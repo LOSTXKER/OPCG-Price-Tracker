@@ -516,13 +516,14 @@ export async function loadPublicProfileData(user: ProfileUserSelect, isOwner: bo
           createdAt: topReview.createdAt.toISOString(),
         }
       : null,
-    // "Verified" = a seller who has demonstrated they can complete deals.
+    // "Established sales history" = a seller who has demonstrated they can
+    // complete deals. This is not identity verification or KYC, so UI copy
+    // must describe sales history rather than a "verified seller".
     // We deliberately keep the bar low enough to be reachable in the first
     // month or two of selling (3 completed deals, no major review issues),
-    // similar to Etsy's "Star Seller" bronze tier. The blue check next to
-    // the displayName is meant as a baseline trust signal — not an elite
-    // award. Sellers without ratings yet are eligible because the rating is
-    // optional from the buyer side.
+    // similar to an entry-level marketplace seller milestone. Sellers without
+    // ratings yet are eligible because the rating is optional from the buyer
+    // side.
     isVerified:
       completedDeals >= 3 && (user.sellerRating == null || user.sellerRating >= 4),
     lastSeenAt: lastSeenAt ? lastSeenAt.toISOString() : null,

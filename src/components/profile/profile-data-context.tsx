@@ -27,7 +27,7 @@ type ProfileDataCtx = {
   checkinLoading: boolean;
   handleCheckin: () => Promise<void>;
   handleUserUpdate: (user: DbUser) => void;
-  reload: () => Promise<void>;
+  reload: () => Promise<boolean>;
 };
 
 const Ctx = createContext<ProfileDataCtx | null>(null);
@@ -53,6 +53,8 @@ export function ProfileDataProvider({ children }: { children: ReactNode }) {
     try {
       const meJson = await apiGet<ProfileData>("/api/me");
       setData(meJson);
+      setLoading(false);
+      return true;
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
         invalidateSettings();
@@ -60,8 +62,9 @@ export function ProfileDataProvider({ children }: { children: ReactNode }) {
         await supabase.auth.signOut();
       }
       setError(t(lang, "loadFailed"));
+      setLoading(false);
+      return false;
     }
-    setLoading(false);
   }, [lang]);
 
   useEffect(() => {

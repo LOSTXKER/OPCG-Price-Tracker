@@ -52,4 +52,13 @@ describe("EmptyState", () => {
     expect(minimal).toContain("flex flex-col items-center gap-2 py-14 text-center");
     expect(minimal).toContain('<p class="text-meta text-muted-foreground/60">No ranking</p>');
   });
+
+  it("announces error variants to assistive technology", () => {
+    const markup = renderToStaticMarkup(
+      <EmptyState variant="error" title="Could not load" description="Try again" />,
+    );
+
+    expect(markup).toContain('role="alert"');
+    expect(markup).toContain('aria-live="assertive"');
+  });
 });

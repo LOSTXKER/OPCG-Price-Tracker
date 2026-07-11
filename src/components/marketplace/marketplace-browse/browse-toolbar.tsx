@@ -19,33 +19,70 @@ const RARITY_OPTIONS = getGameConfig("opcg")?.rarityFilterOptions ?? []
 
 type SortKey = (typeof SORT_OPTIONS)[number]["value"]
 
-/** Chip group inside the modal — multi-select facet. Condition & rarity are both
- *  multi-select in the UI; the container maps them onto the API (condition sends
- *  a value only when exactly one is picked, rarity comma-joins). */
+/** Chip group inside the modal. Single-value facets use radio semantics while
+ * multi-value facets expose each chip as a pressed toggle. */
 function FacetChips({
   options,
   selected,
   onToggle,
+  selectionMode = "multiple",
+  labelledBy,
+  describedBy,
 }: {
   options: readonly { value: string; label: string }[]
   selected: string[]
   onToggle: (value: string) => void
+  selectionMode?: "single" | "multiple"
+  labelledBy: string
+  describedBy?: string
 }) {
+  const isSingle = selectionMode === "single"
+
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div
+      className="flex flex-wrap gap-1.5"
+      role={isSingle ? "radiogroup" : "group"}
+      aria-labelledby={labelledBy}
+      aria-describedby={describedBy}
+    >
       {options.map((opt) => {
         const active = selected.includes(opt.value)
+        const chipClass = cn(
+          "ease-chrome flex min-h-11 items-center rounded-lg border px-3 py-1 text-micro",
+          active
+            ? "border-primary/40 bg-primary/5 text-primary"
+            : "border-hair bg-background text-muted-foreground hover:text-foreground",
+        )
+
+        if (isSingle) {
+          return (
+            <label
+              key={opt.value || "all"}
+              className={cn(
+                chipClass,
+                "cursor-pointer focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
+              )}
+            >
+              <input
+                type="radio"
+                name={labelledBy}
+                value={opt.value}
+                checked={active}
+                onChange={() => onToggle(opt.value)}
+                className="sr-only"
+              />
+              {opt.label}
+            </label>
+          )
+        }
+
         return (
           <button
-            key={opt.value}
+            key={opt.value || "all"}
             type="button"
             onClick={() => onToggle(opt.value)}
-            className={cn(
-              "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium",
-              active
-                ? "border-primary/40 bg-primary/5 text-primary"
-                : "border-hair bg-background text-muted-foreground hover:text-foreground",
-            )}
+            aria-pressed={active}
+            className={chipClass}
           >
             {opt.label}
           </button>
@@ -63,8 +100,8 @@ export function BrowseToolbar({
   onSortChange,
   viewMode,
   onViewModeChange,
-  conditions,
-  onConditionsChange,
+  condition,
+  onConditionChange,
   rarities,
   onRaritiesChange,
   variants,
@@ -77,8 +114,8 @@ export function BrowseToolbar({
   onSortChange: (v: string) => void
   viewMode: "grid" | "list"
   onViewModeChange: (v: "grid" | "list") => void
-  conditions: string[]
-  onConditionsChange: (v: string[]) => void
+  condition: string | null
+  onConditionChange: (v: string | null) => void
   rarities: string[]
   onRaritiesChange: (v: string[]) => void
   variants: string[]
@@ -86,13 +123,21 @@ export function BrowseToolbar({
 }) {
   const lang = useUIStore((s) => s.language)
   const [showFilters, setShowFilters] = useState(false)
+  const [draftCondition, setDraftCondition] = useState<string | null>(condition)
+  const [draftRarities, setDraftRarities] = useState<string[]>(rarities)
+  const [draftVariants, setDraftVariants] = useState<string[]>(variants)
 
   // Rarity codes need no translation; version labels come from i18n.
   const rarityOptions = RARITY_OPTIONS.map((r) => ({ value: r.code, label: r.label }))
-  const conditionOptions = CONDITIONS.map((c) => ({ value: c, label: c }))
+  const conditionOptions = [
+    { value: "", label: t(lang, "mktFilterAll") },
+    ...CONDITIONS.map((c) => ({ value: c, label: c })),
+  ]
   const variantOptions = VARIANTS.map((v) => ({ value: v, label: t(lang, v) }))
 
-  const activeCount = conditions.length + rarities.length + variants.length
+  const activeCount = (condition ? 1 : 0) + rarities.length + variants.length
+  const draftCount =
+    (draftCondition ? 1 : 0) + draftRarities.length + draftVariants.length
 
   const toggle = (
     current: string[],
@@ -114,14 +159,22 @@ export function BrowseToolbar({
         onSubmit={onSubmit}
         searchPlaceholder={t(lang, "mktToolbarSearchPlaceholder")}
         sort={{
-          options: SORT_OPTIONS.map((o) => ({ key: o.value as SortKey, label: o.label })),
+          options: SORT_OPTIONS.map((o) => ({
+            key: o.value as SortKey,
+            label: `${t(lang, o.labelKey)}${"currency" in o ? ` (${o.currency})` : ""}`,
+          })),
           activeKey: sort as SortKey,
           onChange: (key) => onSortChange(key),
         }}
         filters={{
           count: activeCount,
           active: activeCount > 0,
-          onToggle: () => setShowFilters(true),
+          onToggle: () => {
+            setDraftCondition(condition)
+            setDraftRarities(rarities)
+            setDraftVariants(variants)
+            setShowFilters(true)
+          },
           label: t(lang, "filter"),
         }}
         view={{
@@ -142,34 +195,53 @@ export function BrowseToolbar({
         open={showFilters}
         onOpenChange={setShowFilters}
         onReset={() => {
-          onConditionsChange([])
-          onRaritiesChange([])
-          onVariantsChange([])
+          setDraftCondition(null)
+          setDraftRarities([])
+          setDraftVariants([])
         }}
-        resetDisabled={activeCount === 0}
+        resetDisabled={draftCount === 0}
+        onApply={() => {
+          onConditionChange(draftCondition)
+          onRaritiesChange(draftRarities)
+          onVariantsChange(draftVariants)
+        }}
       >
         <div>
-          <span className="mb-1.5 block text-eyebrow">{t(lang, "mktFilterCondition")}</span>
+          <span id="marketplace-condition-filter" className="block text-eyebrow">
+            {t(lang, "mktFilterCondition")}
+          </span>
+          <span id="marketplace-condition-filter-hint" className="mb-2 block text-meta">
+            {t(lang, "mktFilterConditionHint")}
+          </span>
           <FacetChips
             options={conditionOptions}
-            selected={conditions}
-            onToggle={(v) => toggle(conditions, v, onConditionsChange)}
+            selected={[draftCondition ?? ""]}
+            onToggle={(v) => setDraftCondition(v || null)}
+            selectionMode="single"
+            labelledBy="marketplace-condition-filter"
+            describedBy="marketplace-condition-filter-hint"
           />
         </div>
         <div>
-          <span className="mb-1.5 block text-eyebrow">{t(lang, "mktFilterRarity")}</span>
+          <span id="marketplace-rarity-filter" className="mb-1.5 block text-eyebrow">
+            {t(lang, "mktFilterRarity")}
+          </span>
           <FacetChips
             options={rarityOptions}
-            selected={rarities}
-            onToggle={(v) => toggle(rarities, v, onRaritiesChange)}
+            selected={draftRarities}
+            onToggle={(v) => toggle(draftRarities, v, setDraftRarities)}
+            labelledBy="marketplace-rarity-filter"
           />
         </div>
         <div>
-          <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
+          <span id="marketplace-variant-filter" className="mb-1.5 block text-eyebrow">
+            {t(lang, "variant")}
+          </span>
           <FacetChips
             options={variantOptions}
-            selected={variants}
-            onToggle={(v) => toggle(variants, v, onVariantsChange)}
+            selected={draftVariants}
+            onToggle={(v) => toggle(draftVariants, v, setDraftVariants)}
+            labelledBy="marketplace-variant-filter"
           />
         </div>
       </FilterModal>

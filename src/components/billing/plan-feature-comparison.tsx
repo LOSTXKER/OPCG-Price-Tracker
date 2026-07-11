@@ -2,7 +2,12 @@ import { Fragment } from "react";
 import { Check, X } from "lucide-react";
 
 import { Surface } from "@/components/ui/surface";
-import { PLANS, type FeatureSection, type TierKey } from "@/lib/billing";
+import {
+  PLANS,
+  formatPlanFeatureValue,
+  type FeatureSection,
+  type TierKey,
+} from "@/lib/billing";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -54,7 +59,7 @@ function FeatureValue({
           : "font-medium"
       }
     >
-      {isUnlimited ? t(lang, "unlimited") : value}
+      {isUnlimited ? t(lang, "unlimited") : formatPlanFeatureValue(value, lang)}
     </span>
   );
 }

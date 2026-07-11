@@ -5,7 +5,7 @@ import { useState } from "react";
 import { apiPost } from "@/lib/api/client";
 import { Button } from "@/components/ui/button";
 import { MakeOfferDialog } from "@/components/messages/make-offer-dialog";
-import { ShoppingCart, HandCoins } from "lucide-react";
+import { ClipboardPlus, HandCoins } from "lucide-react";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { toast } from "sonner";
@@ -62,7 +62,7 @@ export function ListingActionButtons({
         onClick={handleBuyNow}
         disabled={buying}
       >
-        <ShoppingCart className="size-4" />
+        <ClipboardPlus className="size-4" />
         {buying ? t(lang, "mktActionsBuying") : t(lang, "mktActionsBuyNow")}
       </Button>
       <Button
@@ -81,6 +81,9 @@ export function ListingActionButtons({
         marketPrice={marketPriceThb ?? null}
         onSubmit={handleMakeOffer}
       />
+      <p className="text-meta sm:col-span-2">
+        {t(lang, "mktActionsBuyFlowHint")}
+      </p>
     </>
   );
 }

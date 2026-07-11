@@ -10,6 +10,9 @@ import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
 import { assertMarketplaceEnabled } from "@/lib/marketplace/feature-flag";
 import { MarketplaceErrorState } from "./marketplace-error-state";
+import { t } from "@/lib/i18n";
+import { getServerLanguage } from "@/lib/i18n/server";
+import { parseCondition } from "@/lib/api/parse-condition";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +28,25 @@ const PAGE_SIZE = 12;
 type SearchParams = {
   seller?: string | string[];
   cardCode?: string | string[];
+  q?: string | string[];
+  condition?: string | string[];
+  rarity?: string | string[];
+  variant?: string | string[];
+  sort?: string | string[];
+  page?: string | string[];
 };
+
+const MARKETPLACE_SORTS = new Set([
+  "newest",
+  "price_jpy_asc",
+  "price_jpy_desc",
+  "price_thb_asc",
+  "price_thb_desc",
+]);
+
+function firstParam(value: string | string[] | undefined): string {
+  return (Array.isArray(value) ? value[0] : value) ?? "";
+}
 
 export default async function MarketplacePage({
   searchParams,
@@ -34,9 +55,10 @@ export default async function MarketplacePage({
 }) {
   await assertMarketplaceEnabled();
   const params = await searchParams;
-  const rawSeller = Array.isArray(params.seller) ? params.seller[0] : params.seller;
+  const lang = await getServerLanguage();
+  const rawSeller = firstParam(params.seller);
   const sellerKey = (rawSeller ?? "").trim().replace(/^@/, "").slice(0, 60);
-  const rawCardCode = Array.isArray(params.cardCode) ? params.cardCode[0] : params.cardCode;
+  const rawCardCode = firstParam(params.cardCode);
   // Card codes are uppercase A-Z, digits, dash and underscore (parallel suffix).
   // Strip anything else to avoid weird query strings hitting the DB.
   const cardCodeKey = (rawCardCode ?? "")
@@ -44,9 +66,32 @@ export default async function MarketplacePage({
     .toUpperCase()
     .replace(/[^A-Z0-9_-]/g, "")
     .slice(0, 24);
+  const rawSearch = firstParam(params.q);
+  const searchKey = (rawSearch ?? "").trim().slice(0, 100);
+  const conditionKey = parseCondition(firstParam(params.condition));
+  const rarityKeys = [
+    ...new Set(
+      firstParam(params.rarity)
+        .split(",")
+        .map((value) => value.trim().toUpperCase())
+        .filter((value) => /^[A-Z-]{1,12}$/.test(value)),
+    ),
+  ];
+  const variantKeys = [
+    ...new Set(
+      firstParam(params.variant)
+        .split(",")
+        .filter((value) => value === "regular" || value === "parallel"),
+    ),
+  ];
+  const rawSort = firstParam(params.sort);
+  const sortKey = MARKETPLACE_SORTS.has(rawSort) ? rawSort : "newest";
+  const rawPage = Number(firstParam(params.page));
+  const pageKey = Number.isSafeInteger(rawPage) && rawPage > 0 ? rawPage : 1;
 
   let listings: Parameters<typeof MarketplaceBrowse>[0]["initialListings"] = [];
   let total = 0;
+  let resolvedPage = pageKey;
   let dbError = false;
   let lockedSeller: Parameters<typeof MarketplaceBrowse>[0]["lockedSeller"] = null;
 
@@ -68,15 +113,55 @@ export default async function MarketplacePage({
         };
       }
     }
+    const cardWhere: Prisma.CardWhereInput = {};
     if (cardCodeKey) {
-      where.card = { cardCode: cardCodeKey };
+      cardWhere.cardCode = { equals: cardCodeKey, mode: "insensitive" };
+    } else if (searchKey) {
+      cardWhere.OR = [
+        { cardCode: { contains: searchKey, mode: "insensitive" } },
+        { nameJp: { contains: searchKey, mode: "insensitive" } },
+        { nameEn: { contains: searchKey, mode: "insensitive" } },
+      ];
     }
-    const [rows, count] = await Promise.all([
-      prisma.listing.findMany({
+    if (rarityKeys.length > 0) {
+      const expandedRarities = [
+        ...new Set(
+          rarityKeys.flatMap((rarity) =>
+            rarity.startsWith("P-") ? [rarity] : [rarity, `P-${rarity}`],
+          ),
+        ),
+      ];
+      cardWhere.rarity = { in: expandedRarities };
+    }
+    if (variantKeys.length === 1) {
+      cardWhere.isParallel = variantKeys[0] === "parallel";
+    }
+    if (Object.keys(cardWhere).length > 0) {
+      where.card = cardWhere;
+    }
+
+    if (conditionKey) where.condition = conditionKey;
+
+    const orderBy: Prisma.ListingOrderByWithRelationInput =
+      sortKey === "price_jpy_asc"
+        ? { priceJpy: "asc" }
+        : sortKey === "price_jpy_desc"
+          ? { priceJpy: "desc" }
+          : sortKey === "price_thb_asc"
+            ? { priceThb: "asc" }
+            : sortKey === "price_thb_desc"
+              ? { priceThb: "desc" }
+              : { createdAt: "desc" };
+
+    const count = await prisma.listing.count({ where });
+    total = count;
+    const totalPages = Math.max(1, Math.ceil(count / PAGE_SIZE));
+    resolvedPage = Math.min(pageKey, totalPages);
+    const rows = await prisma.listing.findMany({
         where,
-        orderBy: { createdAt: "desc" },
+        orderBy,
         take: PAGE_SIZE,
-        skip: 0,
+        skip: (resolvedPage - 1) * PAGE_SIZE,
         include: {
           card: {
             include: { set: { select: { code: true, name: true, nameEn: true } } },
@@ -90,11 +175,8 @@ export default async function MarketplacePage({
             },
           },
         },
-      }),
-      prisma.listing.count({ where }),
-    ]);
+      });
 
-    total = count;
     listings = rows.map((l) => ({
       id: l.id,
       priceJpy: l.priceJpy,
@@ -130,23 +212,33 @@ export default async function MarketplacePage({
           <MarketplaceBrowse
             initialListings={listings}
             initialTotal={total}
-            initialPage={1}
+            initialPage={resolvedPage}
             pageSize={PAGE_SIZE}
+            initialSearch={cardCodeKey || searchKey}
+            initialCardCode={cardCodeKey}
+            initialCondition={conditionKey}
+            initialRarities={rarityKeys}
+            initialVariants={variantKeys}
+            initialSort={sortKey}
             lockedSeller={lockedSeller}
           />
         )}
       </div>
       <RelatedPages
+        title={t(lang, "more")}
         items={[
-          { href: "/", icon: LineChart, title: "ตลาดราคา", description: "ดูราคาการ์ดอัปเดตทุกวัน" },
-          { href: "/opcg/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่า" },
-          { href: "/guide/buying", icon: ShoppingCart, title: "คู่มือการซื้อ", description: "ซื้อการ์ดที่ไหนดี?" },
+          { href: "/", icon: LineChart, title: t(lang, "mktHomeRelatedPricesTitle"), description: t(lang, "mktHomeRelatedPricesDesc") },
+          { href: "/opcg/sets", icon: Layers, title: t(lang, "mktHomeRelatedSetsTitle"), description: t(lang, "mktHomeRelatedSetsDesc") },
+          { href: "/guide/buying", icon: ShoppingCart, title: t(lang, "mktHomeRelatedBuyingTitle"), description: t(lang, "mktHomeRelatedBuyingDesc") },
         ]}
       />
-      <FaqSection items={[
-        { question: "Marketplace คืออะไร?", answer: "ตลาดซื้อขายการ์ด OPCG บน Meecard ลงขายเองหรือซื้อจากคนอื่นได้เลย มีราคาตลาดจริงให้อ้างอิง" },
-        { question: "ขายการ์ดยังไง?", answer: "สมัครสมาชิก เลือกการ์ดที่จะขาย ตั้งราคา แล้วลงประกาศ คนซื้อจะทักมาทางแชทในเว็บ" },
-        { question: "ค่าธรรมเนียมเท่าไหร่?", answer: "ลงขายฟรี เก็บค่าธรรมเนียมแค่ตอนขายได้เท่านั้น" },
+      <FaqSection title={t(lang, "guideHomeFaqHeading")} items={[
+        { question: t(lang, "mktHomeFaqWhatQ"), answer: t(lang, "mktHomeFaqWhatA") },
+        { question: t(lang, "mktHomeFaqSellQ"), answer: t(lang, "mktHomeFaqSellA") },
+        {
+          question: t(lang, "mktHomeFaqFeeQ"),
+          answer: t(lang, "mktHomeFaqFeeA"),
+        },
       ]} />
     </>
   );

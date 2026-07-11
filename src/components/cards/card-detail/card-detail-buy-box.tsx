@@ -93,7 +93,7 @@ export function CardDetailBuyBox({
           <p className="text-meta py-2">
             {t(lang, "noLatestSales")} ·{" "}
             <a href="#sources" className="underline hover:text-foreground">
-              {t(lang, "saleHistoryTitle")}
+              {t(lang, "saleHistorySampleTitle")}
             </a>
           </p>
         )}

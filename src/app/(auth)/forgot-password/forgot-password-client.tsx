@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { ArrowLeft, Loader2, Mail, CheckCircle2 } from "lucide-react";
 
@@ -11,9 +12,13 @@ import { FormError } from "@/components/auth/form-error";
 import { createClient } from "@/lib/supabase/client";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
+import { getSafeInternalRedirect } from "@/lib/auth/safe-redirect";
 
 export function ForgotPasswordClient() {
   const lang = useUIStore((s) => s.language);
+  const searchParams = useSearchParams();
+  const redirect = getSafeInternalRedirect(searchParams.get("redirect"));
+  const loginHref = `/login?redirect=${encodeURIComponent(redirect)}`;
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -25,8 +30,10 @@ export function ForgotPasswordClient() {
     setError(null);
     setLoading(true);
     const supabase = createClient();
+    const resetUrl = new URL("/reset-password", window.location.origin);
+    if (redirect !== "/") resetUrl.searchParams.set("redirect", redirect);
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: resetUrl.toString(),
     });
     setLoading(false);
     if (resetError) {
@@ -44,7 +51,7 @@ export function ForgotPasswordClient() {
             <CheckCircle2 className="size-8 text-success" />
             <p className="text-sm">{t(lang, "resetLinkSent")}</p>
           </div>
-          <Link href="/login" className="block">
+          <Link href={loginHref} className="block">
             <Button variant="outline" className="h-11 w-full">
               <ArrowLeft className="mr-2 size-4" />
               {t(lang, "backToLogin")}
@@ -87,7 +94,7 @@ export function ForgotPasswordClient() {
             )}
           </Button>
 
-          <Link href="/login" className="block">
+          <Link href={loginHref} className="block">
             <Button variant="ghost" className="h-11 w-full" type="button">
               <ArrowLeft className="mr-2 size-4" />
               {t(lang, "backToLogin")}

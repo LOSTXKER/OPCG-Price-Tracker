@@ -1,10 +1,14 @@
 "use client"
 
 import { ListingCard } from "@/components/marketplace/listing-card"
+import { t } from "@/lib/i18n"
+import { useUIStore } from "@/stores/ui-store"
 
 import type { MarketplaceBrowseListing } from "./types"
 
 export function BrowseGrid({ listings }: { listings: MarketplaceBrowseListing[] }) {
+  const lang = useUIStore((state) => state.language)
+
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {listings.map((l) => (
@@ -31,6 +35,7 @@ export function BrowseGrid({ listings }: { listings: MarketplaceBrowseListing[] 
           shipping={l.shipping}
           location={l.location}
           isFeatured={l.isFeatured}
+          messageLabel={t(lang, "listingMessageSeller")}
         />
       ))}
     </div>

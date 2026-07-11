@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Loader2, CheckCircle2 } from "lucide-react";
 import { z } from "zod";
@@ -13,6 +14,7 @@ import { FormError } from "@/components/auth/form-error";
 import { createClient } from "@/lib/supabase/client";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
+import { getSafeInternalRedirect } from "@/lib/auth/safe-redirect";
 
 const schema = z
   .object({
@@ -26,6 +28,9 @@ const schema = z
 
 export function ResetPasswordClient() {
   const lang = useUIStore((s) => s.language);
+  const searchParams = useSearchParams();
+  const redirect = getSafeInternalRedirect(searchParams.get("redirect"));
+  const loginHref = `/login?redirect=${encodeURIComponent(redirect)}`;
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +70,7 @@ export function ResetPasswordClient() {
             <CheckCircle2 className="size-8 text-success" />
             <p className="text-sm">{t(lang, "passwordResetSuccess")}</p>
           </div>
-          <Link href="/login" className="block">
+          <Link href={loginHref} className="block">
             <Button className="h-11 w-full">{t(lang, "login")}</Button>
           </Link>
         </div>

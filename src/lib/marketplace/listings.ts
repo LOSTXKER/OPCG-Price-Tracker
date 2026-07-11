@@ -51,6 +51,7 @@ export async function searchActiveListings(searchParams: URLSearchParams): Promi
   const gameSlug = searchParams.get("game") || "";
   const rarityParam = searchParams.get("rarity");
   const searchQuery = searchParams.get("q");
+  const cardCodeParam = searchParams.get("cardCode");
   const sellerParam = searchParams.get("seller");
 
   const where: Prisma.ListingWhereInput = { status: ListingStatus.ACTIVE };
@@ -94,6 +95,16 @@ export async function searchActiveListings(searchParams: URLSearchParams): Promi
     cardFilter.isParallel = true;
   } else if (variantParam === "regular") {
     cardFilter.isParallel = false;
+  }
+  if (cardCodeParam) {
+    const cardCode = cardCodeParam.trim();
+    if (!/^[A-Za-z0-9_-]{1,24}$/.test(cardCode)) {
+      return {
+        ok: false,
+        response: NextResponse.json({ error: "Invalid cardCode" }, { status: 400 }),
+      };
+    }
+    cardFilter.cardCode = { equals: cardCode, mode: "insensitive" };
   }
   if (searchQuery) {
     const q = searchQuery.trim();

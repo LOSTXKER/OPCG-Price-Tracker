@@ -7,6 +7,7 @@ import { guardMarketplaceApi } from "@/lib/marketplace/feature-flag";
 import { notify } from "@/lib/notify/dispatch";
 import { UpdateOfferSchema } from "@/lib/offers/schemas";
 import { NextRequest, NextResponse } from "next/server";
+import { encodeOrderMessageEvent } from "@/lib/orders/message-events";
 
 const log = createLog("api:offers");
 
@@ -106,7 +107,10 @@ export const PATCH = apiHandler(async (request: NextRequest, props: Params) => {
               listingId: offer.listingId,
               senderId: dbUser.id,
               receiverId: offer.buyerId,
-              content: `ยอมรับข้อเสนอ ฿${offer.priceThb.toLocaleString()} - รอการชำระเงิน`,
+              content: encodeOrderMessageEvent({
+                kind: "offer_accepted",
+                priceThb: offer.priceThb,
+              }),
               type: "ORDER_UPDATE",
               offerId: offer.id,
               orderId: order.id,
@@ -150,7 +154,7 @@ export const PATCH = apiHandler(async (request: NextRequest, props: Params) => {
               listingId: offer.listingId,
               senderId: dbUser.id,
               receiverId: offer.buyerId,
-              content: "ปฏิเสธข้อเสนอ",
+              content: encodeOrderMessageEvent({ kind: "offer_rejected" }),
               type: "SYSTEM",
               offerId: offer.id,
             },
@@ -190,7 +194,7 @@ export const PATCH = apiHandler(async (request: NextRequest, props: Params) => {
               listingId: offer.listingId,
               senderId: dbUser.id,
               receiverId: offer.sellerId,
-              content: "ยกเลิกข้อเสนอ",
+              content: encodeOrderMessageEvent({ kind: "offer_cancelled" }),
               type: "SYSTEM",
               offerId: offer.id,
             },
@@ -248,7 +252,11 @@ export const PATCH = apiHandler(async (request: NextRequest, props: Params) => {
               listingId: offer.listingId,
               senderId: dbUser.id,
               receiverId: offer.buyerId,
-              content: `เสนอราคากลับ ฿${counterPrice.toLocaleString()}${counterNote ? ` - ${counterNote.trim()}` : ""}`,
+              content: encodeOrderMessageEvent({
+                kind: "counter_offer",
+                priceThb: counterPrice,
+                note: counterNote?.trim() || undefined,
+              }),
               type: "OFFER",
               offerId: counter.id,
             },

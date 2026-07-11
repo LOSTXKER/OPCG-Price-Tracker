@@ -13,7 +13,7 @@ import { useUIStore } from "@/stores/ui-store";
 import { OrderStatusTracker } from "./order-status-tracker";
 import type { ChatListing, ChatUser } from "./types";
 import {
-  ShoppingCart,
+  ClipboardPlus,
   HandCoins,
   CreditCard,
   Truck,
@@ -151,13 +151,16 @@ export function OrderSidebar({
           {/* Action buttons based on status and role */}
           <div className="space-y-2 pt-1">
             {activeOrder.status === "AWAITING_PAYMENT" && !isSeller && (
-              <Button
-                className="w-full gap-2"
-                onClick={() => onUpdateOrder?.(activeOrder.id, "PAID")}
-              >
-                <CreditCard className="size-4" />
-                {t(lang, "msgOrderMarkPaid")}
-              </Button>
+              <div className="space-y-2">
+                <p className="text-meta">{t(lang, "msgOrderAwaitingPaymentHint")}</p>
+                <Button
+                  className="w-full gap-2"
+                  onClick={() => onUpdateOrder?.(activeOrder.id, "PAID")}
+                >
+                  <CreditCard className="size-4" />
+                  {t(lang, "msgOrderMarkPaid")}
+                </Button>
+              </div>
             )}
             {activeOrder.status === "PAID" && isSeller && (
               <Button
@@ -194,13 +197,14 @@ export function OrderSidebar({
       {!activeOrder && !isSeller && listing.status === "ACTIVE" && (
         <div className="space-y-2 border-b p-4">
           <Button className="w-full gap-2" onClick={onBuyNow}>
-            <ShoppingCart className="size-4" />
+            <ClipboardPlus className="size-4" />
             {t(lang, "msgOrderBuyNow")}
           </Button>
           <Button variant="outline" className="w-full gap-2" onClick={onMakeOffer}>
             <HandCoins className="size-4" />
             {t(lang, "msgOrderMakeOffer")}
           </Button>
+          <p className="text-meta">{t(lang, "msgOrderCreateHint")}</p>
         </div>
       )}
 

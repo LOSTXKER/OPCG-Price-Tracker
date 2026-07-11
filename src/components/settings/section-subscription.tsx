@@ -1,9 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
+  AlertCircle,
   Bell,
+  CheckCircle2,
+  Clock3,
   CreditCard,
   Eye,
   FolderOpen,
@@ -39,7 +42,6 @@ import {
   type TierKey,
   type TierLimits,
 } from "@/lib/billing";
-import { useMarketplaceFees } from "@/hooks/use-marketplace-fees";
 import { Surface } from "@/components/ui/surface";
 import type { UserTier } from "@/generated/prisma/client";
 
@@ -49,6 +51,10 @@ import type { UserTier } from "@/generated/prisma/client";
 type Props = {
   subscription: SubscriptionData;
   stats?: ProfileStats;
+  checkoutReturned?: boolean;
+  checkoutRefreshing?: boolean;
+  checkoutRefreshError?: boolean;
+  onRefreshCheckout?: () => void;
 };
 
 type PaymentMethod = {
@@ -74,6 +80,8 @@ const CANCEL_REASONS = [
   "cancelReasonTooExpensive", "cancelReasonNotUseful",
   "cancelReasonSwitchService", "cancelReasonTemporary", "cancelReasonOther",
 ] as const;
+
+const subscriptionFeatureSections = buildFeatureSections();
 
 // ---------------------------------------------------------------------------
 // Usage row
@@ -118,20 +126,23 @@ function UsageRow({ icon: Icon, label, desc, current, max, color, lang }: {
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
-export function SectionSubscription({ subscription, stats }: Props) {
+export function SectionSubscription({
+  subscription,
+  stats,
+  checkoutReturned = false,
+  checkoutRefreshing = false,
+  checkoutRefreshError = false,
+  onRefreshCheckout,
+}: Props) {
   const lang = useUIStore((s) => s.language);
   const limits = getLimitsForTier(subscription.tier);
-  const marketplaceFees = useMarketplaceFees();
-  const featureSections = useMemo(
-    () => buildFeatureSections({ marketplaceFees }),
-    [marketplaceFees],
-  );
   const isCurrentPlan = (planKey: TierKey) =>
     isPlanCurrent(planKey, subscription.tier);
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(null);
   const [loadingPM, setLoadingPM] = useState(!!subscription.hasStripeSubscription);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [portalError, setPortalError] = useState(false);
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
   const [cancelComment, setCancelComment] = useState("");
@@ -145,10 +156,14 @@ export function SectionSubscription({ subscription, stats }: Props) {
   }, [subscription.hasStripeSubscription]);
 
   const openPortal = useCallback(async () => {
+    setPortalError(false);
     setPortalLoading(true);
     try {
-      const json = await apiTry(apiPost<{ url?: string }>("/api/subscription/portal"));
-      if (json?.url) window.location.href = json.url;
+      const json = await apiPost<{ url?: string }>("/api/subscription/portal");
+      if (!json.url) throw new Error("Billing portal URL missing");
+      window.location.assign(json.url);
+    } catch {
+      setPortalError(true);
     } finally {
       setPortalLoading(false);
     }
@@ -186,6 +201,84 @@ export function SectionSubscription({ subscription, stats }: Props) {
         description={t(lang, "yourPlan")}
       />
 
+      {checkoutReturned && (
+        <Surface
+          variant="subtle"
+          padding="md"
+          role="status"
+          aria-live="polite"
+          className="flex flex-col items-center gap-3 border border-hair text-center sm:flex-row sm:text-left"
+        >
+          {checkoutRefreshError ? (
+            <AlertCircle aria-hidden className="size-5 shrink-0 text-destructive" />
+          ) : subscription.hasStripeSubscription ? (
+            <CheckCircle2 aria-hidden className="size-5 shrink-0 text-success" />
+          ) : (
+            <Clock3 aria-hidden className="size-5 shrink-0 text-primary" />
+          )}
+          <div className="flex-1">
+            <p className="text-label text-foreground">
+              {t(
+                lang,
+                checkoutRefreshError
+                  ? "billingCheckoutRefreshErrorTitle"
+                  : subscription.hasStripeSubscription
+                    ? "billingCheckoutConfirmedTitle"
+                    : "billingCheckoutPendingTitle",
+              )}
+            </p>
+            <p className="text-meta">
+              {t(
+                lang,
+                checkoutRefreshError
+                  ? "billingCheckoutRefreshErrorDesc"
+                  : subscription.hasStripeSubscription
+                    ? "billingCheckoutConfirmedDesc"
+                    : "billingCheckoutPendingDesc",
+              )}
+            </p>
+          </div>
+          {!subscription.hasStripeSubscription && onRefreshCheckout && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={checkoutRefreshing}
+              onClick={onRefreshCheckout}
+            >
+              {checkoutRefreshing && (
+                <Loader2 aria-hidden className="mr-1.5 size-3.5 animate-spin" />
+              )}
+              {t(lang, "retry")}
+            </Button>
+          )}
+        </Surface>
+      )}
+
+      {portalError && (
+        <Surface
+          variant="outline"
+          padding="md"
+          role="alert"
+          aria-live="assertive"
+          className="flex flex-col items-center gap-3 border-destructive/30 text-center sm:flex-row sm:text-left"
+        >
+          <AlertCircle aria-hidden className="size-5 shrink-0 text-destructive" />
+          <p className="flex-1 text-body-sm text-destructive">
+            {t(lang, "billingPortalError")}
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={portalLoading}
+            onClick={() => void openPortal()}
+          >
+            {t(lang, "retry")}
+          </Button>
+        </Surface>
+      )}
+
       {/* Trial banner */}
       {isTrial && (
         <Surface variant="subtle" className="flex items-center justify-center gap-3 border border-hair px-5 py-3">
@@ -198,7 +291,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
 
       <PlanCards
         lang={lang}
-        featureSections={featureSections}
+        featureSections={subscriptionFeatureSections}
         variant="subscription"
         isCurrentPlan={isCurrentPlan}
         renderAction={(plan, current) => {
@@ -315,7 +408,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
 
       <PlanFeatureComparison
         lang={lang}
-        featureSections={featureSections}
+        featureSections={subscriptionFeatureSections}
         variant="subscription"
         isCurrentPlan={isCurrentPlan}
       />

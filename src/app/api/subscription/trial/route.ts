@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
+import { TRIAL_DAYS } from "@/lib/billing/limits";
 import { prisma } from "@/lib/db";
 import { earnHoney } from "@/lib/honey";
-
-const TRIAL_DAYS = 14;
 
 export const POST = apiHandler(async () => {
   const auth = await requireAuthUser();

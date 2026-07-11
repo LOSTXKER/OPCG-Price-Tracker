@@ -419,19 +419,26 @@ export default function SellerOrderDetailPage() {
 
       {order.status === "AWAITING_PAYMENT" && (
         <Surface variant="panel" padding="md" className="space-y-3">
+          <p className="text-h4">{t(lang, "sellOrderAwaitingPaymentTitle")}</p>
           <p className="text-sm text-muted-foreground">
             {t(lang, "sellOrderAwaitingPaymentPrompt")}
           </p>
-          <Button
-            variant="outline"
-            onClick={() => handleStatusUpdate("CANCELLED")}
-            disabled={actionLoading}
-          >
-            {actionLoading && (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            {t(lang, "sellOrderCancelOrder")}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button render={<Link href={`/messages/${order.listing.id}`} />}>
+              <MessageCircle className="mr-2 h-4 w-4" />
+              {t(lang, "sellOrderOpenPaymentChat")}
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => handleStatusUpdate("CANCELLED")}
+              disabled={actionLoading}
+            >
+              {actionLoading && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              {t(lang, "sellOrderCancelOrder")}
+            </Button>
+          </div>
         </Surface>
       )}
 

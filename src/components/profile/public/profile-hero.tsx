@@ -7,8 +7,8 @@ import {
   Award,
   CalendarDays,
   Check,
-  CheckCircle2,
   Copy,
+  PackageCheck,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -46,7 +46,7 @@ const BIO_OVERFLOW_LINES = 4;
  *     ┌────┐                                  [Message][Save][⋯]
  *     │ AV │  (overlaps cover by ~half)
  *     └────┘
- *     Name ✓
+ *     Name · sales-history marker
  *     @handle · activity dot
  *     bio…
  *     ⏱ joined  ·  ⚡ replies in 2h  ·  ✔ 12 deals
@@ -138,9 +138,9 @@ export function ProfileHero({
               <span
                 title={t(lang, "sellerVerified")}
                 aria-label={t(lang, "sellerVerified")}
-                className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-info text-info-foreground"
+                className="status-success inline-flex size-6 shrink-0 items-center justify-center rounded-full"
               >
-                <CheckCircle2 className="size-4" />
+                <PackageCheck className="size-4" />
               </span>
             )}
           </h1>
@@ -294,7 +294,7 @@ function ActivityPill({
 
 /**
  * Quiet "joined Jan 2024" recognition cue under the bio. Trust signals
- * (response time, deals, verified badge) live in `ProfileTrustBlock`
+ * (response time, deals, sales-history marker) live in `ProfileTrustBlock`
  * directly below the hero, so this row intentionally stays as a single
  * fact — too few items to bother with `·` separators or a wrapper-with-
  * Fragment dance.

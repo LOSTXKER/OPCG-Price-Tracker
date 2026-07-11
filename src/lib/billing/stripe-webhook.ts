@@ -3,6 +3,7 @@ import type { UserTier } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { stripe, planByPriceId } from "@/lib/stripe";
 import { createLog } from "@/lib/logger";
+import { isLifetime } from "@/lib/billing/limits";
 
 const log = createLog("webhook:stripe");
 
@@ -19,6 +20,57 @@ function tierFromPriceId(priceId: string | undefined): UserTier {
   return plan?.tier === "PRO_PLUS" ? "PRO_PLUS" : "PRO";
 }
 
+async function cancelAndRefundLifetimeCheckout(
+  session: Stripe.Checkout.Session,
+  subscriptionId: string,
+) {
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+  if (subscription.status !== "canceled") {
+    await stripe.subscriptions.cancel(subscriptionId);
+  }
+
+  const invoiceRef = session.invoice ?? subscription.latest_invoice;
+  const invoiceId =
+    typeof invoiceRef === "string" ? invoiceRef : invoiceRef?.id;
+  if (!invoiceId) {
+    log.warn("Lifetime checkout canceled without an invoice to refund", session.id);
+    return;
+  }
+
+  const invoice = await stripe.invoices.retrieve(invoiceId, {
+    expand: ["payments.data.payment.payment_intent"],
+  });
+  const paidPayments =
+    invoice.payments?.data.filter(
+      (payment) => payment.status === "paid" && (payment.amount_paid ?? 0) > 0,
+    ) ?? [];
+
+  for (const payment of paidPayments) {
+    const paymentIntent = payment.payment.payment_intent;
+    const charge = payment.payment.charge;
+    const params: Stripe.RefundCreateParams | null = paymentIntent
+      ? {
+          payment_intent:
+            typeof paymentIntent === "string" ? paymentIntent : paymentIntent.id,
+          amount: payment.amount_paid ?? undefined,
+          reason: "requested_by_customer",
+          metadata: { reason: "lifetime_plan_checkout_race", sessionId: session.id },
+        }
+      : charge
+        ? {
+            charge: typeof charge === "string" ? charge : charge.id,
+            amount: payment.amount_paid ?? undefined,
+            reason: "requested_by_customer",
+            metadata: { reason: "lifetime_plan_checkout_race", sessionId: session.id },
+          }
+        : null;
+    if (!params) continue;
+    await stripe.refunds.create(params, {
+      idempotencyKey: `lifetime-checkout-refund:${session.id}:${payment.id}`,
+    });
+  }
+}
+
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
   const userId = session.metadata?.userId;
   if (!userId) return;
@@ -28,6 +80,18 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       ? session.subscription
       : session.subscription?.toString();
   if (!subscriptionId) return;
+
+  const currentUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { tier: true },
+  });
+  if (!currentUser || isLifetime(currentUser.tier)) {
+    if (currentUser) {
+      log.warn("Canceling checkout created before Lifetime access", userId);
+      await cancelAndRefundLifetimeCheckout(session, subscriptionId);
+    }
+    return;
+  }
 
   const sub = await stripe.subscriptions.retrieve(subscriptionId);
   const tier = tierFromPriceId(sub.items.data[0]?.price.id);
@@ -51,6 +115,15 @@ async function handleSubscriptionUpdated(sub: Stripe.Subscription) {
     where: { stripeCustomerId: customerId },
   });
   if (!user) return;
+  if (isLifetime(user.tier)) {
+    if (sub.status !== "canceled") await stripe.subscriptions.cancel(sub.id);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { stripeSubscriptionId: null },
+    });
+    log.warn("Canceled recurring subscription for lifetime user", user.id);
+    return;
+  }
 
   if (sub.status !== "active" && sub.status !== "trialing") return;
 
@@ -70,9 +143,17 @@ async function handleSubscriptionDeleted(sub: Stripe.Subscription) {
     typeof sub.customer === "string" ? sub.customer : sub.customer?.toString();
   if (!customerId) return;
 
-  await prisma.user.updateMany({
+  const user = await prisma.user.findUnique({
     where: { stripeCustomerId: customerId },
-    data: { tier: "FREE", stripeSubscriptionId: null },
+    select: { id: true, tier: true },
+  });
+  if (!user) return;
+
+  await prisma.user.updateMany({
+    where: { id: user.id, stripeSubscriptionId: sub.id },
+    data: isLifetime(user.tier)
+      ? { stripeSubscriptionId: null }
+      : { tier: "FREE", stripeSubscriptionId: null },
   });
 }
 

@@ -24,6 +24,14 @@
 - [x] **P3 — route/polish:** game namespace allowlist + feature guards, canonical links, LCP image priority, reduced-motion coverage
 - [x] **Verification:** test + lint + build + browser smoke 105 routes ที่ไม่ใช่ `/proto` และ visual matrix 390/768/1440 ทั้ง light/dark
 
+### UX Truth & Safety batch — 2026-07-11
+> ปิดจุดที่หน้าจอสื่อไม่ตรงกับ behavior จริงก่อนปรับ IA/visual รอบถัดไป · ไม่แตะ schema/dependency/config
+
+- [x] **T1 — Pricing/Checkout truth:** guest CTA ไม่เงียบ, เก็บ plan intent ผ่าน auth, error กู้คืนได้, success กลับหน้า subscription พร้อม confirmation, copy trial/limits ตรงระบบจริง และป้องกัน Lifetime/stale webhook/delayed-payment race
+- [x] **T2 — Marketplace truth:** Condition/API ตรงกัน, URL เป็น source of truth, CTA/สถานะชำระอธิบาย flow จริง, badge ผู้ขายไม่สื่อว่า KYC และ loading/empty/error มีทางไปต่อ
+- [x] **T3 — Card data transparency:** จำกัดข้อมูลซื้อขายจำลองเป็น preview สั้น, ระบุชัดว่าไม่ใช่ธุรกรรมจริง และเลิก nested vertical scroll ที่ไม่จำเป็นบนมือถือ
+- [x] **Verification:** 19 test files / 131 tests + lint 0 errors + TypeScript + build 155 pages + browser matrix Pricing/Marketplace/Card ที่ 390/768/1440 ทั้ง Light/Dark
+
 ## 🎨 Redesign (in-place · ทิศเต็มใน [VISION.md](VISION.md) · **ไม่มีเวอร์ชัน v1/v2**)
 > แก้ของเดิมทีละ surface ตาม spine VISION §7 · ทุก surface = adopt atom kit + verify (tsc/lint/build/test) + เปิดดูจริง · ⚠️ ข้อที่แตะ schema = เบสอนุมัติก่อน
 > 📌 กฎ design-system: การ์ดใหญ่ = `.panel` · `surface-*`/`hairline` = chip/control/nested · `.hairline` เป็น unlayered → อย่าผสมกับ ring/shadow บน element เดียว

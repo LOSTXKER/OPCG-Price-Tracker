@@ -318,7 +318,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
                 <MessageCircle className="size-5" />
                 {t(lang, "mktDetailInterestedChat")}
               </Link>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <ListingActionButtons
                   listingId={listing.id}
                   priceThb={listing.priceThb ?? 0}
@@ -431,6 +431,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
                   shipping={l.shipping}
                   location={l.location}
                   isFeatured={l.isFeatured}
+                  messageLabel={t(lang, "listingMessageSeller")}
                 />
               </div>
             ))}
@@ -467,6 +468,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
                 shipping={l.shipping}
                 location={l.location}
                 isFeatured={l.isFeatured}
+                messageLabel={t(lang, "listingMessageSeller")}
               />
             ))}
           </div>

@@ -1,9 +1,15 @@
 /** Shared 4-col layout for market tables (recent sales + Meecard asks). Col 1 =
  *  source/seller · col 2 = date · col 3 = condition · col 4 = price. */
-/** Mock feed length — recent sales sample table. */
-export const MARKET_FEED_MOCK_COUNT = 12
-/** Mock feed length — Meecard asks (longer so scroll is obvious). */
-export const MARKET_FEED_MOCK_LISTINGS_COUNT = 18
+/** Simulated feeds are deliberately short so they read as a preview, not evidence. */
+export const MARKET_FEED_SAMPLE_PREVIEW_COUNT = 3
+/** Real asks stay scannable here; the Marketplace owns the complete card-scoped list. */
+export const MARKET_FEED_REAL_PREVIEW_COUNT = 5
+
+/** Cap after filtering so a selected condition never disappears from the preview. */
+export function getMarketFeedPreview<T>(rows: readonly T[], isSample: boolean): T[] {
+  const limit = isSample ? MARKET_FEED_SAMPLE_PREVIEW_COUNT : MARKET_FEED_REAL_PREVIEW_COUNT
+  return rows.slice(0, limit)
+}
 
 export const MARKET_TABLE_CLASS = "w-full table-fixed border-collapse"
 

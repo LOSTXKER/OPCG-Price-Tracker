@@ -89,10 +89,14 @@ export function EmptyState({
         {presetConfig?.emoji ?? "🐻"}
       </div>
     ) : mascot;
+  const errorA11y =
+    variant === "error"
+      ? ({ role: "alert", "aria-live": "assertive" } as const)
+      : {};
 
   if (resolvedAppearance === "minimal" && Icon) {
     return (
-      <div className={cn("flex flex-col items-center gap-2 py-14 text-center", className)}>
+      <div {...errorA11y} className={cn("flex flex-col items-center gap-2 py-14 text-center", className)}>
         <Icon className="size-8 text-muted-foreground/20" />
         <p className="text-meta text-muted-foreground/60">{resolvedTitle}</p>
       </div>
@@ -101,7 +105,7 @@ export function EmptyState({
 
   if (resolvedAppearance === "admin" && Icon) {
     return (
-      <div className={cn("flex flex-col items-center gap-3 py-16 text-center", className)}>
+      <div {...errorA11y} className={cn("flex flex-col items-center gap-3 py-16 text-center", className)}>
         <div className="rounded-xl bg-muted/50 p-4">
           <Icon className="h-8 w-8 text-muted-foreground/40" />
         </div>
@@ -119,6 +123,7 @@ export function EmptyState({
   if (resolvedAppearance === "product" && variant === "dashed") {
     return (
       <div
+        {...errorA11y}
         className={cn(
           "flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground",
           className,
@@ -137,6 +142,7 @@ export function EmptyState({
   if (resolvedAppearance === "product") {
     return (
       <div
+        {...errorA11y}
         className={cn(
           "panel flex flex-col items-center justify-center gap-4 bg-accent/30 px-6 py-16 text-center",
           className,
@@ -173,7 +179,7 @@ export function EmptyState({
   );
 
   return (
-    <div className={wrapperClass}>
+    <div {...errorA11y} className={wrapperClass}>
       {Icon && (
         <div
           className={cn(

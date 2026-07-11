@@ -32,7 +32,7 @@ import {
   type Stat,
 } from "./grades"
 import { listingMatchesGrade } from "./asks-rail"
-import { MARKET_FEED_MOCK_COUNT, MARKET_FEED_MOCK_LISTINGS_COUNT } from "./market-table-layout"
+import { MARKET_FEED_SAMPLE_PREVIEW_COUNT } from "./market-table-layout"
 import { mockGradeSeries, mockMeecardListings, mockRecentSales, type MockSale } from "./mock"
 import type { CardDetailProps, CardListing, CardSourcePrice } from "./types"
 import { useCardDetailTabs } from "./use-card-detail-tabs"
@@ -351,8 +351,11 @@ export function useCardDetailModel({
 
   const tabs = [
     { id: "overview", label: t(displayLang, "overview") },
-    { id: "sources", label: t(displayLang, "saleHistoryTitle") },
-    { id: "market", label: t(displayLang, "sellingNow") },
+    { id: "sources", label: t(displayLang, "saleHistorySampleTitle") },
+    {
+      id: "market",
+      label: t(displayLang, marketplaceEnabled ? "sellingNow" : "sellingNowSampleTitle"),
+    },
     ...(siblings.length > 0 ? [{ id: "versions", label: t(displayLang, "otherVersions") }] : []),
   ]
 
@@ -399,7 +402,12 @@ export function useCardDetailModel({
     : null
 
   const saleHistory = useMemo(
-    () => mockRecentSales(card.price?.priceJpy ?? card.latestPriceJpy, latestUpdatedAt ?? null, MARKET_FEED_MOCK_COUNT),
+    () =>
+      mockRecentSales(
+        card.price?.priceJpy ?? card.latestPriceJpy,
+        latestUpdatedAt ?? null,
+        MARKET_FEED_SAMPLE_PREVIEW_COUNT,
+      ),
     [card.price?.priceJpy, card.latestPriceJpy, latestUpdatedAt],
   )
 
@@ -413,7 +421,7 @@ export function useCardDetailModel({
       rows: mockMeecardListings(
         card.price?.priceJpy ?? card.latestPriceJpy,
         latestUpdatedAt ?? null,
-        MARKET_FEED_MOCK_LISTINGS_COUNT,
+        MARKET_FEED_SAMPLE_PREVIEW_COUNT,
       ),
       isSample: true,
     }
