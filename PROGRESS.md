@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-11 — **UX/UI refactor P0–P3 เสร็จ, verify และ merge เข้า `master` แล้ว** ผ่าน PR #106 → #107 → #104 → #105 · master merge SHA `1add144`
+อัปเดตล่าสุด: 2026-07-11 — **UX/UI refactor P0–P3 เสร็จ, verify, merge และขึ้น production แล้ว** ผ่าน PR #106 → #107 → #104 → #105 · implementation SHA `1add144` · Vercel deployment `dpl_9fV5HwhzyA7yJAn3tJMCVmWkLJkW` Ready
 
 ## ✅ ทำแล้ว
 
@@ -23,6 +23,7 @@
 - Browser matrix — 390×844, 768×1024, 1440×900; Light/Dark; ไม่มี horizontal overflow ในหน้าตัวแทน Home, Card, Messages, Marketplace, Saved, Pricing, More และ Admin tables
 - Keyboard/dialog — ArrowRight/Home/End เปลี่ยน segmented selection ถูก; Escape ปิด dialog และคืน focus; dialog ใช้ Base UI focus trap; console error = 0
 - Marketplace flag เปิดใน local ระหว่างตรวจ; Saved/Messages มี success/empty/error/retry และไม่เหลือ spinner ค้าง
+- Production smoke — alias `opcg-price-tracker.vercel.app` ตอบ 200 สำหรับ Home/Sets/Card/Pricing/Marketplace; unsupported aliases = 404, legacy card route = 307 ไป canonical; Vercel error/500 logs = 0
 
 ## ⚠️ ไม่ใช่ blocker ของงานนี้
 
@@ -33,9 +34,9 @@
 
 ## ⏭️ NEXT
 
-1. รอ production deployment จาก `master` SHA `1add144` แล้วยิง smoke สั้นอีกครั้ง
-2. ตรวจ login/auth flow ซ้ำเมื่อปิด auth bypass และยืนยัน Marketplace flag บน production
-3. งานถัดไปแยก scope: migration `middleware.ts` → `proxy.ts` และเก็บ lint warnings เดิม
+1. ตรวจ login/auth flow ด้วยบัญชีจริงเมื่อพร้อม (รอบ local ใช้ auth bypass ตาม scope)
+2. งานถัดไปแยก scope: migration `middleware.ts` → `proxy.ts` และเก็บ lint warnings เดิม
+3. ไม่มีงาน UX/UI P0–P3 ค้าง
 
 ## แหล่งอ้างอิง
 
