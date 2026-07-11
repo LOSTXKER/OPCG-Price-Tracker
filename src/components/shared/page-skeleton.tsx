@@ -12,14 +12,16 @@ export function PageSkeleton({
   panels = 2,
   panelHeight = 200,
   showHeader = true,
+  label = "Loading…",
 }: {
   className?: string;
   panels?: number;
   panelHeight?: number;
   showHeader?: boolean;
+  label?: string;
 }) {
   return (
-    <div className={cn("space-y-6", className)}>
+    <div role="status" aria-label={label} className={cn("space-y-6", className)}>
       {showHeader && (
         <>
           <div className="flex flex-wrap items-center gap-2">
@@ -57,13 +59,15 @@ export function TableSkeleton({
   rows = 8,
   columns = 4,
   className,
+  label = "Loading…",
 }: {
   rows?: number;
   columns?: number;
   className?: string;
+  label?: string;
 }) {
   return (
-    <div className={cn("panel divide-y divide-hair", className)}>
+    <div role="status" aria-label={label} className={cn("panel divide-y divide-hair", className)}>
       <div className="grid items-center gap-3 p-3" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
         {Array.from({ length: columns }).map((_, i) => (
           <Skeleton key={i} className="h-3.5 w-20" />

@@ -12,7 +12,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Surface } from "@/components/ui/surface";
 import { t, getLocale } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
-import { apiGet, apiTry } from "@/lib/api/client";
+import { ApiError, apiGet } from "@/lib/api/client";
 
 type ReviewItem = {
   id: number;
@@ -50,24 +50,44 @@ export default function SellerReviewsPage() {
   const lang = useUIStore((s) => s.language);
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeRating, setActiveRating] = useState<number | null>(null);
   const [page, setPage] = useState(1);
 
-  const fetchReviews = useCallback(async () => {
+  const fetchReviews = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
+    setError(null);
     const params = new URLSearchParams();
     params.set("page", String(page));
     params.set("limit", "20");
     if (activeRating) params.set("rating", String(activeRating));
 
-    const j = await apiTry(apiGet<ApiResponse>(`/api/seller/reviews?${params}`));
-    setData(j);
-    setLoading(false);
+    try {
+      const j = await apiGet<ApiResponse>(
+        `/api/seller/reviews?${params}`,
+        signal,
+      );
+      setData(j);
+    } catch (err) {
+      if (signal?.aborted) return;
+      setData(null);
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : t(useUIStore.getState().language, "loadFailed"),
+      );
+    } finally {
+      if (!signal?.aborted) setLoading(false);
+    }
   }, [activeRating, page]);
 
   useEffect(() => {
-    const t = setTimeout(() => void fetchReviews(), 0);
-    return () => clearTimeout(t);
+    const controller = new AbortController();
+    const timer = setTimeout(() => void fetchReviews(controller.signal), 0);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [fetchReviews]);
 
   const handleRatingFilter = (rating: number | null) => {
@@ -161,7 +181,22 @@ export default function SellerReviewsPage() {
 
       {/* Review list */}
       {loading ? (
-        <LoadingState variant="spinner" />
+        <LoadingState
+          variant="skeleton-list"
+          count={5}
+          label={t(lang, "loading")}
+        />
+      ) : error ? (
+        <EmptyState
+          variant="error"
+          icon={MessageSquare}
+          title={error}
+          action={
+            <Button variant="outline" size="sm" onClick={() => void fetchReviews()}>
+              {t(lang, "retry")}
+            </Button>
+          }
+        />
       ) : !data || data.reviews.length === 0 ? (
         <EmptyState
           variant="dashed"

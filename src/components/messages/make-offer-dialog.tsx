@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -20,7 +20,7 @@ interface MakeOfferDialogProps {
   onOpenChange: (open: boolean) => void;
   listingPrice: number | null;
   marketPrice: number | null;
-  onSubmit: (priceThb: number, note: string) => void;
+  onSubmit: (priceThb: number, note: string) => Promise<boolean>;
   isCounter?: boolean;
   parentOfferId?: number;
 }
@@ -37,6 +37,8 @@ export function MakeOfferDialog({
   const [price, setPrice] = useState("");
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const priceId = useId();
+  const noteId = useId();
 
   const priceNum = parseFloat(price);
   const isValid = !isNaN(priceNum) && priceNum > 0;
@@ -45,7 +47,8 @@ export function MakeOfferDialog({
     if (!isValid) return;
     setSubmitting(true);
     try {
-      await onSubmit(priceNum, note);
+      const submitted = await onSubmit(priceNum, note);
+      if (!submitted) return;
       setPrice("");
       setNote("");
       onOpenChange(false);
@@ -87,10 +90,11 @@ export function MakeOfferDialog({
 
         <div className="space-y-3">
           <div>
-            <label className="mb-1 block text-label">
+            <label htmlFor={priceId} className="mb-1 block text-label">
               {t(lang, "msgOfferPriceLabel")}
             </label>
             <Input
+              id={priceId}
               type="number"
               min="1"
               step="1"
@@ -117,10 +121,11 @@ export function MakeOfferDialog({
           )}
 
           <div>
-            <label className="mb-1 block text-label">
+            <label htmlFor={noteId} className="mb-1 block text-label">
               {t(lang, "msgOfferNoteLabel")}
             </label>
             <Input
+              id={noteId}
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder={t(lang, "msgOfferNotePlaceholder")}

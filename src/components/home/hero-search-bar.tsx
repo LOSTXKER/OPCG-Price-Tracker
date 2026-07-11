@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { Camera, Clock, Search, TrendingUp, Boxes, X } from "lucide-react"
@@ -38,6 +38,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
   const lang = useUIStore((s) => s.language)
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const listboxId = useId()
 
   // Shared engine: 6-result cap, zero debounce (instant feel), and keep prior
   // results on a transient error so the list doesn't blank out mid-typing.
@@ -75,7 +76,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
     if (!trimmed) return
     pushRecent(trimmed)
     setOpen(false)
-    router.push(`/search?q=${encodeURIComponent(trimmed)}`)
+    router.push(`/opcg/search?q=${encodeURIComponent(trimmed)}`)
   }, [pushRecent, router])
 
   const go = useCallback((href: string) => {
@@ -107,10 +108,12 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
   type NavItem = { run: () => void }
   const nav: NavItem[] = []
   if (searching) {
-    for (const c of results) nav.push({ run: () => go(`/cards/${c.cardCode}`) })
-    for (const s of setMatches) nav.push({ run: () => go(`/sets/${s.code}`) })
+    for (const c of results) nav.push({ run: () => go(`/opcg/cards/${c.cardCode}`) })
+    for (const s of setMatches) nav.push({ run: () => go(`/opcg/sets/${s.code}`) })
+    if (trimmed.length >= 2) nav.push({ run: () => commitSearch(query) })
   } else {
     for (const r of filteredRecent) nav.push({ run: () => commitSearch(r) })
+    for (const c of popularCards) nav.push({ run: () => go(`/opcg/cards/${c.cardCode}`) })
   }
 
   const { activeIdx, setActiveIdx, onKeyDown: handleKeyDown } = useSearchKeyboardNav({
@@ -133,6 +136,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
     (searching && (results.length > 0 || setMatches.length > 0 || loading || (trimmed.length >= 2 && results.length === 0))) ||
     (!searching && (filteredRecent.length > 0 || popularCards.length > 0))
   const hasDropdown = open && hasContent
+  const activeOptionId = activeIdx >= 0 ? `${listboxId}-option-${activeIdx}` : undefined
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -165,13 +169,18 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
             onKeyDown={handleKeyDown}
             autoComplete="off"
             aria-label={t(lang, "searchLong")}
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded={hasDropdown}
+            aria-controls={hasDropdown ? listboxId : undefined}
+            aria-activedescendant={hasDropdown ? activeOptionId : undefined}
           />
           {query && (
             <button
               type="button"
               aria-label="Clear search"
               onClick={() => { reset(); inputRef.current?.focus() }}
-              className="ease-chrome rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="tap-safe ease-chrome rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               <X className="size-4" />
             </button>
@@ -183,7 +192,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                 aria-label={t(lang, "photoSearchTitle")}
                 title={t(lang, "photoSearchTitle")}
                 onClick={() => setOpen(false)}
-                className="ease-chrome rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-primary"
+                className="ease-chrome flex size-11 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-primary"
               >
                 <Camera className="size-5" />
               </button>
@@ -193,7 +202,12 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
       </form>
 
       {hasDropdown && (
-        <div className="absolute inset-x-0 top-full z-50 overflow-hidden rounded-b-2xl bg-popover shadow-xl ring-1 ring-hair">
+        <div
+          id={listboxId}
+          role="listbox"
+          aria-label={t(lang, "searchLong")}
+          className="absolute inset-x-0 top-full z-50 overflow-hidden rounded-b-2xl bg-popover shadow-xl ring-1 ring-hair"
+        >
           <div className="max-h-[60vh] overflow-y-auto px-2 pb-3 pt-1">
             {/* CARDS */}
             {searching && loading && results.length === 0 && (
@@ -216,9 +230,12 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                 {results.map((card, i) => (
                   <button
                     key={card.cardCode}
+                    id={`${listboxId}-option-${i}`}
+                    role="option"
+                    aria-selected={activeIdx === i}
                     type="button"
                     onMouseEnter={() => setActiveIdx(i)}
-                    onClick={() => go(`/cards/${card.cardCode}`)}
+                    onClick={() => go(`/opcg/cards/${card.cardCode}`)}
                     className={cn(rowBase, activeIdx === i ? "bg-accent" : "hover:bg-accent/60")}
                   >
                     <SearchResultRow
@@ -247,9 +264,12 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                   return (
                     <button
                       key={s.code}
+                      id={`${listboxId}-option-${i}`}
+                      role="option"
+                      aria-selected={activeIdx === i}
                       type="button"
                       onMouseEnter={() => setActiveIdx(i)}
-                      onClick={() => go(`/sets/${s.code}`)}
+                      onClick={() => go(`/opcg/sets/${s.code}`)}
                       className={cn(rowBase, activeIdx === i ? "bg-accent" : "hover:bg-accent/60")}
                     >
                       <div className="relative size-9 shrink-0 overflow-hidden rounded-md bg-muted">
@@ -293,6 +313,9 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                   >
                     <button
                       type="button"
+                      id={`${listboxId}-option-${i}`}
+                      role="option"
+                      aria-selected={activeIdx === i}
                       onClick={() => commitSearch(item)}
                       className="flex min-w-0 flex-1 items-center gap-3 px-3 py-2.5 text-sm text-left"
                     >
@@ -318,17 +341,27 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
               <>
                 <p className={sectionLabel}>{t(lang, "popular")}</p>
                 <div className="flex flex-wrap gap-2 px-3 pb-3 pt-1">
-                  {popularCards.map((c) => (
-                    <button
-                      key={c.cardCode}
-                      type="button"
-                      onClick={() => go(`/cards/${c.cardCode}`)}
-                      className="ease-chrome inline-flex items-center gap-1.5 rounded-full border border-hair bg-transparent px-3.5 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                      <TrendingUp className="size-3 text-primary/50" aria-hidden />
-                      {getCardName(lang, c)}
-                    </button>
-                  ))}
+                  {popularCards.map((c, popularIndex) => {
+                    const i = filteredRecent.length + popularIndex
+                    return (
+                      <button
+                        key={c.cardCode}
+                        id={`${listboxId}-option-${i}`}
+                        role="option"
+                        aria-selected={activeIdx === i}
+                        type="button"
+                        onMouseEnter={() => setActiveIdx(i)}
+                        onClick={() => go(`/opcg/cards/${c.cardCode}`)}
+                        className={cn(
+                          "tap-safe ease-chrome inline-flex items-center gap-1.5 rounded-full border border-hair bg-transparent px-3.5 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                          activeIdx === i && "bg-accent text-foreground",
+                        )}
+                      >
+                        <TrendingUp className="size-3 text-primary/50" aria-hidden />
+                        {getCardName(lang, c)}
+                      </button>
+                    )
+                  })}
                 </div>
               </>
             )}
@@ -337,8 +370,15 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
             {searching && trimmed.length >= 2 && (
               <button
                 type="button"
+                id={`${listboxId}-option-${results.length + setMatches.length}`}
+                role="option"
+                aria-selected={activeIdx === results.length + setMatches.length}
+                onMouseEnter={() => setActiveIdx(results.length + setMatches.length)}
                 onClick={() => commitSearch(query)}
-                className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-meta motion-base hover:bg-accent/60 hover:text-foreground"
+                className={cn(
+                  "mt-1 flex min-h-11 w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-meta motion-base hover:bg-accent/60 hover:text-foreground",
+                  activeIdx === results.length + setMatches.length && "bg-accent text-foreground",
+                )}
               >
                 <Search className="size-3" />
                 {t(lang, "viewAllResults")} &ldquo;{trimmed}&rdquo;

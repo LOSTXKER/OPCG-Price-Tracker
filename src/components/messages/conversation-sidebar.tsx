@@ -66,9 +66,11 @@ export function ConversationSidebar({
         {tabs.map((t) => (
           <button
             key={t.key}
+            type="button"
             onClick={() => setTab(t.key)}
+            aria-pressed={tab === t.key}
             className={cn(
-              "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
+              "min-h-11 rounded-md px-2.5 py-1 text-xs font-medium transition-colors sm:min-h-0",
               tab === t.key
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:bg-muted"
@@ -86,7 +88,8 @@ export function ConversationSidebar({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t(lang, "msgConvSearchPlaceholder")}
-            className="h-8 pl-8 text-xs"
+            aria-label={t(lang, "msgConvSearchPlaceholder")}
+            className="h-11 pl-8 text-xs sm:h-8"
           />
         </div>
       </div>

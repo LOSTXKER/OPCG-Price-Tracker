@@ -118,7 +118,7 @@ export function NotificationBell() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="relative flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground"
+        className="relative flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground lg:size-8"
         aria-label={t(lang, "notifications")}
       >
         <Bell className="size-4" />
@@ -263,7 +263,7 @@ export function NotificationBell() {
               {/* Footer for price tab */}
               <div className="flex items-center justify-between border-t border-hair px-4 py-2.5">
                 <Link
-                  href="/cards"
+                  href="/opcg/search"
                   onClick={() => setOpen(false)}
                   className="text-xs text-muted-foreground hover:text-foreground"
                 >
@@ -301,7 +301,7 @@ function PriceEmpty({ onNavigate }: { onNavigate: () => void }) {
       <Bell className="size-7 text-muted-foreground/30" />
       <p className="text-sm text-muted-foreground">{t(lang, "noActiveAlerts")}</p>
       <Link
-        href="/cards"
+        href="/opcg/search"
         onClick={onNavigate}
         className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
       >
@@ -335,7 +335,7 @@ function PriceAlertRow({
 
   return (
     <Link
-      href={`/cards/${alert.card.cardCode}`}
+      href={`/opcg/cards/${alert.card.cardCode}`}
       onClick={onNavigate}
       className={cn(
         "flex items-start gap-3 border-b border-hair px-4 py-2.5 transition-colors ease-chrome hover:bg-muted/70",

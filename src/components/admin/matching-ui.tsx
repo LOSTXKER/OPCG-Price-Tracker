@@ -3,6 +3,12 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { RarityBadge } from "@/components/shared/rarity-badge";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 export { relativeTime } from "@/lib/utils/time";
 
 /* ── StatusBadge ── */
@@ -77,34 +83,43 @@ export function Lightbox({
   onClose: () => void;
 }) {
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div className="flex gap-8 p-8" onClick={(e) => e.stopPropagation()}>
-        {images.map((img, i) => (
-          <div key={i} className="flex flex-col items-center gap-3">
-            <p className="text-sm text-white/80 font-semibold">{img.label}</p>
-            <div className="relative w-72 aspect-[63/88] overflow-hidden rounded-xl border-2 border-white/20 bg-black/50">
-              <Image
-                src={img.src}
-                alt={img.label}
-                fill
-                className="object-contain"
-                sizes="288px"
-                unoptimized
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 transition-colors"
+    <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent
+        showCloseButton={false}
+        overlayClassName="bg-black/70 backdrop-blur-sm"
+        className="max-h-[calc(100dvh-2rem)] max-w-[calc(100%-2rem)] overflow-y-auto border-0 bg-transparent p-4 shadow-none sm:max-w-4xl"
       >
-        <X className="size-6" />
-      </button>
-    </div>
+        <DialogTitle className="sr-only">Card image comparison</DialogTitle>
+        <div className="grid gap-6 sm:grid-cols-2 sm:gap-8">
+          {images.map((img, i) => (
+            <div key={i} className="flex flex-col items-center gap-3">
+              <p className="text-sm font-semibold text-white/80">{img.label}</p>
+              <div className="relative aspect-[63/88] w-full max-w-72 overflow-hidden rounded-xl border-2 border-white/20 bg-black/50">
+                <Image
+                  src={img.src}
+                  alt={img.label}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 639px) calc(100vw - 64px), 288px"
+                  unoptimized
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+        <DialogClose
+          render={
+            <button
+              type="button"
+              aria-label="Close image comparison"
+              className="tap-safe absolute right-1 top-1 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20 sm:right-3 sm:top-3"
+            />
+          }
+        >
+          <X className="size-6" />
+        </DialogClose>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -155,23 +170,17 @@ export function CandidatePicker({
             className="accent-info"
           />
           {onZoom ? (
-            <div
-              role="button"
-              tabIndex={0}
+            <button
+              type="button"
+              aria-label={`Zoom ${c.cardCode}`}
               onClick={(e) => {
                 e.preventDefault();
                 onZoom(c);
               }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  onZoom(c);
-                }
-              }}
-              className="cursor-zoom-in"
+              className="tap-safe cursor-zoom-in rounded-sm"
             >
               <CardThumb src={c.imageUrl} />
-            </div>
+            </button>
           ) : (
             <CardThumb src={c.imageUrl} />
           )}

@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StatCard } from "@/components/shared/stat-card";
 import { EmptyState } from "@/components/shared/empty-state";
-import { LoadingState } from "@/components/shared/loading-state";
+import { PageSkeleton } from "@/components/shared/page-skeleton";
 import { PageHeader } from "@/components/layout/page-header";
 import { Surface } from "@/components/ui/surface";
 import { t } from "@/lib/i18n";
@@ -82,21 +82,33 @@ export default function SellerDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const data = await apiGet<Stats>("/api/seller/stats");
-        setStats(data);
-      } catch (err) {
-        setError(err instanceof ApiError ? err.message : "Failed to load stats");
-      } finally {
-        setLoading(false);
-      }
-    })();
+  const fetchStats = useCallback(async (signal?: AbortSignal) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await apiGet<Stats>("/api/seller/stats", signal);
+      setStats(data);
+    } catch (err) {
+      if (signal?.aborted) return;
+      setStats(null);
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : t(useUIStore.getState().language, "sellerLoadFailed"),
+      );
+    } finally {
+      if (!signal?.aborted) setLoading(false);
+    }
   }, []);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetchStats(controller.signal);
+    return () => controller.abort();
+  }, [fetchStats]);
+
   if (loading) {
-    return <LoadingState variant="spinner" />;
+    return <PageSkeleton panels={3} panelHeight={152} label={t(lang, "loading")} />;
   }
 
   if (error || !stats) {
@@ -105,6 +117,11 @@ export default function SellerDashboard() {
         variant="error"
         icon={AlertCircle}
         title={error ?? t(lang, "sellerLoadFailed")}
+        action={
+          <Button variant="outline" size="sm" onClick={() => void fetchStats()}>
+            {t(lang, "retry")}
+          </Button>
+        }
       />
     );
   }

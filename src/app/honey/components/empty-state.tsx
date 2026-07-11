@@ -1,6 +1,6 @@
 import type { Trophy } from "lucide-react";
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { EmptyState as SharedEmptyState } from "@/components/shared/empty-state";
 
 export function EmptyState({ icon, label }: { icon: typeof Trophy; label: string }) {
-  return <KumaEmptyState variant="minimal" icon={icon} title={label} />;
+  return <SharedEmptyState appearance="minimal" icon={icon} title={label} />;
 }

@@ -72,7 +72,7 @@ export default function AdminLoginPage() {
               height={29}
               className="h-auto"
               style={{ width: 40, height: "auto" }}
-              priority
+              preload
             />
           </div>
           <div className="text-center">

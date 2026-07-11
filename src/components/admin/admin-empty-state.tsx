@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { EmptyState } from "@/components/shared/empty-state";
 
 interface AdminEmptyStateProps {
   icon?: LucideIcon;
@@ -15,8 +15,8 @@ export function AdminEmptyState({
   action,
 }: AdminEmptyStateProps) {
   return (
-    <KumaEmptyState
-      variant="admin"
+    <EmptyState
+      appearance="admin"
       icon={icon}
       title={title}
       description={description}

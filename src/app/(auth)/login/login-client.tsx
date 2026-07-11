@@ -120,6 +120,8 @@ export function LoginClient() {
               onChange={(ev) => setEmail(ev.target.value)}
               placeholder="you@example.com"
               disabled={loading}
+              aria-invalid={Boolean(error) || undefined}
+              aria-describedby={error ? "login-error" : undefined}
               className="h-11 pl-10"
             />
           </div>
@@ -135,6 +137,8 @@ export function LoginClient() {
           leftIcon={false}
           showToggle
           inputClassName="h-11"
+          invalid={Boolean(error)}
+          describedBy={error ? "login-error" : undefined}
         />
 
         <div className="flex justify-end">
@@ -146,7 +150,7 @@ export function LoginClient() {
           </Link>
         </div>
 
-        <FormError message={error} />
+        <FormError id="login-error" message={error} />
 
         <Button type="submit" className="h-11 w-full" disabled={loading}>
           {loading ? (

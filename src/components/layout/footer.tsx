@@ -34,16 +34,16 @@ export function Footer() {
 
   const exploreLinks: FooterLink[] = [
     { href: "/", label: t(lang, "market") },
-    { href: "/sets", label: t(lang, "sets") },
-    { href: "/cards", label: t(lang, "cards") },
-    { href: "/trending", label: t(lang, "footerTrending") },
-    { href: "/market-overview", label: t(lang, "marketOverview") },
+    { href: "/opcg/sets", label: t(lang, "sets") },
+    { href: "/opcg/search", label: t(lang, "cards") },
+    { href: "/opcg/trending", label: t(lang, "footerTrending") },
+    { href: "/opcg/market-overview", label: t(lang, "marketOverview") },
   ];
 
   const toolLinks: FooterLink[] = [
-    { href: "/drop-calculator", label: t(lang, "dropCalculator") },
-    { href: "/deck-calculator", label: t(lang, "deckCalculatorNav") },
-    { href: "/compare", label: t(lang, "compareCards") },
+    { href: "/opcg/drop-calculator", label: t(lang, "dropCalculator") },
+    { href: "/opcg/deck-calculator", label: t(lang, "deckCalculatorNav") },
+    { href: "/opcg/compare", label: t(lang, "compareCards") },
     { href: "/portfolio", label: t(lang, "portfolioNav") },
     { href: "/watchlist", label: t(lang, "watchlistNav") },
   ];

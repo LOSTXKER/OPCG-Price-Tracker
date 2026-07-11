@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Search, X } from "lucide-react"
 
@@ -55,6 +55,7 @@ export function CardSearch({
   const { recent, push: pushRecent } = useRecentSearches()
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
+  const listboxId = useId()
 
   useEffect(() => {
     if (!open) return
@@ -80,7 +81,7 @@ export function CardSearch({
       if (card) onSelect?.(card)
       reset()
     } else {
-      router.push(`/cards/${code}`)
+      router.push(`/opcg/cards/${code}`)
     }
   }
 
@@ -102,7 +103,7 @@ export function CardSearch({
             if (!q) return
             pushRecent(q)
             setOpen(false)
-            router.push(`/search?q=${encodeURIComponent(q)}`)
+            router.push(`/opcg/search?q=${encodeURIComponent(q)}`)
           }
         : undefined,
     onEscape: () => {
@@ -142,6 +143,15 @@ export function CardSearch({
           placeholder={placeholder ?? t(lang, "searchByNameOrCode")}
           className="h-11 w-full rounded-xl border border-hair bg-card px-9 text-base outline-none focus-visible:ring-2 focus-visible:ring-ring md:text-sm"
           aria-label={t(lang, "searchByNameOrCode")}
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={showDropdown}
+          aria-controls={showDropdown ? listboxId : undefined}
+          aria-activedescendant={
+            showDropdown && activeIdx >= 0
+              ? `${listboxId}-option-${activeIdx}`
+              : undefined
+          }
         />
         {query && (
           <button
@@ -151,7 +161,7 @@ export function CardSearch({
               inputRef.current?.focus()
             }}
             aria-label={t(lang, "clearAll")}
-            className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground"
+            className="tap-safe absolute top-1/2 right-2.5 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground"
           >
             <X className="size-4" />
           </button>
@@ -160,6 +170,7 @@ export function CardSearch({
 
       {showDropdown && (
         <SearchResultsDropdown
+          id={listboxId}
           results={results as SearchResult[]}
           filteredRecent={results.length > 0 ? [] : filteredRecent}
           loading={loading}

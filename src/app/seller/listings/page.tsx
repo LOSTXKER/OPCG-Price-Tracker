@@ -27,13 +27,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/shared/empty-state";
 import { LoadingState } from "@/components/shared/loading-state";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Surface } from "@/components/ui/surface";
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { useConfirm } from "@/components/shared/confirm-dialog";
 import { t, type TranslationKey } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
-import { apiDelete, apiGet, apiPatch, apiTry } from "@/lib/api/client";
+import { ApiError, apiDelete, apiGet, apiPatch } from "@/lib/api/client";
+import { toast } from "sonner";
 
 type ListingItem = {
   id: number;
@@ -97,28 +99,47 @@ const CONDITION_LABEL: Record<string, string> = {
 export default function SellerListingsPage() {
   const lang = useUIStore((s) => s.language);
   const router = useRouter();
+  const confirmDialog = useConfirm();
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
 
-  const fetchListings = useCallback(async () => {
+  const fetchListings = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
+    setError(null);
     const params = new URLSearchParams();
     params.set("page", String(page));
     params.set("limit", "20");
     if (activeTab !== "ALL") params.set("status", activeTab);
     if (searchQuery.trim()) params.set("q", searchQuery.trim());
 
-    const json = await apiTry(apiGet<ApiResponse>(`/api/seller/listings?${params}`));
-    setData(json);
-    setLoading(false);
+    try {
+      const json = await apiGet<ApiResponse>(
+        `/api/seller/listings?${params}`,
+        signal,
+      );
+      setData(json);
+    } catch (err) {
+      if (signal?.aborted) return;
+      setData(null);
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : t(useUIStore.getState().language, "sellListingLoadError"),
+      );
+    } finally {
+      if (!signal?.aborted) setLoading(false);
+    }
   }, [activeTab, searchQuery, page]);
 
   useEffect(() => {
-    fetchListings();
+    const controller = new AbortController();
+    void fetchListings(controller.signal);
+    return () => controller.abort();
   }, [fetchListings]);
 
   const handleTabChange = (tab: string) => {
@@ -135,8 +156,10 @@ export default function SellerListingsPage() {
   const handleDeactivate = async (id: number) => {
     setActionLoading(id);
     try {
-      const ok = await apiTry(apiPatch(`/api/listings/${id}`, { status: "CANCELLED" }));
-      if (ok !== null) await fetchListings();
+      await apiPatch(`/api/listings/${id}`, { status: "CANCELLED" });
+      await fetchListings();
+    } catch {
+      toast.error(t(lang, "sellListingSaveFailed"));
     } finally {
       setActionLoading(null);
     }
@@ -145,19 +168,30 @@ export default function SellerListingsPage() {
   const handleReactivate = async (id: number) => {
     setActionLoading(id);
     try {
-      const ok = await apiTry(apiPatch(`/api/listings/${id}`, { status: "ACTIVE" }));
-      if (ok !== null) await fetchListings();
+      await apiPatch(`/api/listings/${id}`, { status: "ACTIVE" });
+      await fetchListings();
+    } catch {
+      toast.error(t(lang, "sellListingSaveFailed"));
     } finally {
       setActionLoading(null);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm(t(lang, "sellListDeleteConfirm"))) return;
+    const confirmed = await confirmDialog({
+      title: t(lang, "sellListDeleteConfirm"),
+      description: "",
+      confirmLabel: t(lang, "delete"),
+      cancelLabel: t(lang, "cancel"),
+      variant: "destructive",
+    });
+    if (!confirmed) return;
     setActionLoading(id);
     try {
-      const ok = await apiTry(apiDelete(`/api/listings/${id}`));
-      if (ok !== null) await fetchListings();
+      await apiDelete(`/api/listings/${id}`);
+      await fetchListings();
+    } catch {
+      toast.error(t(lang, "sellListingGenericError"));
     } finally {
       setActionLoading(null);
     }
@@ -218,9 +252,25 @@ export default function SellerListingsPage() {
 
       {/* Content */}
       {loading ? (
-        <LoadingState variant="spinner" label={t(lang, "loading")} />
+        <LoadingState
+          variant="skeleton-list"
+          count={5}
+          label={t(lang, "loading")}
+        />
+      ) : error ? (
+        <EmptyState
+          variant="error"
+          icon={AlertCircle}
+          title={error}
+          action={
+            <Button variant="outline" size="sm" onClick={() => void fetchListings()}>
+              {t(lang, "retry")}
+            </Button>
+          }
+        />
       ) : !data || data.listings.length === 0 ? (
-        <KumaEmptyState
+        <EmptyState
+          mascot="kuma"
           variant="dashed"
           icon={Package}
           title={t(lang, "noListingsFound")}

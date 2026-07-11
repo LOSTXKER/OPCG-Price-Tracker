@@ -67,12 +67,14 @@ export function ForgotPasswordClient() {
                 onChange={(ev) => setEmail(ev.target.value)}
                 placeholder="you@example.com"
                 disabled={loading}
+                aria-invalid={Boolean(error) || undefined}
+                aria-describedby={error ? "forgot-password-error" : undefined}
                 className="h-11 pl-10"
               />
             </div>
           </div>
 
-          <FormError message={error} />
+          <FormError id="forgot-password-error" message={error} />
 
           <Button type="submit" className="h-11 w-full" disabled={loading || !email}>
             {loading ? (

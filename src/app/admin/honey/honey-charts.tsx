@@ -63,9 +63,10 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
             {PERIOD_OPTIONS.map((opt) => (
               <button
                 key={opt.days}
+                type="button"
                 onClick={() => setPeriod(opt.days)}
                 className={cn(
-                  "rounded-md px-2.5 py-1 text-xs font-medium motion-base",
+                  "min-h-11 rounded-md px-2.5 py-1 text-xs font-medium motion-base lg:min-h-0",
                   period === opt.days
                     ? "bg-primary/15 text-primary"
                     : "text-muted-foreground hover:text-foreground",
@@ -77,7 +78,11 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
           </div>
         </div>
         <div className="mt-4 h-56">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            initialDimension={{ width: 320, height: 224 }}
+          >
             <AreaChart data={filtered} margin={{ top: 8, right: 4, bottom: 0, left: -20 }}>
               <defs>
                 <linearGradient id="earnedGrad" x1="0" y1="0" x2="0" y2="1">
@@ -156,7 +161,11 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
       <Surface variant="outline" padding="lg" className="lg:col-span-2">
         <h3 className="text-h4">ธุรกรรมตามประเภท</h3>
         <div className="mt-4 h-56">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            initialDimension={{ width: 320, height: 224 }}
+          >
             <BarChart
               data={sortedTypes.map((t) => ({
                 ...t,

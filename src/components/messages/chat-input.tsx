@@ -7,7 +7,7 @@ import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 
 interface ChatInputProps {
-  onSend: (content: string) => void;
+  onSend: (content: string) => Promise<boolean>;
   disabled?: boolean;
   placeholder?: string;
 }
@@ -21,10 +21,11 @@ export function ChatInput({
   const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSend = useCallback(() => {
+  const handleSend = useCallback(async () => {
     const trimmed = value.trim();
     if (!trimmed) return;
-    onSend(trimmed);
+    const sent = await onSend(trimmed);
+    if (!sent) return;
     setValue("");
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -35,7 +36,7 @@ export function ChatInput({
     (e: React.KeyboardEvent) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        handleSend();
+        void handleSend();
       }
     },
     [handleSend]
@@ -49,7 +50,7 @@ export function ChatInput({
   }, []);
 
   return (
-    <div className="flex items-end gap-2 border-t bg-background p-3">
+    <div className="flex min-w-0 items-end gap-2 border-t bg-background p-3">
       <textarea
         ref={textareaRef}
         value={value}
@@ -57,14 +58,15 @@ export function ChatInput({
         onKeyDown={handleKeyDown}
         onInput={handleInput}
         placeholder={placeholder ?? t(lang, "msgChatPlaceholder")}
+        aria-label={placeholder ?? t(lang, "msgChatPlaceholder")}
         disabled={disabled}
         rows={1}
-        className="flex-1 resize-none rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50"
+        className="min-h-11 min-w-0 flex-1 resize-none rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50"
       />
       <Button
         size="icon"
         aria-label={t(lang, "msgChatSend")}
-        onClick={handleSend}
+        onClick={() => void handleSend()}
         disabled={disabled || !value.trim()}
         className="shrink-0"
       >

@@ -64,7 +64,7 @@ export function ImageGallery({ images, className }: ImageGalleryProps) {
             fill
             className="object-contain transition-transform duration-[var(--dur-base)] group-hover/main:scale-[1.02]"
             sizes="(max-width: 1024px) 100vw, 400px"
-            priority={selected === 0}
+            preload={selected === 0}
           />
         </div>
         <span className="absolute inset-0 flex items-center justify-center bg-black/0 motion-base group-hover/main:bg-black/30">
@@ -119,7 +119,6 @@ export function ImageGallery({ images, className }: ImageGalleryProps) {
               fill
               className="rounded-2xl object-contain"
               sizes="(max-width: 640px) 90vw, 448px"
-              priority
             />
           </div>
           <button

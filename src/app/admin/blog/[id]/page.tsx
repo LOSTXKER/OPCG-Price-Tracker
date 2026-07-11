@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { isMissingTableError } from "@/lib/db-errors";
 import { BlogCategory } from "@/generated/prisma/client";
 import { BlogForm } from "../blog-form";
 
@@ -22,7 +23,10 @@ export default async function EditBlogPostPage(props: {
   const id = Number(idParam);
   if (!Number.isInteger(id) || id < 1) notFound();
 
-  const post = await prisma.blogPost.findUnique({ where: { id } });
+  const post = await prisma.blogPost.findUnique({ where: { id } }).catch((error) => {
+    if (isMissingTableError(error)) redirect("/admin/blog");
+    throw error;
+  });
   if (!post) notFound();
 
   return (

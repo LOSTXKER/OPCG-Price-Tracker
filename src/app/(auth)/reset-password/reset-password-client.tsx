@@ -82,6 +82,8 @@ export function ResetPasswordClient() {
             leftIcon
             showToggle
             inputClassName="h-11"
+            invalid={Boolean(error)}
+            describedBy={error ? "reset-password-error" : undefined}
             hint={<PasswordRules value={password} lang={lang} />}
           />
 
@@ -96,9 +98,11 @@ export function ResetPasswordClient() {
             leftIcon
             showToggle={false}
             inputClassName="h-11"
+            invalid={Boolean(error)}
+            describedBy={error ? "reset-password-error" : undefined}
           />
 
-          <FormError message={error} />
+          <FormError id="reset-password-error" message={error} />
 
           <Button type="submit" className="h-11 w-full" disabled={loading}>
             {loading ? (

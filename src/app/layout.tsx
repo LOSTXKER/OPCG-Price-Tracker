@@ -3,7 +3,7 @@ import { Kanit, JetBrains_Mono } from "next/font/google";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { MainChrome, SiteChrome, FooterChrome, PageContent } from "@/components/layout/main-chrome";
+import { MainChrome, SiteChrome, FooterChrome, PageContent, SkipToContent } from "@/components/layout/main-chrome";
 import { CompareFloatingBar } from "@/components/compare/compare-floating-bar";
 import { ConsentBanner } from "@/components/ads/consent-banner";
 import { ScrollToTop } from "@/components/shared/scroll-to-top";
@@ -33,6 +33,10 @@ const jetbrainsMono = JetBrains_Mono({
 
 import { clientEnv } from "@/lib/env";
 const BASE_URL = clientEnv().NEXT_PUBLIC_APP_URL;
+
+// Keep static rendering while setting the persisted document language before
+// the body is parsed. StoreHydrator keeps it in sync after hydration.
+const INITIAL_HTML_LANG_SCRIPT = `(()=>{const m=document.cookie.match(/(?:^|; )kuma-lang=([^;]*)/);const l=m?decodeURIComponent(m[1]):"TH";document.documentElement.lang=l==="EN"?"en":l==="JP"?"ja":"th"})()`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -80,6 +84,7 @@ export default function RootLayout({
   return (
     <html lang="th" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: INITIAL_HTML_LANG_SCRIPT }} />
         <JsonLd data={websiteJsonLd()} />
       </head>
       <body
@@ -96,6 +101,7 @@ export default function RootLayout({
             <ConfirmDialogProvider>
               <UpgradeDialogProvider>
                 <SiteChrome>
+                  <SkipToContent />
                   <Header />
                 </SiteChrome>
                 <PageContent>{children}</PageContent>

@@ -10,6 +10,7 @@ import { useUIStore } from "@/stores/ui-store"
 export type { SearchResult }
 
 export function SearchResultsDropdown({
+  id,
   results,
   filteredRecent,
   loading,
@@ -17,6 +18,7 @@ export function SearchResultsDropdown({
   onSelectCard,
   onSelectRecent,
 }: {
+  id: string
   results: SearchResult[]
   filteredRecent: string[]
   loading: boolean
@@ -26,10 +28,15 @@ export function SearchResultsDropdown({
 }) {
   const lang = useUIStore((s) => s.language)
   return (
-    <div className="absolute top-full right-0 left-0 z-50 mt-1 overflow-hidden rounded-xl border border-hair bg-popover shadow-lg">
+    <div
+      id={id}
+      role="listbox"
+      aria-label={t(lang, "searchByNameOrCode")}
+      className="absolute top-full right-0 left-0 z-50 mt-1 overflow-hidden rounded-xl border border-hair bg-popover shadow-lg"
+    >
       <div className="max-h-80 overflow-y-auto">
         {loading && results.length === 0 && (
-          <div className="px-4 py-3 text-sm text-muted-foreground">
+          <div role="status" className="px-4 py-3 text-sm text-muted-foreground">
             {t(lang, "searching")}
           </div>
         )}
@@ -39,10 +46,13 @@ export function SearchResultsDropdown({
             {results.map((card, i) => (
               <button
                 key={card.cardCode}
+                id={`${id}-option-${i}`}
+                role="option"
+                aria-selected={activeIdx === i}
                 type="button"
                 onClick={() => onSelectCard(card.cardCode)}
                 className={cn(
-                  "ease-chrome flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-accent",
+                  "ease-chrome flex min-h-11 w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-accent",
                   activeIdx === i && "bg-accent"
                 )}
               >
@@ -60,10 +70,13 @@ export function SearchResultsDropdown({
             {filteredRecent.map((item, i) => (
               <button
                 key={item}
+                id={`${id}-option-${i}`}
+                role="option"
+                aria-selected={activeIdx === i}
                 type="button"
                 onClick={() => onSelectRecent(item)}
                 className={cn(
-                  "ease-chrome flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-accent",
+                  "ease-chrome flex min-h-11 w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-accent",
                   activeIdx === i && "bg-accent"
                 )}
               >
@@ -71,6 +84,12 @@ export function SearchResultsDropdown({
                 {item}
               </button>
             ))}
+          </div>
+        )}
+
+        {results.length === 0 && !loading && filteredRecent.length === 0 && (
+          <div role="status" className="px-4 py-4 text-center text-sm text-muted-foreground">
+            {t(lang, "noResults")}
           </div>
         )}
       </div>

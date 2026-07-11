@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import {
   useCallback,
   useEffect,
-  useLayoutEffect,
+  useId,
   useMemo,
   useRef,
 } from "react"
@@ -28,6 +28,12 @@ import {
 } from "lucide-react"
 
 import { Skeleton } from "@/components/ui/skeleton"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { SearchResultRow } from "@/components/shared/search-result-row"
 import { getCardName, t, type TranslationKey } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -41,13 +47,13 @@ const NAV_ACTIONS: { href: string; labelKey: TranslationKey; icon: LucideIcon }[
   // IA-NAV-06: labels match the canonical destination names used by the header
   // nav + bottom-nav ("หน้าแรก"/"ชุดการ์ด") so a place has one name everywhere.
   { href: "/", labelKey: "home", icon: LineChart },
-  { href: "/sets", labelKey: "sets", icon: LayoutGrid },
-  { href: "/market-overview", labelKey: "marketOverview", icon: BarChart3 },
-  { href: "/decks", labelKey: "decksAndTools", icon: Swords },
+  { href: "/opcg/sets", labelKey: "sets", icon: LayoutGrid },
+  { href: "/opcg/market-overview", labelKey: "marketOverview", icon: BarChart3 },
+  { href: "/opcg/decks", labelKey: "decksAndTools", icon: Swords },
   { href: "/portfolio", labelKey: "portfolioNav", icon: Briefcase },
   { href: "/watchlist", labelKey: "watchlistNav", icon: Heart },
-  { href: "/trending", labelKey: "footerTrending", icon: TrendingUp },
-  { href: "/compare", labelKey: "compareCards", icon: ArrowRightLeft },
+  { href: "/opcg/trending", labelKey: "footerTrending", icon: TrendingUp },
+  { href: "/opcg/compare", labelKey: "compareCards", icon: ArrowRightLeft },
   { href: "/honey", labelKey: "honeyPageTitle", icon: Sparkles },
   // IA-NAV-04: complete the palette — every top destination is reachable.
   { href: "/guide", labelKey: "guide", icon: BookOpen },
@@ -73,8 +79,35 @@ export function CommandSearchTrigger({ onClick }: { onClick: () => void }) {
 export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const router = useRouter()
   const lang = useUIStore((s) => s.language)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const previousFocusRef = useRef<HTMLElement | null>(null)
+  const listboxId = useId()
+  const restoreFocusRef = useRef<HTMLElement | null>(null)
+
+  // This palette is opened by global header buttons/keyboard shortcuts rather
+  // than a DialogTrigger nested under its Root. Remember the last focused
+  // element while closed so Base UI can still restore focus after Escape.
+  useEffect(() => {
+    if (open) return
+
+    const rememberFocus = (event: FocusEvent) => {
+      if (
+        event.target instanceof HTMLElement &&
+        !event.target.closest('[data-slot="dialog-content"]')
+      ) {
+        restoreFocusRef.current = event.target
+      }
+    }
+
+    if (
+      document.activeElement instanceof HTMLElement &&
+      document.activeElement !== document.body &&
+      !document.activeElement.closest('[data-slot="dialog-content"]')
+    ) {
+      restoreFocusRef.current = document.activeElement
+    }
+
+    document.addEventListener("focusin", rememberFocus, true)
+    return () => document.removeEventListener("focusin", rememberFocus, true)
+  }, [open])
 
   // Shared engine: 8-result cap + zero debounce keep the palette's snappy feel.
   const { query, setQuery, results, loading, error, reset } = useCardSearch({
@@ -85,7 +118,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
 
   const goToCard = useCallback((code: string) => {
     onClose()
-    router.push(`/cards/${code}`)
+    router.push(`/opcg/cards/${code}`)
   }, [onClose, router])
 
   const goToPage = useCallback((href: string) => {
@@ -98,7 +131,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
     if (!trimmed) return
     pushRecent(trimmed)
     onClose()
-    router.push(`/search?q=${encodeURIComponent(trimmed)}`)
+    router.push(`/opcg/search?q=${encodeURIComponent(trimmed)}`)
   }, [onClose, pushRecent, router])
 
   const filteredRecent = useMemo(() => {
@@ -116,14 +149,16 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
   }, [query, lang])
 
   const allItems = useMemo(() => {
-    const items: { type: "result" | "nav" | "recent"; key: string }[] = []
+    const items: { type: "result" | "search" | "nav" | "recent"; key: string }[] = []
     for (const r of results) items.push({ type: "result", key: r.cardCode })
+    if (results.length > 0) items.push({ type: "search", key: query.trim() })
     for (const a of matchedNav) items.push({ type: "nav", key: a.href })
     if (results.length === 0) for (const r of filteredRecent) items.push({ type: "recent", key: r })
     return items
-  }, [results, matchedNav, filteredRecent])
+  }, [results, matchedNav, filteredRecent, query])
 
-  const navBase = results.length
+  const searchIndex = results.length
+  const navBase = results.length + (results.length > 0 ? 1 : 0)
   const recentBase = results.length + matchedNav.length
 
   const { activeIdx, setActiveIdx, onKeyDown: handleKeyDown } = useSearchKeyboardNav({
@@ -160,40 +195,24 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
     return () => clearTimeout(tm)
   }, [open, refreshRecent, reset, setActiveIdx])
 
-  useLayoutEffect(() => {
-    if (!open) return
-    const active = document.activeElement
-    previousFocusRef.current = active instanceof HTMLElement ? active : null
-    inputRef.current?.focus()
-    return () => {
-      previousFocusRef.current?.focus({ preventScroll: true })
-      previousFocusRef.current = null
-    }
-  }, [open])
-
-  if (!open) return null
+  const activeOptionId =
+    activeIdx >= 0 ? `${listboxId}-option-${activeIdx}` : undefined
 
   return (
-    <div
-      className="fixed inset-0 z-[100]"
-      role="dialog"
-      aria-modal="true"
-      aria-label={t(lang, "searchCardsDots")}
-    >
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in-0 duration-150"
-        onClick={onClose}
-      />
-
-      {/* Modal */}
-      <div className="relative mx-auto mt-[15vh] w-full max-w-lg px-4 animate-in fade-in-0 slide-in-from-top-2 duration-150">
-        <div className="overflow-hidden rounded-2xl bg-popover shadow-[var(--elev-overlay)] ring-1 ring-border/50">
+    <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
+      <DialogContent
+        showCloseButton={false}
+        finalFocus={restoreFocusRef}
+        className="top-[15vh] block max-w-lg translate-y-0 overflow-hidden rounded-2xl p-0 sm:max-w-lg"
+      >
+        <DialogTitle className="sr-only">
+          {t(lang, "searchCardsDots")}
+        </DialogTitle>
           {/* Search input */}
           <div className="flex items-center gap-3 border-b border-hair px-4">
             <Search className="size-4 shrink-0 text-muted-foreground" />
             <input
-              ref={inputRef}
+              autoFocus
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value)
@@ -201,9 +220,13 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               }}
               onKeyDown={handleKeyDown}
               placeholder={t(lang, "searchCardsCodesDots")}
-              className="h-12 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground/50"
-              aria-expanded={allItems.length > 0}
+              className="h-12 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
+              role="combobox"
+              aria-label={t(lang, "searchCardsDots")}
+              aria-expanded={open}
               aria-autocomplete="list"
+              aria-controls={listboxId}
+              aria-activedescendant={activeOptionId}
             />
             {query && (
               <button
@@ -219,21 +242,25 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               type="button"
               onClick={() => commitSearch(query)}
               disabled={!query.trim()}
-              className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground motion-base hover:bg-primary/90 disabled:opacity-30"
+              className="min-h-11 shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground motion-base hover:bg-primary/90 disabled:opacity-30 sm:min-h-0"
             >
               {t(lang, "search")}
             </button>
-            <button
-              type="button"
-              onClick={onClose}
+            <DialogClose
+              aria-label={t(lang, "close")}
               className="rounded-md border border-transparent dark:border-hair bg-muted/40 px-1.5 py-0.5 font-mono text-micro text-muted-foreground"
             >
               ESC
-            </button>
+            </DialogClose>
           </div>
 
           {/* Results */}
-          <div className="max-h-[50vh] overflow-y-auto">
+          <div
+            id={listboxId}
+            role="listbox"
+            aria-label={t(lang, "searchCardsDots")}
+            className="max-h-[50vh] overflow-y-auto"
+          >
             {loading && results.length === 0 && (
               <div className="p-2 space-y-1">
                 {[0, 1, 2].map((i) => (
@@ -257,7 +284,10 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                 {results.map((card, i) => (
                   <button
                     key={card.cardCode}
+                    id={`${listboxId}-option-${i}`}
                     type="button"
+                    role="option"
+                    aria-selected={activeIdx === i}
                     onClick={() => goToCard(card.cardCode)}
                     className={cn(
                       "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left motion-base",
@@ -274,9 +304,15 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                   </button>
                 ))}
                 <button
+                  id={`${listboxId}-option-${searchIndex}`}
                   type="button"
+                  role="option"
+                  aria-selected={activeIdx === searchIndex}
                   onClick={() => commitSearch(query)}
-                  className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-meta motion-base hover:bg-accent/60 hover:text-foreground"
+                  className={cn(
+                    "mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-meta motion-base hover:bg-accent/60 hover:text-foreground",
+                    activeIdx === searchIndex && "bg-accent text-foreground",
+                  )}
                 >
                   <Search className="size-3" />
                   {t(lang, "viewAllResults")} &ldquo;{query.trim()}&rdquo;
@@ -295,7 +331,10 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                   return (
                     <button
                       key={action.href}
+                      id={`${listboxId}-option-${navBase + i}`}
                       type="button"
+                      role="option"
+                      aria-selected={activeIdx === navBase + i}
                       onClick={() => goToPage(action.href)}
                       className={cn(
                         "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm motion-base",
@@ -324,7 +363,10 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                 {filteredRecent.map((item, i) => (
                   <button
                     key={item}
+                    id={`${listboxId}-option-${recentBase + i}`}
                     type="button"
+                    role="option"
+                    aria-selected={activeIdx === recentBase + i}
                     onClick={() => commitSearch(item)}
                     className={cn(
                       "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm motion-base",
@@ -353,8 +395,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               </div>
             )}
           </div>
-        </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }
