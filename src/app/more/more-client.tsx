@@ -194,25 +194,25 @@ export default function MoreClient() {
               icon={Package}
               iconClassName="bg-info-soft text-info"
               title={t(language, "sets")}
-              href="/sets"
+              href="/opcg/sets"
             />
             <GroupedRow
               icon={TrendingUp}
               iconClassName="bg-success-soft text-success"
               title={t(language, "trendingShort")}
-              href="/trending"
+              href="/opcg/trending"
             />
             <GroupedRow
               icon={ArrowRightLeft}
               iconClassName="bg-warning-soft text-warning"
               title={t(language, "compareCards")}
-              href="/compare"
+              href="/opcg/compare"
             />
             <GroupedRow
               icon={Swords}
               iconClassName="bg-primary/12 text-primary"
               title={t(language, "decksAndTools")}
-              href="/decks"
+              href="/opcg/decks"
             />
           </GroupedSection>
 

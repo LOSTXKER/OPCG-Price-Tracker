@@ -7,6 +7,7 @@ import { t } from "@/lib/i18n";
 import { useTierLimits } from "@/hooks/use-tier-limits";
 import { LockOverlay } from "@/components/shared/upgrade-badge";
 import { Surface } from "@/components/ui/surface";
+import { SettingsSectionHeader } from "./settings-section-header";
 
 export function SectionExport() {
   const lang = useUIStore((s) => s.language);
@@ -46,7 +47,7 @@ export function SectionExport() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-h2 hidden md:block">{t(lang, "goToExport")}</h2>
+      <SettingsSectionHeader title={t(lang, "goToExport")} />
 
       <LockOverlay locked={locked} featureKey="csvExport">
         <div className="grid gap-3 sm:grid-cols-2">

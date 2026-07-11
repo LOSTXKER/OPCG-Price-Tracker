@@ -7,6 +7,7 @@ import { AccountProfileHero } from "./account-profile-hero";
 import { AccountProfileInfo } from "./account-profile-info";
 import { AccountSocialLinks } from "./account-social-links";
 import { AccountCoverImage } from "./account-cover-image";
+import { SettingsSectionHeader } from "./settings-section-header";
 
 type Props = {
   user: DbUser;
@@ -18,7 +19,7 @@ export function SectionAccount({ user, onUserUpdate }: Props) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-h2 hidden md:block">{t(lang, "profileTabAccount")}</h2>
+      <SettingsSectionHeader title={t(lang, "profileTabAccount")} />
 
       <AccountProfileHero user={user} lang={lang} onUserUpdate={onUserUpdate} />
       <AccountCoverImage user={user} lang={lang} onUserUpdate={onUserUpdate} />

@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Surface } from "@/components/ui/surface";
+import { SettingsSectionHeader } from "@/components/settings/settings-section-header";
 import { useUIStore } from "@/stores/ui-store";
 import { apiGet, apiTry } from "@/lib/api/client";
 import { t, getLocale } from "@/lib/i18n";
@@ -30,10 +31,10 @@ export function SectionBilling() {
 
   return (
     <div className="space-y-6">
-      <div className="hidden md:block">
-        <h2 className="text-h2">{t(lang, "billingHistory")}</h2>
-        <p className="page-subtitle">{t(lang, "billingSubtitle")}</p>
-      </div>
+      <SettingsSectionHeader
+        title={t(lang, "billingHistory")}
+        description={t(lang, "billingSubtitle")}
+      />
 
       <Surface variant="outline" padding="lg">
         {loading ? (

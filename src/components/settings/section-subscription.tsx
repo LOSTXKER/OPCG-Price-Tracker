@@ -1,10 +1,9 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Bell,
-  Check,
   CreditCard,
   Eye,
   FolderOpen,
@@ -13,8 +12,10 @@ import {
   Loader2,
   Sparkles,
   Wallet,
-  X,
 } from "lucide-react";
+import { PlanCards } from "@/components/billing/plan-cards";
+import { PlanFeatureComparison } from "@/components/billing/plan-feature-comparison";
+import { SettingsSectionHeader } from "@/components/settings/settings-section-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,10 +33,10 @@ import { cn } from "@/lib/utils";
 import type { Language } from "@/lib/i18n";
 import { type ProfileStats, type SubscriptionData } from "@/components/profile/profile-types";
 import {
-  PLANS,
-  PLAN_HIGHLIGHTS,
   buildFeatureSections,
   getLimits,
+  isPlanCurrent,
+  type TierKey,
   type TierLimits,
 } from "@/lib/billing";
 import { useMarketplaceFees } from "@/hooks/use-marketplace-fees";
@@ -61,8 +62,6 @@ type PaymentMethod = {
 // ---------------------------------------------------------------------------
 // Tier limits – derived from @/lib/billing (single source of truth)
 // ---------------------------------------------------------------------------
-type TierKey = "FREE" | "PRO" | "PRO_PLUS";
-
 function getLimitsForTier(tier: string): TierLimits {
   return getLimits(tier as UserTier);
 }
@@ -70,27 +69,6 @@ function getLimitsForTier(tier: string): TierLimits {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function toEffectiveTier(tier: string): TierKey {
-  // Treat both subscription and lifetime variants identically — display
-  // tier never differentiates them. Use `resolveEffectiveTier(...)` from
-  // `@/lib/billing` when subscription expiry must also be considered.
-  const t = tier as UserTier;
-  if (t === "PRO_PLUS" || t === "LIFETIME_PRO_PLUS") return "PRO_PLUS";
-  if (t === "PRO" || t === "LIFETIME_PRO") return "PRO";
-  return "FREE";
-}
-
-function isCurrentPlan(planKey: string, userTier: string) {
-  const effective = toEffectiveTier(userTier);
-  return planKey === effective;
-}
-
-function tierName(key: string, lang: Language) {
-  if (key === "FREE") return t(lang, "freePlan");
-  if (key === "PRO") return t(lang, "proPlan");
-  return t(lang, "proPlusPlan");
-}
 
 const CANCEL_REASONS = [
   "cancelReasonTooExpensive", "cancelReasonNotUseful",
@@ -138,37 +116,6 @@ function UsageRow({ icon: Icon, label, desc, current, max, color, lang }: {
 }
 
 // ---------------------------------------------------------------------------
-// Render helpers (same as pricing page)
-// ---------------------------------------------------------------------------
-function RenderValue({ val, planKey, lang }: { val: string | boolean; planKey: string; lang: Language }) {
-  if (typeof val === "boolean") {
-    return val
-      ? <Check className="mx-auto h-4 w-4 text-success" />
-      : <X className="mx-auto h-4 w-4 text-muted-foreground/30" />;
-  }
-  const isUnlimited = val === "∞";
-  const isPaid = planKey !== "FREE";
-  return (
-    <span className={isPaid && isUnlimited ? "font-semibold text-foreground" : "font-medium"}>
-      {isUnlimited ? t(lang, "unlimited") : val}
-    </span>
-  );
-}
-
-function RenderHighlightValue({ val, lang }: { val: string | boolean; lang: Language }) {
-  if (typeof val === "boolean") {
-    return val
-      ? <Check className="h-3.5 w-3.5 text-success" />
-      : <X className="h-3.5 w-3.5 text-muted-foreground/30" />;
-  }
-  return (
-    <span className="font-semibold text-foreground">
-      {val === "∞" ? t(lang, "unlimited") : val}
-    </span>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 export function SectionSubscription({ subscription, stats }: Props) {
@@ -179,8 +126,8 @@ export function SectionSubscription({ subscription, stats }: Props) {
     () => buildFeatureSections({ marketplaceFees }),
     [marketplaceFees],
   );
-  const findRow = (key: string) =>
-    featureSections.flatMap((s) => s.rows).find((r) => r.key === key);
+  const isCurrentPlan = (planKey: TierKey) =>
+    isPlanCurrent(planKey, subscription.tier);
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(null);
   const [loadingPM, setLoadingPM] = useState(!!subscription.hasStripeSubscription);
@@ -234,11 +181,10 @@ export function SectionSubscription({ subscription, stats }: Props) {
 
   return (
     <div className="space-y-8">
-      {/* Page header */}
-      <div className="hidden md:block">
-        <h2 className="text-h2">{t(lang, "subscription")}</h2>
-        <p className="page-subtitle">{t(lang, "yourPlan")}</p>
-      </div>
+      <SettingsSectionHeader
+        title={t(lang, "subscription")}
+        description={t(lang, "yourPlan")}
+      />
 
       {/* Trial banner */}
       {isTrial && (
@@ -250,84 +196,57 @@ export function SectionSubscription({ subscription, stats }: Props) {
         </Surface>
       )}
 
-      {/* ─── Plan Cards (3-column grid, same as /pricing) ─── */}
-      <div className="grid items-start gap-4 sm:grid-cols-3">
-        {PLANS.map((plan) => {
-          const isCurrent = isCurrentPlan(plan.key, subscription.tier);
+      <PlanCards
+        lang={lang}
+        featureSections={featureSections}
+        variant="subscription"
+        isCurrentPlan={isCurrentPlan}
+        renderAction={(plan, current) => {
+          if (current && subscription.hasStripeSubscription) {
+            return (
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={openPortal}
+                  disabled={portalLoading}
+                >
+                  {portalLoading && <Loader2 className="mr-1 size-3 animate-spin" />}
+                  {t(lang, "manageSubscription")}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-destructive hover:text-destructive"
+                  onClick={handleCancelManage}
+                  disabled={portalLoading}
+                >
+                  {t(lang, "cancel")}
+                </Button>
+              </div>
+            );
+          }
+          if (current) {
+            return (
+              <Button disabled variant="outline" size="sm" className="w-full">
+                {t(lang, "currentPlan")}
+              </Button>
+            );
+          }
+          if (plan.key === "FREE") return null;
           return (
-            <div
-              key={plan.key}
-              className={cn(
-                "relative flex flex-col rounded-2xl p-5",
-                plan.cardClass,
-                isCurrent && "ring-2 ring-primary/40",
-              )}
-            >
-              {/* Plan name + icon */}
-              <div className="flex items-center gap-2">
-                {plan.icon && <plan.icon className={cn("size-5", plan.iconClass)} />}
-                <div>
-                  <h3 className="text-base font-bold leading-tight">{tierName(plan.key, lang)}</h3>
-                  <p className="text-meta">{t(lang, plan.subtitleKey)}</p>
-                </div>
-              </div>
-
-              {/* Price */}
-              {plan.monthlyPrice ? (
-                <div className="mt-3 flex items-baseline gap-1">
-                  <span className="text-2xl font-extrabold tracking-tight">{plan.monthlyPrice}</span>
-                  <span className="text-meta">{t(lang, "perMonth")}</span>
-                </div>
-              ) : (
-                <p className="mt-3 text-2xl font-extrabold tracking-tight">{t(lang, "freePlan")}</p>
-              )}
-
-              {/* Key highlights */}
-              <div className="mt-4 flex-1 space-y-2 border-t border-hair pt-4">
-                {PLAN_HIGHLIGHTS[plan.key]?.map((featureKey) => {
-                  const row = findRow(featureKey);
-                  if (!row) return null;
-                  const val = row.values[plan.key];
-                  return (
-                    <div key={featureKey} className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">{t(lang, row.labelKey)}</span>
-                      <RenderHighlightValue val={val} lang={lang} />
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* CTA */}
-              <div className="mt-4">
-                {isCurrent ? (
-                  subscription.hasStripeSubscription ? (
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="flex-1" onClick={openPortal} disabled={portalLoading}>
-                        {portalLoading && <Loader2 className="mr-1 size-3 animate-spin" />}
-                        {t(lang, "manageSubscription")}
-                      </Button>
-                      <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive"
-                        onClick={handleCancelManage} disabled={portalLoading}>
-                        {t(lang, "cancel")}
-                      </Button>
-                    </div>
-                  ) : (
-                    <Button disabled variant="outline" size="sm" className="w-full">
-                      {t(lang, "currentPlan")}
-                    </Button>
-                  )
-                ) : plan.key === "FREE" ? null : (
-                  <Link href="/pricing">
-                    <Button size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                      {t(lang, "upgradePlan")}
-                    </Button>
-                  </Link>
-                )}
-              </div>
-            </div>
+            <Link href="/pricing">
+              <Button
+                size="sm"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                {t(lang, "upgradePlan")}
+              </Button>
+            </Link>
           );
-        })}
-      </div>
+        }}
+      />
 
       {/* Trial CTA (Free users who haven't tried) */}
       {isFreeNoTrial && (
@@ -394,108 +313,12 @@ export function SectionSubscription({ subscription, stats }: Props) {
         </div>
       )}
 
-      {/* ─── Full Feature Comparison (same as /pricing) ─── */}
-      <div>
-        <h3 className="mb-4 text-center text-base font-bold">{t(lang, "compareAllFeatures")}</h3>
-
-        {/* Mobile: per-plan card stack */}
-        <div className="space-y-4 sm:hidden">
-          {PLANS.map((plan) => {
-            const isCurrent = isCurrentPlan(plan.key, subscription.tier);
-            return (
-              <Surface
-                key={plan.key}
-                variant="outline"
-                className={cn(
-                  "p-4 space-y-4",
-                  isCurrent && "border-primary/40",
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  {plan.icon && <plan.icon className={cn("size-5", plan.iconClass)} />}
-                  <h4 className={cn("text-h5", isCurrent && "text-foreground")}>
-                    {tierName(plan.key, lang)}
-                  </h4>
-                  {isCurrent && <span className="text-xs text-primary">★</span>}
-                </div>
-                <div className="space-y-4">
-                  {featureSections.map((section) => (
-                    <div key={section.titleKey} className="space-y-2">
-                      <p className="text-eyebrow text-muted-foreground/60">
-                        {t(lang, section.titleKey)}
-                      </p>
-                      <div className="divide-y divide-hair">
-                        {section.rows.map((row) => (
-                          <div
-                            key={row.key}
-                            className="flex items-center justify-between gap-3 py-2 text-sm"
-                          >
-                            <span className="text-muted-foreground">
-                              {t(lang, row.labelKey)}
-                            </span>
-                            <span className="text-right">
-                              <RenderValue val={row.values[plan.key]} planKey={plan.key} lang={lang} />
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Surface>
-            );
-          })}
-        </div>
-
-        {/* Desktop: comparison table */}
-        <div className="hidden sm:block">
-          <table className="w-full border-separate border-spacing-0 text-sm">
-            <thead>
-              <tr>
-                <th className="pb-3 text-left font-medium text-muted-foreground" />
-                {PLANS.map((plan) => {
-                  const isCurrent = isCurrentPlan(plan.key, subscription.tier);
-                  return (
-                    <th key={plan.key} className="pb-3 text-center font-bold">
-                      <div className="flex items-center justify-center gap-1.5">
-                        {plan.icon && <plan.icon className={cn("size-4", plan.iconClass)} />}
-                        <span className={isCurrent ? "text-foreground" : ""}>{tierName(plan.key, lang)}</span>
-                        {isCurrent && <span className="text-xs text-primary">★</span>}
-                      </div>
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
-            <tbody>
-              {featureSections.map((section) => (
-                <Fragment key={section.titleKey}>
-                  <tr>
-                    <td colSpan={4} className="pb-2 pt-5 text-eyebrow text-muted-foreground/60">
-                      {t(lang, section.titleKey)}
-                    </td>
-                  </tr>
-                  {section.rows.map((row) => (
-                    <tr key={row.key} className="border-b border-hair last:border-b-0">
-                      <td className="py-2.5 pr-4 text-muted-foreground">{t(lang, row.labelKey)}</td>
-                      {PLANS.map((plan) => (
-                        <td key={plan.key} className={cn(
-                          "py-2.5 text-center text-sm",
-                          isCurrentPlan(plan.key, subscription.tier) && "text-foreground",
-                        )}>
-                          <span className="inline-flex items-center justify-center">
-                            <RenderValue val={row.values[plan.key]} planKey={plan.key} lang={lang} />
-                          </span>
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </Fragment>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <PlanFeatureComparison
+        lang={lang}
+        featureSections={featureSections}
+        variant="subscription"
+        isCurrentPlan={isCurrentPlan}
+      />
 
       {/* ─── Cancel reason dialog ─── */}
       <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
@@ -519,7 +342,7 @@ export function SectionSubscription({ subscription, stats }: Props) {
             ))}
           </div>
           <textarea
-            className="w-full rounded-lg border border-hair bg-background px-3 py-2 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-lg border border-hair bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
             rows={3} placeholder={t(lang, "cancelReasonComment")} value={cancelComment} onChange={(e) => setCancelComment(e.target.value)}
           />
           <DialogFooter>

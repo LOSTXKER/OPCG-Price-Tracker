@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Surface } from "@/components/ui/surface";
 import { Switch } from "@/components/ui/switch";
 import { SavedPill } from "@/components/shared/saved-pill";
+import { SettingsSectionHeader } from "@/components/settings/settings-section-header";
 import { apiPatch, apiTry } from "@/lib/api/client";
 import { useUIStore } from "@/stores/ui-store";
 import { clientEnv } from "@/lib/env";
@@ -181,11 +182,10 @@ export function SectionNotifications({ settings, onReload }: Props) {
 
   return (
     <div className="space-y-8">
-      {/* Header — hidden on mobile; SettingsShell renders the title + back button. */}
-      <div className="hidden md:block">
-        <h2 className="text-h2">{t(lang, "notifications")}</h2>
-        <p className="page-subtitle">{t(lang, "notificationsSubtitle")}</p>
-      </div>
+      <SettingsSectionHeader
+        title={t(lang, "notifications")}
+        description={t(lang, "notificationsSubtitle")}
+      />
 
       {/* LINE connection banner */}
       {!settings.lineConnected && (

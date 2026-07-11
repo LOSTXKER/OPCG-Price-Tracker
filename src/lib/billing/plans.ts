@@ -12,8 +12,22 @@ import type { TranslationKey } from "@/lib/i18n";
  * importing the static `FEATURE_SECTIONS`.
  */
 
-const TIERS = ["FREE", "PRO", "PRO_PLUS"] as const;
-type TierKey = (typeof TIERS)[number];
+export const TIERS = ["FREE", "PRO", "PRO_PLUS"] as const;
+export type TierKey = (typeof TIERS)[number];
+
+/** Map subscription and lifetime tiers onto the three plans shown in billing UI. */
+export function toPlanTier(tier: string | null | undefined): TierKey {
+  if (tier === "PRO_PLUS" || tier === "LIFETIME_PRO_PLUS") return "PRO_PLUS";
+  if (tier === "PRO" || tier === "LIFETIME_PRO") return "PRO";
+  return "FREE";
+}
+
+export function isPlanCurrent(
+  planKey: TierKey,
+  userTier: string | null | undefined,
+): boolean {
+  return planKey === toPlanTier(userTier);
+}
 
 function num(v: number): string | boolean {
   if (v === Infinity) return "∞";
@@ -193,14 +207,15 @@ export function findRow(key: string) {
   return ALL_ROWS.find((r) => r.key === key);
 }
 
-export const PLAN_HIGHLIGHTS: Record<string, string[]> = {
+export const PLAN_HIGHLIGHTS: Record<TierKey, string[]> = {
   FREE: ["priceHistory", "portfolioCards", "priceAlerts", "compareCards"],
   PRO: ["priceHistory", "csvExport", "portfolioCount", "priceAlerts"],
   PRO_PLUS: ["priceHistory", "portfolioCards", "priceAlerts", "autoPricing"],
 };
 
 export type PlanDef = {
-  key: string;
+  key: TierKey;
+  nameKey: TranslationKey;
   icon: typeof Crown | null;
   iconClass: string;
   cardClass: string;
@@ -219,6 +234,7 @@ export type PlanDef = {
 export const PLANS: PlanDef[] = [
   {
     key: "FREE",
+    nameKey: "freePlan",
     icon: null,
     iconClass: "",
     cardClass: "bg-card shadow-[var(--panel-shadow)]",
@@ -226,6 +242,7 @@ export const PLANS: PlanDef[] = [
   },
   {
     key: "PRO",
+    nameKey: "proPlan",
     icon: Crown,
     iconClass: "text-foreground",
     cardClass: "bg-card shadow-[var(--panel-shadow)] ring-1 ring-primary/25",
@@ -240,6 +257,7 @@ export const PLANS: PlanDef[] = [
   },
   {
     key: "PRO_PLUS",
+    nameKey: "proPlusPlan",
     icon: Sparkles,
     iconClass: "text-foreground",
     cardClass: "bg-card shadow-[var(--panel-shadow)]",

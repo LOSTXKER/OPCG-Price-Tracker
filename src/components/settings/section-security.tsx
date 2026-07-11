@@ -25,6 +25,7 @@ import { t, getLocale } from "@/lib/i18n";
 import { PasswordInput } from "@/components/auth/password-input";
 import { PasswordRules } from "@/components/auth/password-rules";
 import { FormError } from "@/components/auth/form-error";
+import { SettingsSectionHeader } from "./settings-section-header";
 
 const passwordSchema = z
   .object({
@@ -228,7 +229,7 @@ export function SectionSecurity() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-h2 hidden md:block">{t(lang, "security")}</h2>
+      <SettingsSectionHeader title={t(lang, "security")} />
 
       {/* Change password */}
       <Surface variant="outline" padding="lg" className="space-y-4">

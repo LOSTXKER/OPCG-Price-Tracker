@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Surface } from "@/components/ui/surface";
+import { SettingsSectionHeader } from "./settings-section-header";
 import { ApiError, apiDelete, apiGet, apiPatch, apiPost, apiTry } from "@/lib/api/client";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
@@ -142,9 +143,9 @@ export function SectionAddresses() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-h2 hidden md:block">{t(lang, "addresses")}</h2>
-        {!showForm && (
+      <SettingsSectionHeader
+        title={t(lang, "addresses")}
+        action={!showForm ? (
           <Button
             size="sm"
             onClick={() => { resetForm(); setShowForm(true); }}
@@ -153,8 +154,8 @@ export function SectionAddresses() {
             <Plus className="size-3.5" />
             {t(lang, "addAddress")}
           </Button>
-        )}
-      </div>
+        ) : undefined}
+      />
 
       {/* Add/Edit form */}
       {showForm && (
@@ -165,10 +166,11 @@ export function SectionAddresses() {
           <div className="grid gap-3 sm:grid-cols-2">
             {formFields.map(({ key, labelKey, required }) => (
               <div key={key} className="space-y-1.5">
-                <label className="text-eyebrow">
+                <label htmlFor={`address-${key}`} className="text-eyebrow">
                   {t(lang, labelKey)}{required && " *"}
                 </label>
                 <Input
+                  id={`address-${key}`}
                   value={form[key]}
                   onChange={(e) => setForm((prev) => ({ ...prev, [key]: e.target.value }))}
                   placeholder={t(lang, labelKey)}
