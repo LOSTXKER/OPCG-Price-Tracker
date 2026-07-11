@@ -154,6 +154,7 @@ export function AdminDataTable<T>({
   const py = compact ? "py-2" : "py-3";
   const showMobileFallback = !disableMobileFallback;
   const mobileTableHidden = showMobileFallback ? "hidden sm:table" : "table";
+  const sortableColumns = columns.filter((column) => column.sortable);
 
   return (
     <Surface
@@ -187,18 +188,31 @@ export function AdminDataTable<T>({
             {columns.map((col) => (
               <th
                 key={col.key}
+                aria-sort={
+                  col.sortable
+                    ? activeSort.key === col.key
+                      ? activeSort.direction === "asc"
+                        ? "ascending"
+                        : activeSort.direction === "desc"
+                          ? "descending"
+                          : "none"
+                      : "none"
+                    : undefined
+                }
                 className={cn(
                   "px-4 py-2.5 text-left text-eyebrow text-muted-foreground/70",
-                  col.sortable && "cursor-pointer select-none hover:text-foreground",
                   col.pin === "left" && "sticky left-0 z-[5] bg-muted/30",
                   stickyHeader && col.pin === "left" && "z-[11]",
                   col.headerClassName,
                 )}
-                onClick={col.sortable ? () => handleSort(col.key) : undefined}
               >
-                <span className="inline-flex items-center gap-1">
-                  {col.header}
-                  {col.sortable && (
+                {col.sortable ? (
+                  <button
+                    type="button"
+                    onClick={() => handleSort(col.key)}
+                    className="inline-flex min-h-11 items-center gap-1 select-none rounded-sm hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-0"
+                  >
+                    {col.header}
                     <span className="inline-flex text-muted-foreground/40">
                       {activeSort.key === col.key ? (
                         activeSort.direction === "asc" ? (
@@ -212,8 +226,10 @@ export function AdminDataTable<T>({
                         <ArrowUpDown className="size-3" />
                       )}
                     </span>
-                  )}
-                </span>
+                  </button>
+                ) : (
+                  <span>{col.header}</span>
+                )}
               </th>
             ))}
           </tr>
@@ -281,7 +297,41 @@ export function AdminDataTable<T>({
         </tbody>
       </table>
       {showMobileFallback && (
-        <div className="divide-y divide-hair sm:hidden">
+        <div className="sm:hidden">
+          {sortableColumns.length > 0 && (
+            <div
+              aria-label="เรียงลำดับ"
+              className="no-sb scroll-fade-x flex items-center gap-1 overflow-x-auto border-b border-hair bg-muted/20 px-3 py-2"
+            >
+              {sortableColumns.map((column) => {
+                const active = activeSort.key === column.key && activeSort.direction != null;
+                const Icon = active
+                  ? activeSort.direction === "asc"
+                    ? ArrowUp
+                    : ArrowDown
+                  : ArrowUpDown;
+                return (
+                  <button
+                    key={column.key}
+                    type="button"
+                    aria-pressed={active}
+                    aria-label={`เรียงตาม ${column.header}`}
+                    onClick={() => handleSort(column.key)}
+                    className={cn(
+                      "flex min-h-11 shrink-0 items-center gap-1 rounded-lg px-3 text-xs font-medium motion-base",
+                      active
+                        ? "bg-primary/15 text-primary"
+                        : "bg-background text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    {column.header}
+                    <Icon aria-hidden className="size-3.5" />
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          <div className="divide-y divide-hair">
           {loading ? (
             Array.from({ length: loadingRows }).map((_, i) => (
               <div key={i} className="flex items-center gap-3 px-4 py-3">
@@ -340,6 +390,7 @@ export function AdminDataTable<T>({
               );
             })
           )}
+          </div>
         </div>
       )}
     </Surface>
@@ -361,12 +412,26 @@ function MobileRowWrapper({
 }) {
   return (
     <div
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
       className={cn(
         "flex items-start gap-3 px-4 py-3 transition-colors",
-        onClick && "cursor-pointer active:bg-muted/40",
+        onClick &&
+          "cursor-pointer active:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
         isSelected && "bg-primary/[0.06]",
       )}
       onClick={onClick}
+      onKeyDown={
+        onClick
+          ? (event) => {
+              if (event.target !== event.currentTarget) return;
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
     >
       {selectable && (
         <input
@@ -374,7 +439,7 @@ function MobileRowWrapper({
           checked={isSelected}
           onChange={onToggle}
           onClick={(e) => e.stopPropagation()}
-          className="accent-primary mt-1 size-3.5 cursor-pointer rounded-sm"
+          className="tap-safe accent-primary mt-1 size-5 cursor-pointer rounded-sm sm:size-3.5"
         />
       )}
       <div className="min-w-0 flex-1">{children}</div>
@@ -405,12 +470,26 @@ function MobileDefaultRow<T>({
   return (
     <>
       <div
+        role={onRowClick ? "button" : undefined}
+        tabIndex={onRowClick ? 0 : undefined}
         className={cn(
           "flex items-start gap-3 px-4 py-3 transition-colors",
-          onRowClick && "cursor-pointer active:bg-muted/40",
+          onRowClick &&
+            "cursor-pointer active:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
           isSelected && "bg-primary/[0.06]",
         )}
         onClick={onRowClick ? () => onRowClick(row) : undefined}
+        onKeyDown={
+          onRowClick
+            ? (event) => {
+                if (event.target !== event.currentTarget) return;
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  onRowClick(row);
+                }
+              }
+            : undefined
+        }
       >
         {selectable && (
           <input
@@ -418,7 +497,7 @@ function MobileDefaultRow<T>({
             checked={isSelected}
             onChange={onToggle}
             onClick={(e) => e.stopPropagation()}
-            className="accent-primary mt-1 size-3.5 cursor-pointer rounded-sm"
+            className="tap-safe accent-primary mt-1 size-5 cursor-pointer rounded-sm sm:size-3.5"
           />
         )}
         <div className="min-w-0 flex-1 space-y-1.5">
@@ -477,14 +556,28 @@ function DataTableRow<T>({
   return (
     <>
       <tr
+        role={onRowClick ? "button" : undefined}
+        tabIndex={onRowClick ? 0 : undefined}
         className={cn(
           "border-b border-hair transition-colors",
-          onRowClick && "cursor-pointer",
+          onRowClick &&
+            "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
           isSelected
             ? "bg-primary/[0.06]"
             : "hover:bg-muted/30",
         )}
         onClick={onRowClick ? () => onRowClick(row) : undefined}
+        onKeyDown={
+          onRowClick
+            ? (event) => {
+                if (event.target !== event.currentTarget) return;
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  onRowClick(row);
+                }
+              }
+            : undefined
+        }
       >
         {selectable && (
           <td className="px-3" onClick={(e) => e.stopPropagation()}>

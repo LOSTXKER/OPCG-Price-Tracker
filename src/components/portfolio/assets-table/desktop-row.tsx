@@ -38,7 +38,7 @@ export const AssetRowComponent = memo(function AssetRowComponent({
   const name = getCardName(lang as "TH" | "EN" | "JP", row)
   const value = holdingValue(row)
   const pnlResult = pnlCalc(row)
-  const detailHref = `/cards/${row.cardCode}`
+  const detailHref = `/opcg/cards/${row.cardCode}`
   const viewLabel = t(lang, "viewDetails")
 
   const gameSlug = row.game?.slug ?? DEFAULT_GAME

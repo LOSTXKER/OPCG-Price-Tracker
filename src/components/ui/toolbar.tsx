@@ -94,7 +94,7 @@ export function ToolbarSearch({
   return (
     <div
       className={cn(
-        "flex items-center gap-1.5 rounded-lg border border-transparent dark:border-hair bg-muted/30 motion-base",
+        "flex min-h-11 items-center gap-1.5 rounded-lg border border-transparent dark:border-hair bg-muted/30 motion-base sm:min-h-0",
         size === "sm" ? "px-3 py-1.5" : "px-3 py-2",
         containerClassName,
       )}
@@ -104,7 +104,7 @@ export function ToolbarSearch({
         autoFocus={collapsible}
         type="text"
         className={cn(
-          "min-w-0 bg-transparent outline-none placeholder:text-muted-foreground/50",
+          "min-w-0 bg-transparent outline-none placeholder:text-muted-foreground",
           size === "sm" ? "w-28 text-sm sm:w-40" : "w-full text-sm",
           className,
         )}
@@ -168,7 +168,7 @@ export function ToolbarSortDropdown<TKey extends string = string>({
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "flex items-center gap-1.5 rounded-lg border border-border/30 bg-muted/20 px-3 py-1.5 text-xs font-medium text-foreground/80 motion-base hover:bg-muted/70",
+          "flex min-h-11 items-center gap-1.5 rounded-lg border border-border/30 bg-muted/20 px-3 py-1.5 text-xs font-medium text-foreground/80 motion-base hover:bg-muted/70 sm:min-h-0",
           className,
         )}
       >
@@ -218,7 +218,7 @@ export const FilterButton = forwardRef<HTMLButtonElement, FilterButtonProps>(
         ref={ref}
         type="button"
         className={cn(
-          "flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium motion-base",
+          "flex min-h-11 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium motion-base sm:min-h-0",
           active
             ? "border-primary/40 bg-primary/10 text-primary hover:bg-primary/15"
             : "border-border/30 bg-muted/20 text-foreground/80 hover:bg-muted/70",

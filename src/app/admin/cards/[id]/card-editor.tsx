@@ -331,7 +331,7 @@ export function CardEditor({ card }: { card: CardData }) {
               icon={History}
             >
               <div className="max-h-60 overflow-y-auto">
-                <table className="w-full text-xs">
+                <table className="hidden w-full text-xs sm:table">
                   <thead>
                     <tr className="border-b text-muted-foreground">
                       <th className="pb-1 text-left">วันที่</th>
@@ -360,6 +360,23 @@ export function CardEditor({ card }: { card: CardData }) {
                     ))}
                   </tbody>
                 </table>
+                <div className="divide-y divide-hair sm:hidden">
+                  {card.prices.map((p) => (
+                    <div
+                      key={p.id}
+                      className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 py-3"
+                    >
+                      <p className="text-body-sm font-medium">{p.source}</p>
+                      <p className="text-body-sm font-medium tabular-nums">
+                        {p.priceJpy != null ? formatJpy(p.priceJpy) : "—"}
+                      </p>
+                      <p className="text-meta">
+                        {new Date(p.scrapedAt).toLocaleDateString("th-TH")}
+                      </p>
+                      <p className="text-meta text-right">ราคา JPY</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </AdminPanel>
           )}

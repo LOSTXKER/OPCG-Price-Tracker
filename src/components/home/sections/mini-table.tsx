@@ -18,7 +18,7 @@ export function HomeMiniTable({
 }) {
   const lang = useUIStore((s) => s.language)
   const title = type === "gainers" ? t(lang, "topGainers") : t(lang, "topLosers")
-  const linkHref = type === "gainers" ? "/trending?tab=gainers" : "/trending?tab=losers"
+  const linkHref = type === "gainers" ? "/opcg/trending?tab=gainers" : "/opcg/trending?tab=losers"
   const TrendIcon = type === "gainers" ? TrendingUp : TrendingDown
   const trendIconClass = type === "gainers" ? "text-price-up" : "text-price-down"
 
@@ -31,7 +31,7 @@ export function HomeMiniTable({
         </p>
         <Link
           href={linkHref}
-          className="ease-chrome flex items-center gap-1 rounded-md px-1.5 py-0.5 text-meta hover:bg-muted hover:text-foreground"
+          className="ease-chrome flex min-h-11 items-center gap-1 rounded-md px-1.5 py-0.5 text-meta hover:bg-muted hover:text-foreground sm:min-h-0"
         >
           {t(lang, "more")}
           <ArrowRight className="size-3" />
@@ -50,7 +50,7 @@ export function HomeMiniTable({
             return (
               <Link
                 key={card.cardCode}
-                href={`/cards/${card.cardCode}`}
+                href={`/opcg/cards/${card.cardCode}`}
                 className="ease-chrome flex min-h-11 flex-1 items-center gap-2.5 rounded-lg px-1.5 py-2 hover:bg-muted/70"
               >
                 <span className="w-4 shrink-0 text-center font-price text-sm tabular-nums text-muted-foreground/70">

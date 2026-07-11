@@ -187,7 +187,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
                       <span
                         className={cn(
                           "block tabular-nums text-micro",
-                          pnlPct >= 0 ? "text-price-up/80" : "text-price-down/80",
+                          pnlPct >= 0 ? "text-price-up" : "text-price-down",
                         )}
                       >
                         {pnlPct >= 0 ? "+" : ""}

@@ -182,7 +182,7 @@ export function MeecardAsksRail({
             <button
               type="button"
               onClick={() => setAlertOpen(true)}
-              className="ease-chrome inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-border px-4 text-sm font-semibold text-foreground hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="ease-chrome inline-flex h-11 items-center justify-center gap-1.5 rounded-full border border-border px-4 text-sm font-semibold text-foreground hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-10"
             >
               <BellPlus className="size-4" aria-hidden /> {t(lang, "notifyWhenListed")}
             </button>
@@ -271,7 +271,7 @@ export function MeecardAsksRail({
               <div className="hairline-t mt-4 flex justify-end pt-3">
                 <Link
                   href={marketHref}
-                  className="ease-chrome text-label inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
+                  className="ease-chrome text-label inline-flex min-h-11 items-center gap-1 text-muted-foreground hover:text-foreground sm:min-h-0"
                 >
                   {t(lang, "viewAll")} <ChevronRight className="size-3.5" aria-hidden />
                 </Link>

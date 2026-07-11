@@ -6,6 +6,7 @@ import { ApiError, apiPost, apiTry } from "@/lib/api/client";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthState } from "@/hooks/use-auth-state";
 import { invalidateSettings } from "@/hooks/use-settings";
+import { stripGamePrefix } from "@/lib/game/constants";
 
 const SETS_RE = /^\/sets\/([^/]+)/;
 const CARDS_RE = /^\/cards\/([^/]+)/;
@@ -21,8 +22,9 @@ export function MissionTracker() {
 
   useEffect(() => {
     if (authed !== true) return;
+    const routePath = stripGamePrefix(pathname);
 
-    apiPost("/api/honey/missions", { action: "track-by-path", path: pathname }).catch(
+    apiPost("/api/honey/missions", { action: "track-by-path", path: routePath }).catch(
       async (e) => {
         if (e instanceof ApiError && e.status === 401) {
           invalidateSettings();
@@ -35,7 +37,7 @@ export function MissionTracker() {
       },
     );
 
-    const setsMatch = SETS_RE.exec(pathname);
+    const setsMatch = SETS_RE.exec(routePath);
     if (setsMatch) {
       void apiTry(
         apiPost("/api/honey/raffle-missions", {
@@ -46,7 +48,7 @@ export function MissionTracker() {
       );
     }
 
-    const cardsMatch = CARDS_RE.exec(pathname);
+    const cardsMatch = CARDS_RE.exec(routePath);
     if (cardsMatch) {
       void apiTry(
         apiPost("/api/honey/raffle-missions", {
@@ -57,7 +59,7 @@ export function MissionTracker() {
       );
     }
 
-    if (pathname === "/trending") {
+    if (routePath === "/trending") {
       const today = new Date().toISOString().slice(0, 10);
       void apiTry(
         apiPost("/api/honey/raffle-missions", {

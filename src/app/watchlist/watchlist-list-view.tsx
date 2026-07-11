@@ -253,7 +253,7 @@ function WatchlistRow({
         nameBlock
       ) : (
         <Link
-          href={`/cards/${entry.card.cardCode}`}
+          href={`/opcg/cards/${entry.card.cardCode}`}
           className="flex min-w-0 flex-1 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {nameBlock}

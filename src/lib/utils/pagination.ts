@@ -21,3 +21,18 @@ export function buildPageRange(current: number, total: number): (number | "...")
   pages.push(total)
   return pages
 }
+
+/** Compact page window that keeps 44px controls within a phone viewport. */
+export function buildMobilePageRange(
+  current: number,
+  total: number,
+): (number | "...")[] {
+  if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1)
+
+  const pages: (number | "...")[] = [1]
+  if (current > 2) pages.push("...")
+  if (current > 1 && current < total) pages.push(current)
+  if (current < total - 1) pages.push("...")
+  pages.push(total)
+  return pages
+}

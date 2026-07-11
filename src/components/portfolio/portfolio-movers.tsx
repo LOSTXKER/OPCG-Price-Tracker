@@ -67,7 +67,7 @@ export function PortfolioMovers({
             return (
               <Link
                 key={row.itemId}
-                href={code ? `/cards/${code}` : "#"}
+                href={code ? `/opcg/cards/${code}` : "#"}
                 className="ease-chrome flex shrink-0 items-baseline gap-1.5 transition-colors hover:text-foreground"
               >
                 <span className="max-w-32 truncate text-body-sm text-muted-foreground">
@@ -110,7 +110,7 @@ export function PortfolioMovers({
             return (
               <Link
                 key={row.itemId}
-                href={code ? `/cards/${code}` : "#"}
+                href={code ? `/opcg/cards/${code}` : "#"}
                 className="ease-chrome flex min-h-11 items-center gap-3 py-2 transition-colors hover:bg-muted/40"
               >
                 {/* Card thumbnail */}

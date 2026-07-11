@@ -10,6 +10,7 @@ import { useHydrated } from "@/hooks/use-hydrated"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
+import { stripGamePrefix } from "@/lib/game/constants"
 
 const MAX_VISIBLE = 4
 
@@ -29,7 +30,7 @@ export function CompareFloatingBar() {
   const hydrated = useHydrated()
 
   if (!hydrated) return null
-  if (pathname === "/compare") return null
+  if (stripGamePrefix(pathname) === "/compare") return null
   if (seen) return null
   if (items.length === 0) return null
 
@@ -84,7 +85,7 @@ export function CompareFloatingBar() {
 
           {/* Compare CTA */}
           <Link
-            href="/compare"
+            href="/opcg/compare"
             aria-disabled={!ready}
             className={cn(
               "inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground motion-base",

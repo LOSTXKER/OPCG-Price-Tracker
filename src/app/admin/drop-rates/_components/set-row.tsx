@@ -61,6 +61,27 @@ export function SetRow({
   const getCount = (setId: number, rarity: string, isParallel: boolean): number =>
     rarityCounts[`${setId}-${rarity}-${isParallel}`] ?? 0;
 
+  const getRowState = (dr: SetData["dropRates"][number], idx: number) => {
+    const key = `${set.id}-${dr.rarity}`;
+    const isParallel = dr.rarity.startsWith("P-");
+    const prevIsParallel =
+      idx > 0 && set.dropRates[idx - 1].rarity.startsWith("P-");
+
+    return {
+      key,
+      isSaving: saving === key,
+      isSaved: saved.has(key),
+      isParallel,
+      pool: getCount(set.id, dr.rarity, isParallel),
+      dirty: isDirty(dr.rarity),
+      showSeparator: isParallel && !prevIsParallel && idx > 0,
+      suggestedRate: calcSuggestedRate(
+        editRates[dr.rarity]?.avgPerBox ?? "",
+        set.packsPerBox,
+      ),
+    };
+  };
+
   return (
     <Surface
       variant="outline"
@@ -124,7 +145,7 @@ export function SetRow({
           {expanded && (
             <div className="border-t border-hair px-5 py-4">
               {/* Info bar */}
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
                   <span className="text-meta">
                     ซอง/กล่อง:{" "}
@@ -169,8 +190,8 @@ export function SetRow({
               </div>
 
               {/* Table */}
-              <div className="overflow-x-auto rounded-lg border border-hair">
-                <table className="w-full text-sm">
+              <div className="rounded-lg border border-hair sm:overflow-x-auto">
+                <table className="hidden w-full text-sm sm:table">
                   <thead>
                     <tr className="border-b border-hair bg-muted/30">
                       <th className="w-20 px-4 py-2.5 text-left text-eyebrow text-muted-foreground/70">
@@ -190,23 +211,15 @@ export function SetRow({
                   </thead>
                   <tbody>
                     {set.dropRates.map((dr, idx) => {
-                      const key = `${set.id}-${dr.rarity}`;
-                      const isSaving = saving === key;
-                      const isSaved = saved.has(key);
-                      const isParallel = dr.rarity.startsWith("P-");
-                      const pool = getCount(set.id, dr.rarity, isParallel);
-                      const dirty = isDirty(dr.rarity);
-
-                      const prevIsParallel =
-                        idx > 0 &&
-                        set.dropRates[idx - 1].rarity.startsWith("P-");
-                      const showSeparator =
-                        isParallel && !prevIsParallel && idx > 0;
-
-                      const suggestedRate = calcSuggestedRate(
-                        editRates[dr.rarity]?.avgPerBox ?? "",
-                        set.packsPerBox,
-                      );
+                      const {
+                        isSaving,
+                        isSaved,
+                        isParallel,
+                        pool,
+                        dirty,
+                        showSeparator,
+                        suggestedRate,
+                      } = getRowState(dr, idx);
 
                       return (
                         <tr
@@ -319,6 +332,116 @@ export function SetRow({
                     })}
                   </tbody>
                 </table>
+                <div className="divide-y divide-hair sm:hidden">
+                  {set.dropRates.map((dr, idx) => {
+                    const {
+                      isSaving,
+                      isSaved,
+                      isParallel,
+                      pool,
+                      dirty,
+                      showSeparator,
+                      suggestedRate,
+                    } = getRowState(dr, idx);
+
+                    return (
+                      <div
+                        key={dr.rarity}
+                        className={cn(
+                          "space-y-3 p-4",
+                          dirty && "bg-info-soft",
+                          showSeparator && "border-t-2 border-t-warning/30",
+                        )}
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <span
+                            className={cn(
+                              "font-mono text-sm font-bold",
+                              isParallel ? "text-warning" : "text-foreground",
+                            )}
+                          >
+                            {dr.rarity}
+                          </span>
+                          <span className="text-meta">
+                            ในพูล {pool || "—"}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <label className="space-y-1.5">
+                            <span className="text-meta">เฉลี่ย/กล่อง</span>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={editRates[dr.rarity]?.avgPerBox ?? ""}
+                              onChange={(e) =>
+                                setEditRates((prev) => ({
+                                  ...prev,
+                                  [dr.rarity]: {
+                                    ...prev[dr.rarity],
+                                    avgPerBox: e.target.value,
+                                  },
+                                }))
+                              }
+                              className="h-11 text-right text-sm tabular-nums"
+                            />
+                          </label>
+                          <label className="space-y-1.5">
+                            <span className="text-meta">อัตรา/ซอง</span>
+                            <Input
+                              type="number"
+                              step="0.0001"
+                              value={editRates[dr.rarity]?.ratePerPack ?? ""}
+                              onChange={(e) =>
+                                setEditRates((prev) => ({
+                                  ...prev,
+                                  [dr.rarity]: {
+                                    ...prev[dr.rarity],
+                                    ratePerPack: e.target.value,
+                                  },
+                                }))
+                              }
+                              placeholder={
+                                suggestedRate ? `≈${suggestedRate}` : undefined
+                              }
+                              className="h-11 text-right text-sm tabular-nums"
+                            />
+                          </label>
+                        </div>
+
+                        <div className="flex justify-end gap-2">
+                          {dirty && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => resetRate(dr.rarity)}
+                            >
+                              <RotateCcw className="size-3.5" />
+                              รีเซ็ต
+                            </Button>
+                          )}
+                          <Button
+                            variant={dirty ? "default" : "outline"}
+                            size="sm"
+                            onClick={() =>
+                              saveRate(set.id, dr.rarity, set.code)
+                            }
+                            disabled={isSaving}
+                          >
+                            {isSaving ? (
+                              <Loader2 className="size-3.5 animate-spin" />
+                            ) : isSaved && !dirty ? (
+                              <Check className="size-3.5 text-success" />
+                            ) : (
+                              <Save className="size-3.5" />
+                            )}
+                            บันทึก
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}

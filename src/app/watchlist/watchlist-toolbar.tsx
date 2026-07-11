@@ -133,7 +133,7 @@ export function WatchlistToolbar({
           <button
             type="button"
             onClick={onClearSelection}
-            className="text-meta text-muted-foreground hover:text-foreground"
+            className="min-h-11 px-2 text-meta text-muted-foreground hover:text-foreground sm:min-h-0"
           >
             {t(lang, "watchlistClearSelection")}
           </button>
@@ -149,7 +149,8 @@ export function WatchlistToolbar({
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={t(lang, "watchlistSearchPlaceholder")}
-            className="h-9 w-full rounded-lg border border-transparent bg-muted pl-8 pr-2.5 text-sm placeholder:text-muted-foreground/60 focus:border-ring focus:outline-none dark:border-hair"
+            aria-label={t(lang, "watchlistSearchPlaceholder")}
+            className="h-11 w-full rounded-lg border border-transparent bg-muted pl-8 pr-2.5 text-sm placeholder:text-muted-foreground focus:border-ring focus:outline-none dark:border-hair sm:h-9"
           />
         </div>
 
@@ -229,36 +230,26 @@ export function WatchlistToolbar({
           </FilterModal>
 
           {/* View toggle */}
-          <div className="inline-flex h-9 shrink-0 items-center rounded-lg border border-transparent bg-muted p-0.5 dark:border-hair">
-            <button
-              type="button"
-              onClick={() => onViewChange("list")}
-              className={cn(
-                "ease-chrome inline-flex h-8 items-center justify-center rounded-lg px-2 text-xs font-medium",
-                view === "list"
-                  ? "bg-primary/15 text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-              title={t(lang, "watchlistViewList")}
-              aria-label={t(lang, "watchlistViewList")}
-            >
-              <List className="size-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => onViewChange("grid")}
-              className={cn(
-                "ease-chrome inline-flex h-8 items-center justify-center rounded-lg px-2 text-xs font-medium",
-                view === "grid"
-                  ? "bg-primary/15 text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-              title={t(lang, "watchlistViewGrid")}
-              aria-label={t(lang, "watchlistViewGrid")}
-            >
-              <LayoutGrid className="size-4" />
-            </button>
-          </div>
+          <SegmentedControl<WatchView>
+            value={view}
+            onChange={onViewChange}
+            size="sm"
+            ariaLabel={`${t(lang, "watchlistViewList")} / ${t(lang, "watchlistViewGrid")}`}
+            options={[
+              {
+                value: "list",
+                label: <span className="sr-only">{t(lang, "watchlistViewList")}</span>,
+                ariaLabel: t(lang, "watchlistViewList"),
+                icon: List,
+              },
+              {
+                value: "grid",
+                label: <span className="sr-only">{t(lang, "watchlistViewGrid")}</span>,
+                ariaLabel: t(lang, "watchlistViewGrid"),
+                icon: LayoutGrid,
+              },
+            ]}
+          />
 
           {/* Edit toggle — enters/exits multi-select mode */}
           <button

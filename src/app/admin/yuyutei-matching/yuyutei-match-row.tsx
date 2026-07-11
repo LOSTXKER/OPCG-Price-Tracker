@@ -13,7 +13,7 @@ import {
 import type { Mapping, MappingCard } from "./yuyutei-types";
 import { METHOD_INFO, yuyuHd } from "./yuyutei-types";
 
-interface MatchRowProps {
+export interface MatchRowProps {
   m: Mapping;
   showStatus: boolean;
   isChecked: boolean;
@@ -285,5 +285,201 @@ export function YuyuteiMatchRow({
         </div>
       </td>
     </tr>
+  );
+}
+
+export function YuyuteiMatchCard({
+  m,
+  showStatus,
+  isChecked,
+  isSaving,
+  isAiProcessing,
+  effectiveCardId,
+  onToggle,
+  onApprove,
+  onUnmatch,
+  onReject,
+  onAiSuggest,
+  onPickCandidate,
+  onLightbox,
+}: MatchRowProps) {
+  const isMatched = m.status === "matched" && m.matchedCard;
+  const isSuggested = m.status === "suggested" && m.matchedCardId;
+  const suggestedCard = isSuggested
+    ? m.candidates.find((c) => c.id === m.matchedCardId) ?? m.matchedCard
+    : null;
+
+  return (
+    <article
+      className={cn(
+        "space-y-4 p-4 motion-base",
+        isChecked && "bg-primary/[0.06]",
+        !isChecked && m.status === "suggested" && "bg-info/[0.02]",
+        !isChecked && m.status === "pending" && "bg-warning/[0.02]",
+        !isChecked && m.status === "matched" && "bg-success/[0.02]",
+        m.status === "rejected" && "opacity-60",
+      )}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <label className="flex min-h-11 cursor-pointer items-center gap-3">
+          <input
+            type="checkbox"
+            checked={isChecked}
+            onChange={() => onToggle(m.id, false)}
+            className="size-4 accent-primary"
+            aria-label={`เลือก ${m.scrapedCode}`}
+          />
+          <span className="text-eyebrow">รายการ Yuyutei</span>
+        </label>
+        {showStatus && <StatusBadge status={m.status} />}
+      </div>
+
+      <div className="flex items-start gap-3">
+        <button
+          type="button"
+          onClick={() =>
+            onLightbox(
+              m,
+              isMatched ? m.matchedCard! : suggestedCard ?? undefined,
+            )
+          }
+          className="shrink-0 cursor-zoom-in rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label={`ขยายรูป ${m.scrapedCode}`}
+        >
+          <CardThumb src={yuyuHd(m.scrapedImage)} size="md" />
+        </button>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="font-mono text-sm font-bold">
+              {m.scrapedCode}
+            </span>
+            {m.scrapedRarity && (
+              <RarityBadge rarity={m.scrapedRarity} size="sm" />
+            )}
+          </div>
+          <p className="text-body-sm text-muted-foreground">
+            {m.scrapedName}
+          </p>
+          <p className="text-meta font-mono">
+            {m.setCode.toUpperCase()} · {m.yuyuteiId}
+          </p>
+          <p className="mt-2 font-mono text-sm font-bold text-primary">
+            {formatJpy(m.priceJpy)}
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-2 border-t border-hair pt-4">
+        <p className="text-eyebrow">การ์ดในฐานข้อมูล</p>
+        {isMatched ? (
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => onLightbox(m, m.matchedCard!)}
+              className="shrink-0 cursor-zoom-in rounded-sm ring-2 ring-success/50 focus-visible:outline-none focus-visible:ring-ring"
+              aria-label={`ขยายรูป ${m.matchedCard!.cardCode}`}
+            >
+              <CardThumb src={m.matchedCard!.imageUrl} size="md" />
+            </button>
+            <div className="min-w-0">
+              <p className="font-mono text-sm font-bold text-success">
+                {m.matchedCard!.cardCode}
+              </p>
+              <RarityBadge rarity={m.matchedCard!.rarity} size="sm" />
+              <p className="text-meta truncate">
+                {m.matchedCard!.nameEn ?? m.matchedCard!.nameJp}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <CandidatePicker
+            candidates={m.candidates}
+            currentId={effectiveCardId}
+            onPick={(cardId) => onPickCandidate(m.id, cardId)}
+            onZoom={(card) => onLightbox(m, card)}
+          />
+        )}
+      </div>
+
+      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 border-t border-hair pt-3">
+        <dt className="text-meta">วิธีจับคู่</dt>
+        <dd className="text-right text-body-sm">
+          {m.matchMethod ? (
+            <>
+              <span className="font-mono">{m.matchMethod}</span>
+              {m.geminiScore != null && (
+                <span className="ml-2 font-mono text-muted-foreground">
+                  {Math.round(m.geminiScore * 100)}%
+                </span>
+              )}
+            </>
+          ) : (
+            "—"
+          )}
+        </dd>
+        <dt className="text-meta">อัปเดตล่าสุด</dt>
+        <dd className="text-right text-body-sm">
+          {m.actionByUser ? (
+            <>
+              {m.actionByUser.displayName ||
+                m.actionByUser.email.split("@")[0]}
+              <span className="ml-2 text-meta">{relativeTime(m.actionAt)}</span>
+            </>
+          ) : (
+            "—"
+          )}
+        </dd>
+      </dl>
+
+      <div className="flex flex-wrap items-center justify-end gap-2 border-t border-hair pt-3">
+        {isSaving || isAiProcessing ? (
+          <span className="inline-flex min-h-11 items-center gap-2 text-meta" role="status">
+            <Loader2 className="size-4 animate-spin" />
+            กำลังบันทึก…
+          </span>
+        ) : isMatched ? (
+          <button
+            type="button"
+            onClick={() => onUnmatch(m.id)}
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-warning/30 px-3 text-sm text-warning hover:bg-warning/10"
+          >
+            <Undo2 className="size-3.5" />
+            ยกเลิกจับคู่
+          </button>
+        ) : (
+          <>
+            {m.scrapedImage && m.candidates.length > 0 && (
+              <button
+                type="button"
+                onClick={() => onAiSuggest(m.id)}
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-sm font-semibold text-white hover:bg-violet-700"
+              >
+                <Sparkles className="size-3.5" />
+                AI
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                if (effectiveCardId) onApprove(m.id, effectiveCardId);
+              }}
+              disabled={!effectiveCardId}
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-success px-3 text-sm font-semibold text-success-foreground hover:bg-success/90 disabled:opacity-30"
+            >
+              <Check className="size-3.5" />
+              อนุมัติ
+            </button>
+            <button
+              type="button"
+              onClick={() => onReject(m.id)}
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-danger/30 px-3 text-sm text-danger hover:bg-danger/10"
+            >
+              <X className="size-3.5" />
+              ปฏิเสธ
+            </button>
+          </>
+        )}
+      </div>
+    </article>
   );
 }

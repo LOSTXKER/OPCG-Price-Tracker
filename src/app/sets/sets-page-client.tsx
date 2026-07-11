@@ -100,7 +100,7 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
     <>
       {/* Type filter — horizontal scrollable tab bar. Static (not sticky): it
           scrolls away with the page instead of floating over the grid. */}
-      <div className="no-sb -mx-5 flex items-center gap-1 overflow-x-auto border-b border-hair px-5 sm:mx-0 sm:px-0">
+      <div className="no-sb scroll-fade-x -mx-5 flex items-center gap-1 overflow-x-auto border-b border-hair px-5 sm:mx-0 sm:px-0">
         {filterOptions.map((opt) => {
           const active = activeType === opt.value;
           return (
@@ -150,8 +150,12 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
                 )}
 
                 <div className="grid grid-cols-3 gap-x-3 gap-y-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
-                  {list.map((s) => (
-                    <SetCard key={s.id} set={s} />
+                  {list.map((s, setIndex) => (
+                    <SetCard
+                      key={s.id}
+                      set={s}
+                      preload={idx === 0 && setIndex === 0}
+                    />
                   ))}
                 </div>
 
@@ -169,7 +173,13 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
 
 // ─── Set card (poster tile — art-forward, floats on canvas) ──────────
 
-function SetCard({ set }: { set: SetWithCard }) {
+function SetCard({
+  set,
+  preload = false,
+}: {
+  set: SetWithCard;
+  preload?: boolean;
+}) {
   const lang = useUIStore((s) => s.language);
   return (
     <SetPosterTile
@@ -179,6 +189,7 @@ function SetCard({ set }: { set: SetWithCard }) {
       showCount
       count={set.productCardCount}
       countLabel={t(lang, "cardsCount")}
+      preload={preload}
     />
   );
 }

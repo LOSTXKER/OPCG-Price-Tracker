@@ -70,7 +70,7 @@ function CardEditFull({
   return (
     <div className="space-y-5">
       <div className="flex gap-4">
-        <Link href={`/cards/${row.cardCode}`} className="shrink-0">
+        <Link href={`/opcg/cards/${row.cardCode}`} className="shrink-0">
           <div className="relative aspect-[5/7] w-[72px] overflow-hidden rounded-lg bg-muted shadow-md">
             {row.imageUrl ? (
               <Image src={row.imageUrl} alt={name} fill className="object-cover" sizes="72px" />

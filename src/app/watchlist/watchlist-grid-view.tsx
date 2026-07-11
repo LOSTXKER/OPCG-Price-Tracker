@@ -149,7 +149,7 @@ export function WatchlistGridView({
                     <DropdownMenu>
                       <DropdownMenuTrigger
                         aria-label={t(lang, "moreActions")}
-                        className="ease-chrome inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-transparent bg-muted/30 text-muted-foreground transition-colors hover:border-hair hover:bg-muted/70 hover:text-primary dark:border-hair"
+                        className="ease-chrome inline-flex size-11 shrink-0 items-center justify-center rounded-md border border-transparent bg-muted/30 text-muted-foreground transition-colors hover:border-hair hover:bg-muted/70 hover:text-primary dark:border-hair sm:size-9"
                       >
                         <MoreHorizontal className="size-4" />
                       </DropdownMenuTrigger>
@@ -186,10 +186,10 @@ export function WatchlistGridView({
                     </DropdownMenu>
                     {/* detail link fills the row like the home/search action row */}
                     <Link
-                      href={`/cards/${entry.card.cardCode}`}
+                      href={`/opcg/cards/${entry.card.cardCode}`}
                       onClick={(e) => e.stopPropagation()}
                       aria-label={t(lang, "viewDetails")}
-                      className="ml-auto inline-flex h-9 flex-1 items-center justify-center gap-1 rounded-md px-2 text-xs font-medium text-muted-foreground motion-base hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
+                      className="ml-auto inline-flex min-h-11 flex-1 items-center justify-center gap-1 rounded-md px-2 text-xs font-medium text-muted-foreground motion-base hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98] sm:min-h-9"
                     >
                       <span className="truncate">{t(lang, "viewDetails")}</span>
                       <ArrowUpRight className="size-3.5 shrink-0" />

@@ -38,7 +38,7 @@ function SetCardTileBase({
 
   return (
     <Link
-      href={`/cards/${card.cardCode}`}
+      href={`/opcg/cards/${card.cardCode}`}
       aria-label={name}
       className="group ease-chrome flex flex-col gap-1.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >

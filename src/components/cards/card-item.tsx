@@ -45,7 +45,7 @@ export interface CardItemProps {
    *  pages with no price toggle: watchlist, drop-calc…). `"raw"` = raw only.
    *  `"psa10"` = PSA10 price as the main price (pages with a Raw/PSA toggle). */
   priceMode?: "raw" | "psa10"
-  /** Make the set code a link to /sets/[code] (home/search). Default: plain text. */
+  /** Make the set code a link to /opcg/sets/[code] (home/search). Default: plain text. */
   linkSet?: boolean
   /**
    * Override the bottom action row.
@@ -107,7 +107,7 @@ function CardItemBase({
   return (
     <Surface variant="panel" className="group/card hover-lift relative flex h-full flex-col overflow-hidden">
       <Link
-        href={`/cards/${cardCode}`}
+        href={`/opcg/cards/${cardCode}`}
         aria-label={displayName}
         className="absolute inset-0 z-10 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       />
@@ -139,7 +139,7 @@ function CardItemBase({
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  router.push(`/sets/${setCode}`)
+                  router.push(`/opcg/sets/${setCode}`)
                 }}
                 className="ease-chrome relative z-20 cursor-pointer font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground hover:decoration-solid"
               >

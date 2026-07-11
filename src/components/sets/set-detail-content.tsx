@@ -14,7 +14,7 @@ import { RarityBadge } from "@/components/shared/rarity-badge";
 import { RARITY_BAR_COLOR } from "@/lib/constants/rarities";
 import { type ChangePeriod } from "@/components/cards/card-item";
 import { SetCardTile } from "./set-card-tile";
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { EmptyState } from "@/components/shared/empty-state";
 import { CHANGE_PERIODS } from "@/components/home/market-types";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
@@ -198,7 +198,7 @@ export function SetDetailContent({
   }, [visibleGroups]);
 
   if (totalCards === 0) {
-    return <KumaEmptyState title={t(lang, "noCardsInSet")} />;
+    return <EmptyState mascot="kuma" title={t(lang, "noCardsInSet")} />;
   }
 
   // Every rarity section is always rendered (rarity is jump-nav, not a filter).
@@ -394,7 +394,7 @@ export function SetDetailContent({
               ariaLabel={t(lang, "pricePeriod")}
             />
           </div>
-          <div className="no-sb -mx-5 flex items-center gap-1.5 overflow-x-auto px-5">
+          <div className="no-sb scroll-fade-x -mx-5 flex items-center gap-1.5 overflow-x-auto px-5">
             {rarityNav.map((rt) => rarityButton(rt, "chip"))}
           </div>
         </div>

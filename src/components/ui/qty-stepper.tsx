@@ -4,9 +4,12 @@ import { Minus, Plus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-const BTN = { sm: "size-9", md: "size-10" } as const
+const BTN = { sm: "size-11 sm:size-9", md: "size-11 sm:size-10" } as const
 const ICON = { sm: "size-3.5", md: "size-4" } as const
-const FIELD = { sm: "h-9 w-16", md: "h-10 w-20" } as const
+const FIELD = {
+  sm: "h-11 w-16 sm:h-9",
+  md: "h-11 w-20 sm:h-10",
+} as const
 
 /**
  * The one quantity stepper (PLAY-07) — Minus / value / Plus, clamped to

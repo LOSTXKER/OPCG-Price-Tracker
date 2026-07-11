@@ -26,8 +26,8 @@ export function CardDetailRelated({ relatedCards, set, lang }: CardDetailRelated
               {t(lang, "otherCardsFrom")} {setDisplayName}
             </h2>
             <Link
-              href={`/sets/${set.code}`}
-              className="text-meta motion-base hover:text-foreground"
+              href={`/opcg/sets/${set.code}`}
+              className="inline-flex min-h-11 items-center text-meta motion-base hover:text-foreground sm:min-h-0"
             >
               {t(lang, "viewAll")} →
             </Link>
@@ -38,7 +38,7 @@ export function CardDetailRelated({ relatedCards, set, lang }: CardDetailRelated
               return (
                 <Link
                   key={rc.id}
-                  href={`/cards/${rc.cardCode}`}
+                  href={`/opcg/cards/${rc.cardCode}`}
                   className="group flex flex-col"
                 >
                   <div className="surface-1 hairline ease-chrome relative aspect-[63/88] w-full overflow-hidden rounded-lg group-lift">
@@ -73,9 +73,9 @@ export function CardDetailRelated({ relatedCards, set, lang }: CardDetailRelated
       )}
 
       <Link
-        href={`/sets/${set.code}`}
+        href={`/opcg/sets/${set.code}`}
         className={cn(
-          "ease-chrome hairline-t flex items-center justify-center gap-2 pt-4 text-sm font-medium text-muted-foreground hover:text-foreground",
+          "ease-chrome hairline-t flex min-h-11 items-center justify-center gap-2 pt-4 text-sm font-medium text-muted-foreground hover:text-foreground",
           relatedCards.length > 0 && "mt-6",
         )}
       >

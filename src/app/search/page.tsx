@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Search Cards",
   description:
     "Search the entire OPCG card database. Find cards by name, set, rarity, color and more.",
-  alternates: { canonical: "/search" },
+  alternates: { canonical: "/opcg/search" },
 };
 
 async function getSearchMeta() {
@@ -50,15 +50,16 @@ export default async function SearchPage() {
 
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Search", href: "/search" }])} />
+      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Search", href: "/opcg/search" }])} />
+      <h1 className="sr-only">Search cards</h1>
       <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "search" }]} />
       <Suspense>
         <SearchClient sets={sets} />
       </Suspense>
       <RelatedPages items={[
-        { href: "/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่า" },
-        { href: "/trending", icon: TrendingUp, title: "Trending", description: "การ์ดที่ราคาขยับมากที่สุด" },
-        { href: "/compare", icon: GitCompareArrows, title: "เปรียบเทียบ", description: "เทียบการ์ดหลายใบ" },
+        { href: "/opcg/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่า" },
+        { href: "/opcg/trending", icon: TrendingUp, title: "Trending", description: "การ์ดที่ราคาขยับมากที่สุด" },
+        { href: "/opcg/compare", icon: GitCompareArrows, title: "เปรียบเทียบ", description: "เทียบการ์ดหลายใบ" },
       ]} />
     </>
   );

@@ -185,12 +185,22 @@ function HoneyContent() {
     onClaimRaffleMissionBonus: actions.claimRaffleMissionBonusAction,
   } as const;
 
+  const panelLabels: Record<TabKey, string> = {
+    missions: t(lang, "dailyMissions"),
+    achievements: t(lang, "achievements"),
+    shop: t(lang, "honeyShop"),
+    raffle: t(lang, "monthlyRaffle"),
+    rankings: t(lang, "honeyLeaderboard"),
+    referral: t(lang, "referralLink"),
+    activity: t(lang, "activity"),
+  };
+
   const renderPanel = (key: TabKey, content: React.ReactNode) => (
     <div
       key={key}
       role="tabpanel"
       id={`honey-tabpanel-${key}`}
-      aria-labelledby={`honey-tab-${key}`}
+      aria-label={panelLabels[key]}
       hidden={tab !== key}
     >
       {tab === key ? content : null}

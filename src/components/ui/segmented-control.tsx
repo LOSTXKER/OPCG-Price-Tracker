@@ -2,7 +2,8 @@
 
 import { Lock } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import { useRef } from "react";
+import type { KeyboardEvent, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -51,6 +52,44 @@ export interface SegmentedControlProps<T extends string = string> {
   leadingIcon?: LucideIcon;
 }
 
+export type SegmentedNavigationKey =
+  | "ArrowLeft"
+  | "ArrowRight"
+  | "ArrowUp"
+  | "ArrowDown"
+  | "Home"
+  | "End";
+
+/** Return the next enabled option for the radiogroup keyboard pattern. */
+export function getSegmentedNavigationTarget(
+  options: ReadonlyArray<Pick<SegmentedOption, "disabled">>,
+  currentIndex: number,
+  key: SegmentedNavigationKey,
+): number | null {
+  const enabledIndexes = options.flatMap((option, index) =>
+    option.disabled ? [] : [index],
+  );
+
+  if (enabledIndexes.length === 0) return null;
+  if (key === "Home") return enabledIndexes[0] ?? null;
+  if (key === "End") return enabledIndexes.at(-1) ?? null;
+
+  const currentPosition = enabledIndexes.indexOf(currentIndex);
+  const movingBackward = key === "ArrowLeft" || key === "ArrowUp";
+
+  if (currentPosition === -1) {
+    return movingBackward
+      ? (enabledIndexes.at(-1) ?? null)
+      : (enabledIndexes[0] ?? null);
+  }
+
+  const offset = movingBackward ? -1 : 1;
+  const nextPosition =
+    (currentPosition + offset + enabledIndexes.length) % enabledIndexes.length;
+
+  return enabledIndexes[nextPosition] ?? null;
+}
+
 /**
  * Single source of truth for "tab-like" pill controls.
  *
@@ -84,6 +123,46 @@ export function SegmentedControl<T extends string = string>({
   leadingIcon: LeadingIcon,
 }: SegmentedControlProps<T>) {
   const isPill = variant === "pill";
+  const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const selectedIndex = options.findIndex(
+    (option) => option.value === value && !option.disabled,
+  );
+  const fallbackTabIndex = options.findIndex((option) => !option.disabled);
+  const tabStopIndex = selectedIndex >= 0 ? selectedIndex : fallbackTabIndex;
+
+  const handleKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    currentIndex: number,
+  ) => {
+    if (
+      event.key !== "ArrowLeft" &&
+      event.key !== "ArrowRight" &&
+      event.key !== "ArrowUp" &&
+      event.key !== "ArrowDown" &&
+      event.key !== "Home" &&
+      event.key !== "End"
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    const targetIndex = getSegmentedNavigationTarget(
+      options,
+      currentIndex,
+      event.key,
+    );
+    if (targetIndex == null) return;
+
+    buttonRefs.current[targetIndex]?.focus();
+    const targetOption = options[targetIndex];
+    if (
+      targetOption &&
+      !targetOption.locked &&
+      targetOption.value !== value
+    ) {
+      onChange(targetOption.value);
+    }
+  };
 
   return (
     <div
@@ -92,8 +171,8 @@ export function SegmentedControl<T extends string = string>({
       className={cn(
         "inline-flex items-center",
         isPill
-          ? "gap-0.5 rounded-full bg-muted/50 p-0.5"
-          : "gap-0.5 rounded-lg bg-muted/50 p-1",
+          ? "gap-0.5 rounded-full bg-muted/50 px-0.5 sm:p-0.5"
+          : "gap-0.5 rounded-lg bg-muted/50 px-1 sm:p-1",
         fullWidth && "w-full",
         className,
       )}
@@ -107,7 +186,7 @@ export function SegmentedControl<T extends string = string>({
           )}
         />
       )}
-      {options.map((option) => {
+      {options.map((option, index) => {
         const Icon = option.icon;
         const active = option.value === value;
         const locked = !!option.locked;
@@ -129,18 +208,24 @@ export function SegmentedControl<T extends string = string>({
             aria-checked={active}
             aria-label={option.ariaLabel}
             disabled={option.disabled}
+            tabIndex={index === tabStopIndex ? 0 : -1}
+            ref={(node) => {
+              buttonRefs.current[index] = node;
+            }}
             onClick={handleClick}
+            onKeyDown={(event) => handleKeyDown(event, index)}
             className={cn(
-              "inline-flex items-center justify-center gap-1.5 font-medium motion-base",
+              "inline-flex h-11 min-w-11 items-center justify-center gap-1.5 font-medium motion-base sm:min-w-0",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
               "disabled:cursor-not-allowed disabled:opacity-50",
               isPill ? "rounded-full" : "rounded-md",
               size === "sm"
                 ? isPill
-                  ? "h-7 px-2.5 text-xs tabular-nums"
-                  : "h-7 px-2 text-xs"
+                  ? "px-2.5 text-xs tabular-nums sm:h-7"
+                  : "px-2 text-xs sm:h-7"
                 : isPill
-                  ? "h-7 px-2.5 text-xs font-semibold tabular-nums"
-                  : "h-8 px-3 text-sm",
+                  ? "px-2.5 text-xs font-semibold tabular-nums sm:h-7"
+                  : "px-3 text-sm sm:h-8",
               locked
                 ? "cursor-pointer text-muted-foreground/60 hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400"
                 : active
@@ -149,7 +234,12 @@ export function SegmentedControl<T extends string = string>({
               fullWidth && "flex-1",
             )}
           >
-            {Icon && <Icon className={cn(size === "sm" ? "size-3.5" : "size-4")} />}
+            {Icon && (
+              <Icon
+                aria-hidden
+                className={cn(size === "sm" ? "size-3.5" : "size-4")}
+              />
+            )}
             <span className="truncate">{option.label}</span>
             {locked && <Lock aria-hidden className="size-2.5" />}
             {option.badge}

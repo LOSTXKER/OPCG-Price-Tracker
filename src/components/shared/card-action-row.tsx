@@ -93,7 +93,7 @@ export function CardActionRow({
 
       {show.detail && (
         <Link
-          href={`/cards/${card.cardCode}`}
+          href={`/opcg/cards/${card.cardCode}`}
           onClick={(e) => e.stopPropagation()}
           aria-label={t(lang, "viewDetails")}
           className="ml-auto inline-flex h-9 flex-1 items-center justify-center gap-1 rounded-md px-2 text-xs font-medium text-muted-foreground motion-base hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"

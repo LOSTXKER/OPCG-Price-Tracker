@@ -12,6 +12,7 @@ import {
 
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
+import { Pagination } from "@/components/ui/pagination"
 import { Surface } from "@/components/ui/surface"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { EmptyState } from "@/components/shared/empty-state"
@@ -33,7 +34,6 @@ import {
   CHANGE_PERIODS,
   PAGE_SIZE,
 } from "@/components/home/market-types"
-import { SearchPagination } from "./search-pagination"
 import { PhotoSearchButton } from "./photo-search-button"
 import { useSearch } from "./use-search"
 
@@ -141,13 +141,15 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder={t(lang, "searchLong")}
-            className="h-12 w-full rounded-l-xl border border-r-0 border-hair bg-card pl-12 pr-11 text-base outline-none ease-chrome transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20"
+            aria-label={t(lang, "searchLong")}
+            className="h-12 w-full rounded-l-xl border border-r-0 border-hair bg-card pl-12 pr-11 text-base outline-none ease-chrome transition-colors placeholder:text-muted-foreground focus:border-primary/40 focus:ring-2 focus:ring-primary/20"
           />
           {inputValue && (
             <button
               type="button"
+              aria-label={t(lang, "clearAll")}
               onClick={clearInput}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground"
+              className="tap-safe absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-foreground"
             >
               <X className="size-4" />
             </button>
@@ -174,7 +176,7 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
               <button
                 type="button"
                 onClick={clearFilters}
-                className="text-xs text-primary hover:underline"
+                className="min-h-11 px-2 text-xs text-primary hover:underline md:min-h-0"
               >
                 {t(lang, "clearAll")}
               </button>
@@ -198,7 +200,7 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
               type="button"
               onClick={() => setShowFilters(true)}
               className={cn(
-                "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm transition-colors",
+                "ease-chrome relative flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm transition-colors md:min-h-9",
                 modalFilterCount > 0
                   ? "border-primary/40 bg-primary/5 text-primary"
                   : "border-hair bg-background text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -278,7 +280,7 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
                     type="button"
                     onClick={() => toggleRarity(r.code)}
                     className={cn(
-                      "ease-chrome rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors",
+                      "ease-chrome min-h-11 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors md:min-h-0",
                       active
                         ? "text-white"
                         : "bg-muted text-muted-foreground hover:text-foreground",
@@ -304,7 +306,7 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
                   handleVariantChange(selectedVariant === v.code ? "" : v.code)
                 }
                 className={cn(
-                  "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors",
+                  "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
                   selectedVariant === v.code
                     ? "border-primary/40 bg-primary/5 text-primary"
                     : "border-hair bg-background text-muted-foreground hover:text-foreground",
@@ -398,7 +400,19 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
 
       {/* Pagination */}
       {!isPending && totalPages > 1 && cards.length > 0 && (
-        <SearchPagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
+        <Surface variant="panel">
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+            className="px-4 py-3"
+            summary={
+              <p className="text-meta tabular-nums">
+                {t(lang, "pageOf")} {page} / {totalPages}
+              </p>
+            }
+          />
+        </Surface>
       )}
 
       {/* Fetch error */}

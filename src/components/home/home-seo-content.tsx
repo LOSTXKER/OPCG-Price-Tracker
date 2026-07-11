@@ -27,7 +27,7 @@ function buildFeatures(lang: Language) {
       icon: LineChart,
       title: t(lang, "seoFeatPriceTitle"),
       description: t(lang, "seoFeatPriceDesc"),
-      href: "/market-overview",
+      href: "/opcg/market-overview",
     },
     {
       icon: Briefcase,
@@ -39,7 +39,7 @@ function buildFeatures(lang: Language) {
       icon: Calculator,
       title: t(lang, "seoFeatDropTitle"),
       description: t(lang, "seoFeatDropDesc"),
-      href: "/drop-calculator",
+      href: "/opcg/drop-calculator",
     },
   ];
 }
@@ -48,13 +48,13 @@ function buildExploreItems(lang: Language): RelatedPageItem[] {
   return [
     {
       icon: Layers,
-      href: "/sets",
+      href: "/opcg/sets",
       title: t(lang, "seoExploreSetsTitle"),
       description: t(lang, "seoExploreSetsDesc"),
     },
     {
       icon: TrendingUp,
-      href: "/trending",
+      href: "/opcg/trending",
       title: t(lang, "seoExploreTrendingTitle"),
       description: t(lang, "seoExploreTrendingDesc"),
     },
@@ -72,13 +72,13 @@ function buildExploreItems(lang: Language): RelatedPageItem[] {
     },
     {
       icon: GitCompareArrows,
-      href: "/compare",
+      href: "/opcg/compare",
       title: t(lang, "seoExploreCompareTitle"),
       description: t(lang, "seoExploreCompareDesc"),
     },
     {
       icon: ShoppingCart,
-      href: "/deck-calculator",
+      href: "/opcg/deck-calculator",
       title: t(lang, "seoExploreDeckTitle"),
       description: t(lang, "seoExploreDeckDesc"),
     },

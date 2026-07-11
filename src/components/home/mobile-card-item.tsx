@@ -59,7 +59,7 @@ export const MobileCardItem = memo(function MobileCardItem({
         <div className="hairline relative aspect-[63/88] w-11 shrink-0 overflow-hidden rounded-md bg-muted" />
       )}
       <Link
-        href={`/cards/${card.cardCode}`}
+        href={`/opcg/cards/${card.cardCode}`}
         className="flex min-w-0 flex-1 items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <div className="min-w-0 flex-1">

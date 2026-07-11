@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils"
 export const SEGMENT_TRACK =
   "inline-flex max-w-full flex-wrap items-center gap-0.5 rounded-full bg-foreground/5 p-0.5 ring-1 ring-hair"
 export const SEGMENT_BTN =
-  "ease-chrome inline-flex h-10 shrink-0 items-center justify-center rounded-full px-2.5 text-xs font-medium leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset md:h-6"
+  "ease-chrome inline-flex h-11 min-w-11 shrink-0 items-center justify-center rounded-full px-2.5 text-xs font-medium leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset md:h-6 md:min-w-0"
 export const SEGMENT_ACTIVE = "bg-foreground/10 text-foreground"
 export const SEGMENT_IDLE = "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
 

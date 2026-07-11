@@ -141,7 +141,7 @@ export function PortfolioSidebar({
                   return (
                     <span className={cn(
                       "text-micro font-medium tabular-nums",
-                      pnlPct >= 0 ? "text-price-up/80" : "text-price-down/80"
+                      pnlPct >= 0 ? "text-price-up" : "text-price-down"
                     )}>
                       {pnlPct >= 0 ? "+" : ""}{formatPct(pnlPct, 1)}%
                     </span>
