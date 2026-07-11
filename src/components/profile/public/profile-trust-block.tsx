@@ -5,6 +5,7 @@ import {
   Clock,
   Info,
   MapPin,
+  PackageCheck,
   Truck,
   Zap,
   type LucideIcon,
@@ -23,10 +24,11 @@ import type {
  * Visitor-only trust strip rendered between the hero and the reviews preview.
  *
  * Aggregates everything a TCG buyer wants to know on first scroll:
- *   1. Verified facts: verified badge, completed deals, response time, last
- *      seen
+ *   1. Evidence-based facts: sales history, completed deals, response time,
+ *      last seen
  *   2. Commerce profile: where they ship from + shipping methods. Payment is
- *      handled in-platform so we don't surface a payment row.
+ *      arranged between buyer and seller in the order chat, so this block only
+ *      shows facts backed by profile/order data.
  *
  * For brand-new sellers (no completed deals AND no reviews) we render a
  * single quiet honesty notice instead of a row of empty chips — less
@@ -53,7 +55,7 @@ export function ProfileTrustBlock({
   const isBrandNew =
     sellerStats.completedDeals === 0 && reviewCount === 0;
 
-  const verifiedFacts = buildVerifiedFacts(sellerStats, lang);
+  const sellerFacts = buildSellerFacts(sellerStats, lang);
   const locationChip = buildLocationChip(commerceProfile, lang);
   const shippingChips = buildShippingChips(commerceProfile, lang);
 
@@ -62,8 +64,8 @@ export function ProfileTrustBlock({
 
   // Nothing to show + brand-new account → render only the honesty notice.
   // For an established seller with no commerce data set up yet (rare but
-  // possible) we still render the verified-facts row.
-  if (verifiedFacts.length === 0 && !hasCommerceContent && !isBrandNew) {
+  // possible) we still render the seller-facts row.
+  if (sellerFacts.length === 0 && !hasCommerceContent && !isBrandNew) {
     return null;
   }
 
@@ -79,9 +81,9 @@ export function ProfileTrustBlock({
         "px-4 py-4 sm:px-5",
       )}
     >
-      {verifiedFacts.length > 0 && (
+      {sellerFacts.length > 0 && (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          {verifiedFacts.map((f) => (
+          {sellerFacts.map((f) => (
             <FactItem key={f.id} icon={f.icon} tone={f.tone} label={f.label} />
           ))}
         </div>
@@ -91,7 +93,7 @@ export function ProfileTrustBlock({
         <div
           className={cn(
             "grid gap-3 sm:grid-cols-2 sm:gap-x-6",
-            verifiedFacts.length > 0 && "mt-4 border-t border-hair pt-3",
+            sellerFacts.length > 0 && "mt-4 border-t border-hair pt-3",
           )}
         >
           <CommerceRow
@@ -113,7 +115,7 @@ export function ProfileTrustBlock({
         <div
           className={cn(
             "flex flex-wrap items-center gap-x-3 gap-y-1 text-meta",
-            (verifiedFacts.length > 0 || hasCommerceContent) &&
+            (sellerFacts.length > 0 || hasCommerceContent) &&
               "mt-3 border-t border-hair pt-3",
           )}
         >
@@ -125,23 +127,23 @@ export function ProfileTrustBlock({
   );
 }
 
-/* ── Verified facts row ────────────────────────────────────────────────── */
+/* ── Seller facts row ──────────────────────────────────────────────────── */
 
 type Fact = {
   id: string;
   icon: LucideIcon;
   label: string;
-  tone: "verified" | "deals" | "response" | "neutral";
+  tone: "history" | "deals" | "response" | "neutral";
 };
 
-function buildVerifiedFacts(stats: SellerStats, lang: Language): Fact[] {
+function buildSellerFacts(stats: SellerStats, lang: Language): Fact[] {
   const facts: Fact[] = [];
 
   if (stats.isVerified) {
     facts.push({
-      id: "verified",
-      icon: CheckCircle2,
-      tone: "verified",
+      id: "sales-history",
+      icon: PackageCheck,
+      tone: "history",
       label: t(lang, "trustVerifiedSeller"),
     });
   }
@@ -203,8 +205,8 @@ function FactItem({
   tone: Fact["tone"];
 }) {
   const iconClass =
-    tone === "verified"
-      ? "text-info"
+    tone === "history"
+      ? "text-success"
       : tone === "deals"
         ? "text-success"
         : tone === "response"

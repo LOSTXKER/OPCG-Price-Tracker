@@ -1,42 +1,47 @@
+"use client";
+
+import { t, type TranslationKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { useUIStore } from "@/stores/ui-store";
 
 export const ORDER_STATUS_CONFIG: Record<
   string,
-  { label: string; className: string }
+  { labelKey: TranslationKey; className: string }
 > = {
   AWAITING_PAYMENT: {
-    label: "รอชำระเงิน",
+    labelKey: "orderStatusAwaitingPayment",
     className: "status-warning",
   },
   PAID: {
-    label: "ชำระแล้ว",
+    labelKey: "orderStatusPaidExt",
     className: "status-info",
   },
   SHIPPED: {
-    label: "จัดส่งแล้ว",
+    labelKey: "orderStatusShippedExt",
     className: "status-info",
   },
   DELIVERED: {
-    label: "ส่งถึงแล้ว",
+    labelKey: "orderStatusDelivered",
     className: "status-success",
   },
   COMPLETED: {
-    label: "สำเร็จ",
+    labelKey: "orderStatusCompleted",
     className: "status-success",
   },
   CANCELLED: {
-    label: "ยกเลิก",
+    labelKey: "orderStatusCancelled",
     className: "status-danger",
   },
   DISPUTED: {
-    label: "มีปัญหา",
+    labelKey: "orderStatusDisputed",
     className: "status-warning",
   },
 };
 
 export function OrderStatusBadge({ status }: { status: string }) {
+  const lang = useUIStore((s) => s.language);
   const config = ORDER_STATUS_CONFIG[status] ?? {
-    label: status,
+    labelKey: null,
     className: "bg-muted text-muted-foreground",
   };
 
@@ -47,7 +52,7 @@ export function OrderStatusBadge({ status }: { status: string }) {
         config.className
       )}
     >
-      {config.label}
+      {config.labelKey ? t(lang, config.labelKey) : status}
     </span>
   );
 }

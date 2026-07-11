@@ -1,7 +1,12 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { buildFeatureSections, isPlanCurrent, toPlanTier } from "@/lib/billing";
+import {
+  buildFeatureSections,
+  isLifetime,
+  isPlanCurrent,
+  toPlanTier,
+} from "@/lib/billing";
 
 import { PlanCards } from "./plan-cards";
 import { PlanFeatureComparison } from "./plan-feature-comparison";
@@ -13,6 +18,9 @@ describe("billing plan presentation", () => {
     expect(toPlanTier("LIFETIME_PRO")).toBe("PRO");
     expect(toPlanTier("LIFETIME_PRO_PLUS")).toBe("PRO_PLUS");
     expect(isPlanCurrent("PRO", "LIFETIME_PRO")).toBe(true);
+    expect(isLifetime("LIFETIME_PRO")).toBe(true);
+    expect(isLifetime("LIFETIME_PRO_PLUS")).toBe(true);
+    expect(isLifetime("PRO_PLUS")).toBe(false);
   });
 
   it("keeps pricing cards on yearly prices while preserving action slots", () => {
@@ -29,7 +37,9 @@ describe("billing plan presentation", () => {
 
     expect(markup).toContain("฿990");
     expect(markup).toContain("฿1,990");
-    expect(markup).toContain("Most Popular");
+    expect(markup).toContain("ยอดนิยม");
+    expect(markup).toContain("1 ปี");
+    expect(markup).not.toContain("1 year");
     expect(markup).toContain("action-PRO_PLUS");
     expect(markup).toContain("md:grid-cols-3");
   });
@@ -74,5 +84,20 @@ describe("billing plan presentation", () => {
     expect(markup).toContain("sticky top-0 z-10 bg-background");
     expect(markup).toContain("sm:hidden");
     expect(markup).toContain("hidden sm:block");
+  });
+
+  it("does not advertise marketplace entitlements before they are enforced", () => {
+    const visibleKeys = buildFeatureSections().flatMap((section) =>
+      section.rows.map((row) => row.key),
+    );
+
+    expect(visibleKeys).not.toEqual(
+      expect.arrayContaining([
+        "marketplaceFee",
+        "listingBoost",
+        "autoPricing",
+        "bulkPriceLookup",
+      ]),
+    );
   });
 });

@@ -13,6 +13,7 @@ import { OAuthButtons } from "@/components/auth/oauth-buttons"
 import { PasswordInput } from "@/components/auth/password-input"
 import { PasswordRules } from "@/components/auth/password-rules"
 import { FormError } from "@/components/auth/form-error"
+import { getSafeInternalRedirect } from "@/lib/auth/safe-redirect"
 import { createClient } from "@/lib/supabase/client"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
@@ -32,7 +33,7 @@ export function RegisterClient() {
   const router = useRouter()
   const lang = useUIStore((s) => s.language)
   const searchParams = useSearchParams()
-  const redirect = searchParams.get("redirect") || "/"
+  const redirect = getSafeInternalRedirect(searchParams.get("redirect"))
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")

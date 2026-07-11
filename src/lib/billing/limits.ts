@@ -1,5 +1,8 @@
 import type { UserTier } from "@/generated/prisma/client";
 
+/** Card-free Pro trial duration shown in UI and enforced by the trial API. */
+export const TRIAL_DAYS = 14;
+
 /**
  * Source of truth for plan numeric limits and tier comparison helpers.
  *

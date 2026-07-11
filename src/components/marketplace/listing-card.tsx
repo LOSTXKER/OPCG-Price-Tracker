@@ -8,7 +8,6 @@ import { ConditionBadge } from "@/components/shared/condition-badge"
 import { PriceTag } from "@/components/ui/price-tag"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import { CARD_BG } from "@/lib/constants/ui"
 import { cn } from "@/lib/utils"
 import { Price } from "@/components/shared/price-inline"
@@ -36,6 +35,7 @@ export interface ListingCardProps {
   shipping: string[]
   location?: string | null
   isFeatured: boolean
+  messageLabel?: string
 }
 
 function ListingCardBase({
@@ -46,6 +46,7 @@ function ListingCardBase({
   condition,
   seller,
   isFeatured,
+  messageLabel = "Send message",
 }: ListingCardProps) {
   const market = card.latestPriceJpy
   const diffPct =
@@ -134,16 +135,12 @@ function ListingCardBase({
               <RatingStars value={seller.sellerRating} size="sm" />
             )}
           </div>
-          <Link href={`/messages/${id}`}>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              aria-label="Send message"
-              className="size-8 text-muted-foreground hover:text-primary"
-            >
-              <MessageCircle className="size-4" />
-            </Button>
+          <Link
+            href={`/messages/${id}`}
+            aria-label={messageLabel}
+            className="tap-safe ease-chrome inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <MessageCircle className="size-4" />
           </Link>
         </div>
       </div>

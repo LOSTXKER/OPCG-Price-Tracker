@@ -13,6 +13,7 @@ import { FormError } from "@/components/auth/form-error"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { createClient } from "@/lib/supabase/client"
+import { getSafeInternalRedirect } from "@/lib/auth/safe-redirect"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { isAuthBypassed } from "@/lib/env"
@@ -26,7 +27,7 @@ export function LoginClient() {
   const router = useRouter()
   const lang = useUIStore((s) => s.language)
   const searchParams = useSearchParams()
-  const redirect = searchParams.get("redirect") || "/"
+  const redirect = getSafeInternalRedirect(searchParams.get("redirect"))
   const authError = searchParams.get("error")
 
   useEffect(() => {
@@ -143,7 +144,7 @@ export function LoginClient() {
 
         <div className="flex justify-end">
           <Link
-            href="/forgot-password"
+            href={`/forgot-password?redirect=${encodeURIComponent(redirect)}`}
             className="text-meta underline-offset-4 hover:text-primary hover:underline"
           >
             {t(lang, "forgotPassword")}

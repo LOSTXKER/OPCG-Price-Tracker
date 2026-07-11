@@ -382,11 +382,17 @@ export default function BuyerOrderDetailPage() {
 
       {order.status === "AWAITING_PAYMENT" && (
         <Surface variant="panel" className="space-y-3 p-4">
+          <p className="text-h4">{t(lang, "buyOrderAwaitingTitle")}</p>
           <p className="text-sm text-muted-foreground">
             {t(lang, "buyOrderAwaitingPrompt")}
           </p>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Button render={<Link href={`/messages/${order.listing.id}`} />}>
+              <MessageCircle className="mr-2 h-4 w-4" />
+              {t(lang, "buyOrderOpenPaymentChat")}
+            </Button>
             <Button
+              variant="outline"
               onClick={() => handleStatusUpdate("PAID")}
               disabled={actionLoading}
             >
@@ -396,7 +402,7 @@ export default function BuyerOrderDetailPage() {
               {t(lang, "buyOrderNotifyPayment")}
             </Button>
             <Button
-              variant="outline"
+              variant="ghost"
               onClick={() => handleStatusUpdate("CANCELLED")}
               disabled={actionLoading}
             >

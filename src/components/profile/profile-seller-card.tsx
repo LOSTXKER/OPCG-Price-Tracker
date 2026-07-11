@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  BadgeCheck,
   Clock,
   MessageSquareQuote,
   Package,
+  PackageCheck,
   Star,
   type LucideIcon,
 } from "lucide-react";
@@ -69,8 +69,8 @@ export function ProfileSellerCard({ stats }: { stats: SellerStats }) {
           label={t(lang, "sellerResponseTime")}
         />
         {stats.isVerified && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-info/10 px-2 py-0.5 text-micro text-info">
-            <BadgeCheck className="size-3" />
+          <span className="status-success inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro">
+            <PackageCheck className="size-3" />
             {t(lang, "sellerVerified")}
           </span>
         )}

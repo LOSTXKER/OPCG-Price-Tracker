@@ -6,6 +6,7 @@ import { Surface } from "@/components/ui/surface";
 import {
   PLAN_HIGHLIGHTS,
   PLANS,
+  formatPlanFeatureValue,
   type FeatureSection,
   type PlanDef,
   type TierKey,
@@ -49,7 +50,7 @@ function HighlightValue({
 
   return (
     <span className="font-semibold text-foreground">
-      {value === "∞" ? t(lang, "unlimited") : value}
+      {value === "∞" ? t(lang, "unlimited") : formatPlanFeatureValue(value, lang)}
     </span>
   );
 }
@@ -81,7 +82,7 @@ export function PlanCards({
           <>
             {isPricing && plan.popular && (
               <Badge className="absolute -top-2.5 left-1/2 -translate-x-1/2 border-0 bg-foreground text-background text-xs font-semibold">
-                Most Popular
+                {t(lang, "popular")}
               </Badge>
             )}
             {isPricing && plan.badge && (

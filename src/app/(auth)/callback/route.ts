@@ -2,13 +2,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/db";
+import { getSafeInternalRedirect } from "@/lib/auth/safe-redirect";
 import { processReferralConversion } from "@/lib/honey/referral";
 import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = request.nextUrl;
   const code = searchParams.get("code");
-  const redirect = searchParams.get("redirect") || "/";
+  const redirect = getSafeInternalRedirect(searchParams.get("redirect"));
 
   if (code) {
     const supabase = await createClient();
@@ -54,9 +55,12 @@ export async function GET(request: NextRequest) {
         },
       }).catch(() => {});
 
-      return NextResponse.redirect(`${origin}${redirect}`);
+      return NextResponse.redirect(new URL(redirect, origin));
     }
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth_failed`);
+  const loginUrl = new URL("/login", origin);
+  loginUrl.searchParams.set("error", "auth_failed");
+  if (redirect !== "/") loginUrl.searchParams.set("redirect", redirect);
+  return NextResponse.redirect(loginUrl);
 }

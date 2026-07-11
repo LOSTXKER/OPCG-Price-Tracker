@@ -11,6 +11,7 @@ import { formatThb } from "@/lib/utils/currency";
 import { formatRelativeShort } from "@/lib/utils/time";
 import { t, type TranslationKey } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { formatOrderMessageContent } from "@/lib/orders/message-events";
 
 const orderStatusLabelKey: Record<string, TranslationKey> = {
   AWAITING_PAYMENT: "msgConvStatusAwaitingPayment",
@@ -85,7 +86,11 @@ export function ConversationItem({
         </p>
         <div className="mt-0.5 flex items-center gap-1.5">
           <p className="min-w-0 flex-1 truncate text-meta text-muted-foreground/80">
-            {conv.lastMessage}
+            {conv.lastMessageType === "SYSTEM" ||
+            conv.lastMessageType === "ORDER_UPDATE" ||
+            conv.lastMessageType === "OFFER"
+              ? formatOrderMessageContent(conv.lastMessage, lang)
+              : conv.lastMessage}
           </p>
           {conv.unread > 0 && (
             <span className="flex size-4.5 shrink-0 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">

@@ -9,30 +9,35 @@ import { notify } from "@/lib/notify/dispatch";
 import { UpdateOrderSchema } from "@/lib/orders/schemas";
 import { NextRequest, NextResponse } from "next/server";
 import type { OrderStatus } from "@/generated/prisma/client";
+import {
+  encodeOrderMessageEvent,
+  formatOrderMessageContent,
+  type OrderMessageEvent,
+} from "@/lib/orders/message-events";
 
 const log = createLog("api:orders");
 
 type Params = { params: Promise<{ id: string }> };
 
-const VALID_TRANSITIONS: Record<string, { next: OrderStatus; by: "buyer" | "seller"; systemMsg: string }[]> = {
+const VALID_TRANSITIONS: Record<string, { next: OrderStatus; by: "buyer" | "seller"; systemEvent: OrderMessageEvent }[]> = {
   AWAITING_PAYMENT: [
-    { next: "PAID", by: "buyer", systemMsg: "แจ้งชำระเงินแล้ว" },
-    { next: "CANCELLED", by: "buyer", systemMsg: "ยกเลิกคำสั่งซื้อ" },
-    { next: "CANCELLED", by: "seller", systemMsg: "ผู้ขายยกเลิกคำสั่งซื้อ" },
+    { next: "PAID", by: "buyer", systemEvent: { kind: "buyer_marked_paid" } },
+    { next: "CANCELLED", by: "buyer", systemEvent: { kind: "buyer_cancelled" } },
+    { next: "CANCELLED", by: "seller", systemEvent: { kind: "seller_cancelled" } },
   ],
   PAID: [
-    { next: "SHIPPED", by: "seller", systemMsg: "ส่งของแล้ว" },
-    { next: "DISPUTED", by: "buyer", systemMsg: "แจ้งปัญหา" },
-    { next: "CANCELLED", by: "seller", systemMsg: "ผู้ขายยกเลิกคำสั่งซื้อ" },
+    { next: "SHIPPED", by: "seller", systemEvent: { kind: "shipped" } },
+    { next: "DISPUTED", by: "buyer", systemEvent: { kind: "disputed" } },
+    { next: "CANCELLED", by: "seller", systemEvent: { kind: "seller_cancelled" } },
   ],
   SHIPPED: [
-    { next: "DELIVERED", by: "buyer", systemMsg: "ได้รับสินค้าแล้ว" },
-    { next: "DISPUTED", by: "buyer", systemMsg: "แจ้งปัญหา" },
+    { next: "DELIVERED", by: "buyer", systemEvent: { kind: "delivered" } },
+    { next: "DISPUTED", by: "buyer", systemEvent: { kind: "disputed" } },
   ],
   DELIVERED: [
-    { next: "COMPLETED", by: "buyer", systemMsg: "ยืนยันเสร็จสิ้น" },
-    { next: "COMPLETED", by: "seller", systemMsg: "ยืนยันเสร็จสิ้น" },
-    { next: "DISPUTED", by: "buyer", systemMsg: "แจ้งปัญหา" },
+    { next: "COMPLETED", by: "buyer", systemEvent: { kind: "completed" } },
+    { next: "COMPLETED", by: "seller", systemEvent: { kind: "completed" } },
+    { next: "DISPUTED", by: "buyer", systemEvent: { kind: "disputed" } },
   ],
 };
 
@@ -165,23 +170,27 @@ export const PATCH = apiHandler(async (request: NextRequest, props: Params) => {
     updateData.cancelReason = cancelReason;
   }
 
+  const systemEvent: OrderMessageEvent =
+    newStatus === "SHIPPED"
+      ? {
+          kind: "shipped",
+          shippingMethod: shippingMethod || undefined,
+          trackingNumber: trackingNumber || undefined,
+        }
+      : transition.systemEvent;
+
   const result = await prisma.$transaction(async (tx) => {
     const updated = await tx.order.update({
       where: { id: orderId },
       data: updateData,
     });
 
-    let msg = transition.systemMsg;
-    if (newStatus === "SHIPPED" && trackingNumber) {
-      msg += ` (${shippingMethod || "tracking"}: ${trackingNumber})`;
-    }
-
     await tx.message.create({
       data: {
         listingId: order.listingId,
         senderId: dbUser.id,
         receiverId,
-        content: msg,
+        content: encodeOrderMessageEvent(systemEvent),
         type: "ORDER_UPDATE",
         orderId: order.id,
       },
@@ -209,15 +218,16 @@ export const PATCH = apiHandler(async (request: NextRequest, props: Params) => {
 
   // In-app + email/LINE ping the counterparty about the status change.
   // Best-effort — we don't await on the order PATCH happy path.
+  const notificationMessage = formatOrderMessageContent(
+    encodeOrderMessageEvent(systemEvent),
+    "EN",
+  );
   notify({
     userId: receiverId,
     kind: "ORDER_STATUS",
     type: `ORDER_${newStatus}`,
-    title: `Order #${order.id}: ${transition.systemMsg}`,
-    message:
-      newStatus === "SHIPPED" && trackingNumber
-        ? `${transition.systemMsg} (${shippingMethod || "tracking"}: ${trackingNumber})`
-        : transition.systemMsg,
+    title: `Order #${order.id} updated`,
+    message: notificationMessage,
     data: { orderId: order.id, status: newStatus, listingId: order.listingId },
     dedupKey: `order-status:${order.id}:${newStatus}`,
   }).catch((err) => log.error("notify failed", err));

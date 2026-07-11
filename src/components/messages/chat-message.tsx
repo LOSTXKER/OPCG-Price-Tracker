@@ -6,6 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { OfferCard } from "./offer-card";
 import type { ChatMessage } from "./types";
 import { Info } from "lucide-react";
+import { useUIStore } from "@/stores/ui-store";
+import { formatOrderMessageContent } from "@/lib/orders/message-events";
 
 interface ChatMessageProps {
   message: ChatMessage;
@@ -22,12 +24,16 @@ export function ChatMessageBubble({
   onRejectOffer,
   onCounterOffer,
 }: ChatMessageProps) {
+  const lang = useUIStore((state) => state.language);
+
   if (message.type === "SYSTEM" || message.type === "ORDER_UPDATE") {
     return (
       <div className="flex justify-center py-1">
         <div className="flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1">
           <Info className="size-3 text-muted-foreground" />
-          <span className="text-meta">{message.content}</span>
+          <span className="text-meta">
+            {formatOrderMessageContent(message.content, lang)}
+          </span>
           <span className="text-meta text-muted-foreground/60">
             {formatChatTime(message.createdAt)}
           </span>

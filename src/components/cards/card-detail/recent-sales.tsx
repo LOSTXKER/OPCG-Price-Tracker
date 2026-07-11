@@ -19,21 +19,19 @@ import type { MockSale } from "./mock"
 import {
   MARKET_TABLE_CLASS,
   MarketTableColGroup,
-  marketFeedListScroll,
-  marketFeedStickyHead,
-  marketFeedTableScroll,
+  MARKET_FEED_REAL_PREVIEW_COUNT,
   marketPrimaryCell,
   marketTdLead,
   marketTdPrice,
   marketThLead,
   marketThPrice,
 } from "./market-table-layout"
-import { MarketFeedScroll } from "./market-feed-scroll"
 import {
   ConditionChip,
   ConditionFilter,
   FeedPriceCell,
   SampleBadge,
+  SampleDisclosure,
   formatFeedDate,
   gradeFilterLabel,
 } from "./market-feed-shared"
@@ -44,8 +42,8 @@ import {
  * sales have no stable deep-link, so we point at the source homepage so shoppers
  * can verify/browse comparable listings. Unmapped sources render a plain cell.
  */
-function SourceRef({ source }: { source: string }) {
-  const href = sourceUrl(source)
+function SourceRef({ source, interactive = true }: { source: string; interactive?: boolean }) {
+  const href = interactive ? sourceUrl(source) : null
   const label = sourceLabel(source)
   const inner = (
     <>
@@ -127,8 +125,8 @@ function SourceDropdown({
 /**
  * "ประวัติการซื้อขายล่าสุด" — pooled recent sales across several markets (our edge
  * over a single-source competitor page). Each row: source · date · condition · price.
- * Table on ≥sm, list on <sm. Shares its filter / chip / price / date primitives with
- * MeecardAsksRail via market-feed-shared so the two feeds stay one visual dialect.
+ * Table on ≥sm, list on <sm. Sample rows are a short, non-interactive preview;
+ * real feeds expand in the page flow so phones never get a nested vertical scroll.
  */
 export function RecentSales({
   sales,
@@ -150,6 +148,7 @@ export function RecentSales({
   }, [sales])
   const [activeSource, setActiveSource] = useState<string>("all")
   const [activeGrade, setActiveGrade] = useState<string>("all")
+  const [expanded, setExpanded] = useState(false)
 
   const shown = sales.filter(
     (s) =>
@@ -158,20 +157,73 @@ export function RecentSales({
   )
   // Distinguish "no data at all" from "filters excluded everything".
   const emptyCopy = sales.length === 0 ? t(lang, "noLatestSales") : t(lang, "noMatchingFilter")
+  const hasMore = !isSample && shown.length > MARKET_FEED_REAL_PREVIEW_COUNT
+  const visibleSales =
+    hasMore && !expanded ? shown.slice(0, MARKET_FEED_REAL_PREVIEW_COUNT) : shown
+
+  const table = (
+    <table className={MARKET_TABLE_CLASS}>
+      <MarketTableColGroup />
+      <thead className="bg-background">
+        <tr className="text-eyebrow border-b border-hair">
+          <th scope="col" className={marketThLead}>{t(lang, "sourceCol")}</th>
+          <th scope="col" className={marketThLead}>{t(lang, "saleDate")}</th>
+          <th scope="col" className={marketThLead}>{t(lang, "condition")}</th>
+          <th scope="col" className={marketThPrice}>{t(lang, "priceCol")}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {visibleSales.map((sale, index) => (
+          <tr key={`${sale.source}-${index}`} className="border-b border-hair last:border-b-0">
+            <td className={marketTdLead}>
+              <SourceRef source={sale.source} interactive={!isSample} />
+            </td>
+            <td className={marketTdLead}>
+              <span className="text-meta tnum">{formatFeedDate(sale.soldAtIso)}</span>
+            </td>
+            <td className={marketTdLead}>
+              <ConditionChip condition={sale.condition} graded={sale.family != null} />
+            </td>
+            <td className={marketTdPrice}>
+              <FeedPriceCell jpy={sale.priceJpy} currency={currency} right />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+
+  const mobileList = visibleSales.map((sale, index) => (
+    <div key={`${sale.source}-${index}`} className="flex items-center justify-between gap-3 py-3 pl-0.5 pr-2">
+      <span className="min-w-0">
+        <span className="flex items-center gap-2">
+          <SourceRef source={sale.source} interactive={!isSample} />
+          <ConditionChip condition={sale.condition} graded={sale.family != null} />
+        </span>
+        <span className="tnum mt-1 block text-meta">{formatFeedDate(sale.soldAtIso)}</span>
+      </span>
+      <FeedPriceCell jpy={sale.priceJpy} currency={currency} right />
+    </div>
+  ))
 
   return (
     <div>
       <div className="mb-3 min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <h2 className="text-h3">{t(lang, "saleHistoryTitle")}</h2>
+          <h2 className="text-h3">
+            {t(lang, isSample ? "saleHistorySampleTitle" : "saleHistoryTitle")}
+          </h2>
           {isSample && <SampleBadge lang={lang} />}
         </div>
-        <p className="text-meta mt-0.5">{t(lang, "saleHistoryDesc")}</p>
+        <p className="text-meta mt-0.5">
+          {t(lang, isSample ? "saleHistorySampleDesc" : "saleHistoryDesc")}
+        </p>
+        {isSample && <SampleDisclosure lang={lang} kind="sales" />}
       </div>
 
       {/* filters — client-only (Radix dropdown + interactive state). SSR skips
           this block so server/client HTML always agree; same pattern as the chart. */}
-      {hydrated && (grades.length > 1 || sources.length > 1) && (
+      {hydrated && !isSample && (grades.length > 1 || sources.length > 1) && (
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           {grades.length > 1 && (
             <div className="min-w-0 flex-1">
@@ -200,50 +252,22 @@ export function RecentSales({
         <p className="text-meta py-6 text-center">{emptyCopy}</p>
       ) : (
         <>
-          {/* desktop table (≥sm) — ~5 rows visible, scroll for more */}
-          <MarketFeedScroll className="hidden sm:block" scrollClassName={marketFeedTableScroll} lang={lang} label={t(lang, "saleHistoryTitle")} revalidateKey={shown.length}>
-            <table className={MARKET_TABLE_CLASS}>
-              <MarketTableColGroup />
-              <thead className={marketFeedStickyHead}>
-                <tr className="text-eyebrow border-b border-hair">
-                  <th scope="col" className={marketThLead}>{t(lang, "sourceCol")}</th>
-                  <th scope="col" className={marketThLead}>{t(lang, "saleDate")}</th>
-                  <th scope="col" className={marketThLead}>{t(lang, "condition")}</th>
-                  <th scope="col" className={marketThPrice}>{t(lang, "priceCol")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {shown.map((s, i) => (
-                  <tr key={`${s.source}-${i}`} className="border-b border-hair last:border-b-0">
-                    <td className={marketTdLead}>
-                      <SourceRef source={s.source} />
-                    </td>
-                    <td className={marketTdLead}>
-                      <span className="text-meta tnum">{formatFeedDate(s.soldAtIso)}</span>
-                    </td>
-                    <td className={marketTdLead}><ConditionChip condition={s.condition} graded={s.family != null} /></td>
-                    <td className={marketTdPrice}><FeedPriceCell jpy={s.priceJpy} currency={currency} right /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </MarketFeedScroll>
+          <div className="hidden sm:block">{table}</div>
 
-          {/* mobile list (<sm) — ~5 rows visible, scroll for more */}
-          <MarketFeedScroll className="sm:hidden" scrollClassName={marketFeedListScroll} lang={lang} label={t(lang, "saleHistoryTitle")} revalidateKey={shown.length}>
-            {shown.map((s, i) => (
-              <div key={`${s.source}-${i}`} className="flex items-center justify-between gap-3 py-3 pl-0.5 pr-2">
-                <span className="min-w-0">
-                  <span className="flex items-center gap-2">
-                    <SourceRef source={s.source} />
-                    <ConditionChip condition={s.condition} graded={s.family != null} />
-                  </span>
-                  <span className="tnum mt-1 block text-meta">{formatFeedDate(s.soldAtIso)}</span>
-                </span>
-                <FeedPriceCell jpy={s.priceJpy} currency={currency} right />
-              </div>
-            ))}
-          </MarketFeedScroll>
+          <div className="divide-y divide-hair px-1 sm:hidden">{mobileList}</div>
+
+          {hasMore && (
+            <div className="hairline-t mt-3 flex justify-end pt-3">
+              <button
+                type="button"
+                className="ease-chrome min-h-11 rounded-lg px-3 text-label text-primary hover:bg-primary/5 sm:min-h-0"
+                onClick={() => setExpanded((value) => !value)}
+                aria-expanded={expanded}
+              >
+                {t(lang, expanded ? "showLess" : "viewAll")}
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

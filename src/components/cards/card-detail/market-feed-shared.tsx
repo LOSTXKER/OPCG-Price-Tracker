@@ -1,5 +1,7 @@
 "use client"
 
+import { Info } from "lucide-react"
+
 import { formatDisplayValue, jpyToDisplayValue, type Currency } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
@@ -31,6 +33,28 @@ export function SampleBadge({ lang }: { lang: Language }) {
     <span className="text-micro rounded-full bg-foreground/[0.06] px-2 py-0.5 font-semibold uppercase text-muted-foreground ring-1 ring-hair">
       {t(lang, "sampleLabel")}
     </span>
+  )
+}
+
+/** Full disclosure for simulated rows. The badge alone is too easy to miss and
+ *  must never be the only signal that prices, dates, or sellers are fabricated. */
+export function SampleDisclosure({
+  lang,
+  kind,
+}: {
+  lang: Language
+  kind: "sales" | "listings"
+}) {
+  return (
+    <div
+      role="note"
+      className="mt-3 flex items-start gap-2 rounded-lg bg-foreground/[0.04] px-3 py-2.5 ring-1 ring-hair"
+    >
+      <Info className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+      <p className="text-body-sm text-foreground">
+        {t(lang, kind === "sales" ? "sampleSalesDisclosure" : "sampleListingsDisclosure")}
+      </p>
+    </div>
   )
 }
 

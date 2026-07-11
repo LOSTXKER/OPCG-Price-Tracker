@@ -1,42 +1,40 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-11 — **UX/UI refactor P0–P3 เสร็จ, verify, merge และขึ้น production แล้ว** ผ่าน PR #106 → #107 → #104 → #105 · implementation SHA `1add144` · Vercel deployment `dpl_9fV5HwhzyA7yJAn3tJMCVmWkLJkW` Ready
+อัปเดตล่าสุด: 2026-07-11 — **UX Truth & Safety T1–T3 เสร็จและ verify แล้ว**
 
 ## ✅ ทำแล้ว
 
-- **P0 — usability blockers:** ปรับ Light contrast, แยกสีกราฟ/ข้อความสถานะ, loading มี success/empty/error/retry/timeout, commerce ไม่ค้าง spinner, dialog/search/form/skip-link/language/ARIA/keyboard semantics ครบขึ้น
-- **P1 — interaction kit:** จุดกดมือถือ/แท็บเล็ตหลัก ≥44px, `SegmentedControl` roving tabindex + Arrow/Home/End, `Pagination` กลาง, horizontal affordance และ Admin table มี list fallback ใต้ 640px
-- **P2 — dedup/structure:** รวม EmptyState/Kuma, picker, plan comparison, Popover, settings header/skeleton; แยก card detail เป็น model + identity/price/chart/navigation/sticky-buy โดยคงหน้าตาและ behavior
-- **P3 — route/polish:** game namespace allowlist, canonical `/opcg/*`, marketplace guards UI/API, canonical internal links, LCP image priority, reduced-motion coverage
-- เก็บ regression ที่พบจาก browser จริง: header 768px ล้น, chat 390px ล้น, Admin cards ยาวเกิน, bottom-nav bleed, command dialog focus restore, Blog table fallback และ Recharts SSR warning
-- อัปเดต canonical component kit ใน `AGENTS.md`; ไม่เพิ่ม dependency/config/schema/migration
+- **Pricing/Auth:** guest CTA ส่งเข้า login โดยรักษา plan intent; login/register/forgot/reset/OAuth callback รับเฉพาะ redirect ภายในที่ปลอดภัย; กลับมาแล้ว resume checkout แบบ one-shot หรือกดต่อเองได้; CTA ระบุและตามรอบบิลที่กำลังเห็น
+- **Subscription:** success/cancel/pending/error/retry ชัด; trial 14 วันและ limits ใช้ source of truth; Lifetime tier ถูก guard ทั้ง UI/API; webhook ยกเลิกและ refund subscription ที่ชน Lifetime แบบ idempotent; stale deletion event ลดแพ็กเกจใหม่ไม่ได้; Checkout จำกัด immediate card payment
+- **Marketplace/Commerce:** filter ใช้ draft→Apply, X/Escape discard, URL เป็น source of truth รวม exact `cardCode`, condition/rarity/variant/sort/page; query เกินหน้าจริง clamp; loading/success/empty/error/retry ครบและ request เก่าเขียนทับใหม่ไม่ได้; copy ซื้อขาย/ชำระเงิน/ความน่าเชื่อถือผู้ขายตรง behavior จริง
+- **Card detail:** ข้อมูลจำลองเหลือ preview 3 แถวพร้อม disclosure ว่าไม่ใช่ธุรกรรมจริงและไม่ใช้คำนวณราคา; real feed expand ใน flow, ไม่มี vertical scroll ซ้อน และไม่แสดง count จากข้อมูลที่ถูก cap
+- **Orders/Messages:** event ระบบเก็บแบบ language-neutral และ render TH/EN/JP ตามผู้ดู; legacy message และ tracking ยังอ่านได้
+- ใช้ canonical components/tokens เดิม; ไม่เพิ่ม dependency, config, Prisma schema หรือ migration
 
 ## ✅ หลักฐาน verify ล่าสุด
 
-- `npm run lint` — **0 errors**, 30 warnings เดิม (ส่วนใหญ่ `<img>` ใน admin/proto และ `.codex` scripts)
-- `npm run test` — **13 files, 106/106 tests ผ่าน**
+- `npm run lint` — **0 errors**, 30 warnings เดิม
+- `npm run test` — **19 files, 131/131 tests ผ่าน**
 - `npx tsc --noEmit` — ผ่าน
-- `npm run build` — ผ่าน, Next สร้าง **155 pages**; เหลือ warning เดิมว่า middleware convention deprecated
-- Production route smoke — **105/105 non-`/proto` routes ตอบ 200**, ไม่มี 5xx และไม่มี server error log
-- Route boundary — `/opcg/admin`, `/pokemon/cards/*`, `/all/cards/*`, `/opcg/pricing` = 404; legacy `/cards/*` และ `/sets/*` redirect ไป canonical; `/opcg/portfolio` redirect กลับ unified `/portfolio`
-- Browser matrix — 390×844, 768×1024, 1440×900; Light/Dark; ไม่มี horizontal overflow ในหน้าตัวแทน Home, Card, Messages, Marketplace, Saved, Pricing, More และ Admin tables
-- Keyboard/dialog — ArrowRight/Home/End เปลี่ยน segmented selection ถูก; Escape ปิด dialog และคืน focus; dialog ใช้ Base UI focus trap; console error = 0
-- Marketplace flag เปิดใน local ระหว่างตรวจ; Saved/Messages มี success/empty/error/retry และไม่เหลือ spinner ค้าง
-- Production smoke — alias `opcg-price-tracker.vercel.app` ตอบ 200 สำหรับ Home/Sets/Card/Pricing/Marketplace; unsupported aliases = 404, legacy card route = 307 ไป canonical; Vercel error/500 logs = 0
+- `npm run build` — ผ่าน, Next สร้าง **155 pages**; มี warning เดิมเรื่อง `middleware.ts` deprecated
+- Guest auth browser (`NEXT_PUBLIC_BYPASS_AUTH=false`) — Pricing → Login → Forgot/Register รักษา redirect; external redirect ถูกตัดกลับ `/`
+- Browser matrix 390×844, 768×1024, 1440×900 — Pricing/Marketplace/Card ไม่มี horizontal overflow และ Card feed ไม่มี nested vertical scroll
+- Mobile filter — control หลัก 44px, radio/pressed state ตรง URL, Escape ปิด dialog และคืน focus; `/marketplace?page=999` normalize กลับหน้าที่มีข้อมูล
+- Pricing — query Pro+ รายปีแสดง intent ถูก; สลับรายเดือนแล้วข้อความและ CTA เปลี่ยนตามรอบบิลปัจจุบัน
+- Light/Dark — สลับได้และไม่เกิด overflow; browser console error = 0
+- UX/UI P0–P3 ก่อนหน้านี้ขึ้น production แล้ว; production smoke เดิม 105/105 non-`/proto` routes ผ่าน
 
-## ⚠️ ไม่ใช่ blocker ของงานนี้
+## ⚠️ ขอบเขตการตรวจ
 
-- Login เต็ม flow ต้องตรวจซ้ำเมื่อปิด auth bypass; local รอบนี้ใช้ session bypass ตามแผน
-- `/proto` 10 routes และ export files ถูกตัดออกตาม scope
-- Next แนะนำย้าย `middleware.ts` → `proxy.ts`; เป็น convention/config migration แยกงาน ไม่ทำปน refactor นี้
-- Lint warnings เดิม 30 จุดยังไม่ใช่ error และส่วนใหญ่ไม่อยู่ใน scope P0–P3
+- ยังไม่ได้จ่ายเงินจริงใน Stripe test mode หรือ login ด้วยบัญชีจริงครบ flow; billing race ตรวจด้วย regression tests/mocks และ guest auth ตรวจด้วย browser
+- Full 105-route browser smoke ไม่ได้รันซ้ำใน batch นี้ เพราะเปลี่ยนเฉพาะ Pricing/Auth/Commerce/Card/Orders; build ครบ 155 pages และตรวจแม่แบบที่เปลี่ยนครบ 3 ขนาด
+- Lint warnings เดิม 30 จุดและ migration `middleware.ts` → `proxy.ts` เป็นงานแยก
 
 ## ⏭️ NEXT
 
-1. ตรวจ login/auth flow ด้วยบัญชีจริงเมื่อพร้อม (รอบ local ใช้ auth bypass ตาม scope)
-2. งานถัดไปแยก scope: migration `middleware.ts` → `proxy.ts` และเก็บ lint warnings เดิม
-3. ไม่มีงาน UX/UI P0–P3 ค้าง
+1. ถ้าต้องการความมั่นใจด้านการเงินจริง ให้ทำ Stripe test-mode E2E ด้วยบัญชีจริง
+2. งานแยกภายหลัง: `middleware.ts` → `proxy.ts` และเก็บ lint warnings เดิม
 
 ## แหล่งอ้างอิง
 

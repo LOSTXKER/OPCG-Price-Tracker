@@ -1,5 +1,6 @@
 import { OrderStatus, type Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
+import { encodeOrderMessageEvent } from "@/lib/orders/message-events";
 import { NextResponse } from "next/server";
 
 const ORDER_STATUSES = new Set(Object.values(OrderStatus));
@@ -168,7 +169,10 @@ export async function createBuyNowOrder(
         listingId,
         senderId: buyerId,
         receiverId: listing.userId,
-        content: `ซื้อตามราคา ฿${(listing.priceThb || 0).toLocaleString()} - รอการชำระเงิน`,
+        content: encodeOrderMessageEvent({
+          kind: "order_created",
+          priceThb: listing.priceThb || 0,
+        }),
         type: "ORDER_UPDATE",
         orderId: created.id,
       },

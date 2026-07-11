@@ -42,9 +42,9 @@ export const CONDITIONS = ["NM", "LP", "MP", "HP", "DMG"] as const
 // rarity chip. Selecting a version sends the `variant` param.
 export const VARIANTS = ["regular", "parallel"] as const
 export const SORT_OPTIONS = [
-  { value: "newest", label: "ใหม่ล่าสุด" },
-  { value: "price_jpy_asc", label: "ราคาต่ำ → สูง" },
-  { value: "price_jpy_desc", label: "ราคาสูง → ต่ำ" },
-  { value: "price_thb_asc", label: "ราคา ฿ ต่ำ → สูง" },
-  { value: "price_thb_desc", label: "ราคา ฿ สูง → ต่ำ" },
+  { value: "newest", labelKey: "sortNewest" },
+  { value: "price_jpy_asc", labelKey: "sortPriceAsc", currency: "JPY" },
+  { value: "price_jpy_desc", labelKey: "sortPriceDesc", currency: "JPY" },
+  { value: "price_thb_asc", labelKey: "sortPriceAsc", currency: "THB" },
+  { value: "price_thb_desc", labelKey: "sortPriceDesc", currency: "THB" },
 ] as const

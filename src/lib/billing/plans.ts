@@ -1,15 +1,15 @@
 import { Crown, Sparkles } from "lucide-react";
 import { TIER_LIMITS } from "./limits";
-import type { TranslationKey } from "@/lib/i18n";
+import type { CheckoutPlanKey } from "./schemas";
+import { t, type Language, type TranslationKey } from "@/lib/i18n";
 
 /**
  * Pricing-table & plan-card metadata. Numeric values come from `TIER_LIMITS`
  * via `tierValues` so /pricing and /settings/subscription never disagree
  * with the runtime gate logic.
  *
- * For fields that admins can override at runtime (currently the marketplace
- * fee per tier), call `buildFeatureSections({ marketplaceFees })` instead of
- * importing the static `FEATURE_SECTIONS`.
+ * `buildFeatureSections()` is the public pricing surface. It deliberately
+ * excludes rows whose tier entitlements are not enforced end-to-end yet.
  */
 
 export const TIERS = ["FREE", "PRO", "PRO_PLUS"] as const;
@@ -47,12 +47,17 @@ function formatHistoryDays(days: number): string {
   return `${days} days`;
 }
 
-/** Admin-overridable fee values keyed by tier. */
-export type MarketplaceFeeOverrides = Partial<Record<TierKey, number>>;
-
-export interface BuildFeatureSectionsOptions {
-  marketplaceFees?: MarketplaceFeeOverrides;
+/** Localize the semantic price-history values kept in the shared plan table. */
+export function formatPlanFeatureValue(value: string, lang: Language): string {
+  if (value === "All-time") return t(lang, "pricingAllTime");
+  if (value === "1 year") return t(lang, "pricingOneYear");
+  const days = value.match(/^(\d+) days$/)?.[1];
+  if (days) return t(lang, "pricingHistoryDaysValue").replace("{n}", days);
+  return value;
 }
+
+/** Runtime marketplace fee values kept for admin/config consumers. */
+export type MarketplaceFeeOverrides = Partial<Record<TierKey, number>>;
 
 export type FeatureRow = {
   key: string;
@@ -66,36 +71,13 @@ export type FeatureSection = {
 };
 
 /**
- * Build the pricing/comparison feature table. Admin-controlled values (e.g.
- * marketplace fee) are sourced from `options.marketplaceFees`; fall back to
- * compile-time defaults from `TIER_LIMITS` when not provided.
+ * Build the pricing/comparison feature table from benefits that work today.
+ * The marketplace block remains in `FEATURE_SECTIONS` for its internal row
+ * metadata, but is hidden until fee/boost/bulk/auto-pricing gates are wired.
  */
-export function buildFeatureSections(
-  options: BuildFeatureSectionsOptions = {},
-): FeatureSection[] {
-  const { marketplaceFees } = options;
-  const feeForTier = (tier: TierKey): number => {
-    const override = marketplaceFees?.[tier];
-    if (typeof override === "number" && Number.isFinite(override)) return override;
-    return TIER_LIMITS[tier].marketplaceFeePercent;
-  };
-
-  return FEATURE_SECTIONS.map((section) =>
-    section.rows.some((r) => r.key === "marketplaceFee")
-      ? {
-          ...section,
-          rows: section.rows.map((row) =>
-            row.key === "marketplaceFee"
-              ? {
-                  ...row,
-                  values: Object.fromEntries(
-                    TIERS.map((k) => [k, `${feeForTier(k)}%`]),
-                  ),
-                }
-              : row,
-          ),
-        }
-      : section,
+export function buildFeatureSections(): FeatureSection[] {
+  return FEATURE_SECTIONS.filter(
+    (section) => section.titleKey !== "featSectionMarketplace",
   );
 }
 
@@ -210,7 +192,7 @@ export function findRow(key: string) {
 export const PLAN_HIGHLIGHTS: Record<TierKey, string[]> = {
   FREE: ["priceHistory", "portfolioCards", "priceAlerts", "compareCards"],
   PRO: ["priceHistory", "csvExport", "portfolioCount", "priceAlerts"],
-  PRO_PLUS: ["priceHistory", "portfolioCards", "priceAlerts", "autoPricing"],
+  PRO_PLUS: ["priceHistory", "portfolioCards", "portfolioCount", "priceAlerts"],
 };
 
 export type PlanDef = {
@@ -223,8 +205,8 @@ export type PlanDef = {
   badge?: TranslationKey;
   badgeClass?: string;
   subtitleKey: TranslationKey;
-  monthlyPlan?: string;
-  yearlyPlan?: string;
+  monthlyPlan?: CheckoutPlanKey;
+  yearlyPlan?: CheckoutPlanKey;
   monthlyPrice?: string;
   yearlyPrice?: string;
   yearlyPerMonth?: string;
