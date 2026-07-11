@@ -81,7 +81,6 @@ export function ProfileCover({
             fill
             sizes="(min-width: 1024px) 1024px, 100vw"
             className="object-cover"
-            priority={false}
           />
           {/* Subtle warm tint so a wide variety of uploaded photos still feel
               "ours" — keeps the page from drifting into Twitter-banner land. */}

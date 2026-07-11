@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { BookOpen, Calculator, Store, TrendingUp } from "lucide-react";
 import { RelatedPages } from "@/components/shared/related-pages";
 
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { EmptyState } from "@/components/shared/empty-state";
 import { ErrorBanner } from "@/components/shared/error-banner";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: "Card Sets — Booster Boxes & Decks",
   description:
     "Browse all OPCG card sets, booster boxes and starter decks. Card counts and release dates.",
-  alternates: { canonical: "/sets" },
+  alternates: { canonical: "/opcg/sets" },
 };
 
 export default async function SetsIndexPage() {
@@ -82,7 +82,7 @@ export default async function SetsIndexPage() {
       <JsonLd
         data={breadcrumbJsonLd([
           { name: t(lang, "home"), href: "/" },
-          { name: t(lang, "sets"), href: "/sets" },
+          { name: t(lang, "sets"), href: "/opcg/sets" },
         ])}
       />
       <Breadcrumb
@@ -97,7 +97,7 @@ export default async function SetsIndexPage() {
         {dbError ? (
           <ErrorBanner />
         ) : setsRaw.length === 0 ? (
-          <KumaEmptyState title="No card sets yet" />
+          <EmptyState mascot="kuma" title="No card sets yet" />
         ) : (
           <SetsListClient sets={setsRaw} />
         )}
@@ -105,13 +105,13 @@ export default async function SetsIndexPage() {
       <RelatedPages
         items={[
           {
-            href: "/trending",
+            href: "/opcg/trending",
             icon: TrendingUp,
             title: "การ์ดวันพีซมาแรงวันนี้",
             description: "การ์ด OPCG ที่ราคาขยับมากที่สุดในวันนี้",
           },
           {
-            href: "/drop-calculator",
+            href: "/opcg/drop-calculator",
             icon: Calculator,
             title: "คำนวณ Drop Rate กล่องสุ่ม",
             description: "จำลองเปิดกล่องการ์ด OPCG คำนวณโอกาสได้การ์ดที่ต้องการ",

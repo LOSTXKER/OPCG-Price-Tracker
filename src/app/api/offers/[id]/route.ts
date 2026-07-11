@@ -3,6 +3,7 @@ import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
+import { guardMarketplaceApi } from "@/lib/marketplace/feature-flag";
 import { notify } from "@/lib/notify/dispatch";
 import { UpdateOfferSchema } from "@/lib/offers/schemas";
 import { NextRequest, NextResponse } from "next/server";
@@ -31,6 +32,9 @@ function pingOffer(
 type Params = { params: Promise<{ id: string }> };
 
 export const PATCH = apiHandler(async (request: NextRequest, props: Params) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const dbUser = auth.user;

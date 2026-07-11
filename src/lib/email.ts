@@ -68,7 +68,7 @@ export function priceAlertEmail(
         <h2 style="color: #73533E;">🐻 Kuma Price Alert</h2>
         <p><strong>${cardName}</strong> (${cardCode}) has ${verb} <strong>¥${price.toLocaleString()}</strong>.</p>
         <p>Your target was ¥${targetPrice.toLocaleString()}.</p>
-        <a href="${clientEnv().NEXT_PUBLIC_APP_URL}/cards/${cardCode}"
+        <a href="${clientEnv().NEXT_PUBLIC_APP_URL}/opcg/cards/${cardCode}"
            style="display: inline-block; padding: 10px 20px; background: #73533E; color: white; text-decoration: none; border-radius: 8px;">
           View Card
         </a>
@@ -91,12 +91,12 @@ export function weeklyDigestEmail(
 
   const gainersHtml = topGainers
     .slice(0, 5)
-    .map((c) => `<li>🟢 <a href="${baseUrl}/cards/${c.code}">${c.name}</a> +${c.change.toFixed(1)}%</li>`)
+    .map((c) => `<li>🟢 <a href="${baseUrl}/opcg/cards/${c.code}">${c.name}</a> +${c.change.toFixed(1)}%</li>`)
     .join("");
 
   const losersHtml = topLosers
     .slice(0, 5)
-    .map((c) => `<li>🔴 <a href="${baseUrl}/cards/${c.code}">${c.name}</a> ${c.change.toFixed(1)}%</li>`)
+    .map((c) => `<li>🔴 <a href="${baseUrl}/opcg/cards/${c.code}">${c.name}</a> ${c.change.toFixed(1)}%</li>`)
     .join("");
 
   const portfolioSection =
@@ -122,7 +122,7 @@ export function weeklyDigestEmail(
         
         ${portfolioSection}
         
-        <a href="${baseUrl}/trending"
+        <a href="${baseUrl}/opcg/trending"
            style="display: inline-block; padding: 10px 20px; background: #73533E; color: white; text-decoration: none; border-radius: 8px;">
           View Trending
         </a>

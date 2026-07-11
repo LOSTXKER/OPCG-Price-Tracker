@@ -83,19 +83,19 @@ function buildTools(lang: Language): Array<{
 }> {
   return [
     {
-      href: "/drop-calculator",
+      href: "/opcg/drop-calculator",
       icon: Calculator,
       title: t(lang, "guideHomeToolDropTitle"),
       description: t(lang, "guideHomeToolDropDesc"),
     },
     {
-      href: "/deck-calculator",
+      href: "/opcg/deck-calculator",
       icon: Calculator,
       title: t(lang, "guideHomeToolDeckTitle"),
       description: t(lang, "guideHomeToolDeckDesc"),
     },
     {
-      href: "/compare",
+      href: "/opcg/compare",
       icon: GitCompareArrows,
       title: t(lang, "guideHomeToolCompareTitle"),
       description: t(lang, "guideHomeToolCompareDesc"),

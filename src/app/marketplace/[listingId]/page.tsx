@@ -218,7 +218,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
             <ImageGallery images={galleryImages} />
 
             <Link
-              href={`/cards/${encodeURIComponent(listing.card.cardCode)}`}
+              href={`/opcg/cards/${encodeURIComponent(listing.card.cardCode)}`}
               className={cn(
                 buttonVariants({ variant: "outline", size: "sm" }),
                 "w-full text-xs"

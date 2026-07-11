@@ -4,12 +4,16 @@ import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { earnHoney, getHoneyMultiplier } from "@/lib/honey";
 import { createLog } from "@/lib/logger";
+import { guardMarketplaceApi } from "@/lib/marketplace/feature-flag";
 import { CreateReviewSchema } from "@/lib/reviews/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
 const log = createLog("api:reviews");
 
 export const POST = apiHandler(async (request: NextRequest) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const dbUser = auth.user;

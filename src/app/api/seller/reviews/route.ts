@@ -3,8 +3,12 @@ import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { parsePageLimit } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
+import { guardMarketplaceApi } from "@/lib/marketplace/feature-flag";
 
 export const GET = apiHandler(async (request: NextRequest) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const userId = auth.user.id;

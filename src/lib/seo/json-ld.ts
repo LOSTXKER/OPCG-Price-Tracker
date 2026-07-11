@@ -13,7 +13,7 @@ export function websiteJsonLd() {
       "One Piece Card Game market prices updated daily. Track Yuyu-tei prices, view price history charts, manage your portfolio.",
     potentialAction: {
       "@type": "SearchAction",
-      target: { "@type": "EntryPoint", urlTemplate: `${BASE_URL}/search?q={search_term_string}` },
+      target: { "@type": "EntryPoint", urlTemplate: `${BASE_URL}/opcg/search?q={search_term_string}` },
       "query-input": "required name=search_term_string",
     },
   };
@@ -35,7 +35,7 @@ export function productJsonLd(card: {
     name: `${card.cardCode} ${name}`,
     description: `${name} (${card.rarity}) — ${card.set.nameEn ?? card.set.name}`,
     image: card.imageUrl ?? undefined,
-    url: `${BASE_URL}/cards/${card.cardCode}`,
+    url: `${BASE_URL}/opcg/cards/${card.cardCode}`,
     brand: { "@type": "Brand", name: "One Piece Card Game" },
     category: "Trading Cards",
     ...(card.latestPriceJpy != null && {
@@ -44,7 +44,7 @@ export function productJsonLd(card: {
         price: card.latestPriceJpy,
         priceCurrency: "JPY",
         availability: "https://schema.org/InStock",
-        url: `${BASE_URL}/cards/${card.cardCode}`,
+        url: `${BASE_URL}/opcg/cards/${card.cardCode}`,
       },
     }),
   };

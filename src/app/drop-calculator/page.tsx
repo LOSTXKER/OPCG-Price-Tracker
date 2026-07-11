@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   title: "Drop Calculator",
   description:
     "Calculate your odds of pulling specific OPCG cards from booster boxes. Estimate pack and box probabilities by rarity.",
-  alternates: { canonical: "/drop-calculator" },
+  alternates: { canonical: "/opcg/drop-calculator" },
 };
 
 export default function DropCalculatorPage() {
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Drop Calculator", href: "/drop-calculator" }])} />
+      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Drop Calculator", href: "/opcg/drop-calculator" }])} />
       <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "dropCalculator" }]} />
       <DropCalculatorClient />
     </>

@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { clientEnv, serverEnv } from "@/lib/env";
+import { guardMarketplaceApi } from "@/lib/marketplace/feature-flag";
 
 const BUCKET = "listing-photos";
 const MAX_SIZE = 5 * 1024 * 1024;
@@ -33,6 +34,9 @@ async function ensureBucket(
 }
 
 export const POST = apiHandler(async (req: NextRequest) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 

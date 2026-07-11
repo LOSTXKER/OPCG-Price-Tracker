@@ -5,8 +5,12 @@ import { parsePageLimit } from "@/lib/api/request-body";
 import { cardInclude } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
 import { ListingStatus, type Prisma } from "@/generated/prisma/client";
+import { guardMarketplaceApi } from "@/lib/marketplace/feature-flag";
 
 export const GET = apiHandler(async (request: NextRequest) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const userId = auth.user.id;

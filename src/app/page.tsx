@@ -1,4 +1,4 @@
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { EmptyState } from "@/components/shared/empty-state";
 import {
   HomeFeaturedCard,
   HomeMiniTable,
@@ -31,7 +31,7 @@ export default async function HomePage() {
 
   if (totalCards === 0) {
     return (
-      <KumaEmptyState
+      <EmptyState
         title="No card data yet"
         description="Run npm run scrape:master then npm run scrape:prices to populate data"
         preset="no-results"

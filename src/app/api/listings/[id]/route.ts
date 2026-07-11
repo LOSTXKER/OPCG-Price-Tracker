@@ -9,6 +9,7 @@ import { cardInclude, userPublicSelect } from "@/lib/api/query-fragments";
 import { prisma } from "@/lib/db";
 import { earnHoney, getHoneyMultiplier } from "@/lib/honey";
 import { createLog } from "@/lib/logger";
+import { guardMarketplaceApi } from "@/lib/marketplace/feature-flag";
 import { UpdateListingSchema } from "@/lib/marketplace/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -23,6 +24,9 @@ async function getOwnedListing(listingId: number, userId: string) {
 }
 
 export const PATCH = apiHandler(async (request: NextRequest, context: RouteContext) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const dbUser = auth.user;
@@ -101,6 +105,9 @@ export const PATCH = apiHandler(async (request: NextRequest, context: RouteConte
 });
 
 export const DELETE = apiHandler(async (_request: NextRequest, context: RouteContext) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const dbUser = auth.user;

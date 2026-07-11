@@ -3,6 +3,7 @@ import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { createLog } from "@/lib/logger";
+import { guardMarketplaceApi } from "@/lib/marketplace/feature-flag";
 import { notify } from "@/lib/notify/dispatch";
 import { CreateMessageSchema } from "@/lib/messages/schemas";
 import { NextRequest, NextResponse } from "next/server";
@@ -10,6 +11,9 @@ import { NextRequest, NextResponse } from "next/server";
 const log = createLog("api:messages");
 
 export const GET = apiHandler(async (request: NextRequest) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const dbUser = auth.user;
@@ -79,6 +83,9 @@ export const GET = apiHandler(async (request: NextRequest) => {
 });
 
 export const POST = apiHandler(async (request: NextRequest) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const dbUser = auth.user;

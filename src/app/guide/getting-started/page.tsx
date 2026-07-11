@@ -499,7 +499,7 @@ export default async function GettingStartedPage() {
             description: t(lang, "guideStartRelatedPricesDesc"),
           },
           {
-            href: "/sets",
+            href: "/opcg/sets",
             icon: Layers,
             title: t(lang, "guideStartRelatedSetsTitle"),
             description: t(lang, "guideStartRelatedSetsDesc"),

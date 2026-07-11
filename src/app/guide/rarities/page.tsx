@@ -600,7 +600,7 @@ export default async function RaritiesPage() {
           <p className="text-sm text-muted-foreground">
             <strong className="text-foreground">{t(lang, "guideRarityBoxSpLabel")}</strong>{" "}
             {t(lang, "guideRarityBoxSpBodyA")}{" "}
-            <Link href="/drop-calculator" className="font-medium text-primary hover:underline">
+            <Link href="/opcg/drop-calculator" className="font-medium text-primary hover:underline">
               Drop Calculator
             </Link>
             {t(lang, "guideRarityBoxSpBodyB")}

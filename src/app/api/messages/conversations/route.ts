@@ -1,9 +1,13 @@
 import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { prisma } from "@/lib/db";
+import { guardMarketplaceApi } from "@/lib/marketplace/feature-flag";
 import { NextResponse } from "next/server";
 
 export const GET = apiHandler(async () => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const dbUser = auth.user;

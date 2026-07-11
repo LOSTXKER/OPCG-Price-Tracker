@@ -148,7 +148,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
               <p className="text-meta">{t(lang, "topSetsByValueCaption")}</p>
             </div>
             <Link
-              href="/sets"
+              href="/opcg/sets"
               className="inline-flex shrink-0 items-center gap-1 text-meta transition-colors ease-chrome hover:text-primary"
             >
               {t(lang, "marketViewAllSets")}
@@ -161,7 +161,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
               return (
                 <Link
                   key={s.code}
-                  href={`/sets/${s.code.toLowerCase()}`}
+                  href={`/opcg/sets/${s.code.toLowerCase()}`}
                   className="group flex items-center gap-3 px-5 py-3 transition-colors ease-chrome hover:bg-muted/70"
                 >
                   <span className="w-5 shrink-0 text-center font-price text-meta tabular-nums">
@@ -272,7 +272,7 @@ function TopCardTile({
       as={Link}
       variant="panel"
       interactive
-      href={`/cards/${card.cardCode}`}
+      href={`/opcg/cards/${card.cardCode}`}
       className="group flex flex-col overflow-hidden transition-colors ease-chrome"
     >
       <div className="relative aspect-[63/88] w-full overflow-hidden bg-muted/30">
