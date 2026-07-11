@@ -15,6 +15,15 @@
 - [ ] **Phase 6** IA/naming polish (ชื่อ/ไอคอนปลายทางเดียว · palette ครบ destination)
 - [ ] **Phase 7** commerce + admin เก็บกวาด (**ก่อนเปิด marketplace flag**)
 
+### UX/UI implementation batch — 2026-07-11
+> งานตาม audit responsive 390×844 / 768×1024 / 1440×900 · รักษา espresso+honey/Kanit · ไม่แตะ schema/dependency/config
+
+- [x] **P0 — usability blockers:** contrast light mode, finite loading/error/empty states, dialog/focus/keyboard/search/form accessibility
+- [x] **P1 — interaction kit:** mobile tap targets, SegmentedControl keyboard behavior, canonical Pagination, admin table mobile fallbacks
+- [x] **P2 — dedup/structure:** canonical empty/picker/plan/popover/settings/loading patterns และแยก card-detail orchestration โดยคง behavior
+- [x] **P3 — route/polish:** game namespace allowlist + feature guards, canonical links, LCP image priority, reduced-motion coverage
+- [x] **Verification:** test + lint + build + browser smoke 105 routes ที่ไม่ใช่ `/proto` และ visual matrix 390/768/1440 ทั้ง light/dark
+
 ## 🎨 Redesign (in-place · ทิศเต็มใน [VISION.md](VISION.md) · **ไม่มีเวอร์ชัน v1/v2**)
 > แก้ของเดิมทีละ surface ตาม spine VISION §7 · ทุก surface = adopt atom kit + verify (tsc/lint/build/test) + เปิดดูจริง · ⚠️ ข้อที่แตะ schema = เบสอนุมัติก่อน
 > 📌 กฎ design-system: การ์ดใหญ่ = `.panel` · `surface-*`/`hairline` = chip/control/nested · `.hairline` เป็น unlayered → อย่าผสมกับ ring/shadow บน element เดียว

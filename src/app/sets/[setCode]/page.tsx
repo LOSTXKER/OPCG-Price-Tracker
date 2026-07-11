@@ -27,7 +27,7 @@ export async function generateMetadata(props: {
   return {
     title,
     description,
-    alternates: { canonical: `/sets/${set.code}` },
+    alternates: { canonical: `/opcg/sets/${set.code}` },
     openGraph: { title, description, type: "article" },
     twitter: { card: "summary_large_image", title, description },
   };
@@ -49,10 +49,10 @@ export default async function SetDetailPage(props: {
       <JsonLd
         data={breadcrumbJsonLd([
           { name: t(lang, "home"), href: "/" },
-          { name: t(lang, "sets"), href: "/sets" },
+          { name: t(lang, "sets"), href: "/opcg/sets" },
           {
             name: `${set.code.toUpperCase()} — ${data.setName}`,
-            href: `/sets/${set.code}`,
+            href: `/opcg/sets/${set.code}`,
           },
         ])}
       />
@@ -62,7 +62,7 @@ export default async function SetDetailPage(props: {
           <Breadcrumb
             items={[
               { label: t(lang, "home"), href: "/" },
-              { label: t(lang, "sets"), href: "/sets" },
+              { label: t(lang, "sets"), href: "/opcg/sets" },
               { label: set.code.toUpperCase() },
             ]}
           />

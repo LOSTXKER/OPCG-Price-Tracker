@@ -51,7 +51,7 @@ export async function sendLinePriceAlert(
   const verb = direction === "BELOW" ? "ลงมาถึง" : "ขึ้นไปถึง";
   const baseUrl = clientEnv().NEXT_PUBLIC_APP_URL;
 
-  const text = `${emoji} Kuma แจ้งข่าว!\n${cardName} (${cardCode}) ${verb} ¥${price.toLocaleString()}\n\n${baseUrl}/cards/${cardCode}`;
+  const text = `${emoji} Kuma แจ้งข่าว!\n${cardName} (${cardCode}) ${verb} ¥${price.toLocaleString()}\n\n${baseUrl}/opcg/cards/${cardCode}`;
 
   return sendLineMessage(lineUserId, text);
 }

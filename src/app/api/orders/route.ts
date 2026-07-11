@@ -1,11 +1,15 @@
 import { apiHandler } from "@/lib/api/api-handler";
 import { requireAuthUser } from "@/lib/api/auth";
 import { parseJsonBody, parsePageLimit } from "@/lib/api/request-body";
+import { guardMarketplaceApi } from "@/lib/marketplace/feature-flag";
 import { CreateOrderSchema } from "@/lib/orders/schemas";
 import { createBuyNowOrder, listOrders } from "@/lib/orders/service";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = apiHandler(async (request: NextRequest) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 
@@ -32,6 +36,9 @@ export const GET = apiHandler(async (request: NextRequest) => {
 });
 
 export const POST = apiHandler(async (request: NextRequest) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
 

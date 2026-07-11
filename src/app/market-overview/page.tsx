@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Market Overview",
   description:
     "Comprehensive OPCG market statistics — total cards, market value, average price, rarity breakdowns and top sets by value.",
-  alternates: { canonical: "/market-overview" },
+  alternates: { canonical: "/opcg/market-overview" },
 }
 
 async function getMarketData() {
@@ -173,13 +173,13 @@ export default async function MarketOverviewPage() {
 
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Market Overview", href: "/market-overview" }])} />
+      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Market Overview", href: "/opcg/market-overview" }])} />
       <MarketOverviewClient data={data} />
       <RelatedPages
         items={[
-          { href: "/trending", icon: TrendingUp, title: "Trending", description: "การ์ดที่ราคาขยับมากที่สุด" },
-          { href: "/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่า" },
-          { href: "/compare", icon: GitCompareArrows, title: "เปรียบเทียบ", description: "เทียบการ์ดหลายใบ" },
+          { href: "/opcg/trending", icon: TrendingUp, title: "Trending", description: "การ์ดที่ราคาขยับมากที่สุด" },
+          { href: "/opcg/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่า" },
+          { href: "/opcg/compare", icon: GitCompareArrows, title: "เปรียบเทียบ", description: "เทียบการ์ดหลายใบ" },
         ]}
       />
     </>

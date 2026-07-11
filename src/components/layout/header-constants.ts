@@ -16,8 +16,8 @@ export const NAV_LINKS = [
   // bottom-nav + command palette ("หน้าแรก"/"ชุดการ์ด") so a place reads the same
   // on every surface. (Route matching uses href + owns, not the label key.)
   { href: "/" as const, key: "home" as const, owns: [] as readonly string[] },
-  { href: "/sets" as const, key: "sets" as const, owns: ["/cards", "/search", "/trending", "/market-overview"] as readonly string[] },
-  { href: "/decks" as const, key: "decksAndTools" as const, owns: ["/compare", "/drop-calculator", "/deck-calculator"] as readonly string[] },
+  { href: "/opcg/sets" as const, key: "sets" as const, owns: ["/cards", "/search", "/trending", "/market-overview"] as readonly string[] },
+  { href: "/opcg/decks" as const, key: "decksAndTools" as const, owns: ["/compare", "/drop-calculator", "/deck-calculator"] as readonly string[] },
 ];
 
 // Appended to the desktop nav only when marketplaceEnabled (never swaps a hub).

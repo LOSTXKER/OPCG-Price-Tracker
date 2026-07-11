@@ -89,7 +89,7 @@ export function AlertRow({
       <div className="flex gap-3 sm:gap-4">
         {/* Card image — preserves card aspect ratio (63:88 portrait) */}
         <Link
-          href={`/cards/${alert.card.cardCode}`}
+          href={`/opcg/cards/${alert.card.cardCode}`}
           className="relative aspect-[63/88] w-12 shrink-0 overflow-hidden rounded-md bg-muted sm:w-14"
         >
           {alert.card.imageUrl ? (
@@ -110,7 +110,7 @@ export function AlertRow({
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
               <Link
-                href={`/cards/${alert.card.cardCode}`}
+                href={`/opcg/cards/${alert.card.cardCode}`}
                 className="block truncate text-sm font-semibold hover:underline"
               >
                 {cardName}

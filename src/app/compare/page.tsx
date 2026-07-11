@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   title: "Compare Cards",
   description:
     "Compare OPCG card prices, stats and price history side by side. Find the best value across different cards and rarities.",
-  alternates: { canonical: "/compare" },
+  alternates: { canonical: "/opcg/compare" },
 };
 
 export default function ComparePage() {
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Compare Cards", href: "/compare" }])} />
+      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Compare Cards", href: "/opcg/compare" }])} />
       <CompareClient />
     </>
   );

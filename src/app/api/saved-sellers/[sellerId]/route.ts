@@ -2,10 +2,14 @@ import { NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
+import { guardMarketplaceApi } from "@/lib/marketplace/feature-flag";
 
 type Ctx = { params: Promise<{ sellerId: string }> };
 
 export const POST = apiHandler(async (_req, { params }: Ctx) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const { sellerId } = await params;
@@ -40,6 +44,9 @@ export const POST = apiHandler(async (_req, { params }: Ctx) => {
 });
 
 export const DELETE = apiHandler(async (_req, { params }: Ctx) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const { sellerId } = await params;

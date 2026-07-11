@@ -116,7 +116,7 @@ function buildSources(lang: Language) {
     {
       label: t(lang, "guideSetSourceMeecardLabel"),
       desc: t(lang, "guideSetSourceMeecardDesc"),
-      url: "/sets",
+      url: "/opcg/sets",
       internal: true,
     },
   ];
@@ -291,7 +291,7 @@ export default async function GuideSetsPage() {
           <p className="mt-1 text-sm text-muted-foreground">
             {t(lang, "guideSetListIntroA")}
             <Link
-              href="/sets"
+              href="/opcg/sets"
               className="font-medium text-primary hover:underline"
             >
               {t(lang, "guideSetListIntroLink")}
@@ -314,7 +314,7 @@ export default async function GuideSetsPage() {
                 {sets.map((set) => (
                   <Link
                     key={set.code}
-                    href={`/sets/${set.code}`}
+                    href={`/opcg/sets/${set.code}`}
                     className="flex items-center gap-3 px-4 py-3 motion-base hover:bg-muted/70"
                   >
                     {set.boxImageUrl ? (

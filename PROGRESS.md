@@ -1,42 +1,44 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-07 — **Phase 2 (kit dedup) + Phase 3 (token discipline) เกือบครบ · #69–#88 merged เข้า master** · master เขียว tsc0/lint0/test56/build✓ · เหลือ Phase 3 อันเดียว = **TOKENS-07 status-660** (gradual) · **NEXT = TOKENS-07 หรือ Phase 4 (states) / Phase 1 (ลบโค้ดตาย)**
+อัปเดตล่าสุด: 2026-07-11 — **UX/UI refactor P0–P3 เสร็จและ verify แล้ว** บน branch `codex/uxui-refactor-work` · รอ commit/push/PR/merge ตามคำสั่งเบส
 
-## ✅ Phase 3 — token discipline (เข้า master แล้ว #83–#88)
-- **#83** ลบ orphan `streak-tier-indicator` (dead code)
-- **#84** TOKENS-03 hairline → `border-hair` token (373 จุด, invisible)
-- **#86** TOKENS-04 `--chrome-h` var (sticky/scroll-mt) + CHROME-07/12 gutter/ticker align
-- **#87** TOKENS-02 เงา overlay/floating → `--elev-overlay/raised` token (15 จุด)
-- **#88 (ชุดใหญ่ visual)**:
-  - **วินัยเขียว/แดง** — honey = accent เดียว (primary): ดาว/Pro/compare-winner amber&เขียว → honey · เขียว/แดง = กำไร/ขาดทุนเท่านั้น
-  - **หัวใจ** — "รายการโปรด" ใช้หัวใจอันเดียวทั้งแอป (เดิมปนดาว) · `WatchlistStar`→`WatchlistHeart` · nav rose→honey
-  - **motion** — `duration-200/300` → `--dur-*` token (invisible)
-  - **radius** — Surface ทุก variant = 12px (`rounded-lg`) · bare `rounded`(4px)→`rounded-sm` 142 จุด
-  - **admin palette** (ADMIN-05) — status color → semantic token (7 ไฟล์, preserve category/data color)
-  - **guide สี** (CONTENT-09) — สีตกแต่ง→neutral/semantic (preserve board-legend/rarity/card = data)
-  - **dead-scroll** (CHROME-09) — main pb ลดเมื่อ route มี mobile footer (ฆ่าแถบว่าง ~128px)
-- **verify: ฉันเปิด browser เช็คเอง (dev auth bypass)** — สี/หัวใจ/เงา/radius/guide/admin render ถูก · admin ตาราง(#76)+ฟอร์ม(#75) ทำงานจริง · console 0 error
+## ✅ ทำแล้ว
 
-## ✅ Phase 2.5–2.6 (#69–#82) — kit dedup + จัดบ้าน
-search engine · guide/auth kit · SETS-04 · HONEY-03 · **ADMIN-06** `useAdminForm`(ยุบ7ฟอร์ม) · **ADMIN-02** 5 list→`AdminDataTable` · **IDENTITY-11** settings→`components/settings/` · **KIT-04/06/09** · **HONEY-05** honey-sidebar split
+- **P0 — usability blockers:** ปรับ Light contrast, แยกสีกราฟ/ข้อความสถานะ, loading มี success/empty/error/retry/timeout, commerce ไม่ค้าง spinner, dialog/search/form/skip-link/language/ARIA/keyboard semantics ครบขึ้น
+- **P1 — interaction kit:** จุดกดมือถือ/แท็บเล็ตหลัก ≥44px, `SegmentedControl` roving tabindex + Arrow/Home/End, `Pagination` กลาง, horizontal affordance และ Admin table มี list fallback ใต้ 640px
+- **P2 — dedup/structure:** รวม EmptyState/Kuma, picker, plan comparison, Popover, settings header/skeleton; แยก card detail เป็น model + identity/price/chart/navigation/sticky-buy โดยคงหน้าตาและ behavior
+- **P3 — route/polish:** game namespace allowlist, canonical `/opcg/*`, marketplace guards UI/API, canonical internal links, LCP image priority, reduced-motion coverage
+- เก็บ regression ที่พบจาก browser จริง: header 768px ล้น, chat 390px ล้น, Admin cards ยาวเกิน, bottom-nav bleed, command dialog focus restore, Blog table fallback และ Recharts SSR warning
+- อัปเดต canonical component kit ใน `AGENTS.md`; ไม่เพิ่ม dependency/config/schema/migration
 
-## ⏭️ NEXT — เลือกทางต่อ
-1. **ปิด Phase 3**: `TOKENS-07` สี status ดิบ 660 จุด → semantic token **ทีละ feature** (เริ่ม orders/alerts/notifications) — audit สั่งทำ gradual, mixed-risk (บาง invisible บาง visual) แยกทำเป็นชุดๆ
-2. **Phase 4 — states**: ศูนย์ spinner→skeleton (9 จุด) · loading.tsx ราย segment · empty state ทุกจุดมี CTA · หน้า error ไทย
-3. **Phase 1 — ลบโค้ดตาย** ~3,000 บรรทัด/orphan 18+ ไฟล์ (⚠️ เบสอนุมัติ list ก่อนลบ)
-4. **Phase 5 — mobile ราย surface** (เบสเลือกหน้า) · **Phase 6** IA/naming · **Phase 7** commerce+admin (ก่อนเปิด marketplace flag)
-- M0 bug: cron `leaderboard-rewards` ไม่ถูก schedule ใน vercel.json (Top-10 payout อาจไม่จ่าย)
+## ✅ หลักฐาน verify ล่าสุด
 
-## ⚠️ ต้องเบส eyeball/ตัดสิน
-- **dead-scroll** (#88): มือถือ resize ในเครื่อง dev ไม่ได้ → เบสเช็ค real device (แถบว่างท้ายหน้าหาย + เนื้อหาไม่โดน nav ทับ)
-- **radius/สี identity**: ล็อกแล้ว (12px + honey + หัวใจ) — ถ้าอยากปรับ (เช่นดาว/หัวใจทองทั้ง 2 โหมด = ต้อง token `--tier-gold`) บอกได้
+- `npm run lint` — **0 errors**, 30 warnings เดิม (ส่วนใหญ่ `<img>` ใน admin/proto และ `.codex` scripts)
+- `npm run test` — **13 files, 106/106 tests ผ่าน**
+- `npx tsc --noEmit` — ผ่าน
+- `npm run build` — ผ่าน, Next สร้าง **155 pages**; เหลือ warning เดิมว่า middleware convention deprecated
+- Production route smoke — **105/105 non-`/proto` routes ตอบ 200**, ไม่มี 5xx และไม่มี server error log
+- Route boundary — `/opcg/admin`, `/pokemon/cards/*`, `/all/cards/*`, `/opcg/pricing` = 404; legacy `/cards/*` และ `/sets/*` redirect ไป canonical; `/opcg/portfolio` redirect กลับ unified `/portfolio`
+- Browser matrix — 390×844, 768×1024, 1440×900; Light/Dark; ไม่มี horizontal overflow ในหน้าตัวแทน Home, Card, Messages, Marketplace, Saved, Pricing, More และ Admin tables
+- Keyboard/dialog — ArrowRight/Home/End เปลี่ยน segmented selection ถูก; Escape ปิด dialog และคืน focus; dialog ใช้ Base UI focus trap; console error = 0
+- Marketplace flag เปิดใน local ระหว่างตรวจ; Saved/Messages มี success/empty/error/retry และไม่เหลือ spinner ค้าง
 
-## กฎเหล็ก / บทเรียน
-- **ห้าม push master ตรง** — branch+PR+merge · self-merge เฉพาะเบสสั่ง "merge" ชัดเจน
-- **อย่ารัน `npm run build` ตอน dev server รันอยู่** — ทับ `.next` → hydration mismatch (dev cache, ไม่ใช่บั๊ก) · verify build ตอน dev ปิด หรือ restart dev หลัง build
-- **เช็ค UI เอง** ผ่าน browser extension (dev localhost auth bypass) — ไม่โยน eyeball ให้เบสถ้าเข้าเองได้
-- migrate = คงพฤติกรรม/data เดิม · adversarial review workflow ก่อน PR · **PRESERVE data color** (rarity/card/tier/legend) ตอนแตะสี
+## ⚠️ ไม่ใช่ blocker ของงานนี้
+
+- Login เต็ม flow ต้องตรวจซ้ำเมื่อปิด auth bypass; local รอบนี้ใช้ session bypass ตามแผน
+- `/proto` 10 routes และ export files ถูกตัดออกตาม scope
+- Next แนะนำย้าย `middleware.ts` → `proxy.ts`; เป็น convention/config migration แยกงาน ไม่ทำปน refactor นี้
+- Lint warnings เดิม 30 จุดยังไม่ใช่ error และส่วนใหญ่ไม่อยู่ใน scope P0–P3
+
+## ⏭️ NEXT
+
+1. Commit และ push branch `codex/uxui-refactor-work`
+2. เปิด PR, รอ/ตรวจ CI แล้ว merge เข้า `master` (ห้าม push master ตรง)
+3. หลัง deploy ให้ยิง production smoke สั้นอีกครั้ง โดยเฉพาะ auth จริงและ Marketplace flag
 
 ## แหล่งอ้างอิง
-- **แผนแม่บท:** `doc/uxui-refactor-plan.md` (8 phases) · **หลักฐาน:** `doc/uxui-audit-findings-2026-07-04.md` (230 findings) · **kit canon:** `AGENTS.md` §Component Kit
+
+- แผนแม่บท: `doc/uxui-refactor-plan.md`
+- หลักฐาน audit: `doc/uxui-audit-findings-2026-07-04.md`
+- Canonical kit: `AGENTS.md` §Component Kit

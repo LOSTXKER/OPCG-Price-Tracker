@@ -139,7 +139,7 @@ export default async function MarketplacePage({
       <RelatedPages
         items={[
           { href: "/", icon: LineChart, title: "ตลาดราคา", description: "ดูราคาการ์ดอัปเดตทุกวัน" },
-          { href: "/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่า" },
+          { href: "/opcg/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่า" },
           { href: "/guide/buying", icon: ShoppingCart, title: "คู่มือการซื้อ", description: "ซื้อการ์ดที่ไหนดี?" },
         ]}
       />

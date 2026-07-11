@@ -2,12 +2,14 @@ import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 import { isAuthBypassed } from "@/lib/env";
 import {
+  ALL_GAMES,
   DEFAULT_GAME,
   GAME_AGNOSTIC_FEATURES,
   GAME_COOKIE,
   GAME_COOKIE_MAX_AGE,
   GAME_HEADER,
-  isGamePrefix,
+  isActiveGamePrefix,
+  isGameNamespaceRoute,
   isGameScopedSegment,
 } from "@/lib/game/constants";
 
@@ -36,16 +38,28 @@ export async function middleware(request: NextRequest) {
   // prefixed), expose the game via the `x-game` header + persist the cookie.
   // None of the game-scoped features are middleware-auth-gated, so this branch
   // never needs the login redirect below.
-  if (isGamePrefix(seg1)) {
+  const gameSegment = segments[1];
+
+  // Unified cross-game features are canonical at their flat path. Registered
+  // game identities (including `all`) may only act as a removable prefix here;
+  // they must never turn account/system routes into aliases.
+  if (
+    (isActiveGamePrefix(seg1) || seg1 === ALL_GAMES) &&
+    gameSegment &&
+    GAME_AGNOSTIC_FEATURES.has(gameSegment)
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/" + segments.slice(1).join("/");
+    return NextResponse.redirect(url);
+  }
+
+  // Only active games + real game-owned segments may rewrite. `/all` is valid
+  // solely for aggregate search, and registered `comingSoon` games do not own
+  // catalog routes yet.
+  if (isGameNamespaceRoute(seg1, gameSegment)) {
     const game = seg1;
     const url = request.nextUrl.clone();
     url.pathname = "/" + segments.slice(1).join("/"); // "/" when path is just "/opcg"
-
-    // Unified cross-game features (portfolio) are canonical at their flat path —
-    // strip the game prefix so /opcg/portfolio (or /all/portfolio) → /portfolio.
-    if (segments[1] && GAME_AGNOSTIC_FEATURES.has(segments[1])) {
-      return NextResponse.redirect(url);
-    }
 
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set(GAME_HEADER, game);
@@ -66,7 +80,7 @@ export async function middleware(request: NextRequest) {
   // redirected request hits the rewrite branch above (no loop).
   if (isGameScopedSegment(seg1)) {
     const cookieGame = request.cookies.get(GAME_COOKIE)?.value;
-    const game = isGamePrefix(cookieGame) ? cookieGame : DEFAULT_GAME;
+    const game = isActiveGamePrefix(cookieGame) ? cookieGame : DEFAULT_GAME;
     const url = request.nextUrl.clone();
     url.pathname = `/${game}${pathname}`;
     return NextResponse.redirect(url);
@@ -79,15 +93,11 @@ export async function middleware(request: NextRequest) {
 
   const { response, user } = await updateSession(request);
 
-  const needsAuth =
-    pathname.startsWith("/marketplace/create") ||
-    pathname.startsWith("/messages") ||
-    (pathname.startsWith("/admin") && !pathname.startsWith("/admin-login"));
+  const needsAdminAuth =
+    pathname.startsWith("/admin") && !pathname.startsWith("/admin-login");
 
-  if (needsAuth && !user) {
-    const isAdminPath = pathname.startsWith("/admin");
-    const loginUrl = new URL(isAdminPath ? "/admin-login" : "/login", request.url);
-    if (!isAdminPath) loginUrl.searchParams.set("redirect", pathname);
+  if (needsAdminAuth && !user) {
+    const loginUrl = new URL("/admin-login", request.url);
     return Response.redirect(loginUrl);
   }
 

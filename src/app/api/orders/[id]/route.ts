@@ -4,6 +4,7 @@ import { parseJsonBody } from "@/lib/api/request-body";
 import { prisma } from "@/lib/db";
 import { triggerAchievementCheck } from "@/lib/honey";
 import { createLog } from "@/lib/logger";
+import { guardMarketplaceApi } from "@/lib/marketplace/feature-flag";
 import { notify } from "@/lib/notify/dispatch";
 import { UpdateOrderSchema } from "@/lib/orders/schemas";
 import { NextRequest, NextResponse } from "next/server";
@@ -36,6 +37,9 @@ const VALID_TRANSITIONS: Record<string, { next: OrderStatus; by: "buyer" | "sell
 };
 
 export const GET = apiHandler(async (_request: NextRequest, props: Params) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const dbUser = auth.user;
@@ -84,6 +88,9 @@ export const GET = apiHandler(async (_request: NextRequest, props: Params) => {
 });
 
 export const PATCH = apiHandler(async (request: NextRequest, props: Params) => {
+  const blocked = await guardMarketplaceApi();
+  if (blocked) return blocked;
+
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
   const dbUser = auth.user;

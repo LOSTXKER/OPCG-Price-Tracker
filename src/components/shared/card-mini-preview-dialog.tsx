@@ -53,7 +53,6 @@ function LightboxBody({ onClose }: { onClose: () => void }) {
             sizes="(max-width: 640px) 90vw, 560px"
             placeholder="blur"
             blurDataURL={BLUR_DATA_URL}
-            priority
           />
         ) : (
           <div className="flex size-full items-center justify-center text-meta">

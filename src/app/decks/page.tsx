@@ -26,12 +26,12 @@ type Tool = {
 // Active tools first, then reserved "coming soon" slots (meta / tier / builder).
 // Order is stable so future features just flip `disabled` — no layout churn.
 const TOOLS: Tool[] = [
-  { href: "/deck-calculator", icon: LayoutGrid, key: "deckCalculatorNav" },
-  { href: "/drop-calculator", icon: Dices, key: "dropCalculator" },
-  { href: "/compare", icon: ArrowRightLeft, key: "compareCards" },
-  { href: "/decks", icon: Hammer, key: "deckBuilder", disabled: true },
-  { href: "/decks", icon: Flame, key: "metaCards", disabled: true },
-  { href: "/decks", icon: Trophy, key: "tierList", disabled: true },
+  { href: "/opcg/deck-calculator", icon: LayoutGrid, key: "deckCalculatorNav" },
+  { href: "/opcg/drop-calculator", icon: Dices, key: "dropCalculator" },
+  { href: "/opcg/compare", icon: ArrowRightLeft, key: "compareCards" },
+  { href: "/opcg/decks", icon: Hammer, key: "deckBuilder", disabled: true },
+  { href: "/opcg/decks", icon: Flame, key: "metaCards", disabled: true },
+  { href: "/opcg/decks", icon: Trophy, key: "tierList", disabled: true },
 ];
 
 function ToolTile({ tool, label, comingSoon }: { tool: Tool; label: string; comingSoon: string }) {

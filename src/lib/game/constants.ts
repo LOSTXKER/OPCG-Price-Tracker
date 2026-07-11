@@ -54,15 +54,38 @@ export const GAME_AGNOSTIC_FEATURES: ReadonlySet<string> = new Set([
 ])
 
 const VALID_PREFIXES: ReadonlySet<string> = new Set([...getGameSlugs(), ALL_GAMES])
+/** Routing stays pinned until card/set/search queries are genuinely scoped by
+ * game. Flipping a UI `comingSoon` flag must never expose OPCG data under a
+ * second namespace by accident. */
+export const ROUTABLE_GAME_PREFIXES: ReadonlySet<string> = new Set([DEFAULT_GAME])
 
 /** True when `seg` is a usable game URL prefix (`opcg` / `pokemon` / `all`). */
 export function isGamePrefix(seg: string | undefined | null): seg is string {
   return seg != null && VALID_PREFIXES.has(seg)
 }
 
+/** True when `seg` is a game whose catalog is currently browsable. Registered
+ * `comingSoon` games remain valid UI identities, but must not resolve catalog
+ * routes until their data is live. */
+export function isActiveGamePrefix(seg: string | undefined | null): seg is string {
+  return seg != null && ROUTABLE_GAME_PREFIXES.has(seg)
+}
+
 /** True when `seg` is a feature that belongs under a game namespace. */
 export function isGameScopedSegment(seg: string | undefined | null): seg is string {
   return seg != null && GAME_SCOPED_SEGMENTS.has(seg)
+}
+
+/** Whether a namespaced pathname may rewrite to a flat catalog route.
+ * Active games own the home page plus every GAME_SCOPED_SEGMENT. The aggregate
+ * `/all` namespace only owns search; cross-game MINE routes stay canonical at
+ * their flat URLs and are handled separately by middleware. */
+export function isGameNamespaceRoute(
+  prefix: string | undefined | null,
+  segment: string | undefined | null,
+): boolean {
+  if (prefix === ALL_GAMES) return segment === "search"
+  return isActiveGamePrefix(prefix) && (segment == null || isGameScopedSegment(segment))
 }
 
 /**
@@ -92,7 +115,11 @@ export function isNavActive(
   owns: readonly string[] = [],
 ): boolean {
   const path = stripGamePrefix(pathname)
-  const hit = (target: string) =>
-    target === "/" ? path === "/" : path === target || path.startsWith(`${target}/`)
+  const hit = (target: string) => {
+    const normalizedTarget = stripGamePrefix(target)
+    return normalizedTarget === "/"
+      ? path === "/"
+      : path === normalizedTarget || path.startsWith(`${normalizedTarget}/`)
+  }
   return hit(href) || owns.some(hit)
 }

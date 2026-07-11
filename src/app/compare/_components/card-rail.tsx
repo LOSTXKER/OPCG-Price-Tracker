@@ -70,7 +70,7 @@ export function CardRail({
                 >
                   <div className="relative aspect-[5/7] w-full max-w-[180px]">
                     <Link
-                      href={`/cards/${card.cardCode}`}
+                      href={`/opcg/cards/${card.cardCode}`}
                       className="block h-full w-full"
                     >
                       <div className="relative h-full w-full overflow-hidden rounded-xl border bg-muted">

@@ -40,7 +40,7 @@ export async function generateMetadata(props: {
   return {
     title,
     description,
-    alternates: { canonical: `/cards/${card.cardCode}` },
+    alternates: { canonical: `/opcg/cards/${card.cardCode}` },
     openGraph: {
       title,
       description,
@@ -122,8 +122,8 @@ export default async function CardDetailPage(props: {
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", href: "/" },
-          { name: setName, href: `/sets/${card.set.code}` },
-          { name: `${card.cardCode} ${displayName}`, href: `/cards/${card.cardCode}` },
+          { name: setName, href: `/opcg/sets/${card.set.code}` },
+          { name: `${card.cardCode} ${displayName}`, href: `/opcg/cards/${card.cardCode}` },
         ])}
       />
       <CardDetail
