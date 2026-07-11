@@ -8,7 +8,6 @@ import {
   Filter,
   Loader2,
   Package,
-  RotateCcw,
   Search,
   X,
 } from "lucide-react"
@@ -18,6 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { RarityBadge } from "@/components/shared/rarity-badge"
+import { FilterModal } from "@/components/shared/filter-modal"
 import { SetPicker } from "@/components/shared/set-picker"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
@@ -83,9 +83,10 @@ function FilterControls({
             {rarityOptions.map((r) => (
               <button
                 key={r.code}
+                type="button"
                 onClick={() => setActiveRarity(activeRarity === r.code ? null : r.code)}
                 className={cn(
-                  "ease-chrome rounded-lg px-2.5 py-1 text-xs font-semibold",
+                  "ease-chrome min-h-11 rounded-lg px-2.5 py-1 text-xs font-semibold md:min-h-0",
                   activeRarity === r.code
                     ? "text-white"
                     : "bg-muted text-muted-foreground hover:text-foreground"
@@ -106,9 +107,10 @@ function FilterControls({
             {colorOptions.map((c) => (
               <button
                 key={c.code}
+                type="button"
                 onClick={() => setActiveColor(activeColor === c.code ? null : c.code)}
                 className={cn(
-                  "ease-chrome flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium",
+                  "ease-chrome flex min-h-11 items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium md:min-h-0",
                   activeColor === c.code
                     ? "border-primary/40 bg-primary/5 text-primary"
                     : "border-hair bg-background text-muted-foreground hover:text-foreground"
@@ -129,9 +131,10 @@ function FilterControls({
             {typeOptions.map((ty) => (
               <button
                 key={ty.code}
+                type="button"
                 onClick={() => setActiveCardType(activeCardType === ty.code ? null : ty.code)}
                 className={cn(
-                  "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium",
+                  "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium md:min-h-0",
                   activeCardType === ty.code
                     ? "border-primary/40 bg-primary/5 text-primary"
                     : "border-hair bg-background text-muted-foreground hover:text-foreground"
@@ -152,11 +155,12 @@ function FilterControls({
             {variantOptions.map((v) => (
               <button
                 key={v.code}
+                type="button"
                 onClick={() =>
                   setActiveVariant(activeVariant === v.code ? null : v.code)
                 }
                 className={cn(
-                  "ease-chrome rounded-lg border px-2.5 py-1 text-xs font-medium",
+                  "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium md:min-h-0",
                   activeVariant === v.code
                     ? "border-primary/40 bg-primary/5 text-primary"
                     : "border-hair bg-background text-muted-foreground hover:text-foreground"
@@ -171,8 +175,9 @@ function FilterControls({
 
       {activeFilterCount > 0 && (
         <button
+          type="button"
           onClick={clearAllFilters}
-          className="text-xs font-medium text-primary hover:underline"
+          className="min-h-11 px-2 text-xs font-medium text-primary hover:underline md:min-h-0"
         >
           {t(lang, "clearAllFilters")}
         </button>
@@ -420,7 +425,8 @@ export function SelectStep({
             <input
               type="search"
               placeholder={t(lang, "searchLong")}
-              className="h-9 w-full rounded-lg border border-hair bg-muted/30 pl-9 pr-8 text-sm outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-primary/40 focus:bg-background focus:ring-1 focus:ring-primary/20"
+              aria-label={t(lang, "searchLong")}
+              className="h-11 w-full rounded-lg border border-hair bg-muted/30 pl-9 pr-8 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary/40 focus:bg-background focus:ring-1 focus:ring-primary/20 md:h-9"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               autoComplete="off"
@@ -428,8 +434,10 @@ export function SelectStep({
             />
             {query && (
               <button
+                type="button"
+                aria-label={t(lang, "clearAll")}
                 onClick={() => setQuery("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-foreground"
+                className="tap-safe absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-foreground"
               >
                 <X className="size-3.5" />
               </button>
@@ -442,7 +450,7 @@ export function SelectStep({
             type="button"
             onClick={() => setShowFilters(!showFilters)}
             className={cn(
-              "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm",
+              "ease-chrome relative flex h-11 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm md:h-9",
               showFilters || modalFilterCount > 0
                 ? "border-primary/40 bg-primary/5 text-primary"
                 : "border-hair bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -494,7 +502,7 @@ export function SelectStep({
                   type="button"
                   onClick={() => onSelectCard(c)}
                   aria-label={t(lang, "remove")}
-                  className="absolute right-0.5 top-0.5 flex size-5 items-center justify-center rounded-full bg-foreground/85 text-background shadow-[var(--elev-raised)] hover:bg-danger"
+                  className="tap-safe absolute right-0.5 top-0.5 flex size-5 items-center justify-center rounded-full bg-foreground/85 text-background shadow-[var(--elev-raised)] hover:bg-danger"
                 >
                   <X className="size-3" />
                 </button>
@@ -506,60 +514,19 @@ export function SelectStep({
 
       {footer}
 
-      {/* Filters — a CoinMarketCap-style modal: full-screen on mobile, a centered
-          card on desktop (เบส). Rendered INSIDE the picker (absolute, not a portal)
-          so it works in a Dialog / the z-100 compare modal without nesting portals. */}
-      {showFilters && (
-        <>
-          {/* desktop backdrop — dark blur (mobile panel is full-screen) */}
-          <button
-            type="button"
-            aria-label={t(lang, "close")}
-            onClick={() => setShowFilters(false)}
-            className="absolute inset-0 z-20 hidden bg-black/40 animate-in fade-in-0 supports-backdrop-filter:backdrop-blur-sm md:block"
-          />
-          <div className="absolute inset-0 z-30 flex flex-col bg-background animate-in fade-in-0 slide-in-from-bottom-3 duration-[var(--dur-base)] md:inset-auto md:left-1/2 md:top-1/2 md:max-h-[85%] md:w-[26rem] md:max-w-[calc(100%-2rem)] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-2xl md:border md:border-hair md:shadow-[var(--elev-overlay)]">
-            <div className="flex items-center justify-between border-b border-hair px-4 py-3">
-              <span className="text-h4">{t(lang, "filter")}</span>
-              <button
-                type="button"
-                onClick={() => setShowFilters(false)}
-                aria-label={t(lang, "close")}
-                className="tap-safe -mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
-              >
-                <X className="size-4" />
-              </button>
-            </div>
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-              <FilterControls {...filterProps} />
-            </div>
-            {/* Reset (left) + Apply (right) — CoinMarketCap footer */}
-            <div className="flex items-center gap-3 border-t border-hair p-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveRarity(null)
-                  setActiveColor(null)
-                  setActiveCardType(null)
-                  setActiveVariant(null)
-                }}
-                disabled={modalFilterCount === 0}
-                className="ease-chrome flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary hover:bg-primary/5 disabled:opacity-40"
-              >
-                <RotateCcw className="size-3.5" />
-                {t(lang, "reset")}
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowFilters(false)}
-                className="ease-chrome h-11 flex-1 rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90"
-              >
-                {t(lang, "apply")}
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      <FilterModal
+        open={showFilters}
+        onOpenChange={setShowFilters}
+        onReset={() => {
+          setActiveRarity(null)
+          setActiveColor(null)
+          setActiveCardType(null)
+          setActiveVariant(null)
+        }}
+        resetDisabled={modalFilterCount === 0}
+      >
+        <FilterControls {...filterProps} />
+      </FilterModal>
     </div>
   )
 }

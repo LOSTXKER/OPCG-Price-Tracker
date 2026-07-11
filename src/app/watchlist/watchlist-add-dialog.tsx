@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { CardPickerForm, type CardWithSet } from "@/components/shared/card-picker-form";
+import { CardBatchPickerDialog } from "@/components/shared/card-batch-picker-dialog";
+import type { CardWithSet } from "@/components/shared/card-picker-form";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import { ApiError, apiPost } from "@/lib/api/client";
 import { t } from "@/lib/i18n";
@@ -27,73 +26,34 @@ export function WatchlistAddDialog({
 }) {
   const lang = useUIStore((s) => s.language);
   const { openUpgradeDialog } = useUpgradeDialog();
-  const [pending, setPending] = useState<CardWithSet[]>([]);
-  const [busy, setBusy] = useState(false);
 
-  // Drop the pending selection whenever the dialog closes.
-  useEffect(() => {
-    if (!open) setPending([]);
-  }, [open]);
-
-  const toggle = (card: CardWithSet) => {
-    setPending((prev) =>
-      prev.some((c) => c.id === card.id)
-        ? prev.filter((c) => c.id !== card.id)
-        : [...prev, card],
-    );
-  };
-
-  const commit = async () => {
-    if (busy || pending.length === 0) return;
-    setBusy(true);
+  const addCards = async (cards: CardWithSet[]) => {
     try {
-      for (const card of pending) {
+      for (const card of cards) {
         await apiPost("/api/watchlist", { cardId: card.id });
       }
       toast.success(t(lang, "addToWatchlist"), {
-        description: `${pending.length} ${t(lang, "card")}`,
+        description: `${cards.length} ${t(lang, "card")}`,
       });
       onAdded();
-      setPending([]);
-      onOpenChange(false);
+      return true;
     } catch (err) {
       if (err instanceof ApiError && err.status === 403) {
         openUpgradeDialog({ featureKey: "watchlistCards" });
       } else {
         toast.error(t(lang, "watchlistUpdateFailed"));
       }
-    } finally {
-      setBusy(false);
+      return false;
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="flex flex-col gap-0 overflow-hidden p-0 max-md:!inset-0 max-md:!max-h-none max-md:!max-w-none max-md:!translate-x-0 max-md:!translate-y-0 max-md:!rounded-none md:h-auto md:max-h-[85dvh] md:w-full md:max-w-[34rem]"
-      >
-        {/* Tap toggles selection (multi-pick); the footer commits the batch. The
-            footer is passed INTO the picker so the filter overlay covers it. */}
-        <CardPickerForm
-          onSelect={toggle}
-          isSelected={(c) => pending.some((p) => p.id === c.id)}
-          selected={pending}
-          footer={
-            <div className="border-t border-hair p-3">
-              <button
-                type="button"
-                onClick={() => void commit()}
-                disabled={pending.length === 0 || busy}
-                className="ease-chrome h-11 w-full rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                {pending.length === 0
-                  ? t(lang, "selectCardsToAdd")
-                  : `${t(lang, "addToWatchlist")} (${pending.length})`}
-              </button>
-            </div>
-          }
-        />
-      </DialogContent>
-    </Dialog>
+    <CardBatchPickerDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      onSubmit={addCards}
+      emptySubmitLabel={t(lang, "selectCardsToAdd")}
+      submitLabel={(count) => `${t(lang, "addToWatchlist")} (${count})`}
+    />
   );
 }

@@ -68,9 +68,13 @@ Concrete consequences:
 | ตัวเลขใหญ่ (KPI / ราคา hero) | `HeroNumber` | `ui/hero-number.tsx` | พอร์ตรวม / ราคา hero |
 | Sparkline | `MiniSparkline` | `ui/mini-sparkline.tsx` | กราฟจิ๋วในแถว/การ์ด |
 | Loading (ศูนย์ spinner) | `Skeleton` · `LoadingState` · `PageSkeleton` | `ui/skeleton.tsx` · `shared/loading-state.tsx` · `shared/page-skeleton.tsx` | โครงโหลด |
+| Popover | `Popover` · `PopoverTrigger` · `PopoverContent` | `ui/popover.tsx` | floating info/actions ที่ไม่ใช่ dialog — ใช้ Base UI positioning, Escape และ focus behavior กลาง ห้ามคำนวณตำแหน่ง/portal เอง |
 | **Filter surface (canonical)** | `FilterModal` | `shared/filter-modal.tsx` | **ตัวกรองทุกหน้า** — popup กลางจอ (desktop) / เต็มจอ (มือถือ) แบบ CoinMarketCap · header + body (facet rows) + Reset/Apply footer + backdrop เบลอ. เปิดจากปุ่ม "ตัวกรอง". **set/search/sort อยู่นอก modal** (set = control เด่น, ผู้ใช้เลือกชุดก่อน) — ใส่แค่ facet (rarity/สี/type/condition) ข้างใน |
 | Filter / toolbar | `FilterToolbar` · `GameFilterChips` | `shared/filter-toolbar.tsx` · `shared/game-filter-chips.tsx` | แถบกรอง/สลับมุมมอง (search/sort/view) — คู่กับ `FilterModal` |
+| Pagination | `Pagination` | `ui/pagination.tsx` | เปลี่ยนหน้ารายการฝั่งผู้ใช้ — summary เป็น slot, ปุ่มมือถือ ≥44px, มี compact range ใต้ `sm:` |
+| Billing plans | `PlanCards` · `PlanFeatureComparison` | `billing/plan-cards.tsx` · `billing/plan-feature-comparison.tsx` | การ์ดแพ็กเกจและตารางเทียบสิทธิ์บน `/pricing` กับ Settings Subscription — caller เป็นเจ้าของ CTA/Stripe action |
 | Page shell | `PageContainer` · `PageHeader` | `layout/page-container.tsx` · `layout/page-header.tsx` | max-width + หัวหน้า (+ bottom-nav padding) |
+| Settings heading | `SettingsSectionHeader` | `settings/settings-section-header.tsx` | หัว section ใน settings sub-pages; ซ่อน copy ซ้ำบนมือถือและรองรับ action ด้านขวา |
 | ปุ่มย้อน (มือถือ) | `BackButton` · `Breadcrumb` | `shared/back-button.tsx` · `shared/breadcrumb.tsx` | ปุ่มย้อน honey inline ข้างหัวข้อ |
 | Badge | `Badge` · `RarityBadge` · `ConditionBadge` · `GameBadge` | `ui/badge.tsx` · `shared/*-badge.tsx` | ป้ายสถานะ / rarity / สภาพ / เกม |
 | Money | `PriceTag` | `ui/price-tag.tsx` | ราคา + %change (▲/▼) ทุกที่ |
@@ -82,6 +86,7 @@ Concrete consequences:
 | Stepper จำนวน | `QtyStepper` | `ui/qty-stepper.tsx` | +/- จำนวน (`variant` split/joined · min/max · `showInput`) — drop/add-card/deck |
 | ฟอร์มชื่อพอร์ต inline | `PortfolioNameForm` | `portfolio/portfolio-name-form.tsx` | create/rename พอร์ต inline (`sm`/`md`) |
 | ระบบค้นหาการ์ด | `useCardSearch` · `useSearchKeyboardNav` · `SearchResultRow` | `hooks/use-card-search.ts` · `hooks/use-search-keyboard-nav.ts` · `shared/search-result-row.tsx` | engine ค้นหากลาง: fetch+debounce+abort (`useCardSearch`) · ↑↓/Enter/Esc (`useSearchKeyboardNav`, `arrowUpFloor`) · เนื้อในแถวผลลัพธ์ (`SearchResultRow`, props คุมหน้าตาต่อ surface) — hero/palette/inline ใช้ชุดนี้หมด |
+| เลือกการ์ดหลายใบ | `CardBatchPickerDialog` · `ResponsiveDialogContent` | `shared/card-batch-picker-dialog.tsx` · `ui/responsive-dialog-content.tsx` | dialog เลือกหลายใบกลางสำหรับ portfolio/watchlist · เต็มจอบนมือถือ/กลางจอบน desktop · caller เป็นเจ้าของ submit และข้อความ |
 | Guide kit (หน้าคู่มือ) | `GuideSourceList` · `GuideCallout` · `GuidePrevNext` · `CardThumbStrip` | `components/guide/*.tsx` | บล็อกซ้ำใน `/guide/*` 6 หน้า: แหล่งอ้างอิง (`internal` prop) · callout (`tone`, body=children) · prev/next footer · แถบรูปการ์ด aspect-[63/88] (`size` sm/md/lg/xl) |
 | Auth kit (หน้า auth) | `AuthShell` · `OAuthButtons` · `PasswordInput` · `PasswordRules` · `FormError` | `components/auth/*.tsx` · `lib/auth/password-rules.ts` | ยุบโครง login/register + rules ซ้ำ: `AuthShell` (hero slot 2-col/1-col) · `OAuthButtons` (Google/FB, owns signInOAuth) · `PasswordInput` (ตา a11y-fixed, `leftIcon`/`showToggle`/`hint`) · `PasswordRules` (+`getPasswordRules` single source) · `FormError` |
 

@@ -7,7 +7,6 @@ import { Plus } from "lucide-react";
 
 import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
 import { PageHeader } from "@/components/layout/page-header";
 import { useConfirm } from "@/components/shared/confirm-dialog";
@@ -31,6 +30,7 @@ import { WatchlistGridView } from "./watchlist-grid-view";
 import { WatchlistListView } from "./watchlist-list-view";
 import { WatchlistMockPreview } from "./watchlist-mock-preview";
 import { WatchlistSummary } from "./watchlist-summary";
+import { WatchlistSkeleton } from "./watchlist-skeleton";
 import { WatchlistToolbar } from "./watchlist-toolbar";
 import { sortEntries } from "./watchlist-sort";
 import {
@@ -50,12 +50,7 @@ export default function WatchlistClient() {
   const lang = useUIStore((s) => s.language);
 
   if (authed === null) {
-    return (
-      <div className="space-y-6">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-64 rounded-xl shadow-[var(--panel-shadow)]" />
-      </div>
-    );
+    return <WatchlistSkeleton />;
   }
 
   if (authed === false) {
@@ -379,21 +374,7 @@ function WatchlistContent() {
   );
 
   if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="space-y-3">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-4 w-64" />
-        </div>
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 rounded-xl" />
-          ))}
-        </div>
-        <Skeleton className="h-12 rounded-lg" />
-        <Skeleton className="h-96 rounded-xl shadow-[var(--panel-shadow)]" />
-      </div>
-    );
+    return <WatchlistSkeleton />;
   }
 
   return (
@@ -518,4 +499,3 @@ function WatchlistContent() {
     </div>
   );
 }
-

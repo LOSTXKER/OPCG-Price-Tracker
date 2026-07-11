@@ -7,7 +7,7 @@ import Link from "next/link"
 import { Eye, EyeOff, Globe, Lock, Plus, Share2 } from "lucide-react"
 import { toast } from "sonner"
 
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
+import { EmptyState } from "@/components/shared/empty-state"
 import { AuthPreviewGate } from "@/components/shared/login-gate"
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { BackButton } from "@/components/shared/back-button"
@@ -211,8 +211,9 @@ function PortfolioDetailContent({ portfolioId }: { portfolioId: number }) {
   // id. Soft in-page state (not a hard 404): the user is one click from home.
   if (!activePortfolio) {
     return (
-      <KumaEmptyState
+      <EmptyState
         preset="not-found"
+        lang={lang}
         title={t(lang, "portfolioNotFound")}
         description={t(lang, "portfolioNotFoundDesc")}
         action={
@@ -239,6 +240,7 @@ function PortfolioDetailContent({ portfolioId }: { portfolioId: number }) {
 
   return (
     <div className="space-y-4 sm:space-y-5">
+      <h1 className="sr-only">{activePortfolio.name}</h1>
       <Breadcrumb
         items={[
           { label: t(lang, "home"), href: "/" },
@@ -325,8 +327,9 @@ function PortfolioDetailContent({ portfolioId }: { portfolioId: number }) {
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       {items.length === 0 ? (
-        <KumaEmptyState
+        <EmptyState
           preset="empty-portfolio"
+          lang={lang}
           action={
             <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
               <Plus className="size-4" />
@@ -413,4 +416,3 @@ function PortfolioDetailContent({ portfolioId }: { portfolioId: number }) {
     </div>
   )
 }
-

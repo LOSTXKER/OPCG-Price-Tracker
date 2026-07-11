@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react"
 import { ArrowDown, ArrowUp, Eye, EyeOff, Lock, Plus } from "lucide-react"
 
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state"
+import { EmptyState } from "@/components/shared/empty-state"
 import { AuthPreviewGate } from "@/components/shared/login-gate"
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { PageHeader } from "@/components/layout/page-header"
@@ -150,8 +150,9 @@ function PortfolioHubContent() {
   if (portfolioMetas.length === 0) {
     return (
       <>
-        <KumaEmptyState
+        <EmptyState
           preset="empty-portfolio"
+          lang={lang}
           action={
             <Button onClick={() => setDialogOpen(true)} className="gap-1.5">
               <Plus className="size-4" />
@@ -307,4 +308,3 @@ function CreatePortfolioCard({ onCreate }: { onCreate: (name: string) => void })
     </button>
   )
 }
-
