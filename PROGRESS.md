@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-11 — **UX/UI refactor P0–P3 เสร็จและ verify แล้ว** บน branch `codex/uxui-refactor-work` · รอ commit/push/PR/merge ตามคำสั่งเบส
+อัปเดตล่าสุด: 2026-07-11 — **UX/UI refactor P0–P3 เสร็จ, verify และ merge เข้า `master` แล้ว** ผ่าน PR #106 → #107 → #104 → #105 · master merge SHA `1add144`
 
 ## ✅ ทำแล้ว
 
@@ -33,9 +33,9 @@
 
 ## ⏭️ NEXT
 
-1. Commit และ push branch `codex/uxui-refactor-work`
-2. เปิด PR, รอ/ตรวจ CI แล้ว merge เข้า `master` (ห้าม push master ตรง)
-3. หลัง deploy ให้ยิง production smoke สั้นอีกครั้ง โดยเฉพาะ auth จริงและ Marketplace flag
+1. รอ production deployment จาก `master` SHA `1add144` แล้วยิง smoke สั้นอีกครั้ง
+2. ตรวจ login/auth flow ซ้ำเมื่อปิด auth bypass และยืนยัน Marketplace flag บน production
+3. งานถัดไปแยก scope: migration `middleware.ts` → `proxy.ts` และเก็บ lint warnings เดิม
 
 ## แหล่งอ้างอิง
 
