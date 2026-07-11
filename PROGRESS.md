@@ -1,36 +1,34 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-07 — **Phase 2 (kit dedup) + Phase 3 (token discipline) เกือบครบ · #69–#88 merged เข้า master** · master เขียว tsc0/lint0/test56/build✓ · เหลือ Phase 3 อันเดียว = **TOKENS-07 status-660** (gradual) · **NEXT = TOKENS-07 หรือ Phase 4 (states) / Phase 1 (ลบโค้ดตาย)**
+อัปเดตล่าสุด: 2026-07-10 — **master ถึง PR #102 (`4cb48f8`)** · Phase 1/2/3/6 ปิดแล้ว · Phase 4 core states เสร็จ · Phase 5 mobile pass เดินต่ออยู่ · **NEXT = ขออนุมัติแก้ M0 `leaderboard-rewards` cron ก่อน แล้วค่อยกลับ Phase 5**
 
-## ✅ Phase 3 — token discipline (เข้า master แล้ว #83–#88)
-- **#83** ลบ orphan `streak-tier-indicator` (dead code)
-- **#84** TOKENS-03 hairline → `border-hair` token (373 จุด, invisible)
-- **#86** TOKENS-04 `--chrome-h` var (sticky/scroll-mt) + CHROME-07/12 gutter/ticker align
-- **#87** TOKENS-02 เงา overlay/floating → `--elev-overlay/raised` token (15 จุด)
-- **#88 (ชุดใหญ่ visual)**:
-  - **วินัยเขียว/แดง** — honey = accent เดียว (primary): ดาว/Pro/compare-winner amber&เขียว → honey · เขียว/แดง = กำไร/ขาดทุนเท่านั้น
-  - **หัวใจ** — "รายการโปรด" ใช้หัวใจอันเดียวทั้งแอป (เดิมปนดาว) · `WatchlistStar`→`WatchlistHeart` · nav rose→honey
-  - **motion** — `duration-200/300` → `--dur-*` token (invisible)
-  - **radius** — Surface ทุก variant = 12px (`rounded-lg`) · bare `rounded`(4px)→`rounded-sm` 142 จุด
-  - **admin palette** (ADMIN-05) — status color → semantic token (7 ไฟล์, preserve category/data color)
-  - **guide สี** (CONTENT-09) — สีตกแต่ง→neutral/semantic (preserve board-legend/rarity/card = data)
-  - **dead-scroll** (CHROME-09) — main pb ลดเมื่อ route มี mobile footer (ฆ่าแถบว่าง ~128px)
-- **verify: ฉันเปิด browser เช็คเอง (dev auth bypass)** — สี/หัวใจ/เงา/radius/guide/admin render ถูก · admin ตาราง(#76)+ฟอร์ม(#75) ทำงานจริง · console 0 error
+## ✅ เข้า master แล้ว (#90–#102)
+- **#90 Phase 3 ปิด:** status color → semantic token + admin-login espresso; preserve สีข้อมูล/brand · `TOKENS-07` เสร็จแล้ว ห้ามเริ่มซ้ำ
+- **#91 Phase 1 ปิด:** audit ใหม่พบ orphan เหลือจริง 3 ไฟล์และลบแล้ว (ก้อน ~3,000 บรรทัดลบไปก่อนหน้าใน #59–60)
+- **#92 Phase 4 core:** error ไทย + ทางกลับหน้าแรก + `loading.tsx` 8 dynamic segment; spinner/empty CTA ที่เหลือย้ายไปเก็บราย surface ใน Phase 5
+- **#93–#95 Phase 5 foundation:** sort มือถือ · watchlist row/menu · `.tap-safe` ให้ icon button กลาง+ราว 30 จุด · menu-fold บาง surface; dense cluster บางกลุ่มยังเหลือ
+- **#96 Phase 6 ปิด:** ชื่อปลายทาง/ไอคอน/command palette/canonical profile URL + `useScrolled()` กลาง + breadcrumb i18n
+- **#97–#100 picker/filter:** `CardPickerForm` และ `FilterModal` กลาง · rarity base/P-family · version facet · i18n · watchlist refine เต็มจอมือถือ
+- **#102 kit follow-up:** ยุบ `GridCard` → canonical `CardItem` และ migrate grid หน้าแรก/ค้นหา/watchlist · คง `SetCardTile`/`TopCardTile` ที่ต่างจริง
+- **#101 ไม่เข้า master:** ปิดเพราะเข้าใจโจทย์ card grid ผิดเป็น empty state — ห้ามนับ/merge กลับ
 
-## ✅ Phase 2.5–2.6 (#69–#82) — kit dedup + จัดบ้าน
-search engine · guide/auth kit · SETS-04 · HONEY-03 · **ADMIN-06** `useAdminForm`(ยุบ7ฟอร์ม) · **ADMIN-02** 5 list→`AdminDataTable` · **IDENTITY-11** settings→`components/settings/` · **KIT-04/06/09** · **HONEY-05** honey-sidebar split
+## ⏭️ NEXT
+1. **M0 Honey:** ขออนุมัติแก้ config เพื่อเพิ่ม schedule `/api/cron/leaderboard-rewards` ใน `vercel.json` แล้วตรวจ ledger แบบ read-only ว่าต้อง backfill รางวัล Top 10 เดือนไหนหรือไม่
+2. **Phase 5 ต่อราย surface:** เก็บ spinner/empty CTA/state และ mobile UX ที่ยังค้างตาม `doc/uxui-refactor-plan.md` เป็น batch เล็ก + เปิดดูจริง
+3. **Phase 7 ก่อนเปิด Marketplace:** เก็บ commerce/admin trust · error/confirm/status flow; คง `marketplaceEnabled=false` จนผ่าน gate
 
-## ⏭️ NEXT — เลือกทางต่อ
-1. **ปิด Phase 3**: `TOKENS-07` สี status ดิบ 660 จุด → semantic token **ทีละ feature** (เริ่ม orders/alerts/notifications) — audit สั่งทำ gradual, mixed-risk (บาง invisible บาง visual) แยกทำเป็นชุดๆ
-2. **Phase 4 — states**: ศูนย์ spinner→skeleton (9 จุด) · loading.tsx ราย segment · empty state ทุกจุดมี CTA · หน้า error ไทย
-3. **Phase 1 — ลบโค้ดตาย** ~3,000 บรรทัด/orphan 18+ ไฟล์ (⚠️ เบสอนุมัติ list ก่อนลบ)
-4. **Phase 5 — mobile ราย surface** (เบสเลือกหน้า) · **Phase 6** IA/naming · **Phase 7** commerce+admin (ก่อนเปิด marketplace flag)
-- M0 bug: cron `leaderboard-rewards` ไม่ถูก schedule ใน vercel.json (Top-10 payout อาจไม่จ่าย)
+## ⚠️ Gates / ห้ามเคลมเกินจริง
+- แก้ `vercel.json` = แตะ config ต้องเบสอนุมัติ · backfill = เขียน DB จริง ต้อง audit period + idempotency และอนุมัติแยกก่อนรัน
+- Phase 4 ยังไม่ใช่ “ศูนย์ spinner/empty CTA ครบทุกหน้า” — #92 ปิดเฉพาะ core loading/error; remainder อยู่ Phase 5
+- `shared/EmptyState` กับ `kuma/KumaEmptyState` ยังมีสองบทบาท/สองระบบ; งานรวม `STATES-03` ยังไม่เข้า master และ PR #101 ไม่ใช่งานนี้
+- Marketplace ยังปิด flag · Prisma drift/HoneyActionType/Pokémon data migration แตะ DB จริงและต้องอนุมัติแยก
+- ต้อง eyeball มือถือจริงต่อ: dead-scroll (#88), menu alerts/addresses/billing (#95), picker portfolio/alerts (#98)
 
-## ⚠️ ต้องเบส eyeball/ตัดสิน
-- **dead-scroll** (#88): มือถือ resize ในเครื่อง dev ไม่ได้ → เบสเช็ค real device (แถบว่างท้ายหน้าหาย + เนื้อหาไม่โดน nav ทับ)
-- **radius/สี identity**: ล็อกแล้ว (12px + honey + หัวใจ) — ถ้าอยากปรับ (เช่นดาว/หัวใจทองทั้ง 2 โหมด = ต้อง token `--tier-gold`) บอกได้
+## 🔎 Verification ล่าสุด
+- HEAD #102 บน branch docs นี้: `npm run test` = **56/56 ผ่าน** · `npm run lint` = **0 error / 32 warnings**
+- PR #102: Vercel check/build ผ่าน + browser ตรวจหน้าแรก grid/Raw–PSA10/set link/actions ตาม PR
+- ไม่รัน local build ซ้ำเพราะ dev server ทำงานอยู่ (กฎกัน `.next` cache/hydration เพี้ยน); ใช้ Vercel build ของ #102 เป็นหลักฐาน build
 
 ## กฎเหล็ก / บทเรียน
 - **ห้าม push master ตรง** — branch+PR+merge · self-merge เฉพาะเบสสั่ง "merge" ชัดเจน
@@ -39,4 +37,4 @@ search engine · guide/auth kit · SETS-04 · HONEY-03 · **ADMIN-06** `useAdmin
 - migrate = คงพฤติกรรม/data เดิม · adversarial review workflow ก่อน PR · **PRESERVE data color** (rarity/card/tier/legend) ตอนแตะสี
 
 ## แหล่งอ้างอิง
-- **แผนแม่บท:** `doc/uxui-refactor-plan.md` (8 phases) · **หลักฐาน:** `doc/uxui-audit-findings-2026-07-04.md` (230 findings) · **kit canon:** `AGENTS.md` §Component Kit
+- **สถานะ phase ล่าสุด:** `PLAN.md` · **checklist แม่:** `doc/uxui-refactor-plan.md` · **หลักฐาน audit:** `doc/uxui-audit-findings-2026-07-04.md` (230 findings) · **kit canon:** `AGENTS.md` §Component Kit
