@@ -32,7 +32,7 @@ export function HeaderMobile({ isAuthenticated }: { isAuthenticated: boolean }) 
       )}
     >
       <div className="flex h-14 items-center gap-1 px-5">
-        <Link href="/" className="flex shrink-0 items-center gap-2">
+        <Link href="/" className="flex min-h-11 shrink-0 items-center gap-2">
           <Image
             src="/meecard.png"
             alt="Meecard"
@@ -40,7 +40,6 @@ export function HeaderMobile({ isAuthenticated }: { isAuthenticated: boolean }) 
             height={29}
             className="h-auto shrink-0 select-none"
             style={{ width: 26, height: "auto" }}
-            priority
           />
           <span className="text-base font-bold tracking-tight">Meecard</span>
         </Link>

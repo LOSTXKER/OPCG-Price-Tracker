@@ -10,9 +10,9 @@ import {
   Package,
   Ticket,
   Trophy,
-  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Surface } from "@/components/ui/surface";
 import { t, getLocale, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -58,33 +58,21 @@ function PrizeImageViewer({
   alt: string;
   onClose: () => void;
 }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <button
-        onClick={onClose}
-        className="tap-safe absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white motion-base hover:bg-white/20"
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent
+        overlayClassName="bg-black/80 backdrop-blur-sm"
+        className="max-w-[90vw] border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-[90vw] [&>[data-slot=dialog-close]]:text-white [&>[data-slot=dialog-close]]:hover:bg-white/20"
       >
-        <X className="size-5" />
-      </button>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={alt}
-        className="max-h-[85vh] max-w-[90vw] rounded-xl object-contain"
-        onClick={(e) => e.stopPropagation()}
-      />
-    </div>
+        <DialogTitle className="sr-only">{alt}</DialogTitle>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt={alt}
+          className="mx-auto max-h-[85vh] max-w-[90vw] rounded-xl object-contain"
+        />
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -224,7 +212,7 @@ function RecentWinnersStrip({
       </header>
 
       {winners.length > 0 ? (
-        <div className="flex gap-2 overflow-x-auto scrollbar-none px-3 py-2.5">
+        <div className="scroll-fade-x flex gap-2 overflow-x-auto scrollbar-none px-3 py-2.5">
           {winners.slice(0, 8).map((w, i) => (
             <Surface
               as="article"
@@ -344,7 +332,8 @@ function MachineCard({
                 <button
                   type="button"
                   onClick={() => onViewImage({ src: prize.imageUrl!, alt: prize.name })}
-                  className="size-9 shrink-0 overflow-hidden rounded-lg bg-muted transition-transform hover:scale-105"
+                  aria-label={prize.name}
+                  className="size-11 shrink-0 overflow-hidden rounded-lg bg-muted transition-transform hover:scale-105 sm:size-9"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img

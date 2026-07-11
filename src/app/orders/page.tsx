@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
-import { ApiError, apiGet, apiPatch, apiTry } from "@/lib/api/client";
+import { ApiError, apiGet, apiPatch } from "@/lib/api/client";
 
 type ApiResponse = {
   orders: OrderListItem[];
@@ -49,7 +49,7 @@ export default function BuyerOrdersPage() {
   const [page, setPage] = useState(1);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
 
-  const fetchOrders = useCallback(async () => {
+  const fetchOrders = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
 
@@ -59,18 +59,26 @@ export default function BuyerOrdersPage() {
     params.set("limit", "20");
     if (activeTab !== "ALL") params.set("status", activeTab);
 
-    const j = await apiTry(apiGet<ApiResponse>(`/api/orders?${params}`));
-    if (j) {
+    try {
+      const j = await apiGet<ApiResponse>(`/api/orders?${params}`, signal);
       setData(j);
-    } else {
+    } catch (err) {
+      if (signal?.aborted) return;
       setData(null);
-      setError(t(lang, "ordersLoadFailed"));
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : t(useUIStore.getState().language, "ordersLoadFailed"),
+      );
+    } finally {
+      if (!signal?.aborted) setLoading(false);
     }
-    setLoading(false);
   }, [activeTab, page]);
 
   useEffect(() => {
-    fetchOrders();
+    const controller = new AbortController();
+    void fetchOrders(controller.signal);
+    return () => controller.abort();
   }, [fetchOrders]);
 
   const handleTabChange = (tab: string) => {
@@ -171,7 +179,11 @@ export default function BuyerOrdersPage() {
 
       {/* Content */}
       {loading ? (
-        <LoadingState variant="spinner" label={t(lang, "loading")} />
+        <LoadingState
+          variant="skeleton-list"
+          count={5}
+          label={t(lang, "loading")}
+        />
       ) : error ? (
         <EmptyState
           variant="error"

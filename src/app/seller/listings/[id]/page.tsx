@@ -16,12 +16,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { EmptyState } from "@/components/shared/empty-state";
-import { LoadingState } from "@/components/shared/loading-state";
+import { PageSkeleton } from "@/components/shared/page-skeleton";
 import { PageHeader } from "@/components/layout/page-header";
 import { Surface } from "@/components/ui/surface";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
-import { ApiError, apiForm, apiGet, apiPatch, apiTry } from "@/lib/api/client";
+import { ApiError, apiForm, apiGet, apiPatch } from "@/lib/api/client";
 
 type ListingData = {
   id: number;
@@ -82,57 +82,72 @@ export default function SellerEditListingPage() {
   const [photos, setPhotos] = useState<string[]>([]);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
-  useEffect(() => {
-    async function loadListing() {
-      try {
-        const data = await apiGet<{ listings: ListingData[] }>(
-          `/api/seller/listings?limit=100`
-        );
-        const found = data.listings.find(
-          (l: ListingData) => l.id === Number(listingId)
-        );
-        if (!found) throw new Error("Listing not found");
+  const loadListing = useCallback(async (signal?: AbortSignal) => {
+    setError(null);
+    try {
+      const data = await apiGet<{ listings: ListingData[] }>(
+        "/api/seller/listings?limit=100",
+        signal,
+      );
+      const found = data.listings.find(
+        (item: ListingData) => item.id === Number(listingId),
+      );
+      if (!found) throw new Error("Listing not found");
 
-        setListing(found);
-        setPriceJpy(found.priceJpy);
-        setPriceThb(found.priceThb != null ? String(found.priceThb) : "");
-        setCondition(found.condition);
-        setQuantity(found.quantity);
-        setDescription(found.description ?? "");
-        setLocation(found.location ?? "");
-        setShippingMethods(found.shipping ?? []);
-        setPhotos(found.photos ?? []);
-      } catch (e) {
-        setError(
-          e instanceof ApiError
+      setListing(found);
+      setPriceJpy(found.priceJpy);
+      setPriceThb(found.priceThb != null ? String(found.priceThb) : "");
+      setCondition(found.condition);
+      setQuantity(found.quantity);
+      setDescription(found.description ?? "");
+      setLocation(found.location ?? "");
+      setShippingMethods(found.shipping ?? []);
+      setPhotos(found.photos ?? []);
+    } catch (e) {
+      if (signal?.aborted) return;
+      setListing(null);
+      setError(
+        e instanceof ApiError
+          ? e.message
+          : e instanceof Error
             ? e.message
-            : e instanceof Error
-              ? e.message
-              : t(lang, "sellListingLoadError")
-        );
-      } finally {
-        setLoading(false);
-      }
+            : t(lang, "sellListingLoadError"),
+      );
+    } finally {
+      if (!signal?.aborted) setLoading(false);
     }
-    loadListing();
   }, [listingId, lang]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void loadListing(controller.signal);
+    return () => controller.abort();
+  }, [loadListing]);
 
   const handlePhotoUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     setUploadingPhoto(true);
+    setError(null);
     try {
       for (const file of Array.from(files)) {
         if (photos.length >= 5) break;
         const formData = new FormData();
         formData.append("file", file);
-        const data = await apiTry(
-          apiForm<{ url?: string }>("/api/listings/upload", formData),
+        const data = await apiForm<{ url?: string }>(
+          "/api/listings/upload",
+          formData,
         );
         if (data?.url) {
           const url = data.url;
           setPhotos((prev) => [...prev, url]);
         }
       }
+    } catch (err) {
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : t(lang, "mktShipUploadFailed"),
+      );
     } finally {
       setUploadingPhoto(false);
     }
@@ -177,7 +192,7 @@ export default function SellerEditListingPage() {
   }, [priceJpy, priceThb, condition, quantity, description, location, shippingMethods, photos, listingId, lang]);
 
   if (loading) {
-    return <LoadingState variant="spinner" />;
+    return <PageSkeleton panels={2} panelHeight={220} label={t(lang, "loading")} />;
   }
 
   if (error && !listing) {
@@ -187,7 +202,23 @@ export default function SellerEditListingPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t(lang, "sellListingBack")}
         </Button>
-        <EmptyState variant="error" icon={Package} title={error} />
+        <EmptyState
+          variant="error"
+          icon={Package}
+          title={error}
+          action={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setLoading(true);
+                void loadListing();
+              }}
+            >
+              {t(lang, "retry")}
+            </Button>
+          }
+        />
       </div>
     );
   }

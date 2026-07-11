@@ -46,21 +46,27 @@
 
   --color-price-up: var(--price-up);
   --color-price-down: var(--price-down);
+  --color-price-up-text: var(--price-up-text);
+  --color-price-down-text: var(--price-down-text);
   --color-chance-mid: var(--chance-mid);
   /* Per-game accent (set by GameSwitcher in P4); defaults to primary. */
   --color-game-accent: var(--game-accent);
 
-  /* Semantic status tokens (additive — mirror existing colors so visual is unchanged). */
+  /* Semantic status fills/data plus dedicated accessible text roles. */
   --color-success: var(--success);
+  --color-success-text: var(--success-text);
   --color-success-foreground: var(--success-foreground);
   --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
+  --color-warning-text: var(--warning-text);
   --color-warning-foreground: var(--warning-foreground);
   --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
+  --color-danger-text: var(--danger-text);
   --color-danger-foreground: var(--danger-foreground);
   --color-danger-soft: var(--danger-soft);
   --color-info: var(--info);
+  --color-info-text: var(--info-text);
   --color-info-foreground: var(--info-foreground);
   --color-info-soft: var(--info-soft);
   --color-neutral: var(--neutral);
@@ -97,7 +103,7 @@
   --secondary: #F5EDE6;
   --secondary-foreground: #362617;
   --muted: #F5EDE6;
-  --muted-foreground: #8B7565;
+  --muted-foreground: #7A6454;
   --accent: #FEF6E8;
   --accent-foreground: #362617;
   --destructive: #FF3B30;
@@ -147,24 +153,33 @@
 
   --price-up: #34C759;
   --price-down: #FF3B30;
+  /* Data/charts keep the vivid market colors above. Text roles are darker so
+     normal-size labels pass WCAG AA on white and their matching soft fills. */
+  --price-up-text: #187A3E;
+  --price-down-text: #C5221F;
   --chance-mid: #FF9F0A;
   --game-accent: var(--primary);
 
-  /* Semantic status tokens (additive). Values mirror existing palette so
-     introducing them does not change any current visual. */
+  /* Semantic status fills retain the existing palette; text uses the dedicated
+     roles so light-mode labels do not inherit chart-level contrast. */
   --success: #34C759;
+  --success-text: var(--price-up-text);
   --success-foreground: #FFFFFF;
   --success-soft: color-mix(in srgb, var(--success) 12%, transparent);
   --warning: #FF9F0A;
+  --warning-text: #8A5700;
   --warning-foreground: #1D1D1F;
   --warning-soft: color-mix(in srgb, var(--warning) 12%, transparent);
   --danger: var(--destructive);
+  --danger-text: var(--price-down-text);
   --danger-foreground: #FFFFFF;
   --danger-soft: color-mix(in srgb, var(--danger) 12%, transparent);
   --info: #007AFF;
+  --info-text: #0067C0;
   --info-foreground: #FFFFFF;
   --info-soft: color-mix(in srgb, var(--info) 12%, transparent);
-  --neutral: var(--muted-foreground);
+  /* Preserve the pre-contrast-sweep neutral fill; only muted text darkens. */
+  --neutral: #8B7565;
   --neutral-foreground: var(--foreground);
   --neutral-soft: var(--muted);
 }
@@ -217,20 +232,26 @@
      down-charts/deltas read washed-out. Push to a saturated coral so up & down carry
      equal authority on the dark plot. */
   --price-down: #FF6155;
+  --price-up-text: var(--price-up);
+  --price-down-text: var(--price-down);
   --chance-mid: #FF9F0A;
   --game-accent: var(--primary);
 
   /* Semantic status tokens — dark variants. */
   --success: #46D68B;
+  --success-text: var(--success);
   --success-foreground: #100C09;
   --success-soft: color-mix(in srgb, var(--success) 16%, transparent);
   --warning: #FF9F0A;
+  --warning-text: var(--warning);
   --warning-foreground: #1C1C1E;
   --warning-soft: color-mix(in srgb, var(--warning) 16%, transparent);
   --danger: var(--destructive);
+  --danger-text: var(--danger);
   --danger-foreground: #FFFFFF;
   --danger-soft: color-mix(in srgb, var(--danger) 18%, transparent);
   --info: #0A84FF;
+  --info-text: var(--info);
   --info-foreground: #FFFFFF;
   --info-soft: color-mix(in srgb, var(--info) 16%, transparent);
   --neutral: var(--muted-foreground);
@@ -268,6 +289,43 @@
   background: var(--card);
   box-shadow: var(--panel-shadow);
   border-radius: var(--radius);
+}
+
+/* Tailwind's color tokens intentionally power fills, borders and chart marks.
+   Text needs a different contrast curve in light mode, so keep the established
+   semantic class names while routing only their `color` property to text roles. */
+.text-price-up { color: var(--price-up-text); }
+.text-price-down { color: var(--price-down-text); }
+.text-success { color: var(--success-text); }
+.text-warning { color: var(--warning-text); }
+.text-danger,
+.text-destructive { color: var(--danger-text); }
+.text-info { color: var(--info-text); }
+
+/* Light-mode copy must keep AA contrast even when a legacy surface still
+   carries an old Tailwind opacity modifier. Limit the compatibility rule to
+   text-bearing elements so decorative icons can retain their quiet hierarchy;
+   new code should use the full semantic text token directly. */
+:root:not(.dark)
+  :where(p, span, div, dt, dd, th, td, label, kbd, a, button):is(
+    [class~="text-muted-foreground/15"],
+    [class~="text-muted-foreground/20"],
+    [class~="text-muted-foreground/30"],
+    [class~="text-muted-foreground/35"],
+    [class~="text-muted-foreground/40"],
+    [class~="text-muted-foreground/50"],
+    [class~="text-muted-foreground/55"],
+    [class~="text-muted-foreground/60"],
+    [class~="text-muted-foreground/70"],
+    [class~="text-muted-foreground/75"],
+    [class~="text-muted-foreground/80"]
+  ) {
+  color: var(--muted-foreground);
+}
+
+:root:not(.dark) :where(input, textarea)::placeholder {
+  color: var(--muted-foreground);
+  opacity: 1;
 }
 
 .section-heading {
@@ -397,6 +455,13 @@
   -webkit-backdrop-filter: blur(18px) saturate(1.3);
 }
 
+/* Navigation labels sit over arbitrary page content, so the bottom bar needs a
+   denser frost than transient sheets/sticky tools. This prevents underlying
+   copy from visually colliding with the five tab labels in both themes. */
+.bottom-nav-frost {
+  background: color-mix(in srgb, var(--background) 94%, transparent);
+}
+
 /* one calm motion curve for chrome */
 .ease-chrome { transition: all var(--dur-base) var(--ease-chrome); }
 
@@ -473,10 +538,10 @@
 /* Combine text color + soft background. Use on badges, pills, chips,  */
 /* small status dots. For solo color text use `text-success` etc.      */
 /* ------------------------------------------------------------------ */
-.status-success { color: var(--success); background-color: var(--success-soft); }
-.status-warning { color: var(--warning); background-color: var(--warning-soft); }
-.status-danger  { color: var(--danger);  background-color: var(--danger-soft); }
-.status-info    { color: var(--info);    background-color: var(--info-soft); }
+.status-success { color: var(--success-text); background-color: var(--success-soft); }
+.status-warning { color: var(--warning-text); background-color: var(--warning-soft); }
+.status-danger  { color: var(--danger-text);  background-color: var(--danger-soft); }
+.status-info    { color: var(--info-text);    background-color: var(--info-soft); }
 .status-neutral { color: var(--muted-foreground); background-color: var(--muted); }
 
 /* ------------------------------------------------------------------ */
@@ -678,11 +743,27 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
   .animate-ticker {
     animation: none;
   }
   .animate-pulse {
     animation: none;
+  }
+  .animate-spin,
+  .animate-ping {
+    animation: none !important;
   }
 }
 

@@ -10,7 +10,13 @@ import type { Conversation, ChatMessage } from "./types";
 import { createClient } from "@/lib/supabase/client";
 import { apiGet, apiPatch, apiPost, apiTry } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
+import { MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/shared/empty-state";
+import { LoadingState } from "@/components/shared/loading-state";
+import { t } from "@/lib/i18n";
+import { useUIStore } from "@/stores/ui-store";
+import { toast } from "sonner";
 
 interface ChatLayoutProps {
   currentUserId: string;
@@ -19,9 +25,13 @@ interface ChatLayoutProps {
 
 export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) {
   const router = useRouter();
+  const lang = useUIStore((state) => state.language);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [messagesLoading, setMessagesLoading] = useState(Boolean(activeListingId));
+  const [messagesError, setMessagesError] = useState(false);
   const [sending, setSending] = useState(false);
   const [offerDialogOpen, setOfferDialogOpen] = useState(false);
   const [counterOfferId, setCounterOfferId] = useState<number | null>(null);
@@ -41,24 +51,65 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
   } | null>(null);
 
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
+  const messagesAbortRef = useRef<AbortController | null>(null);
 
   const activeConv = conversations.find(
     (c) => c.listingId === activeListingId
   );
 
   const fetchConversations = useCallback(async () => {
-    const data = await apiTry(
-      apiGet<{ conversations?: Conversation[] }>("/api/messages/conversations")
-    );
-    if (data) setConversations(data.conversations || []);
+    try {
+      const data = await apiGet<{ conversations?: Conversation[] }>(
+        "/api/messages/conversations",
+      );
+      setConversations(data.conversations || []);
+      return true;
+    } catch {
+      return false;
+    }
   }, []);
 
-  const fetchMessages = useCallback(async (listingId: number) => {
-    const data = await apiTry(
-      apiGet<{ messages?: ChatMessage[] }>(`/api/messages?listingId=${listingId}`)
-    );
-    if (data) setMessages(data.messages || []);
-  }, []);
+  const fetchMessages = useCallback(
+    async (
+      listingId: number,
+      signal?: AbortSignal,
+      showLoading = false,
+    ): Promise<boolean> => {
+      if (showLoading) {
+        setMessages([]);
+        setMessagesError(false);
+        setMessagesLoading(true);
+      }
+
+      try {
+        const data = await apiGet<{ messages?: ChatMessage[] }>(
+          `/api/messages?listingId=${listingId}`,
+          signal,
+        );
+        if (signal?.aborted) return false;
+        setMessages(data.messages || []);
+        if (showLoading) setMessagesError(false);
+        return true;
+      } catch {
+        if (signal?.aborted) return false;
+        if (showLoading) setMessagesError(true);
+        return false;
+      } finally {
+        if (showLoading && !signal?.aborted) setMessagesLoading(false);
+      }
+    },
+    [],
+  );
+
+  const loadMessageThread = useCallback(
+    (listingId: number) => {
+      messagesAbortRef.current?.abort();
+      const controller = new AbortController();
+      messagesAbortRef.current = controller;
+      void fetchMessages(listingId, controller.signal, true);
+    },
+    [fetchMessages],
+  );
 
   const fetchActiveOrder = useCallback(
     async (listingId: number) => {
@@ -76,15 +127,29 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
   );
 
   useEffect(() => {
-    fetchConversations().then(() => setLoading(false));
+    let cancelled = false;
+    void fetchConversations().then((ok) => {
+      if (cancelled) return;
+      setLoadError(!ok);
+      setLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [fetchConversations]);
 
   useEffect(() => {
     if (activeListingId) {
-      fetchMessages(activeListingId);
+      loadMessageThread(activeListingId);
       setMobileView("chat");
+    } else {
+      messagesAbortRef.current?.abort();
+      setMessages([]);
+      setMessagesError(false);
+      setMessagesLoading(false);
     }
-  }, [activeListingId, fetchMessages]);
+    return () => messagesAbortRef.current?.abort();
+  }, [activeListingId, loadMessageThread]);
 
   useEffect(() => {
     if (activeListingId && conversations.length > 0) {
@@ -155,71 +220,83 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
   }, [fetchConversations]);
 
   const handleSend = useCallback(
-    async (content: string) => {
-      if (!activeListingId) return;
+    async (content: string): Promise<boolean> => {
+      if (!activeListingId) return false;
       setSending(true);
       try {
-        const data = await apiTry(
-          apiPost<{ message: ChatMessage }>("/api/messages", {
-            listingId: activeListingId,
-            content,
-          })
-        );
-        if (data) {
-          setMessages((prev) => [...prev, data.message]);
-          fetchConversations();
-        }
+        const data = await apiPost<{ message: ChatMessage }>("/api/messages", {
+          listingId: activeListingId,
+          content,
+        });
+        setMessages((prev) => [...prev, data.message]);
+        void fetchConversations();
+        return true;
+      } catch {
+        // A timed-out mutation may have reached the server. Reconcile before
+        // the user retries so a successful send is visible instead of hidden.
+        await fetchMessages(activeListingId);
+        toast.error(t(lang, "sendFailed"));
+        return false;
       } finally {
         setSending(false);
       }
     },
-    [activeListingId, fetchConversations]
+    [activeListingId, fetchConversations, fetchMessages, lang]
   );
 
   const handleMakeOffer = useCallback(
-    async (priceThb: number, note: string) => {
-      if (!activeListingId) return;
-      const ok = await apiTry(
-        apiPost("/api/offers", {
+    async (priceThb: number, note: string): Promise<boolean> => {
+      if (!activeListingId) return false;
+      try {
+        await apiPost("/api/offers", {
           listingId: activeListingId,
           priceThb,
           note: note || undefined,
           parentId: counterOfferId || undefined,
-        })
-      );
-      if (ok !== null) {
-        fetchMessages(activeListingId);
-        fetchConversations();
+        });
+        void fetchMessages(activeListingId);
+        void fetchConversations();
         setCounterOfferId(null);
+        return true;
+      } catch {
+        await fetchMessages(activeListingId);
+        toast.error(t(lang, "offerFailed"));
+        return false;
       }
     },
-    [activeListingId, counterOfferId, fetchMessages, fetchConversations]
+    [activeListingId, counterOfferId, fetchMessages, fetchConversations, lang]
   );
 
   const handleAcceptOffer = useCallback(
     async (offerId: number) => {
-      const ok = await apiTry(
-        apiPatch(`/api/offers/${offerId}`, { action: "accept" })
-      );
-      if (ok !== null && activeListingId) {
-        fetchMessages(activeListingId);
-        fetchConversations();
+      try {
+        await apiPatch(`/api/offers/${offerId}`, { action: "accept" });
+        if (activeListingId) {
+          void fetchMessages(activeListingId);
+          void fetchConversations();
+        }
+      } catch {
+        if (activeListingId) await fetchMessages(activeListingId);
+        toast.error(t(lang, "offerFailed"));
       }
     },
-    [activeListingId, fetchMessages, fetchConversations]
+    [activeListingId, fetchMessages, fetchConversations, lang]
   );
 
   const handleRejectOffer = useCallback(
     async (offerId: number) => {
-      const ok = await apiTry(
-        apiPatch(`/api/offers/${offerId}`, { action: "reject" })
-      );
-      if (ok !== null && activeListingId) {
-        fetchMessages(activeListingId);
-        fetchConversations();
+      try {
+        await apiPatch(`/api/offers/${offerId}`, { action: "reject" });
+        if (activeListingId) {
+          void fetchMessages(activeListingId);
+          void fetchConversations();
+        }
+      } catch {
+        if (activeListingId) await fetchMessages(activeListingId);
+        toast.error(t(lang, "offerFailed"));
       }
     },
-    [activeListingId, fetchMessages, fetchConversations]
+    [activeListingId, fetchMessages, fetchConversations, lang]
   );
 
   const handleCounterOffer = useCallback((offerId: number) => {
@@ -229,33 +306,73 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
 
   const handleBuyNow = useCallback(async () => {
     if (!activeListingId) return;
-    const ok = await apiTry(
-      apiPost("/api/orders", { listingId: activeListingId })
-    );
-    if (ok !== null) {
-      fetchMessages(activeListingId);
-      fetchConversations();
+    try {
+      await apiPost("/api/orders", { listingId: activeListingId });
+      void fetchMessages(activeListingId);
+      void fetchConversations();
+    } catch {
+      await fetchMessages(activeListingId);
+      toast.error(t(lang, "mktCreateGenericError"));
     }
-  }, [activeListingId, fetchMessages, fetchConversations]);
+  }, [activeListingId, fetchMessages, fetchConversations, lang]);
 
   const handleUpdateOrder = useCallback(
     async (orderId: number, status: string, data?: Record<string, string>) => {
-      const ok = await apiTry(
-        apiPatch(`/api/orders/${orderId}`, { status, ...data })
-      );
-      if (ok !== null && activeListingId) {
-        fetchMessages(activeListingId);
-        fetchConversations();
-        fetchActiveOrder(activeListingId);
+      try {
+        await apiPatch(`/api/orders/${orderId}`, { status, ...data });
+        if (activeListingId) {
+          void fetchMessages(activeListingId);
+          void fetchConversations();
+          void fetchActiveOrder(activeListingId);
+        }
+      } catch {
+        if (activeListingId) {
+          await Promise.all([
+            fetchMessages(activeListingId),
+            fetchActiveOrder(activeListingId),
+          ]);
+        }
+        toast.error(t(lang, "orderUpdateFailed"));
       }
     },
-    [activeListingId, fetchMessages, fetchConversations, fetchActiveOrder]
+    [activeListingId, fetchMessages, fetchConversations, fetchActiveOrder, lang]
   );
 
   if (loading) {
     return (
-      <div className="flex h-dvh items-center justify-center">
-        <Loader2 className="size-8 animate-spin text-muted-foreground" />
+      <div className="h-dvh bg-background p-4">
+        <LoadingState
+          variant="skeleton-list"
+          count={7}
+          label={t(lang, "loading")}
+          className="mx-auto max-w-xl"
+        />
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="flex h-dvh items-center justify-center bg-background p-4">
+        <EmptyState
+          variant="error"
+          icon={MessageCircle}
+          title={t(lang, "failedToLoad")}
+          action={
+            <Button
+              onClick={() => {
+                setLoadError(false);
+                setLoading(true);
+                void fetchConversations().then((ok) => {
+                  setLoadError(!ok);
+                  setLoading(false);
+                });
+              }}
+            >
+              {t(lang, "retry")}
+            </Button>
+          }
+        />
       </div>
     );
   }
@@ -265,7 +382,7 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
   const isSeller = activeConv?.isSeller ?? false;
 
   return (
-    <div className="relative flex h-dvh bg-background">
+    <div className="relative flex h-dvh w-full overflow-hidden bg-background">
       {/* Sidebar - hidden on mobile when chat is active */}
       <ConversationSidebar
         conversations={conversations}
@@ -280,7 +397,7 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
       {/* Chat panel */}
       <div
         className={cn(
-          "relative flex flex-1",
+          "relative flex min-w-0 flex-1",
           mobileView === "list" && "hidden md:flex"
         )}
       >
@@ -296,6 +413,11 @@ export function ChatLayout({ currentUserId, activeListingId }: ChatLayoutProps) 
           onBack={activeListingId ? () => { setMobileView("list"); router.push("/messages"); } : undefined}
           onTogglePanel={listing && otherUser ? () => setShowOrderPanel((v) => !v) : undefined}
           sending={sending}
+          messagesLoading={messagesLoading}
+          messagesError={messagesError}
+          onRetryMessages={
+            activeListingId ? () => loadMessageThread(activeListingId) : undefined
+          }
         />
 
         {/* Order sidebar - toggle on tablet, always on desktop */}

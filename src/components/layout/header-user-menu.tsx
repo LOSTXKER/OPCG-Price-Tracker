@@ -96,13 +96,13 @@ export function HeaderUserMenu({
   const isMessagesActive = pathname === "/messages" || pathname.startsWith("/messages/");
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-0.5 lg:gap-1.5">
       {marketplaceEnabled && (
         <Link
           href="/messages"
           aria-label={t(language, "messagesTitle")}
           className={cn(
-            "relative flex size-9 items-center justify-center rounded-lg motion-base",
+            "relative flex size-11 items-center justify-center rounded-lg motion-base lg:size-9",
             isMessagesActive
               ? "bg-primary/15 text-primary"
               : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
@@ -119,8 +119,9 @@ export function HeaderUserMenu({
       <NotificationBell />
       <DropdownMenu>
         <DropdownMenuTrigger
+          aria-label={userName}
           className={cn(
-            "flex max-w-[12rem] items-center gap-2.5 rounded-full py-1.5 pl-1.5 pr-3.5 motion-base",
+            "flex size-11 items-center justify-center rounded-full p-1.5 motion-base xl:size-auto xl:max-w-[12rem] xl:justify-start xl:gap-2.5 xl:py-1.5 xl:pl-1.5 xl:pr-3.5",
             "hover:bg-muted/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/35"
           )}
         >
@@ -134,7 +135,7 @@ export function HeaderUserMenu({
               {userName.slice(0, 1).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <div className="flex min-w-0 flex-col items-start gap-0.5 text-left">
+          <div className="hidden min-w-0 flex-col items-start gap-0.5 text-left xl:flex">
             <span className="max-w-[7.5rem] truncate text-sm font-medium leading-tight text-foreground">
               {userName}
             </span>

@@ -5,25 +5,30 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, PanelRight } from "lucide-react";
+import { ArrowLeft, MessageCircle, PanelRight } from "lucide-react";
 import { ChatMessageBubble } from "./chat-message";
 import { ChatInput } from "./chat-input";
 import type { ChatMessage, ChatListing, ChatUser } from "./types";
 import { t, type TranslationKey } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { EmptyState } from "@/components/shared/empty-state";
+import { LoadingState } from "@/components/shared/loading-state";
 
 interface ChatPanelProps {
   messages: ChatMessage[];
   currentUserId: string;
   listing: ChatListing | null;
   otherUser: ChatUser | null;
-  onSend: (content: string) => void;
+  onSend: (content: string) => Promise<boolean>;
   onAcceptOffer?: (offerId: number) => void;
   onRejectOffer?: (offerId: number) => void;
   onCounterOffer?: (offerId: number) => void;
   onBack?: () => void;
   onTogglePanel?: () => void;
   sending?: boolean;
+  messagesLoading?: boolean;
+  messagesError?: boolean;
+  onRetryMessages?: () => void;
   className?: string;
 }
 
@@ -47,6 +52,9 @@ export function ChatPanel({
   onBack,
   onTogglePanel,
   sending = false,
+  messagesLoading = false,
+  messagesError = false,
+  onRetryMessages,
   className,
 }: ChatPanelProps) {
   const lang = useUIStore((s) => s.language);
@@ -63,16 +71,22 @@ export function ChatPanel({
 
   if (!listing || !otherUser) {
     return (
-      <div className={cn("flex flex-1 flex-col items-center justify-center bg-muted/20", className)}>
+      <div className={cn("flex flex-1 flex-col items-center justify-center gap-4 bg-muted/20 px-6 text-center", className)}>
         <p className="text-muted-foreground">{t(lang, "msgChatEmptyState")}</p>
+        {onBack && (
+          <Button variant="outline" onClick={onBack}>
+            <ArrowLeft className="size-4" />
+            {t(lang, "back")}
+          </Button>
+        )}
       </div>
     );
   }
 
   return (
-    <div className={cn("flex flex-1 flex-col", className)}>
+    <div className={cn("flex min-w-0 flex-1 flex-col", className)}>
       {/* Header */}
-      <div className="flex items-center gap-3 border-b bg-background px-4 py-2.5">
+      <div className="flex min-w-0 items-center gap-3 border-b bg-background px-4 py-2.5">
         {onBack && (
           <Button variant="ghost" size="icon-sm" aria-label="Go back" className="shrink-0 md:hidden" onClick={onBack}>
             <ArrowLeft className="size-4" />
@@ -107,22 +121,53 @@ export function ChatPanel({
       {/* Messages */}
       <div
         ref={scrollRef}
-        className="flex-1 space-y-1 overflow-y-auto px-4 py-3"
+        className="min-w-0 flex-1 space-y-1 overflow-y-auto px-4 py-3"
       >
-        {messages.map((msg) => (
-          <ChatMessageBubble
-            key={msg.id}
-            message={msg}
-            currentUserId={currentUserId}
-            onAcceptOffer={onAcceptOffer}
-            onRejectOffer={onRejectOffer}
-            onCounterOffer={onCounterOffer}
+        {messagesLoading ? (
+          <LoadingState
+            variant="skeleton-list"
+            count={5}
+            label={t(lang, "loading")}
+            size="sm"
           />
-        ))}
+        ) : messagesError ? (
+          <EmptyState
+            variant="error"
+            icon={MessageCircle}
+            title={t(lang, "failedToLoad")}
+            action={
+              onRetryMessages ? (
+                <Button variant="outline" size="sm" onClick={onRetryMessages}>
+                  {t(lang, "retry")}
+                </Button>
+              ) : undefined
+            }
+          />
+        ) : messages.length === 0 ? (
+          <EmptyState
+            variant="plain"
+            appearance="minimal"
+            icon={MessageCircle}
+            title={t(lang, "startConversation")}
+          />
+        ) : (
+          messages.map((msg) => (
+            <ChatMessageBubble
+              key={msg.id}
+              message={msg}
+              currentUserId={currentUserId}
+              onAcceptOffer={onAcceptOffer}
+              onRejectOffer={onRejectOffer}
+              onCounterOffer={onCounterOffer}
+            />
+          ))
+        )}
       </div>
 
       {/* Input */}
-      <ChatInput onSend={onSend} disabled={sending} />
+      {!messagesLoading && !messagesError && (
+        <ChatInput onSend={onSend} disabled={sending} />
+      )}
     </div>
   );
 }

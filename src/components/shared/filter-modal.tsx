@@ -3,7 +3,8 @@
 import { type ReactNode } from "react";
 import { RotateCcw, X } from "lucide-react";
 
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogTitle } from "@/components/ui/dialog";
+import { ResponsiveDialogContent } from "@/components/ui/responsive-dialog-content";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 
@@ -41,9 +42,9 @@ export function FilterModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
+      <ResponsiveDialogContent
         showCloseButton={false}
-        className="flex flex-col gap-0 overflow-hidden p-0 max-md:!inset-0 max-md:!max-h-none max-md:!max-w-none max-md:!translate-x-0 max-md:!translate-y-0 max-md:!rounded-none md:h-auto md:max-h-[85dvh] md:w-full md:max-w-[26rem]"
+        className="md:max-w-[26rem]"
       >
         <div className="flex items-center justify-between border-b border-hair px-4 py-3">
           <DialogTitle className="text-h4">
@@ -53,7 +54,7 @@ export function FilterModal({
             type="button"
             onClick={() => onOpenChange(false)}
             aria-label={t(lang, "close")}
-            className="tap-safe -mr-1 flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="-mr-1 flex size-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground md:size-8"
           >
             <X className="size-4" />
           </button>
@@ -69,7 +70,7 @@ export function FilterModal({
               type="button"
               onClick={onReset}
               disabled={resetDisabled}
-              className="ease-chrome flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary hover:bg-primary/5 disabled:opacity-40"
+              className="ease-chrome flex min-h-11 items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary hover:bg-primary/5 disabled:opacity-40 md:min-h-0"
             >
               <RotateCcw className="size-3.5" />
               {t(lang, "reset")}
@@ -86,7 +87,7 @@ export function FilterModal({
             {applyLabel ?? t(lang, "apply")}
           </button>
         </div>
-      </DialogContent>
+      </ResponsiveDialogContent>
     </Dialog>
   );
 }

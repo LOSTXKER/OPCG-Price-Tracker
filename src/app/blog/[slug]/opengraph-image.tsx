@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { BRAND_GRADIENT } from "@/lib/constants/brand";
 import { prisma } from "@/lib/db";
+import { isMissingTableError } from "@/lib/db-errors";
 
 export const alt = "Blog Post";
 export const size = { width: 1200, height: 630 };
@@ -10,10 +11,15 @@ export default async function BlogOG(props: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await props.params;
-  const post = await prisma.blogPost.findUnique({
-    where: { slug, published: true },
-    select: { title: true, excerpt: true, category: true },
-  });
+  let post = null;
+  try {
+    post = await prisma.blogPost.findUnique({
+      where: { slug, published: true },
+      select: { title: true, excerpt: true, category: true },
+    });
+  } catch (error) {
+    if (!isMissingTableError(error)) throw error;
+  }
 
   if (!post) {
     return new ImageResponse(

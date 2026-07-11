@@ -17,7 +17,7 @@ import { MoreSheet } from "@/components/layout/more-sheet";
 // tab-less catalog routes that keep ชุดการ์ด lit while browsing.
 const TABS = [
   { href: "/", key: "home", icon: LineChart, owns: [] as readonly string[] },
-  { href: "/sets", key: "sets", icon: LayoutGrid, owns: ["/cards", "/search", "/trending", "/market-overview"] as readonly string[] },
+  { href: "/opcg/sets", key: "sets", icon: LayoutGrid, owns: ["/cards", "/search", "/trending", "/market-overview"] as readonly string[] },
   { href: "/watchlist", key: "watchlistNav", icon: Heart, owns: [] as readonly string[] },
   { href: "/portfolio", key: "portfolioNav", icon: Briefcase, owns: [] as readonly string[] },
 ] as const;
@@ -67,7 +67,11 @@ function TabLink({
 }) {
   return (
     <li className="min-w-0 flex-1">
-      <Link href={href} className={cn(TAB_CLASS, active ? "text-primary" : "text-muted-foreground")}>
+      <Link
+        href={href}
+        aria-current={active ? "page" : undefined}
+        className={cn(TAB_CLASS, active ? "text-primary" : "text-muted-foreground")}
+      >
         <TabInner icon={icon} label={label} badge={badge} active={active} />
       </Link>
     </li>
@@ -125,7 +129,7 @@ export function BottomNav({ className }: { className?: string }) {
   return (
     <nav
       className={cn(
-        "frost hairline-t pb-safe fixed right-0 bottom-0 left-0 z-50 md:hidden",
+        "bottom-nav-frost frost hairline-t pb-safe fixed right-0 bottom-0 left-0 z-50 md:hidden",
         className
       )}
       aria-label="Navigation"

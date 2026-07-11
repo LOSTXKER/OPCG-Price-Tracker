@@ -51,7 +51,11 @@ export function DashboardCharts({ data }: { data: ChartData }) {
         <h3 className="text-sm font-semibold text-foreground">ความครบถ้วนข้อมูล</h3>
         <div className="mt-4 flex items-center gap-5">
           <div className="relative size-28 shrink-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer
+              width="100%"
+              height="100%"
+              initialDimension={{ width: 112, height: 112 }}
+            >
               <PieChart>
                 <Pie
                   data={[
@@ -103,7 +107,11 @@ export function DashboardCharts({ data }: { data: ChartData }) {
       <Surface variant="panel" padding="md" className="lg:col-span-3">
         <h3 className="text-sm font-semibold text-foreground">การ์ดตามระดับความหายาก</h3>
         <div className="mt-3 h-48">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            initialDimension={{ width: 320, height: 192 }}
+          >
             <BarChart
               data={data.rarities}
               margin={{ top: 8, right: 4, bottom: 0, left: -20 }}

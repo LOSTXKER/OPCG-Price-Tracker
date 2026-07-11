@@ -31,8 +31,9 @@ export function SortableHeader<TCol extends string>({
     return (
       <button
         type="button"
+        aria-pressed={isActive}
         onClick={() => onClick(column)}
-        className={cn("inline-flex items-center gap-1 text-xs font-medium", className)}
+        className={cn("inline-flex min-h-11 items-center gap-1 text-xs font-medium sm:min-h-0", className)}
       >
         {label}
         <Icon
@@ -47,17 +48,19 @@ export function SortableHeader<TCol extends string>({
 
   return (
     <th
+      aria-sort={isActive ? (dir === "asc" ? "ascending" : "descending") : "none"}
       className={cn(
-        "group cursor-pointer select-none whitespace-nowrap py-2.5 pr-3 font-medium motion-base hover:text-foreground",
+        "select-none whitespace-nowrap pr-3 font-medium",
         align === "right" && "text-right",
         isActive && "text-foreground",
         className
       )}
-      onClick={() => onClick(column)}
     >
-      <span
+      <button
+        type="button"
+        onClick={() => onClick(column)}
         className={cn(
-          "inline-flex items-center gap-1",
+          "group inline-flex min-h-11 items-center gap-1 py-2.5 motion-base hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-0",
           align === "right" && "flex-row-reverse"
         )}
       >
@@ -70,7 +73,7 @@ export function SortableHeader<TCol extends string>({
             )}
           />
         </span>
-      </span>
+      </button>
     </th>
   );
 }

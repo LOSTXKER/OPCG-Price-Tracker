@@ -7,15 +7,15 @@ import { Loader2, Bookmark, Trash2, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
 import { EmptyState } from "@/components/shared/empty-state";
 import { LoadingState } from "@/components/shared/loading-state";
 import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
-import { ApiError, apiGet, apiPost, apiTry } from "@/lib/api/client";
+import { ApiError, apiGet, apiPost } from "@/lib/api/client";
 import { formatJpy, formatThb } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 type SavedItem = {
   id: number;
@@ -57,31 +57,44 @@ export default function SavedListingsPage() {
   const [page, setPage] = useState(1);
   const [removing, setRemoving] = useState<number | null>(null);
 
-  const fetchSaved = useCallback(async () => {
+  const fetchSaved = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
     try {
-      const json = await apiGet<ApiResponse>(`/api/saved?page=${page}&limit=20`);
+      const json = await apiGet<ApiResponse>(
+        `/api/saved?page=${page}&limit=20`,
+        signal,
+      );
       setData(json);
     } catch (err) {
+      if (signal?.aborted) return;
       setData(null);
       // read lang imperatively so this fetch callback doesn't re-run on every
       // language toggle just for the error-fallback string
-      setError(err instanceof ApiError ? err.message : t(useUIStore.getState().language, "failedToLoad"));
+      setError(
+        err instanceof ApiError && err.status !== 408
+          ? err.message
+          : t(useUIStore.getState().language, "failedToLoad"),
+      );
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
   }, [page]);
 
   useEffect(() => {
-    fetchSaved();
+    const controller = new AbortController();
+    void fetchSaved(controller.signal);
+    return () => controller.abort();
   }, [fetchSaved]);
 
   const handleRemove = async (listingId: number) => {
     setRemoving(listingId);
     try {
-      const ok = await apiTry(apiPost(`/api/listings/${listingId}/save`));
-      if (ok !== null) await fetchSaved();
+      await apiPost(`/api/listings/${listingId}/save`);
+      await fetchSaved();
+    } catch {
+      // The card stays in place so the user can safely retry after a timeout.
+      toast.error(t(lang, "saveFailed"));
     } finally {
       setRemoving(null);
     }
@@ -103,7 +116,11 @@ export default function SavedListingsPage() {
       />
 
       {loading ? (
-        <LoadingState variant="spinner" label={t(lang, "loading")} />
+        <LoadingState
+          variant="skeleton-grid"
+          count={3}
+          label={t(lang, "loading")}
+        />
       ) : error ? (
         <EmptyState
           variant="error"
@@ -123,7 +140,8 @@ export default function SavedListingsPage() {
           }
         />
       ) : !data || data.saved.length === 0 ? (
-        <KumaEmptyState
+        <EmptyState
+          mascot="kuma"
           variant="dashed"
           icon={Bookmark}
           title={t(lang, "savedEmptyTitle")}
@@ -163,6 +181,7 @@ export default function SavedListingsPage() {
                           src={listing.card.imageUrl}
                           alt={cardName}
                           fill
+                          sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
                           className="object-contain"
                         />
                       ) : (
@@ -213,7 +232,7 @@ export default function SavedListingsPage() {
                       onClick={() => handleRemove(listing.id)}
                       disabled={removing === listing.id}
                       aria-label={t(lang, "remove")}
-                      className="inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-destructive disabled:opacity-50"
+                      className="tap-safe inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground ease-chrome transition-colors hover:bg-muted hover:text-destructive disabled:opacity-50"
                     >
                       {removing === listing.id ? (
                         <Loader2 className="h-3.5 w-3.5 animate-spin" />

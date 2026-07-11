@@ -26,7 +26,7 @@ import {
 import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
 import { AdminFormField } from "@/components/admin/admin-form-field";
 import { Badge } from "@/components/ui/badge";
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { EmptyState } from "@/components/shared/empty-state";
 import { Surface } from "@/components/ui/surface";
 import { adminFetch } from "@/lib/admin/admin-fetch";
 import { cn } from "@/lib/utils";
@@ -206,8 +206,8 @@ export function SetsManager({ initialSets }: { initialSets: SetRow[] }) {
           );
         })}
         {filteredSets.length === 0 && (
-          <KumaEmptyState
-            variant="admin"
+          <EmptyState
+            appearance="admin"
             icon={Package}
             title="ไม่พบชุดการ์ดที่ตรงกับเงื่อนไข"
           />

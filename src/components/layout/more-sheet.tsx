@@ -61,16 +61,16 @@ function MoreSheetBody({ onNavigate }: { onNavigate: () => void }) {
   const tiles: Tile[] = authed
     ? [
         { icon: Sparkles, label: "Honey", href: "/honey", iconClassName: "bg-primary/12 text-primary", dot: honeyPendingActions },
-        { icon: Swords, label: t(lang, "decksAndTools"), href: "/decks", iconClassName: "bg-primary/12 text-primary" },
+        { icon: Swords, label: t(lang, "decksAndTools"), href: "/opcg/decks", iconClassName: "bg-primary/12 text-primary" },
         { icon: BellRing, label: t(lang, "managePriceAlerts"), href: "/watchlist?tab=alerts", iconClassName: "bg-warning-soft text-warning" },
-        { icon: TrendingUp, label: t(lang, "trendingShort"), href: "/trending", iconClassName: "bg-success-soft text-success" },
+        { icon: TrendingUp, label: t(lang, "trendingShort"), href: "/opcg/trending", iconClassName: "bg-success-soft text-success" },
         { icon: BookOpen, label: t(lang, "guide"), href: "/guide", iconClassName: "bg-info-soft text-info" },
         { icon: Settings, label: t(lang, "settingsTitle"), href: "/settings", iconClassName: "bg-muted text-muted-foreground" },
       ]
     : [
-        { icon: Swords, label: t(lang, "decksAndTools"), href: "/decks", iconClassName: "bg-primary/12 text-primary" },
-        { icon: TrendingUp, label: t(lang, "trendingShort"), href: "/trending", iconClassName: "bg-success-soft text-success" },
-        { icon: ArrowRightLeft, label: t(lang, "compareCards"), href: "/compare", iconClassName: "bg-warning-soft text-warning" },
+        { icon: Swords, label: t(lang, "decksAndTools"), href: "/opcg/decks", iconClassName: "bg-primary/12 text-primary" },
+        { icon: TrendingUp, label: t(lang, "trendingShort"), href: "/opcg/trending", iconClassName: "bg-success-soft text-success" },
+        { icon: ArrowRightLeft, label: t(lang, "compareCards"), href: "/opcg/compare", iconClassName: "bg-warning-soft text-warning" },
         { icon: BookOpen, label: t(lang, "guide"), href: "/guide", iconClassName: "bg-info-soft text-info" },
         { icon: Crown, label: t(lang, "pricing"), href: "/pricing", iconClassName: "bg-primary/12 text-primary" },
       ];

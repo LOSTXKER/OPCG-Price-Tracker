@@ -2,12 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { apiPost, apiTry } from "@/lib/api/client";
+import { apiPost } from "@/lib/api/client";
 import { Button } from "@/components/ui/button";
 import { MakeOfferDialog } from "@/components/messages/make-offer-dialog";
 import { ShoppingCart, HandCoins } from "lucide-react";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
+import { toast } from "sonner";
 
 interface ListingActionButtonsProps {
   listingId: number;
@@ -28,21 +29,27 @@ export function ListingActionButtons({
   const handleBuyNow = async () => {
     setBuying(true);
     try {
-      const ok = await apiTry(apiPost("/api/orders", { listingId }));
-      if (ok !== null) {
-        router.push(`/messages/${listingId}`);
-      }
+      await apiPost("/api/orders", { listingId });
+      router.push(`/messages/${listingId}`);
+    } catch {
+      toast.error(t(lang, "mktCreateGenericError"));
     } finally {
       setBuying(false);
     }
   };
 
-  const handleMakeOffer = async (price: number, note: string) => {
-    const ok = await apiTry(
-      apiPost("/api/offers", { listingId, priceThb: price, note: note || undefined }),
-    );
-    if (ok !== null) {
+  const handleMakeOffer = async (price: number, note: string): Promise<boolean> => {
+    try {
+      await apiPost("/api/offers", {
+        listingId,
+        priceThb: price,
+        note: note || undefined,
+      });
       router.push(`/messages/${listingId}`);
+      return true;
+    } catch {
+      toast.error(t(lang, "offerFailed"));
+      return false;
     }
   };
 

@@ -227,7 +227,7 @@ export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps
               <button
                 type="button"
                 onClick={reset}
-                className="absolute right-2 top-2 rounded-full bg-background/90 p-1.5 text-foreground hover:bg-background"
+                className="tap-safe absolute right-2 top-2 rounded-full bg-background/90 p-1.5 text-foreground hover:bg-background"
                 aria-label={t(lang, "remove")}
               >
                 <X className="size-4" />
@@ -341,7 +341,7 @@ function ResultBlock({
               as={Link}
               variant="outline"
               key={card.cardCode}
-              href={`/cards/${card.cardCode}`}
+              href={`/opcg/cards/${card.cardCode}`}
               onClick={onClose}
               className="flex items-center gap-3 p-2 ease-chrome hover:bg-muted/70"
             >

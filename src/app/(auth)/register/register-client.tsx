@@ -116,6 +116,8 @@ export function RegisterClient() {
               onChange={(ev) => setEmail(ev.target.value)}
               placeholder="you@example.com"
               disabled={loading}
+              aria-invalid={Boolean(error) || undefined}
+              aria-describedby={error ? "register-error" : undefined}
               className="h-11 pl-10"
             />
           </div>
@@ -133,6 +135,8 @@ export function RegisterClient() {
           showToggle
           inputClassName="h-11"
           hint={<PasswordRules value={password} lang={lang} />}
+          invalid={Boolean(error)}
+          describedBy={error ? "register-error" : undefined}
         />
 
         <PasswordInput
@@ -146,9 +150,11 @@ export function RegisterClient() {
           leftIcon
           showToggle
           inputClassName="h-11"
+          invalid={Boolean(error)}
+          describedBy={error ? "register-error" : undefined}
         />
 
-        <FormError message={error} />
+        <FormError id="register-error" message={error} />
 
         <Button type="submit" className="h-11 w-full" disabled={loading}>
           {loading ? (

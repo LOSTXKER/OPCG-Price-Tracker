@@ -7,7 +7,8 @@ import { Bell, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Surface } from "@/components/ui/surface";
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { SettingsSectionHeader } from "@/components/settings/settings-section-header";
+import { EmptyState } from "@/components/shared/empty-state";
 import { AlertEditDialog } from "@/components/alerts/alert-edit-dialog";
 import { AlertCreateDialog } from "@/components/alerts/alert-create-dialog";
 import type { PriceAlertItem } from "@/components/alerts/alert-types";
@@ -15,6 +16,7 @@ import { useUIStore } from "@/stores/ui-store";
 import { useGameFilterReset } from "@/hooks/use-game-filter";
 import { useMultigameDemo, MOCK_POKEMON_ALERTS } from "@/lib/mock/multigame-demo";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
+import { useConfirm } from "@/components/shared/confirm-dialog";
 import { ApiError, apiDelete, apiGet, apiPatch } from "@/lib/api/client";
 import { t, type Language } from "@/lib/i18n";
 import { GameFilterChips, type GameChip } from "@/components/shared/game-filter-chips";
@@ -48,6 +50,7 @@ export function AlertsManagerClient() {
   );
   useGameFilterReset(gameFilter, availableGames, setGameFilter);
   const { openUpgradeDialog } = useUpgradeDialog();
+  const confirmDialog = useConfirm();
 
   const fetchAlerts = useCallback(async () => {
     try {
@@ -139,7 +142,14 @@ export function AlertsManagerClient() {
 
   const onDelete = async (alert: PriceAlertItem) => {
     if (busyId === alert.id) return;
-    if (!window.confirm(t(lang, "deleteAlertConfirm"))) return;
+    const confirmed = await confirmDialog({
+      title: t(lang, "deleteAlertConfirm"),
+      description: "",
+      confirmLabel: t(lang, "delete"),
+      cancelLabel: t(lang, "cancel"),
+      variant: "destructive",
+    });
+    if (!confirmed) return;
     setBusyId(alert.id);
     try {
       await apiDelete(`/api/alerts?id=${alert.id}`);
@@ -235,20 +245,20 @@ export function AlertsManagerClient() {
 
   return (
     <div className="space-y-5 sm:space-y-6">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 hidden md:block">
-          <h2 className="text-h2">{t(lang, "managePriceAlerts")}</h2>
-          <p className="page-subtitle">{t(lang, "managePriceAlertsSubtitle")}</p>
-        </div>
-        <Button
-          size="sm"
-          onClick={() => setCreateOpen(true)}
-          className="shrink-0 gap-1.5 rounded-full"
-        >
-          <Plus className="size-3.5" />
-          {t(lang, "createAlert")}
-        </Button>
-      </div>
+      <SettingsSectionHeader
+        title={t(lang, "managePriceAlerts")}
+        description={t(lang, "managePriceAlertsSubtitle")}
+        action={
+          <Button
+            size="sm"
+            onClick={() => setCreateOpen(true)}
+            className="shrink-0 gap-1.5 rounded-full"
+          >
+            <Plus className="size-3.5" />
+            {t(lang, "createAlert")}
+          </Button>
+        }
+      />
 
       <GameFilterChips
         games={gameChips}
@@ -335,8 +345,8 @@ function ActiveEmpty({ onCreate }: { onCreate: () => void }) {
   const lang = useUIStore((s) => s.language);
   return (
     <div className="rounded-xl border border-dashed border-hair bg-card/50 px-6 py-10">
-      <KumaEmptyState
-        variant="minimal"
+      <EmptyState
+        appearance="minimal"
         icon={Bell}
         title={t(lang, "noActiveAlerts")}
         description={t(lang, "noActiveAlertsDesc")}
@@ -346,7 +356,7 @@ function ActiveEmpty({ onCreate }: { onCreate: () => void }) {
           <Plus className="size-3.5" />
           {t(lang, "createAlert")}
         </Button>
-        <Link href="/cards">
+        <Link href="/opcg/search">
           <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
             <Bell className="size-3.5" />
             {t(lang, "browseCardsToAlert")}

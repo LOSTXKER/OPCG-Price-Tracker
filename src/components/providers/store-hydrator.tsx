@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 
+import { getHtmlLang, type Language } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 
 /**
@@ -12,7 +13,19 @@ import { useUIStore } from "@/stores/ui-store";
  */
 export function StoreHydrator() {
   useEffect(() => {
+    const syncDocumentLanguage = (language: Language) => {
+      document.documentElement.lang = getHtmlLang(language);
+    };
+
+    syncDocumentLanguage(useUIStore.getState().language);
+    const unsubscribe = useUIStore.subscribe((state, previousState) => {
+      if (state.language !== previousState.language) {
+        syncDocumentLanguage(state.language);
+      }
+    });
     void useUIStore.persist.rehydrate();
+
+    return unsubscribe;
   }, []);
 
   return null;

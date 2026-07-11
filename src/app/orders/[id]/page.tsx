@@ -18,6 +18,8 @@ import {
   Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/shared/empty-state";
+import { PageSkeleton } from "@/components/shared/page-skeleton";
 import { OrderStatusBadge } from "@/components/orders/order-status-badge";
 import { PageHeader } from "@/components/layout/page-header";
 import { Surface } from "@/components/ui/surface";
@@ -80,22 +82,28 @@ export default function BuyerOrderDetailPage() {
 
   const timelineSteps = useMemo(() => getTimelineSteps(lang), [lang]);
 
-  const fetchOrder = useCallback(async () => {
+  const fetchOrder = useCallback(async (signal?: AbortSignal) => {
+    setError(null);
     try {
       const data = await apiGet<{ order: OrderDetail }>(
         `/api/orders/${orderId}`,
+        signal,
       );
       setOrder(data.order);
     } catch (e) {
+      if (signal?.aborted) return;
+      setOrder(null);
       // read lang imperatively so this fetch callback isn't language-dependent
       setError(e instanceof ApiError ? e.message : t(useUIStore.getState().language, "loadFailed"));
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
   }, [orderId]);
 
   useEffect(() => {
-    fetchOrder();
+    const controller = new AbortController();
+    void fetchOrder(controller.signal);
+    return () => controller.abort();
   }, [fetchOrder]);
 
   const handleStatusUpdate = async (status: string) => {
@@ -114,11 +122,7 @@ export default function BuyerOrderDetailPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <PageSkeleton panels={3} panelHeight={160} label={t(lang, "loading")} />;
   }
 
   if (error || !order) {
@@ -128,10 +132,23 @@ export default function BuyerOrderDetailPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t(lang, "back")}
         </Button>
-        <div className="flex flex-col items-center justify-center py-20 text-center text-muted-foreground">
-          <Package className="mb-3 h-12 w-12 opacity-30" />
-          <p>{error ?? t(lang, "buyOrderNotFound")}</p>
-        </div>
+        <EmptyState
+          variant="error"
+          icon={Package}
+          title={error ?? t(lang, "buyOrderNotFound")}
+          action={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setLoading(true);
+                void fetchOrder();
+              }}
+            >
+              {t(lang, "retry")}
+            </Button>
+          }
+        />
       </div>
     );
   }

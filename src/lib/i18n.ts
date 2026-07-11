@@ -22,8 +22,18 @@ const LOCALE_MAP: Record<Language, string> = {
   JP: "ja-JP",
 };
 
+const HTML_LANG_MAP: Record<Language, "th" | "en" | "ja"> = {
+  TH: "th",
+  EN: "en",
+  JP: "ja",
+};
+
 export function getLocale(lang: Language): string {
   return LOCALE_MAP[lang];
+}
+
+export function getHtmlLang(lang: Language): "th" | "en" | "ja" {
+  return HTML_LANG_MAP[lang];
 }
 
 const translations = { TH: th, EN: en, JP: jp } as const;

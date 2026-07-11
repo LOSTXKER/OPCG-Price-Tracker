@@ -28,6 +28,8 @@ export function PasswordInput({
   inputClassName,
   labelClassName = "text-label",
   hint,
+  invalid = false,
+  describedBy,
 }: {
   id: string
   label: string
@@ -45,6 +47,8 @@ export function PasswordInput({
   labelClassName?: string
   /** slotted below the input inside the same field group (e.g. PasswordRules). */
   hint?: ReactNode
+  invalid?: boolean
+  describedBy?: string
 }) {
   const [visible, setVisible] = useState(false)
   return (
@@ -63,6 +67,8 @@ export function PasswordInput({
           value={value}
           onChange={onChange}
           disabled={disabled}
+          aria-invalid={invalid || undefined}
+          aria-describedby={describedBy}
           className={cn(inputClassName, leftIcon && "pl-10", showToggle && "pr-10")}
         />
         {showToggle && (
@@ -71,7 +77,7 @@ export function PasswordInput({
             onClick={() => setVisible((v) => !v)}
             aria-label={t(lang, visible ? "hidePassword" : "showPassword")}
             aria-pressed={visible}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+            className="tap-safe absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
           >
             {visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>

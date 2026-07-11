@@ -84,7 +84,7 @@ export function OrderSidebar({
           )}
         </div>
         <Link
-          href={`/cards/${encodeURIComponent(card.cardCode)}`}
+          href={`/opcg/cards/${encodeURIComponent(card.cardCode)}`}
           className="group block text-center"
         >
           <p className="text-sm font-medium group-hover:text-primary transition-colors">

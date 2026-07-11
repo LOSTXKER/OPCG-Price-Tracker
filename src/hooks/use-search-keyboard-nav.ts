@@ -41,7 +41,9 @@ export function useSearchKeyboardNav({
         setActiveIdx((i) => Math.min(i + 1, length - 1))
       } else if (e.key === "ArrowUp") {
         e.preventDefault()
-        setActiveIdx((i) => Math.max(i - 1, arrowUpFloor))
+        setActiveIdx((i) =>
+          length > 0 ? Math.max(i - 1, arrowUpFloor) : -1,
+        )
       } else if (e.key === "Enter") {
         if (activeIdx >= 0 && activeIdx < length) {
           e.preventDefault()

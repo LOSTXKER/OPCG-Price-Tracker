@@ -10,6 +10,7 @@ import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd, blogPostingJsonLd } from "@/lib/seo/json-ld";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { prisma } from "@/lib/db";
+import { isMissingTableError } from "@/lib/db-errors";
 import { Layers, TrendingUp, Store, BookOpen } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -17,10 +18,18 @@ export const dynamic = "force-dynamic";
 type PageProps = { params: Promise<{ slug: string }> };
 
 const getPost = cache(async (slug: string) => {
-  return prisma.blogPost.findUnique({
-    where: { slug, published: true },
-    include: { author: { select: { displayName: true, avatarUrl: true } } },
-  });
+  try {
+    return await prisma.blogPost.findUnique({
+      where: { slug, published: true },
+      include: { author: { select: { displayName: true, avatarUrl: true } } },
+    });
+  } catch (error) {
+    // Blog is an optional surface in local/preview environments created before
+    // its table existed. Treat only that known state like an empty collection;
+    // real database failures must still reach the error boundary.
+    if (isMissingTableError(error)) return null;
+    throw error;
+  }
 });
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -53,11 +62,11 @@ const CATEGORY_CTA: Record<
   { href: string; icon: typeof Layers; title: string; description: string }[]
 > = {
   MARKET_ANALYSIS: [
-    { href: "/trending", icon: TrendingUp, title: "Trending", description: "การ์ดที่ราคาขยับมากที่สุด" },
-    { href: "/market-overview", icon: Layers, title: "Market Overview", description: "สถิติตลาดภาพรวม" },
+    { href: "/opcg/trending", icon: TrendingUp, title: "Trending", description: "การ์ดที่ราคาขยับมากที่สุด" },
+    { href: "/opcg/market-overview", icon: Layers, title: "Market Overview", description: "สถิติตลาดภาพรวม" },
   ],
   SET_REVIEW: [
-    { href: "/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่า" },
+    { href: "/opcg/sets", icon: Layers, title: "ชุดการ์ด", description: "ดูทุกชุดการ์ดพร้อมมูลค่า" },
   ],
   TIPS: [
     { href: "/guide", icon: BookOpen, title: "คู่มือ OPCG", description: "เรียนรู้เกมตั้งแต่เริ่มต้น" },
@@ -161,7 +170,7 @@ export default async function BlogPostPage({ params }: PageProps) {
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 768px"
-              priority
+              preload
             />
           </div>
         )}

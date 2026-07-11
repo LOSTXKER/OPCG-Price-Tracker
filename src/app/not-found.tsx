@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
 
-import { KumaEmptyState } from "@/components/kuma/kuma-empty-state";
+import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
@@ -18,12 +18,13 @@ export default function NotFound() {
 
   return (
     <div className="mx-auto flex max-w-lg flex-col justify-center px-5 py-16">
-      <KumaEmptyState
+      <EmptyState
         preset="not-found"
+        lang={lang}
         action={
           <div className="flex flex-wrap items-center justify-center gap-2">
             <Button render={<Link href="/" />}>{t(lang, "backToHome")}</Button>
-            <Button variant="outline" render={<Link href="/search" />} className="gap-1.5">
+            <Button variant="outline" render={<Link href="/opcg/search" />} className="gap-1.5">
               <Search className="size-4" />
               {t(lang, "search")}
             </Button>

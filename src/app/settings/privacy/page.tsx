@@ -4,6 +4,7 @@ import { AccountPrivacySection } from "@/components/settings/account-privacy-sec
 import { useProfileData } from "@/components/profile/profile-data-context";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
+import { SettingsSectionHeader } from "@/components/settings/settings-section-header";
 
 export default function SettingsPrivacyPage() {
   const lang = useUIStore((s) => s.language);
@@ -12,10 +13,10 @@ export default function SettingsPrivacyPage() {
 
   return (
     <div className="space-y-6">
-      <header className="space-y-1">
-        <h2 className="text-h2 hidden md:block">{t(lang, "privacy")}</h2>
-        <p className="text-meta">{t(lang, "privacySubtitle")}</p>
-      </header>
+      <SettingsSectionHeader
+        title={t(lang, "privacy")}
+        description={t(lang, "privacySubtitle")}
+      />
 
       <AccountPrivacySection
         user={data.user}

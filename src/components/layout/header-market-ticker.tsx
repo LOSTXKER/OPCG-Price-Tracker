@@ -77,7 +77,7 @@ export function HeaderMarketTicker({
 
           {stats.totalValue > 0 && (
             <Link
-              href="/market-overview"
+              href="/opcg/market-overview"
               className="group ease-chrome flex shrink-0 items-center gap-1.5 rounded-full bg-muted/50 px-3 py-1.5 text-sm transition-colors hover:bg-muted"
             >
               <span className="font-medium">{t(language, "totalValue")}</span>
@@ -101,7 +101,7 @@ export function HeaderMarketTicker({
           <button
             type="button"
             onClick={onSearchOpen}
-            className="surface-2 hairline ease-chrome flex h-8 w-44 items-center gap-1.5 rounded-full px-3 text-sm text-muted-foreground hover:text-foreground lg:w-52"
+            className="surface-2 hairline ease-chrome flex h-11 w-44 items-center gap-1.5 rounded-full px-3 text-sm text-muted-foreground hover:text-foreground lg:h-8 lg:w-52"
           >
             <Search className="size-3.5 shrink-0 text-muted-foreground/60" />
             <span className="min-w-0 flex-1 truncate text-left text-muted-foreground/70">{t(language, "searchPlaceholder")}</span>
@@ -114,7 +114,7 @@ export function HeaderMarketTicker({
             <>
               <Link
                 href="/pricing"
-                className="ease-chrome hidden items-center gap-1 rounded-full border border-primary/30 px-2.5 py-1.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 sm:flex"
+                className="ease-chrome hidden min-h-11 items-center gap-1 rounded-full border border-primary/30 px-2.5 py-1.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 sm:flex lg:min-h-0"
               >
                 <Zap className="size-3" />
                 {t(language, "upgrade")}
@@ -124,7 +124,7 @@ export function HeaderMarketTicker({
           )}
 
           <DropdownMenu>
-            <DropdownMenuTrigger className="ease-chrome flex items-center gap-1.5 rounded-full border border-hair px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none">
+            <DropdownMenuTrigger className="ease-chrome flex min-h-11 items-center gap-1.5 rounded-full border border-hair px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none lg:min-h-0">
               <Globe className="size-3" />
               <span className="hidden sm:inline">{LANG_OPTIONS.find((l) => l.value === language)?.label ?? language}</span>
               <span className="sm:hidden">{language}</span>
@@ -141,7 +141,7 @@ export function HeaderMarketTicker({
           </DropdownMenu>
 
           <DropdownMenu>
-            <DropdownMenuTrigger className="ease-chrome flex items-center gap-1.5 rounded-full border border-hair px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none">
+            <DropdownMenuTrigger className="ease-chrome flex min-h-11 items-center gap-1.5 rounded-full border border-hair px-2.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none lg:min-h-0">
               <span>{CURRENCY_SYMBOL[currency]}</span>
               <span>{currency}</span>
             </DropdownMenuTrigger>
@@ -159,7 +159,8 @@ export function HeaderMarketTicker({
           <button
             type="button"
             onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-            className="ease-chrome flex items-center gap-1.5 rounded-full border border-hair px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label={mounted && resolvedTheme === "dark" ? t(language, "lightMode") : t(language, "darkMode")}
+            className="ease-chrome flex size-11 items-center justify-center rounded-full border border-hair text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:size-auto lg:gap-1.5 lg:px-2.5 lg:py-1.5"
           >
             {mounted && resolvedTheme === "dark" ? <Sun className="size-3" /> : <Moon className="size-3" />}
             <span className="hidden font-medium lg:inline">

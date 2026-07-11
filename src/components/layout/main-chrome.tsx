@@ -2,6 +2,10 @@
 
 import { usePathname } from "next/navigation";
 
+import { t } from "@/lib/i18n";
+import { stripGamePrefix } from "@/lib/game/constants";
+import { useUIStore } from "@/stores/ui-store";
+
 import { PageContainer, type PageWidth } from "./page-container";
 
 /**
@@ -79,12 +83,14 @@ const ROUTE_WIDTH: ReadonlyArray<readonly [RegExp | string, PageWidth]> = [
 ];
 
 function matches(pathname: string, patterns: ReadonlyArray<string | RegExp>): boolean {
-  return patterns.some((p) => (typeof p === "string" ? pathname === p : p.test(pathname)));
+  const routePath = stripGamePrefix(pathname);
+  return patterns.some((p) => (typeof p === "string" ? routePath === p : p.test(routePath)));
 }
 
 function resolveWidth(pathname: string): PageWidth {
+  const routePath = stripGamePrefix(pathname);
   for (const [pattern, width] of ROUTE_WIDTH) {
-    if (typeof pattern === "string" ? pathname === pattern : pattern.test(pathname)) {
+    if (typeof pattern === "string" ? routePath === pattern : pattern.test(routePath)) {
       return width;
     }
   }
@@ -118,6 +124,20 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+/** First keyboard stop on pages with the global site header. */
+export function SkipToContent() {
+  const lang = useUIStore((state) => state.language);
+
+  return (
+    <a
+      href="#main-content"
+      className="fixed top-4 left-4 z-[100] -translate-y-24 rounded-lg bg-background px-4 py-2 text-sm font-medium text-foreground shadow-[var(--elev-overlay)] motion-base focus-visible:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    >
+      {t(lang, "skipToContent")}
+    </a>
+  );
+}
+
 /**
  * Wraps the marketing Footer. Same hide rules as `SiteChrome`, plus: on
  * app/utility routes the footer is dropped on mobile (`<md`) and only shown on
@@ -140,8 +160,16 @@ export function PageContent({ children }: { children: React.ReactNode }) {
   const chromeless = matches(pathname, CHROMELESS_ROUTES);
   const fullWidth = matches(pathname, FULL_WIDTH_ROUTES);
 
-  if (chromeless || fullWidth) {
+  if (chromeless) {
     return <>{children}</>;
+  }
+
+  if (fullWidth) {
+    return (
+      <main id="main-content" tabIndex={-1} className="flex-1">
+        {children}
+      </main>
+    );
   }
 
   const width = resolveWidth(pathname);
@@ -156,6 +184,8 @@ export function PageContent({ children }: { children: React.ReactNode }) {
 
   return (
     <main
+      id="main-content"
+      tabIndex={-1}
       className={`relative flex-1 pt-8 md:pt-10 md:pb-24 ${hasMobileFooter ? "pb-12" : "pb-32"}`}
     >
       {/* ONE warm overhead light for every page (consistent) — spills from the
@@ -163,7 +193,7 @@ export function PageContent({ children }: { children: React.ReactNode }) {
           the old per-page glows so the ambient is identical app-wide. */}
       <div
         aria-hidden
-        className="hero-search-glow pointer-events-none absolute left-1/2 -top-28 -z-10 h-[34rem] w-screen -translate-x-1/2 blur-2xl"
+        className="hero-search-glow pointer-events-none absolute inset-x-0 -top-28 -z-10 h-[34rem] w-full blur-2xl"
       />
       <PageContainer width={width}>{children}</PageContainer>
     </main>

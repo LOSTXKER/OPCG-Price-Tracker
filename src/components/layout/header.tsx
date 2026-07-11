@@ -108,8 +108,12 @@ export function Header() {
           boxShadow: scrolled ? "inset 0 -1px 0 0 var(--p-hair)" : "none",
         }}
       >
-        <div className="flex h-14 items-center px-6 lg:px-8">
-          <Link href="/" className="mr-3 flex shrink-0 items-center gap-2.5">
+        <div className="flex h-14 items-center px-4 lg:px-8">
+          <Link
+            href="/"
+            aria-label="Meecard"
+            className="mr-2 flex min-h-11 shrink-0 items-center gap-2 lg:mr-3 lg:min-h-0 lg:gap-2.5"
+          >
             <Image
               src="/meecard.png"
               alt="Meecard"
@@ -117,12 +121,11 @@ export function Header() {
               height={29}
               className="h-auto shrink-0 select-none"
               style={{ width: 28, height: "auto" }}
-              priority
             />
-            <span className="text-base font-bold tracking-tight">Meecard</span>
+            <span className="hidden text-base font-bold tracking-tight lg:inline">Meecard</span>
           </Link>
 
-          <GameSwitcher className="mr-5" />
+          <GameSwitcher className="mr-2 min-h-11 px-2.5 lg:mr-5 lg:min-h-0 lg:px-3" />
 
           <nav className="flex items-center">
             {navLinks.map((link) => {
@@ -131,8 +134,9 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  aria-current={active ? "page" : undefined}
                   className={cn(
-                    "ease-chrome whitespace-nowrap rounded-lg px-3 py-2 text-sm",
+                    "ease-chrome inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-2 py-2 text-sm lg:min-h-0 lg:px-3",
                     active
                       ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
                       : "font-medium text-muted-foreground hover:text-foreground"
@@ -146,11 +150,13 @@ export function Header() {
 
           <div className="flex-1" />
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-0.5 lg:gap-1.5">
             <Link
               href="/portfolio"
+              aria-label={t(language, "portfolioNav")}
+              aria-current={isNavActive(pathname, "/portfolio") ? "page" : undefined}
               className={cn(
-                "ease-chrome flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
+                "ease-chrome flex size-11 items-center justify-center rounded-full text-sm font-medium transition-colors xl:size-auto xl:gap-1.5 xl:px-3 xl:py-1.5",
                 isNavActive(pathname, "/portfolio")
                   ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -164,26 +170,30 @@ export function Header() {
                     : "text-muted-foreground/60"
                 )}
               />
-              {t(language, "portfolioNav")}
+              <span className="hidden xl:inline">{t(language, "portfolioNav")}</span>
             </Link>
 
             <Link
               href="/watchlist"
+              aria-label={t(language, "watchlistNav")}
+              aria-current={isNavActive(pathname, "/watchlist") ? "page" : undefined}
               className={cn(
-                "ease-chrome flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
+                "ease-chrome flex size-11 items-center justify-center rounded-full text-sm font-medium transition-colors xl:size-auto xl:gap-1.5 xl:px-3 xl:py-1.5",
                 isNavActive(pathname, "/watchlist")
                   ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
               <Heart className="size-3.5 text-primary" />
-              {t(language, "watchlistNav")}
+              <span className="hidden xl:inline">{t(language, "watchlistNav")}</span>
             </Link>
 
             <Link
               href="/honey"
+              aria-label="Honey"
+              aria-current={isNavActive(pathname, "/honey") ? "page" : undefined}
               className={cn(
-                "ease-chrome relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
+                "ease-chrome relative flex size-11 items-center justify-center rounded-full text-sm font-medium transition-colors xl:size-auto xl:gap-1.5 xl:px-3 xl:py-1.5",
                 isNavActive(pathname, "/honey")
                   ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -196,15 +206,15 @@ export function Header() {
                 </span>
               )}
               <span className="text-sm leading-none">🍯</span>
-              <span>Honey</span>
+              <span className="hidden xl:inline">Honey</span>
               {authLoaded && authUser && honeyPoints > 0 && (
-                <span className="font-bold tabular-nums text-amber-600 dark:text-amber-400">
+                <span className="hidden font-bold tabular-nums text-amber-600 dark:text-amber-400 xl:inline">
                   {formatCount(honeyPoints)}
                 </span>
               )}
             </Link>
 
-            <div className="mx-1.5 h-5 w-px bg-border/40" />
+            <div className="mx-0.5 h-5 w-px bg-border/40 lg:mx-1.5" />
 
             {authLoaded && authUser ? (
               <HeaderUserMenu
