@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
  *
  * Visual contract: the tile mirrors the listing card it pairs with —
  * same `.panel` surface, same `aspect-[63/88]` top "image" area (filled
- * with a brand-warm gradient + centered icon), same bottom info block.
+ * with a flat brand-warm fill + centered icon), same bottom info block.
  * The dashed border + softer surface make it read as a "ghost" card
  * (placeholder/CTA) rather than a real listing.
  *

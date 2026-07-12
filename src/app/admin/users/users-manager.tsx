@@ -317,7 +317,7 @@ export function UsersManager() {
         </div>
       )}
 
-      <div className="sticky top-0 z-20 -mx-1 bg-background/85 px-1 py-2 backdrop-blur supports-backdrop-filter:bg-background/70">
+      <div className="sticky top-0 z-20 -mx-1 bg-background px-1 py-2">
         <AdminToolbar>
           <AdminSearch
             value={search}

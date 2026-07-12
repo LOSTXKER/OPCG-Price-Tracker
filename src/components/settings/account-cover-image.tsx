@@ -257,7 +257,7 @@ export function AccountCoverImage({
             className={cn(
               "absolute inset-0 flex flex-col items-center justify-center gap-1.5 px-4 text-center transition-opacity",
               hasCover
-                ? "bg-background/55 opacity-0 backdrop-blur-[1px] group-hover:opacity-100"
+                ? "bg-background/70 opacity-0 group-hover:opacity-100"
                 : "bg-background/35 opacity-100",
               dragActive && "opacity-100",
             )}

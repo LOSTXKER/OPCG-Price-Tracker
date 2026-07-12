@@ -104,7 +104,7 @@ export function LockOverlay({
               requiredTier: tier,
             });
           }}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-xs font-semibold text-primary shadow-sm ring-1 ring-border/50 backdrop-blur-sm motion-base hover:bg-background"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-background px-3 py-1.5 text-xs font-semibold text-primary shadow-sm ring-1 ring-border/50 motion-base hover:bg-background"
         >
           <Lock className="size-3" />
           <TierIcon tier={tier} className="size-3" />

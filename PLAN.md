@@ -82,8 +82,39 @@
 ### Price-mode visual proportion — 2026-07-12
 > Raw/PSA 10 มี label กว้างต่างกันจน active Raw เป็นก้อน 44×44px; แก้เฉพาะ grade selector ไม่บังคับ segmented control ทุกชนิดให้กว้างเท่ากัน
 
-- [x] **Q1 — Mobile 50/50:** PriceModeControl ใช้ track กว้างคงที่บนมือถือและแบ่ง Raw/PSA 10 เท่ากันผ่าน `fullWidth`; ตั้งแต่ `sm:` กลับเป็น compact intrinsic width
+- [x] **Q1 — Mobile 50/50 (ถูกแทนด้วย W1):** PriceModeControl เคยใช้ track กว้างคงที่บนมือถือและแบ่ง Raw/PSA 10 เท่ากันผ่าน `fullWidth`; ภาพใช้งานจริงทำให้เปลี่ยนเป็น content-fit ใน W1
 - [x] **Verification:** สลับ Raw/PSA 10 ที่ 390 และตรวจ no overflow ที่ 390/640/768; lint + test + TypeScript + build
+
+### Price-mode intrinsic sizing correction — 2026-07-12
+> ภาพใช้งานจริงพบว่า fixed 144px + 50/50 บีบฝั่งที่มีไอคอนจน `PSA 10` ถูกตัด; ผู้ใช้เลือกให้แต่ละ segment กว้างตามเนื้อหาแทนความสมมาตร
+
+- [x] **W1 — Content-fit segments:** ยกเลิก fixed width และ `fullWidth` เฉพาะ PriceModeControl ทุก breakpoint ให้ Raw/PSA จองพื้นที่ตาม icon + label + padding โดยคง visual frame/hitbox ตาม responsive geometry เดิม
+- [x] **Verification:** ข้อความ Raw/PSA 10 แสดงครบเมื่อสลับ active ที่ 320/390/768/1440px, ไม่มี horizontal overflow และ radiogroup/keyboard เดิมไม่ถอย; lint + test + TypeScript + build
+
+### Mobile toolbar compact visual shell — 2026-07-12
+> ลดเฉพาะกรอบที่มองเห็นของ utility controls บนมือถือ โดยคง hit target 44px, desktop geometry และ CTA/form controls เดิม
+
+- [x] **V1 — Compact primitives:** Filter/Sort และ SegmentedControl แบบ opt-in ใช้ visual frame 36px ภายใน hitbox 44px โดยไม่มี hit area ซ้อน
+- [x] **V2 — Toolbar adoption:** Home/Search/Watchlist/Marketplace/card picker/Admin ใช้ compact primitives; Raw/PSA เดิม 144px แบบ 50/50 (ถูกแทนด้วย W1), mobile sort กว้างคงที่ และ SetPicker toolbar สูง 40px
+- [x] **Verification:** unit + lint + TypeScript + test + build; browser 320/375/390/640/768/1440 ไทย/อังกฤษ Light/Dark และตรวจ tap boundary/no overflow
+
+### Horizontal rail static-fade removal — 2026-07-12
+> ผู้ใช้พบทั้ง Card Detail section nav และ grade selector จมใต้ mask; audit พบ 13/44 horizontal rails ใช้ bilateral fade แบบคงที่ซึ่งไม่ดู overflow/scroll position
+
+- [x] **R1 — Reproduce:** section nav เริ่ม offset 0 และ grade rail เริ่ม offset 4px ภายใน mask 0–16px; grade rail ยังถูก fade แม้ `scrollWidth === clientWidth`
+- [x] **R2 — Whole-site sweep:** ถอด `scroll-fade-x` จากทั้ง 13 consumers + ลบ helper กลาง และคืน local safe-gutter patch ที่ไม่จำเป็น เพื่อคง layout เดิม
+- [x] **Verification:** `rg` เหลือ 0 usage; Browser representative rails 320/390/768/1440 ทั้ง Light/Dark + scroll endpoints/no new page overflow; lint/test/TypeScript/build
+
+### Site-wide flat surfaces — remove gradient + blur — 2026-07-12
+> ผู้ใช้สั่งถอด gradient/blur ทุก section ทั้งเว็บ; scope = เอฟเฟ็กต์ที่ render จริงใน production, admin, prototype และ generated app artwork/OG โดยคงเฉพาะ `next/image` blur placeholder ซึ่งเป็นกลไกโหลดรูป ไม่ใช่ surface styling
+
+- [x] **F1 — Audit + boundary:** พบ 52 gradient code sites และ 49 blur/backdrop/filter declarations/references; ไม่มี conic gradient หรือ mask gradient ค้างจากงานก่อนหน้า; ล็อกว่า fade animation, shadow และ image loading placeholder ไม่อยู่ใน scope
+- [x] **F2 — Flat foundation + chrome:** แทน gradient/glow/frost กลางด้วย semantic solid fills; ถอด blurred ambient, backdrop blur, translucent fallback และ fade overlay จาก header/footer/modal/sheet/dropdown/sticky bars
+- [x] **F3 — Flat feature surfaces:** แทน profile/auth/portfolio/honey/admin/commerce gradients และ blurred decorations ด้วยสีทึบ; multi-color indicator ใช้ solid semantic color; login gate ใช้ opaque scrim แทน blur
+- [x] **F4 — Flat charts + generated artwork:** แทน SVG/Recharts area gradients ด้วย solid fill + opacity; ถอด SVG tooltip blur filter; เปลี่ยน icon/OG/share artwork และ prototypes เป็นพื้นทึบ
+- [x] **Verification:** source audit เหลือ 0 rendered gradient และ 0 visual blur/backdrop/filter (ยกเว้น `next/image` placeholder); Browser 320/390/768/1440 Light/Dark บน Home/Card/Portfolio/Profile/Honey/Admin/Compare + modal/dropdown/chart; lint/test/TypeScript/build
+- [x] **F5 — Locked exception: overhead light:** คืน ambient light กลางจากขอบบนเพียงจุดเดียวใน `PageContent` พร้อมสีแยก Light/Dark; ส่วน mask, backdrop blur, section gradient และ component blur ยังต้องเป็นศูนย์
+- [x] **F5 Verification:** source/runtime มี rendered gradient+blur เพียง `.hero-search-glow` หนึ่ง element ต่อหน้า; Browser 390/1440 Light/Dark + no overflow/console error; lint/test/TypeScript/build
 
 ## 🎨 Redesign (in-place · ทิศเต็มใน [VISION.md](VISION.md) · **ไม่มีเวอร์ชัน v1/v2**)
 > แก้ของเดิมทีละ surface ตาม spine VISION §7 · ทุก surface = adopt atom kit + verify (tsc/lint/build/test) + เปิดดูจริง · ⚠️ ข้อที่แตะ schema = เบสอนุมัติก่อน

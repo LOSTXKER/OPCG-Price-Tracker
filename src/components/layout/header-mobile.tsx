@@ -28,7 +28,7 @@ export function HeaderMobile({ isAuthenticated }: { isAuthenticated: boolean }) 
     <div
       className={cn(
         "ease-chrome sticky top-0 z-50 transition-colors md:hidden",
-        scrolled ? "frost hairline-b" : "bg-transparent",
+        scrolled ? "hairline-b bg-background" : "bg-transparent",
       )}
     >
       <div className="flex h-14 items-center gap-1 px-5">

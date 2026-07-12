@@ -35,11 +35,9 @@ export function HomeSearchHero({ sets, trending }: { sets: SetSuggestion[]; tren
 
   return (
     <section className="relative z-30">
-      {/* (warm overhead glow now lives once in the layout — PageContent — so the
-          ambient is identical on every page; no per-hero glow here anymore) */}
       <div className="mx-auto max-w-2xl px-1 pb-6 pt-4 sm:pb-8 sm:pt-8">
         <div className="text-center">
-          {/* eyebrow teaser + the rotating gradient subject (Fastwork-style).
+          {/* Eyebrow teaser + rotating subject.
               sr-only carries a stable heading; the animated line is aria-hidden. */}
           <p className="text-meta">{t(lang, "heroTeaser")}</p>
           <h1 className="mt-1.5 text-3xl font-extrabold leading-[1.12] tracking-tight text-foreground sm:text-5xl">

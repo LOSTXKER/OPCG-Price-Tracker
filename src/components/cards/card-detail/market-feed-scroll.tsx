@@ -19,7 +19,7 @@ type MarketFeedScrollProps = {
   children: ReactNode
 }
 
-/** Scroll viewport for market feeds — bottom fade + hint when more rows are below. */
+/** Scroll viewport for market feeds — solid hint when more rows are below. */
 export function MarketFeedScroll({ className, scrollClassName, lang, label, revalidateKey, children }: MarketFeedScrollProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [showHint, setShowHint] = useState(false)
@@ -55,16 +55,10 @@ export function MarketFeedScroll({ className, scrollClassName, lang, label, reva
         {children}
       </div>
       {showHint && (
-        <>
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-12 bg-gradient-to-t from-background via-background/85 to-transparent"
-          />
-          <div className="pointer-events-none absolute inset-x-0 bottom-2 z-[3] flex items-center justify-center gap-1 text-meta">
-            <ChevronDown className="size-3.5 shrink-0 motion-safe:animate-bounce" aria-hidden />
-            <span>{t(lang, "scrollForMore")}</span>
-          </div>
-        </>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] flex h-10 items-center justify-center gap-1 border-t border-hair bg-background text-meta">
+          <ChevronDown className="size-3.5 shrink-0 motion-safe:animate-bounce" aria-hidden />
+          <span>{t(lang, "scrollForMore")}</span>
+        </div>
       )}
     </div>
   )

@@ -87,14 +87,14 @@ export function ImageUploader({
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="rounded-lg bg-white/20 p-2 text-white backdrop-blur-sm transition-colors hover:bg-white/30"
+            className="rounded-lg bg-white/20 p-2 text-white transition-colors hover:bg-white/30"
           >
             <Upload className="size-4" />
           </button>
           <button
             type="button"
             onClick={() => onChange("")}
-            className="rounded-lg bg-danger/30 p-2 text-white backdrop-blur-sm transition-colors hover:bg-danger/50"
+            className="rounded-lg bg-danger/30 p-2 text-white transition-colors hover:bg-danger/50"
           >
             <Trash2 className="size-4" />
           </button>

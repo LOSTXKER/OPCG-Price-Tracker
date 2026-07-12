@@ -444,7 +444,7 @@ export function YuyuteiMatchClient() {
       <Surface variant="outline" className="overflow-hidden">
         {/* Status tabs */}
         <div className="flex flex-col items-stretch gap-2 border-b border-hair bg-muted/20 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
-          <div className="no-sb scroll-fade-x flex max-w-full items-center gap-0.5 overflow-x-auto rounded-lg bg-muted/60 p-0.5">
+          <div className="no-sb flex max-w-full items-center gap-0.5 overflow-x-auto rounded-lg bg-muted/60 p-0.5">
             {STATUS_TABS.map((tab) => {
               const count =
                 tab.key === ""

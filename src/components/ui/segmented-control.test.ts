@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
+import { createElement } from "react";
 
-import { getSegmentedNavigationTarget } from "./segmented-control";
+import { SegmentedControl, getSegmentedNavigationTarget } from "./segmented-control";
 
 const options = [
   { disabled: false },
@@ -35,5 +37,34 @@ describe("getSegmentedNavigationTarget", () => {
         "ArrowRight",
       ),
     ).toBeNull();
+  });
+});
+
+describe("SegmentedControl compact visual", () => {
+  it("keeps the mobile hit target while insetting the painted frame", () => {
+    const markup = renderToStaticMarkup(
+      createElement(SegmentedControl, {
+        compactVisual: true,
+        options: [
+          { value: "raw", label: "Raw" },
+          { value: "psa10", label: "PSA 10" },
+          { value: "psa9", label: "PSA 9", disabled: true },
+        ],
+        value: "raw",
+        onChange: () => undefined,
+        ariaLabel: "Price mode",
+      }),
+    );
+
+    expect(markup).toContain('role="radiogroup"');
+    expect(markup).toContain('data-compact-visual="true"');
+    expect(markup).toContain("h-11");
+    expect(markup).toContain("before:inset-y-1");
+    expect(markup).toContain("before:bg-primary/15");
+    expect(markup).toContain("sm:before:hidden");
+    expect(markup).toContain('role="radio"');
+    expect(markup).toContain('aria-checked="true"');
+    expect(markup).toContain('aria-checked="false"');
+    expect(markup).toContain('disabled=""');
   });
 });

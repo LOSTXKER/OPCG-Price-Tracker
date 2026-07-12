@@ -169,18 +169,8 @@ function PortfolioHubContent() {
     <div className="space-y-5 sm:space-y-6">
       {error && <p className="text-sm text-destructive">{error}</p>}
 
-      {/* Dashboard hero — sum of every portfolio. Glow follows the combined
-          P/L direction honestly (never a game or brand color). */}
+      {/* Dashboard hero — sum of every portfolio. */}
       <Surface variant="panel" className="relative overflow-hidden p-4 sm:p-5">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-12 -top-20 h-64 w-80 rounded-full blur-3xl"
-          style={{
-            background: `color-mix(in srgb, ${
-              hasOverallPnl ? (pnlUp ? "var(--price-up)" : "var(--price-down)") : "var(--muted-foreground)"
-            } 12%, transparent)`,
-          }}
-        />
         <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="text-eyebrow">{t(lang, "allPortfolios")}</p>

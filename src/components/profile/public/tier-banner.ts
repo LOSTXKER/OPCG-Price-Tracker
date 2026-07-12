@@ -1,15 +1,15 @@
 /**
- * Subtle gradient applied behind the locked / private profile banner.
+ * Flat colour applied behind the locked / private profile banner.
  * Tier-derived colour is intentionally restrained — visitors should never
  * see a literal "PRO" badge, but paid sellers get a slightly richer banner
  * so their profile feels a touch more polished.
  */
 export const TIER_BANNER: Record<string, string> = {
-  FREE: "from-slate-600 via-slate-500 to-slate-400 dark:from-slate-800 dark:via-slate-700 dark:to-slate-600",
-  PRO: "from-amber-700 via-orange-500 to-yellow-400 dark:from-amber-900 dark:via-orange-700 dark:to-yellow-600",
-  LIFETIME_PRO: "from-amber-700 via-orange-500 to-yellow-400 dark:from-amber-900 dark:via-orange-700 dark:to-yellow-600",
-  PRO_PLUS: "from-yellow-600 via-amber-400 to-orange-300 dark:from-yellow-800 dark:via-amber-600 dark:to-orange-500",
-  LIFETIME_PRO_PLUS: "from-yellow-600 via-amber-400 to-orange-300 dark:from-yellow-800 dark:via-amber-600 dark:to-orange-500",
+  FREE: "bg-slate-600 dark:bg-slate-800",
+  PRO: "bg-amber-700 dark:bg-amber-900",
+  LIFETIME_PRO: "bg-amber-700 dark:bg-amber-900",
+  PRO_PLUS: "bg-yellow-600 dark:bg-yellow-800",
+  LIFETIME_PRO_PLUS: "bg-yellow-600 dark:bg-yellow-800",
 };
 
 export function tierBanner(tier: string): string {

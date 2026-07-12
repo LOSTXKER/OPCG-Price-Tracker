@@ -84,16 +84,6 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
             initialDimension={{ width: 320, height: 224 }}
           >
             <AreaChart data={filtered} margin={{ top: 8, right: 4, bottom: 0, left: -20 }}>
-              <defs>
-                <linearGradient id="earnedGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(142, 71%, 45%)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(142, 71%, 45%)" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="redeemedGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(0, 72%, 51%)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(0, 72%, 51%)" stopOpacity={0} />
-                </linearGradient>
-              </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.5} />
               <XAxis
                 dataKey="date"
@@ -139,7 +129,8 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
                 type="monotone"
                 dataKey="earned"
                 stroke="hsl(142, 71%, 45%)"
-                fill="url(#earnedGrad)"
+                fill="hsl(142, 71%, 45%)"
+                fillOpacity={0.1}
                 strokeWidth={2}
                 dot={false}
                 activeDot={{ r: 4, strokeWidth: 0 }}
@@ -148,7 +139,8 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
                 type="monotone"
                 dataKey="redeemed"
                 stroke="hsl(0, 72%, 51%)"
-                fill="url(#redeemedGrad)"
+                fill="hsl(0, 72%, 51%)"
+                fillOpacity={0.1}
                 strokeWidth={2}
                 dot={false}
                 activeDot={{ r: 4, strokeWidth: 0 }}

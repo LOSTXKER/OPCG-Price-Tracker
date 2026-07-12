@@ -43,7 +43,7 @@ export function CollectionCard({
       <div
         className={cn(
           "relative aspect-[63/88] w-full overflow-hidden rounded-md",
-          "bg-gradient-to-br from-muted/40 to-muted/10",
+          "bg-muted/30",
           "shadow-[inset_0_0_0_1px_rgba(0,0,0,0.04)]",
           "transition-all duration-[var(--dur-base)]",
           "group-hover/binder:-translate-y-0.5 group-hover/binder:shadow-md group-hover/binder:ring-1 group-hover/binder:ring-primary/30",

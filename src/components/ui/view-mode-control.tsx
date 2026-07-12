@@ -34,6 +34,7 @@ export function ViewModeControl<T extends ViewMode>({
   return (
     <SegmentedControl<T>
       size="sm"
+      compactVisual
       ariaLabel={labels.join(" / ")}
       className={className}
       options={modes.map((mode, index) => ({

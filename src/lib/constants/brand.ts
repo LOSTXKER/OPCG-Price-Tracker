@@ -9,4 +9,4 @@
  */
 export const BRAND_PRIMARY = "#73533E" // espresso brown (light --primary)
 export const BRAND_GOLD = "#E0B865" // honey-gold accent
-export const BRAND_GRADIENT = `linear-gradient(135deg, ${BRAND_PRIMARY}, ${BRAND_GOLD})`
+export const BRAND_SURFACE = BRAND_PRIMARY

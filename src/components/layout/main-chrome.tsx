@@ -188,12 +188,13 @@ export function PageContent({ children }: { children: React.ReactNode }) {
       tabIndex={-1}
       className={`relative flex-1 pt-8 md:pt-10 md:pb-24 ${hasMobileFooter ? "pb-12" : "pb-32"}`}
     >
-      {/* ONE warm overhead light for every page (consistent) — spills from the
-          top of the screen, BEHIND the transparent nav, and fades down. Replaces
-          the old per-page glows so the ambient is identical app-wide. */}
       <div
         aria-hidden
         className="hero-search-glow pointer-events-none absolute inset-x-0 -top-28 -z-10 h-[34rem] w-full blur-2xl"
+        style={{
+          background:
+            "radial-gradient(48% 58% at 50% 0%, var(--overhead-light-strong) 0%, transparent 66%), linear-gradient(to bottom, var(--overhead-light-soft) 0%, transparent 72%)",
+        }}
       />
       <PageContainer width={width}>{children}</PageContainer>
     </main>

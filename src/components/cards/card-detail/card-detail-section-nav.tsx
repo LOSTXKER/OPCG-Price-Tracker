@@ -31,7 +31,7 @@ export function CardDetailSectionNav({
       aria-label={t(lang, "cardSectionsNav")}
       className="ease-chrome sticky top-[var(--chrome-h)] z-30 mt-6 bg-background shadow-[inset_0_-1px_0_0_var(--p-hair)]"
     >
-      <div className="scroll-fade-x no-sb relative flex gap-5 overflow-x-auto">
+      <div className="no-sb relative flex gap-5 overflow-x-auto">
         {tabs.map((tab) => (
           <a
             key={tab.id}

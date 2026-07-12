@@ -394,7 +394,7 @@ export function SetDetailContent({
               ariaLabel={t(lang, "pricePeriod")}
             />
           </div>
-          <div className="no-sb scroll-fade-x -mx-5 flex items-center gap-1.5 overflow-x-auto px-5">
+          <div className="no-sb -mx-5 flex items-center gap-1.5 overflow-x-auto px-5">
             {rarityNav.map((rt) => rarityButton(rt, "chip"))}
           </div>
         </div>

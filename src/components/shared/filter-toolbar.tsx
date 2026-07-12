@@ -112,6 +112,7 @@ export function FilterToolbar<TSortKey extends string = string, TView extends Vi
             activeKey={sort.activeKey}
             activeDir={sort.activeDir ?? "desc"}
             onChange={sort.onChange}
+            stableMobileWidth
           />
         )}
         {view && (

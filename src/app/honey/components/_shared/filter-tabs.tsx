@@ -24,7 +24,7 @@ export function FilterTabs<T extends string>({
   return (
     <div
       className={cn(
-        "scroll-fade-x flex gap-1 overflow-x-auto bg-muted/20 px-4 py-1.5 scrollbar-none",
+        "flex gap-1 overflow-x-auto bg-muted/20 px-4 py-1.5 scrollbar-none",
         className,
       )}
     >

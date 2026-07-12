@@ -170,7 +170,7 @@ function MobileTabBar({
       role="tablist"
       aria-orientation="horizontal"
       aria-label={t(lang, "honeyPageTitle")}
-      className="scroll-fade-x flex gap-0.5 overflow-x-auto rounded-lg bg-muted/30 p-1 scrollbar-none lg:hidden"
+      className="flex gap-0.5 overflow-x-auto rounded-lg bg-muted/30 p-1 scrollbar-none lg:hidden"
     >
       {ALL_ITEMS.map((item) => {
         const Icon = item.icon;

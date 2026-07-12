@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { BRAND_GRADIENT } from "@/lib/constants/brand";
+import { BRAND_SURFACE } from "@/lib/constants/brand";
 import { prisma } from "@/lib/db";
 import { isMissingTableError } from "@/lib/db-errors";
 
@@ -53,8 +53,7 @@ export default async function BlogOG(props: {
           flexDirection: "column",
           justifyContent: "center",
           padding: 80,
-          background:
-            "linear-gradient(135deg, #1C1C1E 0%, #231E1A 50%, #1C1C1E 100%)",
+          background: "#1C1C1E",
           fontFamily: "sans-serif",
         }}
       >
@@ -73,7 +72,7 @@ export default async function BlogOG(props: {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: BRAND_GRADIENT,
+              background: BRAND_SURFACE,
               borderRadius: 10,
             }}
           >

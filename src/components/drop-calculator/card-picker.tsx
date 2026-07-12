@@ -85,7 +85,8 @@ export function CardPicker({
           aria-label={t(lang, "filter")}
           aria-haspopup="dialog"
           aria-expanded={showFilters}
-          className="min-w-11 shrink-0 sm:min-w-0"
+          iconOnly
+          className="shrink-0"
         >
           <span className="hidden sm:inline">{t(lang, "filter")}</span>
         </FilterButton>

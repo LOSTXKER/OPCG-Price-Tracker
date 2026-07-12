@@ -58,7 +58,7 @@ export function GameFilterChips({
   if (!showFilter && teasers.length === 0) return null
 
   return (
-    <div className="no-sb scroll-fade-x -mx-0.5 flex w-fit max-w-full items-center gap-0.5 overflow-x-auto rounded-full bg-muted/50 p-0.5">
+    <div className="no-sb -mx-0.5 flex w-fit max-w-full items-center gap-0.5 overflow-x-auto rounded-full bg-muted/50 p-0.5">
       {showFilter && (
         <div role="radiogroup" aria-label={t(lang, "filterByGame")} className="contents">
           <Seg active={activeGame === ALL_GAMES} onClick={() => onSelect(ALL_GAMES)} label={t(lang, "allGames")} value={allValue} />

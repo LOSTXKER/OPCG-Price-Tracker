@@ -343,7 +343,7 @@ export function SectionSubscription({
 
       {/* Trial CTA (Free users who haven't tried) */}
       {isFreeNoTrial && (
-        <div className="overflow-hidden rounded-2xl border border-amber-500/20 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5">
+        <div className="overflow-hidden rounded-2xl border border-amber-500/20 bg-amber-500/5">
           <div className="flex flex-col items-center gap-4 p-5 text-center sm:flex-row sm:text-left">
             <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10">
               <Sparkles className="size-6 text-amber-500" />

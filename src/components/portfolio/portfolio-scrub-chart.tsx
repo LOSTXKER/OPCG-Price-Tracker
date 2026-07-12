@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { CalendarRange } from "lucide-react"
 import {
   Area,
@@ -60,9 +60,6 @@ export function PortfolioScrubChart({
 }: PortfolioScrubChartProps) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
-  // Unique gradient ID — prevents conflicts when multiple charts are on the same page.
-  const fillId = `pf-scrub-${useId().replace(/:/g, "")}`
-
   // Default to 1M when there is enough data; fall back to ALL for sparse histories.
   const defaultRange: RangeId = data.length >= 30 ? "1M" : "ALL"
   const [range, setRange] = useState<RangeId>(defaultRange)
@@ -250,15 +247,6 @@ export function PortfolioScrubChart({
       >
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 8, right: 4, left: 4, bottom: 0 }}>
-            <defs>
-              {/* Soft honey-gold gradient fill under the line */}
-              <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={HONEY} stopOpacity={0.22} />
-                <stop offset="65%" stopColor={HONEY} stopOpacity={0.06} />
-                <stop offset="100%" stopColor={HONEY} stopOpacity={0} />
-              </linearGradient>
-            </defs>
-
             {/* Hidden axes — present so ReferenceLine/ReferenceDot resolve their
                 x (by label) + y positions, and the line zooms to the data range. */}
             <XAxis dataKey="label" hide />
@@ -272,7 +260,7 @@ export function PortfolioScrubChart({
               strokeOpacity={0.22}
             />
 
-            {/* Honey-gold line with gradient area fill */}
+            {/* Honey-gold line with a quiet solid area fill */}
             <Area
               type="monotone"
               dataKey="displayValue"
@@ -280,7 +268,8 @@ export function PortfolioScrubChart({
               strokeWidth={2.25}
               strokeLinecap="round"
               strokeLinejoin="round"
-              fill={`url(#${fillId})`}
+              fill={HONEY}
+              fillOpacity={0.08}
               isAnimationActive={false}
               activeDot={false}
               dot={false}

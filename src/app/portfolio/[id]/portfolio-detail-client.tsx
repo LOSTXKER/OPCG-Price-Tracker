@@ -31,7 +31,7 @@ import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { useGameFilterReset } from "@/hooks/use-game-filter"
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants"
-import { getGameConfig, getGameAccentTint } from "@/lib/game-config"
+import { getGameConfig } from "@/lib/game-config"
 import { usePortfolioApi } from "@/hooks/use-portfolio-api"
 import { useTierLimits } from "@/hooks/use-tier-limits"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
@@ -345,7 +345,6 @@ function PortfolioDetailContent({ portfolioId }: { portfolioId: number }) {
             stats={stats}
             hideBalance={hideBalance}
             scopeLabel={scopeGameName}
-            scopeTint={gameFilter === ALL_GAMES ? null : getGameAccentTint(gameFilter)}
           />
           <PortfolioGameChips
             breakdown={gameBreakdown}

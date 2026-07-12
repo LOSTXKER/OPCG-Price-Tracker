@@ -27,17 +27,7 @@ export function EmptyProfilePanel({
 }) {
   const name = user.handle ? `@${user.handle}` : user.displayName ?? "User";
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-dashed border-hair bg-gradient-to-br from-primary/[0.04] via-background to-background px-6 py-12 text-center">
-      {/* Soft sparkle backdrop — purely decorative. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-30"
-        style={{
-          backgroundImage:
-            "radial-gradient(40% 60% at 30% 30%, rgba(99,102,241,0.12), transparent 70%), radial-gradient(50% 70% at 70% 70%, rgba(245,158,11,0.10), transparent 70%)",
-        }}
-      />
-
+    <div className="relative overflow-hidden rounded-2xl border border-dashed border-hair bg-card px-6 py-12 text-center">
       <div className="relative mx-auto flex size-16 items-center justify-center rounded-2xl bg-background shadow-sm ring-1 ring-border/40">
         <Sparkles className="size-7 text-primary/70" />
       </div>

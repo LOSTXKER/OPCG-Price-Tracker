@@ -19,7 +19,7 @@ export const CARD_COLORS: CardColorConfig[] = [
   { value: "Purple", dotClass: "bg-purple-500", bgClass: "bg-purple-500", label: { TH: "ม่วง",   EN: "Purple", JP: "紫" } },
   { value: "Black",  dotClass: "bg-neutral-800 dark:bg-neutral-300", bgClass: "bg-gray-800", label: { TH: "ดำ", EN: "Black", JP: "黒" } },
   { value: "Yellow", dotClass: "bg-yellow-500", bgClass: "bg-yellow-400", label: { TH: "เหลือง", EN: "Yellow", JP: "黄" } },
-  { value: "multi",  dotClass: "bg-gradient-to-r from-red-400 to-blue-400", bgClass: "bg-gradient-to-r from-red-400 to-blue-400", label: { TH: "หลายสี", EN: "Multi", JP: "多色" } },
+  { value: "multi",  dotClass: "bg-fuchsia-500", bgClass: "bg-fuchsia-500", label: { TH: "หลายสี", EN: "Multi", JP: "多色" } },
 ];
 
 export const CARD_TYPE_ORDER = ["LEADER", "CHARACTER", "EVENT", "STAGE", "DON"] as const;

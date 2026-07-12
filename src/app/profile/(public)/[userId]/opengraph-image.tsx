@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { BRAND_GOLD, BRAND_GRADIENT } from "@/lib/constants/brand";
+import { BRAND_GOLD, BRAND_SURFACE } from "@/lib/constants/brand";
 import { ListingStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 
@@ -73,7 +73,7 @@ export default async function ProfileOG(props: {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          background: "linear-gradient(135deg, #1C1C1E 0%, #231E1A 50%, #1C1C1E 100%)",
+          background: "#1C1C1E",
           fontFamily: "sans-serif",
           padding: 60,
           color: "white",
@@ -88,7 +88,7 @@ export default async function ProfileOG(props: {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: BRAND_GRADIENT,
+              background: BRAND_SURFACE,
               borderRadius: 10,
             }}
           >
@@ -117,7 +117,7 @@ export default async function ProfileOG(props: {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: BRAND_GRADIENT,
+              background: BRAND_SURFACE,
               border: "6px solid rgba(224, 184, 101, 0.4)",
               flexShrink: 0,
             }}
@@ -149,7 +149,7 @@ export default async function ProfileOG(props: {
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
               <span
                 style={{
-                  background: BRAND_GRADIENT,
+                  background: BRAND_SURFACE,
                   color: "white",
                   padding: "6px 14px",
                   borderRadius: 999,

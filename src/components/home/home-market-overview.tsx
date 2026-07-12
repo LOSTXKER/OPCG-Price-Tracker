@@ -132,10 +132,8 @@ export function HomeMarketOverview({
       onClick={() => m.setFilterOpen(true)}
       active={m.filterOpen || m.activeFilterCount > 0}
       count={m.activeFilterCount}
-      className={cn(
-        "shrink-0",
-        showLabel ? "md:min-h-0" : "min-w-11 px-0",
-      )}
+      iconOnly={!showLabel}
+      className="shrink-0"
     >
       {showLabel && <span className="hidden md:inline">{t(lang, "filter")}</span>}
     </FilterButton>
@@ -189,17 +187,17 @@ export function HomeMarketOverview({
               variant="inline"
               nullable
               prominent
-              triggerClassName="rounded-xl border-primary/25 bg-primary/5 hover:border-primary/35 hover:bg-primary/10 aria-expanded:rounded-b-none aria-expanded:border-primary/35 aria-expanded:bg-primary/10"
+              triggerClassName="tap-safe h-10 rounded-lg border-primary/25 bg-primary/5 hover:border-primary/35 hover:bg-primary/10 aria-expanded:rounded-b-none aria-expanded:border-primary/35 aria-expanded:bg-primary/10"
             />
           )}
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <PriceModeControl
               value={m.priceMode}
               onChange={(mode) => { m.setPriceMode(mode); m.setPage(1) }}
             />
 
-            <div className="ml-auto flex items-center gap-2">
+            <div className="ml-auto flex shrink-0 items-center gap-2">
               {renderFilterTrigger(false)}
               {renderViewControl()}
             </div>
@@ -209,16 +207,14 @@ export function HomeMarketOverview({
             <div className="flex items-center justify-between gap-2">
               <span className="text-meta shrink-0">{t(lang, "sortBy")}</span>
               <ToolbarSortDropdown
-                options={mobileSortOptions.map((option) => ({
-                  ...option,
-                  label: <span className="min-w-0 flex-1 truncate text-left">{option.label}</span>,
-                }))}
+                options={mobileSortOptions}
                 activeKey={(m.sortCol ?? "") as ColumnId}
                 activeDir={m.sortDir}
                 onChange={(key) => m.handleColumnSort(key)}
                 fallbackLabel={t(lang, "sortBy")}
                 align="end"
-                className="ml-auto w-48 min-w-0 flex-none justify-between overflow-hidden px-3"
+                stableMobileWidth
+                className="ml-auto w-48 min-w-0 flex-none"
               />
             </div>
           )}

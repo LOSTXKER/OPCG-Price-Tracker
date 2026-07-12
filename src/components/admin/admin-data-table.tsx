@@ -168,7 +168,7 @@ export function AdminDataTable<T>({
           <tr
             className={cn(
               "border-b border-hair bg-muted/30",
-              stickyHeader && "sticky top-0 z-10 bg-muted/80 backdrop-blur-sm",
+              stickyHeader && "sticky top-0 z-10 bg-muted",
             )}
           >
             {selectable && (
@@ -301,7 +301,7 @@ export function AdminDataTable<T>({
           {sortableColumns.length > 0 && (
             <div
               aria-label="เรียงลำดับ"
-              className="no-sb scroll-fade-x flex items-center gap-1 overflow-x-auto border-b border-hair bg-muted/20 px-3 py-2"
+              className="no-sb flex items-center gap-1 overflow-x-auto border-b border-hair bg-muted/20 px-3 py-2"
             >
               {sortableColumns.map((column) => {
                 const active = activeSort.key === column.key && activeSort.direction != null;

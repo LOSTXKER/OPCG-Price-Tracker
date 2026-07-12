@@ -86,7 +86,7 @@ export function Lightbox({
     <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
       <DialogContent
         showCloseButton={false}
-        overlayClassName="bg-black/70 backdrop-blur-sm"
+        overlayClassName="bg-black/70"
         className="max-h-[calc(100dvh-2rem)] max-w-[calc(100%-2rem)] overflow-y-auto border-0 bg-transparent p-4 shadow-none sm:max-w-4xl"
       >
         <DialogTitle className="sr-only">Card image comparison</DialogTitle>

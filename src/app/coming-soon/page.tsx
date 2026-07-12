@@ -34,11 +34,6 @@ export default async function ComingSoonPage({
 
   return (
     <div className="relative mx-auto flex min-h-[55vh] max-w-md flex-col items-center justify-center text-center">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-4 left-1/2 -z-10 h-40 w-72 -translate-x-1/2 rounded-full blur-3xl"
-        style={{ background: `color-mix(in srgb, ${tint} 14%, transparent)` }}
-      />
       <span
         className="mb-6 inline-flex size-16 items-center justify-center rounded-2xl ring-1 ring-hair"
         style={{ background: `color-mix(in srgb, ${tint} 14%, transparent)`, color: tint }}
