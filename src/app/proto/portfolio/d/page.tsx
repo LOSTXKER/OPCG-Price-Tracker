@@ -227,13 +227,7 @@ export default function PortfolioProtoD() {
               preserveAspectRatio="none"
               className="h-40 w-full sm:h-48"
             >
-              <defs>
-                <linearGradient id="proto-d2-fill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--price-up)" stopOpacity="0.18" />
-                  <stop offset="100%" stopColor="var(--price-up)" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <polygon points={chart.area} fill="url(#proto-d2-fill)" />
+              <polygon points={chart.area} fill="var(--price-up)" fillOpacity="0.08" />
               <polyline
                 points={chart.line}
                 fill="none"

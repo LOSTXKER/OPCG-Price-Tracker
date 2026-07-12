@@ -19,21 +19,16 @@ import { PortfolioHero } from "./portfolio-hero"
 /**
  * The overview hero card: ONE panel carrying the portfolio value + delta and a
  * four-stat row (P/L · Cost · Best · Worst) — the live site's layout, rebuilt on
- * the warm token system. A thin radial glow (≤12% mix, VISION §5.3 allows ≤18%)
- * tints the corner — honest money (VISION principle 3): the glow direction
- * always follows the portfolio's own P/L sign, never the game's brand color,
- * so a losing position never gets painted a reassuring green.
+ * the warm token system.
  */
 export function PortfolioHeroPanel({
   stats,
   hideBalance = false,
   scopeLabel = null,
-  scopeTint = null,
 }: {
   stats: PortfolioStats
   hideBalance?: boolean
   scopeLabel?: string | null
-  scopeTint?: string | null
 }) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -43,20 +38,8 @@ export function PortfolioHeroPanel({
   const money = (jpy: number) =>
     hideBalance ? MASKED : formatDisplayValue(jpyToDisplayValue(jpy, currency), currency)
 
-  // Glow is always P/L-truthful. `scopeTint` only nudges the hue toward the
-  // filtered game's identity when there IS a cost basis to color by; with no
-  // cost yet (fresh portfolio) it falls back to the game tint or neutral —
-  // never a fabricated "up" green.
-  const glow = hasCost ? (isUp ? "var(--price-up)" : "var(--price-down)") : (scopeTint ?? "var(--muted-foreground)")
-
   return (
     <Surface variant="panel" className="relative overflow-hidden p-4 sm:p-5">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-12 -top-20 h-64 w-80 rounded-full blur-3xl"
-        style={{ background: `color-mix(in srgb, ${glow} 12%, transparent)` }}
-      />
-
       <PortfolioHero
         valueJpy={stats.totalValueJpy}
         deltaJpy={stats.unrealizedPnl}

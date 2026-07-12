@@ -54,7 +54,7 @@ export function FilterChips({
   return (
     <div
       className={cn(
-        "scroll-fade-x flex w-full min-w-0 items-center gap-2 overflow-x-auto pb-1",
+        "flex w-full min-w-0 items-center gap-2 overflow-x-auto pb-1",
         "[scrollbar-width:thin]",
         className
       )}

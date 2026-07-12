@@ -37,6 +37,11 @@ export interface SegmentedControlProps<T extends string = string> {
   /** Stretch each segment to fill the row equally. */
   fullWidth?: boolean;
   /**
+   * Keep a 44px mobile hit target while painting a compact 36px toolbar frame.
+   * Desktop geometry remains unchanged from `sm:` upward.
+   */
+  compactVisual?: boolean;
+  /**
    * Visual style:
    * - `default` — rounded-xl on 44px mobile controls, rounded-lg once compact
    *   at `sm:`. Used for tab-like controls (home tabs, view toggle, etc.).
@@ -120,6 +125,7 @@ export function SegmentedControl<T extends string = string>({
   className,
   size = "md",
   fullWidth = false,
+  compactVisual = false,
   variant = "default",
   leadingIcon: LeadingIcon,
 }: SegmentedControlProps<T>) {
@@ -169,11 +175,19 @@ export function SegmentedControl<T extends string = string>({
     <div
       role="radiogroup"
       aria-label={ariaLabel}
+      data-compact-visual={compactVisual || undefined}
       className={cn(
         "inline-flex items-center",
-        isPill
-          ? "gap-0.5 rounded-full bg-muted/50 px-0.5 sm:p-0.5"
-          : "gap-0.5 rounded-xl bg-muted/50 sm:rounded-lg sm:p-1",
+        compactVisual
+          ? cn(
+              "relative h-11 gap-0.5 before:pointer-events-none before:absolute before:inset-x-0 before:inset-y-1 before:bg-muted/50 before:content-[''] sm:h-auto sm:bg-muted/50 sm:before:hidden",
+              isPill
+                ? "px-0.5 before:rounded-full sm:rounded-full sm:p-0.5"
+                : "before:rounded-lg sm:rounded-lg sm:p-1",
+            )
+          : isPill
+            ? "gap-0.5 rounded-full bg-muted/50 px-0.5 sm:p-0.5"
+            : "gap-0.5 rounded-xl bg-muted/50 sm:rounded-lg sm:p-1",
         fullWidth && "w-full",
         className,
       )}
@@ -183,6 +197,7 @@ export function SegmentedControl<T extends string = string>({
           aria-hidden
           className={cn(
             "shrink-0 text-muted-foreground/50",
+            compactVisual && "relative z-10",
             isPill ? "mx-1.5 size-3.5" : "ml-1 mr-0.5 size-3.5",
           )}
         />
@@ -216,23 +231,40 @@ export function SegmentedControl<T extends string = string>({
             onClick={handleClick}
             onKeyDown={(event) => handleKeyDown(event, index)}
             className={cn(
-              "inline-flex h-11 min-w-11 items-center justify-center gap-1.5 font-medium motion-base sm:min-w-0",
+              "inline-flex h-11 min-w-11 items-center justify-center font-medium motion-base sm:min-w-0",
+              compactVisual ? "gap-1 sm:gap-1.5" : "gap-1.5",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
               "disabled:cursor-not-allowed disabled:opacity-50",
+              compactVisual &&
+                "relative isolate before:pointer-events-none before:absolute before:inset-x-0 before:inset-y-1 before:content-[''] sm:before:hidden [&>*]:relative [&>*]:z-10",
               isPill
-                ? "rounded-full"
-                : "rounded-lg first:rounded-l-xl last:rounded-r-xl sm:rounded-md sm:first:rounded-l-md sm:last:rounded-r-md",
+                ? cn("rounded-full", compactVisual && "before:rounded-full")
+                : compactVisual
+                  ? "rounded-md before:rounded-md sm:rounded-md sm:first:rounded-l-md sm:last:rounded-r-md"
+                  : "rounded-lg first:rounded-l-xl last:rounded-r-xl sm:rounded-md sm:first:rounded-l-md sm:last:rounded-r-md",
               size === "sm"
                 ? isPill
-                  ? "px-2.5 text-xs tabular-nums sm:h-7"
-                  : "px-2 text-xs sm:h-7"
+                  ? compactVisual
+                    ? "px-2 text-xs tabular-nums sm:h-7 sm:px-2.5"
+                    : "px-2.5 text-xs tabular-nums sm:h-7"
+                  : compactVisual
+                    ? "px-1.5 text-xs sm:h-7 sm:px-2"
+                    : "px-2 text-xs sm:h-7"
                 : isPill
-                  ? "px-2.5 text-xs font-semibold tabular-nums sm:h-7"
-                  : "px-3 text-sm sm:h-8",
+                  ? compactVisual
+                    ? "px-2 text-xs font-semibold tabular-nums sm:h-7 sm:px-2.5"
+                    : "px-2.5 text-xs font-semibold tabular-nums sm:h-7"
+                  : compactVisual
+                    ? "px-2.5 text-sm sm:h-8 sm:px-3"
+                    : "px-3 text-sm sm:h-8",
               locked
-                ? "cursor-pointer text-muted-foreground/60 hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400"
+                ? compactVisual
+                  ? "cursor-pointer text-muted-foreground/60 hover:before:bg-amber-500/10 hover:text-amber-700 sm:hover:bg-amber-500/10 dark:hover:text-amber-400"
+                  : "cursor-pointer text-muted-foreground/60 hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400"
                 : active
-                  ? "bg-primary/15 text-primary"
+                  ? compactVisual
+                    ? "text-primary before:bg-primary/15 sm:bg-primary/15"
+                    : "bg-primary/15 text-primary"
                   : "text-muted-foreground hover:text-foreground",
               fullWidth && "flex-1",
             )}

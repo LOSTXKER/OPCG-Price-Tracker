@@ -91,8 +91,6 @@ export function LoginClient() {
       subtitle={t(lang, "loginSubtitle")}
       showBackLink
       hero={{
-        radialGradient:
-          "bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/30 via-transparent to-transparent",
         title: t(lang, "loginHeroTitle"),
         desc: t(lang, "loginHeroDesc"),
       }}

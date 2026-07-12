@@ -98,6 +98,7 @@ export function MarketTable({
             onChange={(key) => onColumnSort(key)}
             fallbackLabel={t(lang, "sortBy")}
             align="start"
+            stableMobileWidth
           />
         </div>
       )}

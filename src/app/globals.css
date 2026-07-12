@@ -100,6 +100,8 @@
   --popover-foreground: #292118;
   --primary: #73533E;
   --primary-foreground: #FFFFFF;
+  --overhead-light-strong: rgba(244, 166, 60, 0.24);
+  --overhead-light-soft: rgba(244, 166, 60, 0.14);
   --secondary: #F5EDE6;
   --secondary-foreground: #362617;
   --muted: #F5EDE6;
@@ -194,6 +196,8 @@
   --popover-foreground: #F6EFE6;
   --primary: #E9B970;
   --primary-foreground: #1A1207;
+  --overhead-light-strong: color-mix(in srgb, var(--primary) 24%, transparent);
+  --overhead-light-soft: color-mix(in srgb, var(--primary) 12%, transparent);
   --secondary: #221A14;
   --secondary-foreground: #F6EFE6;
   --muted: #1D1611;
@@ -338,12 +342,8 @@
 }
 
 .panel-hero {
-  background: linear-gradient(135deg, var(--card) 0%, color-mix(in srgb, var(--primary) 6%, var(--card)) 100%);
+  background: var(--card);
   border-top: 2px solid var(--primary);
-}
-
-.dark .panel-hero {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 4%, var(--card)) 0%, color-mix(in srgb, var(--primary) 10%, var(--card)) 100%);
 }
 
 /* Guarantees a ≥44×44px touch target WITHOUT changing the visual box: a
@@ -414,11 +414,6 @@
 .pl-safe { padding-left: env(safe-area-inset-left); }
 .pr-safe { padding-right: env(safe-area-inset-right); }
 
-/* honey glow — reserved for hero / premium moments only */
-.glow-honey {
-  background: radial-gradient(130% 90% at 50% -10%, var(--p-honey-soft), transparent 62%);
-}
-
 /* blinking caret for the typewriter headline (its own solid colour, a small honey
    accent beside the neutral headline) */
 @keyframes tw-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
@@ -430,36 +425,15 @@
 }
 @media (prefers-reduced-motion: reduce) { .tw-caret { animation: none; } }
 
-/* hero search backdrop — a deliberately VISIBLE warm pool behind the home search
-   bar (the page's single honey moment). Stronger than .glow-honey and mode-tuned:
-   a soft tan tint on the light canvas, a clear gold pool on dark (where a low %
-   over near-black would otherwise read as nothing). */
-.hero-search-glow {
-  /* Light mode: the brown light-mode --primary reads as a muddy smudge on the
-     white canvas, so the warm "light from above" uses a clean amber instead —
-     a soft sunlit wash that stays visible without dirtying the page. */
-  background:
-    radial-gradient(48% 58% at 50% 0%, color-mix(in srgb, #F4A63C 24%, transparent) 0%, transparent 66%),
-    linear-gradient(to bottom, color-mix(in srgb, #F4A63C 14%, transparent) 0%, transparent 72%);
-}
-.dark .hero-search-glow {
-  background:
-    radial-gradient(48% 58% at 50% 0%, color-mix(in srgb, var(--primary) 24%, transparent) 0%, transparent 66%),
-    linear-gradient(to bottom, color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 72%);
-}
-
-/* frosted elevation — reserved for sticky bars / sheets (not inline cards) */
+/* Opaque elevation — reserved for sticky bars / sheets (not inline cards). */
 .frost {
-  background: color-mix(in srgb, var(--background) 72%, transparent);
-  backdrop-filter: blur(18px) saturate(1.3);
-  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  background: var(--background);
 }
 
-/* Navigation labels sit over arbitrary page content, so the bottom bar needs a
-   denser frost than transient sheets/sticky tools. This prevents underlying
-   copy from visually colliding with the five tab labels in both themes. */
+/* Navigation labels sit over arbitrary page content, so the bottom bar stays
+   fully opaque to prevent underlying copy from colliding with its labels. */
 .bottom-nav-frost {
-  background: color-mix(in srgb, var(--background) 94%, transparent);
+  background: var(--background);
 }
 
 /* one calm motion curve for chrome */
@@ -472,7 +446,7 @@
 .motion-base,
 .motion-slow {
   transition-property: color, background-color, border-color, text-decoration-color,
-    fill, stroke, box-shadow, opacity, transform, filter, backdrop-filter;
+    fill, stroke, box-shadow, opacity, transform, filter;
   transition-timing-function: var(--ease-chrome);
 }
 .motion-base { transition-duration: var(--dur-base); }
@@ -735,11 +709,6 @@
 }
 .animate-ticker:hover {
   animation-play-state: paused;
-}
-
-.scroll-fade-x {
-  mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {

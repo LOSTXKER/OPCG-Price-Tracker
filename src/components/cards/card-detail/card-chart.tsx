@@ -331,18 +331,6 @@ export function ScrubChart({
         else if (event.key === "Escape") onScrubEnd()
       }}
     >
-      <defs>
-        <linearGradient id="card-price-area" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor={primary.color} stopOpacity="0.28" />
-          <stop offset="62%" stopColor={primary.color} stopOpacity="0.08" />
-          <stop offset="100%" stopColor={primary.color} stopOpacity="0" />
-        </linearGradient>
-        {/* tooltip elevation — drop shadow so the box reads clearly over the dark plot.
-            Hover-only (not page-scroll), so the filter's cost never hits scroll perf. */}
-        <filter id="tt-shadow" x="-30%" y="-30%" width="160%" height="160%">
-          <feDropShadow dx="0" dy="2" stdDeviation="5" floodColor="#000000" floodOpacity="0.45" />
-        </filter>
-      </defs>
       {/* dated x-ticks (labels) — calendar-snapped, density = f(real width), single group. */}
       {xTicks.map((tk, idx) => (
         <text
@@ -357,8 +345,8 @@ export function ScrubChart({
         </text>
       ))}
       {/* area — BRIGHT up to the cursor, DIMMED after it (scrub focus). At rest = full bright. */}
-      <path d={areaRange(0, splitIdx)} fill="url(#card-price-area)" />
-      {hasDim && <path d={areaRange(splitIdx, latestIndex)} fill="url(#card-price-area)" opacity="0.25" />}
+      <path d={areaRange(0, splitIdx)} fill={primary.color} fillOpacity={0.1} />
+      {hasDim && <path d={areaRange(splitIdx, latestIndex)} fill={primary.color} fillOpacity={0.025} />}
       {/* faint dotted VERTICAL gridlines at the date ticks (graph-paper texture, both dark
           refs) — over the area fill, under the data line. Horizontals are dotted below too. */}
       {xTicks.map((tk, idx) => {
@@ -465,11 +453,11 @@ export function ScrubChart({
           ))}
           {/* date-pill pinned to the time axis at the crosshair */}
           <g transform={`translate(${dpX} ${height - padBottom})`}>
-            <rect x={-dpW / 2} y="3" width={dpW} height="18" rx="5" fill="var(--popover)" stroke="var(--p-hair)" filter="url(#tt-shadow)" />
+            <rect x={-dpW / 2} y="3" width={dpW} height="18" rx="5" fill="var(--popover)" stroke="var(--p-hair)" />
             <text x="0" y="16" textAnchor="middle" fill="var(--popover-foreground)" fontSize={X_AXIS_FONT}>{dpLabel}</text>
           </g>
           <g transform={`translate(${ttX} ${ttY})`}>
-            <rect width={ttW} height={ttH} rx="10" fill="var(--popover)" stroke="var(--p-hair)" filter="url(#tt-shadow)" />
+            <rect width={ttW} height={ttH} rx="10" fill="var(--popover)" stroke="var(--p-hair)" />
             <text x="12" y="17" fill="var(--muted-foreground)" fontSize={TOOLTIP_FONT}>
               {dateAtIndex({ i: active, len, range, latestUpdatedAt, lang })}
             </text>

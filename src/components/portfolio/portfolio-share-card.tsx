@@ -64,12 +64,6 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
       year: "numeric",
     })
 
-    const accent = hasCost
-      ? isUp
-        ? "var(--color-price-up)"
-        : "var(--color-price-down)"
-      : "var(--color-primary)"
-
     return (
       <div
         ref={ref}
@@ -81,35 +75,6 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
             "var(--font-sans, system-ui, -apple-system, 'Segoe UI', sans-serif)",
         }}
       >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute"
-          style={{
-            top: -200,
-            right: -160,
-            width: 640,
-            height: 640,
-            borderRadius: "50%",
-            background: accent,
-            opacity: 0.18,
-            filter: "blur(120px)",
-          }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute"
-          style={{
-            bottom: -260,
-            left: -200,
-            width: 560,
-            height: 560,
-            borderRadius: "50%",
-            background: accent,
-            opacity: 0.08,
-            filter: "blur(140px)",
-          }}
-        />
-
         <div
           className="relative flex h-full w-full flex-col"
           style={{ padding: PAD }}
@@ -125,8 +90,7 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
                   borderRadius: 20,
                   fontSize: 34,
                   color: "#2a1b08",
-                  background:
-                    "linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 55%, #ffffff))",
+                  background: "var(--color-primary)",
                   boxShadow: "0 8px 24px color-mix(in srgb, var(--color-primary) 35%, transparent)",
                 }}
               >
@@ -390,8 +354,6 @@ function ShareSparkline({
     })
     .join(" ")
   const fillPoints = `0,${height} ${points} ${width},${height}`
-  const gid = up ? "shareSparkUp" : "shareSparkDown"
-
   return (
     <svg
       width={width}
@@ -399,13 +361,7 @@ function ShareSparkline({
       viewBox={`0 0 ${width} ${height}`}
       preserveAspectRatio="none"
     >
-      <defs>
-        <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={stroke} stopOpacity="0.32" />
-          <stop offset="100%" stopColor={stroke} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <polygon points={fillPoints} fill={`url(#${gid})`} />
+      <polygon points={fillPoints} fill={stroke} fillOpacity={0.1} />
       <polyline
         points={points}
         fill="none"

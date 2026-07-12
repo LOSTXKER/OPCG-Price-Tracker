@@ -56,11 +56,6 @@ export default function AdminLoginPage() {
 
   return (
     <div className="flex min-h-svh items-center justify-center bg-background px-4">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute bottom-0 left-0 h-[300px] w-[400px] rounded-full bg-primary/3 blur-3xl" />
-      </div>
-
       <div className="relative w-full max-w-sm">
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center gap-3">
@@ -86,7 +81,7 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl border border-hair bg-card p-6 shadow-2xl backdrop-blur-sm">
+        <div className="rounded-2xl border border-hair bg-card p-6 shadow-2xl">
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-1.5">
               <label htmlFor="admin-email" className="text-xs font-medium text-muted-foreground">

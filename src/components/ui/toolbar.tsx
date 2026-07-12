@@ -151,6 +151,8 @@ export interface ToolbarSortDropdownProps<TKey extends string = string> {
   onChange: (key: TKey) => void;
   fallbackLabel?: ReactNode;
   align?: "start" | "end" | "center";
+  /** Keep the mobile trigger width stable while labels change. */
+  stableMobileWidth?: boolean;
   className?: string;
 }
 
@@ -161,6 +163,7 @@ export function ToolbarSortDropdown<TKey extends string = string>({
   onChange,
   fallbackLabel,
   align = "end",
+  stableMobileWidth = false,
   className,
 }: ToolbarSortDropdownProps<TKey>) {
   const active = options.find((o) => o.key === activeKey);
@@ -168,17 +171,23 @@ export function ToolbarSortDropdown<TKey extends string = string>({
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "flex min-h-11 items-center gap-1.5 rounded-lg border border-transparent bg-muted/50 px-3 py-1.5 text-xs font-medium text-foreground/80 motion-base hover:bg-muted/70 sm:min-h-0 sm:rounded-md",
+          "group/toolbar-action inline-flex h-11 min-w-11 items-center justify-center rounded-md bg-transparent p-0 text-xs font-medium outline-none sm:h-auto sm:min-w-0",
+          "focus-visible:ring-2 focus-visible:ring-ring/40",
+          stableMobileWidth && "w-40 sm:w-auto",
           className,
         )}
       >
-        {activeDir === "desc" ? (
-          <ArrowDown className="size-3 text-muted-foreground/60" />
-        ) : (
-          <ArrowUp className="size-3 text-muted-foreground/60" />
-        )}
-        {active?.label ?? fallbackLabel}
-        <ChevronDown className="size-3 text-muted-foreground/50" />
+        <span className="pointer-events-none flex h-9 w-full min-w-0 items-center justify-between gap-1.5 overflow-hidden rounded-md border border-transparent bg-muted/50 px-3 py-1.5 text-foreground/80 motion-base group-hover/toolbar-action:bg-muted/70 sm:h-auto">
+          {activeDir === "desc" ? (
+            <ArrowDown className="size-3 shrink-0 text-muted-foreground/60" />
+          ) : (
+            <ArrowUp className="size-3 shrink-0 text-muted-foreground/60" />
+          )}
+          <span className="min-w-0 flex-1 truncate text-left">
+            {active?.label ?? fallbackLabel}
+          </span>
+          <ChevronDown className="size-3 shrink-0 text-muted-foreground/50" />
+        </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align={align} sideOffset={4}>
         {options.map((opt) => (
@@ -208,6 +217,8 @@ export interface FilterButtonProps
   count?: number;
   active?: boolean;
   iconLeft?: ReactNode;
+  /** Paint a square 36px frame inside the canonical 44px hit target. */
+  iconOnly?: boolean;
 }
 
 export const FilterButton = forwardRef<HTMLButtonElement, FilterButtonProps>(
@@ -215,6 +226,7 @@ export const FilterButton = forwardRef<HTMLButtonElement, FilterButtonProps>(
     count,
     active,
     iconLeft = <SlidersHorizontal aria-hidden className="size-3.5" />,
+    iconOnly = false,
     className,
     children,
     "aria-haspopup": ariaHasPopup = "dialog",
@@ -227,28 +239,37 @@ export const FilterButton = forwardRef<HTMLButtonElement, FilterButtonProps>(
         type="button"
         aria-haspopup={ariaHasPopup}
         className={cn(
-          "flex min-h-11 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium motion-base sm:min-h-0 sm:rounded-md",
-          active
-            ? "border-transparent bg-primary/15 text-primary hover:bg-primary/20"
-            : "border-transparent bg-muted/50 text-foreground/80 hover:bg-muted/70",
+          "group/toolbar-action inline-flex h-11 min-w-11 items-center justify-center rounded-md bg-transparent p-0 text-xs font-medium outline-none sm:h-auto sm:min-w-0",
+          "focus-visible:ring-2 focus-visible:ring-ring/40",
           className,
         )}
         {...rest}
       >
-        {iconLeft}
-        {children}
-        {showCount && (
-          <span
-            className={cn(
-              "ml-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-micro tabular-nums",
-              active
-                ? "bg-primary text-primary-foreground"
-                : "bg-primary/15 text-primary",
-            )}
-          >
-            {count}
-          </span>
-        )}
+        <span
+          className={cn(
+            "pointer-events-none relative inline-flex h-9 min-w-0 items-center justify-center gap-1.5 rounded-md border border-transparent px-3 py-1.5 motion-base sm:h-auto",
+            active
+              ? "bg-primary/15 text-primary group-hover/toolbar-action:bg-primary/20"
+              : "bg-muted/50 text-foreground/80 group-hover/toolbar-action:bg-muted/70",
+            iconOnly && "size-9 px-0 sm:w-auto sm:px-3",
+          )}
+        >
+          {iconLeft}
+          {children}
+          {showCount && (
+            <span
+              className={cn(
+                "ml-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-micro tabular-nums",
+                iconOnly && "absolute -right-1 -top-1 ml-0 sm:static sm:ml-0.5",
+                active
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-primary/15 text-primary",
+              )}
+            >
+              {count}
+            </span>
+          )}
+        </span>
       </button>
     );
   },

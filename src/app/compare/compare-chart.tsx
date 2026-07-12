@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo } from "react";
+import { useMemo } from "react";
 import {
   Area,
   AreaChart,
@@ -79,7 +79,7 @@ function CompareTooltip({
   if (entries.length === 0) return null;
 
   return (
-    <div className="min-w-[200px] rounded-xl border border-hair bg-popover/95 px-3.5 py-2.5 shadow-xl backdrop-blur-sm">
+    <div className="min-w-[200px] rounded-xl border border-hair bg-popover px-3.5 py-2.5 shadow-xl">
       <p className="text-meta">{formatTooltipDate(label, locale)}</p>
       <div className="mt-1.5 space-y-1">
         {entries.map(({ card, color, value }) => (
@@ -119,7 +119,6 @@ export function CompareChart({
   const lang = useUIStore((s) => s.language);
   const currency = useUIStore((s) => s.currency) as Currency;
   const locale = getLocale(lang);
-  const chartId = useId().replace(/:/g, "");
 
   const fmtPrice = useMemo(
     () => (v: number) => formatDisplayValue(v, currency),
@@ -164,29 +163,6 @@ export function CompareChart({
             data={chartData}
             margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
           >
-            <defs>
-              {cards.map((card, i) => (
-                <linearGradient
-                  key={card.cardCode}
-                  id={`cmp-grad-${chartId}-${card.cardCode}`}
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="0%"
-                    stopColor={colors[i % colors.length]}
-                    stopOpacity={0.18}
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor={colors[i % colors.length]}
-                    stopOpacity={0}
-                  />
-                </linearGradient>
-              ))}
-            </defs>
             <CartesianGrid
               strokeDasharray="3 3"
               className="stroke-border/30"
@@ -238,7 +214,8 @@ export function CompareChart({
                 dataKey={card.cardCode}
                 stroke={colors[i % colors.length]}
                 strokeWidth={2}
-                fill={`url(#cmp-grad-${chartId}-${card.cardCode})`}
+                fill={colors[i % colors.length]}
+                fillOpacity={0.08}
                 dot={false}
                 connectNulls
                 activeDot={{

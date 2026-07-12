@@ -418,6 +418,7 @@ export function SelectStep({
           variant="inline"
           nullable
           prominent
+          triggerClassName="tap-safe h-10 sm:h-9"
         />
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
@@ -453,7 +454,8 @@ export function SelectStep({
             aria-label={t(lang, "filter")}
             aria-haspopup="dialog"
             aria-expanded={showFilters}
-            className="min-w-11 shrink-0 sm:min-w-0"
+            iconOnly
+            className="shrink-0"
           >
             <span className="hidden sm:inline">{t(lang, "filter")}</span>
           </FilterButton>

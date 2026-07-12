@@ -6,8 +6,6 @@ import { Logo } from "@/components/brand/logo"
 import { t, type Language } from "@/lib/i18n"
 
 export type AuthHero = {
-  /** the second (radial) gradient layer — the only per-page hero divergence. */
-  radialGradient: string
   title: string
   desc: string
   /** optional extra below the hero copy (e.g. register's feature checklist). */
@@ -60,8 +58,6 @@ export function AuthShell({
     <div className="flex min-h-svh">
       {/* Decorative left panel */}
       <div className="relative hidden w-1/2 overflow-hidden bg-foreground lg:block">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-primary/10" />
-        <div className={`absolute inset-0 ${hero.radialGradient}`} />
         <div className="relative flex h-full flex-col justify-between p-12">
           <Link href="/"><Logo size="lg" mono className="text-background" /></Link>
           <div className="max-w-md">

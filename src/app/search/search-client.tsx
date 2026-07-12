@@ -190,6 +190,7 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
                   onSelect={(code) => handleSetChange(code ?? "")}
                   variant="inline"
                   nullable
+                  triggerClassName="tap-safe h-10 sm:h-9"
                 />
               </div>
             )}

@@ -234,7 +234,7 @@ export function TrendingTabs({ data }: { data: TrendingData }) {
             segmented control at 390px — contained horizontal scroll (same
             pattern as the card-detail section tabs / set type pills) instead
             of letting it overflow the whole page. */}
-        <div className="no-sb scroll-fade-x -mx-5 overflow-x-auto px-5 sm:mx-0 sm:overflow-visible sm:px-0">
+        <div className="no-sb -mx-5 overflow-x-auto px-5 sm:mx-0 sm:overflow-visible sm:px-0">
           <SegmentedControl
             options={tabOptions}
             value={activeTab}

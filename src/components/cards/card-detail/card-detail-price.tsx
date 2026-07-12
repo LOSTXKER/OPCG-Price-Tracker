@@ -96,7 +96,7 @@ export function CardDetailPrice({
         <div
           role="group"
           aria-label={t(lang, "chooseGrade")}
-          className="scroll-fade-x no-sb -mx-1 flex items-stretch gap-1 overflow-x-auto px-1"
+          className="no-sb -mx-1 flex items-stretch gap-1 overflow-x-auto px-1"
         >
           {GRADE_TIERS.map((tier, index) => {
             const gradeDatum = gradeData[tier.key]

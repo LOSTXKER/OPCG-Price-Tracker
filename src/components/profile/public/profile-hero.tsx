@@ -17,7 +17,7 @@ import { getTierConfig } from "@/components/profile/profile-types";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { clientEnv } from "@/lib/env";
-import { avatarGradient } from "@/lib/utils/avatar-gradient";
+import { avatarColor } from "@/lib/utils/avatar-gradient";
 import type {
   ProfileAchievement,
   SellerStats,
@@ -103,8 +103,8 @@ export function ProfileHero({
             {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt="" /> : null}
             <AvatarFallback
               className={cn(
-                "bg-gradient-to-br text-3xl font-bold text-white sm:text-4xl",
-                avatarGradient(user.id),
+                "text-3xl font-bold text-white sm:text-4xl",
+                avatarColor(user.id),
               )}
             >
               {(user.displayName ?? "?").slice(0, 1).toUpperCase()}

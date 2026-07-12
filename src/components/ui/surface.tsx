@@ -68,8 +68,8 @@ export interface SurfaceProps
  *   - `panel`   — primary card (`.panel` token; bg + soft shadow + radius)
  *   - `outline` — secondary card (border + bg-card, no shadow)
  *   - `subtle`  — informational/banner surface (muted bg, no border)
- *   - `hero`    — `.panel-hero` (gradient + accent top border) — reserve for
- *                 ONE hero per page only
+ *   - `hero`    — raised flat surface with a hairline — reserve for one hero
+ *                 per page only
  *   - `ghost`   — no surface chrome (use only when composing)
  *
  * `interactive` adds `hover:bg-muted/30 hover:border-border` (no translate, no

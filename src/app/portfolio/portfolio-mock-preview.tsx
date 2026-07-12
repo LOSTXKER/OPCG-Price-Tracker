@@ -16,11 +16,6 @@ export function PortfolioMockPreview({ lang }: { lang: Language }) {
     <div className="space-y-5 sm:space-y-6">
       {/* Dashboard hero */}
       <Surface variant="panel" className="relative overflow-hidden p-4 sm:p-5">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-12 -top-20 h-64 w-80 rounded-full blur-3xl"
-          style={{ background: "color-mix(in srgb, var(--price-up) 12%, transparent)" }}
-        />
         <div className="relative flex items-start justify-between gap-3">
           <div>
             <p className="text-eyebrow">{t(lang, "allPortfolios")}</p>

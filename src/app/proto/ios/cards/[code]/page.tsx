@@ -55,7 +55,7 @@ export default function CardDetailPage() {
     Math.max(0, ((displayPrice - card.rangeLow) / (card.rangeHigh - card.rangeLow)) * 100),
   )
 
-  // SVG price history chart (30-point polyline + gradient area fill)
+  // SVG price history chart (30-point polyline + quiet solid area fill)
   const history = card.history
   const chartMin = Math.min(...history)
   const chartMax = Math.max(...history)
@@ -202,14 +202,8 @@ export default function CardDetailPage() {
                   className="h-[88px] w-full"
                   aria-hidden
                 >
-                  <defs>
-                    <linearGradient id="card-chart-fill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="var(--price-up)" stopOpacity="0.18" />
-                      <stop offset="100%" stopColor="var(--price-up)" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
                   {/* Area fill */}
-                  <path d={areaPath} fill="url(#card-chart-fill)" />
+                  <path d={areaPath} fill="var(--price-up)" fillOpacity="0.08" />
                   {/* Price line */}
                   <polyline
                     points={polylinePoints}

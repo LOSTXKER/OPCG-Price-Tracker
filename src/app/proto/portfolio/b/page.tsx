@@ -130,22 +130,12 @@ export default function PortfolioProtoB() {
                   return (
                     <div key={h.code} className="w-40 shrink-0 lg:w-auto">
                       <div className="relative">
-                        {i === 0 && (
-                          <div
-                            aria-hidden
-                            className="pointer-events-none absolute -inset-6 -z-10 rounded-full blur-2xl"
-                            style={{
-                              background:
-                                "radial-gradient(circle, color-mix(in srgb, var(--primary) 10%, transparent), transparent 70%)",
-                            }}
-                          />
-                        )}
                         <img
                           src={h.img}
                           alt={h.name}
                           className="aspect-[63/88] w-full rounded-xl object-cover ring-1 ring-hair"
                         />
-                        <span className="text-overlay font-price absolute left-1.5 top-1.5 rounded-sm bg-background/85 px-1.5 py-0.5 ring-1 ring-hair backdrop-blur-sm">
+                        <span className="text-overlay font-price absolute left-1.5 top-1.5 rounded-sm bg-background px-1.5 py-0.5 ring-1 ring-hair">
                           {i + 1}/{showcase.length}
                         </span>
                       </div>

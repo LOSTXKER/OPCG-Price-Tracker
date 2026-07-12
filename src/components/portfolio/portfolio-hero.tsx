@@ -23,8 +23,6 @@ export interface PortfolioHeroProps {
   /** When a single game is filtered, the game's short name — appended to the
    *  eyebrow so the scoped total never reads as the whole-portfolio value. */
   scopeLabel?: string | null
-  /** Thin per-game tint for the scoped hero glow (null in the all-games view). */
-  scopeTint?: string | null
 }
 
 /**
@@ -42,7 +40,6 @@ export function PortfolioHero({
   live = false,
   hideBalance = false,
   scopeLabel = null,
-  scopeTint = null,
 }: PortfolioHeroProps) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -58,13 +55,6 @@ export function PortfolioHero({
   // overview value strip) it must size to content so the stats sit beside it.
   return (
     <section className="relative min-w-0">
-      {scopeTint && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -left-4 -top-6 -z-10 h-24 w-56 rounded-full blur-2xl"
-          style={{ background: `color-mix(in srgb, ${scopeTint} 18%, transparent)` }}
-        />
-      )}
       <p className="text-eyebrow">
         {t(lang, "portfolioValue")}
         {scopeLabel ? <span className="text-primary"> · {scopeLabel}</span> : null}

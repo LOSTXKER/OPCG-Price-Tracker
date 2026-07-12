@@ -27,8 +27,8 @@ export function LoginCTAButtons() {
 }
 
 /**
- * Renders a blurred mock preview of a page with a centered login CTA overlay.
- * Pass the static mock UI as `preview`; it will be blurred and non-interactive.
+ * Renders a subdued mock preview of a page with a centered login CTA overlay.
+ * Pass the static mock UI as `preview`; it will be non-interactive.
  */
 export function AuthPreviewGate({ preview }: { preview: React.ReactNode }) {
   const lang = useUIStore((s) => s.language);
@@ -38,13 +38,13 @@ export function AuthPreviewGate({ preview }: { preview: React.ReactNode }) {
   return (
     <div className="relative overflow-hidden rounded-xl">
       <div
-        className="pointer-events-none select-none blur-[6px] opacity-60"
+        className="pointer-events-none select-none"
         aria-hidden
       >
         {preview}
       </div>
 
-      <div className="absolute inset-0 flex items-center justify-center bg-background/40 backdrop-blur-[1px]">
+      <div className="absolute inset-0 flex items-center justify-center bg-background/70">
         <Surface variant="outline" className="mx-auto max-w-xs space-y-4 rounded-2xl p-8 text-center shadow-lg">
           <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-muted">
             <LogIn className="size-6 text-muted-foreground" />

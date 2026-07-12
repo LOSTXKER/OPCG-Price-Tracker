@@ -61,7 +61,7 @@ function PrizeImageViewer({
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent
-        overlayClassName="bg-black/80 backdrop-blur-sm"
+        overlayClassName="bg-black/80"
         className="max-w-[90vw] border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-[90vw] [&>[data-slot=dialog-close]]:text-white [&>[data-slot=dialog-close]]:hover:bg-white/20"
       >
         <DialogTitle className="sr-only">{alt}</DialogTitle>
@@ -212,7 +212,7 @@ function RecentWinnersStrip({
       </header>
 
       {winners.length > 0 ? (
-        <div className="scroll-fade-x flex gap-2 overflow-x-auto scrollbar-none px-3 py-2.5">
+        <div className="flex gap-2 overflow-x-auto scrollbar-none px-3 py-2.5">
           {winners.slice(0, 8).map((w, i) => (
             <Surface
               as="article"

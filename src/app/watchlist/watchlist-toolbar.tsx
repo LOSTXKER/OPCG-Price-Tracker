@@ -168,6 +168,7 @@ export function WatchlistToolbar({
             activeDir={sortDirection}
             onChange={onSortChange}
             fallbackLabel={t(lang, "watchlistSortBy")}
+            stableMobileWidth
             className="shrink-0"
           />
 

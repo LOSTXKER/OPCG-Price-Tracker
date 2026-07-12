@@ -72,8 +72,6 @@ export function RegisterClient() {
       subtitle={t(lang, "registerSubtitle")}
       showBackLink
       hero={{
-        radialGradient:
-          "bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/25 via-transparent to-transparent",
         title: t(lang, "registerHeroTitle"),
         desc: t(lang, "registerHeroDesc"),
         extra: (

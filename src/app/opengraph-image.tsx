@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { BRAND_GOLD, BRAND_GRADIENT } from "@/lib/constants/brand";
+import { BRAND_GOLD, BRAND_SURFACE } from "@/lib/constants/brand";
 
 export const alt = "Meecard — OPCG Card Prices Updated Daily";
 export const size = { width: 1200, height: 630 };
@@ -16,7 +16,7 @@ export default function OGImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #1C1C1E 0%, #231E1A 50%, #1C1C1E 100%)",
+          background: "#1C1C1E",
           fontFamily: "sans-serif",
         }}
       >
@@ -35,7 +35,7 @@ export default function OGImage() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: BRAND_GRADIENT,
+              background: BRAND_SURFACE,
               borderRadius: 20,
             }}
           >

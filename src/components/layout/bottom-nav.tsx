@@ -129,7 +129,7 @@ export function BottomNav({ className }: { className?: string }) {
   return (
     <nav
       className={cn(
-        "bottom-nav-frost frost hairline-t pb-safe fixed right-0 bottom-0 left-0 z-50 md:hidden",
+        "hairline-t pb-safe fixed right-0 bottom-0 left-0 z-50 bg-background md:hidden",
         className
       )}
       aria-label="Navigation"

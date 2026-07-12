@@ -14,7 +14,7 @@ import { useUIStore } from "@/stores/ui-store";
  * The one canonical filter surface (เบส: CoinMarketCap-style). A modal that is a
  * centered card on desktop and full-screen on mobile, with a header, a scrollable
  * body of filter rows (`children`), and a Reset / Apply footer. The Dialog overlay
- * supplies the dark blur backdrop. Every page opens THIS from its "ตัวกรอง" button
+ * supplies the dark backdrop. Every page opens THIS from its "ตัวกรอง" button
  * instead of rolling its own filter row.
  */
 export function FilterModal({
