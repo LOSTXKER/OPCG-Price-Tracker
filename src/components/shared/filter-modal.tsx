@@ -5,6 +5,8 @@ import { RotateCcw, X } from "lucide-react";
 
 import { Dialog, DialogTitle } from "@/components/ui/dialog";
 import { ResponsiveDialogContent } from "@/components/ui/responsive-dialog-content";
+import { Button } from "@/components/ui/button";
+import { IconButton } from "@/components/ui/icon-button";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 
@@ -50,14 +52,13 @@ export function FilterModal({
           <DialogTitle className="text-h4">
             {title ?? t(lang, "filter")}
           </DialogTitle>
-          <button
-            type="button"
+          <IconButton
             onClick={() => onOpenChange(false)}
             aria-label={t(lang, "close")}
-            className="-mr-1 flex size-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground md:size-8"
+            className="-mr-1 md:size-8"
           >
             <X className="size-4" />
-          </button>
+          </IconButton>
         </div>
 
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
@@ -66,26 +67,26 @@ export function FilterModal({
 
         <div className="flex items-center gap-3 border-t border-hair p-3">
           {onReset && (
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={onReset}
               disabled={resetDisabled}
-              className="ease-chrome flex min-h-11 items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary hover:bg-primary/5 disabled:opacity-40 md:min-h-0"
+              className="text-primary hover:bg-primary/5 hover:text-primary"
             >
               <RotateCcw className="size-3.5" />
               {t(lang, "reset")}
-            </button>
+            </Button>
           )}
-          <button
-            type="button"
+          <Button
             onClick={() => {
               onApply?.();
               onOpenChange(false);
             }}
-            className="ease-chrome h-11 flex-1 rounded-xl bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+            className="flex-1"
           >
             {applyLabel ?? t(lang, "apply")}
-          </button>
+          </Button>
         </div>
       </ResponsiveDialogContent>
     </Dialog>

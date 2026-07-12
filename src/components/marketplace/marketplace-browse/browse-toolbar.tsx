@@ -168,7 +168,8 @@ export function BrowseToolbar({
         }}
         filters={{
           count: activeCount,
-          active: activeCount > 0,
+          active: showFilters || activeCount > 0,
+          open: showFilters,
           onToggle: () => {
             setDraftCondition(condition)
             setDraftRarities(rarities)

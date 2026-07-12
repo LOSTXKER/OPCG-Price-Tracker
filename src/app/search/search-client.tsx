@@ -2,9 +2,6 @@
 
 import { Suspense, useState } from "react"
 import {
-  Filter,
-  LayoutGrid,
-  List,
   Search,
   TrendingUpDown,
   X,
@@ -15,10 +12,11 @@ import { Button } from "@/components/ui/button"
 import { Pagination } from "@/components/ui/pagination"
 import { Surface } from "@/components/ui/surface"
 import { SegmentedControl } from "@/components/ui/segmented-control"
+import { ViewModeControl } from "@/components/ui/view-mode-control"
 import { EmptyState } from "@/components/shared/empty-state"
 import { FilterModal } from "@/components/shared/filter-modal"
 import { cn } from "@/lib/utils"
-import { ToolbarSortDropdown } from "@/components/ui/toolbar"
+import { FilterButton, ToolbarSortDropdown } from "@/components/ui/toolbar"
 import { SetPicker } from "@/components/shared/set-picker"
 import { CardItem, CardItemSkeleton } from "@/components/cards/card-item"
 import { MobileCardSkeleton } from "@/components/home/mobile-card-item"
@@ -196,24 +194,17 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
               </div>
             )}
 
-            <button
-              type="button"
+            <FilterButton
+              count={modalFilterCount}
+              active={showFilters || modalFilterCount > 0}
               onClick={() => setShowFilters(true)}
-              className={cn(
-                "ease-chrome relative flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm transition-colors md:min-h-9",
-                modalFilterCount > 0
-                  ? "border-primary/40 bg-primary/5 text-primary"
-                  : "border-hair bg-background text-muted-foreground hover:bg-muted hover:text-foreground",
-              )}
+              aria-label={t(lang, "filter")}
+              aria-haspopup="dialog"
+              aria-expanded={showFilters}
+              className="shrink-0"
             >
-              <Filter className="size-3.5" />
               {t(lang, "filter")}
-              {modalFilterCount > 0 && (
-                <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
-                  {modalFilterCount}
-                </span>
-              )}
-            </button>
+            </FilterButton>
 
             <div className="hidden sm:block">
               <ToolbarSortDropdown
@@ -240,15 +231,11 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
                 </div>
               )}
 
-              <SegmentedControl
-                options={[
-                  { value: "table", label: "Table", icon: List, ariaLabel: "Table view" },
-                  { value: "grid", label: "Grid", icon: LayoutGrid, ariaLabel: "Grid view" },
-                ]}
+              <ViewModeControl
+                modes={["table", "grid"]}
                 value={viewMode}
                 onChange={setViewMode}
-                size="sm"
-                ariaLabel="View mode"
+                showLabels
               />
             </div>
           </div>

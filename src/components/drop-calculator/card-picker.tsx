@@ -2,11 +2,10 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { Filter, Search } from "lucide-react"
-
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { FilterModal } from "@/components/shared/filter-modal"
 import { Price } from "@/components/shared/price-inline"
+import { FilterButton, ToolbarSearch } from "@/components/ui/toolbar"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -71,34 +70,25 @@ export function CardPicker({
       {/* Search stays outside; only rarity (a secondary facet) moves into the
           FilterModal opened by the "ตัวกรอง" button. */}
       <div className="flex items-center gap-2">
-        <div className="relative flex-1 sm:max-w-72">
-          <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="search"
-            placeholder={t(lang, "searchByNameOrCode")}
-            value={cardSearch}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="h-9 w-full rounded-full border border-border bg-background pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
-          />
-        </div>
-        <button
-          type="button"
+        <ToolbarSearch
+          value={cardSearch}
+          onValueChange={onSearchChange}
+          placeholder={t(lang, "searchByNameOrCode")}
+          aria-label={t(lang, "searchByNameOrCode")}
+          size="sm"
+          containerClassName="min-w-0 flex-1 sm:max-w-72"
+        />
+        <FilterButton
+          count={activeFilterCount}
+          active={showFilters || activeFilterCount > 0}
           onClick={() => setShowFilters(true)}
-          className={cn(
-            "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-sm",
-            activeFilterCount > 0
-              ? "border-primary/40 bg-primary/5 text-primary"
-              : "border-border bg-background text-muted-foreground hover:text-foreground"
-          )}
+          aria-label={t(lang, "filter")}
+          aria-haspopup="dialog"
+          aria-expanded={showFilters}
+          className="min-w-11 shrink-0 sm:min-w-0"
         >
-          <Filter className="size-3.5" />
           <span className="hidden sm:inline">{t(lang, "filter")}</span>
-          {activeFilterCount > 0 && (
-            <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
-              {activeFilterCount}
-            </span>
-          )}
-        </button>
+        </FilterButton>
       </div>
 
       <FilterModal

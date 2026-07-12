@@ -91,7 +91,7 @@ export function TabToolbar<F extends string, S extends string>({
           activeDir="desc"
           onChange={(key) => onSort?.(key)}
           fallbackLabel={t(lang, "toolbarSort")}
-          className="shrink-0 rounded-full"
+          className="shrink-0"
         />
       )}
     </div>

@@ -48,6 +48,8 @@ interface SetPickerProps {
    * even before a set is picked.
    */
   prominent?: boolean
+  /** Optional inline-trigger styling for a specific surface without changing the popover. */
+  triggerClassName?: string
 }
 
 export function SetPicker({
@@ -59,6 +61,7 @@ export function SetPicker({
   nullable = false,
   align,
   prominent = false,
+  triggerClassName,
 }: SetPickerProps) {
   const lang = useUIStore((s) => s.language)
   const [open, setOpen] = useState(false)
@@ -119,6 +122,7 @@ export function SetPicker({
     <div ref={ref} className={cn("relative", (isCta || isInline) && "w-full", isCta && "max-w-md")}>
       <button
         type="button"
+        aria-expanded={open}
         onClick={() => setOpen(!open)}
         className={cn(
           "flex items-center gap-2 motion-base",
@@ -139,6 +143,7 @@ export function SetPicker({
               : prominent
                 ? "border-primary/40 bg-[var(--p-honey-soft)] font-medium text-foreground hover:bg-primary/15"
                 : "border-border hover:bg-muted/70",
+            triggerClassName,
             open && (selectedSet || prominent ? "bg-primary/15" : "bg-muted/70"),
             // square off the bottom so the dropdown reads as one attached unit
             open && "rounded-b-none",

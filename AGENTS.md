@@ -62,7 +62,7 @@ Concrete consequences:
 | --- | --- | --- | --- |
 | Surface / panel | `Surface` | `ui/surface.tsx` | กล่อง/พาเนลทุกใบ (variant + padding) |
 | Section heading | `SectionHead` | `shared/section-head.tsx` | หัวข้อ section + action ขวา |
-| Segmented / tab เลือก 1 จาก N | `SegmentedControl` · `Tabs` | `ui/segmented-control.tsx` · `ui/tabs.tsx` | pill/แท็บเลือกหนึ่งจากหลายตัว |
+| Segmented / tab เลือก 1 จาก N | `SegmentedControl` · `ViewModeControl` · `Tabs` | `ui/segmented-control.tsx` · `ui/view-mode-control.tsx` · `ui/tabs.tsx` | pill/แท็บเลือกหนึ่งจากหลายตัว · มุมมอง table/list/grid |
 | List row (มือถือ) | `GroupedList`/`GroupedRow` · `ListRow` | `ui/grouped-list.tsx` · `ui/list-row.tsx` | แถวรายการ iOS-style |
 | Empty state | `EmptyState` (หมี Kuma) | `shared/empty-state.tsx` | หน้า/ลิสต์ว่าง |
 | ตัวเลขใหญ่ (KPI / ราคา hero) | `HeroNumber` | `ui/hero-number.tsx` | พอร์ตรวม / ราคา hero |

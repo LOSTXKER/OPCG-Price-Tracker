@@ -5,13 +5,26 @@ import { Fragment, type ReactNode } from "react"
 import { SortableHeader } from "@/components/shared/sortable-header"
 import { ToolbarSortDropdown } from "@/components/ui/toolbar"
 import { MobileCardItem, MobileCardSkeleton } from "@/components/home/mobile-card-item"
-import { t } from "@/lib/i18n"
+import { t, type Language } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import type { CardRow, ColumnId, PriceMode } from "@/components/home/market-types"
 
 import type { MarketColumn } from "./market-columns"
 import { MarketTableRow, MarketTableRowSkeleton } from "./market-table-row"
+
+/** Shared label for desktop sort headers and compact mobile sort controls. */
+export function getMarketColumnLabel(col: MarketColumn, lang: Language) {
+  return col.key === "change24h"
+    ? "24h"
+    : col.key === "change7d"
+      ? "7d"
+      : col.key === "change30d"
+        ? "30d"
+        : col.labelKey
+          ? t(lang, col.labelKey)
+          : col.key
+}
 
 /**
  * Shared market table (the "table" view body) used by BOTH the homepage and
@@ -34,6 +47,7 @@ export function MarketTable({
   emptyText,
   inFeedAd,
   surface = "card",
+  showMobileSort = true,
 }: {
   cards: CardRow[]
   rankOffset: number
@@ -54,25 +68,14 @@ export function MarketTable({
    * `canvas` — floating directly on the page background (e.g. home market).
    */
   surface?: "card" | "canvas"
+  /** Home composes sorting into its mobile toolbar; other consumers keep it here. */
+  showMobileSort?: boolean
 }) {
   const lang = useUIStore((s) => s.language)
   const showSkeleton = isPending && cards.length === 0
   const isEmpty = !isPending && cards.length === 0
 
   const sparkFor = (card: CardRow) => (card.id != null ? sparklines[card.id] : undefined)
-
-  // Shared header label — literal spans for the change columns, i18n otherwise.
-  // Reused by the desktop <th> and the mobile sort <select> so they never drift.
-  const columnLabel = (col: MarketColumn) =>
-    col.key === "change24h"
-      ? "24h"
-      : col.key === "change7d"
-        ? "7d"
-        : col.key === "change30d"
-          ? "30d"
-          : col.labelKey
-            ? t(lang, col.labelKey)
-            : col.key
 
   // Sortable columns exposed to the mobile list (the <th> sort headers are
   // table-only, so <sm has no other way to re-sort). Same COLUMN_SORTS ids.
@@ -82,13 +85,13 @@ export function MarketTable({
     <>
       {/* Mobile sort control (<sm) — the sortable <th> headers live in the
           desktop table only; on mobile expose sort via the sort dropdown. */}
-      {sortableCols.length > 0 && !isEmpty && (
+      {showMobileSort && sortableCols.length > 0 && !isEmpty && (
         <div className="flex items-center gap-2 pb-2 sm:hidden">
           <span className="text-meta shrink-0">{t(lang, "sortBy")}</span>
           <ToolbarSortDropdown
             options={sortableCols.map((c) => ({
               key: c.sort as ColumnId,
-              label: columnLabel(c),
+              label: getMarketColumnLabel(c, lang),
             }))}
             activeKey={(sortCol ?? "") as ColumnId}
             activeDir={sortDir}
@@ -129,7 +132,7 @@ export function MarketTable({
             <tr className="border-b border-hair text-eyebrow text-muted-foreground">
               {columns.map((col) => {
                 if (col.sort) {
-                  const label = columnLabel(col)
+                  const label = getMarketColumnLabel(col, lang)
                   return (
                     <SortableHeader
                       key={col.key}

@@ -1,6 +1,5 @@
 "use client";
 
-import { Grid3x3, List as ListIcon, SlidersHorizontal } from "lucide-react";
 import type { ReactNode } from "react";
 
 import {
@@ -11,10 +10,10 @@ import {
   type ToolbarSortOption,
   type ToolbarSearchProps,
 } from "@/components/ui/toolbar";
-import { SegmentedControl, type SegmentedOption } from "@/components/ui/segmented-control";
+import { ViewModeControl, type ViewMode } from "@/components/ui/view-mode-control";
 import { cn } from "@/lib/utils";
 
-export interface FilterToolbarProps<TSortKey extends string = string, TView extends string = string> {
+export interface FilterToolbarProps<TSortKey extends string = string, TView extends ViewMode = ViewMode> {
   search: string;
   onSearchChange: (value: string) => void;
   searchPlaceholder?: string;
@@ -31,12 +30,13 @@ export interface FilterToolbarProps<TSortKey extends string = string, TView exte
   filters?: {
     count?: number;
     active?: boolean;
+    open?: boolean;
     onToggle: () => void;
     label?: ReactNode;
   };
   /** View-mode toggle (grid/list/etc) — omit to hide. */
   view?: {
-    modes?: ReadonlyArray<SegmentedOption<TView>>;
+    modes?: ReadonlyArray<TView>;
     value: TView;
     onChange: (value: TView) => void;
   };
@@ -49,10 +49,7 @@ export interface FilterToolbarProps<TSortKey extends string = string, TView exte
   bare?: boolean;
 }
 
-const DEFAULT_VIEW_MODES: ReadonlyArray<SegmentedOption<"grid" | "list">> = [
-  { value: "grid", label: <Grid3x3 className="size-3.5" />, ariaLabel: "Grid view" },
-  { value: "list", label: <ListIcon className="size-3.5" />, ariaLabel: "List view" },
-];
+const DEFAULT_VIEW_MODES: ReadonlyArray<ViewMode> = ["grid", "list"];
 
 /**
  * Composed search + sort + filter + view-mode + CTA row.
@@ -65,10 +62,10 @@ const DEFAULT_VIEW_MODES: ReadonlyArray<SegmentedOption<"grid" | "list">> = [
  *   - `search-client.tsx` top controls
  *
  * Internally composes the existing `Toolbar` primitives (`ToolbarSearch`,
- * `ToolbarSortDropdown`, `FilterButton`, `SegmentedControl`) so visual chrome stays
+ * `ToolbarSortDropdown`, `FilterButton`, `ViewModeControl`) so visual chrome stays
  * consistent across pages.
  */
-export function FilterToolbar<TSortKey extends string = string, TView extends string = string>({
+export function FilterToolbar<TSortKey extends string = string, TView extends ViewMode = ViewMode>({
   search,
   onSearchChange,
   searchPlaceholder,
@@ -101,9 +98,9 @@ export function FilterToolbar<TSortKey extends string = string, TView extends st
       <div className="flex flex-wrap items-center gap-2">
         {filters && (
           <FilterButton
-            iconLeft={<SlidersHorizontal className="size-3.5" />}
             count={filters.count}
             active={filters.active}
+            aria-expanded={filters.open}
             onClick={filters.onToggle}
           >
             {filters.label ?? "Filters"}
@@ -118,10 +115,8 @@ export function FilterToolbar<TSortKey extends string = string, TView extends st
           />
         )}
         {view && (
-          <SegmentedControl
-            size="sm"
-            ariaLabel="View mode"
-            options={(view.modes ?? DEFAULT_VIEW_MODES) as ReadonlyArray<SegmentedOption<TView>>}
+          <ViewModeControl<TView>
+            modes={(view.modes ?? DEFAULT_VIEW_MODES) as ReadonlyArray<TView>}
             value={view.value}
             onChange={view.onChange}
           />

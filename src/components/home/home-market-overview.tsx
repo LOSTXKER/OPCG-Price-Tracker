@@ -1,11 +1,6 @@
 "use client"
 
-import {
-  LayoutGrid,
-  List,
-  SlidersHorizontal,
-  TrendingUpDown,
-} from "lucide-react"
+import { TrendingUpDown } from "lucide-react"
 
 import { useMemo } from "react"
 
@@ -16,6 +11,8 @@ import { AdSlot } from "@/components/ads/ad-slot"
 import { Input } from "@/components/ui/input"
 import { Pagination } from "@/components/ui/pagination"
 import { SegmentedControl } from "@/components/ui/segmented-control"
+import { FilterButton, ToolbarSortDropdown } from "@/components/ui/toolbar"
+import { ViewModeControl } from "@/components/ui/view-mode-control"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
@@ -23,13 +20,14 @@ import { formatCount } from "@/lib/utils/currency"
 import { getCardTypeLabel, getColorOptions } from "@/lib/constants/card-config"
 import { useMarketCards } from "@/hooks/use-market-cards"
 
-import { MarketTable } from "@/components/market/market-table"
+import { getMarketColumnLabel, MarketTable } from "@/components/market/market-table"
 import { PriceModeControl } from "@/components/market/price-mode-control"
 import { buildMarketColumns } from "@/components/market/market-columns"
 import { CardItem, CardItemSkeleton } from "@/components/cards/card-item"
 import {
   type Tab,
   type CardRow,
+  type ColumnId,
   CHANGE_PERIODS,
   PAGE_SIZE,
 } from "./market-types"
@@ -106,6 +104,14 @@ export function HomeMarketOverview({
 
   const selectedSets = m.filters.set ?? []
   const columns = useMemo(() => buildMarketColumns({ showViews: m.showViews }), [m.showViews])
+  const mobileSortOptions = columns.flatMap((column) =>
+    column.sort
+      ? [{ key: column.sort, label: getMarketColumnLabel(column, lang) }]
+      : []
+  )
+  const showMobileSort = m.viewMode === "table"
+    && mobileSortOptions.length > 0
+    && (m.isPending || m.cards.length > 0)
 
   // Reset clears only the modal's own facets (rarity/type/color/variant) + price
   // range — NOT the set (its own control up top) and NOT search (outside the modal).
@@ -117,6 +123,31 @@ export function HomeMarketOverview({
     m.setMaxPrice("")
     m.setPage(1)
   }
+
+  const renderFilterTrigger = (showLabel: boolean) => (
+    <FilterButton
+      aria-label={t(lang, "filter")}
+      aria-haspopup="dialog"
+      aria-expanded={m.filterOpen}
+      onClick={() => m.setFilterOpen(true)}
+      active={m.filterOpen || m.activeFilterCount > 0}
+      count={m.activeFilterCount}
+      className={cn(
+        "shrink-0",
+        showLabel ? "md:min-h-0" : "min-w-11 px-0",
+      )}
+    >
+      {showLabel && <span className="hidden md:inline">{t(lang, "filter")}</span>}
+    </FilterButton>
+  )
+
+  const renderViewControl = () => (
+    <ViewModeControl
+      modes={["table", "grid"]}
+      value={m.viewMode}
+      onChange={m.setViewMode}
+    />
+  )
 
   return (
     <div className="space-y-4">
@@ -146,13 +177,57 @@ export function HomeMarketOverview({
           ))}
         </div>
 
-        {/* Row 2: set picker (left) + display controls (right) — one line on
-            every breakpoint (set picker flexes, controls keep natural width) */}
-        <div className="flex items-center gap-2 px-3 py-2 sm:px-4">
-          {/* Set picker — flexes to fill on mobile, fixed 19rem on sm+ so its
-              dropdown (matches the trigger width) fits full set names */}
+        {/* Mobile browse controls: the set is the primary axis and owns the
+            first row. Display actions stay together, while sorting gets enough
+            width to keep its label readable at the narrowest supported size. */}
+        <div className="space-y-2 px-3 py-3 sm:hidden">
           {sets.length > 0 && (
-            <div className="min-w-0 flex-1 sm:flex-none sm:w-[19rem]">
+            <SetPicker
+              sets={sets}
+              selectedCode={selectedSets[0] ?? null}
+              onSelect={(code) => m.handleFilterChange("set", code ? [code] : [])}
+              variant="inline"
+              nullable
+              prominent
+              triggerClassName="rounded-xl border-primary/25 bg-primary/5 hover:border-primary/35 hover:bg-primary/10 aria-expanded:rounded-b-none aria-expanded:border-primary/35 aria-expanded:bg-primary/10"
+            />
+          )}
+
+          <div className="flex items-center gap-2">
+            <PriceModeControl
+              value={m.priceMode}
+              onChange={(mode) => { m.setPriceMode(mode); m.setPage(1) }}
+            />
+
+            <div className="ml-auto flex items-center gap-2">
+              {renderFilterTrigger(false)}
+              {renderViewControl()}
+            </div>
+          </div>
+
+          {showMobileSort && (
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-meta shrink-0">{t(lang, "sortBy")}</span>
+              <ToolbarSortDropdown
+                options={mobileSortOptions.map((option) => ({
+                  ...option,
+                  label: <span className="min-w-0 flex-1 truncate text-left">{option.label}</span>,
+                }))}
+                activeKey={(m.sortCol ?? "") as ColumnId}
+                activeDir={m.sortDir}
+                onChange={(key) => m.handleColumnSort(key)}
+                fallbackLabel={t(lang, "sortBy")}
+                align="end"
+                className="ml-auto w-48 min-w-0 flex-none justify-between overflow-hidden px-3"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Desktop/tablet keeps the established single-row toolbar. */}
+        <div className="hidden items-center gap-2 px-4 py-2 sm:flex">
+          {sets.length > 0 && (
+            <div className="w-[19rem] flex-none">
               <SetPicker
                 sets={sets}
                 selectedCode={selectedSets[0] ?? null}
@@ -163,47 +238,19 @@ export function HomeMarketOverview({
             </div>
           )}
 
-          {/* Display controls: price lens · divider · filter · view */}
-          <div className="flex shrink-0 items-center justify-end gap-1.5 sm:ml-auto">
+          <div className="ml-auto flex shrink-0 items-center justify-end gap-1.5">
             <PriceModeControl
               value={m.priceMode}
               onChange={(mode) => { m.setPriceMode(mode); m.setPage(1) }}
             />
 
-            <div className="hidden h-5 w-px bg-border/40 sm:block" />
+            <div className="h-5 w-px bg-border/40" />
 
             {/* Opens the canonical FilterModal (centered on desktop, full-screen
                 on mobile). Badge counts only the modal's facets + price range —
                 set has its own control up top. */}
-            <button
-              type="button"
-              onClick={() => m.setFilterOpen(true)}
-              className={cn(
-                "ease-chrome flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium md:min-h-0 md:min-w-0",
-                m.filterOpen || m.activeFilterCount > 0
-                  ? "bg-primary/15 text-primary"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-            >
-              <SlidersHorizontal className="size-3.5" />
-              <span className="hidden md:inline">{t(lang, "filter")}</span>
-              {m.activeFilterCount > 0 && (
-                <span className="flex size-4.5 items-center justify-center rounded-full bg-primary/15 text-micro text-primary">
-                  {m.activeFilterCount}
-                </span>
-              )}
-            </button>
-
-            <SegmentedControl
-              size="sm"
-              ariaLabel="View mode"
-              options={[
-                { value: "table", label: <List className="size-3.5" />, ariaLabel: "Table view" },
-                { value: "grid", label: <LayoutGrid className="size-3.5" />, ariaLabel: "Grid view" },
-              ]}
-              value={m.viewMode}
-              onChange={m.setViewMode}
-            />
+            {renderFilterTrigger(true)}
+            {renderViewControl()}
           </div>
         </div>
       </div>
@@ -287,6 +334,7 @@ export function HomeMarketOverview({
       {m.viewMode === "table" ? (
         <MarketTable
           surface="canvas"
+          showMobileSort={false}
           cards={m.cards}
           rankOffset={(m.page - 1) * PAGE_SIZE}
           columns={columns}

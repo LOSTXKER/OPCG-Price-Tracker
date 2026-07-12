@@ -1,17 +1,12 @@
 "use client";
 
 import {
-  ArrowDownUp,
   Bell,
   Check,
-  ChevronDown,
   Layers,
-  LayoutGrid,
-  List,
   Pencil,
   Pin,
   Search,
-  SlidersHorizontal,
   TrendingDown,
   TrendingUp,
   TrendingUpDown,
@@ -22,12 +17,8 @@ import { useMemo, useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { FilterModal } from "@/components/shared/filter-modal";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { ViewModeControl } from "@/components/ui/view-mode-control";
+import { FilterButton, ToolbarSortDropdown } from "@/components/ui/toolbar";
 import { UpgradeBadge } from "@/components/shared/upgrade-badge";
 import { OPCG_SETS } from "@/lib/constants/sets";
 import { t, type Language } from "@/lib/i18n";
@@ -111,6 +102,10 @@ export function WatchlistToolbar({
     (filters.direction ? 1 : 0) +
     (filters.hasAlert ? 1 : 0) +
     (filters.pinnedOnly ? 1 : 0);
+  const sortDirection: "asc" | "desc" =
+    sortKey === "loss" || sortKey === "priceLow" || sortKey === "nameAz"
+      ? "asc"
+      : "desc";
 
   return (
     <div className="space-y-3">
@@ -167,54 +162,25 @@ export function WatchlistToolbar({
           />
 
           {/* Sort */}
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "sm" }),
-                "h-9 gap-1.5 px-2.5 text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <ArrowDownUp className="size-3.5 opacity-70" />
-              <span>{t(lang, "watchlistSortBy")}</span>
-              <ChevronDown className="size-3 opacity-70" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" sideOffset={4} className="w-56">
-              {sortOptions.map((opt) => (
-                <DropdownMenuItem
-                  key={opt.key}
-                  onClick={() => onSortChange(opt.key)}
-                  className={cn(
-                    "justify-between",
-                    sortKey === opt.key && "font-semibold text-primary"
-                  )}
-                >
-                  {opt.label}
-                  {sortKey === opt.key && <Check className="size-3.5" />}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <ToolbarSortDropdown
+            options={sortOptions}
+            activeKey={sortKey}
+            activeDir={sortDirection}
+            onChange={onSortChange}
+            fallbackLabel={t(lang, "watchlistSortBy")}
+            className="shrink-0"
+          />
 
           {/* Filter */}
-          <button
-            type="button"
+          <FilterButton
             onClick={() => setFilterOpen(true)}
-            className={cn(
-              buttonVariants({ variant: "ghost", size: "sm" }),
-              "h-9 gap-1.5 px-2.5",
-              activeFilterCount > 0
-                ? "text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            )}
+            count={activeFilterCount}
+            active={filterOpen || activeFilterCount > 0}
+            aria-haspopup="dialog"
+            aria-expanded={filterOpen}
           >
-            <SlidersHorizontal className="size-3.5 opacity-70" />
             <span>{t(lang, "filter")}</span>
-            {activeFilterCount > 0 && (
-              <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary/15 px-1 text-overlay tabular-nums text-primary ring-1 ring-primary/30">
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
+          </FilterButton>
           <FilterModal
             open={filterOpen}
             onOpenChange={setFilterOpen}
@@ -230,25 +196,10 @@ export function WatchlistToolbar({
           </FilterModal>
 
           {/* View toggle */}
-          <SegmentedControl<WatchView>
+          <ViewModeControl<WatchView>
+            modes={["list", "grid"]}
             value={view}
             onChange={onViewChange}
-            size="sm"
-            ariaLabel={`${t(lang, "watchlistViewList")} / ${t(lang, "watchlistViewGrid")}`}
-            options={[
-              {
-                value: "list",
-                label: <span className="sr-only">{t(lang, "watchlistViewList")}</span>,
-                ariaLabel: t(lang, "watchlistViewList"),
-                icon: List,
-              },
-              {
-                value: "grid",
-                label: <span className="sr-only">{t(lang, "watchlistViewGrid")}</span>,
-                ariaLabel: t(lang, "watchlistViewGrid"),
-                icon: LayoutGrid,
-              },
-            ]}
           />
 
           {/* Edit toggle — enters/exits multi-select mode */}
