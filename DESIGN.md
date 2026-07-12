@@ -28,12 +28,12 @@
 | `accent-foreground` | `#F4D9A8` |
 | `border` / hairline | `rgba(246,239,230,0.12)` |
 | **price-up (gain)** | `#46D68B` (green) |
-| **price-down (loss)** | `#FF7A6B` (red) |
+| **price-down (loss)** | `#FF6155` (red) |
 | warning / mid | `#FF9F0A` |
 | info | `#0A84FF` |
 
 ### Light
-`background #FFFFFF` · `foreground #1D1D1F` · `primary #73533E` (espresso) · `primary-foreground #FFFFFF` · `muted-foreground #8B7565` · `border #E5D9CE` · price-up `#34C759` · price-down `#FF3B30`.
+`background #FFFFFF` · `foreground #1D1D1F` · `primary #73533E` (espresso) · `primary-foreground #FFFFFF` · `muted-foreground #8B7565` · `border #E5D9CE` · chart/fill price-up `#34C759` · price-down `#FF3B30` · vivid price text `#00853D / #D93025` · text on soft fills `#007A38 / #C80000`.
 
 ### Surfaces & elevation (warm overlays — elevation reads by LIGHT, not dark shadow)
 - `--p-s1` = `rgba(246,239,230,0.035)` — quiet fill

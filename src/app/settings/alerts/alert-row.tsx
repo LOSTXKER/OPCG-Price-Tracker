@@ -63,7 +63,7 @@ export function AlertRow({
       : null;
 
   const dirIsAbove = alert.direction === "ABOVE";
-  const directionTone = dirIsAbove ? "text-price-up" : "text-price-down";
+  const directionTone = dirIsAbove ? "text-price-up-on-soft" : "text-price-down-on-soft";
   const directionBg = dirIsAbove ? "bg-price-up/10" : "bg-price-down/10";
   const operator = dirIsAbove ? "≥" : "≤";
   const DirectionIcon = dirIsAbove ? ArrowUp : ArrowDown;

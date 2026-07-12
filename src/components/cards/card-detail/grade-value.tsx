@@ -39,7 +39,11 @@ export function Delta({
 }) {
   const flat = Math.abs(pct) < 0.05
   const up = pct > 0
-  const color = flat ? "var(--muted-foreground)" : up ? "var(--price-up)" : "var(--price-down)"
+  const color = flat
+    ? "var(--muted-foreground)"
+    : up
+      ? "var(--price-up-text)"
+      : "var(--price-down-text)"
   return (
     <span
       className={cn(

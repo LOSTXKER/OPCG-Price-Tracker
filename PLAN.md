@@ -116,6 +116,35 @@
 - [x] **F5 — Locked exception: overhead light:** คืน ambient light กลางจากขอบบนเพียงจุดเดียวใน `PageContent` พร้อมสีแยก Light/Dark; ส่วน mask, backdrop blur, section gradient และ component blur ยังต้องเป็นศูนย์
 - [x] **F5 Verification:** source/runtime มี rendered gradient+blur เพียง `.hero-search-glow` หนึ่ง element ต่อหน้า; Browser 390/1440 Light/Dark + no overflow/console error; lint/test/TypeScript/build
 
+### Card-detail mobile floating CTA removal — 2026-07-12
+> ผู้ใช้สั่งเอา CTA ที่ลอยตามหน้าจอเมื่อเลื่อนลงออก; CTA ซื้อขาย/เพิ่มพอร์ตใน hero buy box ต้องคงอยู่ และ Desktop ต้องไม่เปลี่ยน
+
+- [x] **B1 — Remove floating behavior:** ถอด `CardDetailStickyBuy`, sentinel และ `useStickyBuy` wiring ออกจาก runtime เพื่อไม่ render fixed bar และไม่ผูก scroll/resize observer
+- [x] **B2 — Remove reserved gap:** ลด mobile bottom padding ที่เคยเผื่อ sticky CTA โดยให้ global `PageContent`/footer รับผิดชอบระยะหลบ bottom nav ตามเดิม
+- [x] **Verification:** Browser card detail ที่ 390px เลื่อนทั้งหน้าแล้วไม่มี floating CTA แต่ inline CTA ยังครบ; 768/1440 layout เดิม, ไม่มี overflow/console error; lint + test + TypeScript + build
+
+### Price direction color parity — 2026-07-12
+> ประวัติรอบก่อน: ผู้ใช้เคยเลือกให้ Light เหมือน Dark แต่ข้อสรุปนี้ถูกแทนด้วย readability correction ด้านล่างหลังดูภาพจริง
+
+- [x] **K1 — Shared market palette:** ให้ Light `--price-up/down` และ text roles ใช้ `#46D68B / #FF6155` เหมือน Dark เพื่อครอบคลุม PriceTag, table, portfolio, chart และ card detail
+- [x] **K2 — Status isolation:** แยก `--success-text` และ `--danger-text` ใน Light ให้คง accessible สีเดิม จึงไม่กระทบ form feedback, error และสถานะระบบ
+- [x] **Verification:** Browser Light/Dark บน Home/Card Detail/Portfolio ได้ computed market colors ชุดเดียวกัน แต่ success/error status Light คงสีเดิม; ไม่มี overflow/console error; lint + test + TypeScript + build
+
+### Price direction Light-mode readability correction — 2026-07-12
+> หลังดูภาพจริง ผู้ใช้ให้ความสำคัญกับการอ่านบนพื้นขาวมากกว่า palette parity; งานนี้แทนข้อสรุป K1 เฉพาะ Light mode โดย Dark mode ต้องคงเดิม
+
+- [x] **L1 — Split market roles:** Light chart/fill ใช้ `#34C759 / #FF3B30` และข้อความราคาใช้สีเข้ม `#187A3E / #C5221F`; consumer ที่เคยใช้ primitive เป็นข้อความเปลี่ยนมาใช้ text role
+- [x] **L2 — Preserve semantics:** Dark price palette คง `#46D68B / #FF6155`; Light success/danger แยกค่าคงที่จาก market token และ share/OG surfaces ใช้บทบาทสีตรงหน้าที่
+- [x] **Verification:** Browser Home/Card Detail/Portfolio ที่ 390/1440px ทั้ง Light/Dark ไม่มี overflow/console error; lint 0 errors + test 132/132 + TypeScript + build 155/155
+
+### Price direction Light-mode saturation correction — 2026-07-12
+> สีข้อความ Light รอบก่อนอ่านง่ายแต่หม่นเกินไป; เพิ่ม saturation โดยยังรักษา WCAG AA บนพื้นขาว และไม่เปลี่ยน chart/fill, status หรือ Dark mode
+
+- [x] **N1 — Vivid readable text:** Light price text ใช้เขียว `#00853D` และแดง `#D93025` (contrast ≥4.5:1 บนขาว)
+- [x] **N2 — Scope isolation:** chart/fill Light, success/danger Light และ price palette Dark คงเดิม
+- [x] **N3 — Soft-surface contrast:** chip/soft fill ใช้ text-on-soft hue เดียวกันที่เข้มกว่า เพื่อรักษา contrast ≥4.5:1 ถึง fill 22% โดยไม่ทำให้ข้อความราคาบนพื้นปกติหม่นลง
+- [x] **Verification:** Browser Home/Card Detail/Portfolio/Market Overview/Watchlist soft chips ที่ 390/1440px ทั้ง Light/Dark ไม่มี overflow/console error; lint 0 errors + test 132/132 + TypeScript + build 155/155
+
 ## 🎨 Redesign (in-place · ทิศเต็มใน [VISION.md](VISION.md) · **ไม่มีเวอร์ชัน v1/v2**)
 > แก้ของเดิมทีละ surface ตาม spine VISION §7 · ทุก surface = adopt atom kit + verify (tsc/lint/build/test) + เปิดดูจริง · ⚠️ ข้อที่แตะ schema = เบสอนุมัติก่อน
 > 📌 กฎ design-system: การ์ดใหญ่ = `.panel` · `surface-*`/`hairline` = chip/control/nested · `.hairline` เป็น unlayered → อย่าผสมกับ ring/shadow บน element เดียว

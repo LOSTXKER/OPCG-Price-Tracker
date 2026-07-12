@@ -71,7 +71,7 @@ export function MarketSnapshot({
                 style={{
                   width: `${upPct}%`,
                   background: "color-mix(in srgb, var(--price-up) 22%, transparent)",
-                  color: "var(--price-up)",
+                  color: "var(--price-up-text-on-soft)",
                 }}
                 aria-label={`${t(lang, "moversUp")} ${upPct.toFixed(1)}%`}
                 title={`${t(lang, "moversUp")} · ${upPct.toFixed(1)}% (${formatCount(movers.up)} ${t(lang, "cardUnit")})`}
@@ -103,7 +103,7 @@ export function MarketSnapshot({
                 style={{
                   width: `${downPct}%`,
                   background: "color-mix(in srgb, var(--price-down) 22%, transparent)",
-                  color: "var(--price-down)",
+                  color: "var(--price-down-text-on-soft)",
                 }}
                 aria-label={`${t(lang, "moversDown")} ${downPct.toFixed(1)}%`}
                 title={`${t(lang, "moversDown")} · ${downPct.toFixed(1)}% (${formatCount(movers.down)} ${t(lang, "cardUnit")})`}
@@ -121,7 +121,7 @@ export function MarketSnapshot({
           <div className="mt-3 grid grid-cols-3 gap-2 text-meta">
             <MoverLegend
               icon={ArrowUp}
-              color="var(--price-up)"
+              color="var(--price-up-text)"
               count={movers.up}
               label={t(lang, "moversUp")}
               unit={t(lang, "cardUnit")}
@@ -136,7 +136,7 @@ export function MarketSnapshot({
             />
             <MoverLegend
               icon={ArrowDown}
-              color="var(--price-down)"
+              color="var(--price-down-text)"
               count={movers.down}
               label={t(lang, "moversDown")}
               unit={t(lang, "cardUnit")}
@@ -261,9 +261,9 @@ export function DeltaPill({
   const isDown = delta < -0.0001
   const Icon = isUp ? ArrowUp : isDown ? ArrowDown : ArrowRight
   const color = isUp
-    ? "var(--price-up)"
+    ? "var(--price-up-text-on-soft)"
     : isDown
-      ? "var(--price-down)"
+      ? "var(--price-down-text-on-soft)"
       : "var(--muted-foreground)"
   const bg = isUp
     ? "color-mix(in srgb, var(--price-up) 14%, transparent)"

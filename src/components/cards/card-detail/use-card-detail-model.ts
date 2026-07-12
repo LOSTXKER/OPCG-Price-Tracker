@@ -31,15 +31,12 @@ import {
   type GradeKey,
   type Stat,
 } from "./grades"
-import { listingMatchesGrade } from "./asks-rail"
 import { MARKET_FEED_SAMPLE_PREVIEW_COUNT } from "./market-table-layout"
 import { mockGradeSeries, mockMeecardListings, mockRecentSales, type MockSale } from "./mock"
 import type { CardDetailProps, CardListing, CardSourcePrice } from "./types"
 import { useCardDetailTabs } from "./use-card-detail-tabs"
-import { useStickyBuy } from "./use-sticky-buy"
 
 type CardDetailTabsModel = ReturnType<typeof useCardDetailTabs>
-type StickyBuyModel = ReturnType<typeof useStickyBuy>
 
 interface LatestSale {
   source: string
@@ -69,8 +66,6 @@ export interface CardDetailModel {
   alertOpen: boolean
   setAlertOpen: Dispatch<SetStateAction<boolean>>
   gradeActiveRef: RefObject<HTMLButtonElement | null>
-  sentinelRef: StickyBuyModel["sentinelRef"]
-  showStickyBuy: boolean
   navRef: CardDetailTabsModel["navRef"]
   tabRefs: CardDetailTabsModel["tabRefs"]
   activeTab: string
@@ -86,7 +81,6 @@ export interface CardDetailModel {
   setSelectedGrade: Dispatch<SetStateAction<GradeKey>>
   datum: GradeDatum
   gradeLabel: string
-  latest: number | null
   seriesList: ChartSeries[]
   activeValue: number | null
   shownDelta: number | null
@@ -94,7 +88,6 @@ export interface CardDetailModel {
   priceLow: number | null
   priceHigh: number | null
   pricePos: number
-  meecardLowest: CardListing | null
   windowLabel: string
   provenance: ProvenanceModel | null
   tabs: { id: string; label: string }[]
@@ -142,7 +135,6 @@ export function useCardDetailModel({
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
   const gradeActiveRef = useRef<HTMLButtonElement | null>(null)
-  const { sentinelRef, showStickyBuy } = useStickyBuy()
   const { navRef, tabRefs, activeTab, tabIndicator, scrollToSection } = useCardDetailTabs(displayLang)
 
   const set = card.set
@@ -249,15 +241,6 @@ export function useCardDetailModel({
       ? Math.max(0, Math.min(100, ((latest - priceLow) / (priceHigh - priceLow)) * 100))
       : 50
 
-  const meecardAsks = useMemo(
-    () =>
-      (listings ?? [])
-        .filter((listing) => listingMatchesGrade(listing.condition, gradeLabel))
-        .sort((a, b) => a.priceJpy - b.priceJpy),
-    [listings, gradeLabel],
-  )
-  const meecardLowest = meecardAsks[0] ?? null
-
   const marketRows = useMemo<CardSourcePrice[]>(() => {
     if (edition === "EN") return []
     const base = chartMode === "raw" ? sourcePricesRaw : sourcePricesPsa10
@@ -343,7 +326,7 @@ export function useCardDetailModel({
   const provenance = datum.value.isEst
     ? null
     : {
-        kindColor: heroIsSold ? "var(--price-up)" : "var(--muted-foreground)",
+        kindColor: heroIsSold ? "var(--price-up-text)" : "var(--muted-foreground)",
         kindLabel: heroIsSold ? t(displayLang, "lastSold") : t(displayLang, "askPriceVerb"),
         referenceLabel: t(displayLang, "referenceBadge"),
         sourceCode: heroSourceCode,
@@ -446,8 +429,6 @@ export function useCardDetailModel({
     alertOpen,
     setAlertOpen,
     gradeActiveRef,
-    sentinelRef,
-    showStickyBuy,
     navRef,
     tabRefs,
     activeTab,
@@ -463,7 +444,6 @@ export function useCardDetailModel({
     setSelectedGrade,
     datum,
     gradeLabel,
-    latest,
     seriesList,
     activeValue,
     shownDelta,
@@ -471,7 +451,6 @@ export function useCardDetailModel({
     priceLow,
     priceHigh,
     pricePos,
-    meecardLowest,
     windowLabel,
     provenance,
     tabs,

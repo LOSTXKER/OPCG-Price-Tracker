@@ -278,9 +278,9 @@ function SegButton({
         "ease-chrome inline-flex h-8 items-center justify-center gap-1 rounded-lg border px-2 text-xs font-medium",
         active
           ? tone === "up"
-            ? "border-price-up/40 bg-price-up/10 text-price-up"
+            ? "border-price-up/40 bg-price-up/10 text-price-up-on-soft"
             : tone === "down"
-              ? "border-price-down/40 bg-price-down/10 text-price-down"
+              ? "border-price-down/40 bg-price-down/10 text-price-down-on-soft"
               : "border-primary/40 bg-primary/15 text-primary"
           : "border-transparent bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground"
       )}

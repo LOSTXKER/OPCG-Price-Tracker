@@ -96,8 +96,8 @@ function CardEditFull({
                   className={cn(
                     "rounded-full px-2 py-0.5 tabular-nums text-micro",
                     pnlResult.pnl >= 0
-                      ? "bg-price-up/10 text-price-up"
-                      : "bg-price-down/10 text-price-down",
+                      ? "bg-price-up/10 text-price-up-on-soft"
+                      : "bg-price-down/10 text-price-down-on-soft",
                   )}
                 >
                   {pnlResult.pnl >= 0 ? "+" : ""}

@@ -164,7 +164,7 @@ export default async function CardOG(props: {
               marginTop: 12,
             }}
           >
-            <span style={{ fontSize: 52, fontWeight: 800, color: "#22c55e" }}>
+            <span style={{ fontSize: 52, fontWeight: 800, color: "#46D68B" }}>
               {priceText}
             </span>
           </div>

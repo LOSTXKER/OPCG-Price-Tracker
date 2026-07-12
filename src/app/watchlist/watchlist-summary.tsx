@@ -145,8 +145,8 @@ function MovementChip({
       className={cn(
         "ml-1 inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 tabular-nums",
         tone === "up"
-          ? "bg-price-up/10 text-price-up"
-          : "bg-price-down/10 text-price-down"
+          ? "bg-price-up/10 text-price-up-on-soft"
+          : "bg-price-down/10 text-price-down-on-soft"
       )}
       title={`${label} ${formatSignedPct(change)}`}
     >
