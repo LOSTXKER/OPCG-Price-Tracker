@@ -38,8 +38,8 @@ export interface SegmentedControlProps<T extends string = string> {
   fullWidth?: boolean;
   /**
    * Visual style:
-   * - `default` — rounded-lg pill on a `bg-muted/50` track. Used for tab-like
-   *   segmented controls (home tabs, trending tabs, view toggle, etc.).
+   * - `default` — rounded-xl on 44px mobile controls, rounded-lg once compact
+   *   at `sm:`. Used for tab-like controls (home tabs, view toggle, etc.).
    * - `pill` — rounded-full pill on a frameless `bg-muted/50` track. Used as the
    *   canonical style for time-period / chart-range filters across the site
    *   (24h / 7d / 30d, chart ranges, portfolio history, etc.).
@@ -98,9 +98,10 @@ export function getSegmentedNavigationTarget(
  * rows. Two visual variants:
  *
  *   - `default` (track-style):
- *       track:   `bg-muted/50 rounded-lg p-1`
- *       segment: `rounded-md`
- *       active:  `bg-card shadow-sm text-foreground`
+ *       track:   `bg-muted/50 rounded-xl sm:rounded-lg`
+ *       segment: inner corners `rounded-lg`; first/last outer corners follow
+ *                the mobile track, then all corners become `rounded-md` at `sm:`
+ *       active:  `bg-primary/15 text-primary`
  *
  *   - `pill` (period/range filters):
  *       track:   `rounded-full border border-border/50 p-0.5`
@@ -172,7 +173,7 @@ export function SegmentedControl<T extends string = string>({
         "inline-flex items-center",
         isPill
           ? "gap-0.5 rounded-full bg-muted/50 px-0.5 sm:p-0.5"
-          : "gap-0.5 rounded-lg bg-muted/50 px-1 sm:p-1",
+          : "gap-0.5 rounded-xl bg-muted/50 sm:rounded-lg sm:p-1",
         fullWidth && "w-full",
         className,
       )}
@@ -218,7 +219,9 @@ export function SegmentedControl<T extends string = string>({
               "inline-flex h-11 min-w-11 items-center justify-center gap-1.5 font-medium motion-base sm:min-w-0",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
               "disabled:cursor-not-allowed disabled:opacity-50",
-              isPill ? "rounded-full" : "rounded-md",
+              isPill
+                ? "rounded-full"
+                : "rounded-lg first:rounded-l-xl last:rounded-r-xl sm:rounded-md sm:first:rounded-l-md sm:last:rounded-r-md",
               size === "sm"
                 ? isPill
                   ? "px-2.5 text-xs tabular-nums sm:h-7"

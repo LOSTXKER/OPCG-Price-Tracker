@@ -7,7 +7,7 @@ import {
   type InputHTMLAttributes,
   type ReactNode,
 } from "react";
-import { ArrowDown, ArrowUp, ChevronDown, Search, X } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -168,7 +168,7 @@ export function ToolbarSortDropdown<TKey extends string = string>({
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "flex min-h-11 items-center gap-1.5 rounded-lg border border-border/30 bg-muted/20 px-3 py-1.5 text-xs font-medium text-foreground/80 motion-base hover:bg-muted/70 sm:min-h-0",
+          "flex min-h-11 items-center gap-1.5 rounded-lg border border-transparent bg-muted/50 px-3 py-1.5 text-xs font-medium text-foreground/80 motion-base hover:bg-muted/70 sm:min-h-0 sm:rounded-md",
           className,
         )}
       >
@@ -211,17 +211,26 @@ export interface FilterButtonProps
 }
 
 export const FilterButton = forwardRef<HTMLButtonElement, FilterButtonProps>(
-  function FilterButton({ count, active, iconLeft, className, children, ...rest }, ref) {
+  function FilterButton({
+    count,
+    active,
+    iconLeft = <SlidersHorizontal aria-hidden className="size-3.5" />,
+    className,
+    children,
+    "aria-haspopup": ariaHasPopup = "dialog",
+    ...rest
+  }, ref) {
     const showCount = typeof count === "number" && count > 0;
     return (
       <button
         ref={ref}
         type="button"
+        aria-haspopup={ariaHasPopup}
         className={cn(
-          "flex min-h-11 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium motion-base sm:min-h-0",
+          "flex min-h-11 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium motion-base sm:min-h-0 sm:rounded-md",
           active
-            ? "border-primary/40 bg-primary/10 text-primary hover:bg-primary/15"
-            : "border-border/30 bg-muted/20 text-foreground/80 hover:bg-muted/70",
+            ? "border-transparent bg-primary/15 text-primary hover:bg-primary/20"
+            : "border-transparent bg-muted/50 text-foreground/80 hover:bg-muted/70",
           className,
         )}
         {...rest}

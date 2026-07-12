@@ -27,6 +27,8 @@ export function PriceModeControl({
   return (
     <SegmentedControl<PriceMode>
       size="sm"
+      fullWidth
+      className="w-40 sm:w-auto"
       value={value}
       onChange={onChange}
       ariaLabel={t(lang, "price")}

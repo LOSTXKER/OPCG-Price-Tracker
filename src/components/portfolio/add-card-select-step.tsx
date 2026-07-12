@@ -5,7 +5,6 @@ import Image from "next/image"
 import {
   Check,
   ChevronDown,
-  Filter,
   Loader2,
   Package,
   Search,
@@ -20,6 +19,7 @@ import { RarityBadge } from "@/components/shared/rarity-badge"
 import { FilterModal } from "@/components/shared/filter-modal"
 import { SetPicker } from "@/components/shared/set-picker"
 import { Skeleton } from "@/components/ui/skeleton"
+import { FilterButton } from "@/components/ui/toolbar"
 import { cn } from "@/lib/utils"
 import { RARITY_HEX } from "@/lib/constants/rarities"
 import { getCardTypeLabel, getColorOptions } from "@/lib/constants/card-config"
@@ -446,24 +446,17 @@ export function SelectStep({
 
           {/* Opens the filter modal (centered on desktop, full-screen on mobile).
               Badge counts only the modal's facets — set has its own control above. */}
-          <button
-            type="button"
+          <FilterButton
+            count={modalFilterCount}
+            active={showFilters || modalFilterCount > 0}
             onClick={() => setShowFilters(!showFilters)}
-            className={cn(
-              "ease-chrome relative flex h-11 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm md:h-9",
-              showFilters || modalFilterCount > 0
-                ? "border-primary/40 bg-primary/5 text-primary"
-                : "border-hair bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground"
-            )}
+            aria-label={t(lang, "filter")}
+            aria-haspopup="dialog"
+            aria-expanded={showFilters}
+            className="min-w-11 shrink-0 sm:min-w-0"
           >
-            <Filter className="size-3.5" />
             <span className="hidden sm:inline">{t(lang, "filter")}</span>
-            {modalFilterCount > 0 && (
-              <span className="flex size-4.5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
-                {modalFilterCount}
-              </span>
-            )}
-          </button>
+          </FilterButton>
         </div>
       </div>
 

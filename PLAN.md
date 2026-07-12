@@ -32,6 +32,59 @@
 - [x] **T3 — Card data transparency:** จำกัดข้อมูลซื้อขายจำลองเป็น preview สั้น, ระบุชัดว่าไม่ใช่ธุรกรรมจริง และเลิก nested vertical scroll ที่ไม่จำเป็นบนมือถือ
 - [x] **Verification:** 19 test files / 131 tests + lint 0 errors + TypeScript + build 155 pages + browser matrix Pricing/Marketplace/Card ที่ 390/768/1440 ทั้ง Light/Dark
 
+### Mobile home market toolbar — 2026-07-12
+> แก้เฉพาะหัวตารางหน้าแรกใต้ `sm:` จากภาพใช้งานจริง · desktop และ `/search` ต้องคง behavior/layout เดิม
+
+- [x] **M1 — Mobile hierarchy:** ให้ SetPicker เป็น control หลักเต็มพื้นที่; แยก price mode, sort, filter และ view control เป็นแถวที่อ่านง่ายโดยไม่บีบข้อความ
+- [x] **M2 — Interaction:** ทุก control ≥44px, sort ยังใช้ column model เดียว, keyboard/ARIA เดิมไม่ถอย และไม่มี horizontal overflow
+- [x] **Verification:** targeted lint/test + `npm run lint` + `npm run test` + `npm run build` + browser 375/390/768/1440 ทั้ง Light/Dark
+
+### Mobile home toolbar visual-density polish — 2026-07-12
+> รอบเก็บภาพจริง: ลดความหนักของกรอบโดยไม่ลด hit area และทำให้ utility controls อ่านเป็นกลุ่มเดียว
+
+- [x] **D1 — Grouping:** ย้าย Filter ไปอยู่กลุ่มเดียวกับ List/Grid ด้านขวา และคง Price mode เป็นกลุ่มซ้าย
+- [x] **D2 — Surface density:** จำกัดความกว้าง sort, ลดน้ำหนัก border/fill ของ prominent SetPicker และใช้ radius ที่นุ่มขึ้นอย่างเป็นระบบ
+- [x] **Verification:** ตรวจ 375/390 Light/Dark + List/Grid + dropdown + no overflow และรัน lint/test/build
+
+### Canonical toolbar controls — 2026-07-12
+> ทำให้ Raw/PSA, ตัวกรอง, เรียง และตัวเลือกมุมมองใช้ component/shape/state ชุดเดียวกันทั้งเว็บ โดยคง control เฉพาะทางที่มีหน้าที่ต่างกันจริง
+
+- [x] **C1 — Canonical primitives:** ล็อกสัญญา FilterButton, ToolbarSortDropdown, ViewModeControl และ action ภายใน FilterModal ให้มี radius/state/tap target/a11y เดียว
+- [x] **C2 — Public surfaces:** ย้าย Home, Search, Watchlist, Public Profile, Marketplace, Drop Calculator และ card picker มาใช้ primitive กลางโดยไม่เปลี่ยน behavior
+- [x] **C3 — Admin consistency:** แทน view toggle เขียนมือใน Admin Cards ด้วย control กลาง พร้อม keyboard/ARIA ครบ
+- [x] **Verification:** targeted tests + lint + TypeScript + build; Home 390/768/1440 Light/Dark และ spot-check Search/Watchlist/Marketplace/Card picker/Admin ที่ 390
+
+### Responsive control radius correction — 2026-07-12
+> แก้สัดส่วนความมนที่ราก: mobile control สูง 44px ต้องใช้ radius ใหญ่กว่า desktop compact control โดยไม่สร้าง component/token เพิ่ม
+
+- [x] **R1 — Canonical radius:** Segmented track ใช้ outer radius `rounded-xl → lg`; segment และ toolbar action ใช้ inner radius `rounded-lg → md`; pill variant คง `rounded-full`
+- [x] **Verification:** lint + test + TypeScript + build และ browser Home/Search/Watchlist/Marketplace/Admin ที่ 390 เทียบ Home 768/1440
+
+### Client API 404 regression — 2026-07-12
+> หา URL ที่ทำให้ `apiFetch` โยน 404 จากหน้าจริงก่อนแก้ และรักษา Marketplace guard ที่ตั้งใจคืน 404 เมื่อ feature flag ปิด
+
+- [x] **A1 — Reproduce/trace:** จับได้ว่า Home/Search → `useSparklines` → `/api/cards/sparklines`; dev route registry ค้างและคืน HTML 404 ขณะที่ production route เดียวกันตอบ JSON 200
+- [x] **A2 — No-code recovery:** หยุด dev server แล้วย้าย `.next/dev` ที่เสียไปไว้ใน `/tmp` เพื่อให้ Next สร้าง cache ใหม่ (cold restart อย่างเดียวไม่พอ); ไม่แก้ `apiFetch`/hook/route เพื่อกลบ 404 และไม่กระทบ Marketplace guard ที่ตั้งใจไว้
+- [x] **Verification:** Home และ dev API สำคัญ (`sparklines`, `config/public`, `honey/ranks`, `messages/unread-count`) ตอบ 200 หลังสร้าง cache ใหม่; production build ผ่านและ Browser ไม่มี console error
+
+### Canonical toolbar action shape — 2026-07-12
+> แยก shape hierarchy ให้ถูกชั้น: segmented track เป็นกรอบครอบกลุ่ม ส่วน Filter/Sort เป็นตัว action จึงต้องใช้ radius ระดับเดียวกับ segment ด้านใน
+
+- [x] **S1 — Root shape:** track คง `rounded-xl → lg`; Filter/Sort ใช้ `rounded-lg → md` โดยไม่เพิ่ม component/prop หรือ consumer override
+- [x] **Verification:** lint + test + TypeScript + build; browser Home 390/768 และ spot-check Search/Watchlist/Marketplace ที่ 390; ไม่มี overflow/console error
+
+### Segmented active-edge alignment — 2026-07-12
+> แก้ active layer มือถือที่สูงเท่ากรอบแต่มี padding/radius คนละแนว ทำให้เส้นโค้งของตัวเลือกแรก/สุดท้ายไม่ตรงกับ track
+
+- [x] **E1 — Concentric edge:** default track มือถือไม่มี horizontal inset; segment แรก/สุดท้ายใช้ outer-side radius เดียวกับ track ขณะที่ด้านในคง segment radius และ desktop inset เดิม
+- [x] **Verification:** สลับ first/last selection ใน Raw/PSA และ List/Grid ที่ 390 พร้อมเทียบ 768; lint + test + TypeScript + build
+
+### Price-mode visual proportion — 2026-07-12
+> Raw/PSA 10 มี label กว้างต่างกันจน active Raw เป็นก้อน 44×44px; แก้เฉพาะ grade selector ไม่บังคับ segmented control ทุกชนิดให้กว้างเท่ากัน
+
+- [x] **Q1 — Mobile 50/50:** PriceModeControl ใช้ track กว้างคงที่บนมือถือและแบ่ง Raw/PSA 10 เท่ากันผ่าน `fullWidth`; ตั้งแต่ `sm:` กลับเป็น compact intrinsic width
+- [x] **Verification:** สลับ Raw/PSA 10 ที่ 390 และตรวจ no overflow ที่ 390/640/768; lint + test + TypeScript + build
+
 ## 🎨 Redesign (in-place · ทิศเต็มใน [VISION.md](VISION.md) · **ไม่มีเวอร์ชัน v1/v2**)
 > แก้ของเดิมทีละ surface ตาม spine VISION §7 · ทุก surface = adopt atom kit + verify (tsc/lint/build/test) + เปิดดูจริง · ⚠️ ข้อที่แตะ schema = เบสอนุมัติก่อน
 > 📌 กฎ design-system: การ์ดใหญ่ = `.panel` · `surface-*`/`hairline` = chip/control/nested · `.hairline` เป็น unlayered → อย่าผสมกับ ring/shadow บน element เดียว

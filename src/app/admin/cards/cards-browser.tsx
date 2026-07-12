@@ -5,8 +5,6 @@ import Link from "next/link";
 import {
   CreditCard,
   ExternalLink,
-  LayoutGrid,
-  List,
   Pencil,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -30,7 +28,7 @@ import {
 } from "@/components/admin/admin-data-table";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { ViewModeControl } from "@/components/ui/view-mode-control";
 import { useAdminList } from "@/lib/admin/use-admin-list";
 import { useAdminUrlState } from "@/lib/admin/use-admin-url-state";
 import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
@@ -287,36 +285,11 @@ export function CardsBrowser({
             </Badge>
           }
           actions={
-            <div className="flex items-center gap-1 rounded-lg border border-hair p-0.5">
-              <button
-                type="button"
-                onClick={() => setViewMode("table")}
-                className={cn(
-                  "flex size-11 items-center justify-center rounded-md motion-base sm:size-7",
-                  viewMode === "table"
-                    ? "bg-primary/15 text-primary"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-                aria-label="มุมมองตาราง"
-                aria-pressed={viewMode === "table"}
-              >
-                <List className="size-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode("grid")}
-                className={cn(
-                  "flex size-11 items-center justify-center rounded-md motion-base sm:size-7",
-                  viewMode === "grid"
-                    ? "bg-primary/15 text-primary"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-                aria-label="มุมมองกริด"
-                aria-pressed={viewMode === "grid"}
-              >
-                <LayoutGrid className="size-4" />
-              </button>
-            </div>
+            <ViewModeControl
+              modes={["table", "grid"]}
+              value={viewMode}
+              onChange={setViewMode}
+            />
           }
         />
       }
