@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-12 — **แก้ Raw/PSA ให้กว้างตามเนื้อหา ไม่ตัด `PSA 10`**
+อัปเดตล่าสุด: 2026-07-12 — **ชุด UI toolbar + flat surfaces merge เข้า `master` และ deploy ผ่านแล้ว**
 
 ## ✅ ทำแล้ว
 
@@ -9,6 +9,7 @@
 - มือถือยังคง hitbox สูง 44px และ visual frame 36px; ตั้งแต่ `sm:` ยังใช้ความสูง compact เดิม 28px จึงเปลี่ยนเฉพาะความกว้าง
 - ไม่แก้ `SegmentedControl` กลาง จึงไม่กระทบ List/Grid, radiogroup, disabled state หรือ Arrow/Home/End behavior
 - งานก่อนหน้ายังคงครบ: mobile toolbar compact, ถอด static horizontal fade 13 consumers และ flat surfaces ทั้งเว็บ โดยคง overhead light จากขอบบนเพียงจุดเดียว
+- Commit `66e1fc3` merge ผ่าน PR #112 เป็น `98c1439` บน `master`; Vercel checks ผ่านครบ
 
 ## ✅ หลักฐาน verify ล่าสุด
 
@@ -29,8 +30,8 @@
 
 ## ⏭️ NEXT
 
-1. Review diff แล้ว commit/merge งาน mobile toolbar + content-fit PriceMode + horizontal fade + site-wide flat surfaces ตาม workflow ของ repo
-2. หลัง deploy ให้ smoke test Raw/PSA ที่ 390px และ 1440px อีกครั้ง
+1. Smoke test production Raw/PSA ที่ 390px และ 1440px หลัง CDN อัปเดตครบ
+2. งานแยกภายหลัง: image aspect/LCP warning, `middleware.ts` → `proxy.ts` และ lint warnings เดิม
 
 ## แหล่งอ้างอิง
 
