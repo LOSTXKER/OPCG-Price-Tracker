@@ -16,7 +16,6 @@ import { CardDetailChartSection } from "./card-detail/card-detail-chart-section"
 import { CardDetailIdentity } from "./card-detail/card-detail-identity"
 import { CardDetailPrice } from "./card-detail/card-detail-price"
 import { CardDetailSectionNav } from "./card-detail/card-detail-section-nav"
-import { CardDetailStickyBuy } from "./card-detail/card-detail-sticky-buy"
 import { RecentSales } from "./card-detail/recent-sales"
 import { SectionHead } from "./card-detail/section-head"
 import { SiblingGrid } from "./card-detail-sibling-grid"
@@ -46,8 +45,6 @@ export function CardDetail(props: CardDetailProps) {
     alertOpen,
     setAlertOpen,
     gradeActiveRef,
-    sentinelRef,
-    showStickyBuy,
     navRef,
     tabRefs,
     activeTab,
@@ -63,7 +60,6 @@ export function CardDetail(props: CardDetailProps) {
     setSelectedGrade,
     datum,
     gradeLabel,
-    latest,
     seriesList,
     activeValue,
     shownDelta,
@@ -71,7 +67,6 @@ export function CardDetail(props: CardDetailProps) {
     priceLow,
     priceHigh,
     pricePos,
-    meecardLowest,
     windowLabel,
     provenance,
     tabs,
@@ -82,7 +77,7 @@ export function CardDetail(props: CardDetailProps) {
   } = useCardDetailModel(props)
 
   return (
-    <div className="relative mx-auto max-w-7xl scroll-smooth pb-[calc(8.5rem+env(safe-area-inset-bottom))] md:pb-8">
+    <div className="relative mx-auto max-w-7xl scroll-smooth pb-8">
       {/* breadcrumb row — Breadcrumb self-adapts: full trail on md+, an
           iOS-style "< [set name]" back pill on mobile. The old mobile-only
           compact meta line (set · code · rarity) was dropped — it duplicated
@@ -164,10 +159,6 @@ export function CardDetail(props: CardDetailProps) {
           onAlertOpenChange={setAlertOpen}
         />
       </div>
-
-      {/* Sentinel — drives the mobile sticky-buy bar: once the hero buy box scrolls
-          off the top, this passes y<72 and the bar appears (shopping-journey CTA). */}
-      <div ref={sentinelRef} className="h-px" aria-hidden />
 
       <CardDetailSectionNav
         lang={displayLang}
@@ -277,17 +268,6 @@ export function CardDetail(props: CardDetailProps) {
           )}
         </DialogContent>
       </Dialog>
-
-      <CardDetailStickyBuy
-        visible={showStickyBuy}
-        cardId={card.id}
-        cardName={displayName}
-        gradeLabel={gradeLabel}
-        lowestListing={meecardLowest}
-        latest={latest}
-        currency={currency}
-        lang={displayLang}
-      />
     </div>
   )
 }

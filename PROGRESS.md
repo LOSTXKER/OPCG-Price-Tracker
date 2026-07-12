@@ -1,37 +1,42 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-12 — **ชุด UI toolbar + flat surfaces merge เข้า `master` และ deploy ผ่านแล้ว**
+อัปเดตล่าสุด: 2026-07-12 — **เพิ่ม saturation สีราคาขึ้น/ลง Light mode โดยยังอ่านชัด**
 
 ## ✅ ทำแล้ว
 
-- ถอด `fullWidth` และ fixed `w-36` ออกจาก `PriceModeControl`; Raw และ PSA จองความกว้างตาม label + icon + padding ทุก breakpoint
-- มือถือยังคง hitbox สูง 44px และ visual frame 36px; ตั้งแต่ `sm:` ยังใช้ความสูง compact เดิม 28px จึงเปลี่ยนเฉพาะความกว้าง
-- ไม่แก้ `SegmentedControl` กลาง จึงไม่กระทบ List/Grid, radiogroup, disabled state หรือ Arrow/Home/End behavior
-- งานก่อนหน้ายังคงครบ: mobile toolbar compact, ถอด static horizontal fade 13 consumers และ flat surfaces ทั้งเว็บ โดยคง overhead light จากขอบบนเพียงจุดเดียว
-- Commit `66e1fc3` merge ผ่าน PR #112 เป็น `98c1439` บน `master`; Vercel checks ผ่านครบ
+- Light แยกสีตามหน้าที่: chart/fill ใช้ `#34C759 / #FF3B30`; ข้อความราคาและ PnL ใช้สีอิ่มขึ้น `#00853D / #D93025` (contrast บนขาว 4.75:1 / 4.77:1)
+- Chip/soft fill ใช้ hue เดียวกันที่เข้มกว่า `#007A38 / #C80000`; ผ่าน contrast ≥4.5:1 แม้ Market Overview ใช้ fill 22%
+- แก้ consumer ที่เคยใช้สีกราฟเป็นข้อความใน Card Detail, Market Overview และ Portfolio share card ให้รับ text role; OG card price ใช้เขียว Dark palette ที่เข้ากับพื้น OG
+- Dark คง price palette `#46D68B / #FF6155`; Light success/error status แยกค่าคงที่จาก market token จึงไม่เปลี่ยนตามการปรับสีราคาในอนาคต
+- งานก่อนหน้ายังคงครบ: ถอด floating CTA/sentinel/scroll observer จาก Card Detail และลด bottom padding จาก 136px เหลือ 32px โดย CTA ปกติยังอยู่
+- เก็บ `card-detail-sticky-buy.tsx` และ `use-sticky-buy.ts` เป็น orphan ชั่วคราว เพราะกฎ repo ต้องขออนุญาตก่อนลบไฟล์
 
 ## ✅ หลักฐาน verify ล่าสุด
 
-- Browser 320/390px: track 113.27px, Raw 44px, PSA 69.27px; label `PSA 10` มี `clientWidth === scrollWidth` ทั้ง active/inactive จึงไม่มี ellipsis
-- Browser 768/1440px: Raw 40.17px, PSA 75.27px; label แสดงครบ, geometry สูง 28px เดิม
-- ทุก viewport ไม่มีขอบเขตกดซ้อนและไม่มี horizontal page overflow; click และ ArrowLeft สลับ `aria-checked` ถูกต้อง; final console = **0 errors**
+- Browser Home/Card Detail/Portfolio ที่ 390/1440px: Light text = `rgb(0, 133, 61)` / `rgb(217, 48, 37)`; Dark text = `rgb(70, 214, 139)` / `rgb(255, 97, 85)`
+- Browser Market Overview/Watchlist: Light soft-chip text = `rgb(0, 122, 56)` / `rgb(200, 0, 0)`; Dark soft-chip alias กลับไป palette เดิม
+- ทุก route/viewport ที่ตรวจไม่มี horizontal overflow; console = **0 errors** (มี image aspect warning เดิม 1 รายการ)
+- Card Detail 390px ที่ top / scrollY 1500 / ท้ายหน้า: fixed CTA = 0 ทุกตำแหน่ง, CTA ปกติยังครบ และ root padding = 32px
+- Source audit: `CardDetailStickyBuy`/`useStickyBuy` เหลือเฉพาะ definition ในไฟล์ orphan ไม่มี import/call จาก runtime
 - `npm run lint` — ผ่านด้วย **0 errors**, 30 warnings เดิมนอก scope
 - `npm run test` — **19 files, 132/132 tests ผ่าน**
 - `npx tsc --noEmit` — ผ่าน
 - `npm run build` — ผ่าน, Next.js 16.2.1 สร้าง **155/155 pages**
-- Dev server รันอยู่ที่ `http://localhost:3001` หลัง final visual smoke
+- Dev server ถูกหยุดหลัง verification เพื่อเตรียม publish
 
 ## ⚠️ ขอบเขตการตรวจ
 
-- รอบแก้ `PSA 10` ล่าสุดจำกัดที่ `PriceModeControl` หนึ่งไฟล์; ชุดงานรวมไม่แตะ CTA, form, API, data, schema, dependency หรือ config
-- คง overhead light จากขอบบนเป็นข้อยกเว้นด้าน art direction เพียงจุดเดียว; gradient/blur ส่วนอื่นยังถูกถอดเหมือนเดิม
+- สี Light ที่อิ่มขึ้นใช้กับข้อความราคาเท่านั้น; เส้นกราฟ/soft fill และ status colors ไม่เปลี่ยน
+- ระหว่างตรวจพบ `.next/dev` ค้าง CSS รุ่นก่อน; ย้าย cache เก่าไป `/tmp/meecard-next-dev-*` แล้ว cold rebuild ยืนยันว่า runtime รับทั้ง vivid และ on-soft token ใหม่
+- ชุด diff ปัจจุบันรวมการถอด Card Detail floating CTA กับการแก้ price roles; ไม่แตะ CTA กลาง, API, data, schema, dependency หรือ config
+- ไม่ลบไฟล์ orphan โดยพลการ; ถ้าต้องการเก็บกวาดให้ขออนุมัติแยก
 - Build ยังมี warning เดิมเรื่อง `middleware` convention deprecated; lint warnings เดิม 30 จุดเป็นงานแยก
 
 ## ⏭️ NEXT
 
-1. Smoke test production Raw/PSA ที่ 390px และ 1440px หลัง CDN อัปเดตครบ
-2. งานแยกภายหลัง: image aspect/LCP warning, `middleware.ts` → `proxy.ts` และ lint warnings เดิม
+1. หลัง merge ให้ smoke test production ที่ 390/1440px เมื่อ CDN อัปเดตครบ
+2. ถ้าได้รับอนุญาต ให้ลบไฟล์ orphan `card-detail-sticky-buy.tsx` และ `use-sticky-buy.ts`
 
 ## แหล่งอ้างอิง
 

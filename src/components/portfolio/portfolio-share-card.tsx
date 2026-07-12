@@ -143,8 +143,8 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
                     ? "color-mix(in srgb, var(--color-price-up) 14%, transparent)"
                     : "color-mix(in srgb, var(--color-price-down) 14%, transparent)",
                   color: isUp
-                    ? "var(--color-price-up)"
-                    : "var(--color-price-down)",
+                    ? "var(--color-price-up-on-soft)"
+                    : "var(--color-price-down-on-soft)",
                 }}
               >
                 {isUp ? "▲ " : "▼ "}
@@ -167,8 +167,8 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
                   className="font-bold tabular-nums"
                   style={{
                     color: isUp
-                      ? "var(--color-price-up)"
-                      : "var(--color-price-down)",
+                      ? "var(--color-price-up-text)"
+                      : "var(--color-price-down-text)",
                   }}
                 >
                   {isUp ? "▲ " : "▼ "}
@@ -316,8 +316,8 @@ function HoldingTile({
                 fontSize: 18,
                 color:
                   pnl.pct >= 0
-                    ? "var(--color-price-up)"
-                    : "var(--color-price-down)",
+                    ? "var(--color-price-up-text)"
+                    : "var(--color-price-down-text)",
               }}
             >
               {pnl.pct >= 0 ? "+" : ""}

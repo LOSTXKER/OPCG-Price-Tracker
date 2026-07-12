@@ -183,8 +183,8 @@ function DirectionPill({
 }) {
   const activeCls =
     tone === "up"
-      ? "border-price-up/40 bg-price-up/10 text-price-up"
-      : "border-price-down/40 bg-price-down/10 text-price-down";
+      ? "border-price-up/40 bg-price-up/10 text-price-up-on-soft"
+      : "border-price-down/40 bg-price-down/10 text-price-down-on-soft";
   return (
     <button
       type="button"

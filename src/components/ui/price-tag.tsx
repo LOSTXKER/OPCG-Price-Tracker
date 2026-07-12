@@ -90,8 +90,12 @@ export function PriceTag({
     : flat
       ? "text-muted-foreground"
       : good
-        ? "text-price-up"
-        : "text-price-down";
+        ? changeStyle === "chip"
+          ? "text-price-up-on-soft"
+          : "text-price-up"
+        : changeStyle === "chip"
+          ? "text-price-down-on-soft"
+          : "text-price-down";
   const Arrow = flat ? Minus : positive ? ArrowUp : ArrowDown;
 
   // Base classes for the change chip — the external `className` is applied at
