@@ -1,5 +1,6 @@
 # 🎨 UX/UI Refactor Master Plan — 2026-07-04
 
+> **อัปเดต 2026-07-16:** มี audit รอบสอง 319 ข้อ (ข้อใหม่ + สถานะปัจจุบันของข้อเดิม) ที่ **[uxui-audit-findings-2026-07-16.md](uxui-audit-findings-2026-07-16.md)** — ก่อนทำ Phase ไหนให้เปิดเทียบทั้ง 2 ไฟล์ · หมายเหตุ: Portfolio detail กับ Watchlist ถูกรื้อใหม่แล้ว (branch `feat/portfolio-watchlist-teardown`) ข้อเดิมที่ชี้ 2 หน้านี้อาจ obsolete
 > **ไฟล์นี้ = แผนลงมือ refactor UX/UI ทั้งเว็บ** (ติ๊กได้ · ทำทีละข้อ · ไม่หลุด)
 > หลักฐานฉบับเต็มต่อข้อ (ปัญหา/หลักฐาน file:line/วิธีแก้/หมายเหตุ verify) อยู่ที่ **[uxui-audit-findings-2026-07-04.md](uxui-audit-findings-2026-07-04.md)** — อ้างด้วย ID เช่น `HOME-01`
 > ที่มา: audit ทั้งเว็บด้วย workflow 86 agents (13 กลุ่มหน้า + 6 มิติ cross-cutting) · ทุกข้อระดับ high ผ่าน adversarial verify กับโค้ดจริงแล้ว (62 ผ่าน / 5 ตกไป) · รวมที่เหลือ 230 ข้อ
