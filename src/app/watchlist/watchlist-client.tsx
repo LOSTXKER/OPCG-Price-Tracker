@@ -1,14 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
 
 import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog";
 import { Button } from "@/components/ui/button";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
-import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/shared/empty-state";
+import type { SetPickerItem } from "@/components/shared/set-picker";
 import { useConfirm } from "@/components/shared/confirm-dialog";
 import { ApiError, apiDelete, apiGet, apiPatch, apiTry } from "@/lib/api/client";
 import { useAuthState } from "@/hooks/use-auth-state";
@@ -23,29 +23,44 @@ import { useMultigameDemo, MOCK_POKEMON_WATCHLIST } from "@/lib/mock/multigame-d
 import { GameFilterChips, type GameChip } from "@/components/shared/game-filter-chips";
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants";
 import { getGameConfig } from "@/lib/game-config";
+import { useWatchlistStore } from "@/stores/watchlist-store";
 
 import { WatchlistAddDialog } from "./watchlist-add-dialog";
 import { WatchlistEmpty } from "./watchlist-empty";
 import { WatchlistGridView } from "./watchlist-grid-view";
 import { WatchlistListView } from "./watchlist-list-view";
+import {
+  createWatchlistLoadRevision,
+  shouldSettleWatchlistForeground,
+} from "./watchlist-load-revision";
 import { WatchlistMockPreview } from "./watchlist-mock-preview";
-import { WatchlistSummary } from "./watchlist-summary";
 import { WatchlistSkeleton } from "./watchlist-skeleton";
 import { WatchlistToolbar } from "./watchlist-toolbar";
-import { sortEntries } from "./watchlist-sort";
+import {
+  countActiveWatchlistFilters,
+  ensureValidSetCode,
+  filterAndSortEntries,
+} from "./watchlist-sort";
+import { buildWatchlistTabHref } from "./watchlist-tab-query";
 import {
   DEFAULT_FILTERS,
-  getEntryChange,
   type ChangePeriod,
   type SortKey,
   type WatchView,
   type WatchlistEntry,
   type WatchlistFilters,
+  type WatchlistPanelState,
 } from "./watchlist-types";
 
 const VIEW_STORAGE_KEY = "opcg.watchlist.view";
 
-export default function WatchlistClient() {
+interface WatchlistClientProps {
+  addOpen?: boolean;
+  onAddOpenChange?: (open: boolean) => void;
+  onPageStateChange?: (state: WatchlistPanelState) => void;
+}
+
+export default function WatchlistClient(props: WatchlistClientProps = {}) {
   const { authed } = useAuthState();
   const lang = useUIStore((s) => s.language);
 
@@ -57,14 +72,21 @@ export default function WatchlistClient() {
     return <AuthPreviewGate preview={<WatchlistMockPreview lang={lang} />} />;
   }
 
-  return <WatchlistContent />;
+  return <WatchlistContent {...props} />;
 }
 
-function WatchlistContent() {
+function WatchlistContent({
+  addOpen: controlledAddOpen,
+  onAddOpenChange,
+  onPageStateChange,
+}: WatchlistClientProps) {
   const lang = useUIStore((s) => s.language);
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { limits } = useTierLimits();
   const confirm = useConfirm();
+  const syncWatchlistIds = useWatchlistStore((state) => state.syncIds);
 
   const [items, setItems] = useState<WatchlistEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -96,8 +118,7 @@ function WatchlistContent() {
     [items],
   );
   useGameFilterReset(gameFilter, availableGames, setGameFilter);
-  // Summary strip must reflect the GAME scope only (not search/set/direction) —
-  // otherwise filtering to Pokémon still shows OPCG totals.
+  // Set choices follow the selected game while the watchlist itself stays unified.
   const scopedByGame = useMemo(
     () =>
       gameFilter === ALL_GAMES
@@ -105,37 +126,104 @@ function WatchlistContent() {
         : items.filter((e) => (e.card.set.game?.slug ?? DEFAULT_GAME) === gameFilter),
     [items, gameFilter],
   );
-  const [addOpen, setAddOpen] = useState(false);
+  const [internalAddOpen, setInternalAddOpen] = useState(false);
+  const addOpen = controlledAddOpen ?? internalAddOpen;
+  const setAddOpen = useCallback(
+    (open: boolean) => {
+      if (controlledAddOpen === undefined) setInternalAddOpen(open);
+      onAddOpenChange?.(open);
+    },
+    [controlledAddOpen, onAddOpenChange],
+  );
 
   const [alertTarget, setAlertTarget] = useState<WatchlistEntry | null>(null);
   const [alertOpen, setAlertOpen] = useState(false);
 
   const [sparklines, setSparklines] = useState<Record<number, number[]>>({});
   const sparklineFetchedRef = useRef<Set<number>>(new Set());
+  const loadRevisionRef = useRef<ReturnType<
+    typeof createWatchlistLoadRevision
+  > | null>(null);
+  if (!loadRevisionRef.current) {
+    loadRevisionRef.current = createWatchlistLoadRevision();
+  }
+  const loadRevision = loadRevisionRef.current;
+  const foregroundLoadRevisionRef = useRef<number | null>(null);
 
-  const load = useCallback(async () => {
-    setError(null);
+  const syncRealIds = useCallback(
+    (entries: readonly WatchlistEntry[]) => {
+      syncWatchlistIds(
+        entries.filter((entry) => entry.cardId > 0).map((entry) => entry.cardId),
+      );
+    },
+    [syncWatchlistIds],
+  );
+
+  const load = useCallback(async (background = false) => {
+    if (!loadRevision.isActive()) return;
+    const revision = loadRevision.begin();
+    if (!background) {
+      foregroundLoadRevisionRef.current = revision;
+      setLoading(true);
+      setError(null);
+    }
     try {
       const data = await apiGet<{ items: WatchlistEntry[] }>("/api/watchlist");
+      if (!loadRevision.canApply(revision)) return;
+      const realItems = data.items ?? [];
       // Demo-only: append mock Pokémon entries so the multi-game UI is visible.
-      setItems([...(data.items ?? []), ...(demo ? MOCK_POKEMON_WATCHLIST : [])]);
+      setItems([...realItems, ...(demo ? MOCK_POKEMON_WATCHLIST : [])]);
+      syncRealIds(realItems);
     } catch (err) {
+      if (!loadRevision.canApply(revision)) return;
       if (err instanceof ApiError && err.status === 401) {
         invalidateSettings();
         toast.error(t(lang, "watchlistSessionExpired"));
         const supabase = createClient();
         await supabase.auth.signOut();
       } else {
-        setError(t(lang, "loadFailed"));
+        if (background) toast.error(t(lang, "loadFailed"));
+        else setError(t(lang, "loadFailed"));
       }
     } finally {
-      setLoading(false);
+      if (
+        shouldSettleWatchlistForeground({
+          active: loadRevision.isActive(),
+          background,
+          completedRevision: revision,
+          foregroundRevision: foregroundLoadRevisionRef.current,
+          canApply: loadRevision.canApply(revision),
+        })
+      ) {
+        foregroundLoadRevisionRef.current = null;
+        setLoading(false);
+      }
     }
-  }, [lang, demo]);
+  }, [lang, demo, loadRevision, syncRealIds]);
+
+  useEffect(() => {
+    loadRevision.activate();
+    return () => {
+      foregroundLoadRevisionRef.current = null;
+      loadRevision.dispose();
+    };
+  }, [loadRevision]);
 
   useEffect(() => {
     void load();
   }, [load]);
+
+  const panelStatus: WatchlistPanelState["status"] = loading
+    ? "loading"
+    : error
+      ? "error"
+      : items.length === 0
+        ? "empty"
+        : "ready";
+
+  useEffect(() => {
+    onPageStateChange?.({ status: panelStatus, itemCount: items.length });
+  }, [items.length, onPageStateChange, panelStatus]);
 
   // Fetch sparklines for visible cards (list view only, lazy)
   useEffect(() => {
@@ -158,49 +246,42 @@ function WatchlistContent() {
     });
   }, [items, view]);
 
-  const setOptions = useMemo(() => {
-    const seen = new Map<string, string>();
-    for (const e of items) {
-      const code = e.card.set.code;
-      if (!seen.has(code)) seen.set(code, code.toUpperCase());
+  const setOptions = useMemo<SetPickerItem[]>(() => {
+    const seen = new Map<string, SetPickerItem>();
+    for (const entry of scopedByGame) {
+      const code = entry.card.set.code;
+      if (seen.has(code)) continue;
+      const gameSlug = entry.card.set.game?.slug ?? DEFAULT_GAME;
+      const setInfo = getGameConfig(gameSlug)?.sets.find(
+        (set) => set.code.toLowerCase() === code.toLowerCase(),
+      );
+      seen.set(code, {
+        code,
+        name: setInfo?.name ?? code.toUpperCase(),
+        nameEn: setInfo?.nameEn ?? setInfo?.name ?? code.toUpperCase(),
+        type: setInfo?.type ?? "OTHER",
+      });
     }
-    return Array.from(seen.entries())
-      .map(([code, label]) => ({ code, label }))
-      .sort((a, b) => a.label.localeCompare(b.label));
-  }, [items]);
+    return [...seen.values()].sort((a, b) => a.code.localeCompare(b.code));
+  }, [scopedByGame]);
 
-  const filteredEntries = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    let out = items.filter((entry) => {
-      if (
-        gameFilter !== ALL_GAMES &&
-        (entry.card.set.game?.slug ?? DEFAULT_GAME) !== gameFilter
-      )
-        return false;
-      if (filters.pinnedOnly && entry.pinnedAt == null) return false;
-      if (filters.hasAlert && !entry.hasActiveAlert) return false;
-      if (filters.setCodes.length > 0 && !filters.setCodes.includes(entry.card.set.code)) {
-        return false;
-      }
-      if (filters.direction) {
-        const change = getEntryChange(entry, period);
-        if (change == null) return false;
-        if (filters.direction === "up" && change <= 0) return false;
-        if (filters.direction === "down" && change >= 0) return false;
-      }
-      if (q) {
-        const name = `${entry.card.nameEn ?? ""} ${entry.card.nameJp ?? ""} ${entry.card.nameTh ?? ""}`.toLowerCase();
-        const code = entry.card.cardCode.toLowerCase();
-        if (!name.includes(q) && !code.includes(q)) return false;
-      }
-      return true;
-    });
+  useEffect(() => {
+    const validSetCode = ensureValidSetCode(items, gameFilter, filters.setCode);
+    if (validSetCode === filters.setCode) return;
+    setFilters((current) => ({ ...current, setCode: validSetCode }));
+  }, [filters.setCode, gameFilter, items]);
 
-    out = sortEntries(out, sortKey, period);
-    return out;
-  }, [items, search, filters, sortKey, period, gameFilter]);
+  const filteredEntries = useMemo(
+    () =>
+      filterAndSortEntries(
+        items,
+        { filters, period, search, gameFilter },
+        sortKey,
+      ),
+    [filters, gameFilter, items, period, search, sortKey],
+  );
 
-  // Per-game counts + logos for the chip rail (cross-game, from all items).
+  // Per-game membership + logos for the chip rail (cross-game, from all items).
   const gameMeta = useMemo(() => {
     const count = new Map<string, number>();
     const logo = new Map<string, string | null>();
@@ -213,19 +294,20 @@ function WatchlistContent() {
     return { count, logo };
   }, [items]);
 
-  // Chips for games the user actually watches cards in (count > 0). The rail
-  // self-hides below two games.
+  // Chips for games the user actually watches cards in (count > 0). A single
+  // live game is not a meaningful filter, so this page only mounts the rail
+  // once the collection truly spans multiple games. The canonical component
+  // still keeps its always-visible roadmap behavior for callers that need it.
   const gameChips = useMemo<GameChip[]>(
     () =>
       [...gameMeta.count.entries()]
         .filter(([, c]) => c > 0)
-        .map(([slug, c]) => ({
+        .map(([slug]) => ({
           slug,
           label: getGameConfig(slug)?.shortName ?? slug.toUpperCase(),
-          value: `${c} ${t(lang, "card")}`,
           logoUrl: gameMeta.logo.get(slug) ?? null,
         })),
-    [gameMeta, lang],
+    [gameMeta],
   );
 
   const toggleSelect = (cardId: number) => {
@@ -252,6 +334,24 @@ function WatchlistContent() {
     });
   };
 
+  const allVisibleSelected =
+    filteredEntries.length > 0 &&
+    filteredEntries.every((entry) => selected.has(entry.cardId));
+
+  const resetAllControls = () => {
+    setSearch("");
+    setFilters(DEFAULT_FILTERS);
+    setGameFilter(ALL_GAMES);
+    setSortKey("default");
+    setPeriod("7d");
+    setSelected(new Set());
+  };
+
+  const hasActiveConstraints =
+    search.trim().length > 0 ||
+    gameFilter !== ALL_GAMES ||
+    countActiveWatchlistFilters(filters) > 0;
+
   const removeSingle = async (entry: WatchlistEntry) => {
     const cardName = getCardName(lang, entry.card);
     const ok = await confirm({
@@ -263,9 +363,13 @@ function WatchlistContent() {
     });
     if (!ok) return;
 
+    if (!loadRevision.beginMutation()) return;
     const previousItems = items;
+    const previousSelected = new Set(selected);
+    const nextItems = items.filter((item) => item.cardId !== entry.cardId);
     setRemovingIds((prev) => new Set(prev).add(entry.cardId));
-    setItems((prev) => prev.filter((x) => x.cardId !== entry.cardId));
+    setItems(nextItems);
+    syncRealIds(nextItems);
     setSelected((prev) => {
       if (!prev.has(entry.cardId)) return prev;
       const next = new Set(prev);
@@ -278,6 +382,8 @@ function WatchlistContent() {
       toast.success(t(lang, "watchlistRemoved"));
     } catch {
       setItems(previousItems);
+      syncRealIds(previousItems);
+      setSelected(previousSelected);
       toast.error(t(lang, "watchlistUpdateFailed"));
     } finally {
       setRemovingIds((prev) => {
@@ -285,6 +391,7 @@ function WatchlistContent() {
         next.delete(entry.cardId);
         return next;
       });
+      if (loadRevision.finishMutation()) void load(true);
     }
   };
 
@@ -300,13 +407,17 @@ function WatchlistContent() {
     });
     if (!ok) return;
 
+    if (!loadRevision.beginMutation()) return;
     const previousItems = items;
+    const previousSelected = new Set(selected);
+    const nextItems = items.filter((item) => !selected.has(item.cardId));
     setRemovingIds((prev) => {
       const next = new Set(prev);
       ids.forEach((id) => next.add(id));
       return next;
     });
-    setItems((prev) => prev.filter((x) => !selected.has(x.cardId)));
+    setItems(nextItems);
+    syncRealIds(nextItems);
     setSelected(new Set());
 
     try {
@@ -314,6 +425,8 @@ function WatchlistContent() {
       toast.success(t(lang, "watchlistRemoved"));
     } catch {
       setItems(previousItems);
+      syncRealIds(previousItems);
+      setSelected(previousSelected);
       toast.error(t(lang, "watchlistUpdateFailed"));
     } finally {
       setRemovingIds((prev) => {
@@ -321,10 +434,12 @@ function WatchlistContent() {
         ids.forEach((id) => next.delete(id));
         return next;
       });
+      if (loadRevision.finishMutation()) void load(true);
     }
   };
 
   const togglePin = async (entry: WatchlistEntry) => {
+    if (!loadRevision.beginMutation()) return;
     const previousItems = items;
     const nextPinnedAt = entry.pinnedAt ? null : new Date().toISOString();
     setItems((prev) =>
@@ -346,6 +461,8 @@ function WatchlistContent() {
     } catch {
       setItems(previousItems);
       toast.error(t(lang, "watchlistUpdateFailed"));
+    } finally {
+      if (loadRevision.finishMutation()) void load(true);
     }
   };
 
@@ -354,7 +471,7 @@ function WatchlistContent() {
     // instead of silently creating a duplicate (the create API has no unique
     // guard, so re-tapping the bell would stack identical alerts).
     if (entry.hasActiveAlert) {
-      router.push("/watchlist?tab=alerts");
+      router.push(buildWatchlistTabHref(pathname, searchParams, "alerts"));
       return;
     }
     setAlertTarget(entry);
@@ -362,7 +479,7 @@ function WatchlistContent() {
   };
 
   const refreshAlerts = () => {
-    void load();
+    void load(true);
   };
 
   const hasAnySparkline = useMemo(
@@ -374,42 +491,46 @@ function WatchlistContent() {
   );
 
   if (loading) {
-    return <WatchlistSkeleton />;
+    return <WatchlistSkeleton withHeader={false} />;
+  }
+
+  if (error) {
+    return (
+      <EmptyState
+        variant="error"
+        preset="error"
+        lang={lang}
+        description={error}
+        action={
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => void load()}
+            className="sm:min-h-11 md:min-h-0"
+          >
+            {t(lang, "retry")}
+          </Button>
+        }
+      />
+    );
   }
 
   return (
-    <div className="space-y-5 sm:space-y-6">
-      <PageHeader
-        title={t(lang, "watchlistNav")}
-        description={items.length === 0 ? t(lang, "emptyWatchlistDesc") : undefined}
-        actions={
-          <Button size="sm" onClick={() => setAddOpen(true)} className="gap-1.5">
-            <Plus className="size-4" />
-            {t(lang, "addCard")}
-          </Button>
-        }
-      >
-        {items.length > 0 && (
-          <div className="mt-1.5">
-            <WatchlistSummary entries={scopedByGame} period={period} />
-          </div>
-        )}
-      </PageHeader>
-
-      {error && <p className="text-sm text-destructive">{error}</p>}
-
+    <div className="space-y-2 md:space-y-3">
       {items.length === 0 ? (
         <WatchlistEmpty onAdd={() => setAddOpen(true)} />
       ) : (
         <>
-          <GameFilterChips
-            games={gameChips}
-            activeGame={gameFilter}
-            onSelect={setGameFilter}
-            allValue={`${items.length} ${t(lang, "card")}`}
-          />
-
           <WatchlistToolbar
+            scope={
+              gameChips.length > 1 ? (
+                <GameFilterChips
+                  games={gameChips}
+                  activeGame={gameFilter}
+                  onSelect={setGameFilter}
+                />
+              ) : undefined
+            }
             view={view}
             onViewChange={setView}
             period={period}
@@ -421,28 +542,37 @@ function WatchlistContent() {
             search={search}
             onSearchChange={setSearch}
             setOptions={setOptions}
+            resultCount={filteredEntries.length}
             itemCount={items.length}
             limit={limits.watchlistCards}
             editMode={editMode}
             onToggleEditMode={toggleEditMode}
             selectedCount={selected.size}
+            allVisibleSelected={allVisibleSelected}
+            onToggleSelectAll={toggleSelectAll}
             onClearSelection={() => setSelected(new Set())}
             onBulkRemove={() => void removeBulk()}
           />
 
           {filteredEntries.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-hair py-10 text-center text-sm text-muted-foreground">
-              <p>{t(lang, "noCardsFoundDesc")}</p>
-              {gameFilter !== ALL_GAMES && (
-                <button
-                  type="button"
-                  onClick={() => setGameFilter(ALL_GAMES)}
-                  className="mt-2 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                >
-                  {t(lang, "showAllGames")}
-                </button>
-              )}
-            </div>
+            <EmptyState
+              preset="no-results"
+              lang={lang}
+              variant="dashed"
+              description={t(lang, "noCardsFoundDesc")}
+              action={
+                hasActiveConstraints ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={resetAllControls}
+                    className="sm:min-h-11 md:min-h-0"
+                  >
+                    {t(lang, "clearAll")}
+                  </Button>
+                ) : undefined
+              }
+            />
           ) : view === "list" ? (
             <WatchlistListView
               entries={filteredEntries}
@@ -450,7 +580,6 @@ function WatchlistContent() {
               editMode={editMode}
               selected={selected}
               onToggleSelect={toggleSelect}
-              onToggleAll={toggleSelectAll}
               sparklines={sparklines}
               hasAnySparkline={hasAnySparkline}
               onTogglePin={(e) => void togglePin(e)}
@@ -494,7 +623,7 @@ function WatchlistContent() {
       <WatchlistAddDialog
         open={addOpen}
         onOpenChange={setAddOpen}
-        onAdded={() => void load()}
+        onAdded={() => void load(true)}
       />
     </div>
   );

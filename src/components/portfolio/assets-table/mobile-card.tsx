@@ -6,6 +6,7 @@ import Link from "next/link"
 
 import { GameBadge } from "@/components/shared/game-badge"
 import { Price } from "@/components/shared/price-inline"
+import { MASKED } from "@/lib/constants/ui"
 import { getCardName, type Language } from "@/lib/i18n"
 import type { AssetRow } from "@/lib/types/portfolio"
 import { cn } from "@/lib/utils"
@@ -59,9 +60,9 @@ export const MobileAssetCard = memo(function MobileAssetCard({
 
       <div className="shrink-0 text-right leading-tight">
         <p className="tabular-nums text-body-sm font-semibold">
-          {hideBalance ? "••••" : <Price jpy={value} />}
+          {hideBalance ? MASKED : <Price jpy={value} />}
         </p>
-        {pnlResult && (
+        {pnlResult?.pct != null && (
           <p
             className={cn(
               "mt-0.5 tabular-nums text-micro font-medium",
@@ -69,7 +70,7 @@ export const MobileAssetCard = memo(function MobileAssetCard({
             )}
           >
             {hideBalance
-              ? "••"
+              ? MASKED
               : `${pnlResult.pct >= 0 ? "+" : ""}${formatPct(pnlResult.pct)}%`}
           </p>
         )}

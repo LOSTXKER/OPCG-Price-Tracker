@@ -42,7 +42,7 @@ const NO_HEADER_FOOTER_ROUTES: ReadonlyArray<string | RegExp> = ["/more"];
  * carries discovery links + SEO (mobile-first indexing reads the mobile DOM).
  */
 const NO_MOBILE_FOOTER_ROUTES: ReadonlyArray<string | RegExp> = [
-  "/portfolio",
+  /^\/portfolio(\/|$)/,
   /^\/watchlist(\/|$)/,
   /^\/honey(\/|$)/,
   /^\/decks(\/|$)/,

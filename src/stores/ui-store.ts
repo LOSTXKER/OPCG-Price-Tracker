@@ -20,7 +20,7 @@ export type AdConsent = "granted" | "denied" | null;
 const CURRENCY_CYCLE: Currency[] = ["THB", "JPY", "USD"];
 const LANGUAGE_CYCLE: Language[] = ["TH", "EN", "JP"];
 
-interface UIState {
+export interface UIState {
   language: Language;
   currency: Currency;
   /** Active card game slug (e.g. "opcg"). Scopes browse/search/decks. Game switcher UI lands in P4. */
@@ -34,6 +34,8 @@ interface UIState {
   /** Dismiss-once hint clarifying that the header game pill navigates the
    *  catalog and the in-page chips filter MINE lists (shown on MINE routes). */
   dismissedSwitcherHint: boolean;
+  /** Shared, persisted balance privacy for portfolio hub and detail pages. */
+  portfolioBalanceHidden: boolean;
   setLanguage: (language: Language) => void;
   cycleLanguage: () => void;
   setCurrency: (currency: Currency) => void;
@@ -45,6 +47,20 @@ interface UIState {
   setSearchOpen: (open: boolean) => void;
   setUnreadMessages: (count: number) => void;
   dismissSwitcherHint: () => void;
+  setPortfolioBalanceHidden: (hidden: boolean) => void;
+}
+
+export function selectPersistedUIState(state: UIState) {
+  return {
+    language: state.language,
+    currency: state.currency,
+    currentGame: state.currentGame,
+    cardView: state.cardView,
+    dismissedBanner: state.dismissedBanner,
+    adConsent: state.adConsent,
+    dismissedSwitcherHint: state.dismissedSwitcherHint,
+    portfolioBalanceHidden: state.portfolioBalanceHidden,
+  };
 }
 
 export const useUIStore = create<UIState>()(
@@ -59,6 +75,7 @@ export const useUIStore = create<UIState>()(
       searchOpen: false,
       unreadMessages: 0,
       dismissedSwitcherHint: false,
+      portfolioBalanceHidden: false,
       setLanguage: (language) => {
         writeLangCookie(language);
         set({ language });
@@ -82,6 +99,7 @@ export const useUIStore = create<UIState>()(
       setSearchOpen: (open) => set({ searchOpen: open }),
       setUnreadMessages: (count) => set({ unreadMessages: count }),
       dismissSwitcherHint: () => set({ dismissedSwitcherHint: true }),
+      setPortfolioBalanceHidden: (portfolioBalanceHidden) => set({ portfolioBalanceHidden }),
     }),
     {
       name: "kuma-ui-preferences",
@@ -91,15 +109,7 @@ export const useUIStore = create<UIState>()(
       // Instead we skip auto-hydration and rehydrate once after mount via <StoreHydrator/>,
       // so the first paint matches the server and prefs swap in cleanly afterwards.
       skipHydration: true,
-      partialize: (state) => ({
-        language: state.language,
-        currency: state.currency,
-        currentGame: state.currentGame,
-        cardView: state.cardView,
-        dismissedBanner: state.dismissedBanner,
-        adConsent: state.adConsent,
-        dismissedSwitcherHint: state.dismissedSwitcherHint,
-      }),
+      partialize: selectPersistedUIState,
       // Backfill the lang cookie for users whose preference predates it, so
       // server components match the client on the first load after this ships.
       onRehydrateStorage: () => (state) => {

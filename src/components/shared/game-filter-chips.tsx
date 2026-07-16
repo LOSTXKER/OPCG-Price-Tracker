@@ -1,9 +1,10 @@
 "use client"
 
+import type { KeyboardEvent } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
-import { getAllGameConfigs } from "@/lib/game-config"
+import { getAllGameConfigs, getGameConfig } from "@/lib/game-config"
 import { ALL_GAMES } from "@/lib/game/constants"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -11,7 +12,8 @@ import { cn } from "@/lib/utils"
 
 export type GameChip = {
   slug: string
-  /** Short label, e.g. "OPCG". */
+  /** Fallback label for unregistered games. Registered games may provide the
+   *  canonical MINE-rail label through `GameConfig.filterName`. */
   label: string
   /** Pre-formatted per-game value (unit-labelled count). Omit for name-only
    *  chips — e.g. portfolio, where the money lives in the breakdown panel. */
@@ -24,17 +26,59 @@ export type GameChip = {
  *  same `/coming-soon` teaser the header switcher uses. */
 const COMING_SOON_GAMES = getAllGameConfigs().filter((g) => g.comingSoon)
 
+/** @internal Exported for keyboard regression coverage. */
+export function getGameFilterTargetIndex(
+  key: string,
+  currentIndex: number,
+  itemCount: number,
+): number | null {
+  if (itemCount <= 0 || currentIndex < 0 || currentIndex >= itemCount) return null
+  if (key === "Home") return 0
+  if (key === "End") return itemCount - 1
+  if (key === "ArrowRight" || key === "ArrowDown") {
+    return (currentIndex + 1) % itemCount
+  }
+  if (key === "ArrowLeft" || key === "ArrowUp") {
+    return (currentIndex - 1 + itemCount) % itemCount
+  }
+  return null
+}
+
+function handleGameFilterKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+  const target = event.target
+  if (!(target instanceof HTMLElement)) return
+
+  const current = target.closest<HTMLButtonElement>('button[role="radio"]')
+  if (!current || !event.currentTarget.contains(current)) return
+
+  const radios = Array.from(
+    event.currentTarget.querySelectorAll<HTMLButtonElement>(
+      'button[role="radio"]:not(:disabled)',
+    ),
+  )
+  const currentIndex = radios.indexOf(current)
+  const nextIndex = getGameFilterTargetIndex(event.key, currentIndex, radios.length)
+  if (nextIndex == null) return
+
+  event.preventDefault()
+  const next = radios[nextIndex]
+  if (!next) return
+  next.focus()
+  if (next !== current) next.click()
+}
+
 /**
  * The "one collection, every game" filter for a unified personal surface
- * (portfolio / watchlist / alerts). A filter that can't partition is clutter, so
- * the real filter is DATA-DRIVEN and progressively disclosed: the caller passes
- * only the games the user actually has data in, and the filter chips render only
- * once at least two of them exist. Below that, the rail still appears when there
- * are coming-soon games — as a pure teaser, never a dead filter chip.
+ * (portfolio / watchlist / alerts). The caller passes only games with real data,
+ * while the rail keeps a stable All → live game → coming-soon hierarchy even
+ * when there is only one live game. With no data games, only the roadmap teaser
+ * remains; a coming-soon game with real demo data becomes a live filter instead
+ * of rendering twice.
  *
  * Visual vocabulary is byte-identical to SegmentedControl's pill: frameless
  * `bg-muted/50` track, active = `bg-primary/15 text-primary` (one honey fill,
- * no border/extra dot — keeps honey <5%).
+ * no border/extra dot — keeps honey <5%). Segments keep a 44px touch target
+ * below `md`, then settle to the same compact desktop rail as other filters.
  */
 export function GameFilterChips({
   games,
@@ -50,24 +94,37 @@ export function GameFilterChips({
 }) {
   const lang = useUIStore((s) => s.language)
 
-  // Real filtering needs ≥2 games; below that there's nothing to partition. Still
-  // render the rail when a coming-soon game exists, to tease it — but never tease
-  // a game that already has real data (it's a live filter chip now, not "soon").
-  const showFilter = games.length >= 2
+  // Keep the MINE rail structurally consistent from the first live game onward.
+  // Never tease a game that already has data (it is a live filter chip instead).
+  const showFilter = games.length > 0
+  const hasActiveSelection =
+    activeGame === ALL_GAMES || games.some((game) => game.slug === activeGame)
   const teasers = COMING_SOON_GAMES.filter((g) => !games.some((x) => x.slug === g.slug))
   if (!showFilter && teasers.length === 0) return null
 
   return (
-    <div className="no-sb -mx-0.5 flex w-fit max-w-full items-center gap-0.5 overflow-x-auto rounded-full bg-muted/50 p-0.5">
+    <div className="no-sb relative -mx-0.5 flex h-11 w-fit max-w-full items-center gap-0.5 overflow-x-auto rounded-full px-0.5 before:pointer-events-none before:absolute before:inset-x-0 before:inset-y-1 before:rounded-full before:bg-muted/50 before:content-[''] md:h-auto md:bg-muted/50 md:p-0.5 md:before:hidden">
       {showFilter && (
-        <div role="radiogroup" aria-label={t(lang, "filterByGame")} className="contents">
-          <Seg active={activeGame === ALL_GAMES} onClick={() => onSelect(ALL_GAMES)} label={t(lang, "allGames")} value={allValue} />
+        <div
+          role="radiogroup"
+          aria-label={t(lang, "filterByGame")}
+          className="contents"
+          onKeyDown={handleGameFilterKeyDown}
+        >
+          <Seg
+            active={activeGame === ALL_GAMES}
+            tabIndex={activeGame === ALL_GAMES || !hasActiveSelection ? 0 : -1}
+            onClick={() => onSelect(ALL_GAMES)}
+            label={t(lang, "allGames")}
+            value={allValue}
+          />
           {games.map((g) => (
             <Seg
               key={g.slug}
               active={activeGame === g.slug}
+              tabIndex={activeGame === g.slug ? 0 : -1}
               onClick={() => onSelect(g.slug)}
-              label={g.label}
+              label={getGameConfig(g.slug)?.filterName ?? g.label}
               value={g.value}
               logoUrl={g.logoUrl}
             />
@@ -78,7 +135,7 @@ export function GameFilterChips({
         <ComingSoonSeg
           key={g.slug}
           slug={g.slug}
-          label={g.shortName ?? g.nameEn}
+          label={g.filterName ?? g.shortName ?? g.nameEn}
           soon={t(lang, "comingSoon")}
         />
       ))}
@@ -92,7 +149,7 @@ function ComingSoonSeg({ slug, label, soon }: { slug: string; label: string; soo
   return (
     <Link
       href={`/coming-soon?game=${slug}`}
-      className="motion-base inline-flex min-h-11 shrink-0 snap-start items-center gap-2 rounded-full px-3 py-2 text-muted-foreground/80 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="motion-base relative z-10 inline-flex h-11 shrink-0 snap-start items-center gap-2 rounded-full px-3 py-2 text-muted-foreground/80 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:h-8 md:gap-1.5 md:px-2.5 md:py-1"
     >
       <span
         aria-hidden
@@ -108,12 +165,14 @@ function ComingSoonSeg({ slug, label, soon }: { slug: string; label: string; soo
 
 function Seg({
   active,
+  tabIndex,
   onClick,
   label,
   value,
   logoUrl,
 }: {
   active: boolean
+  tabIndex: 0 | -1
   onClick: () => void
   label: string
   value?: string
@@ -124,10 +183,13 @@ function Seg({
       type="button"
       role="radio"
       aria-checked={active}
+      tabIndex={tabIndex}
       onClick={onClick}
       className={cn(
-        "motion-base inline-flex min-h-11 shrink-0 snap-start items-center justify-center gap-2 rounded-full px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        active ? "bg-primary/15 text-primary" : "text-muted-foreground hover:text-foreground",
+        "motion-base relative isolate inline-flex h-11 shrink-0 snap-start items-center justify-center gap-2 rounded-full px-3 py-2 before:pointer-events-none before:absolute before:inset-x-0 before:inset-y-1 before:rounded-full before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:h-8 md:gap-1.5 md:px-2.5 md:py-1 md:before:hidden [&>*]:relative [&>*]:z-10",
+        active
+          ? "text-primary before:bg-primary/15 md:bg-primary/15"
+          : "text-muted-foreground hover:text-foreground",
       )}
     >
       {logoUrl ? (

@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { getCardName, t, type Language } from "@/lib/i18n"
+import { MASKED } from "@/lib/constants/ui"
 import type { AssetRow } from "@/lib/types/portfolio"
 import { cn } from "@/lib/utils"
 import {
@@ -44,6 +45,7 @@ function CardEditCompact({
   qty,
   cost,
   costSymbol,
+  hideBalance,
   isPrivate,
   onFieldChange,
   onRemove,
@@ -53,6 +55,7 @@ function CardEditCompact({
   qty: string
   cost: string
   costSymbol: string
+  hideBalance: boolean
   isPrivate: boolean
   onFieldChange: (
     itemId: number,
@@ -116,20 +119,26 @@ function CardEditCompact({
         </div>
         <div className="flex items-center gap-1.5">
           <span className="text-overlay text-muted-foreground/60">{t(lang, "costBasis")}</span>
-          <div className="relative">
-            <span className="pointer-events-none absolute left-1.5 top-1/2 -translate-y-1/2 text-overlay text-muted-foreground/50">
-              {costSymbol}
+          {hideBalance ? (
+            <span className="flex min-h-7 w-20 items-center rounded-lg border border-hair bg-muted/30 px-2 text-xs tabular-nums text-muted-foreground">
+              {MASKED}
             </span>
-            <input
-              className="w-20 shrink-0 rounded-lg border border-hair bg-muted/30 py-1 pl-5 pr-2 text-left text-xs tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
-              value={cost}
-              onChange={(e) => onFieldChange(row.itemId, "cost", e.target.value)}
-              type="number"
-              step="1"
-              min={0}
-              placeholder="—"
-            />
-          </div>
+          ) : (
+            <div className="relative">
+              <span className="pointer-events-none absolute left-1.5 top-1/2 -translate-y-1/2 text-overlay text-muted-foreground/50">
+                {costSymbol}
+              </span>
+              <input
+                className="w-20 shrink-0 rounded-lg border border-hair bg-muted/30 py-1 pl-5 pr-2 text-left text-xs tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
+                value={cost}
+                onChange={(e) => onFieldChange(row.itemId, "cost", e.target.value)}
+                type="number"
+                step="1"
+                min={0}
+                placeholder="—"
+              />
+            </div>
+          )}
         </div>
         <div className="ml-auto">
           <button
@@ -169,12 +178,14 @@ export function BulkEditDialog({
   open,
   onOpenChange,
   assets,
+  hideBalance = false,
   onUpdate,
   onRemove,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   assets: AssetRow[]
+  hideBalance?: boolean
   onUpdate: (
     itemId: number,
     data: {
@@ -234,11 +245,13 @@ export function BulkEditDialog({
       // Compare against the initial display string (not a re-derived JPY) so a
       // currency round-trip's ±1 rounding never reads as an edit.
       const costChanged =
-        local.cost !== displayCostStr(row, currency) && parseCostValue(local.cost) !== undefined
+        !hideBalance &&
+        local.cost !== displayCostStr(row, currency) &&
+        parseCostValue(local.cost) !== undefined
       const privacyChanged = local.isPrivate !== row.isPrivate
       return qtyChanged || costChanged || privacyChanged
     })
-  }, [edits, assets, currency])
+  }, [edits, assets, currency, hideBalance])
 
   const handleSave = () => {
     for (const row of assets) {
@@ -247,7 +260,7 @@ export function BulkEditDialog({
       const data: { quantity?: number; purchasePrice?: number | null; isPrivate?: boolean } = {}
       const q = parseInt(local.qty)
       if (Number.isInteger(q) && q >= 1 && q !== row.quantity) data.quantity = q
-      if (local.cost !== displayCostStr(row, currency)) {
+      if (!hideBalance && local.cost !== displayCostStr(row, currency)) {
         const costVal = parseCostValue(local.cost)
         if (costVal !== undefined) {
           data.purchasePrice = costVal === null ? null : displayValueToJpy(costVal, currency)
@@ -330,6 +343,7 @@ export function BulkEditDialog({
                     qty={state.qty}
                     cost={state.cost}
                     costSymbol={currencySymbol(currency)}
+                    hideBalance={hideBalance}
                     isPrivate={state.isPrivate}
                     onFieldChange={handleFieldChange}
                     onRemove={onRemove}

@@ -50,6 +50,8 @@ export interface GameConfig {
   nameEn: string;
   /** Short label for the game-switcher pill (e.g. "OPCG", "Pokémon"). */
   shortName?: string;
+  /** Friendly label for the unified MINE game rail (e.g. "One Piece"). */
+  filterName?: string;
   /** Registered but not yet browsable — switcher shows it disabled. */
   comingSoon?: boolean;
   /** Thin per-game tint layered OVER the honey baseline (crest dot / top-glow /

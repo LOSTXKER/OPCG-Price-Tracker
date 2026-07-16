@@ -5,6 +5,19 @@ import { type FormEvent, useCallback, useEffect, useRef, useState, useTransition
 
 import { fetchCards } from "@/lib/api/fetch-cards"
 import {
+  countAllSearchFilters,
+  countSearchModalFilters,
+  createEmptySearchFilters,
+  resetSearchModalFilters,
+  serializeSearchFilters,
+  toggleSearchMultiFilter,
+  type CardSearchFacets,
+  type SearchFilters,
+  type SearchMultiFilterKey,
+  type SearchVariant,
+} from "@/lib/cards/search-filters"
+import { ALL_GAMES } from "@/lib/game/constants"
+import {
   type SortKey,
   type ColumnId,
   type ViewMode,
@@ -21,13 +34,13 @@ import { useSparklines } from "@/hooks/use-sparklines"
  * search, sort/filter/pagination handlers, abortable fetches, and the derived
  * sort column + active-filter count. The view stays a pure render of this.
  */
-export function useSearch() {
+export function useSearch(game: string) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const routeQuery = searchParams.get("q") ?? ""
 
-  const initialQuery = searchParams.get("q") ?? ""
-  const [query, setQuery] = useState(initialQuery)
-  const [inputValue, setInputValue] = useState(initialQuery)
+  const [query, setQuery] = useState(routeQuery)
+  const [inputValue, setInputValue] = useState(routeQuery)
   const [sort, setSort] = useState<SortKey>("price_desc")
   const [page, setPage] = useState(1)
   const [cards, setCards] = useState<CardRow[]>([])
@@ -39,43 +52,49 @@ export function useSearch() {
   const [fetchError, setFetchError] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>("table")
   const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d")
-  const [selectedSet, setSelectedSet] = useState("")
-  const [selectedRarity, setSelectedRarity] = useState("")
-  // Version facet — "regular" | "parallel" | "" (both). Passed as `variant` to
-  // /api/cards; the server picks the isParallel side. Base rarity (e.g. SEC)
-  // already expands to its P- family server-side, so no client expansion here.
-  const [selectedVariant, setSelectedVariant] = useState("")
+  const [filters, setFilters] = useState<SearchFilters>(createEmptySearchFilters)
+  const [facets, setFacets] = useState<CardSearchFacets | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const fetchAbortRef = useRef<AbortController | null>(null)
   const sortRef = useRef(sort)
-  const setRef = useRef(selectedSet)
-  const rarityRef = useRef(selectedRarity)
-  const variantRef = useRef(selectedVariant)
+  const filtersRef = useRef(filters)
+  const facetsRef = useRef<CardSearchFacets | null>(null)
+
+  const replaceFilters = useCallback((next: SearchFilters) => {
+    filtersRef.current = next
+    setFilters(next)
+  }, [])
+
+  const replaceFacets = useCallback((next: CardSearchFacets | null) => {
+    facetsRef.current = next
+    setFacets(next)
+  }, [])
+
   useEffect(() => {
     sortRef.current = sort
-    setRef.current = selectedSet
-    rarityRef.current = selectedRarity
-    variantRef.current = selectedVariant
-  }, [sort, selectedSet, selectedRarity, selectedVariant])
+  }, [sort])
 
   const fetchResults = useCallback(
     (
       q: string,
       sortKey: SortKey,
       pg: number,
-      filterSet?: string,
-      filterRarity?: string,
-      filterVariant?: string,
+      activeFilters: SearchFilters,
+      includeFacets = facetsRef.current === null,
     ) => {
+      fetchAbortRef.current?.abort()
       if (!q.trim()) {
+        fetchAbortRef.current = null
         setCards([])
         setTotal(0)
         setTotalPages(0)
+        setHasSearched(false)
+        replaceFacets(null)
         return
       }
-      fetchAbortRef.current?.abort()
       const controller = new AbortController()
       fetchAbortRef.current = controller
+      const serializedFilters = serializeSearchFilters(activeFilters)
 
       startTransition(async () => {
         try {
@@ -86,78 +105,77 @@ export function useSearch() {
               sort: sortKey,
               page: pg,
               limit: PAGE_SIZE,
-              set: filterSet || undefined,
-              rarity: filterRarity || undefined,
-              variant: filterVariant || undefined,
+              game: game === ALL_GAMES ? undefined : game,
+              ...serializedFilters,
+              includeFacets,
             },
             { signal: controller.signal },
           )
+          if (controller.signal.aborted || fetchAbortRef.current !== controller) return
           setCards(data.cards as CardRow[])
           setTotal(data.total ?? 0)
           setTotalPages(data.totalPages ?? 0)
+          if (data.facets) replaceFacets(data.facets)
           setHasSearched(true)
         } catch (e) {
-          if (e instanceof Error && e.name === "AbortError") return
+          if (
+            controller.signal.aborted
+            || fetchAbortRef.current !== controller
+            || (e instanceof Error && e.name === "AbortError")
+          ) return
           console.error("Search fetch failed:", e)
           setFetchError(true)
         }
       })
     },
-    [],
+    [game, replaceFacets],
   )
 
   useEffect(() => {
-    const q = searchParams.get("q") ?? ""
     const timer = setTimeout(() => {
-      setQuery(q)
-      setInputValue(q)
+      const nextFilters = createEmptySearchFilters()
+      setQuery(routeQuery)
+      setInputValue(routeQuery)
       setPage(1)
-      if (q.trim())
-        fetchResults(
-          q,
-          sortRef.current,
-          1,
-          setRef.current,
-          rarityRef.current,
-          variantRef.current,
-        )
+      setCards([])
+      setTotal(0)
+      setTotalPages(0)
+      setHasSearched(false)
+      setFetchError(false)
+      replaceFacets(null)
+      replaceFilters(nextFilters)
+      fetchResults(routeQuery, sortRef.current, 1, nextFilters, true)
     }, 0)
     return () => clearTimeout(timer)
-  }, [searchParams, fetchResults])
+  }, [routeQuery, fetchResults, replaceFacets, replaceFilters])
 
   useEffect(() => {
     inputRef.current?.focus()
   }, [])
 
-  const refetch = useCallback(
-    (overrides?: {
-      sort?: SortKey
-      page?: number
-      set?: string
-      rarity?: string
-      variant?: string
-    }) => {
-      const s = overrides?.sort ?? sort
-      const p = overrides?.page ?? 1
-      const st = overrides?.set ?? selectedSet
-      const r = overrides?.rarity ?? selectedRarity
-      const v = overrides?.variant ?? selectedVariant
-      fetchResults(query, s, p, st, r, v)
-    },
-    [query, sort, selectedSet, selectedRarity, selectedVariant, fetchResults],
-  )
+  useEffect(() => () => fetchAbortRef.current?.abort(), [])
+
+  const commitFilters = useCallback((nextFilters: SearchFilters) => {
+    replaceFilters(nextFilters)
+    setPage(1)
+    fetchResults(query, sort, 1, nextFilters)
+  }, [fetchResults, query, replaceFilters, sort])
+
+  const refetch = useCallback(() => {
+    fetchResults(query, sort, page, filtersRef.current)
+  }, [fetchResults, page, query, sort])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     const trimmed = inputValue.trim()
     if (!trimmed) return
-    router.push(`/opcg/search?q=${encodeURIComponent(trimmed)}`)
+    router.push(`/${game}/search?q=${encodeURIComponent(trimmed)}`)
   }
 
   const handleSortChange = (newSort: SortKey) => {
     setSort(newSort)
     setPage(1)
-    refetch({ sort: newSort, page: 1 })
+    fetchResults(query, newSort, 1, filtersRef.current)
   }
 
   const handleColumnSort = (col: ColumnId) => {
@@ -170,34 +188,32 @@ export function useSearch() {
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage)
-    fetchResults(query, sort, newPage, selectedSet, selectedRarity, selectedVariant)
+    fetchResults(query, sort, newPage, filtersRef.current)
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   const handleSetChange = (v: string) => {
-    setSelectedSet(v)
-    setPage(1)
-    refetch({ set: v, page: 1 })
+    commitFilters({ ...filtersRef.current, set: v })
   }
 
-  const handleRarityChange = (v: string) => {
-    setSelectedRarity(v)
-    setPage(1)
-    refetch({ rarity: v, page: 1 })
+  const handleMultiFilterToggle = (key: SearchMultiFilterKey, value: string) => {
+    commitFilters(toggleSearchMultiFilter(filtersRef.current, key, value))
   }
 
-  const handleVariantChange = (v: string) => {
-    setSelectedVariant(v)
-    setPage(1)
-    refetch({ variant: v, page: 1 })
+  const handleVariantChange = (variant: SearchVariant) => {
+    commitFilters({ ...filtersRef.current, variant })
+  }
+
+  const handlePriceChange = (key: "minPrice" | "maxPrice", value: string) => {
+    commitFilters({ ...filtersRef.current, [key]: value })
+  }
+
+  const resetModalFilters = () => {
+    commitFilters(resetSearchModalFilters(filtersRef.current))
   }
 
   const clearFilters = () => {
-    setSelectedSet("")
-    setSelectedRarity("")
-    setSelectedVariant("")
-    setPage(1)
-    refetch({ set: "", rarity: "", variant: "", page: 1 })
+    commitFilters(createEmptySearchFilters())
   }
 
   const clearInput = () => {
@@ -206,8 +222,8 @@ export function useSearch() {
   }
 
   const { col: sortCol, dir: sortDir } = parseSortColumn(sort)
-  const activeFilterCount =
-    (selectedSet ? 1 : 0) + (selectedRarity ? 1 : 0) + (selectedVariant ? 1 : 0)
+  const modalFilterCount = countSearchModalFilters(filters)
+  const activeFilterCount = countAllSearchFilters(filters)
 
   return {
     query,
@@ -225,21 +241,23 @@ export function useSearch() {
     setViewMode,
     changePeriod,
     setChangePeriod,
-    selectedSet,
-    selectedRarity,
-    selectedVariant,
+    filters,
+    facets,
     inputRef,
     sortCol,
     sortDir,
     sparklines,
+    modalFilterCount,
     activeFilterCount,
     handleSubmit,
     handleSortChange,
     handleColumnSort,
     handlePageChange,
     handleSetChange,
-    handleRarityChange,
+    handleMultiFilterToggle,
     handleVariantChange,
+    handlePriceChange,
+    resetModalFilters,
     refetch,
     clearFilters,
     clearInput,

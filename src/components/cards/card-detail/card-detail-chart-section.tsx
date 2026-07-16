@@ -3,6 +3,7 @@
 import { MoveHorizontal } from "lucide-react"
 
 import { AdSlot } from "@/components/ads/ad-slot"
+import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
 import { t, type Currency, type Language } from "@/lib/i18n"
 import { formatDisplayValue } from "@/lib/utils/currency"
@@ -15,12 +16,6 @@ import {
   type ChartSeries,
 } from "./card-chart"
 import type { GradeDatum, GradeKey } from "./grades"
-import {
-  SEGMENT_ACTIVE,
-  SEGMENT_BTN,
-  SEGMENT_IDLE,
-  SEGMENT_TRACK,
-} from "./market-feed-shared"
 
 interface CardDetailChartSectionProps {
   lang: Language
@@ -67,29 +62,17 @@ export function CardDetailChartSection({
           <p className="text-eyebrow">
             {t(lang, "priceHistory")} · {gradeLabel}
           </p>
-          <div className="flex flex-wrap items-center gap-2">
-            <div
-              role="group"
-              aria-label={t(lang, "priceHistory")}
-              className={SEGMENT_TRACK}
-            >
-              {RANGES.map((rangeOption) => (
-                <button
-                  key={rangeOption}
-                  type="button"
-                  aria-pressed={rangeOption === range}
-                  onClick={() => onRangeChange(rangeOption)}
-                  className={cn(
-                    SEGMENT_BTN,
-                    "tnum min-h-11 min-w-11 sm:min-h-0 sm:min-w-0",
-                    rangeOption === range ? SEGMENT_ACTIVE : SEGMENT_IDLE,
-                  )}
-                >
-                  {rangeOption}
-                </button>
-              ))}
-            </div>
-          </div>
+          <SegmentedControl<ChartRange>
+            options={RANGES.map((rangeOption) => ({
+              value: rangeOption,
+              label: rangeOption,
+            }))}
+            value={range}
+            onChange={onRangeChange}
+            size="sm"
+            variant="pill"
+            ariaLabel={t(lang, "priceHistory")}
+          />
         </div>
 
         {!datum.hasData ? (

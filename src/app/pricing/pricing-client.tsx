@@ -303,6 +303,7 @@ export default function PricingClient({
           value={billing}
           onChange={setBilling}
           variant="pill"
+          compactVisual={false}
           ariaLabel={t(lang, "pricing")}
           options={[
             { value: "monthly", label: t(lang, "monthly") },

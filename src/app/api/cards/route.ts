@@ -1,8 +1,15 @@
 import { apiHandler } from "@/lib/api/api-handler";
 import { parsePageLimit } from "@/lib/api/request-body";
+import { CardType, type Prisma } from "@/generated/prisma/client";
+import { buildCardSearchFacets } from "@/lib/cards/search-filters";
 import { prisma } from "@/lib/db";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
+import { buildCardSetScope } from "@/lib/game/card-scope";
 import { NextRequest, NextResponse } from "next/server";
+
+function splitCsv(value: string): string[] {
+  return value.split(",").map((item) => item.trim()).filter(Boolean);
+}
 
 export const GET = apiHandler(async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
@@ -18,49 +25,60 @@ export const GET = apiHandler(async (request: NextRequest) => {
 
   const codes = searchParams.get("codes") || "";
   const game = searchParams.get("game") || "";
-  const where: Record<string, unknown> = {};
+  const includeFacets = searchParams.get("includeFacets") === "true";
+  const baseWhere: Prisma.CardWhereInput = {};
 
   if (codes) {
-    where.cardCode = { in: codes.split(",").filter(Boolean) };
+    baseWhere.cardCode = { in: splitCsv(codes) };
   }
-  if (game || set) {
-    const setFilter: Record<string, unknown> = {};
-    if (game) setFilter.game = { slug: game };
-    if (set) setFilter.code = set;
-    where.set = setFilter;
+  if (game) {
+    baseWhere.set = buildCardSetScope(game);
   }
   if (search) {
-    where.OR = [
+    baseWhere.OR = [
       { nameJp: { contains: search, mode: "insensitive" } },
       { nameEn: { contains: search, mode: "insensitive" } },
       { nameTh: { contains: search, mode: "insensitive" } },
       { cardCode: { contains: search, mode: "insensitive" } },
     ];
   }
+
+  // Facet availability stays anchored to search + game so multi-select options
+  // do not disappear while the user toggles filters. Results add set/facets below.
+  const where: Prisma.CardWhereInput = { ...baseWhere };
+  if (set) where.set = buildCardSetScope(game || undefined, set);
+
   if (rarity) {
     // A base rarity also matches its parallel (SEC → SEC + P-SEC) so the filter
     // shows the whole family; the `variant` param below narrows regular/parallel.
-    const rarityCodes = rarity
-      .split(",")
+    const rarityCodes = splitCsv(rarity)
       .flatMap((r) => (r.startsWith("P-") ? [r] : [r, `P-${r}`]));
     where.rarity = { in: [...new Set(rarityCodes)] };
   }
   if (type) {
-    where.cardType = type;
+    const requestedTypes = splitCsv(type);
+    const validTypes = requestedTypes.filter((value): value is CardType =>
+      Object.values(CardType).includes(value as CardType),
+    );
+    if (validTypes.length !== requestedTypes.length) {
+      return NextResponse.json({ error: "Invalid card type" }, { status: 400 });
+    }
+    if (validTypes.length > 0) where.cardType = { in: validTypes };
   }
   if (color) {
-    if (color === "multi") {
-      where.colorEn = { contains: "/" };
-    } else {
-      where.colorEn = color;
-    }
+    const colors = splitCsv(color);
+    const singleColors = colors.filter((value) => value !== "multi");
+    const colorFilters: Prisma.CardWhereInput[] = [];
+    if (singleColors.length > 0) colorFilters.push({ colorEn: { in: singleColors } });
+    if (colors.includes("multi")) colorFilters.push({ colorEn: { contains: "/" } });
+    if (colorFilters.length > 0) where.AND = [{ OR: colorFilters }];
   }
   const variant = searchParams.get("variant") || "";
-  if (minPrice > 0) {
-    where.latestPriceJpy = { ...((where.latestPriceJpy as object) || {}), gte: minPrice };
-  }
-  if (maxPrice > 0) {
-    where.latestPriceJpy = { ...((where.latestPriceJpy as object) || {}), lte: maxPrice };
+  if (minPrice > 0 || maxPrice > 0) {
+    where.latestPriceJpy = {
+      ...(minPrice > 0 ? { gte: minPrice } : {}),
+      ...(maxPrice > 0 ? { lte: maxPrice } : {}),
+    };
   }
   if (variant === "parallel") {
     where.isParallel = true;
@@ -121,7 +139,15 @@ export const GET = apiHandler(async (request: NextRequest) => {
       orderBy.updatedAt = "desc";
   }
 
-  const [rawCards, total, valueAgg] = await Promise.all([
+  const facetsPromise = includeFacets
+    ? prisma.card.groupBy({
+        by: ["setId", "rarity", "cardType", "colorEn", "isParallel"],
+        where: baseWhere,
+        _count: true,
+      }).then(buildCardSearchFacets)
+    : Promise.resolve(undefined);
+
+  const [rawCards, total, valueAgg, facets] = await Promise.all([
     prisma.card.findMany({
       where,
       orderBy,
@@ -143,6 +169,7 @@ export const GET = apiHandler(async (request: NextRequest) => {
     }),
     prisma.card.count({ where }),
     prisma.card.aggregate({ _sum: { latestPriceJpy: true }, where: { latestPriceJpy: { gt: 0 } } }),
+    facetsPromise,
   ]);
 
   const cards = rawCards.map(({ prices, ...rest }) => ({
@@ -157,5 +184,6 @@ export const GET = apiHandler(async (request: NextRequest) => {
     page,
     limit,
     totalPages: Math.ceil(total / limit),
+    ...(facets ? { facets } : {}),
   });
 });

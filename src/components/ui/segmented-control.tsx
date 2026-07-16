@@ -38,16 +38,20 @@ export interface SegmentedControlProps<T extends string = string> {
   fullWidth?: boolean;
   /**
    * Keep a 44px mobile hit target while painting a compact 36px toolbar frame.
-   * Desktop geometry remains unchanged from `sm:` upward.
+   * The compact frame remains touch-sized below `md`; desktop geometry starts
+   * at the chrome breakpoint. Pill/range controls opt into this by default.
+   * Pass `false` only for intentionally prominent selectors (for example the
+   * pricing billing cadence).
    */
   compactVisual?: boolean;
   /**
    * Visual style:
-   * - `default` — rounded-xl on 44px mobile controls, rounded-lg once compact
-   *   at `sm:`. Used for tab-like controls (home tabs, view toggle, etc.).
+   * - `default` — rounded-xl on 44px mobile controls, rounded-lg once compact.
+   *   Used for tab-like controls (home tabs, view toggle, etc.).
    * - `pill` — rounded-full pill on a frameless `bg-muted/50` track. Used as the
    *   canonical style for time-period / chart-range filters across the site
-   *   (24h / 7d / 30d, chart ranges, portfolio history, etc.).
+   *   (24h / 7d / 30d, chart ranges, portfolio history, etc.). Pill controls
+   *   use the compact painted frame by default.
    */
   variant?: "default" | "pill";
   /**
@@ -103,15 +107,15 @@ export function getSegmentedNavigationTarget(
  * rows. Two visual variants:
  *
  *   - `default` (track-style):
- *       track:   `bg-muted/50 rounded-xl sm:rounded-lg`
+ *       track:   `bg-muted/50`, responsive rounded track
  *       segment: inner corners `rounded-lg`; first/last outer corners follow
- *                the mobile track, then all corners become `rounded-md` at `sm:`
+ *                the mobile track, then all corners become `rounded-md`
  *       active:  `bg-primary/15 text-primary`
  *
  *   - `pill` (period/range filters):
- *       track:   `rounded-full border border-border/50 p-0.5`
+ *       track:   compact `rounded-full bg-muted/50`
  *       segment: `rounded-full`
- *       active:  `bg-background shadow-sm text-foreground`
+ *       active:  `bg-primary/15 text-primary`
  *
  * Implemented as a radiogroup so screen readers announce arrow-key movement
  * between options.
@@ -125,11 +129,12 @@ export function SegmentedControl<T extends string = string>({
   className,
   size = "md",
   fullWidth = false,
-  compactVisual = false,
+  compactVisual,
   variant = "default",
   leadingIcon: LeadingIcon,
 }: SegmentedControlProps<T>) {
   const isPill = variant === "pill";
+  const useCompactVisual = compactVisual ?? isPill;
   const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const selectedIndex = options.findIndex(
     (option) => option.value === value && !option.disabled,
@@ -175,18 +180,18 @@ export function SegmentedControl<T extends string = string>({
     <div
       role="radiogroup"
       aria-label={ariaLabel}
-      data-compact-visual={compactVisual || undefined}
+      data-compact-visual={useCompactVisual || undefined}
       className={cn(
         "inline-flex items-center",
-        compactVisual
+        useCompactVisual
           ? cn(
-              "relative h-11 gap-0.5 before:pointer-events-none before:absolute before:inset-x-0 before:inset-y-1 before:bg-muted/50 before:content-[''] sm:h-auto sm:bg-muted/50 sm:before:hidden",
+              "relative h-11 gap-0.5 before:pointer-events-none before:absolute before:inset-x-0 before:inset-y-1 before:bg-muted/50 before:content-[''] md:h-auto md:bg-muted/50 md:before:hidden",
               isPill
-                ? "px-0.5 before:rounded-full sm:rounded-full sm:p-0.5"
-                : "before:rounded-lg sm:rounded-lg sm:p-1",
+                ? "px-0.5 before:rounded-full md:rounded-full md:p-0.5"
+                : "before:rounded-lg md:rounded-lg md:p-1",
             )
           : isPill
-            ? "gap-0.5 rounded-full bg-muted/50 px-0.5 sm:p-0.5"
+            ? "gap-0.5 rounded-full bg-muted/50 px-0.5 md:p-0.5"
             : "gap-0.5 rounded-xl bg-muted/50 sm:rounded-lg sm:p-1",
         fullWidth && "w-full",
         className,
@@ -197,7 +202,7 @@ export function SegmentedControl<T extends string = string>({
           aria-hidden
           className={cn(
             "shrink-0 text-muted-foreground/50",
-            compactVisual && "relative z-10",
+            useCompactVisual && "relative z-10",
             isPill ? "mx-1.5 size-3.5" : "ml-1 mr-0.5 size-3.5",
           )}
         />
@@ -231,39 +236,43 @@ export function SegmentedControl<T extends string = string>({
             onClick={handleClick}
             onKeyDown={(event) => handleKeyDown(event, index)}
             className={cn(
-              "inline-flex h-11 min-w-11 items-center justify-center font-medium motion-base sm:min-w-0",
-              compactVisual ? "gap-1 sm:gap-1.5" : "gap-1.5",
+              "inline-flex h-11 min-w-11 items-center justify-center font-medium motion-base",
+              useCompactVisual
+                ? "gap-1 md:min-w-0 md:gap-1.5"
+                : isPill
+                  ? "gap-1.5 md:min-w-0"
+                  : "gap-1.5 sm:min-w-0",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
               "disabled:cursor-not-allowed disabled:opacity-50",
-              compactVisual &&
-                "relative isolate before:pointer-events-none before:absolute before:inset-x-0 before:inset-y-1 before:content-[''] sm:before:hidden [&>*]:relative [&>*]:z-10",
+              useCompactVisual &&
+                "relative isolate before:pointer-events-none before:absolute before:inset-x-0 before:inset-y-1 before:content-[''] md:before:hidden [&>*]:relative [&>*]:z-10",
               isPill
-                ? cn("rounded-full", compactVisual && "before:rounded-full")
-                : compactVisual
-                  ? "rounded-md before:rounded-md sm:rounded-md sm:first:rounded-l-md sm:last:rounded-r-md"
+                ? cn("rounded-full", useCompactVisual && "before:rounded-full")
+                : useCompactVisual
+                  ? "rounded-md before:rounded-md md:rounded-md md:first:rounded-l-md md:last:rounded-r-md"
                   : "rounded-lg first:rounded-l-xl last:rounded-r-xl sm:rounded-md sm:first:rounded-l-md sm:last:rounded-r-md",
               size === "sm"
                 ? isPill
-                  ? compactVisual
-                    ? "px-2 text-xs tabular-nums sm:h-7 sm:px-2.5"
-                    : "px-2.5 text-xs tabular-nums sm:h-7"
-                  : compactVisual
-                    ? "px-1.5 text-xs sm:h-7 sm:px-2"
+                  ? useCompactVisual
+                    ? "px-2 text-xs tabular-nums md:h-7 md:px-2.5"
+                    : "px-2.5 text-xs tabular-nums md:h-7"
+                  : useCompactVisual
+                    ? "px-1.5 text-xs md:h-7 md:px-2"
                     : "px-2 text-xs sm:h-7"
                 : isPill
-                  ? compactVisual
-                    ? "px-2 text-xs font-semibold tabular-nums sm:h-7 sm:px-2.5"
-                    : "px-2.5 text-xs font-semibold tabular-nums sm:h-7"
-                  : compactVisual
-                    ? "px-2.5 text-sm sm:h-8 sm:px-3"
+                  ? useCompactVisual
+                    ? "px-2 text-xs font-semibold tabular-nums md:h-7 md:px-2.5"
+                    : "px-2.5 text-xs font-semibold tabular-nums md:h-7"
+                  : useCompactVisual
+                    ? "px-2.5 text-sm md:h-8 md:px-3"
                     : "px-3 text-sm sm:h-8",
               locked
-                ? compactVisual
-                  ? "cursor-pointer text-muted-foreground/60 hover:before:bg-amber-500/10 hover:text-amber-700 sm:hover:bg-amber-500/10 dark:hover:text-amber-400"
+                ? useCompactVisual
+                  ? "cursor-pointer text-muted-foreground/60 hover:before:bg-amber-500/10 hover:text-amber-700 md:hover:bg-amber-500/10 dark:hover:text-amber-400"
                   : "cursor-pointer text-muted-foreground/60 hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-400"
                 : active
-                  ? compactVisual
-                    ? "text-primary before:bg-primary/15 sm:bg-primary/15"
+                  ? useCompactVisual
+                    ? "text-primary before:bg-primary/15 md:bg-primary/15"
                     : "bg-primary/15 text-primary"
                   : "text-muted-foreground hover:text-foreground",
               fullWidth && "flex-1",
@@ -275,7 +284,9 @@ export function SegmentedControl<T extends string = string>({
                 className={cn(size === "sm" ? "size-3.5" : "size-4")}
               />
             )}
-            <span className="truncate">{option.label}</span>
+            {option.label != null && (
+              <span className="truncate">{option.label}</span>
+            )}
             {locked && <Lock aria-hidden className="size-2.5" />}
             {option.badge}
           </button>

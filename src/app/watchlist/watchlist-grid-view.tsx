@@ -1,7 +1,6 @@
 "use client";
 
-import { ArrowUpRight, Bell, Check, MoreHorizontal, Pin, Trash2 } from "lucide-react";
-import Link from "next/link";
+import { Bell, Check, MoreHorizontal, Pin, Trash2 } from "lucide-react";
 
 import { CardItem } from "@/components/cards/card-item";
 import { CardGrid } from "@/components/cards/card-grid";
@@ -130,10 +129,11 @@ export function WatchlistGridView({
               priceChange30d={entry.card.priceChange30d}
               changePeriod={period}
               setCode={entry.card.set.code}
+              gameSlug={entry.card.set.game?.slug ?? "opcg"}
               actionRow={
                 editMode ? null : (
                   <div
-                    className="relative z-20 flex items-center gap-1.5 border-t border-hair p-2"
+                    className="relative z-20 flex items-center justify-between gap-2 border-t border-hair p-2"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <CompareButton
@@ -145,16 +145,20 @@ export function WatchlistGridView({
                       }}
                       size="sm"
                       variant="chip"
+                      className="size-11 md:size-9"
                     />
                     <DropdownMenu>
                       <DropdownMenuTrigger
                         aria-label={t(lang, "moreActions")}
-                        className="ease-chrome inline-flex size-11 shrink-0 items-center justify-center rounded-md border border-transparent bg-muted/30 text-muted-foreground transition-colors hover:border-hair hover:bg-muted/70 hover:text-primary dark:border-hair sm:size-9"
+                        className="ease-chrome inline-flex size-11 shrink-0 items-center justify-center rounded-md border border-transparent bg-muted/30 text-muted-foreground transition-colors hover:border-hair hover:bg-muted/70 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring dark:border-hair md:size-9"
                       >
                         <MoreHorizontal className="size-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => onTogglePin(entry)}>
+                        <DropdownMenuItem
+                          className="min-h-11 md:min-h-0"
+                          onClick={() => onTogglePin(entry)}
+                        >
                           <Pin
                             className={cn(
                               "size-4",
@@ -163,7 +167,10 @@ export function WatchlistGridView({
                           />
                           {pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => onSetAlert(entry)}>
+                        <DropdownMenuItem
+                          className="min-h-11 md:min-h-0"
+                          onClick={() => onSetAlert(entry)}
+                        >
                           <Bell
                             className={cn(
                               "size-4",
@@ -177,6 +184,7 @@ export function WatchlistGridView({
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           variant="destructive"
+                          className="min-h-11 md:min-h-0"
                           onClick={() => onRemove(entry)}
                         >
                           <Trash2 className="size-4" />
@@ -184,16 +192,6 @@ export function WatchlistGridView({
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                    {/* detail link fills the row like the home/search action row */}
-                    <Link
-                      href={`/opcg/cards/${entry.card.cardCode}`}
-                      onClick={(e) => e.stopPropagation()}
-                      aria-label={t(lang, "viewDetails")}
-                      className="ml-auto inline-flex min-h-11 flex-1 items-center justify-center gap-1 rounded-md px-2 text-xs font-medium text-muted-foreground motion-base hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98] sm:min-h-9"
-                    >
-                      <span className="truncate">{t(lang, "viewDetails")}</span>
-                      <ArrowUpRight className="size-3.5 shrink-0" />
-                    </Link>
                   </div>
                 )
               }

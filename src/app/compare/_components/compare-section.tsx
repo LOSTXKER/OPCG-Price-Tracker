@@ -25,9 +25,13 @@ export function CompareSection({
 }) {
   return (
     <section id={id} className="scroll-mt-24">
-      <header className="mb-2 flex items-end justify-between gap-3 border-b border-hair pb-3 sm:pb-4">
+      <header className="mb-2 flex flex-col gap-3 border-b border-hair pb-3 sm:flex-row sm:items-end sm:justify-between sm:pb-4">
         <h2 className="text-h2 sm:text-h1">{title}</h2>
-        {action}
+        {action ? (
+          <div className="no-sb w-full min-w-0 overflow-x-auto pb-px sm:w-auto sm:max-w-full">
+            {action}
+          </div>
+        ) : null}
       </header>
       <div>{children}</div>
     </section>
@@ -301,4 +305,3 @@ export function CompareFact({
     </div>
   );
 }
-

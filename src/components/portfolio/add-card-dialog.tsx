@@ -4,6 +4,7 @@ import { toast } from "sonner"
 
 import { CardBatchPickerDialog } from "@/components/shared/card-batch-picker-dialog"
 import { t } from "@/lib/i18n"
+import type { PortfolioBatchResult } from "@/lib/types/portfolio"
 import { useUIStore } from "@/stores/ui-store"
 
 import { type CartItem } from "./add-card-types"
@@ -20,14 +21,12 @@ export function AddCardDialog({
   open,
   onOpenChange,
   onAddBatch,
+  portfolioName,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onAddBatch: (items: CartItem[]) => Promise<{
-    ok: boolean
-    failed: number
-    limitReached?: boolean
-  }>
+  portfolioName?: string
+  onAddBatch: (items: CartItem[]) => Promise<PortfolioBatchResult>
 }) {
   const lang = useUIStore((s) => s.language)
 
@@ -40,12 +39,19 @@ export function AddCardDialog({
           cards.map((card) => ({ card, quantity: 1, purchasePrice: null })),
         )
         if (!result.ok && !result.limitReached) {
-          toast.error(t(lang, "addFailed"))
+          toast.error(t(lang, "addFailed"), {
+            description: result.error || undefined,
+          })
         }
         return result.ok
       }}
       emptySubmitLabel={t(lang, "selectCardsToAdd")}
-      submitLabel={(count) => `${t(lang, "addToPortfolio")} (${count})`}
+      submitLabel={(count) => {
+        const label = portfolioName
+          ? t(lang, "addCardsToPortfolio").replace("{name}", portfolioName)
+          : t(lang, "addToPortfolio")
+        return `${label} (${count})`
+      }}
     />
   )
 }

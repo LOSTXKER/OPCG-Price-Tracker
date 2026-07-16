@@ -1,7 +1,16 @@
 "use client"
 
-import { useState } from "react"
-import { Briefcase, Check, ChevronDown, Lock, Plus, Settings2 } from "lucide-react"
+import { useRef, useState } from "react"
+import { toast } from "sonner"
+import {
+  Briefcase,
+  Check,
+  ChevronDown,
+  Globe,
+  Lock,
+  Plus,
+  Settings2,
+} from "lucide-react"
 
 import {
   DropdownMenu,
@@ -22,26 +31,32 @@ import {
 import { cn } from "@/lib/utils"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
-import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
+import { formatJpyAmount } from "@/lib/utils/currency"
 import { MASKED } from "@/lib/constants/ui"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
 import { PortfolioSidebar } from "./portfolio-selector"
-import type { PortfolioMeta } from "@/lib/types/portfolio"
+import {
+  PortfolioCreateDialog,
+  type PortfolioCreateHandler,
+} from "./portfolio-create-dialog"
+import { getPortfolioCreateCopy } from "./portfolio-create-copy"
+import type { PortfolioMeta, PortfolioMutationResult } from "@/lib/types/portfolio"
 
 interface PortfolioSwitcherProps {
   portfolios: PortfolioMeta[]
   activeId: number | null
-  activeName: string
   onSelect: (id: number) => void
-  onCreate: (name: string) => void
-  onRename: (id: number, name: string) => void
-  onDelete: (id: number) => void
+  onCreate: PortfolioCreateHandler<{ id: number }>
+  onCreatedPortfolio: (id: number) => void
+  onRename: (id: number, name: string) => Promise<PortfolioMutationResult<unknown>>
+  onSetVisibility: (
+    id: number,
+    isPublic: boolean,
+  ) => Promise<PortfolioMutationResult<unknown>>
+  onDelete: (id: number) => Promise<PortfolioMutationResult<unknown>>
   totalAllPortfolios: number
-  totalPnlPctAll: number
-  hasOverallPnl: boolean
   hideBalance?: boolean
-  /** Hide the pill's total while the page is scoped to one game — the pill's
-   *  number is the ALL-GAMES book total and would contradict the scoped hero. */
+  /** Hide the multi-portfolio total while the page is scoped to one game. */
   totalVisible?: boolean
   maxPortfolios?: number
 }
@@ -50,20 +65,30 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
   const {
     portfolios,
     activeId,
-    activeName,
     onSelect,
     totalAllPortfolios,
-    totalPnlPctAll,
-    hasOverallPnl,
     hideBalance,
     totalVisible = true,
   } = props
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
   const [sheetOpen, setSheetOpen] = useState(false)
-  // When true, the manage dialog opens straight into the create form.
-  const [createOnOpen, setCreateOnOpen] = useState(false)
+  const [createOpen, setCreateOpen] = useState(false)
+  const mobileTriggerRef = useRef<HTMLButtonElement>(null)
+  const desktopTriggerRef = useRef<HTMLButtonElement>(null)
+  const activePortfolio = portfolios.find((portfolio) => portfolio.id === activeId)
   const multi = portfolios.length > 1
+  const overallCopyCount = portfolios.reduce(
+    (sum, portfolio) => sum + portfolio.totalCopyCount,
+    0,
+  )
+  const overallValuedCopyCount = portfolios.reduce(
+    (sum, portfolio) => sum + portfolio.valuedCopyCount,
+    0,
+  )
+  const overallValuationComplete =
+    overallCopyCount > 0 && overallValuedCopyCount === overallCopyCount
+  const overallValueAvailable = overallValuedCopyCount > 0
   const { openUpgradeDialog } = useUpgradeDialog()
 
   const maxPortfolios = props.maxPortfolios
@@ -76,17 +101,31 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
         .replace("{n}", String(portfolios.length))
         .replace("{max}", String(maxPortfolios))
     : t(lang, "portfolioCountOnly").replace("{n}", String(portfolios.length))
+  const overallValueLabel = hideBalance
+    ? MASKED
+    : !overallValueAvailable
+      ? "—"
+      : `${overallValuationComplete ? "" : "≈ "}${formatJpyAmount(totalAllPortfolios, currency)}`
+  const activePrivacyLabel = activePortfolio
+    ? t(lang, activePortfolio.isPublic ? "portfolioPublic" : "portfolioPrivate")
+    : null
+  const switcherAccessibleLabel = activePortfolio
+    ? `${t(lang, "switchPortfolio")}: ${activePortfolio.name}, ${activePrivacyLabel}`
+    : t(lang, "switchPortfolio")
 
-  const openManage = (create: boolean) => {
-    setCreateOnOpen(create)
-    setSheetOpen(true)
-  }
+  const getVisibleSwitcherTrigger = () =>
+    [mobileTriggerRef.current, desktopTriggerRef.current].find(
+      (element): element is HTMLButtonElement =>
+        element != null && element.getClientRects().length > 0,
+    ) ?? null
 
   const handleCreateClick = () => {
     if (atLimit) {
       openUpgradeDialog({ featureKey: "portfolioCount" })
     } else {
-      openManage(true)
+      // Keep the create dialog outside the management dialog's focus trap.
+      setSheetOpen(false)
+      setCreateOpen(true)
     }
   }
 
@@ -97,22 +136,16 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
       </span>
       <span className="min-w-0 flex-1">
         <span className="block max-w-[9rem] truncate text-sm font-semibold leading-tight sm:max-w-[12rem]">
-          {activeName}
+          {activePortfolio?.name ?? t(lang, "portfolio")}
         </span>
-        {totalVisible && (
-          <span className="block tabular-nums text-meta leading-tight">
-            {hideBalance ? "••••" : formatJpyAmount(totalAllPortfolios, currency)}
-            {multi && hasOverallPnl && !hideBalance && (
-              <span
-                className={cn(
-                  "ml-1.5 font-semibold",
-                  totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
-                )}
-              >
-                {totalPnlPctAll >= 0 ? "+" : ""}
-                {formatPct(totalPnlPctAll, 1)}%
-              </span>
+        {activePortfolio && (
+          <span className="flex items-center gap-1 text-meta leading-tight">
+            {activePortfolio.isPublic ? (
+              <Globe className="size-3" aria-hidden />
+            ) : (
+              <Lock className="size-3" aria-hidden />
             )}
+            {t(lang, activePortfolio.isPublic ? "portfolioPublic" : "portfolioPrivate")}
           </span>
         )}
       </span>
@@ -124,10 +157,13 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
     <>
       {/* Mobile / tablet: open management sheet */}
       <button
+        ref={mobileTriggerRef}
         type="button"
         className="min-w-0 md:hidden"
-        onClick={() => openManage(false)}
-        aria-label={t(lang, "switchPortfolio")}
+        onClick={() => setSheetOpen(true)}
+        aria-label={switcherAccessibleLabel}
+        aria-haspopup="dialog"
+        aria-expanded={sheetOpen}
       >
         {pill}
       </button>
@@ -136,8 +172,9 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
       <div className="hidden min-w-0 md:block">
         <DropdownMenu>
           <DropdownMenuTrigger
+            ref={desktopTriggerRef}
             className="min-w-0 outline-none"
-            aria-label={t(lang, "switchPortfolio")}
+            aria-label={switcherAccessibleLabel}
           >
             {pill}
           </DropdownMenuTrigger>
@@ -148,9 +185,9 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
               <DropdownMenuLabel className="flex items-center justify-between">
                 <span>{multi ? t(lang, "allPortfolios") : t(lang, "portfolio")}</span>
                 <span className="flex items-center gap-2">
-                  {multi && (
+                  {multi && totalVisible && (
                     <span className="tabular-nums text-foreground">
-                      {hideBalance ? "••••" : formatJpyAmount(totalAllPortfolios, currency)}
+                      {overallValueLabel}
                     </span>
                   )}
                   <span className="tabular-nums font-normal text-muted-foreground">
@@ -162,8 +199,6 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
             <DropdownMenuSeparator />
             {portfolios.map((p) => {
               const active = p.id === activeId
-              const pnlPct =
-                p.totalCost > 0 ? ((p.totalValue - p.totalCost) / p.totalCost) * 100 : null
               return (
                 <DropdownMenuItem
                   key={p.id}
@@ -181,19 +216,12 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
                   <span className="min-w-0 flex-1 truncate text-sm">{p.name}</span>
                   <span className="shrink-0 text-right">
                     <span className="block tabular-nums text-xs">
-                      {hideBalance ? "••••" : formatJpyAmount(p.totalValue, currency)}
+                      {hideBalance
+                        ? MASKED
+                        : p.valuedCopyCount === 0
+                          ? "—"
+                          : `${p.valuationComplete ? "" : "≈ "}${formatJpyAmount(p.totalValue, currency)}`}
                     </span>
-                    {pnlPct != null && !hideBalance && (
-                      <span
-                        className={cn(
-                          "block tabular-nums text-micro",
-                          pnlPct >= 0 ? "text-price-up" : "text-price-down",
-                        )}
-                      >
-                        {pnlPct >= 0 ? "+" : ""}
-                        {formatPct(pnlPct, 1)}%
-                      </span>
-                    )}
                   </span>
                   {active && <Check className="size-3.5 shrink-0 text-primary" />}
                 </DropdownMenuItem>
@@ -215,7 +243,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
                 </span>
               )}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => openManage(false)} className="gap-2.5">
+            <DropdownMenuItem onClick={() => setSheetOpen(true)} className="gap-2.5">
               <Settings2 className="size-4 text-muted-foreground" />
               {t(lang, "managePortfolios")}
             </DropdownMenuItem>
@@ -227,32 +255,18 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
           centered modal; the owner vetoed bottom sheets app-wide. */}
       <Dialog
         open={sheetOpen}
-        onOpenChange={(open) => {
-          setSheetOpen(open)
-          if (!open) setCreateOnOpen(false)
-        }}
+        onOpenChange={setSheetOpen}
       >
         <DialogContent className="max-h-[78vh] overflow-y-auto sm:max-w-md">
           <DialogHeader className="pb-2">
             <DialogTitle>{t(lang, "portfolio")}</DialogTitle>
             <DialogDescription className="tabular-nums">
-              {multi && (
+              {multi && totalVisible && (
                 <>
                   {t(lang, "allPortfolios")}{" "}
                   <span className="font-semibold text-foreground">
-                    {hideBalance ? MASKED : formatJpyAmount(totalAllPortfolios, currency)}
+                    {overallValueLabel}
                   </span>
-                  {hasOverallPnl && !hideBalance && (
-                    <span
-                      className={cn(
-                        "ml-1.5 font-semibold",
-                        totalPnlPctAll >= 0 ? "text-price-up" : "text-price-down",
-                      )}
-                    >
-                      {totalPnlPctAll >= 0 ? "+" : ""}
-                      {formatPct(totalPnlPctAll, 1)}%
-                    </span>
-                  )}
                   <span aria-hidden className="mx-1.5 text-muted-foreground/40">
                     ·
                   </span>
@@ -268,15 +282,29 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
               onSelect(id)
               setSheetOpen(false)
             }}
-            onCreate={props.onCreate}
+            onCreateRequest={handleCreateClick}
             onRename={props.onRename}
+            onSetVisibility={props.onSetVisibility}
             onDelete={props.onDelete}
             hideBalance={hideBalance}
             maxPortfolios={props.maxPortfolios}
-            initialCreating={createOnOpen}
           />
         </DialogContent>
       </Dialog>
+
+      <PortfolioCreateDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onCreate={props.onCreate}
+        onCreated={(result, input) => {
+          toast.success(t(lang, "portfolioCreated"), { description: input.name })
+          props.onCreatedPortfolio(result.data.id)
+        }}
+        title={t(lang, "createPortfolioTitle")}
+        description={t(lang, "createPortfolioDesc")}
+        copy={getPortfolioCreateCopy(lang, t(lang, "createAndAddCards"))}
+        finalFocus={getVisibleSwitcherTrigger}
+      />
     </>
   )
 }

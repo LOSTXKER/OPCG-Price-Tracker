@@ -30,6 +30,7 @@ import { Surface } from "@/components/ui/surface";
 import type { PriceAlertItem } from "@/components/alerts/alert-types";
 import { useUIStore } from "@/stores/ui-store";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
+import { DEFAULT_GAME } from "@/lib/game/constants";
 import { getCardName, getLocale, t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { formatByCurrency } from "@/lib/utils/currency";
@@ -56,6 +57,7 @@ export function AlertRow({
   const lang = useUIStore((s) => s.language);
   const currency = useUIStore((s) => s.currency);
   const cardName = getCardName(lang, alert.card);
+  const gameSlug = alert.card.set?.game?.slug ?? DEFAULT_GAME;
   const target = formatByCurrency(alert.targetPrice, currency).primary;
   const current =
     alert.card.latestPriceJpy != null
@@ -89,7 +91,7 @@ export function AlertRow({
       <div className="flex gap-3 sm:gap-4">
         {/* Card image — preserves card aspect ratio (63:88 portrait) */}
         <Link
-          href={`/opcg/cards/${alert.card.cardCode}`}
+          href={`/${gameSlug}/cards/${alert.card.cardCode}`}
           className="relative aspect-[63/88] w-12 shrink-0 overflow-hidden rounded-md bg-muted sm:w-14"
         >
           {alert.card.imageUrl ? (
@@ -110,8 +112,8 @@ export function AlertRow({
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
               <Link
-                href={`/opcg/cards/${alert.card.cardCode}`}
-                className="block truncate text-sm font-semibold hover:underline"
+                href={`/${gameSlug}/cards/${alert.card.cardCode}`}
+                className="flex min-h-11 items-center truncate text-sm font-semibold hover:underline md:min-h-0"
               >
                 {cardName}
               </Link>
@@ -129,8 +131,8 @@ export function AlertRow({
 
             {/* Actions */}
             <div className="-mr-1 -mt-1 flex shrink-0 items-center">
-              {/* Desktop (≥sm): inline icon buttons — the row has room. */}
-              <div className="hidden items-center sm:flex">
+              {/* Desktop (≥md): inline icon buttons — the row has room. */}
+              <div className="hidden items-center md:flex">
                 {onEdit && (
                   <Button
                     size="icon-sm"
@@ -170,31 +172,38 @@ export function AlertRow({
                 </Button>
               </div>
 
-              {/* Mobile (<sm): fold edit / reactivate / delete into one 44px
+              {/* Mobile (<md): fold edit / reactivate / delete into one 44px
                   overflow menu so the dense cluster isn't easy to mis-tap. */}
               <DropdownMenu>
                 <DropdownMenuTrigger
                   aria-label={t(lang, "moreActions")}
                   disabled={busy}
-                  className="inline-flex size-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted sm:hidden"
+                  className="inline-flex size-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted md:hidden"
                 >
                   <MoreHorizontal className="size-5" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   {onEdit && (
-                    <DropdownMenuItem onClick={onEdit}>
+                    <DropdownMenuItem className="min-h-11 md:min-h-0" onClick={onEdit}>
                       <Pencil className="size-4" />
                       {t(lang, "edit")}
                     </DropdownMenuItem>
                   )}
                   {onReactivate && (
-                    <DropdownMenuItem onClick={onReactivate}>
+                    <DropdownMenuItem
+                      className="min-h-11 md:min-h-0"
+                      onClick={onReactivate}
+                    >
                       <RotateCcw className="size-4" />
                       {t(lang, "reactivate")}
                     </DropdownMenuItem>
                   )}
                   {(onEdit || onReactivate) && <DropdownMenuSeparator />}
-                  <DropdownMenuItem variant="destructive" onClick={onDelete}>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    className="min-h-11 md:min-h-0"
+                    onClick={onDelete}
+                  >
                     <Trash2 className="size-4" />
                     {t(lang, "delete")}
                   </DropdownMenuItem>

@@ -3,12 +3,19 @@
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
+import { MASKED } from "@/lib/constants/ui"
 import { useUIStore } from "@/stores/ui-store"
 import { t } from "@/lib/i18n"
 import { jpyToDisplayValue, formatDisplayValue, formatPct } from "@/lib/utils/currency"
 import type { AllocationSlice } from "@/lib/types/portfolio"
 
-export function PortfolioAllocationPanel({ allocation }: { allocation: AllocationSlice[] }) {
+export function PortfolioAllocationPanel({
+  allocation,
+  hideBalance = false,
+}: {
+  allocation: AllocationSlice[]
+  hideBalance?: boolean
+}) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
 
@@ -21,10 +28,9 @@ export function PortfolioAllocationPanel({ allocation }: { allocation: Allocatio
       <p className="text-eyebrow mb-3">{t(lang, "allocation")}</p>
       <div className="divide-y divide-hair">
         {allocation.map((slice, i) => {
-          const displayValue = formatDisplayValue(
-            jpyToDisplayValue(slice.value, currency),
-            currency,
-          )
+          const displayValue = hideBalance
+            ? MASKED
+            : formatDisplayValue(jpyToDisplayValue(slice.value, currency), currency)
           const pctStr = `${formatPct(slice.percent, 1)}%`
           const isTop = i === 0
           const barWidth = `${Math.min(Math.max(slice.percent, 0), 100)}%`

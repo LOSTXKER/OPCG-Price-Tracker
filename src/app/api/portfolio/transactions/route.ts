@@ -3,6 +3,8 @@ import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
+const BATCH_NOTE_PREFIX = "__portfolio_batch__:";
+
 export const GET = apiHandler(async (request: NextRequest) => {
   const auth = await requireAuthUser();
   if (!auth.ok) return auth.response;
@@ -37,7 +39,14 @@ export const GET = apiHandler(async (request: NextRequest) => {
     },
   });
 
-  return NextResponse.json({ transactions });
+  return NextResponse.json({
+    transactions: transactions.map((transaction) => ({
+      ...transaction,
+      note: transaction.note?.startsWith(BATCH_NOTE_PREFIX)
+        ? null
+        : transaction.note,
+    })),
+  });
 });
 
 export const DELETE = apiHandler(async (request: NextRequest) => {

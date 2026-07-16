@@ -6,6 +6,7 @@ import { ArrowDown, ArrowUp } from "lucide-react"
 import { Surface } from "@/components/ui/surface"
 import { getGameAccentTint, getGameConfig } from "@/lib/game-config"
 import { DEFAULT_GAME } from "@/lib/game/constants"
+import { MASKED } from "@/lib/constants/ui"
 import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
@@ -46,6 +47,7 @@ export function PortfolioGameBreakdown({
 
   // Sort descending by value so the largest position is first (gets honey tint).
   const sorted = [...breakdown].sort((a, b) => b.valueJpy - a.valueJpy)
+  const valuationComplete = breakdown.every((entry) => entry.valuationComplete)
 
   return (
     <Surface variant="panel" className="overflow-hidden">
@@ -57,8 +59,8 @@ export function PortfolioGameBreakdown({
       {/* One row per game */}
       <div className="divide-y divide-hair">
         {sorted.map((b) => {
-          const hasCost = b.costJpy > 0
-          const isUp = b.pnlPercent >= 0
+          const hasPerformance = b.performanceComplete && b.pnlPercent != null
+          const isUp = (b.pnlPercent ?? 0) >= 0
           // Clamp share to [0, 100] in case of rounding drift.
           const sharePct =
             totalValueJpy > 0
@@ -111,43 +113,54 @@ export function PortfolioGameBreakdown({
                 <div className="shrink-0 text-right">
                   <p className="tabular-nums text-sm font-bold">
                     {hideBalance
-                      ? "••••"
-                      : formatDisplayValue(
-                          jpyToDisplayValue(b.valueJpy, currency),
-                          currency,
-                        )}
+                      ? MASKED
+                      : b.valuedCopyCount === 0
+                        ? "—"
+                        : `${b.valuationComplete ? "" : "≈ "}${formatDisplayValue(
+                            jpyToDisplayValue(b.valueJpy, currency),
+                            currency,
+                          )}`}
                   </p>
-                  {hasCost && (
+                  {hasPerformance && (
                     <span
                       className={cn(
                         "inline-flex items-center gap-0.5 tabular-nums text-micro font-semibold",
-                        isUp ? "text-price-up" : "text-price-down",
+                        hideBalance
+                          ? "text-foreground"
+                          : isUp
+                            ? "text-price-up"
+                            : "text-price-down",
                       )}
                     >
-                      {isUp ? (
-                        <ArrowUp className="size-3" aria-hidden />
-                      ) : (
-                        <ArrowDown className="size-3" aria-hidden />
-                      )}
-                      {formatPct(Math.abs(b.pnlPercent), 1)}%
+                      {!hideBalance &&
+                        (isUp ? (
+                          <ArrowUp className="size-3" aria-hidden />
+                        ) : (
+                          <ArrowDown className="size-3" aria-hidden />
+                        ))}
+                      {hideBalance
+                        ? MASKED
+                        : `${formatPct(Math.abs(b.pnlPercent ?? 0), 1)}%`}
                     </span>
                   )}
                 </div>
               </div>
 
               {/* Share bar — each game carries its own thin tint over honey */}
-              <div
-                className="mt-2 h-1 overflow-hidden rounded-full bg-muted/60"
-                role="presentation"
-              >
+              {valuationComplete && (
                 <div
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${sharePct}%`,
-                    background: `color-mix(in srgb, ${getGameAccentTint(slug)} 55%, transparent)`,
-                  }}
-                />
-              </div>
+                  className="mt-2 h-1 overflow-hidden rounded-full bg-muted/60"
+                  role="presentation"
+                >
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${sharePct}%`,
+                      background: `color-mix(in srgb, ${getGameAccentTint(slug)} 55%, transparent)`,
+                    }}
+                  />
+                </div>
+              )}
             </>
           )
 

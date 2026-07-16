@@ -32,6 +32,15 @@ const RANGES: { id: RangeId; label: string; pts: number }[] = [
   { id: "ALL", label: "ALL", pts: Infinity },
 ]
 
+const RANGE_OPTIONS: SegmentedOption<RangeId>[] = RANGES.map((range) => ({
+  value: range.id,
+  label: range.label,
+}))
+
+const DISABLED_RANGE_OPTIONS: SegmentedOption<RangeId>[] = RANGE_OPTIONS.map(
+  (option) => ({ ...option, disabled: true }),
+)
+
 // ─── Color constants — semantic CSS variables only ───────────────────────────
 
 const HONEY = "var(--primary)"
@@ -65,11 +74,6 @@ export function PortfolioScrubChart({
   const [range, setRange] = useState<RangeId>(defaultRange)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
-
-  const rangeOptions: SegmentedOption<RangeId>[] = RANGES.map((r) => ({
-    value: r.id,
-    label: r.label,
-  }))
 
   // ── Data slicing ──────────────────────────────────────────────────────────
 
@@ -149,15 +153,16 @@ export function PortfolioScrubChart({
   if (data.length < 2) {
     return (
       <div className="space-y-3">
-        <div className="pointer-events-none flex justify-end opacity-40">
+        <div className="no-sb flex max-w-full overflow-x-auto pb-px">
           <SegmentedControl<RangeId>
-            options={rangeOptions}
+            options={DISABLED_RANGE_OPTIONS}
             value={range}
             onChange={() => {}}
             size="sm"
             variant="pill"
             leadingIcon={CalendarRange}
             ariaLabel={t(lang, "filter")}
+            className="ml-auto shrink-0"
           />
         </div>
         <div className="flex h-24 w-full items-center justify-center rounded-xl border border-dashed border-hair sm:h-28">
@@ -172,9 +177,9 @@ export function PortfolioScrubChart({
   if (filtered.length < 2) {
     return (
       <div className="space-y-3">
-        <div className="flex justify-end">
+        <div className="no-sb flex max-w-full overflow-x-auto pb-px">
           <SegmentedControl<RangeId>
-            options={rangeOptions}
+            options={RANGE_OPTIONS}
             value={range}
             onChange={(r) => {
               setRange(r)
@@ -184,6 +189,7 @@ export function PortfolioScrubChart({
             variant="pill"
             leadingIcon={CalendarRange}
             ariaLabel={t(lang, "filter")}
+            className="ml-auto shrink-0"
           />
         </div>
         <div className="flex h-24 w-full items-center justify-center rounded-xl border border-dashed border-hair sm:h-28">
@@ -198,9 +204,9 @@ export function PortfolioScrubChart({
   return (
     <div className="space-y-3">
       {/* Range selector */}
-      <div className="flex justify-end">
+      <div className="no-sb flex max-w-full overflow-x-auto pb-px">
         <SegmentedControl<RangeId>
-          options={rangeOptions}
+          options={RANGE_OPTIONS}
           value={range}
           onChange={(r) => {
             setRange(r)
@@ -210,6 +216,7 @@ export function PortfolioScrubChart({
           variant="pill"
           leadingIcon={CalendarRange}
           ariaLabel={t(lang, "filter")}
+          className="ml-auto shrink-0"
         />
       </div>
 

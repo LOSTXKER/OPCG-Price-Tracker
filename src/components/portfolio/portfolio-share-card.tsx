@@ -4,6 +4,7 @@ import { forwardRef, useMemo } from "react"
 
 import { getCardName, getLocale, t, type Language } from "@/lib/i18n"
 import { clientEnv } from "@/lib/env"
+import { MASKED } from "@/lib/constants/ui"
 import {
   formatJpyAmount,
   formatPct,
@@ -23,13 +24,18 @@ interface PortfolioShareCardProps {
   portfolioName: string
   totalValueJpy: number
   totalCostJpy: number
-  unrealizedPnl: number
-  unrealizedPnlPercent: number
+  unrealizedPnl: number | null
+  unrealizedPnlPercent: number | null
+  valuedCopyCount: number
+  valuationComplete: boolean
+  performanceComplete: boolean
   history: { label: string; value: number }[]
   assets: AssetRow[]
   lang: Language
   currency: Currency
   brand?: string
+  hideBalance?: boolean
+  maskText?: string
 }
 
 export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardProps>(
@@ -40,17 +46,25 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
       totalCostJpy,
       unrealizedPnl,
       unrealizedPnlPercent,
+      valuedCopyCount,
+      valuationComplete,
+      performanceComplete,
       history,
       assets,
       lang,
       currency,
       brand = "Meecard",
+      hideBalance = false,
+      maskText = MASKED,
     },
     ref,
   ) {
     const locale = getLocale(lang)
-    const hasCost = totalCostJpy > 0
-    const isUp = unrealizedPnl >= 0
+    const hasPerformance = performanceComplete && unrealizedPnl != null
+    const hasRoi = hasPerformance && unrealizedPnlPercent != null
+    const safePnl = unrealizedPnl ?? 0
+    const safeRoi = unrealizedPnlPercent ?? 0
+    const isUp = safePnl >= 0
 
     const top = useMemo(
       () => sortAssets(assets, "value", "desc").slice(0, 4),
@@ -116,7 +130,7 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
                 className="font-semibold uppercase tracking-[0.2em] text-muted-foreground/70"
                 style={{ fontSize: 14, letterSpacing: 3 }}
               >
-                {t(lang, "portfolioValue")}
+                {t(lang, valuationComplete ? "portfolioValue" : "portfolioEstimatedValue")}
               </p>
               <p
                 className="mt-2 text-muted-foreground"
@@ -132,29 +146,43 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
               className="font-extrabold tracking-tight tabular-nums"
               style={{ fontSize: 132, lineHeight: 1 }}
             >
-              {formatJpyAmount(totalValueJpy, currency)}
+              {hideBalance
+                ? maskText
+                : valuedCopyCount === 0
+                  ? "—"
+                  : `${valuationComplete ? "" : "≈ "}${formatJpyAmount(totalValueJpy, currency)}`}
             </span>
-            {hasCost && (
+            {hasRoi && (
               <span
                 className="rounded-full px-6 py-2 font-bold tabular-nums"
                 style={{
                   fontSize: 36,
-                  background: isUp
-                    ? "color-mix(in srgb, var(--color-price-up) 14%, transparent)"
-                    : "color-mix(in srgb, var(--color-price-down) 14%, transparent)",
-                  color: isUp
-                    ? "var(--color-price-up-on-soft)"
-                    : "var(--color-price-down-on-soft)",
+                  background: hideBalance
+                    ? "color-mix(in srgb, var(--color-muted-foreground) 10%, transparent)"
+                    : isUp
+                      ? "color-mix(in srgb, var(--color-price-up) 14%, transparent)"
+                      : "color-mix(in srgb, var(--color-price-down) 14%, transparent)",
+                  color: hideBalance
+                    ? "var(--color-muted-foreground)"
+                    : isUp
+                      ? "var(--color-price-up-on-soft)"
+                      : "var(--color-price-down-on-soft)",
                 }}
               >
-                {isUp ? "▲ " : "▼ "}
-                {isUp ? "+" : ""}
-                {formatPct(unrealizedPnlPercent, 2)}%
+                {hideBalance ? (
+                  maskText
+                ) : (
+                  <>
+                    {isUp ? "▲ " : "▼ "}
+                    {isUp ? "+" : ""}
+                    {formatPct(safeRoi, 2)}%
+                  </>
+                )}
               </span>
             )}
           </div>
 
-          {hasCost && (
+          {hasPerformance && (
             <div
               className="mt-5 flex flex-wrap items-center text-muted-foreground"
               style={{ fontSize: 26, gap: 28 }}
@@ -166,14 +194,22 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
                 <span
                   className="font-bold tabular-nums"
                   style={{
-                    color: isUp
-                      ? "var(--color-price-up-text)"
-                      : "var(--color-price-down-text)",
+                    color: hideBalance
+                      ? "var(--color-foreground)"
+                      : isUp
+                        ? "var(--color-price-up-text)"
+                        : "var(--color-price-down-text)",
                   }}
                 >
-                  {isUp ? "▲ " : "▼ "}
-                  {isUp ? "+" : ""}
-                  {formatJpyAmount(unrealizedPnl, currency)}
+                  {hideBalance ? (
+                    maskText
+                  ) : (
+                    <>
+                      {isUp ? "▲ " : "▼ "}
+                      {isUp ? "+" : ""}
+                      {formatJpyAmount(safePnl, currency)}
+                    </>
+                  )}
                 </span>
               </span>
               <span aria-hidden style={{ opacity: 0.3 }}>
@@ -184,13 +220,13 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
                   {t(lang, "costBasis")}
                 </span>{" "}
                 <span className="font-semibold tabular-nums text-foreground/80">
-                  {formatJpyAmount(totalCostJpy, currency)}
+                  {hideBalance ? maskText : formatJpyAmount(totalCostJpy, currency)}
                 </span>
               </span>
             </div>
           )}
 
-          {sparkData.length >= 2 && (
+          {performanceComplete && sparkData.length >= 2 && (
             <div className="mt-12">
               <ShareSparkline
                 data={sparkData}
@@ -224,6 +260,8 @@ export const PortfolioShareCard = forwardRef<HTMLDivElement, PortfolioShareCardP
                       row={row}
                       lang={lang}
                       currency={currency}
+                      hideBalance={hideBalance}
+                      maskText={maskText}
                     />
                   ))}
                 </div>
@@ -252,10 +290,14 @@ function HoldingTile({
   row,
   lang,
   currency,
+  hideBalance,
+  maskText,
 }: {
   row: AssetRow
   lang: Language
   currency: Currency
+  hideBalance: boolean
+  maskText: string
 }) {
   const name = getCardName(lang, row)
   const value = holdingValue(row)
@@ -307,21 +349,28 @@ function HoldingTile({
             className="font-bold tabular-nums"
             style={{ fontSize: 24 }}
           >
-            {formatJpyAmount(value, currency)}
+            {hideBalance ? maskText : formatJpyAmount(value, currency)}
           </span>
-          {pnl ? (
+          {pnl?.pct != null ? (
             <span
               className="font-semibold tabular-nums"
               style={{
                 fontSize: 18,
-                color:
-                  pnl.pct >= 0
+                color: hideBalance
+                  ? "var(--color-foreground)"
+                  : pnl.pct >= 0
                     ? "var(--color-price-up-text)"
                     : "var(--color-price-down-text)",
               }}
             >
-              {pnl.pct >= 0 ? "+" : ""}
-              {formatPct(pnl.pct)}%
+              {hideBalance ? (
+                maskText
+              ) : (
+                <>
+                  {pnl.pct >= 0 ? "+" : ""}
+                  {formatPct(pnl.pct)}%
+                </>
+              )}
             </span>
           ) : null}
         </div>

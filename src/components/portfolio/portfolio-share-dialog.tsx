@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { t } from "@/lib/i18n"
+import { MASKED } from "@/lib/constants/ui"
 import { useUIStore } from "@/stores/ui-store"
 import type { AssetRow, PortfolioStats } from "@/lib/types/portfolio"
 
@@ -28,6 +29,7 @@ interface PortfolioShareDialogProps {
   stats: PortfolioStats
   history: { label: string; value: number }[]
   assets: AssetRow[]
+  hideBalance?: boolean
 }
 
 type Action = "download" | "copy" | "share" | null
@@ -39,6 +41,7 @@ export function PortfolioShareDialog({
   stats,
   history,
   assets,
+  hideBalance = false,
 }: PortfolioShareDialogProps) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -168,10 +171,15 @@ export function PortfolioShareDialog({
               totalCostJpy={stats.totalCostJpy}
               unrealizedPnl={stats.unrealizedPnl}
               unrealizedPnlPercent={stats.unrealizedPnlPercent}
+              valuedCopyCount={stats.valuedCopyCount}
+              valuationComplete={stats.valuationComplete}
+              performanceComplete={stats.performanceComplete}
               history={history}
               assets={assets}
               lang={lang}
               currency={currency}
+              hideBalance={hideBalance}
+              maskText={MASKED}
             />
           </PreviewScaler>
         </div>

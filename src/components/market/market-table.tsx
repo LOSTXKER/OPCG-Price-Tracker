@@ -48,6 +48,7 @@ export function MarketTable({
   inFeedAd,
   surface = "card",
   showMobileSort = true,
+  mobileSortAppearance = "soft",
 }: {
   cards: CardRow[]
   rankOffset: number
@@ -70,6 +71,8 @@ export function MarketTable({
   surface?: "card" | "canvas"
   /** Home composes sorting into its mobile toolbar; other consumers keep it here. */
   showMobileSort?: boolean
+  /** Let a caller strengthen only its own mobile sort affordance. */
+  mobileSortAppearance?: "soft" | "outline"
 }) {
   const lang = useUIStore((s) => s.language)
   const showSkeleton = isPending && cards.length === 0
@@ -95,6 +98,7 @@ export function MarketTable({
             }))}
             activeKey={(sortCol ?? "") as ColumnId}
             activeDir={sortDir}
+            appearance={mobileSortAppearance}
             onChange={(key) => onColumnSort(key)}
             fallbackLabel={t(lang, "sortBy")}
             align="start"

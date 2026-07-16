@@ -33,8 +33,8 @@ export function PortfolioHeroPanel({
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
 
-  const hasCost = stats.totalCostJpy > 0
-  const isUp = stats.unrealizedPnl >= 0
+  const hasPerformance = stats.performanceComplete && stats.unrealizedPnl != null
+  const isUp = (stats.unrealizedPnl ?? 0) >= 0
   const money = (jpy: number) =>
     hideBalance ? MASKED : formatDisplayValue(jpyToDisplayValue(jpy, currency), currency)
 
@@ -44,51 +44,71 @@ export function PortfolioHeroPanel({
         valueJpy={stats.totalValueJpy}
         deltaJpy={stats.unrealizedPnl}
         deltaPct={stats.unrealizedPnlPercent}
-        hasPnl={hasCost}
+        hasPnl={hasPerformance}
+        valueAvailable={stats.valuedCopyCount > 0}
+        valuationComplete={stats.valuationComplete}
         hideBalance={hideBalance}
         scopeLabel={scopeLabel}
       />
 
-      {/* Stat row — P/L · Cost Basis · Best · Worst (no market-value repeat) */}
-      <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-hair pt-4 sm:grid-cols-4">
-        <div>
-          <p className="text-eyebrow">{t(lang, "pnl")}</p>
-          <p className="mt-1">
-            {hasCost ? (
-              <span
-                className={cn(
-                  "inline-flex items-center gap-0.5 text-price",
-                  hideBalance ? "text-foreground" : isUp ? "text-price-up" : "text-price-down",
-                )}
-              >
-                {!hideBalance &&
-                  (isUp ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />)}
-                {hideBalance
-                  ? MASKED
-                  : `${isUp ? "+" : "−"}${money(Math.abs(stats.unrealizedPnl))}`}
-              </span>
-            ) : (
-              <span className="text-price text-muted-foreground">—</span>
-            )}
-          </p>
-        </div>
+      {hasPerformance ? (
+        /* Stat row — P/L · Cost Basis · Best · Worst (no market-value repeat) */
+        <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-hair pt-4 sm:grid-cols-4">
+          <div>
+            <p className="text-eyebrow">{t(lang, "pnl")}</p>
+            <p className="mt-1">
+              {stats.unrealizedPnl != null ? (
+                <span
+                  className={cn(
+                    "inline-flex items-center gap-0.5 text-price",
+                    hideBalance
+                      ? "text-foreground"
+                      : isUp
+                        ? "text-price-up"
+                        : "text-price-down",
+                  )}
+                >
+                  {!hideBalance &&
+                    (isUp ? (
+                      <ArrowUp className="size-3" />
+                    ) : (
+                      <ArrowDown className="size-3" />
+                    ))}
+                  {hideBalance
+                    ? MASKED
+                    : `${isUp ? "+" : "−"}${money(Math.abs(stats.unrealizedPnl))}`}
+                </span>
+              ) : (
+                <span className="text-price text-muted-foreground">—</span>
+              )}
+            </p>
+          </div>
 
-        <div>
-          <p className="text-eyebrow">{t(lang, "costBasis")}</p>
-          <p className="mt-1 text-price text-foreground/80">{money(stats.totalCostJpy)}</p>
-        </div>
+          <div>
+            <p className="text-eyebrow">{t(lang, "costBasis")}</p>
+            <p className="mt-1 text-price text-foreground/80">
+              {money(stats.totalCostJpy)}
+            </p>
+          </div>
 
-        <PerformerStat
-          label={t(lang, "bestPerformer")}
-          performer={stats.bestPerformer}
-          hideBalance={hideBalance}
-        />
-        <PerformerStat
-          label={t(lang, "worstPerformer")}
-          performer={stats.worstPerformer}
-          hideBalance={hideBalance}
-        />
-      </div>
+          <PerformerStat
+            label={t(lang, "bestPerformer")}
+            performer={stats.bestPerformer}
+            hideBalance={hideBalance}
+            formatMoney={money}
+          />
+          <PerformerStat
+            label={t(lang, "worstPerformer")}
+            performer={stats.worstPerformer}
+            hideBalance={hideBalance}
+            formatMoney={money}
+          />
+        </div>
+      ) : (
+        <p className="mt-4 border-t border-hair pt-4 text-meta">
+          {t(lang, "portfolioPerformanceIncomplete")}
+        </p>
+      )}
     </Surface>
   )
 }
@@ -97,10 +117,12 @@ function PerformerStat({
   label,
   performer,
   hideBalance,
+  formatMoney,
 }: {
   label: string
-  performer: { name: string; pnl: number; pnlPercent: number } | null
+  performer: { name: string; pnl: number; pnlPercent: number | null } | null
   hideBalance: boolean
+  formatMoney: (jpy: number) => string
 }) {
   const up = (performer?.pnl ?? 0) >= 0
   return (
@@ -109,7 +131,9 @@ function PerformerStat({
       {performer ? (
         <p className="mt-1 flex items-baseline gap-1.5">
           <span className="truncate text-sm font-medium">{performer.name}</span>
-          {!hideBalance && (
+          {hideBalance ? (
+            <span className="shrink-0 text-micro tabular-nums text-foreground">{MASKED}</span>
+          ) : (
             <span
               className={cn(
                 "inline-flex shrink-0 items-center gap-0.5 font-price text-micro tabular-nums",
@@ -117,7 +141,9 @@ function PerformerStat({
               )}
             >
               {up ? <ArrowUp className="size-2.5" /> : <ArrowDown className="size-2.5" />}
-              {formatPct(Math.abs(performer.pnlPercent), 1)}%
+              {performer.pnlPercent != null
+                ? `${formatPct(Math.abs(performer.pnlPercent), 1)}%`
+                : formatMoney(Math.abs(performer.pnl))}
             </span>
           )}
         </p>

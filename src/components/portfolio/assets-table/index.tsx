@@ -138,6 +138,7 @@ export function PortfolioAssetsTable({
           onOpenChange={setEditOpen}
           assets={assets}
           focusItemId={editFocusId}
+          hideBalance={hideBalance}
           onUpdate={onUpdate}
           onRemove={onRemove}
         />
@@ -146,6 +147,7 @@ export function PortfolioAssetsTable({
           open={editOpen}
           onOpenChange={setEditOpen}
           assets={assets}
+          hideBalance={hideBalance}
           onUpdate={onUpdate}
           onRemove={onRemove}
         />

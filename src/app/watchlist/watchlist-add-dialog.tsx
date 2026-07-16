@@ -28,9 +28,11 @@ export function WatchlistAddDialog({
   const { openUpgradeDialog } = useUpgradeDialog();
 
   const addCards = async (cards: CardWithSet[]) => {
+    let addedCount = 0;
     try {
       for (const card of cards) {
         await apiPost("/api/watchlist", { cardId: card.id });
+        addedCount += 1;
       }
       toast.success(t(lang, "addToWatchlist"), {
         description: `${cards.length} ${t(lang, "card")}`,
@@ -38,6 +40,10 @@ export function WatchlistAddDialog({
       onAdded();
       return true;
     } catch (err) {
+      // Requests are sequential, so an early card may already be persisted
+      // when a later one hits the tier limit or the network fails. Refresh the
+      // page/store snapshot even while keeping the picker open for retry.
+      if (addedCount > 0) onAdded();
       if (err instanceof ApiError && err.status === 403) {
         openUpgradeDialog({ featureKey: "watchlistCards" });
       } else {

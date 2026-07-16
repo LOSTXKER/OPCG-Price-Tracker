@@ -16,6 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { getCardName, t, type Language } from "@/lib/i18n"
+import { MASKED } from "@/lib/constants/ui"
 import type { AssetRow } from "@/lib/types/portfolio"
 import { cn } from "@/lib/utils"
 import { currencySymbol, displayValueToJpy, formatPct, jpyToDisplayValue } from "@/lib/utils/currency"
@@ -33,6 +34,7 @@ function CardEditFull({
   cost,
   onCostChange,
   costSymbol,
+  hideBalance,
   notes,
   onNotesChange,
   isPrivate,
@@ -46,6 +48,7 @@ function CardEditFull({
   cost: string
   onCostChange: (v: string) => void
   costSymbol: string
+  hideBalance: boolean
   notes: string
   onNotesChange: (v: string) => void
   isPrivate: boolean
@@ -88,10 +91,21 @@ function CardEditFull({
           </p>
           {row.currentPrice != null && (
             <div className="mt-3 flex items-center gap-2">
-              <span className="tabular-nums text-lg font-bold leading-none">
-                <Price jpy={row.currentPrice} />
-              </span>
-              {pnlResult && (
+              {hideBalance ? (
+                <>
+                  <span className="tabular-nums text-lg font-bold leading-none">{MASKED}</span>
+                  {pnlResult?.pct != null && (
+                    <span className="rounded-full bg-muted px-2 py-0.5 tabular-nums text-micro text-muted-foreground">
+                      {MASKED}
+                    </span>
+                  )}
+                </>
+              ) : (
+                <span className="tabular-nums text-lg font-bold leading-none">
+                  <Price jpy={row.currentPrice} />
+                </span>
+              )}
+              {!hideBalance && pnlResult?.pct != null && (
                 <span
                   className={cn(
                     "rounded-full px-2 py-0.5 tabular-nums text-micro",
@@ -126,20 +140,26 @@ function CardEditFull({
           <label className="mb-1.5 block text-eyebrow text-muted-foreground/60">
             {t(lang, "costBasis")}
           </label>
-          <div className="relative">
-            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground/50">
-              {costSymbol}
-            </span>
-            <input
-              className="w-full rounded-lg border border-hair bg-muted/20 py-2.5 pl-7 pr-3 text-sm tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
-              value={cost}
-              onChange={(e) => onCostChange(e.target.value)}
-              type="number"
-              step="1"
-              min={0}
-              placeholder="—"
-            />
-          </div>
+          {hideBalance ? (
+            <div className="flex min-h-10 items-center rounded-lg border border-hair bg-muted/20 px-3 text-sm tabular-nums text-muted-foreground">
+              {MASKED}
+            </div>
+          ) : (
+            <div className="relative">
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground/50">
+                {costSymbol}
+              </span>
+              <input
+                className="w-full rounded-lg border border-hair bg-muted/20 py-2.5 pl-7 pr-3 text-sm tabular-nums outline-none transition-all focus:border-primary/40 focus:bg-background focus:ring-2 focus:ring-primary/20"
+                value={cost}
+                onChange={(e) => onCostChange(e.target.value)}
+                type="number"
+                step="1"
+                min={0}
+                placeholder="—"
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -205,6 +225,7 @@ export function SingleEditDialog({
   onOpenChange,
   assets,
   focusItemId,
+  hideBalance = false,
   onUpdate,
   onRemove,
 }: {
@@ -212,6 +233,7 @@ export function SingleEditDialog({
   onOpenChange: (open: boolean) => void
   assets: AssetRow[]
   focusItemId: number
+  hideBalance?: boolean
   onUpdate: (
     itemId: number,
     data: {
@@ -252,13 +274,14 @@ export function SingleEditDialog({
     if (!row) return false
     const parsedQty = parseInt(qty)
     const qtyChanged = Number.isInteger(parsedQty) && parsedQty >= 1 && parsedQty !== row.quantity
-    const costChanged = cost !== initialCost && parseCostValue(cost) !== undefined
+    const costChanged =
+      !hideBalance && cost !== initialCost && parseCostValue(cost) !== undefined
     const privacyChanged = isPrivate !== row.isPrivate
     const trimmedNotes = notes.trim()
     const nextNotes = trimmedNotes.length === 0 ? null : trimmedNotes
     const notesChanged = nextNotes !== (row.notes ?? null)
     return qtyChanged || costChanged || privacyChanged || notesChanged
-  }, [qty, cost, initialCost, notes, isPrivate, row])
+  }, [qty, cost, initialCost, notes, isPrivate, row, hideBalance])
 
   const handleSave = () => {
     if (!row) return
@@ -270,7 +293,7 @@ export function SingleEditDialog({
     } = {}
     const q = parseInt(qty)
     if (Number.isInteger(q) && q >= 1 && q !== row.quantity) data.quantity = q
-    if (cost !== initialCost) {
+    if (!hideBalance && cost !== initialCost) {
       const costVal = parseCostValue(cost)
       if (costVal !== undefined) {
         data.purchasePrice = costVal === null ? null : displayValueToJpy(costVal, currency)
@@ -301,6 +324,7 @@ export function SingleEditDialog({
           cost={cost}
           onCostChange={setCost}
           costSymbol={currencySymbol(currency)}
+          hideBalance={hideBalance}
           notes={notes}
           onNotesChange={setNotes}
           isPrivate={isPrivate}

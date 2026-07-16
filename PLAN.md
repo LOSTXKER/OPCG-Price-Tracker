@@ -15,6 +15,15 @@
 - [ ] **Phase 6** IA/naming polish (ชื่อ/ไอคอนปลายทางเดียว · palette ครบ destination)
 - [ ] **Phase 7** commerce + admin เก็บกวาด (**ก่อนเปิด marketplace flag**)
 
+### Portfolio gateway consolidation — 2026-07-16
+> ยกเลิก Manager Hub ที่โล่งและแสดงข้อมูลซ้ำ ให้ `/portfolio` เป็น gateway ไปพอร์ตล่าสุด และรวมการสลับ/จัดการไว้ใน Detail โดยไม่แตะ schema/dependency/config
+
+- [x] **PG1 — Gateway:** server auth + ownership-validated `portfolio-last-active` cookie + deterministic fallback; guest/zero/error/loading ใช้โครง Detail
+- [x] **PG2 — Detail flow:** ตัด breadcrumb/back/ยอดรวมซ้ำ, create → `?add=1`, ล้าง query เมื่อปิด และ delete current → next/zero ด้วย replace navigation
+- [x] **PG3 — Consolidated management:** switcher dialog จัดการ rename/privacy/delete ได้ทุกพอร์ต พร้อม confirmation, pending/error และ touch target ≥44px
+- [x] **PG4 — Compatibility:** global links คง `/portfolio`, mobile footer ครอบคลุม detail, API ordering เพิ่ม `id desc` และไม่ลบ Manager files เดิม
+- [x] **Verification:** unit/component/browser 390/640/768/1440 Light/Dark TH/EN/JP + lint/test/TypeScript/build/diff-check
+
 ### UX/UI implementation batch — 2026-07-11
 > งานตาม audit responsive 390×844 / 768×1024 / 1440×900 · รักษา espresso+honey/Kanit · ไม่แตะ schema/dependency/config
 
@@ -144,6 +153,96 @@
 - [x] **N2 — Scope isolation:** chart/fill Light, success/danger Light และ price palette Dark คงเดิม
 - [x] **N3 — Soft-surface contrast:** chip/soft fill ใช้ text-on-soft hue เดียวกันที่เข้มกว่า เพื่อรักษา contrast ≥4.5:1 ถึง fill 22% โดยไม่ทำให้ข้อความราคาบนพื้นปกติหม่นลง
 - [x] **Verification:** Browser Home/Card Detail/Portfolio/Market Overview/Watchlist soft chips ที่ 390/1440px ทั้ง Light/Dark ไม่มี overflow/console error; lint 0 errors + test 132/132 + TypeScript + build 155/155
+
+### Search result facet parity — 2026-07-15
+> หน้า `/opcg/search` ใช้ฐานข้อมูลการ์ดเดียวกับหน้าแรก แต่มีเพียง rarity/version และแสดง option ที่ไม่มีผลสำหรับคำค้น; ปรับให้หมวดตรงกับหน้าแรกและ scope ตาม query + game โดยไม่เปลี่ยน filter เฉพาะ domain ของ Marketplace/Watchlist
+
+- [x] **SF1 — Facet data:** ส่ง rarity/type/color/variant availability ที่คำนวณจากคำค้นและเกมปัจจุบัน; ซ่อน option 0 ผล, rarity รวม base+parallel family และจำกัด set/results ด้วย game scope
+- [x] **SF2 — Search controls:** เพิ่ม Type/Color/Price ใน FilterModal เดิม, ต่อ state/request/reset/badge ให้ครบ และคง SetPicker/Sort ไว้นอก modal
+- [x] **SF3 — Multicolor indicator:** คืนวงกลมหลายสีแบบ gradient ที่ canonical `CARD_COLORS` ให้ Search, Set detail และ card picker ใช้ภาพเดียวกัน
+- [x] **Verification:** targeted unit/API tests + lint + test + TypeScript + build; Browser `/opcg/search?q=op13` ที่ 390/768/1440px ทั้ง Light/Dark ตรวจ apply/reset, long labels, no overflow และ console 0 errors
+- [x] **SF4 — Search toolbar affordance:** เพิ่ม visual outline/fill ที่ชัดให้ Filter และ Sort เฉพาะแถบผลค้นหา โดยคง hitbox/ความสูง compact เดิม และไม่เปลี่ยน toolbar หน้าอื่น
+- [x] **SF4 Verification:** ตรวจ `/opcg/search?q=op13` ที่ 390/768/1440px ทั้ง Light/Dark, focus/dropdown/no overflow พร้อม lint + test + TypeScript + build
+- [x] **SF5 — Search SetPicker overlay:** ปลด overflow clipping เฉพาะ controls Surface ให้ Set dropdown วางเหนือผลลัพธ์ได้ โดยรักษามุมล่างของ toolbar และคง table Surface ที่ต้อง clip ไว้เดิม
+- [x] **SF5 Verification:** ตรวจ open/select/outside-close ที่ 320/390/768px ทั้ง Light/Dark, popup width/overlay hit-test/no new horizontal overflow พร้อม lint + test + TypeScript + build
+
+### Watchlist price-check UX — 2026-07-15
+> ทำให้ `/watchlist` เช็กราคาและจัดการแจ้งเตือนได้เร็วขึ้น โดยคง API/schema/dependency/config เดิม, ไม่ลบไฟล์ และไม่แตะงาน Search ที่ค้างใน shared toolbar
+
+- [x] **WU1 — Shared shell:** เรียง H1 → canonical Tabs → context/summary → controls → results; sync เฉพาะ `tab` ใน URL โดยรักษา query อื่น และให้ CTA บนหัวเปลี่ยนตามแท็บ/สถานะข้อมูล
+- [x] **WU2 — Cards controls:** ทำ summary compact, period อยู่ใน context band, SetPicker เลือกทีละชุดตามเกม, responsive toolbar 2 แถวบนมือถือ/แถวเดียวบน desktop และ FilterModal ใช้ draft Apply/Reset/Cancel จริง
+- [x] **WU3 — Cards results/states:** List มือถือทั้งแถวเปิดรายละเอียด, desktop เป็น semantic table, Grid เหลือ Compare + More, selection bar แทนหัวผลลัพธ์, แยก loading/error/empty/filtered-empty และ sync `watchlist-store`
+- [x] **WU4 — Alerts:** ใช้ shell/H2 เดียวกับหน้า, คง active/history, game filter, dialog และ deep link เดิม พร้อม controlled dialog/page status
+- [x] **WU5 — Tests + verification:** unit 20 ข้อเฉพาะงาน + ทั้งชุด 195/195, lint 0 errors, TypeScript/build/diff-check ผ่าน; Browser Cards+Alerts ไม่มี overflow/touch target หลุดที่ 320/390/640/768/1024/1440px และแถวแรก 390px อยู่ที่ 452/417px — ภาษา EN/JP ตรวจ copy+build, theme ใช้ semantic tokens เดิมโดยไม่เพิ่มสี hardcode
+- [x] **WU6 — Context declutter (2026-07-16):** เอามูลค่าราคาอ้างอิงและ mover chips ขึ้น/ลงออกจาก context band พร้อมถอด logic คำนวณที่ไม่ใช้; Browser 390/1280px ไม่มี overflow, period ยังแตะได้ 44×44px และ console 0 errors
+
+### Watchlist flat results-first — 2026-07-16
+> ลดชั้นก่อนถึงรายการให้เหลือ H1 → Tabs → Game rail → Controls → Results; คง behavior/API/schema/dependency/config เดิม และไม่ทับงาน Search/Portfolio ใน shared worktree
+
+- [x] **WF1 — Cards composition:** เอา context/summary Surface ออกจาก runtime, game rail ไม่มี count ซ้ำ และย้าย period ไปอยู่กับ result controls
+- [x] **WF2 — Responsive controls:** มือถือคง Search+Set / Sort+Filter สองแถวและ result controls สองแถว; `sm+` ยุบ result controls เป็นแถวเดียว โดย selection bar แทนทั้งแถว
+- [x] **WF3 — Alerts hierarchy:** เอาหัวจัดการที่ซ้ำออก, game rail ไม่มี count และใช้ semantic H2 แบบกะทัดรัดสำหรับ Active/History พร้อม count
+- [x] **WF4 — States + tests:** ปรับ skeleton/mock ให้ mirror layout ใหม่และเพิ่ม regression tests สำหรับ period, selection replacement และ heading hierarchy
+- [~] **WF Verification:** lint 0 errors + test 219/219 + TypeScript + build 156/156 + `git diff --check` ผ่าน; browser geometry/keyboard/touch/no-content-overflow ผ่าน 320/390/640/768/1024/1440px ใน TH/Dark และ Light/console รอบสุดท้ายผ่านแล้ว — เหลือ smoke EN/JP เต็มหน้า
+
+### Canonical compact controls + game rail — 2026-07-16
+> แก้จากภาพใช้งานจริง: time filter และ List/Grid ใช้ component กลางอยู่แล้วแต่ geometry เฉพาะหน้า/ค่า responsive กลางทำให้สัดส่วนไม่เป็นระบบ; game rail ซ่อน All + One Piece เมื่อมีข้อมูลเกมเดียว ทั้งที่ต้องสื่อโครงหลายเกมให้ชัด
+
+- [x] **CC1 — Whole-site audit:** ตรวจ period/range `SegmentedControl`, `ViewModeControl` และ `GameFilterChips` ทุก caller เพื่อแยกปัญหาที่รากออกจาก override เฉพาะหน้า
+- [x] **CC2 — Canonical proportion:** ให้ period/range ใช้ compact visual shell กลาง, icon-only view segments สมส่วน และคง hit target ≥44px ทุก viewport ใต้ `md` โดยถอด geometry override ของ Watchlist
+- [x] **CC3 — Canonical game rail:** เมื่อมีเกมจริงอย่างน้อยหนึ่งเกมให้แสดง “ทุกเกม” + เกมนั้นเสมอ, ใช้ชื่อ “One Piece” จาก config กลาง และคง Pokémon “เร็ว ๆ นี้” เป็น teaser ที่ไม่ปน radiogroup
+- [x] **CC4 — Tests + verification:** เพิ่ม regression tests สำหรับ visual contract/single-game rail/keyboard/empty range; Browser Watchlist/Home/Search/Card Detail/Pricing ที่ 390/640/768/1440px และ Watchlist matrix เดิม 320/1024px ผ่าน Light/Dark, keyboard, touch target และ no overflow; lint 0 errors + test 219/219 + TypeScript + build 156/156 + diff-check ผ่าน
+
+### Watchlist control alignment follow-up — 2026-07-16
+> เก็บรายละเอียดจากภาพใช้งานจริง: ไอคอนใน ViewMode active ต้องอยู่กึ่งกลางพอดี และ period ต้องมีไอคอนนำหน้าเหมือน visual language เดิม โดยแก้ที่ canonical component เท่าที่จำเป็น
+
+- [x] **CA1 — Root-cause audit:** วัด DOM จริงพบ active frame อยู่กลาง แต่ hidden label wrapper ยังเป็น flex child จึงสร้าง gap และดัน SVG ซ้าย 2px; ตรวจ period caller, skeleton/mock และ shared callers ครบ
+- [x] **CA2 — Canonical alignment:** icon-only ViewMode ไม่ render label wrapper ที่ซ้ำกับ `aria-label`; คืน `TrendingUpDown` นำหน้า Watchlist 24h/7d/30d และ sync mock/skeleton โดยคง keyboard/ARIA/touch target เดิม
+- [x] **CA3 — Tests + verification:** regression tests ล็อก icon-only/showLabels/period icon; Browser 320/390/768/1440px Light/Dark ได้ SVG↔button center delta 0px, ไม่มี overflow/console error; lint + test 233/233 + TypeScript + build 156/156 + diff-check ผ่าน
+
+### Watchlist selected-tab edge alignment — 2026-07-16
+> เก็บ selected state จากภาพใช้งานจริง: ปุ่มแท็บสูงกว่าราง แต่ underline ถูกเลื่อนต่ำกว่าเส้นฐาน จึงดูเป็นเส้นสองชั้นที่หลุดจากตัวเลือก; แก้เฉพาะ caller Watchlist เพื่อไม่เปลี่ยน Tabs กลางของหน้าอื่น
+
+- [x] **TA1 — Reproduce + falsify:** วัด DOM จริงที่ 390px พบ TabsList สูง 32px, trigger สูง 44px และ underline `bottom: -5px`; ทดลองแยกแก้ความสูง/ตำแหน่งแล้วไม่พอ ต้องจัดทั้งสองค่าให้ใช้ edge เดียวกัน
+- [x] **TA2 — Caller-specific alignment:** ให้ Watchlist TabsList สูงเท่ากับ trigger 44/36px ด้วย orientation modifier ที่ merge กับค่า base ตรงตัว และวาง active underline ทับเส้นฐาน โดยคง canonical Tabs ของ caller อื่น
+- [x] **TA3 — Tests + verification:** regression test ล็อก class merge ของ list/indicator; Production Browser Cards/Alerts ที่ 390/640/768/1440px ทั้ง Light/Dark ได้ list=trigger 44/36px, indicator `bottom: 0`, ไม่มี overflow/error overlay; lint 0 errors + test 243/243 + TypeScript + build 156/156 + diff-check ผ่าน
+
+### Watchlist minimal hierarchy — 2026-07-16
+> ปรับภาพรวมตามหน้าแรก: ลด navigation/controls ที่ซ้ำ, ให้รายการลอยบน canvas และแสดงคอลัมน์เสริมเฉพาะเมื่อมีข้อมูลจริง โดยรักษา period icon, canonical controls, URL tabs และ flow เพิ่ม/แก้ไขเดิม
+
+- [x] **WM1 — Home comparison:** เทียบ DOM/geometry หน้าแรกกับ Watchlist จริง และแยกปัญหาเป็น hierarchy หลายชั้น, panel ซ้ำ และคอลัมน์ว่าง
+- [x] **WM2 — Results-first composition:** ตัด breadcrumb ซ้ำ, ลดน้ำหนัก CTA, ซ่อน game rail ที่ไม่มีทางเลือกจริง และยุบ game/context/display ให้อยู่แถวเดียวกัน
+- [x] **WM3 — Flat useful results:** ทำ desktop table เป็น canvas, ซ่อน history เมื่อไม่มี sparkline และรวม pin/alert กับ action cell เพื่อตัด status column
+- [x] **WM4 — State parity:** ปรับ loading/guest preview/Alerts/tests ให้สะท้อนโครงใหม่โดยคง touch target มือถือและ edit/empty/error behavior
+- [x] **WM Verification:** Browser Cards/Alerts + list/grid ที่ 390/640/768/1440px Light/Dark ไม่มี overflow/console error; lint 0 errors (30 warnings เดิม) + test 270/270 + TypeScript + build 156/156 + diff-check ผ่าน
+
+### Portfolio Manager — 2026-07-15
+> เปลี่ยน `/portfolio` จาก dashboard ที่ซ้ำยอดเป็น manager สำหรับเลือกและจัดการพอร์ต โดยคง `/portfolio/[id]` เป็นหน้ารายละเอียด และรักษางาน Search/Watchlist ที่ค้างใน worktree ไว้ทั้งหมด
+
+- [x] **PM1 — Server contract:** `GET /api/portfolio` ส่ง effective tier + quota จาก server (`null` = ไม่จำกัด), `POST` บังคับเลือก privacy และ mutation ส่งผลสำเร็จ/ล้มเหลวแบบมี status/error
+- [x] **PM2 — Atomic batch add:** เพิ่ม `POST /api/portfolio/items/batch` ที่ตรวจ owner/quota/card/holding ทั้งชุดก่อนเขียนใน transaction; holding เดิมไม่กิน quotaเพิ่มและ retry ไม่สร้างรายการซ้ำ
+- [x] **PM3 — Shared creation/quick add:** เพิ่ม `PortfolioCreateForm/Dialog` (ชื่อ + privacy ไม่มีค่าเริ่มต้น), สร้างสำเร็จเปิด batch pickerของพอร์ตนั้นทันที และ quick-add จากหน้าการ์ดไม่สร้าง `Default` หรือเลือกพอร์ตแรกเงียบ ๆ
+- [x] **PM4 — Responsive manager:** PageHeader ขนาดเล็ก + summary กะทัดรัด; mobile rows ใต้ `sm`, desktop table ตั้งแต่ `sm`, cost ที่ `lg`, explicit open/add/manage actions, copy/item/game metadata และ quota upgrade dialog
+- [x] **PM5 — Reliable management:** rename รอ API และคงฟอร์มเมื่อ fail; private→public ต้อง confirm, public→private ทำทันที พร้อม toast/rollback; error+Retry มาก่อน empty state
+- [x] **PM6 — Shared privacy:** ย้าย hide-balance เข้า persisted UI store ให้ Hub/Detail ใช้ค่าเดียวกันและ mask ยอดเงิน/P&L ครบ; skeleton/auth/guest preview ใช้รูปทรง manager เดียวกัน
+- [x] **PM7 — Copy + kit + tests:** เติม TH/EN/JP, อัปเดต canonical Component Kit และเพิ่ม API/unit/markup tests สำหรับ privacy/quota/batch/responsive links/counts/masking
+- [x] **PM Verification:** lint + test + TypeScript + build + `git diff --check`; browser 390/640/768/1440px, Light/Dark, TH/EN/JP, keyboard/focus, touch target ≥44px, create→auto-add, manage/quota/error/retry และ hide balanceข้าม Hub→Detail→reload
+
+### Portfolio Manager — visual hierarchy round 2 — 2026-07-16
+> ปรับตามภาพใช้งานจริง: ลดพื้นที่ว่างและตัวเลขซ้ำ, ทำความสัมพันธ์ระหว่างยอดรวม/ซ่อนยอด/กำไรให้ชัด และลด action ที่แย่งน้ำหนักกัน โดยไม่เปลี่ยนสูตรหรือ flow ที่ทำไว้ใน PM1–PM7
+
+- [x] **PM8 — Compact snapshot:** ยุบ summary เป็น snapshot ซ้าย=มูลค่ารวม+จำนวนพอร์ต/รายการ/ใบ, ขวา=กำไร+ROIและต้นทุน; ย้ายปุ่มซ่อนยอดมาอยู่ติดกับยอดที่ควบคุม
+- [x] **PM9 — Rich manager rows:** ทำ mobile card และ `sm+` table row ให้ thumbnail/name/privacy/count เป็นกลุ่มเดียว, แยก value กับ P/L ให้อ่านเร็ว, ลด action hierarchy เหลือเปิดพอร์ตเด่น + เพิ่มการ์ดรอง + manage menu
+- [x] **PM10 — Header/copy/state parity:** เมื่อเต็มโควตาใช้ข้อความอัปเกรดที่บอกผลชัด, เพิ่มคำช่วยเลือกพอร์ต TH/EN/JP และปรับ skeleton/guest preview/empty ให้ mirror composition ใหม่
+- [x] **PM11 — Round-2 verification:** อัปเดต markup tests แล้วตรวจ 390/640/768/1440px, Light/Dark, TH/EN/JP, keyboard/focus/touch target/no overflow/no hydration error พร้อม lint/test/TypeScript/build/diff-check
+
+### Portfolio Manager — minimal hierarchy round 3 — 2026-07-16
+> ลด Hub ให้เป็นหน้าสำหรับเลือก/เปิด/เพิ่ม/จัดการพอร์ตจริง ๆ: ไม่มี dashboard ซ้ำกับแถว และไม่แสดงผลตอบแทนรวมเมื่อข้อมูลราคา/ต้นทุนไม่ครบ
+
+- [x] **PM12 — Honest financial rollup:** เพิ่มตัวคำนวณ coverage กลางสำหรับมูลค่า/ต้นทุน/P&L/ROI; ค่า performance เป็น nullable เมื่อข้อมูลไม่ครบ และให้ Detail/Share/Breakdown ใช้ guard เดียวกันโดยไม่แตะ schema/API contract
+- [x] **PM13 — Minimal manager hierarchy:** เหลือ H1 เดียว + toolbar + responsive list เดียว; 0 พอร์ตมี CTA เดียว, 1 พอร์ตไม่มียอดรวม, 2+ พอร์ตแสดงยอดรวมหนึ่งบรรทัด และตัด table/P&L/ROI/cost/item count/game badge/open button ออกจาก Hub
+- [x] **PM14 — State/i18n parity:** แถวใช้รูปไม่เกิน 2 ใบ + privacy/copy count/estimated value + add/manage 44px; skeleton/guest/error/empty/masking และ TH/EN/JP mirror โครงใหม่
+- [x] **PM15 — Minimal-manager verification:** เพิ่ม unit/markup tests แล้วตรวจ 390/640/768/1440px, Light/Dark, TH/EN/JP, keyboard/focus/touch target/no overflow พร้อม lint/test/TypeScript/build/diff-check
 
 ## 🎨 Redesign (in-place · ทิศเต็มใน [VISION.md](VISION.md) · **ไม่มีเวอร์ชัน v1/v2**)
 > แก้ของเดิมทีละ surface ตาม spine VISION §7 · ทุก surface = adopt atom kit + verify (tsc/lint/build/test) + เปิดดูจริง · ⚠️ ข้อที่แตะ schema = เบสอนุมัติก่อน
