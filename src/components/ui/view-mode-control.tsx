@@ -4,6 +4,7 @@ import { LayoutGrid, List } from "lucide-react";
 
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { t } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import { useUIStore } from "@/stores/ui-store";
 
 export type ViewMode = "table" | "grid" | "list";
@@ -36,12 +37,15 @@ export function ViewModeControl<T extends ViewMode>({
       size="sm"
       compactVisual
       ariaLabel={labels.join(" / ")}
-      className={className}
+      className={cn(
+        "shrink-0 gap-0 before:inset-x-1 md:gap-0.5 md:before:inset-x-0 [&_button]:before:inset-x-1 md:[&_button]:before:inset-x-0 [&_svg]:size-4",
+        className,
+      )}
       options={modes.map((mode, index) => ({
         value: mode,
         icon: VIEW_MODE_META[mode].icon,
         ariaLabel: labels[index],
-        label: showLabels ? labels[index] : <span className="sr-only">{labels[index]}</span>,
+        label: showLabels ? labels[index] : null,
       }))}
       value={value}
       onChange={onChange}

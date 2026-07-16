@@ -4,13 +4,13 @@ export type SortKey = "value" | "pnl" | "change24h" | "cost" | "qty"
 export type SortDir = "desc" | "asc"
 export type HoldingsView = "grid" | "list"
 
-export function pnlCalc(row: AssetRow): { pnl: number; pct: number } | null {
+export function pnlCalc(row: AssetRow): { pnl: number; pct: number | null } | null {
   if (row.purchasePrice == null || row.currentPrice == null) return null
   const pnl = (row.currentPrice - row.purchasePrice) * row.quantity
   const pct =
     row.purchasePrice > 0
       ? ((row.currentPrice - row.purchasePrice) / row.purchasePrice) * 100
-      : 0
+      : null
   return { pnl, pct }
 }
 
@@ -27,7 +27,10 @@ export function sortAssets(assets: AssetRow[], key: SortKey, dir: SortDir): Asse
       case "pnl": {
         const pa = pnlCalc(a)
         const pb = pnlCalc(b)
-        return ((pa?.pct ?? -Infinity) - (pb?.pct ?? -Infinity)) * m
+        if (pa?.pct == null && pb?.pct == null) return 0
+        if (pa?.pct == null) return 1
+        if (pb?.pct == null) return -1
+        return (pa.pct - pb.pct) * m
       }
       case "change24h":
         return ((a.priceChange24h ?? -Infinity) - (b.priceChange24h ?? -Infinity)) * m

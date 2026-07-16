@@ -50,7 +50,7 @@ export function AlertGameGroup({
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex w-full items-center gap-2 rounded-lg px-1 py-1 text-left ease-chrome transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex h-11 w-full items-center gap-2 rounded-lg px-1 py-1 text-left ease-chrome transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-auto"
       >
         <GameCrest game={group.game} size={18} />
         <span className="text-body-sm font-semibold">{name}</span>

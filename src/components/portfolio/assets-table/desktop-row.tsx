@@ -9,6 +9,7 @@ import { Price } from "@/components/shared/price-inline"
 import { MiniSparkline } from "@/components/ui/mini-sparkline"
 import { getGameConfig, getGameAccentTint } from "@/lib/game-config"
 import { DEFAULT_GAME } from "@/lib/game/constants"
+import { MASKED } from "@/lib/constants/ui"
 import { getCardName, t, type Language } from "@/lib/i18n"
 import type { AssetRow } from "@/lib/types/portfolio"
 import { cn } from "@/lib/utils"
@@ -127,7 +128,7 @@ export const AssetRowComponent = memo(function AssetRowComponent({
       <td className="py-2.5 pr-3 text-right align-middle">
         {pnlResult ? (
           hideBalance ? (
-            <span className="text-body-sm tabular-nums text-muted-foreground/40">••••</span>
+            <span className="text-body-sm tabular-nums text-muted-foreground/40">{MASKED}</span>
           ) : (
             <span
               className={cn(
@@ -137,10 +138,12 @@ export const AssetRowComponent = memo(function AssetRowComponent({
             >
               {pnlResult.pnl >= 0 ? "+" : ""}
               {formatJpyAmount(pnlResult.pnl, currency)}
-              <span className="ml-1 text-micro font-normal opacity-70">
-                ({pnlResult.pct >= 0 ? "+" : ""}
-                {formatPct(pnlResult.pct)}%)
-              </span>
+              {pnlResult.pct != null && (
+                <span className="ml-1 text-micro font-normal opacity-70">
+                  ({pnlResult.pct >= 0 ? "+" : ""}
+                  {formatPct(pnlResult.pct)}%)
+                </span>
+              )}
             </span>
           )
         ) : (
@@ -151,7 +154,7 @@ export const AssetRowComponent = memo(function AssetRowComponent({
       {/* มูลค่า */}
       <td className="py-2.5 pr-3 text-right align-middle">
         <span className="text-body-sm font-semibold tabular-nums">
-          {hideBalance ? "••••" : <Price jpy={value} />}
+          {hideBalance ? MASKED : <Price jpy={value} />}
         </span>
       </td>
 

@@ -1,3 +1,5 @@
+import type { CardSearchFacets } from "@/lib/cards/search-filters";
+
 export interface FetchCardsParams {
   search?: string;
   sort?: string;
@@ -13,6 +15,7 @@ export interface FetchCardsParams {
   maxPrice?: number;
   priceMode?: string;
   popular?: boolean;
+  includeFacets?: boolean;
   ids?: number[];
   [key: string]: string | number | boolean | number[] | undefined;
 }
@@ -43,6 +46,7 @@ export interface CardsApiResponse {
   total: number;
   page: number;
   totalPages: number;
+  facets?: CardSearchFacets;
 }
 
 export function buildCardsUrl(params: FetchCardsParams): string {

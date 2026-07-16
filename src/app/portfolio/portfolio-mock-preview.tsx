@@ -1,73 +1,80 @@
-import { ArrowUp, Eye, MoreHorizontal } from "lucide-react"
+"use client"
 
+import {
+  ChevronDown,
+  Eye,
+  Lock,
+  Plus,
+  Share2,
+} from "lucide-react"
+
+import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Surface } from "@/components/ui/surface"
 import { t, type Language } from "@/lib/i18n"
 
-/** Static, data-free preview shown behind the auth gate on /portfolio (and any
- *  /portfolio/[id] a logged-out visitor lands on). Mirrors the hub: dashboard
- *  hero → portfolio picker grid — no data, no interactivity, just the shape. */
+/** Static, data-free detail preview shared by every logged-out portfolio URL. */
 export function PortfolioMockPreview({ lang }: { lang: Language }) {
-  const portfolios = [
-    { name: "Main Collection", value: "¥15,580", chg: "+9.3%", count: 7 },
-    { name: "Grading Pile", value: "¥42,900", chg: "+2.1%", count: 12 },
-  ]
-
   return (
-    <div className="space-y-5 sm:space-y-6">
-      {/* Dashboard hero */}
-      <Surface variant="panel" className="relative overflow-hidden p-4 sm:p-5">
-        <div className="relative flex items-start justify-between gap-3">
-          <div>
-            <p className="text-eyebrow">{t(lang, "allPortfolios")}</p>
-            <div className="mt-2 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-              <span className="tabular-nums text-display leading-none">¥58,480</span>
-              <span className="inline-flex items-center gap-1 pb-0.5 text-sm font-semibold tabular-nums text-price-up">
-                <ArrowUp className="size-3.5" />
-                +6.8%
-              </span>
-            </div>
-            <p className="mt-1.5 text-meta">2 {t(lang, "portfolio")} · 19 {t(lang, "card")}</p>
+    <div className="space-y-4 sm:space-y-5" data-slot="portfolio-detail-preview">
+      <div className="flex items-center gap-2">
+        <Surface
+          variant="subtle"
+          className="flex min-h-11 min-w-0 flex-1 items-center gap-2 px-3 py-2 sm:max-w-sm"
+        >
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-h4">{t(lang, "myPortfolio")}</p>
+            <Badge variant="neutral" className="mt-1">
+              <Lock aria-hidden />
+              {t(lang, "portfolioPrivate")}
+            </Badge>
           </div>
-          <span className="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground">
-            <Eye className="size-4" />
+          <ChevronDown className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+        </Surface>
+
+        <div className="ml-auto flex shrink-0 items-center gap-1.5">
+          <span className="flex size-11 items-center justify-center rounded-lg bg-muted/50">
+            <Eye className="size-4" aria-hidden />
           </span>
+          <span className="flex size-11 items-center justify-center rounded-lg bg-muted/50">
+            <Share2 className="size-4" aria-hidden />
+          </span>
+          <span className="flex min-h-11 items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground">
+            <Plus className="size-4" aria-hidden />
+            <span className="hidden sm:inline">{t(lang, "addCard")}</span>
+          </span>
+        </div>
+      </div>
+
+      <Surface variant="panel" className="space-y-4 p-4 sm:p-5">
+        <div>
+          <p className="text-eyebrow">{t(lang, "portfolioValue")}</p>
+          <p className="mt-2 text-display tabular-nums">¥15,580</p>
+        </div>
+        <div className="grid grid-cols-2 gap-4 border-t border-hair pt-4 sm:grid-cols-4">
+          {["+¥2,180", "¥13,400", "+11.2%", "9"].map((value) => (
+            <div key={value} className="space-y-1">
+              <Skeleton className="h-3 w-14" />
+              <p className="text-body-sm tabular-nums">{value}</p>
+            </div>
+          ))}
         </div>
       </Surface>
 
-      {/* Portfolio picker grid */}
-      <div>
-        <p className="mb-3 text-eyebrow">{t(lang, "selectPortfolio")}</p>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {portfolios.map((p) => (
-            <Surface key={p.name} variant="panel" className="p-4">
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold">{p.name}</p>
-                  <p className="mt-1.5 text-price-lg tabular-nums">{p.value}</p>
-                  <span className="inline-flex items-center gap-0.5 text-micro font-semibold tabular-nums text-price-up">
-                    <ArrowUp className="size-3" />
-                    {p.chg}
-                  </span>
-                </div>
-                <span className="text-muted-foreground">
-                  <MoreHorizontal className="size-4" />
-                </span>
+      <Surface variant="panel" className="overflow-hidden">
+        <div className="divide-y divide-hair">
+          {["OP01-016", "OP05-119", "OP06-069", "OP09-093"].map((code) => (
+            <div key={code} className="flex items-center gap-3 px-3 py-3 sm:px-4">
+              <Skeleton className="aspect-[63/88] w-11 shrink-0 rounded-md" />
+              <div className="min-w-0 flex-1 space-y-1.5">
+                <Skeleton className="h-3.5 w-40 max-w-full" />
+                <p className="text-meta">{code}</p>
               </div>
-              <div className="mt-3 flex items-center gap-1.5">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="aspect-[63/88] w-7 shrink-0 rounded-sm bg-muted ring-1 ring-hair"
-                  />
-                ))}
-                <span className="ml-auto text-meta tabular-nums">
-                  {p.count} {t(lang, "card")}
-                </span>
-              </div>
-            </Surface>
+              <Skeleton className="h-4 w-20" />
+            </div>
           ))}
         </div>
-      </div>
+      </Surface>
     </div>
   )
 }

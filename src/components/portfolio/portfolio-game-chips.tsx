@@ -7,7 +7,7 @@ import type { GameBreakdown } from "@/lib/types/portfolio"
 
 /**
  * Portfolio's game filter — one chip per game the user actually holds
- * (value > 0). Chips are NAME-ONLY: the per-game money lives in exactly one
+ * (count > 0). Chips are NAME-ONLY: the per-game money lives in exactly one
  * place (the "by game" breakdown panel), so the rail stays a clean control
  * instead of a second stats row. The rail self-hides below two games.
  */
@@ -21,7 +21,7 @@ export function PortfolioGameChips({
   onSelect: (game: string) => void
 }) {
   const games: GameChip[] = breakdown
-    .filter((b) => b.valueJpy > 0)
+    .filter((b) => b.count > 0)
     .map((b) => {
       // Fall back to the default game when a holding's set has no game link yet
       // (not every set is backfilled) — mirrors watchlist/alerts so OPCG still

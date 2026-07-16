@@ -9,6 +9,7 @@ import {
 
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Pagination } from "@/components/ui/pagination"
 import { Surface } from "@/components/ui/surface"
 import { SegmentedControl } from "@/components/ui/segmented-control"
@@ -25,6 +26,7 @@ import { buildMarketColumns } from "@/components/market/market-columns"
 import { CardGrid } from "@/components/cards/card-grid"
 import { t } from "@/lib/i18n"
 import { getGameConfig } from "@/lib/game-config"
+import { getCardTypeOptions, getColorOptions } from "@/lib/constants/card-config"
 import { RARITY_HEX } from "@/lib/constants/rarities"
 import { useUIStore } from "@/stores/ui-store"
 import {
@@ -39,13 +41,8 @@ import { useSearch } from "./use-search"
 // home "popular" tab concept). Static — never changes — so build it once.
 const SEARCH_COLUMNS = buildMarketColumns({ showViews: false })
 
-// Rarity facet = BASE options only (SEC/SR/R/UC/C/L/SP/TR/DON — no P- variants).
-// The server expands a base rarity to its P- family (rarity=SEC → SEC + P-SEC),
-// so we drive the chips off the game config's canonical base list instead of the
-// distinct DB rarities (which include "P-SEC" etc.). No client ",P-" expansion.
-const RARITY_OPTIONS = getGameConfig("opcg")?.rarityFilterOptions ?? []
-
 type SetOption = {
+  id: number
   code: string
   name: string
   nameEn: string | null
@@ -66,7 +63,7 @@ const SORT_KEYS: { value: SortKey; key: "sortPriceDesc" | "sortPriceAsc" | "sort
   { value: "name", key: "sortNameAz" },
 ]
 
-function SearchContent({ sets }: { sets: SetOption[] }) {
+function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
   const lang = useUIStore((s) => s.language)
   const SORT_OPTIONS = SORT_KEYS.map((o) => ({ key: o.value, label: t(lang, o.key) }))
   const [showFilters, setShowFilters] = useState(false)
@@ -87,45 +84,74 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
     setViewMode,
     changePeriod,
     setChangePeriod,
-    selectedSet,
-    selectedRarity,
-    selectedVariant,
+    filters,
+    facets,
     inputRef,
     sortCol,
     sortDir,
     sparklines,
+    modalFilterCount,
     activeFilterCount,
     handleSubmit,
     handleSortChange,
     handleColumnSort,
     handlePageChange,
     handleSetChange,
-    handleRarityChange,
+    handleMultiFilterToggle,
     handleVariantChange,
+    handlePriceChange,
+    resetModalFilters,
     refetch,
     clearFilters,
     clearInput,
-  } = useSearch()
+  } = useSearch(game)
 
-  // Version facet — ปกติ / พาราเลล → the `variant` param (regular|parallel).
-  // Single-select: tapping the active chip clears it (both).
-  const VARIANT_OPTIONS = [
-    { code: "regular", label: t(lang, "regular") },
-    { code: "parallel", label: t(lang, "parallel") },
-  ]
+  const gameConfig = getGameConfig(game) ?? getGameConfig("opcg")
+  const isAvailable = (available: string[], selected: string[], value: string) =>
+    !facets || available.includes(value) || selected.includes(value)
 
-  // Rarity + version are the modal facets. Rarity is a comma-joined multi-select
-  // in the hook; toggle in/out of the array and re-join to preserve the query.
-  const rarityValues = selectedRarity ? selectedRarity.split(",") : []
-  const rarityCount = rarityValues.length
-  const toggleRarity = (value: string) => {
-    const next = rarityValues.includes(value)
-      ? rarityValues.filter((r) => r !== value)
-      : [...rarityValues, value]
-    handleRarityChange(next.join(","))
-  }
-  // How many modal facets are set (drives the "ตัวกรอง" button badge + reset).
-  const modalFilterCount = rarityCount + (selectedVariant ? 1 : 0)
+  // Keep canonical game-config order/labels, then hide values with no match for
+  // the active query. Facet-only values are appended so /all/search and future
+  // game configs never lose valid options that OPCG's canonical list lacks.
+  const canonicalRarities = gameConfig?.rarityFilterOptions ?? []
+  const rarityCodes = new Set(canonicalRarities.map((option) => option.code))
+  const rarityOptions = [
+    ...canonicalRarities,
+    ...(facets?.rarities ?? [])
+      .filter((code) => !rarityCodes.has(code))
+      .map((code) => ({ code, label: code })),
+  ].filter((option) =>
+    isAvailable(facets?.rarities ?? [], filters.rarities, option.code),
+  )
+  const canonicalTypes = getCardTypeOptions(lang)
+  const typeValues = new Set(canonicalTypes.map((option) => option.value))
+  const typeOptions = [
+    ...canonicalTypes,
+    ...(facets?.types ?? [])
+      .filter((value) => !typeValues.has(value))
+      .map((value) => ({ value, label: value })),
+  ].filter((option) =>
+    isAvailable(facets?.types ?? [], filters.types, option.value),
+  )
+  const canonicalColors = getColorOptions(lang)
+  const colorValues = new Set(canonicalColors.map((option) => option.value))
+  const colorOptions = [
+    ...canonicalColors,
+    ...(facets?.colors ?? [])
+      .filter((value) => !colorValues.has(value))
+      .map((value) => ({ value, label: value, dot: "bg-muted-foreground" })),
+  ].filter((option) =>
+    isAvailable(facets?.colors ?? [], filters.colors, option.value),
+  )
+  const variantOptions = [
+    { code: "regular" as const, label: t(lang, "regular") },
+    { code: "parallel" as const, label: t(lang, "parallel") },
+  ].filter((option) =>
+    !facets || facets.variants.includes(option.code) || filters.variant === option.code,
+  )
+  const availableSets = facets
+    ? sets.filter((set) => facets.setIds.includes(set.id) || filters.set === set.code)
+    : sets
 
   return (
     <div className="space-y-4">
@@ -164,7 +190,7 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
 
       {/* Results summary + controls */}
       {hasSearched && query.trim() && (
-        <Surface variant="panel" padding="none" className="overflow-hidden">
+        <Surface variant="panel" padding="none">
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
             <p className="text-sm text-muted-foreground">
               {t(lang, "resultsFor")} &ldquo;<span className="font-medium text-foreground">{query}</span>&rdquo;
@@ -181,12 +207,12 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 border-t border-hair bg-popover px-4 py-2.5">
-            {sets.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 rounded-b-lg border-t border-hair bg-popover px-4 py-2.5">
+            {availableSets.length > 0 && (
               <div className="min-w-0 basis-full sm:basis-auto sm:w-[220px]">
                 <SetPicker
-                  sets={sets}
-                  selectedCode={selectedSet || null}
+                  sets={availableSets}
+                  selectedCode={filters.set || null}
                   onSelect={(code) => handleSetChange(code ?? "")}
                   variant="inline"
                   nullable
@@ -198,6 +224,7 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
             <FilterButton
               count={modalFilterCount}
               active={showFilters || modalFilterCount > 0}
+              appearance="outline"
               onClick={() => setShowFilters(true)}
               aria-label={t(lang, "filter")}
               aria-haspopup="dialog"
@@ -212,6 +239,7 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
                 options={SORT_OPTIONS}
                 activeKey={sort}
                 activeDir={sortDir}
+                appearance="outline"
                 onChange={(key) => handleSortChange(key as SortKey)}
                 align="start"
               />
@@ -243,30 +271,26 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
         </Surface>
       )}
 
-      {/* Rarity + version filters — open in the canonical FilterModal. Set + sort
-          stay as their own controls above; the secondary facets live here. Rarity
-          chips are BASE only (config list); the server expands SEC → SEC + P-SEC.
-          The version facet (ปกติ/พาราเลล) narrows regular/parallel. */}
+      {/* Query-aware secondary facets. Set + sort stay as their own controls above;
+          rarity/type/color/version/price mirror the Home filter vocabulary. */}
       <FilterModal
         open={showFilters}
         onOpenChange={setShowFilters}
-        onReset={() => {
-          handleRarityChange("")
-          handleVariantChange("")
-        }}
+        onReset={resetModalFilters}
         resetDisabled={modalFilterCount === 0}
       >
-        {RARITY_OPTIONS.length > 0 && (
+        {rarityOptions.length > 0 && (
           <div>
             <span className="mb-1.5 block text-eyebrow">{t(lang, "rarity")}</span>
             <div className="flex flex-wrap gap-1.5">
-              {RARITY_OPTIONS.map((r) => {
-                const active = rarityValues.includes(r.code)
+              {rarityOptions.map((r) => {
+                const active = filters.rarities.includes(r.code)
                 return (
                   <button
                     key={r.code}
                     type="button"
-                    onClick={() => toggleRarity(r.code)}
+                    aria-pressed={active}
+                    onClick={() => handleMultiFilterToggle("rarities", r.code)}
                     className={cn(
                       "ease-chrome min-h-11 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors md:min-h-0",
                       active
@@ -283,26 +307,110 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
           </div>
         )}
 
+        {typeOptions.length > 0 && (
+          <div>
+            <span className="mb-1.5 block text-eyebrow">{t(lang, "type")}</span>
+            <div className="flex flex-wrap gap-1.5">
+              {typeOptions.map((option) => {
+                const active = filters.types.includes(option.value)
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => handleMultiFilterToggle("types", option.value)}
+                    className={cn(
+                      "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
+                      active
+                        ? "border-primary/40 bg-primary/5 text-primary"
+                        : "border-hair bg-background text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {colorOptions.length > 0 && (
+          <div>
+            <span className="mb-1.5 block text-eyebrow">{t(lang, "color")}</span>
+            <div className="flex flex-wrap gap-1.5">
+              {colorOptions.map((option) => {
+                const active = filters.colors.includes(option.value)
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => handleMultiFilterToggle("colors", option.value)}
+                    className={cn(
+                      "ease-chrome flex min-h-11 items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
+                      active
+                        ? "border-primary/40 bg-primary/5 text-primary"
+                        : "border-hair bg-background text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    <span className={cn("size-2.5 rounded-full", option.dot)} />
+                    {option.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {variantOptions.length > 0 && (
+          <div>
+            <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
+            <div className="flex flex-wrap gap-1.5">
+              {variantOptions.map((option) => {
+                const active = filters.variant === option.code
+                return (
+                  <button
+                    key={option.code}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => handleVariantChange(active ? "" : option.code)}
+                    className={cn(
+                      "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
+                      active
+                        ? "border-primary/40 bg-primary/5 text-primary"
+                        : "border-hair bg-background text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
         <div>
-          <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
-          <div className="flex flex-wrap gap-1.5">
-            {VARIANT_OPTIONS.map((v) => (
-              <button
-                key={v.code}
-                type="button"
-                onClick={() =>
-                  handleVariantChange(selectedVariant === v.code ? "" : v.code)
-                }
-                className={cn(
-                  "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
-                  selectedVariant === v.code
-                    ? "border-primary/40 bg-primary/5 text-primary"
-                    : "border-hair bg-background text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {v.label}
-              </button>
-            ))}
+          <span className="mb-1.5 block text-eyebrow">{t(lang, "priceLabel")}</span>
+          <div className="flex items-center gap-1.5">
+            <Input
+              type="number"
+              min={0}
+              value={filters.minPrice}
+              onChange={(event) => handlePriceChange("minPrice", event.target.value)}
+              placeholder={t(lang, "min")}
+              aria-label={`${t(lang, "priceLabel")} ${t(lang, "min")}`}
+              className="surface-1 h-11 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20 md:h-10"
+            />
+            <span className="text-meta">–</span>
+            <Input
+              type="number"
+              min={0}
+              value={filters.maxPrice}
+              onChange={(event) => handlePriceChange("maxPrice", event.target.value)}
+              placeholder={t(lang, "max")}
+              aria-label={`${t(lang, "priceLabel")} ${t(lang, "max")}`}
+              className="surface-1 h-11 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20 md:h-10"
+            />
           </div>
         </div>
       </FilterModal>
@@ -375,6 +483,7 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
             rankOffset={(page - 1) * PAGE_SIZE}
             columns={SEARCH_COLUMNS}
             priceMode="raw"
+            mobileSortAppearance="outline"
             sparklines={sparklines}
             sortCol={sortCol}
             sortDir={sortDir}
@@ -438,7 +547,7 @@ function SearchContent({ sets }: { sets: SetOption[] }) {
   )
 }
 
-export default function SearchClient({ sets }: { sets: SetOption[] }) {
+export default function SearchClient({ sets, game }: { sets: SetOption[]; game: string }) {
   return (
     <Suspense
       fallback={
@@ -449,7 +558,7 @@ export default function SearchClient({ sets }: { sets: SetOption[] }) {
         </div>
       }
     >
-      <SearchContent sets={sets} />
+      <SearchContent sets={sets} game={game} />
     </Suspense>
   )
 }

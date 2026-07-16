@@ -16,12 +16,10 @@ export function LoginCTAButtons() {
 
   return (
     <div className="flex items-center justify-center gap-3">
-      <Link href={redirectUrl}>
-        <Button>{t(lang, "login")}</Button>
-      </Link>
-      <Link href="/register">
-        <Button variant="outline">{t(lang, "register")}</Button>
-      </Link>
+      <Button render={<Link href={redirectUrl} />}>{t(lang, "login")}</Button>
+      <Button variant="outline" render={<Link href="/register" />}>
+        {t(lang, "register")}
+      </Button>
     </div>
   );
 }
@@ -40,6 +38,7 @@ export function AuthPreviewGate({ preview }: { preview: React.ReactNode }) {
       <div
         className="pointer-events-none select-none"
         aria-hidden
+        inert
       >
         {preview}
       </div>
@@ -54,14 +53,12 @@ export function AuthPreviewGate({ preview }: { preview: React.ReactNode }) {
             {t(lang, "loginRequiredDesc")}
           </p>
           <div className="flex flex-col gap-2">
-            <Link href={redirectUrl}>
-              <Button className="w-full">{t(lang, "login")}</Button>
-            </Link>
-            <Link href="/register">
-              <Button variant="outline" className="w-full">
-                {t(lang, "register")}
-              </Button>
-            </Link>
+            <Button className="w-full" render={<Link href={redirectUrl} />}>
+              {t(lang, "login")}
+            </Button>
+            <Button variant="outline" className="w-full" render={<Link href="/register" />}>
+              {t(lang, "register")}
+            </Button>
           </div>
         </Surface>
       </div>

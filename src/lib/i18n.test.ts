@@ -46,3 +46,42 @@ describe("marketplace truth copy", () => {
     expect(t(copy.language, "mktFilterConditionHint")).toBe(copy.conditionHint);
   });
 });
+
+describe("portfolio financial honesty copy", () => {
+  it.each([
+    {
+      language: "TH",
+      estimatedValue: "มูลค่าโดยประมาณ",
+      partialValue: "ราคาบางใบยังไม่ครบ",
+      unavailableValue: "ยังไม่มีข้อมูลราคา",
+      incompletePerformance: "เพิ่มราคาและต้นทุนให้ครบเพื่อดูผลตอบแทน",
+      noCards: "ยังไม่มีการ์ด",
+      balanceHidden: "ยอดถูกซ่อน",
+    },
+    {
+      language: "EN",
+      estimatedValue: "Estimated value",
+      partialValue: "Some prices are missing",
+      unavailableValue: "No price data",
+      incompletePerformance: "Add all prices and costs to see portfolio returns",
+      noCards: "No cards yet",
+      balanceHidden: "Balance hidden",
+    },
+    {
+      language: "JP",
+      estimatedValue: "推定価値",
+      partialValue: "一部の価格が未登録",
+      unavailableValue: "価格データなし",
+      incompletePerformance: "すべての価格と取得コストを登録すると、収益を確認できます",
+      noCards: "カードはまだありません",
+      balanceHidden: "残高は非表示です",
+    },
+  ] as const)("keeps the coverage states explicit in $language", (copy) => {
+    expect(t(copy.language, "portfolioEstimatedValue")).toBe(copy.estimatedValue);
+    expect(t(copy.language, "portfolioValuePartial")).toBe(copy.partialValue);
+    expect(t(copy.language, "portfolioValueUnavailable")).toBe(copy.unavailableValue);
+    expect(t(copy.language, "portfolioPerformanceIncomplete")).toBe(copy.incompletePerformance);
+    expect(t(copy.language, "portfolioNoCards")).toBe(copy.noCards);
+    expect(t(copy.language, "balanceHidden")).toBe(copy.balanceHidden);
+  });
+});

@@ -1,3 +1,5 @@
+import type { PortfolioFinancialRollup } from "@/lib/portfolio/financials"
+
 export type GameRef = {
   slug: string
   name: string
@@ -5,13 +7,14 @@ export type GameRef = {
   logoUrl: string | null
 }
 
-export interface PortfolioStats {
+export interface PortfolioStats extends PortfolioFinancialRollup {
+  /** Compatibility aliases for existing portfolio detail consumers. */
   totalValueJpy: number
   totalCostJpy: number
-  unrealizedPnl: number
-  unrealizedPnlPercent: number
-  bestPerformer: { name: string; pnl: number; pnlPercent: number } | null
-  worstPerformer: { name: string; pnl: number; pnlPercent: number } | null
+  unrealizedPnl: number | null
+  unrealizedPnlPercent: number | null
+  bestPerformer: { name: string; pnl: number; pnlPercent: number | null } | null
+  worstPerformer: { name: string; pnl: number; pnlPercent: number | null } | null
 }
 
 export type AllocationSlice = {
@@ -53,16 +56,43 @@ export type PortfolioPreviewItem = {
   nameEn: string | null
 }
 
-export type PortfolioMeta = {
+export type PortfolioMeta = PortfolioFinancialRollup & {
   id: number
   name: string
   isPublic: boolean
+  /** Compatibility aliases for existing manager/switcher consumers. */
   totalValue: number
   totalCost: number
+  /** Number of distinct holding rows (card + condition). */
   itemCount: number
+  /** Total physical copies across every holding row. */
+  copyCount: number
+  /** Distinct games represented by this portfolio. */
+  games: GameRef[]
   /** Top holdings by value (desc), capped small — thumbnails on the hub's
    *  portfolio card, not a full listing. */
   previewItems: PortfolioPreviewItem[]
+}
+
+export type PortfolioQuota = {
+  effectiveTier: string
+  /** `null` means unlimited — JSON cannot represent `Infinity`. */
+  portfolioCount: number | null
+  /** `null` means unlimited — JSON cannot represent `Infinity`. */
+  portfolioCards: number | null
+}
+
+/** Every portfolio mutation preserves the HTTP outcome for reliable UI feedback. */
+export type PortfolioMutationResult<T = undefined> =
+  | { ok: true; status: number; error: null; data: T }
+  | { ok: false; status: number; error: string; data?: undefined }
+
+export type PortfolioBatchResult = PortfolioMutationResult<{
+  added: number
+  updated: number
+}> & {
+  failed: number
+  limitReached?: boolean
 }
 
 export type TransactionRow = {
@@ -105,11 +135,12 @@ export type HistoryPoint = {
  * the same data drives the "All games" aggregate + per-game deep-links
  * (VISION §5.7). `game` is null only when no game is linked to the card's set.
  */
-export type GameBreakdown = {
+export type GameBreakdown = PortfolioFinancialRollup & {
   game: GameRef | null
+  /** Compatibility aliases for existing game-breakdown consumers. */
   valueJpy: number
   costJpy: number
-  pnl: number
-  pnlPercent: number
+  pnl: number | null
+  pnlPercent: number | null
   count: number
 }

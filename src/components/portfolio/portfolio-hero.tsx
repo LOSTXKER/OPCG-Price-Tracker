@@ -15,9 +15,11 @@ import {
 
 export interface PortfolioHeroProps {
   valueJpy: number
-  deltaJpy: number
-  deltaPct: number
+  deltaJpy: number | null
+  deltaPct: number | null
   hasPnl: boolean
+  valueAvailable?: boolean
+  valuationComplete?: boolean
   live?: boolean
   hideBalance?: boolean
   /** When a single game is filtered, the game's short name — appended to the
@@ -37,6 +39,8 @@ export function PortfolioHero({
   deltaJpy,
   deltaPct,
   hasPnl,
+  valueAvailable = true,
+  valuationComplete = true,
   live = false,
   hideBalance = false,
   scopeLabel = null,
@@ -44,57 +48,80 @@ export function PortfolioHero({
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
 
-  const isUp = deltaJpy >= 0
+  const safeDeltaJpy = deltaJpy ?? 0
+  const isUp = safeDeltaJpy >= 0
   const absValueDisplay = formatDisplayValue(
-    jpyToDisplayValue(Math.abs(deltaJpy), currency),
+    jpyToDisplayValue(Math.abs(safeDeltaJpy), currency),
     currency,
   )
-  const absPct = Math.abs(deltaPct)
+  const absPct = deltaPct == null ? null : Math.abs(deltaPct)
 
   // No w-full: as a block it already fills alone, and inside a flex row (the
   // overview value strip) it must size to content so the stats sit beside it.
   return (
     <section className="relative min-w-0">
       <p className="text-eyebrow">
-        {t(lang, "portfolioValue")}
+        {t(lang, valuationComplete ? "portfolioValue" : "portfolioEstimatedValue")}
         {scopeLabel ? <span className="text-primary"> · {scopeLabel}</span> : null}
       </p>
 
       <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-2">
-        <HeroNumber
-          value={jpyToDisplayValue(valueJpy, currency)}
-          format={(n) => formatDisplayValue(n, currency)}
-          live={live}
-          hidden={hideBalance}
-        />
+        <span className="inline-flex min-w-0 items-baseline gap-1">
+          {valueAvailable && !valuationComplete && !hideBalance && (
+            <span
+              aria-label={t(lang, "portfolioValuePartial")}
+              className="text-h2 text-muted-foreground"
+            >
+              ≈
+            </span>
+          )}
+          {valueAvailable ? (
+            <HeroNumber
+              value={jpyToDisplayValue(valueJpy, currency)}
+              format={(n) => formatDisplayValue(n, currency)}
+              live={live}
+              hidden={hideBalance}
+              hiddenText={MASKED}
+            />
+          ) : (
+            <span className="text-display text-muted-foreground" aria-label={t(lang, "portfolioValueUnavailable")}>
+              —
+            </span>
+          )}
+        </span>
 
         {/* Plain-text delta — no filled pill. The color + arrow carry the
             meaning (Robinhood restraint); a colored box is chrome we don't need. */}
-        {hasPnl && (
+        {hasPnl && deltaJpy != null && (
           <span
             className={cn(
               "inline-flex items-center gap-1 tabular-nums",
               "text-body-sm font-medium",
-              isUp ? "text-price-up" : "text-price-down",
+              hideBalance
+                ? "text-foreground"
+                : isUp
+                  ? "text-price-up"
+                  : "text-price-down",
             )}
           >
-            {isUp ? (
-              <ArrowUp className="size-3.5 shrink-0" aria-hidden />
-            ) : (
-              <ArrowDown className="size-3.5 shrink-0" aria-hidden />
-            )}
+            {!hideBalance &&
+              (isUp ? (
+                <ArrowUp className="size-3.5 shrink-0" aria-hidden />
+              ) : (
+                <ArrowDown className="size-3.5 shrink-0" aria-hidden />
+              ))}
 
             {hideBalance ? (
-              <span aria-label="balance hidden">{MASKED}</span>
+              <span aria-label={t(lang, "balanceHidden")}>{MASKED}</span>
             ) : (
               <>
                 <span>
                   {isUp ? "+" : "-"}
                   {absValueDisplay}
                 </span>
-                <span className="opacity-70">
-                  ({formatPct(absPct, 2)}%)
-                </span>
+                {absPct != null && (
+                  <span className="opacity-70">({formatPct(absPct, 2)}%)</span>
+                )}
               </>
             )}
           </span>

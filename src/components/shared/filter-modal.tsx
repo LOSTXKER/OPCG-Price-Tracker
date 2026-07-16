@@ -72,7 +72,7 @@ export function FilterModal({
               size="sm"
               onClick={onReset}
               disabled={resetDisabled}
-              className="text-primary hover:bg-primary/5 hover:text-primary"
+              className="sm:min-h-11 md:min-h-0 text-primary hover:bg-primary/5 hover:text-primary"
             >
               <RotateCcw className="size-3.5" />
               {t(lang, "reset")}
@@ -83,7 +83,7 @@ export function FilterModal({
               onApply?.();
               onOpenChange(false);
             }}
-            className="flex-1"
+            className="flex-1 sm:min-h-11 md:min-h-0"
           >
             {applyLabel ?? t(lang, "apply")}
           </Button>

@@ -1,6 +1,6 @@
 "use client"
 
-import { Check, X } from "lucide-react"
+import { Check, Loader2, X } from "lucide-react"
 
 import { t, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
@@ -21,6 +21,8 @@ export function PortfolioNameForm({
   placeholder,
   size = "md",
   autoFocus = true,
+  pending = false,
+  error,
   className,
 }: {
   value: string
@@ -32,48 +34,63 @@ export function PortfolioNameForm({
   placeholder?: string
   size?: "sm" | "md"
   autoFocus?: boolean
+  pending?: boolean
+  error?: string | null
   className?: string
 }) {
   const icon = size === "sm" ? "size-3.5" : "size-4"
   return (
     <form
-      className={cn("flex items-center", size === "sm" ? "gap-1" : "gap-1.5", className)}
+      className={cn("space-y-1.5", className)}
+      aria-busy={pending}
       onSubmit={(e) => {
         e.preventDefault()
         const v = value.trim()
-        if (v) onSubmit(v)
+        if (v && !pending) onSubmit(v)
       }}
     >
-      <input
-        autoFocus={autoFocus}
-        aria-label={placeholder ?? t(lang, "portfolioName")}
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Escape") onCancel()
-        }}
-        className={cn(
-          "min-w-0 flex-1 rounded-lg border border-hair bg-background py-1.5 text-sm outline-none ring-primary/30 transition-shadow focus:ring-2",
-          size === "sm" ? "px-2" : "px-2.5",
-          placeholder && "placeholder:text-muted-foreground",
-        )}
-      />
-      <button
-        type="submit"
-        aria-label={t(lang, "save")}
-        className="ease-chrome shrink-0 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-      >
-        <Check className={icon} />
-      </button>
-      <button
-        type="button"
-        onClick={onCancel}
-        aria-label={t(lang, "cancel")}
-        className="ease-chrome shrink-0 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-      >
-        <X className={icon} />
-      </button>
+      <div className={cn("flex items-center", size === "sm" ? "gap-1" : "gap-1.5")}>
+        <input
+          autoFocus={autoFocus}
+          aria-label={placeholder ?? t(lang, "portfolioName")}
+          aria-invalid={!!error}
+          aria-describedby={error ? "portfolio-name-error" : undefined}
+          placeholder={placeholder}
+          value={value}
+          disabled={pending}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape" && !pending) onCancel()
+          }}
+          className={cn(
+            "min-h-11 min-w-0 flex-1 rounded-lg border border-hair bg-background py-1.5 text-sm outline-none ring-primary/30 transition-shadow focus:ring-2 sm:min-h-9",
+            size === "sm" ? "px-2" : "px-2.5",
+            placeholder && "placeholder:text-muted-foreground",
+          )}
+        />
+        <button
+          type="submit"
+          disabled={pending || value.trim().length === 0}
+          aria-label={t(lang, "save")}
+          className="ease-chrome flex size-11 shrink-0 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50 sm:size-9"
+        >
+          {pending ? <Loader2 className={cn(icon, "animate-spin")} /> : <Check className={icon} />}
+        </button>
+        <button
+          type="button"
+          disabled={pending}
+          onClick={onCancel}
+          aria-label={t(lang, "cancel")}
+          className="ease-chrome flex size-11 shrink-0 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50 sm:size-9"
+        >
+          <X className={icon} />
+        </button>
+      </div>
+      {error && (
+        <p id="portfolio-name-error" role="alert" className="text-meta text-destructive">
+          {error}
+        </p>
+      )}
     </form>
   )
 }

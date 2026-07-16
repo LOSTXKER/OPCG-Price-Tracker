@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import WatchlistTabs from "./watchlist-tabs";
 
 export const metadata: Metadata = {
@@ -13,11 +12,8 @@ export const metadata: Metadata = {
 
 export default function WatchlistPage() {
   return (
-    <>
-      <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "watchlistNav" }]} />
-      <Suspense fallback={null}>
-        <WatchlistTabs />
-      </Suspense>
-    </>
+    <Suspense fallback={null}>
+      <WatchlistTabs />
+    </Suspense>
   );
 }

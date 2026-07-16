@@ -41,17 +41,22 @@ export type SortKey =
   | "nameAz";
 
 export type WatchlistFilters = {
-  setCodes: string[];
+  setCode: string | null;
   direction: "up" | "down" | null;
   hasAlert: boolean;
   pinnedOnly: boolean;
 };
 
 export const DEFAULT_FILTERS: WatchlistFilters = {
-  setCodes: [],
+  setCode: null,
   direction: null,
   hasAlert: false,
   pinnedOnly: false,
+};
+
+export type WatchlistPanelState = {
+  status: "loading" | "ready" | "empty" | "error";
+  itemCount: number;
 };
 
 export function getEntryChange(entry: WatchlistEntry, period: ChangePeriod): number | null {

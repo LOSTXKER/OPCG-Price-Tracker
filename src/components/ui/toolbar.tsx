@@ -151,8 +151,12 @@ export interface ToolbarSortDropdownProps<TKey extends string = string> {
   onChange: (key: TKey) => void;
   fallbackLabel?: ReactNode;
   align?: "start" | "end" | "center";
+  /** Use a bounded control on toolbar surfaces where the soft fill would blend in. */
+  appearance?: "soft" | "outline";
   /** Keep the mobile trigger width stable while labels change. */
   stableMobileWidth?: boolean;
+  /** Optional row sizing for the dropdown options at a specific call site. */
+  itemClassName?: string;
   className?: string;
 }
 
@@ -163,7 +167,9 @@ export function ToolbarSortDropdown<TKey extends string = string>({
   onChange,
   fallbackLabel,
   align = "end",
+  appearance = "soft",
   stableMobileWidth = false,
+  itemClassName,
   className,
 }: ToolbarSortDropdownProps<TKey>) {
   const active = options.find((o) => o.key === activeKey);
@@ -171,22 +177,44 @@ export function ToolbarSortDropdown<TKey extends string = string>({
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "group/toolbar-action inline-flex h-11 min-w-11 items-center justify-center rounded-md bg-transparent p-0 text-xs font-medium outline-none sm:h-auto sm:min-w-0",
+          "group/toolbar-action inline-flex h-11 min-w-11 items-center justify-center rounded-md bg-transparent p-0 text-xs font-medium outline-none md:h-auto md:min-w-0",
           "focus-visible:ring-2 focus-visible:ring-ring/40",
           stableMobileWidth && "w-40 sm:w-auto",
           className,
         )}
       >
-        <span className="pointer-events-none flex h-9 w-full min-w-0 items-center justify-between gap-1.5 overflow-hidden rounded-md border border-transparent bg-muted/50 px-3 py-1.5 text-foreground/80 motion-base group-hover/toolbar-action:bg-muted/70 sm:h-auto">
+        <span
+          className={cn(
+            "pointer-events-none flex h-9 w-full min-w-0 items-center justify-between gap-1.5 overflow-hidden rounded-md border px-3 py-1.5 motion-base md:h-auto",
+            appearance === "outline"
+              ? "border-border bg-background text-foreground group-hover/toolbar-action:bg-muted/70"
+              : "border-transparent bg-muted/50 text-foreground/80 group-hover/toolbar-action:bg-muted/70",
+          )}
+        >
           {activeDir === "desc" ? (
-            <ArrowDown className="size-3 shrink-0 text-muted-foreground/60" />
+            <ArrowDown
+              className={cn(
+                "size-3 shrink-0",
+                appearance === "outline" ? "text-muted-foreground" : "text-muted-foreground/60",
+              )}
+            />
           ) : (
-            <ArrowUp className="size-3 shrink-0 text-muted-foreground/60" />
+            <ArrowUp
+              className={cn(
+                "size-3 shrink-0",
+                appearance === "outline" ? "text-muted-foreground" : "text-muted-foreground/60",
+              )}
+            />
           )}
           <span className="min-w-0 flex-1 truncate text-left">
             {active?.label ?? fallbackLabel}
           </span>
-          <ChevronDown className="size-3 shrink-0 text-muted-foreground/50" />
+          <ChevronDown
+            className={cn(
+              "size-3 shrink-0",
+              appearance === "outline" ? "text-muted-foreground" : "text-muted-foreground/50",
+            )}
+          />
         </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align={align} sideOffset={4}>
@@ -194,7 +222,10 @@ export function ToolbarSortDropdown<TKey extends string = string>({
           <DropdownMenuItem
             key={opt.key}
             onClick={() => onChange(opt.key)}
-            className={cn(activeKey === opt.key && "font-semibold text-primary")}
+            className={cn(
+              itemClassName,
+              activeKey === opt.key && "font-semibold text-primary",
+            )}
           >
             <span className="flex-1">{opt.label}</span>
             {activeKey === opt.key &&
@@ -217,6 +248,8 @@ export interface FilterButtonProps
   count?: number;
   active?: boolean;
   iconLeft?: ReactNode;
+  /** Use a bounded control on toolbar surfaces where the soft fill would blend in. */
+  appearance?: "soft" | "outline";
   /** Paint a square 36px frame inside the canonical 44px hit target. */
   iconOnly?: boolean;
 }
@@ -226,6 +259,7 @@ export const FilterButton = forwardRef<HTMLButtonElement, FilterButtonProps>(
     count,
     active,
     iconLeft = <SlidersHorizontal aria-hidden className="size-3.5" />,
+    appearance = "soft",
     iconOnly = false,
     className,
     children,
@@ -239,7 +273,7 @@ export const FilterButton = forwardRef<HTMLButtonElement, FilterButtonProps>(
         type="button"
         aria-haspopup={ariaHasPopup}
         className={cn(
-          "group/toolbar-action inline-flex h-11 min-w-11 items-center justify-center rounded-md bg-transparent p-0 text-xs font-medium outline-none sm:h-auto sm:min-w-0",
+          "group/toolbar-action inline-flex h-11 min-w-11 items-center justify-center rounded-md bg-transparent p-0 text-xs font-medium outline-none md:h-auto md:min-w-0",
           "focus-visible:ring-2 focus-visible:ring-ring/40",
           className,
         )}
@@ -247,10 +281,15 @@ export const FilterButton = forwardRef<HTMLButtonElement, FilterButtonProps>(
       >
         <span
           className={cn(
-            "pointer-events-none relative inline-flex h-9 min-w-0 items-center justify-center gap-1.5 rounded-md border border-transparent px-3 py-1.5 motion-base sm:h-auto",
+            "pointer-events-none relative inline-flex h-9 min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-3 py-1.5 motion-base md:h-auto",
             active
-              ? "bg-primary/15 text-primary group-hover/toolbar-action:bg-primary/20"
-              : "bg-muted/50 text-foreground/80 group-hover/toolbar-action:bg-muted/70",
+              ? cn(
+                  "bg-primary/15 text-primary group-hover/toolbar-action:bg-primary/20",
+                  appearance === "outline" ? "border-primary/30" : "border-transparent",
+                )
+              : appearance === "outline"
+                ? "border-border bg-background text-foreground group-hover/toolbar-action:bg-muted/70"
+                : "border-transparent bg-muted/50 text-foreground/80 group-hover/toolbar-action:bg-muted/70",
             iconOnly && "size-9 px-0 sm:w-auto sm:px-3",
           )}
         >

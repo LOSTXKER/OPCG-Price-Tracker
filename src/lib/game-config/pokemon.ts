@@ -13,6 +13,7 @@ export const pokemonConfig: GameConfig = {
   name: "Pokémon Trading Card Game",
   nameEn: "Pokémon TCG",
   shortName: "Pokémon",
+  filterName: "Pokémon",
   comingSoon: true,
   accentTint: "#F2C744", // thin yellow skin over honey (whisper, not repaint)
 

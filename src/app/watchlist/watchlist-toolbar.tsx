@@ -3,28 +3,31 @@
 import {
   Bell,
   Check,
-  Layers,
   Pencil,
   Pin,
-  Search,
+  Trash2,
   TrendingDown,
   TrendingUp,
-  TrendingUpDown,
-  X,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { type ReactNode, useMemo, useRef, useState } from "react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { FilterModal } from "@/components/shared/filter-modal";
+import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { ViewModeControl } from "@/components/ui/view-mode-control";
-import { FilterButton, ToolbarSortDropdown } from "@/components/ui/toolbar";
+import {
+  FilterButton,
+  ToolbarSearch,
+  ToolbarSortDropdown,
+} from "@/components/ui/toolbar";
 import { UpgradeBadge } from "@/components/shared/upgrade-badge";
-import { OPCG_SETS } from "@/lib/constants/sets";
 import { t, type Language } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 
+import { countActiveWatchlistModalFilters } from "./watchlist-sort";
+import { WatchlistPeriodControl } from "./watchlist-summary";
 import {
   DEFAULT_FILTERS,
   type ChangePeriod,
@@ -33,11 +36,8 @@ import {
   type WatchlistFilters,
 } from "./watchlist-types";
 
-const PERIODS: ChangePeriod[] = ["24h", "7d", "30d"];
-
-const setNameByCode = new Map(OPCG_SETS.map((s) => [s.code, s.nameEn]));
-
 export function WatchlistToolbar({
+  scope,
   view,
   onViewChange,
   period,
@@ -49,35 +49,44 @@ export function WatchlistToolbar({
   search,
   onSearchChange,
   setOptions,
+  resultCount,
   itemCount,
   limit,
   editMode,
   onToggleEditMode,
   selectedCount,
+  allVisibleSelected,
+  onToggleSelectAll,
   onClearSelection,
   onBulkRemove,
 }: {
+  scope?: ReactNode;
   view: WatchView;
   onViewChange: (v: WatchView) => void;
   period: ChangePeriod;
-  onPeriodChange: (p: ChangePeriod) => void;
+  onPeriodChange: (period: ChangePeriod) => void;
   sortKey: SortKey;
   onSortChange: (k: SortKey) => void;
   filters: WatchlistFilters;
   onFiltersChange: (next: WatchlistFilters) => void;
   search: string;
   onSearchChange: (s: string) => void;
-  setOptions: { code: string; label: string }[];
+  setOptions: SetPickerItem[];
+  resultCount: number;
   itemCount: number;
   limit: number;
   editMode: boolean;
   onToggleEditMode: () => void;
   selectedCount: number;
+  allVisibleSelected: boolean;
+  onToggleSelectAll: () => void;
   onClearSelection: () => void;
   onBulkRemove: () => void;
 }) {
   const lang = useUIStore((s) => s.language);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [draftFilters, setDraftFilters] = useState(filters);
+  const filterButtonRef = useRef<HTMLButtonElement>(null);
 
   const sortOptions: { key: SortKey; label: string }[] = useMemo(
     () => [
@@ -97,159 +106,205 @@ export function WatchlistToolbar({
   const isFull = isFinite && itemCount >= limit;
   const isHigh = isFinite && !isFull && usagePct >= 80;
 
-  const activeFilterCount =
-    (filters.setCodes.length > 0 ? 1 : 0) +
-    (filters.direction ? 1 : 0) +
-    (filters.hasAlert ? 1 : 0) +
-    (filters.pinnedOnly ? 1 : 0);
+  const activeFilterCount = countActiveWatchlistModalFilters(filters);
+  const draftFilterCount = countActiveWatchlistModalFilters(draftFilters);
   const sortDirection: "asc" | "desc" =
     sortKey === "loss" || sortKey === "priceLow" || sortKey === "nameAz"
       ? "asc"
       : "desc";
 
+  const openFilters = () => {
+    setDraftFilters(filters);
+    setFilterOpen(true);
+  };
+
+  const handleFilterOpenChange = (open: boolean) => {
+    setFilterOpen(open);
+    if (!open) requestAnimationFrame(() => filterButtonRef.current?.focus());
+  };
+
   return (
-    <div className="space-y-3">
-      {/* Bulk action bar — only in edit mode with a selection */}
-      {editMode && selectedCount > 0 && (
-        <div className="flex items-center gap-2 rounded-full border border-primary/40 bg-primary/15 px-3 py-1.5">
-          <span className="text-meta tabular-nums text-primary">
+    <div className="space-y-2">
+      <div className="grid grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] items-center gap-2 md:flex md:min-w-0 md:flex-nowrap">
+        <ToolbarSearch
+          type="search"
+          value={search}
+          onValueChange={onSearchChange}
+          placeholder={t(lang, "watchlistSearchPlaceholder")}
+          aria-label={t(lang, "watchlistSearchPlaceholder")}
+          containerClassName="min-w-0 border-border bg-background py-0 sm:min-h-11 md:min-h-0 md:min-w-40 md:flex-1 md:py-2 lg:max-w-72"
+          className="h-11 w-full md:h-auto"
+        />
+
+        <div className="min-w-0 md:min-w-40 md:flex-1 lg:max-w-64">
+          <SetPicker
+            sets={setOptions}
+            selectedCode={filters.setCode}
+            onSelect={(setCode) => onFiltersChange({ ...filters, setCode })}
+            variant="inline"
+            nullable
+            triggerClassName="sm:h-11 md:h-9"
+          />
+        </div>
+
+        <ToolbarSortDropdown
+          options={sortOptions}
+          activeKey={sortKey}
+          activeDir={sortDirection}
+          onChange={onSortChange}
+          fallbackLabel={t(lang, "watchlistSortBy")}
+          stableMobileWidth
+          itemClassName="min-h-11 md:min-h-0"
+          className="w-full sm:h-11 md:h-auto md:w-auto"
+        />
+
+        <FilterButton
+          ref={filterButtonRef}
+          onClick={openFilters}
+          count={activeFilterCount}
+          active={filterOpen || activeFilterCount > 0}
+          aria-haspopup="dialog"
+          aria-expanded={filterOpen}
+          className="w-full sm:h-11 md:h-auto md:w-auto [&>span]:w-full"
+        >
+          <span>{t(lang, "filter")}</span>
+        </FilterButton>
+        <FilterModal
+          open={filterOpen}
+          onOpenChange={handleFilterOpenChange}
+          onReset={() =>
+            setDraftFilters({ ...DEFAULT_FILTERS, setCode: filters.setCode })
+          }
+          resetDisabled={draftFilterCount === 0}
+          onApply={() => onFiltersChange(draftFilters)}
+        >
+          <WatchlistFilterPanel
+            lang={lang}
+            filters={draftFilters}
+            onFiltersChange={setDraftFilters}
+          />
+        </FilterModal>
+      </div>
+
+      {editMode ? (
+        <div
+          className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 p-2"
+          aria-label={t(lang, "watchlistSelected")}
+        >
+          <span className="mr-auto px-1 text-label tabular-nums text-primary">
             {selectedCount} {t(lang, "watchlistSelected")}
           </span>
           <Button
             type="button"
             size="sm"
-            variant="destructive"
-            className="h-7 gap-1 px-2.5"
-            onClick={onBulkRemove}
+            variant="outline"
+            onClick={onToggleSelectAll}
+            disabled={resultCount === 0}
+            className="sm:min-h-11 md:min-h-0"
           >
-            <X className="size-3" />
+            {allVisibleSelected ? t(lang, "deselectAll") : t(lang, "watchlistSelectAll")}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="destructive"
+            onClick={onBulkRemove}
+            disabled={selectedCount === 0}
+            className="sm:min-h-11 md:min-h-0"
+          >
+            <Trash2 className="size-3.5" />
             {t(lang, "watchlistRemoveSelected")}
           </Button>
-          <button
+          <Button
             type="button"
+            size="sm"
+            variant="ghost"
             onClick={onClearSelection}
-            className="min-h-11 px-2 text-meta text-muted-foreground hover:text-foreground sm:min-h-0"
+            disabled={selectedCount === 0}
+            className="sm:min-h-11 md:min-h-0"
           >
             {t(lang, "watchlistClearSelection")}
-          </button>
-        </div>
-      )}
-
-      {/* Single control row — search left, controls right (wraps on mobile) */}
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="relative w-full sm:w-64">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="search"
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder={t(lang, "watchlistSearchPlaceholder")}
-            aria-label={t(lang, "watchlistSearchPlaceholder")}
-            className="h-11 w-full rounded-lg border border-transparent bg-muted pl-8 pr-2.5 text-sm placeholder:text-muted-foreground focus:border-ring focus:outline-none dark:border-hair sm:h-9"
-          />
-        </div>
-
-        <div className="flex flex-1 flex-wrap items-center gap-2 sm:justify-end">
-          {/* Period */}
-          <SegmentedControl<ChangePeriod>
-            options={PERIODS.map((p) => ({ value: p, label: p }))}
-            value={period}
-            onChange={onPeriodChange}
-            size="sm"
-            variant="pill"
-            leadingIcon={TrendingUpDown}
-            ariaLabel={t(lang, "change")}
-          />
-
-          {/* Sort */}
-          <ToolbarSortDropdown
-            options={sortOptions}
-            activeKey={sortKey}
-            activeDir={sortDirection}
-            onChange={onSortChange}
-            fallbackLabel={t(lang, "watchlistSortBy")}
-            stableMobileWidth
-            className="shrink-0"
-          />
-
-          {/* Filter */}
-          <FilterButton
-            onClick={() => setFilterOpen(true)}
-            count={activeFilterCount}
-            active={filterOpen || activeFilterCount > 0}
-            aria-haspopup="dialog"
-            aria-expanded={filterOpen}
-          >
-            <span>{t(lang, "filter")}</span>
-          </FilterButton>
-          <FilterModal
-            open={filterOpen}
-            onOpenChange={setFilterOpen}
-            onReset={() => onFiltersChange(DEFAULT_FILTERS)}
-            resetDisabled={activeFilterCount === 0}
-          >
-            <FilterPanel
-              lang={lang}
-              filters={filters}
-              onFiltersChange={onFiltersChange}
-              setOptions={setOptions}
-            />
-          </FilterModal>
-
-          {/* View toggle */}
-          <ViewModeControl<WatchView>
-            modes={["list", "grid"]}
-            value={view}
-            onChange={onViewChange}
-          />
-
-          {/* Edit toggle — enters/exits multi-select mode */}
-          <button
+          </Button>
+          <Button
             type="button"
+            size="sm"
             onClick={onToggleEditMode}
-            aria-pressed={editMode}
-            className={cn(
-              buttonVariants({ variant: "ghost", size: "sm" }),
-              "h-9 gap-1.5 px-2.5",
-              editMode
-                ? "bg-primary/15 text-primary hover:bg-primary/20"
-                : "text-muted-foreground hover:text-foreground"
-            )}
+            className="sm:min-h-11 md:min-h-0"
           >
-            {editMode ? <Check className="size-3.5" /> : <Pencil className="size-3.5" />}
-            {editMode ? t(lang, "watchlistEditDone") : t(lang, "watchlistEditMode")}
-          </button>
+            <Check className="size-3.5" />
+            {t(lang, "watchlistEditDone")}
+          </Button>
         </div>
-      </div>
+      ) : (
+        <div className="flex min-w-0 flex-wrap items-center gap-2 sm:min-h-11 md:min-h-9">
+          {scope && <div className="w-full min-w-0 md:w-auto">{scope}</div>}
 
-      {/* Limit pill — only surfaces near/at cap (no redundant count otherwise) */}
-      {isFinite && (isFull || isHigh) && (
-        <div className="flex justify-end">
-          <div
+          <span
             className={cn(
-              "flex items-center gap-1.5 rounded-md border px-2 py-1",
-              isFull ? "border-destructive/30 bg-destructive/5" : "border-warning/30 bg-warning/5"
+              "hidden min-w-0 truncate whitespace-nowrap text-meta tabular-nums sm:inline",
+              !scope && "sm:mr-auto",
             )}
-            title={`${itemCount}/${limit}`}
+            aria-live="polite"
           >
-            <div className="hidden h-1 w-10 overflow-hidden rounded-full bg-muted sm:flex">
+            {resultCount.toLocaleString()} {t(lang, "watchlistSummaryCards").toLowerCase()}
+          </span>
+
+          <div className="no-sb ml-auto flex max-w-full min-w-0 shrink-0 items-center justify-end gap-2 overflow-x-auto">
+            <WatchlistPeriodControl
+              period={period}
+              onPeriodChange={onPeriodChange}
+            />
+
+            {isFinite && (isFull || isHigh) && (
               <div
                 className={cn(
-                  "h-full rounded-full motion-base",
-                  isFull ? "bg-destructive" : "bg-warning"
+                  "flex items-center gap-1.5 rounded-md border px-2 py-1",
+                  isFull
+                    ? "border-destructive/30 bg-destructive/5"
+                    : "border-warning/30 bg-warning/5",
                 )}
-                style={{ width: `${usagePct}%` }}
-              />
-            </div>
-            <span
+                title={`${itemCount}/${limit}`}
+              >
+                <div className="hidden h-1 w-10 overflow-hidden rounded-full bg-muted sm:flex">
+                  <div
+                    className={cn(
+                      "h-full rounded-full motion-base",
+                      isFull ? "bg-destructive" : "bg-warning",
+                    )}
+                    style={{ width: `${usagePct}%` }}
+                  />
+                </div>
+                <span
+                  className={cn(
+                    "text-meta tabular-nums",
+                    isFull ? "text-destructive" : "text-warning",
+                  )}
+                >
+                  {itemCount}/{limit}
+                </span>
+                <UpgradeBadge featureKey="watchlistCards" />
+              </div>
+            )}
+
+            <ViewModeControl<WatchView>
+              modes={["list", "grid"]}
+              value={view}
+              onChange={onViewChange}
+            />
+
+            <button
+              type="button"
+              onClick={onToggleEditMode}
+              aria-pressed={false}
               className={cn(
-                "text-meta tabular-nums",
-                isFull ? "text-destructive" : "text-warning"
+                buttonVariants({ variant: "ghost", size: "sm" }),
+                "min-w-11 gap-1.5 px-2.5 text-muted-foreground hover:text-foreground sm:min-h-11 md:min-h-0 md:min-w-0",
               )}
             >
-              {itemCount}/{limit}
-            </span>
-            <UpgradeBadge featureKey="watchlistCards" />
+              <Pencil className="size-3.5" />
+              <span className="hidden sm:inline">{t(lang, "watchlistEditMode")}</span>
+              <span className="sr-only sm:hidden">{t(lang, "watchlistEditMode")}</span>
+            </button>
           </div>
         </div>
       )}
@@ -257,52 +312,15 @@ export function WatchlistToolbar({
   );
 }
 
-function SegButton({
-  active,
-  onClick,
-  label,
-  icon,
-  tone,
-}: {
-  active: boolean;
-  onClick: () => void;
-  label: string;
-  icon?: React.ReactNode;
-  tone?: "up" | "down";
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "ease-chrome inline-flex h-8 items-center justify-center gap-1 rounded-lg border px-2 text-xs font-medium",
-        active
-          ? tone === "up"
-            ? "border-price-up/40 bg-price-up/10 text-price-up-on-soft"
-            : tone === "down"
-              ? "border-price-down/40 bg-price-down/10 text-price-down-on-soft"
-              : "border-primary/40 bg-primary/15 text-primary"
-          : "border-transparent bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground"
-      )}
-    >
-      {icon}
-      {label}
-    </button>
-  );
-}
-
-/** The filter-only content (movement + status + set) as plain elements, rendered
- *  inside the FilterModal. Filters apply on tap; the modal's Reset button clears them. */
-function FilterPanel({
+/** Draft-only movement/status controls rendered inside the canonical FilterModal. */
+export function WatchlistFilterPanel({
   lang,
   filters,
   onFiltersChange,
-  setOptions,
 }: {
   lang: Language;
   filters: WatchlistFilters;
   onFiltersChange: (next: WatchlistFilters) => void;
-  setOptions: { code: string; label: string }[];
 }) {
   return (
     <>
@@ -310,27 +328,36 @@ function FilterPanel({
         <span className="text-eyebrow mb-2 block">
           {t(lang, "watchlistFilterMovement")}
         </span>
-        <div className="grid grid-cols-3 gap-1.5">
-          <SegButton
-            active={filters.direction === null}
-            onClick={() => onFiltersChange({ ...filters, direction: null })}
-            label={t(lang, "watchlistFilterMovementAll")}
-          />
-          <SegButton
-            active={filters.direction === "up"}
-            onClick={() => onFiltersChange({ ...filters, direction: "up" })}
-            label={t(lang, "watchlistFilterMovementUp")}
-            icon={<TrendingUp className="size-3" />}
-            tone="up"
-          />
-          <SegButton
-            active={filters.direction === "down"}
-            onClick={() => onFiltersChange({ ...filters, direction: "down" })}
-            label={t(lang, "watchlistFilterMovementDown")}
-            icon={<TrendingDown className="size-3" />}
-            tone="down"
-          />
-        </div>
+        <SegmentedControl<"all" | "up" | "down">
+          options={[
+            {
+              value: "all",
+              label: t(lang, "watchlistFilterMovementAll"),
+            },
+            {
+              value: "up",
+              label: t(lang, "watchlistFilterMovementUp"),
+              icon: TrendingUp,
+            },
+            {
+              value: "down",
+              label: t(lang, "watchlistFilterMovementDown"),
+              icon: TrendingDown,
+            },
+          ]}
+          value={filters.direction ?? "all"}
+          onChange={(value) =>
+            onFiltersChange({
+              ...filters,
+              direction: value === "all" ? null : value,
+            })
+          }
+          ariaLabel={t(lang, "watchlistFilterMovement")}
+          fullWidth
+          size="sm"
+          compactVisual
+          className="w-full"
+        />
       </div>
 
       <div>
@@ -357,36 +384,6 @@ function FilterPanel({
         </div>
       </div>
 
-      {setOptions.length > 0 && (
-        <div>
-          <span className="text-eyebrow mb-2 block">{t(lang, "set")}</span>
-          <div className="max-h-56 space-y-0.5 overflow-y-auto">
-            {setOptions.map((opt) => {
-              const checked = filters.setCodes.includes(opt.code);
-              const setName = setNameByCode.get(opt.code.toLowerCase()) ?? "";
-              const label = `${opt.code.toUpperCase()} · ${setName}`
-                .trim()
-                .replace(/ ·\s*$/, "");
-              return (
-                <ToggleRow
-                  key={opt.code}
-                  icon={<Layers className="size-4" />}
-                  label={label}
-                  checked={checked}
-                  onToggle={() =>
-                    onFiltersChange({
-                      ...filters,
-                      setCodes: checked
-                        ? filters.setCodes.filter((c) => c !== opt.code)
-                        : [...filters.setCodes, opt.code],
-                    })
-                  }
-                />
-              );
-            })}
-          </div>
-        </div>
-      )}
     </>
   );
 }
@@ -406,8 +403,9 @@ function ToggleRow({
     <button
       type="button"
       onClick={onToggle}
+      aria-pressed={checked}
       className={cn(
-        "ease-chrome flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm",
+        "ease-chrome flex min-h-11 w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm",
         checked ? "bg-primary/10 text-primary" : "text-foreground hover:bg-muted"
       )}
     >

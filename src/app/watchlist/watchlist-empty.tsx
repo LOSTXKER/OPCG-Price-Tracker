@@ -11,12 +11,18 @@ export function WatchlistEmpty({ onAdd }: { onAdd: () => void }) {
   const lang = useUIStore((s) => s.language);
 
   return (
-    <div className="flex flex-col items-center gap-4 py-6">
-      <EmptyState preset="empty-watchlist" lang={lang} />
-      <Button onClick={onAdd} className="gap-1.5">
-        <Plus className="size-4" />
-        {t(lang, "addCard")}
-      </Button>
-    </div>
+    <EmptyState
+      preset="empty-watchlist"
+      lang={lang}
+      action={
+        <Button
+          onClick={onAdd}
+          className="gap-1.5 sm:min-h-11 md:min-h-0"
+        >
+          <Plus className="size-4" />
+          {t(lang, "addCard")}
+        </Button>
+      }
+    />
   );
 }

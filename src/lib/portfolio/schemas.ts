@@ -11,7 +11,7 @@ const optionalNonNegative = z.union([z.coerce.number().nonnegative(), z.null()])
 
 export const CreatePortfolioSchema = z.object({
   name: z.string().trim().min(1).max(120),
-  isPublic: z.boolean().optional(),
+  isPublic: z.boolean(),
 });
 
 export const UpdatePortfolioSchema = z
@@ -34,6 +34,30 @@ export const CreatePortfolioItemSchema = z.object({
   condition: condition.optional(),
   notes: z.string().max(2000).optional(),
 });
+
+export const CreatePortfolioItemsBatchSchema = z
+  .object({
+    portfolioId: numericId,
+    requestId: z.string().uuid(),
+    items: z
+      .array(CreatePortfolioItemSchema.omit({ portfolioId: true }))
+      .min(1)
+      .max(100),
+  })
+  .superRefine(({ items }, context) => {
+    const seen = new Set<string>();
+    items.forEach((item, index) => {
+      const key = `${item.cardId}:${item.condition ?? CardCondition.NM}`;
+      if (seen.has(key)) {
+        context.addIssue({
+          code: "custom",
+          path: ["items", index],
+          message: "Duplicate card and condition in batch",
+        });
+      }
+      seen.add(key);
+    });
+  });
 
 export const UpdatePortfolioItemSchema = z
   .object({
@@ -61,6 +85,9 @@ export const CreatePortfolioTransactionSchema = z.object({
 export type CreatePortfolioInput = z.infer<typeof CreatePortfolioSchema>;
 export type UpdatePortfolioInput = z.infer<typeof UpdatePortfolioSchema>;
 export type CreatePortfolioItemInput = z.infer<typeof CreatePortfolioItemSchema>;
+export type CreatePortfolioItemsBatchInput = z.infer<
+  typeof CreatePortfolioItemsBatchSchema
+>;
 export type UpdatePortfolioItemInput = z.infer<typeof UpdatePortfolioItemSchema>;
 export type CreatePortfolioTransactionInput = z.infer<
   typeof CreatePortfolioTransactionSchema

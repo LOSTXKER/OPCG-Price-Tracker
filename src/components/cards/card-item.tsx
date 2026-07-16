@@ -34,6 +34,8 @@ export interface CardItemProps {
   /** Which period to display; defaults to "7d" */
   changePeriod?: ChangePeriod
   setCode?: string
+  /** Route namespace for the card/set links. Defaults to the live baseline game. */
+  gameSlug?: string
   inStock?: boolean
   /**
    * Pull probability per box (0-1 range). Currently unused — kept for
@@ -72,6 +74,7 @@ function CardItemBase({
   priceChange30d,
   changePeriod = "7d",
   setCode,
+  gameSlug = "opcg",
   psa10PriceUsd,
   priceMode,
   linkSet,
@@ -107,7 +110,7 @@ function CardItemBase({
   return (
     <Surface variant="panel" className="group/card hover-lift relative flex h-full flex-col overflow-hidden">
       <Link
-        href={`/opcg/cards/${cardCode}`}
+        href={`/${gameSlug}/cards/${cardCode}`}
         aria-label={displayName}
         className="absolute inset-0 z-10 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       />
@@ -139,7 +142,7 @@ function CardItemBase({
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  router.push(`/opcg/sets/${setCode}`)
+                  router.push(`/${gameSlug}/sets/${setCode}`)
                 }}
                 className="ease-chrome relative z-20 cursor-pointer font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground hover:decoration-solid"
               >

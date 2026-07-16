@@ -1,13 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { Bell, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Surface } from "@/components/ui/surface";
-import { SettingsSectionHeader } from "@/components/settings/settings-section-header";
 import { EmptyState } from "@/components/shared/empty-state";
 import { AlertEditDialog } from "@/components/alerts/alert-edit-dialog";
 import { AlertCreateDialog } from "@/components/alerts/alert-create-dialog";
@@ -30,14 +28,29 @@ type Feedback = {
   kind: FeedbackKind;
 };
 
-export function AlertsManagerClient() {
+export type AlertsPanelState = {
+  status: "loading" | "error" | "empty" | "ready";
+  itemCount: number;
+};
+
+interface AlertsManagerClientProps {
+  createOpen?: boolean;
+  onCreateOpenChange?: (open: boolean) => void;
+  onPageStateChange?: (state: AlertsPanelState) => void;
+}
+
+export function AlertsManagerClient({
+  createOpen: controlledCreateOpen,
+  onCreateOpenChange,
+  onPageStateChange,
+}: AlertsManagerClientProps = {}) {
   const lang = useUIStore((s) => s.language);
   const [alerts, setAlerts] = useState<PriceAlertItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<PriceAlertItem | null>(null);
   const [editOpen, setEditOpen] = useState(false);
-  const [createOpen, setCreateOpen] = useState(false);
+  const [internalCreateOpen, setInternalCreateOpen] = useState(false);
   const [busyId, setBusyId] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   // One unified alerts list across every game, filtered in-view by game. The
@@ -51,9 +64,18 @@ export function AlertsManagerClient() {
   useGameFilterReset(gameFilter, availableGames, setGameFilter);
   const { openUpgradeDialog } = useUpgradeDialog();
   const confirmDialog = useConfirm();
+  const createOpen = controlledCreateOpen ?? internalCreateOpen;
+  const setCreateOpen = useCallback(
+    (open: boolean) => {
+      if (controlledCreateOpen === undefined) setInternalCreateOpen(open);
+      onCreateOpenChange?.(open);
+    },
+    [controlledCreateOpen, onCreateOpenChange],
+  );
 
   const fetchAlerts = useCallback(async () => {
     try {
+      setLoading(true);
       setError(null);
       const data = await apiGet<{ alerts: PriceAlertItem[] }>("/api/alerts");
       // Demo-only: append mock Pokémon alerts so the multi-game UI is visible.
@@ -72,6 +94,18 @@ export function AlertsManagerClient() {
   useEffect(() => {
     void fetchAlerts();
   }, [fetchAlerts]);
+
+  const panelStatus: AlertsPanelState["status"] = loading
+    ? "loading"
+    : error
+      ? "error"
+      : alerts.length === 0
+        ? "empty"
+        : "ready";
+
+  useEffect(() => {
+    onPageStateChange?.({ status: panelStatus, itemCount: alerts.length });
+  }, [alerts.length, onPageStateChange, panelStatus]);
 
   useEffect(() => {
     if (!feedback) return;
@@ -97,32 +131,29 @@ export function AlertsManagerClient() {
     return { active: a, history: h };
   }, [scopedAlerts]);
 
-  // Per-game counts + logos for the chip rail (cross-game, from all alerts).
+  // Games + logos for the chip rail (cross-game, from all alerts).
   const gameMeta = useMemo(() => {
-    const count = new Map<string, number>();
+    const slugs = new Set<string>();
     const logo = new Map<string, string | null>();
     for (const a of alerts) {
       const g = a.card.set?.game ?? null;
       const slug = g?.slug ?? DEFAULT_GAME;
-      count.set(slug, (count.get(slug) ?? 0) + 1);
+      slugs.add(slug);
       if (g?.logoUrl && !logo.has(slug)) logo.set(slug, g.logoUrl);
     }
-    return { count, logo };
+    return { slugs, logo };
   }, [alerts]);
 
-  // Chips for games the user actually has alerts in. The rail self-hides below
-  // two games.
+  // Chips for games the user actually has alerts in. This page only needs the
+  // rail once there is a real choice between multiple live games.
   const gameChips = useMemo<GameChip[]>(
     () =>
-      [...gameMeta.count.entries()]
-        .filter(([, c]) => c > 0)
-        .map(([slug, c]) => ({
-          slug,
-          label: getGameConfig(slug)?.shortName ?? slug.toUpperCase(),
-          value: `${c} ${t(lang, "alertsUnit")}`,
-          logoUrl: gameMeta.logo.get(slug) ?? null,
-        })),
-    [gameMeta, lang],
+      [...gameMeta.slugs].map((slug) => ({
+        slug,
+        label: getGameConfig(slug)?.shortName ?? slug.toUpperCase(),
+        logoUrl: gameMeta.logo.get(slug) ?? null,
+      })),
+    [gameMeta],
   );
 
   const onEdit = (alert: PriceAlertItem) => {
@@ -218,15 +249,17 @@ export function AlertsManagerClient() {
 
   if (loading) {
     return (
-      <div className="space-y-8">
-        <div>
-          <Skeleton className="h-7 w-40" />
-          <Skeleton className="mt-2 h-4 w-64" />
-        </div>
+      <div className="space-y-4 md:space-y-5">
         <div className="space-y-3">
-          {[0, 1, 2].map((i) => (
-            <Skeleton key={i} className="h-24 rounded-xl" />
-          ))}
+          <div className="flex items-baseline justify-between gap-3">
+            <Skeleton className="h-5 w-24" />
+            <Skeleton className="h-4 w-5" />
+          </div>
+          <div className="space-y-3">
+            {[0, 1, 2].map((i) => (
+              <Skeleton key={i} className="h-24 rounded-xl" />
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -236,7 +269,12 @@ export function AlertsManagerClient() {
     return (
       <Surface variant="outline" className="p-6 text-center">
         <p className="text-sm text-muted-foreground">{error}</p>
-        <Button size="sm" variant="outline" className="mt-3" onClick={() => void fetchAlerts()}>
+        <Button
+          size="sm"
+          variant="outline"
+          className="mt-3 sm:min-h-11 md:min-h-0"
+          onClick={() => void fetchAlerts()}
+        >
           {t(lang, "retry")}
         </Button>
       </Surface>
@@ -244,41 +282,28 @@ export function AlertsManagerClient() {
   }
 
   return (
-    <div className="space-y-5 sm:space-y-6">
-      <SettingsSectionHeader
-        title={t(lang, "managePriceAlerts")}
-        description={t(lang, "managePriceAlertsSubtitle")}
-        action={
-          <Button
-            size="sm"
-            onClick={() => setCreateOpen(true)}
-            className="shrink-0 gap-1.5 rounded-full"
-          >
-            <Plus className="size-3.5" />
-            {t(lang, "createAlert")}
-          </Button>
-        }
-      />
+    <div className="space-y-4 md:space-y-5">
+      {gameChips.length > 1 && (
+        <GameFilterChips
+          games={gameChips}
+          activeGame={gameFilter}
+          onSelect={setGameFilter}
+        />
+      )}
 
-      <GameFilterChips
-        games={gameChips}
-        activeGame={gameFilter}
-        onSelect={setGameFilter}
-        allValue={`${alerts.length} ${t(lang, "alertsUnit")}`}
-      />
-
-      <section className="space-y-3">
-        <div className="flex items-baseline justify-between">
-          <h3 className="text-eyebrow">{t(lang, "activeAlerts")}</h3>
-          <span className="text-meta text-muted-foreground">
-            {active.length}
-          </span>
-        </div>
+      <section className="space-y-3" aria-labelledby="active-alerts-heading">
+        <AlertSectionHeading
+          id="active-alerts-heading"
+          title={t(lang, "activeAlerts")}
+          count={active.length}
+        />
         {active.length === 0 ? (
           gameFilter !== ALL_GAMES ? (
-            <FilteredEmpty lang={lang} onShowAll={() => setGameFilter(ALL_GAMES)} onCreate={() => setCreateOpen(true)} />
+            <FilteredEmpty lang={lang} onShowAll={() => setGameFilter(ALL_GAMES)} />
           ) : (
-            <ActiveEmpty onCreate={() => setCreateOpen(true)} />
+            <ActiveEmpty
+              onCreate={alerts.length === 0 ? () => setCreateOpen(true) : undefined}
+            />
           )
         ) : (
           renderAlertList(active, "active")
@@ -286,13 +311,12 @@ export function AlertsManagerClient() {
       </section>
 
       {history.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex items-baseline justify-between">
-            <h3 className="text-eyebrow">{t(lang, "alertHistory")}</h3>
-            <span className="text-meta text-muted-foreground">
-              {history.length}
-            </span>
-          </div>
+        <section className="space-y-3" aria-labelledby="alert-history-heading">
+          <AlertSectionHeading
+            id="alert-history-heading"
+            title={t(lang, "alertHistory")}
+            count={history.length}
+          />
           {renderAlertList(history, "history")}
         </section>
       )}
@@ -316,53 +340,68 @@ export function AlertsManagerClient() {
   );
 }
 
+export function AlertSectionHeading({
+  id,
+  title,
+  count,
+}: {
+  id: string;
+  title: string;
+  count: number;
+}) {
+  return (
+    <div className="flex items-baseline justify-between gap-3">
+      <h2 id={id} className="text-h4">
+        {title}
+      </h2>
+      <span className="text-meta tabular-nums">{count}</span>
+    </div>
+  );
+}
+
 function FilteredEmpty({
   lang,
   onShowAll,
-  onCreate,
 }: {
   lang: Language;
   onShowAll: () => void;
-  onCreate: () => void;
 }) {
   return (
     <div className="rounded-xl border border-dashed border-hair bg-card/50 px-6 py-10 text-center">
       <p className="text-sm text-muted-foreground">{t(lang, "noActiveAlerts")}</p>
-      <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
-        <Button size="sm" onClick={onShowAll} className="rounded-full">
+      <div className="mt-3 flex items-center justify-center">
+        <Button
+          size="sm"
+          onClick={onShowAll}
+          className="rounded-full sm:min-h-11 md:min-h-0"
+        >
           {t(lang, "showAllGames")}
-        </Button>
-        <Button variant="ghost" size="sm" onClick={onCreate} className="gap-1.5 text-muted-foreground">
-          <Plus className="size-3.5" />
-          {t(lang, "createAlert")}
         </Button>
       </div>
     </div>
   );
 }
 
-function ActiveEmpty({ onCreate }: { onCreate: () => void }) {
+function ActiveEmpty({ onCreate }: { onCreate?: () => void }) {
   const lang = useUIStore((s) => s.language);
   return (
-    <div className="rounded-xl border border-dashed border-hair bg-card/50 px-6 py-10">
-      <EmptyState
-        appearance="minimal"
-        icon={Bell}
-        title={t(lang, "noActiveAlerts")}
-        description={t(lang, "noActiveAlertsDesc")}
-      />
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        <Button size="sm" onClick={onCreate} className="gap-1.5 rounded-full">
-          <Plus className="size-3.5" />
-          {t(lang, "createAlert")}
-        </Button>
-        <Link href="/opcg/search">
-          <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
-            <Bell className="size-3.5" />
-            {t(lang, "browseCardsToAlert")}
+    <EmptyState
+      variant="dashed"
+      icon={Bell}
+      title={t(lang, "noActiveAlerts")}
+      description={t(lang, "noActiveAlertsDesc")}
+      action={
+        onCreate ? (
+          <Button
+            size="sm"
+            onClick={onCreate}
+            className="min-h-11 gap-1.5 rounded-full sm:min-h-11 md:min-h-0"
+          >
+            <Plus className="size-3.5" />
+            {t(lang, "createAlert")}
           </Button>
-        </Link>
-      </div>
-    </div>
+        ) : undefined
+      }
+    />
   );
 }
