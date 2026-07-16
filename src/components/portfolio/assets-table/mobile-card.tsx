@@ -6,11 +6,10 @@ import Link from "next/link"
 
 import { GameBadge } from "@/components/shared/game-badge"
 import { Price } from "@/components/shared/price-inline"
+import { PriceTag } from "@/components/ui/price-tag"
 import { MASKED } from "@/lib/constants/ui"
 import { getCardName, type Language } from "@/lib/i18n"
 import type { AssetRow } from "@/lib/types/portfolio"
-import { cn } from "@/lib/utils"
-import { formatPct } from "@/lib/utils/currency"
 
 import { AssetEditButton } from "./action-menu"
 import { holdingValue, pnlCalc } from "./utils"
@@ -62,18 +61,20 @@ export const MobileAssetCard = memo(function MobileAssetCard({
         <p className="tabular-nums text-body-sm font-semibold">
           {hideBalance ? MASKED : <Price jpy={value} />}
         </p>
-        {pnlResult?.pct != null && (
-          <p
-            className={cn(
-              "mt-0.5 tabular-nums text-micro font-medium",
-              pnlResult.pct >= 0 ? "text-price-up" : "text-price-down",
-            )}
-          >
-            {hideBalance
-              ? MASKED
-              : `${pnlResult.pct >= 0 ? "+" : ""}${formatPct(pnlResult.pct)}%`}
-          </p>
-        )}
+        {pnlResult?.pct != null &&
+          (hideBalance ? (
+            <p className="mt-0.5 tabular-nums text-micro font-medium text-foreground">
+              {MASKED}
+            </p>
+          ) : (
+            <PriceTag
+              change={pnlResult.pct}
+              changeOnly
+              changeStyle="plain"
+              size="sm"
+              className="mt-0.5 justify-end text-micro font-medium"
+            />
+          ))}
       </div>
 
       <AssetEditButton lang={lang} onEdit={onEdit} />

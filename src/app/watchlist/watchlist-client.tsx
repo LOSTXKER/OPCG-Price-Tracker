@@ -482,6 +482,16 @@ function WatchlistContent({
     void load(true);
   };
 
+  // Clicking a desktop 24H/7D/30D column header (list view only) switches the
+  // active period to that column and starts sorting by it — tapping the same
+  // column again while already sorted by gain flips to loss, mirroring a
+  // price-table's sort toggle.
+  const handleListPeriodSort = (nextPeriod: ChangePeriod) => {
+    const alreadyGainOnPeriod = period === nextPeriod && sortKey === "gain";
+    setSortKey(alreadyGainOnPeriod ? "loss" : "gain");
+    setPeriod(nextPeriod);
+  };
+
   const hasAnySparkline = useMemo(
     () =>
       filteredEntries.some(
@@ -587,6 +597,7 @@ function WatchlistContent({
               onRemove={(e) => void removeSingle(e)}
               removingIds={removingIds}
               showGameBadge={availableGames.length >= 2}
+              onPeriodSort={handleListPeriodSort}
             />
           ) : (
             <WatchlistGridView

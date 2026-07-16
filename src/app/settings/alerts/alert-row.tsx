@@ -113,9 +113,9 @@ export function AlertRow({
             <div className="min-w-0 flex-1">
               <Link
                 href={`/${gameSlug}/cards/${alert.card.cardCode}`}
-                className="flex min-h-11 items-center truncate text-sm font-semibold hover:underline md:min-h-0"
+                className="flex min-h-11 min-w-0 items-center text-sm font-semibold hover:underline md:min-h-0"
               >
-                {cardName}
+                <span className="truncate">{cardName}</span>
               </Link>
               <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-muted-foreground/70">
                 <span>{alert.card.cardCode}</span>

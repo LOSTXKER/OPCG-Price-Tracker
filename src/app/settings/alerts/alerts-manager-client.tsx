@@ -5,7 +5,6 @@ import { Bell, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Surface } from "@/components/ui/surface";
 import { EmptyState } from "@/components/shared/empty-state";
 import { AlertEditDialog } from "@/components/alerts/alert-edit-dialog";
 import { AlertCreateDialog } from "@/components/alerts/alert-create-dialog";
@@ -267,17 +266,22 @@ export function AlertsManagerClient({
 
   if (error) {
     return (
-      <Surface variant="outline" className="p-6 text-center">
-        <p className="text-sm text-muted-foreground">{error}</p>
-        <Button
-          size="sm"
-          variant="outline"
-          className="mt-3 sm:min-h-11 md:min-h-0"
-          onClick={() => void fetchAlerts()}
-        >
-          {t(lang, "retry")}
-        </Button>
-      </Surface>
+      <EmptyState
+        variant="error"
+        preset="error"
+        lang={lang}
+        description={error}
+        action={
+          <Button
+            size="sm"
+            variant="outline"
+            className="sm:min-h-11 md:min-h-0"
+            onClick={() => void fetchAlerts()}
+          >
+            {t(lang, "retry")}
+          </Button>
+        }
+      />
     );
   }
 

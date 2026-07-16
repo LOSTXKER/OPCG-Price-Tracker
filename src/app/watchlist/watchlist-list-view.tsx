@@ -40,6 +40,7 @@ export function WatchlistListView({
   onRemove,
   removingIds,
   showGameBadge = false,
+  onPeriodSort,
 }: {
   entries: WatchlistEntry[];
   period: ChangePeriod;
@@ -53,6 +54,8 @@ export function WatchlistListView({
   onRemove: (entry: WatchlistEntry) => void;
   removingIds: Set<number>;
   showGameBadge?: boolean;
+  /** Desktop 24H/7D/30D column headers act as sort buttons — list view only. */
+  onPeriodSort?: (period: ChangePeriod) => void;
 }) {
   const lang = useUIStore((s) => s.language);
 
@@ -97,6 +100,7 @@ export function WatchlistListView({
                       entry={entry}
                       displayName={displayName}
                       showGameBadge={showGameBadge}
+                      showStatusIcons
                     />
                     <MobilePrice entry={entry} change={change} />
                   </label>
@@ -106,15 +110,12 @@ export function WatchlistListView({
                     aria-label={displayName}
                     className="flex min-w-0 flex-1 items-center gap-3 rounded-sm px-3 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                   >
-                    <WatchlistThumbnail
-                      entry={entry}
-                      displayName={displayName}
-                      showIndicators
-                    />
+                    <WatchlistThumbnail entry={entry} displayName={displayName} />
                     <CardIdentity
                       entry={entry}
                       displayName={displayName}
                       showGameBadge={showGameBadge}
+                      showStatusIcons
                     />
                     <MobilePrice entry={entry} change={change} />
                   </Link>
@@ -136,35 +137,47 @@ export function WatchlistListView({
         </div>
       </div>
 
-      {/* Dense price-check table (>=sm): flat canvas, matching Home market data. */}
+      {/* Dense price-check table (>=sm): flat canvas, matching Home market data.
+          No table-fixed/colgroup — the 30D column only appears from `xl:` and
+          keeping widths on th/td (not <col>) is the simple way to hide a
+          column without the colgroup falling out of sync. */}
       <div className="hidden sm:block">
-        <table className="w-full table-fixed border-collapse text-left text-body-sm">
-          <colgroup>
-            <col />
-            <col className="w-28" />
-            <col className="w-24" />
-            {hasAnySparkline && (
-              <col className="hidden w-32 lg:table-column" />
-            )}
-            <col className="w-24" />
-          </colgroup>
+        <table className="w-full border-collapse text-left text-body-sm">
           <thead>
             <tr className="border-b border-hair text-eyebrow">
               <th scope="col" className="px-3 py-2.5">
                 {t(lang, "card")}
               </th>
-              <th scope="col" className="px-3 py-2.5 text-right">
+              <th scope="col" className="w-28 px-3 py-2.5 text-right">
                 {t(lang, "price")}
               </th>
-              <th scope="col" className="px-3 py-2.5 text-right">
-                {t(lang, "change")} · {period}
+              <th scope="col" className="w-20 px-3 py-2.5 text-right">
+                <PeriodSortHeaderButton
+                  label="24H"
+                  active={period === "24h"}
+                  onClick={() => onPeriodSort?.("24h")}
+                />
+              </th>
+              <th scope="col" className="w-20 px-3 py-2.5 text-right">
+                <PeriodSortHeaderButton
+                  label="7D"
+                  active={period === "7d"}
+                  onClick={() => onPeriodSort?.("7d")}
+                />
+              </th>
+              <th scope="col" className="hidden w-20 px-3 py-2.5 text-right xl:table-cell">
+                <PeriodSortHeaderButton
+                  label="30D"
+                  active={period === "30d"}
+                  onClick={() => onPeriodSort?.("30d")}
+                />
               </th>
               {hasAnySparkline && (
                 <th scope="col" className="hidden px-3 py-2.5 text-center lg:table-cell">
                   {t(lang, "priceHistory")}
                 </th>
               )}
-              <th scope="col" className="px-2 py-2.5">
+              <th scope="col" className="w-24 px-2 py-2.5">
                 <span className="sr-only">{t(lang, "moreActions")}</span>
               </th>
             </tr>
@@ -172,7 +185,6 @@ export function WatchlistListView({
           <tbody>
             {entries.map((entry) => {
               const displayName = getCardName(lang, entry.card);
-              const change = getEntryChange(entry, period);
               const removing = removingIds.has(entry.cardId);
               const sparklineData = sparklines[entry.cardId];
 
@@ -229,7 +241,7 @@ export function WatchlistListView({
                       )}
                     </div>
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="w-28 px-3 py-2 text-right">
                     <PriceTag
                       jpy={entry.card.latestPriceJpy}
                       thb={entry.card.latestPriceThb}
@@ -238,9 +250,25 @@ export function WatchlistListView({
                       className="flex-nowrap justify-end whitespace-nowrap"
                     />
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="w-20 px-3 py-2 text-right">
                     <PriceTag
-                      change={change}
+                      change={getEntryChange(entry, "24h")}
+                      changeOnly
+                      changeStyle="plain"
+                      size="sm"
+                    />
+                  </td>
+                  <td className="w-20 px-3 py-2 text-right">
+                    <PriceTag
+                      change={getEntryChange(entry, "7d")}
+                      changeOnly
+                      changeStyle="plain"
+                      size="sm"
+                    />
+                  </td>
+                  <td className="hidden w-20 px-3 py-2 text-right xl:table-cell">
+                    <PriceTag
+                      change={getEntryChange(entry, "30d")}
                       changeOnly
                       changeStyle="plain"
                       size="sm"
@@ -259,7 +287,7 @@ export function WatchlistListView({
                       </div>
                     </td>
                   )}
-                  <td className="px-2 py-2 text-right">
+                  <td className="w-24 px-2 py-2 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <WatchlistStatus entry={entry} />
                       {!editMode && (
@@ -282,41 +310,50 @@ export function WatchlistListView({
   );
 }
 
+/** 24H/7D/30D desktop column header — click toggles the active sort period. */
+function PeriodSortHeaderButton({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={cn(
+        "block w-full text-right text-eyebrow transition-colors",
+        active ? "text-foreground font-semibold" : "hover:text-foreground",
+      )}
+    >
+      {label}
+    </button>
+  );
+}
+
 function WatchlistThumbnail({
   entry,
   displayName,
-  showIndicators = false,
 }: {
   entry: WatchlistEntry;
   displayName: string;
-  showIndicators?: boolean;
 }) {
-  const pinned = entry.pinnedAt != null;
-
   return (
-    <div className="relative shrink-0">
-      <div className="relative aspect-[63/88] h-16 overflow-hidden rounded-lg bg-muted ring-1 ring-hair">
-        {entry.card.imageUrl && (
-          <Image
-            src={entry.card.imageUrl}
-            alt={displayName}
-            fill
-            sizes="46px"
-            className="object-cover"
-            placeholder="blur"
-            blurDataURL={BLUR_DATA_URL}
-          />
-        )}
-      </div>
-      {showIndicators && pinned && (
-        <span className="pointer-events-none absolute left-0.5 top-0.5 z-10 inline-flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background">
-          <Pin className="size-2.5 fill-current" aria-hidden />
-        </span>
-      )}
-      {showIndicators && entry.hasActiveAlert && (
-        <span className="pointer-events-none absolute right-0.5 top-0.5 z-10 inline-flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background">
-          <Bell className="size-2.5 fill-current" aria-hidden />
-        </span>
+    <div className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-hair">
+      {entry.card.imageUrl && (
+        <Image
+          src={entry.card.imageUrl}
+          alt={displayName}
+          fill
+          sizes="46px"
+          className="object-cover"
+          placeholder="blur"
+          blurDataURL={BLUR_DATA_URL}
+        />
       )}
     </div>
   );
@@ -326,11 +363,17 @@ function CardIdentity({
   entry,
   displayName,
   showGameBadge,
+  showStatusIcons = false,
 }: {
   entry: WatchlistEntry;
   displayName: string;
   showGameBadge: boolean;
+  /** Mobile rows only — pin/alert live inline here instead of overlapping the artwork. */
+  showStatusIcons?: boolean;
 }) {
+  const lang = useUIStore((s) => s.language);
+  const pinned = entry.pinnedAt != null;
+
   return (
     <div className="min-w-0 flex-1">
       <p className="line-clamp-2 break-words text-body-sm" title={displayName}>
@@ -341,6 +384,26 @@ function CardIdentity({
         <span className="truncate font-mono text-muted-foreground">
           {entry.card.cardCode}
         </span>
+        {showStatusIcons && pinned && (
+          <span
+            role="img"
+            aria-label={t(lang, "watchlistPinned")}
+            title={t(lang, "watchlistPinned")}
+            className="inline-flex shrink-0 text-primary"
+          >
+            <Pin className="size-3 fill-current" aria-hidden />
+          </span>
+        )}
+        {showStatusIcons && entry.hasActiveAlert && (
+          <span
+            role="img"
+            aria-label={t(lang, "watchlistHasAlert")}
+            title={t(lang, "watchlistHasAlert")}
+            className="inline-flex shrink-0 text-primary"
+          >
+            <Bell className="size-3 fill-current" aria-hidden />
+          </span>
+        )}
         {showGameBadge && <GameBadge game={entry.card.set.game} />}
       </div>
     </div>

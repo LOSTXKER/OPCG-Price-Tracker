@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Switch } from "@/components/ui/switch"
 import { getCardName, t, type Language } from "@/lib/i18n"
 import { MASKED } from "@/lib/constants/ui"
 import type { AssetRow } from "@/lib/types/portfolio"
@@ -180,10 +181,7 @@ function CardEditFull({
       </div>
 
       <div className="flex items-center gap-2">
-        <button
-          onClick={() => onPrivateChange(!isPrivate)}
-          className="flex flex-1 items-center justify-between rounded-lg border border-hair px-3 py-2.5 transition-colors hover:bg-muted/30"
-        >
+        <div className="flex flex-1 items-center justify-between rounded-lg border border-hair px-3 py-2.5">
           <div className="flex items-center gap-2">
             {isPrivate ? (
               <EyeOff className="size-3.5 text-muted-foreground/60" />
@@ -194,20 +192,12 @@ function CardEditFull({
               {isPrivate ? t(lang, "privateCard") : t(lang, "unmarkPrivate")}
             </span>
           </div>
-          <div
-            className={cn(
-              "relative inline-flex h-5 w-9 shrink-0 rounded-full transition-colors",
-              isPrivate ? "bg-muted-foreground/25" : "bg-primary",
-            )}
-          >
-            <span
-              className={cn(
-                "pointer-events-none absolute top-0.5 inline-block size-4 rounded-full bg-white shadow-sm transition-transform",
-                isPrivate ? "left-0.5" : "left-[18px]",
-              )}
-            />
-          </div>
-        </button>
+          <Switch
+            checked={!isPrivate}
+            onCheckedChange={(checked) => onPrivateChange(!checked)}
+            ariaLabel={isPrivate ? t(lang, "privateCard") : t(lang, "unmarkPrivate")}
+          />
+        </div>
         <button
           onClick={() => void handleRemove()}
           className="tap-safe shrink-0 rounded-lg border border-destructive/15 p-2.5 text-destructive/50 transition-colors hover:border-destructive/30 hover:bg-destructive/10 hover:text-destructive"

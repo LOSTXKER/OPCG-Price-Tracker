@@ -30,7 +30,9 @@ export function DesktopAssetsTable({
   return (
     <div className="hidden sm:block">
       <table className="w-full border-collapse text-left text-sm">
-        <thead className="sticky top-0 z-10 bg-background">
+        {/* Not sticky: the global header is sticky z-50, so a top-0 thead
+            would pin underneath it. Revisit when --chrome-h (TOKENS-04) lands. */}
+        <thead className="bg-background">
           <tr className="border-b border-hair text-eyebrow text-muted-foreground/60">
             <th className="py-3 pr-3 font-medium">{t(lang, "card")}</th>
             <th className="py-3 pr-3 text-right font-medium">{t(lang, "price")}</th>

@@ -10,7 +10,7 @@ import { AuthPreviewGate } from "@/components/shared/login-gate"
 import { useAuthState } from "@/hooks/use-auth-state"
 import { PortfolioSwitcher } from "@/components/portfolio/portfolio-switcher"
 import { PortfolioHero } from "@/components/portfolio/portfolio-hero"
-import { PortfolioHeroPanel } from "@/components/portfolio/portfolio-hero-panel"
+import { PortfolioKpis } from "@/components/portfolio/portfolio-kpis"
 import { PortfolioAllocationPanel } from "@/components/portfolio/portfolio-allocation-panel"
 import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
 import { PortfolioGameChips } from "@/components/portfolio/portfolio-game-chips"
@@ -21,7 +21,6 @@ import { PortfolioShareDialog } from "@/components/portfolio/portfolio-share-dia
 import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
 import { Button } from "@/components/ui/button"
 import { IconButton } from "@/components/ui/icon-button"
-import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Surface } from "@/components/ui/surface"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -49,8 +48,6 @@ const PortfolioScrubChart = dynamic(
     loading: () => <div className="h-44 animate-pulse rounded-xl bg-muted sm:h-56" />,
   },
 )
-
-type PortfolioTab = "overview" | "insights"
 
 export default function PortfolioDetailClient({
   portfolioId,
@@ -105,8 +102,6 @@ function PortfolioDetailContent({
   const [deletedActiveId, setDeletedActiveId] = useState<number | null>(null)
   const hideBalance = useUIStore((s) => s.portfolioBalanceHidden)
   const setHideBalance = useUIStore((s) => s.setPortfolioBalanceHidden)
-  // Overview = value + the collection · Insights = chart/by-game/movers/allocation.
-  const [tab, setTab] = useState<PortfolioTab>("overview")
   // The point under the finger while scrubbing the value chart; null when idle.
   const [scrub, setScrub] = useState<HistoryPoint | null>(null)
   // Per-page game filter — local, session-only (never shared with watchlist/alerts).
@@ -258,24 +253,11 @@ function PortfolioDetailContent({
     )
   }
 
-  const tabControl = (
-    <SegmentedControl<PortfolioTab>
-      options={[
-        { value: "overview", label: t(lang, "overviewTab") },
-        { value: "insights", label: t(lang, "insightsTab") },
-      ]}
-      value={tab}
-      onChange={setTab}
-      size="sm"
-      ariaLabel={t(lang, "portfolio")}
-    />
-  )
-
   return (
     <div className="space-y-4 sm:space-y-5">
       <h1 className="sr-only">{activePortfolio.name}</h1>
 
-      {/* Top bar: portfolio switcher/management · tabs · page actions. */}
+      {/* Top bar: portfolio switcher/management · page actions. */}
       <div className="flex items-center gap-2">
         <div className="min-w-0 flex-1">
           <PortfolioSwitcher
@@ -293,8 +275,6 @@ function PortfolioDetailContent({
             maxPortfolios={maxPortfolios}
           />
         </div>
-        {items.length > 0 && <div className="hidden min-w-0 md:block">{tabControl}</div>}
-        <div className="hidden flex-1 md:block" />
 
         <div className="flex shrink-0 items-center gap-1.5">
           <IconButton
@@ -327,9 +307,6 @@ function PortfolioDetailContent({
         </div>
       </div>
 
-      {/* Mobile/tablet tabs — full-width under the top bar */}
-      {items.length > 0 && <div className="md:hidden">{tabControl}</div>}
-
       {items.length === 0 ? (
         <EmptyState
           preset="empty-portfolio"
@@ -344,69 +321,96 @@ function PortfolioDetailContent({
             </Button>
           }
         />
-      ) : tab === "overview" ? (
-        <>
-          {/* OVERVIEW — one hero card (value + P/L · Cost · Best · Worst),
-              game chips, then the collection immediately. */}
-          <PortfolioHeroPanel
-            stats={stats}
-            hideBalance={hideBalance}
-            scopeLabel={scopeGameName}
-          />
-          <PortfolioGameChips
-            breakdown={gameBreakdown}
-            activeGame={gameFilter}
-            onSelect={setGameFilter}
-          />
-          <PortfolioAssetsTable
-            assets={assets}
-            onUpdate={updateItem}
-            onRemove={removeItem}
-            hideBalance={hideBalance}
-            showGameBadge={availableGames.length >= 2}
-          />
-        </>
       ) : (
-        <>
-          {/* INSIGHTS — history (scrub-bound value) → by-game → movers → allocation */}
-          <Surface variant="panel" className="space-y-3 p-4 sm:p-5">
-            <PortfolioHero
-              valueJpy={heroValueJpy}
-              deltaJpy={heroDeltaJpy}
-              deltaPct={heroDeltaPct}
-              hasPnl={heroHasPnl}
-              valueAvailable={activeScrub != null || stats.valuedCopyCount > 0}
-              valuationComplete={activeScrub ? false : stats.valuationComplete}
-              live={!!activeScrub}
-              hideBalance={hideBalance}
-              scopeLabel={scopeGameName}
-            />
-            {gameFilter === ALL_GAMES ? (
-              <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
-            ) : (
-              // No per-game history yet (snapshots are whole-portfolio) — one
-              // honest line instead of a faked curve.
-              <p className="text-meta text-muted-foreground/70">{t(lang, "chartAllGamesOnly")}</p>
+        /* Single Robinhood-style page (VISION §5.3) — no more overview/insights
+           tabs. Mobile: one column, hero → chart → KPI → movers → chips →
+           holdings → by-game → allocation. Desktop (lg:): a two-zone grid
+           (main + 320px rail) built with `display:contents` wrappers so every
+           leaf mounts exactly once — `order-N`/`lg:order-none` reorders leaves
+           into the mobile sequence, then each wrapper becomes a real block at
+           `lg:` and its children fall back to normal DOM order inside it. */
+        <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-8">
+          <div className="contents lg:block lg:min-w-0 lg:space-y-5">
+            <div className="order-1 lg:order-none">
+              <PortfolioHero
+                valueJpy={heroValueJpy}
+                deltaJpy={heroDeltaJpy}
+                deltaPct={heroDeltaPct}
+                hasPnl={heroHasPnl}
+                valueAvailable={activeScrub != null || stats.valuedCopyCount > 0}
+                valuationComplete={activeScrub ? false : stats.valuationComplete}
+                live={!!activeScrub}
+                hideBalance={hideBalance}
+                scopeLabel={scopeGameName}
+              />
+            </div>
+
+            <div className="order-2 lg:order-none">
+              {gameFilter === ALL_GAMES ? (
+                <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
+              ) : (
+                // No per-game history yet (snapshots are whole-portfolio) — one
+                // honest line instead of a faked curve.
+                <p className="text-meta text-muted-foreground/70">{t(lang, "chartAllGamesOnly")}</p>
+              )}
+            </div>
+
+            {/* Quiet ticker-tape movers — mobile/tablet only; the desktop rail
+                gets the fuller "list" variant instead (see below). */}
+            <div className="order-4 lg:order-none lg:hidden">
+              <PortfolioMovers assets={assets} hideBalance={hideBalance} variant="inline" />
+            </div>
+
+            <div className="order-5 lg:order-none">
+              <PortfolioGameChips
+                breakdown={gameBreakdown}
+                activeGame={gameFilter}
+                onSelect={setGameFilter}
+              />
+            </div>
+
+            <div className="order-6 lg:order-none">
+              <PortfolioAssetsTable
+                assets={assets}
+                onUpdate={updateItem}
+                onRemove={removeItem}
+                hideBalance={hideBalance}
+                showGameBadge={availableGames.length >= 2}
+              />
+            </div>
+          </div>
+
+          <aside className="contents lg:block lg:space-y-6">
+            <div className="order-3 lg:order-none">
+              <PortfolioKpis stats={stats} hideBalance={hideBalance} />
+            </div>
+
+            {/* Desktop-only "list" movers — cheap to double-mount (pure memo
+                over assets, no fetch); the mobile row above stays "inline". */}
+            <div className="hidden lg:block">
+              <Surface variant="panel" className="p-4">
+                <PortfolioMovers assets={assets} hideBalance={hideBalance} variant="list" />
+              </Surface>
+            </div>
+
+            {gameFilter === ALL_GAMES && (
+              <div className="order-7 lg:order-none">
+                <PortfolioGameBreakdown
+                  breakdown={gameBreakdown}
+                  totalValueJpy={stats.totalValueJpy}
+                  onSelect={setGameFilter}
+                  hideBalance={hideBalance}
+                />
+              </div>
             )}
-          </Surface>
 
-          {gameFilter === ALL_GAMES && (
-            <PortfolioGameBreakdown
-              breakdown={gameBreakdown}
-              totalValueJpy={stats.totalValueJpy}
-              onSelect={setGameFilter}
-              hideBalance={hideBalance}
-            />
-          )}
-
-          <Surface variant="panel" className="p-4 sm:p-5">
-            <PortfolioMovers assets={assets} hideBalance={hideBalance} />
-          </Surface>
-
-          {stats.valuationComplete && (
-            <PortfolioAllocationPanel allocation={allocation} hideBalance={hideBalance} />
-          )}
-        </>
+            {stats.valuationComplete && (
+              <div className="order-8 lg:order-none">
+                <PortfolioAllocationPanel allocation={allocation} hideBalance={hideBalance} />
+              </div>
+            )}
+          </aside>
+        </div>
       )}
 
       <AddCardDialog

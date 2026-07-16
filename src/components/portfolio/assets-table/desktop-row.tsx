@@ -7,16 +7,17 @@ import { ChevronRight, StickyNote } from "lucide-react"
 
 import { Price } from "@/components/shared/price-inline"
 import { MiniSparkline } from "@/components/ui/mini-sparkline"
+import { PriceTag } from "@/components/ui/price-tag"
 import { getGameConfig, getGameAccentTint } from "@/lib/game-config"
 import { DEFAULT_GAME } from "@/lib/game/constants"
 import { MASKED } from "@/lib/constants/ui"
 import { getCardName, t, type Language } from "@/lib/i18n"
 import type { AssetRow } from "@/lib/types/portfolio"
 import { cn } from "@/lib/utils"
-import { formatJpyAmount, formatPct } from "@/lib/utils/currency"
+import { formatJpyAmount } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
-import { AssetEditButton, ChangeCell } from "./action-menu"
+import { AssetEditButton } from "./action-menu"
 import { holdingValue, pnlCalc } from "./utils"
 
 export const AssetRowComponent = memo(function AssetRowComponent({
@@ -112,7 +113,7 @@ export const AssetRowComponent = memo(function AssetRowComponent({
 
       {/* 24h */}
       <td className="py-2.5 pr-3 text-right align-middle">
-        <ChangeCell value={row.priceChange24h} />
+        <PriceTag change={row.priceChange24h} changeOnly changeStyle="plain" size="sm" />
       </td>
 
       {/* 7d trend — CMC-style micro line (lg+) */}
@@ -139,9 +140,17 @@ export const AssetRowComponent = memo(function AssetRowComponent({
               {pnlResult.pnl >= 0 ? "+" : ""}
               {formatJpyAmount(pnlResult.pnl, currency)}
               {pnlResult.pct != null && (
-                <span className="ml-1 text-micro font-normal opacity-70">
-                  ({pnlResult.pct >= 0 ? "+" : ""}
-                  {formatPct(pnlResult.pct)}%)
+                <span className="ml-1 font-normal opacity-70">
+                  (
+                  <PriceTag
+                    change={pnlResult.pct}
+                    changeOnly
+                    changeStyle="plain"
+                    showArrow={false}
+                    size="sm"
+                    className="text-micro"
+                  />
+                  )
                 </span>
               )}
             </span>

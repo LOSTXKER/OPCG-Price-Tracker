@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   BellRing,
   BookOpen,
-  Heart,
+  Bookmark,
   Info,
   LogOut,
   Mail,
@@ -247,7 +247,7 @@ export function HeaderUserMenu({
                 {t(language, "myOrders")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => router.push("/saved")}>
-                <Heart className="size-4" />
+                <Bookmark className="size-4" />
                 {t(language, "savedListings")}
               </DropdownMenuItem>
             </>

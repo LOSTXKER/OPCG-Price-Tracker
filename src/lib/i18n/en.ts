@@ -341,7 +341,7 @@ export const en = {
   emptyPortfolio: "No cards in portfolio",
   emptyPortfolioDesc: "Add your first card to start tracking value",
   emptyWatchlist: "No cards in watchlist",
-  emptyWatchlistDesc: "Star cards you're interested in to track prices",
+  emptyWatchlistDesc: "Tap the heart on cards you're interested in to track prices",
   noPortfolioData: "Not enough data yet",
   noPortfolioDataDesc: "Chart will appear after at least 2 days of price data",
   unrealizedPnl: "Unrealized P&L",

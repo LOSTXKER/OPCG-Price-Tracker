@@ -341,7 +341,7 @@ export const jp = {
   emptyPortfolio: "ポートフォリオにカードがありません",
   emptyPortfolioDesc: "最初のカードを追加して価値を追跡しましょう",
   emptyWatchlist: "ウォッチリストにカードがありません",
-  emptyWatchlistDesc: "気になるカードにスターを付けて価格を追跡",
+  emptyWatchlistDesc: "気になるカードにハートを付けて価格を追跡",
   noPortfolioData: "データが不足しています",
   noPortfolioDataDesc: "価格データが2日以上になるとチャートが表示されます",
   unrealizedPnl: "未実現損益",

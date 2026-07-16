@@ -38,13 +38,31 @@ const entry: WatchlistEntry = {
   },
 };
 
+const pinnedAlertedEntry: WatchlistEntry = {
+  ...entry,
+  id: 2,
+  cardId: 2,
+  pinnedAt: "2026-07-10T00:00:00.000Z",
+  hasActiveAlert: true,
+};
+
 const noop = () => undefined;
 
-function renderList({ hasSparkline = false }: { hasSparkline?: boolean } = {}) {
+function renderList({
+  hasSparkline = false,
+  entries = [entry],
+  period = "7d" as const,
+  onPeriodSort,
+}: {
+  hasSparkline?: boolean;
+  entries?: WatchlistEntry[];
+  period?: "24h" | "7d" | "30d";
+  onPeriodSort?: (period: "24h" | "7d" | "30d") => void;
+} = {}) {
   return renderToStaticMarkup(
     <WatchlistListView
-      entries={[entry]}
-      period="7d"
+      entries={entries}
+      period={period}
       editMode={false}
       selected={new Set()}
       onToggleSelect={noop}
@@ -54,6 +72,7 @@ function renderList({ hasSparkline = false }: { hasSparkline?: boolean } = {}) {
       onSetAlert={noop}
       onRemove={noop}
       removingIds={new Set()}
+      onPeriodSort={onPeriodSort}
     />,
   );
 }
@@ -73,5 +92,37 @@ describe("watchlist flat list view", () => {
 
     expect(markup).toContain(t("TH", "priceHistory"));
     expect(markup).toContain("<polyline");
+  });
+
+  it("drops the overlapping thumbnail badges and moves pin/alert inline next to the card code", () => {
+    const markup = renderList({ entries: [pinnedAlertedEntry] });
+
+    // The old circular badges sat absolutely positioned on top of the artwork.
+    expect(markup).not.toContain("ring-2 ring-background");
+
+    // Mobile CardIdentity (inline icons) + desktop WatchlistStatus (circle
+    // icons) both use role="img" for pin/alert — 2 surfaces x 2 icons.
+    expect(markup.match(/role="img"/g)).toHaveLength(4);
+    expect(markup).toContain(t("TH", "watchlistPinned"));
+    expect(markup).toContain(t("TH", "watchlistHasAlert"));
+  });
+
+  it("keeps status icons out of the meta line when a card is neither pinned nor alerted", () => {
+    const markup = renderList({ entries: [entry] });
+
+    expect(markup).not.toContain(t("TH", "watchlistPinned"));
+    expect(markup).not.toContain(t("TH", "watchlistHasAlert"));
+  });
+
+  it("renders 24H/7D/30D as sortable desktop column headers with the active period highlighted", () => {
+    const onPeriodSort = () => undefined;
+    const markup = renderList({ period: "7d", onPeriodSort });
+
+    expect(markup).toContain(">24H<");
+    expect(markup).toContain(">7D<");
+    expect(markup).toContain(">30D<");
+    expect(markup.match(/aria-pressed="true"/g)).toHaveLength(1);
+    expect(markup.match(/aria-pressed="false"/g)).toHaveLength(2);
+    expect(markup).toContain("xl:table-cell");
   });
 });

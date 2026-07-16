@@ -3,8 +3,6 @@
 import { Pencil } from "lucide-react"
 
 import { t, type Language } from "@/lib/i18n"
-import { cn } from "@/lib/utils"
-import { formatPct } from "@/lib/utils/currency"
 
 export function AssetEditButton({
   lang,
@@ -26,38 +24,5 @@ export function AssetEditButton({
     >
       <Pencil className="size-3.5" />
     </button>
-  )
-}
-
-export function ChangeCell({
-  value,
-  label,
-}: {
-  value?: number | null
-  label?: string
-}) {
-  if (value == null)
-    return label ? (
-      <span className="tabular-nums text-meta text-muted-foreground/60">
-        {label} —
-      </span>
-    ) : (
-      <span className="tabular-nums text-xs text-muted-foreground">—</span>
-    )
-  return (
-    <span
-      className={cn(
-        "tabular-nums text-micro",
-        value > 0
-          ? "text-price-up"
-          : value < 0
-            ? "text-price-down"
-            : "text-muted-foreground",
-      )}
-    >
-      {label && <span className="mr-0.5 font-sans text-muted-foreground/60">{label}</span>}
-      {value > 0 ? "+" : ""}
-      {formatPct(value)}%
-    </span>
   )
 }

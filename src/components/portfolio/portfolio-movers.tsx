@@ -14,6 +14,7 @@ import {
   formatPct,
 } from "@/lib/utils/currency"
 import { MASKED } from "@/lib/constants/ui"
+import { DEFAULT_GAME } from "@/lib/game/constants"
 import type { AssetRow } from "@/lib/types/portfolio"
 
 type Mover = {
@@ -64,12 +65,8 @@ export function PortfolioMovers({
             const up = pct > 0
             const name = getCardName(lang, row)
             const code = row.baseCode ?? row.cardCode
-            return (
-              <Link
-                key={row.itemId}
-                href={code ? `/opcg/cards/${code}` : "#"}
-                className="ease-chrome flex shrink-0 items-baseline gap-1.5 transition-colors hover:text-foreground"
-              >
+            const inner = (
+              <>
                 <span className="max-w-32 truncate text-body-sm text-muted-foreground">
                   {name}
                 </span>
@@ -82,7 +79,23 @@ export function PortfolioMovers({
                   {up ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />}
                   {formatPct(Math.abs(pct), 1)}%
                 </span>
+              </>
+            )
+            return code ? (
+              <Link
+                key={row.itemId}
+                href={`/${row.game?.slug ?? DEFAULT_GAME}/cards/${code}`}
+                className="ease-chrome flex shrink-0 items-baseline gap-1.5 transition-colors hover:text-foreground"
+              >
+                {inner}
               </Link>
+            ) : (
+              <span
+                key={row.itemId}
+                className="flex shrink-0 items-baseline gap-1.5"
+              >
+                {inner}
+              </span>
             )
           })}
         </div>
@@ -107,12 +120,8 @@ export function PortfolioMovers({
               currency,
             )
 
-            return (
-              <Link
-                key={row.itemId}
-                href={code ? `/opcg/cards/${code}` : "#"}
-                className="ease-chrome flex min-h-11 items-center gap-3 py-2 transition-colors hover:bg-muted/40"
-              >
+            const rowInner = (
+              <>
                 {/* Card thumbnail */}
                 <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted ring-1 ring-hair">
                   {row.imageUrl ? (
@@ -160,7 +169,21 @@ export function PortfolioMovers({
                     {formatPct(Math.abs(pct), 1)}%
                   </span>
                 </div>
+              </>
+            )
+
+            return code ? (
+              <Link
+                key={row.itemId}
+                href={`/${row.game?.slug ?? DEFAULT_GAME}/cards/${code}`}
+                className="ease-chrome flex min-h-11 items-center gap-3 py-2 transition-colors hover:bg-muted/40"
+              >
+                {rowInner}
               </Link>
+            ) : (
+              <div key={row.itemId} className="flex min-h-11 items-center gap-3 py-2">
+                {rowInner}
+              </div>
             )
           })}
         </div>

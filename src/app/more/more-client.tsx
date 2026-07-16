@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Crown,
   Globe,
+  Bookmark,
   Heart,
   LogOut,
   MessageCircle,
@@ -252,7 +253,7 @@ export default function MoreClient() {
                     href="/orders"
                   />
                   <GroupedRow
-                    icon={Heart}
+                    icon={Bookmark}
                     iconClassName="bg-destructive/10 text-destructive"
                     title={t(language, "savedListings")}
                     href="/saved"

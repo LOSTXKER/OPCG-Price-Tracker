@@ -190,7 +190,7 @@ function DirectionPill({
       type="button"
       onClick={onClick}
       className={cn(
-        "h-8 rounded-md border px-2 text-xs font-medium transition-all",
+        "h-11 rounded-md border px-2 text-xs font-medium transition-all md:h-8",
         active
           ? activeCls
           : "border-border text-muted-foreground hover:border-hair",
@@ -223,7 +223,7 @@ function ChannelPill({
       title={title}
       aria-pressed={active}
       className={cn(
-        "relative inline-flex h-8 items-center justify-center gap-1 rounded-md border px-2 text-xs font-medium transition-all",
+        "relative inline-flex h-11 items-center justify-center gap-1 rounded-md border px-2 text-xs font-medium transition-all md:h-8",
         active
           ? "border-primary/40 bg-primary/10 text-primary"
           : "border-border text-muted-foreground hover:border-hair",

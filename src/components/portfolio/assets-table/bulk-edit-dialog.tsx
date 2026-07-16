@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Switch } from "@/components/ui/switch"
 import { getCardName, t, type Language } from "@/lib/i18n"
 import { MASKED } from "@/lib/constants/ui"
 import type { AssetRow } from "@/lib/types/portfolio"
@@ -100,7 +101,7 @@ function CardEditCompact({
 
         <button
           onClick={() => void handleRemove()}
-          className="tap-safe shrink-0 rounded-lg p-1 text-muted-foreground/25 opacity-0 transition-all group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive"
+          className="tap-safe shrink-0 rounded-lg p-1 text-muted-foreground/25 opacity-100 transition-all hover:bg-destructive/10 hover:text-destructive sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
         >
           <Trash2 className="size-3.5" />
         </button>
@@ -140,34 +141,20 @@ function CardEditCompact({
             </div>
           )}
         </div>
-        <div className="ml-auto">
-          <button
-            onClick={() => onFieldChange(row.itemId, "isPrivate", !isPrivate)}
-            className="ease-chrome flex items-center gap-1.5 rounded-lg px-1.5 py-0.5 hover:bg-muted"
-            title={isPrivate ? t(lang, "unmarkPrivate") : t(lang, "markAsPrivate")}
+        <div className="ml-auto flex items-center gap-1.5 rounded-lg px-1.5 py-0.5">
+          <span
+            className={cn(
+              "text-overlay",
+              isPrivate ? "text-muted-foreground/50" : "text-primary/80",
+            )}
           >
-            <span
-              className={cn(
-                "text-overlay",
-                isPrivate ? "text-muted-foreground/50" : "text-primary/80",
-              )}
-            >
-              {isPrivate ? t(lang, "privateCard") : t(lang, "unmarkPrivate")}
-            </span>
-            <div
-              className={cn(
-                "relative inline-flex h-4 w-7 shrink-0 rounded-full transition-colors",
-                isPrivate ? "bg-muted-foreground/25" : "bg-primary",
-              )}
-            >
-              <span
-                className={cn(
-                  "pointer-events-none absolute top-0.5 inline-block size-3 rounded-full bg-white shadow-sm transition-transform",
-                  isPrivate ? "left-0.5" : "left-[14px]",
-                )}
-              />
-            </div>
-          </button>
+            {isPrivate ? t(lang, "privateCard") : t(lang, "unmarkPrivate")}
+          </span>
+          <Switch
+            checked={!isPrivate}
+            onCheckedChange={(checked) => onFieldChange(row.itemId, "isPrivate", !checked)}
+            ariaLabel={isPrivate ? t(lang, "unmarkPrivate") : t(lang, "markAsPrivate")}
+          />
         </div>
       </div>
     </div>

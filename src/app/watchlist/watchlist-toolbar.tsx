@@ -13,6 +13,7 @@ import { type ReactNode, useMemo, useRef, useState } from "react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { FilterModal } from "@/components/shared/filter-modal";
+import { IconButton } from "@/components/ui/icon-button";
 import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { ViewModeControl } from "@/components/ui/view-mode-control";
@@ -86,7 +87,9 @@ export function WatchlistToolbar({
   const lang = useUIStore((s) => s.language);
   const [filterOpen, setFilterOpen] = useState(false);
   const [draftFilters, setDraftFilters] = useState(filters);
-  const filterButtonRef = useRef<HTMLButtonElement>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const mobileFilterButtonRef = useRef<HTMLButtonElement>(null);
+  const desktopFilterButtonRef = useRef<HTMLButtonElement>(null);
 
   const sortOptions: { key: SortKey; label: string }[] = useMemo(
     () => [
@@ -120,72 +123,56 @@ export function WatchlistToolbar({
 
   const handleFilterOpenChange = (open: boolean) => {
     setFilterOpen(open);
-    if (!open) requestAnimationFrame(() => filterButtonRef.current?.focus());
+    if (!open) {
+      requestAnimationFrame(() => {
+        const target = mobileFilterButtonRef.current?.offsetParent
+          ? mobileFilterButtonRef.current
+          : desktopFilterButtonRef.current;
+        target?.focus();
+      });
+    }
   };
+
+  const limitMeter =
+    isFinite && (isFull || isHigh) ? (
+      <div
+        className={cn(
+          "flex items-center gap-1.5 rounded-md border px-2 py-1",
+          isFull
+            ? "border-destructive/30 bg-destructive/5"
+            : "border-warning/30 bg-warning/5",
+        )}
+        title={`${itemCount}/${limit}`}
+      >
+        <div className="hidden h-1 w-10 overflow-hidden rounded-full bg-muted sm:flex">
+          <div
+            className={cn(
+              "h-full rounded-full motion-base",
+              isFull ? "bg-destructive" : "bg-warning",
+            )}
+            style={{ width: `${usagePct}%` }}
+          />
+        </div>
+        <span
+          className={cn(
+            "text-meta tabular-nums",
+            isFull ? "text-destructive" : "text-warning",
+          )}
+        >
+          {itemCount}/{limit}
+        </span>
+        <UpgradeBadge featureKey="watchlistCards" />
+      </div>
+    ) : null;
+
+  const resultCountLine = (
+    <span className="shrink-0 text-meta tabular-nums" aria-live="polite">
+      {resultCount.toLocaleString()} {t(lang, "watchlistSummaryCards").toLowerCase()}
+    </span>
+  );
 
   return (
     <div className="space-y-2">
-      <div className="grid grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] items-center gap-2 md:flex md:min-w-0 md:flex-nowrap">
-        <ToolbarSearch
-          type="search"
-          value={search}
-          onValueChange={onSearchChange}
-          placeholder={t(lang, "watchlistSearchPlaceholder")}
-          aria-label={t(lang, "watchlistSearchPlaceholder")}
-          containerClassName="min-w-0 border-border bg-background py-0 sm:min-h-11 md:min-h-0 md:min-w-40 md:flex-1 md:py-2 lg:max-w-72"
-          className="h-11 w-full md:h-auto"
-        />
-
-        <div className="min-w-0 md:min-w-40 md:flex-1 lg:max-w-64">
-          <SetPicker
-            sets={setOptions}
-            selectedCode={filters.setCode}
-            onSelect={(setCode) => onFiltersChange({ ...filters, setCode })}
-            variant="inline"
-            nullable
-            triggerClassName="sm:h-11 md:h-9"
-          />
-        </div>
-
-        <ToolbarSortDropdown
-          options={sortOptions}
-          activeKey={sortKey}
-          activeDir={sortDirection}
-          onChange={onSortChange}
-          fallbackLabel={t(lang, "watchlistSortBy")}
-          stableMobileWidth
-          itemClassName="min-h-11 md:min-h-0"
-          className="w-full sm:h-11 md:h-auto md:w-auto"
-        />
-
-        <FilterButton
-          ref={filterButtonRef}
-          onClick={openFilters}
-          count={activeFilterCount}
-          active={filterOpen || activeFilterCount > 0}
-          aria-haspopup="dialog"
-          aria-expanded={filterOpen}
-          className="w-full sm:h-11 md:h-auto md:w-auto [&>span]:w-full"
-        >
-          <span>{t(lang, "filter")}</span>
-        </FilterButton>
-        <FilterModal
-          open={filterOpen}
-          onOpenChange={handleFilterOpenChange}
-          onReset={() =>
-            setDraftFilters({ ...DEFAULT_FILTERS, setCode: filters.setCode })
-          }
-          resetDisabled={draftFilterCount === 0}
-          onApply={() => onFiltersChange(draftFilters)}
-        >
-          <WatchlistFilterPanel
-            lang={lang}
-            filters={draftFilters}
-            onFiltersChange={setDraftFilters}
-          />
-        </FilterModal>
-      </div>
-
       {editMode ? (
         <div
           className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 p-2"
@@ -236,78 +223,181 @@ export function WatchlistToolbar({
           </Button>
         </div>
       ) : (
-        <div className="flex min-w-0 flex-wrap items-center gap-2 sm:min-h-11 md:min-h-9">
-          {scope && <div className="w-full min-w-0 md:w-auto">{scope}</div>}
+        <>
+          {scope && <div className="min-w-0">{scope}</div>}
 
-          <span
-            className={cn(
-              "hidden min-w-0 truncate whitespace-nowrap text-meta tabular-nums sm:inline",
-              !scope && "sm:mr-auto",
-            )}
-            aria-live="polite"
-          >
-            {resultCount.toLocaleString()} {t(lang, "watchlistSummaryCards").toLowerCase()}
-          </span>
-
-          <div className="no-sb ml-auto flex max-w-full min-w-0 shrink-0 items-center justify-end gap-2 overflow-x-auto">
-            <WatchlistPeriodControl
-              period={period}
-              onPeriodChange={onPeriodChange}
+          {/* Mobile (<sm), stacked: set is the primary browse axis and owns its
+              own full-width row, then a control cluster, then sort — mirrors
+              the home-market-overview grammar so browsing feels identical
+              across pages. */}
+          <div className="space-y-2 sm:hidden">
+            <SetPicker
+              sets={setOptions}
+              selectedCode={filters.setCode}
+              onSelect={(setCode) => onFiltersChange({ ...filters, setCode })}
+              variant="inline"
+              nullable
+              prominent
+              triggerClassName="tap-safe h-10 rounded-lg border-primary/25 bg-primary/5 hover:border-primary/35 hover:bg-primary/10 aria-expanded:rounded-b-none aria-expanded:border-primary/35 aria-expanded:bg-primary/10"
             />
 
-            {isFinite && (isFull || isHigh) && (
-              <div
-                className={cn(
-                  "flex items-center gap-1.5 rounded-md border px-2 py-1",
-                  isFull
-                    ? "border-destructive/30 bg-destructive/5"
-                    : "border-warning/30 bg-warning/5",
-                )}
-                title={`${itemCount}/${limit}`}
-              >
-                <div className="hidden h-1 w-10 overflow-hidden rounded-full bg-muted sm:flex">
-                  <div
-                    className={cn(
-                      "h-full rounded-full motion-base",
-                      isFull ? "bg-destructive" : "bg-warning",
-                    )}
-                    style={{ width: `${usagePct}%` }}
-                  />
-                </div>
-                <span
-                  className={cn(
-                    "text-meta tabular-nums",
-                    isFull ? "text-destructive" : "text-warning",
-                  )}
+            <div className="flex flex-wrap items-center gap-2">
+              <WatchlistPeriodControl period={period} onPeriodChange={onPeriodChange} />
+
+              <div className="ml-auto flex shrink-0 items-center gap-2">
+                <ToolbarSearch
+                  type="search"
+                  value={search}
+                  onValueChange={onSearchChange}
+                  collapsible
+                  open={searchOpen}
+                  onOpenChange={setSearchOpen}
+                  placeholder={t(lang, "watchlistSearchPlaceholder")}
+                  aria-label={t(lang, "watchlistSearchPlaceholder")}
+                  size="sm"
+                />
+
+                <FilterButton
+                  ref={mobileFilterButtonRef}
+                  onClick={openFilters}
+                  count={activeFilterCount}
+                  active={filterOpen || activeFilterCount > 0}
+                  aria-haspopup="dialog"
+                  aria-expanded={filterOpen}
+                  iconOnly
+                  aria-label={t(lang, "filter")}
+                />
+
+                <ViewModeControl<WatchView>
+                  modes={["list", "grid"]}
+                  value={view}
+                  onChange={onViewChange}
+                />
+
+                <IconButton
+                  aria-label={t(lang, "watchlistEditMode")}
+                  onClick={onToggleEditMode}
+                  size="md"
                 >
-                  {itemCount}/{limit}
-                </span>
-                <UpgradeBadge featureKey="watchlistCards" />
+                  <Pencil className="size-4" />
+                </IconButton>
               </div>
-            )}
+            </div>
 
-            <ViewModeControl<WatchView>
-              modes={["list", "grid"]}
-              value={view}
-              onChange={onViewChange}
-            />
+            <div className="flex items-center justify-between gap-2">
+              <span className="shrink-0 text-meta">{t(lang, "sortBy")}</span>
+              <ToolbarSortDropdown
+                options={sortOptions}
+                activeKey={sortKey}
+                activeDir={sortDirection}
+                onChange={onSortChange}
+                fallbackLabel={t(lang, "watchlistSortBy")}
+                align="end"
+                stableMobileWidth
+                itemClassName="min-h-11 md:min-h-0"
+                className="ml-auto w-48 min-w-0 flex-none"
+              />
+            </div>
 
-            <button
-              type="button"
-              onClick={onToggleEditMode}
-              aria-pressed={false}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "sm" }),
-                "min-w-11 gap-1.5 px-2.5 text-muted-foreground hover:text-foreground sm:min-h-11 md:min-h-0 md:min-w-0",
-              )}
-            >
-              <Pencil className="size-3.5" />
-              <span className="hidden sm:inline">{t(lang, "watchlistEditMode")}</span>
-              <span className="sr-only sm:hidden">{t(lang, "watchlistEditMode")}</span>
-            </button>
+            {limitMeter}
+
+            <p className="text-meta tabular-nums" aria-live="polite">
+              {resultCount.toLocaleString()} {t(lang, "watchlistSummaryCards").toLowerCase()}
+            </p>
           </div>
-        </div>
+
+          {/* Desktop/tablet (>=sm): one row, mirrors home-market-overview's
+              desktop toolbar — set on the left, count next to it, then the
+              display/action cluster pinned to the right. */}
+          <div className="hidden items-center gap-2 sm:flex">
+            <div className="w-[19rem] flex-none">
+              <SetPicker
+                sets={setOptions}
+                selectedCode={filters.setCode}
+                onSelect={(setCode) => onFiltersChange({ ...filters, setCode })}
+                variant="inline"
+                nullable
+              />
+            </div>
+
+            {resultCountLine}
+            {limitMeter}
+
+            <div className="ml-auto flex shrink-0 items-center gap-1.5">
+              <WatchlistPeriodControl period={period} onPeriodChange={onPeriodChange} />
+
+              <div className="h-5 w-px bg-border/40" />
+
+              <ToolbarSearch
+                type="search"
+                value={search}
+                onValueChange={onSearchChange}
+                collapsible
+                open={searchOpen}
+                onOpenChange={setSearchOpen}
+                placeholder={t(lang, "watchlistSearchPlaceholder")}
+                aria-label={t(lang, "watchlistSearchPlaceholder")}
+                size="sm"
+              />
+
+              <ToolbarSortDropdown
+                options={sortOptions}
+                activeKey={sortKey}
+                activeDir={sortDirection}
+                onChange={onSortChange}
+                fallbackLabel={t(lang, "watchlistSortBy")}
+                itemClassName="min-h-11 md:min-h-0"
+              />
+
+              <FilterButton
+                ref={desktopFilterButtonRef}
+                onClick={openFilters}
+                count={activeFilterCount}
+                active={filterOpen || activeFilterCount > 0}
+                aria-haspopup="dialog"
+                aria-expanded={filterOpen}
+              >
+                <span>{t(lang, "filter")}</span>
+              </FilterButton>
+
+              <ViewModeControl<WatchView>
+                modes={["list", "grid"]}
+                value={view}
+                onChange={onViewChange}
+              />
+
+              <button
+                type="button"
+                onClick={onToggleEditMode}
+                aria-pressed={false}
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "gap-1.5 px-2.5 text-muted-foreground hover:text-foreground",
+                )}
+              >
+                <Pencil className="size-3.5" />
+                <span>{t(lang, "watchlistEditMode")}</span>
+              </button>
+            </div>
+          </div>
+        </>
       )}
+
+      <FilterModal
+        open={filterOpen}
+        onOpenChange={handleFilterOpenChange}
+        onReset={() =>
+          setDraftFilters({ ...DEFAULT_FILTERS, setCode: filters.setCode })
+        }
+        resetDisabled={draftFilterCount === 0}
+        onApply={() => onFiltersChange(draftFilters)}
+      >
+        <WatchlistFilterPanel
+          lang={lang}
+          filters={draftFilters}
+          onFiltersChange={setDraftFilters}
+        />
+      </FilterModal>
     </div>
   );
 }

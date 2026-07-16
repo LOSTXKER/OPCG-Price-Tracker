@@ -15,21 +15,35 @@ export function WatchlistSkeleton({ withHeader = true }: { withHeader?: boolean 
         </>
       )}
 
-      <div className="grid grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] gap-2 md:flex">
-        <Skeleton className="h-11 min-w-0 md:h-9 md:min-w-40 md:flex-1 lg:max-w-72" />
-        <Skeleton className="h-11 min-w-0 md:h-9 md:min-w-40 md:flex-1 lg:max-w-64" />
-        <Skeleton className="h-11 md:w-40 md:h-9" />
-        <Skeleton className="h-11 md:w-24 md:h-9" />
+      {/* Mobile toolbar (<sm): prominent set bar, then a control row, then the
+          sort row — mirrors the home-market-overview grammar. */}
+      <div className="space-y-2 sm:hidden">
+        <Skeleton className="h-10 w-full rounded-lg" />
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-9 w-24 rounded-full" />
+          <div className="ml-auto flex items-center gap-2">
+            <Skeleton className="size-9 rounded-md" />
+            <Skeleton className="size-9 rounded-md" />
+            <Skeleton className="size-9 rounded-md" />
+            <Skeleton className="size-9 rounded-md" />
+          </div>
+        </div>
+        <div className="flex items-center justify-between gap-2">
+          <Skeleton className="h-3 w-14" />
+          <Skeleton className="h-9 w-48 rounded-md" />
+        </div>
       </div>
 
-      <div className="flex min-w-0 flex-wrap items-center gap-2 sm:min-h-11 md:min-h-9">
-        <Skeleton className="hidden h-4 w-24 sm:block" />
-        <div className="ml-auto flex max-w-full items-center gap-2 overflow-hidden">
-          <div className="flex h-11 w-42 items-center md:h-8">
-            <Skeleton className="h-9 w-full rounded-full md:h-8" />
-          </div>
-          <Skeleton className="h-11 w-20 md:h-7" />
-          <Skeleton className="size-11 md:size-7" />
+      {/* Desktop/tablet toolbar (>=sm): one row. */}
+      <div className="hidden items-center gap-2 sm:flex">
+        <Skeleton className="h-9 w-[19rem] rounded-lg" />
+        <Skeleton className="h-3 w-20" />
+        <div className="ml-auto flex items-center gap-1.5">
+          <Skeleton className="h-7 w-24 rounded-full" />
+          <Skeleton className="h-7 w-32 rounded-md" />
+          <Skeleton className="h-7 w-20 rounded-md" />
+          <Skeleton className="h-7 w-20 rounded-md" />
+          <Skeleton className="size-7 rounded-md" />
         </div>
       </div>
 
@@ -51,10 +65,13 @@ export function WatchlistSkeleton({ withHeader = true }: { withHeader?: boolean 
       </Surface>
 
       <div className="hidden sm:block">
-        <div className="grid grid-cols-[minmax(0,1fr)_7rem_6rem_6rem] gap-3 border-b border-hair px-3 py-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-3 w-14" />
-          ))}
+        <div className="flex items-center gap-3 border-b border-hair px-3 py-3">
+          <Skeleton className="h-3 flex-1" />
+          <Skeleton className="h-3 w-28" />
+          <Skeleton className="h-3 w-20" />
+          <Skeleton className="h-3 w-20" />
+          <Skeleton className="hidden h-3 w-20 xl:block" />
+          <Skeleton className="h-3 w-24" />
         </div>
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="flex items-center gap-3 px-3 py-2">
@@ -63,8 +80,10 @@ export function WatchlistSkeleton({ withHeader = true }: { withHeader?: boolean 
               <Skeleton className="h-4 w-48" />
               <Skeleton className="h-3 w-28" />
             </div>
+            <Skeleton className="h-4 w-28" />
             <Skeleton className="h-4 w-20" />
-            <Skeleton className="h-4 w-14" />
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="hidden h-4 w-20 xl:block" />
             <Skeleton className="size-9 shrink-0" />
           </div>
         ))}
