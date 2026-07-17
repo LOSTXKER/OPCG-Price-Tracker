@@ -3,8 +3,11 @@ import { describe, expect, it } from "vitest";
 
 import { t } from "@/lib/i18n";
 
-import { WatchlistListView } from "./watchlist-list-view";
-import type { WatchlistEntry } from "./watchlist-types";
+import {
+  WatchlistListView,
+  type WatchlistHeaderCol,
+} from "./watchlist-list-view";
+import type { SortKey, WatchlistEntry } from "./watchlist-types";
 
 const entry: WatchlistEntry = {
   id: 1,
@@ -52,12 +55,14 @@ function renderList({
   hasSparkline = false,
   entries = [entry],
   period = "7d" as const,
-  onPeriodSort,
+  sortKey = "default" as SortKey,
+  onHeaderSort,
 }: {
   hasSparkline?: boolean;
   entries?: WatchlistEntry[];
   period?: "24h" | "7d" | "30d";
-  onPeriodSort?: (period: "24h" | "7d" | "30d") => void;
+  sortKey?: SortKey;
+  onHeaderSort?: (col: WatchlistHeaderCol) => void;
 } = {}) {
   return renderToStaticMarkup(
     <WatchlistListView
@@ -72,7 +77,8 @@ function renderList({
       onSetAlert={noop}
       onRemove={noop}
       removingIds={new Set()}
-      onPeriodSort={onPeriodSort}
+      sortKey={sortKey}
+      onHeaderSort={onHeaderSort}
     />,
   );
 }
@@ -114,15 +120,23 @@ describe("watchlist flat list view", () => {
     expect(markup).not.toContain(t("TH", "watchlistHasAlert"));
   });
 
-  it("renders 24H/7D/30D as sortable desktop column headers with the active period highlighted", () => {
-    const onPeriodSort = () => undefined;
-    const markup = renderList({ period: "7d", onPeriodSort });
+  it("renders every data column as a canonical SortableHeader with the active sort exposed", () => {
+    const markup = renderList({ period: "7d", sortKey: "gain" });
 
-    expect(markup).toContain(">24H<");
-    expect(markup).toContain(">7D<");
-    expect(markup).toContain(">30D<");
-    expect(markup.match(/aria-pressed="true"/g)).toHaveLength(1);
-    expect(markup.match(/aria-pressed="false"/g)).toHaveLength(2);
+    expect(markup).toContain("24H");
+    expect(markup).toContain("7D");
+    expect(markup).toContain("30D");
+    // sortKey=gain + period=7d → the 7D column is the single descending header
+    // (name/price/24h/30d stay aria-sort="none").
+    expect(markup.match(/aria-sort="descending"/g)).toHaveLength(1);
+    expect(markup.match(/aria-sort="none"/g)).toHaveLength(4);
     expect(markup).toContain("xl:table-cell");
+  });
+
+  it("marks the name column ascending when sorting A→Z", () => {
+    const markup = renderList({ sortKey: "nameAz" });
+
+    expect(markup.match(/aria-sort="ascending"/g)).toHaveLength(1);
+    expect(markup.match(/aria-sort="descending"/g)).toBeNull();
   });
 });

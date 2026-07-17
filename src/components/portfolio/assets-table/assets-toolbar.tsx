@@ -64,13 +64,16 @@ export function AssetsToolbar({
             placeholder={t(lang, "searchByNameOrCode")}
             size="sm"
           />
-          <ToolbarSortDropdown
-            options={sortOptions}
-            activeKey={sortKey}
-            activeDir={sortDir}
-            onChange={onSortSelect}
-            fallbackLabel={t(lang, "toolbarSort")}
-          />
+          {/* Mobile only — the desktop table sorts at its column headers. */}
+          <div className="sm:hidden">
+            <ToolbarSortDropdown
+              options={sortOptions}
+              activeKey={sortKey}
+              activeDir={sortDir}
+              onChange={onSortSelect}
+              fallbackLabel={t(lang, "toolbarSort")}
+            />
+          </div>
           {hasAssets && (
             <Button
               type="button"

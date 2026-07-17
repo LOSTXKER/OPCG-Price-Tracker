@@ -38,7 +38,8 @@ export type SortKey =
   | "loss"
   | "priceHigh"
   | "priceLow"
-  | "nameAz";
+  | "nameAz"
+  | "nameZa";
 
 export type WatchlistFilters = {
   setCode: string | null;

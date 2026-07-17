@@ -1,9 +1,11 @@
 "use client"
 
+import { SortableHeader } from "@/components/shared/sortable-header"
 import { t, type Language } from "@/lib/i18n"
 import type { AssetRow } from "@/lib/types/portfolio"
 
 import { AssetRowComponent } from "./desktop-row"
+import type { SortDir, SortKey } from "./utils"
 
 /**
  * Quiet columns (owner: "ตารางรก ซ้ำซ้อน"): card · price · 24h · 7d trend
@@ -17,6 +19,9 @@ export function DesktopAssetsTable({
   hideBalance = false,
   showGameBadge = false,
   sparklines,
+  sortKey,
+  sortDir,
+  onSortSelect,
 }: {
   rows: AssetRow[]
   lang: Language
@@ -26,6 +31,10 @@ export function DesktopAssetsTable({
   showGameBadge?: boolean
   /** 7-day price series keyed by cardId (optional trend column). */
   sparklines?: Record<number, number[]>
+  sortKey: SortKey
+  sortDir: SortDir
+  /** Column headers sort in place (canonical SortableHeader, all tables). */
+  onSortSelect: (key: SortKey) => void
 }) {
   return (
     <div className="hidden sm:block">
@@ -35,11 +44,39 @@ export function DesktopAssetsTable({
         <thead className="bg-background">
           <tr className="border-b border-hair text-eyebrow text-muted-foreground/60">
             <th className="py-3 pr-3 font-medium">{t(lang, "card")}</th>
-            <th className="py-3 pr-3 text-right font-medium">{t(lang, "price")}</th>
-            <th className="py-3 pr-3 text-right font-medium">24h</th>
+            <SortableHeader<SortKey>
+              label={t(lang, "price")}
+              column="price"
+              activeCol={sortKey}
+              dir={sortDir}
+              onClick={onSortSelect}
+              align="right"
+            />
+            <SortableHeader<SortKey>
+              label="24h"
+              column="change24h"
+              activeCol={sortKey}
+              dir={sortDir}
+              onClick={onSortSelect}
+              align="right"
+            />
             <th className="hidden py-3 pr-3 text-right font-medium lg:table-cell">7d</th>
-            <th className="py-3 pr-3 text-right font-medium">{t(lang, "pnl")}</th>
-            <th className="py-3 pr-3 text-right font-medium">{t(lang, "value")}</th>
+            <SortableHeader<SortKey>
+              label={t(lang, "pnl")}
+              column="pnl"
+              activeCol={sortKey}
+              dir={sortDir}
+              onClick={onSortSelect}
+              align="right"
+            />
+            <SortableHeader<SortKey>
+              label={t(lang, "value")}
+              column="value"
+              activeCol={sortKey}
+              dir={sortDir}
+              onClick={onSortSelect}
+              align="right"
+            />
             <th className="w-10 py-3 pl-1" />
           </tr>
         </thead>

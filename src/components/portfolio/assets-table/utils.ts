@@ -1,6 +1,6 @@
 import type { AssetRow } from "@/lib/types/portfolio"
 
-export type SortKey = "value" | "pnl" | "change24h" | "cost" | "qty"
+export type SortKey = "value" | "pnl" | "change24h" | "cost" | "qty" | "price"
 export type SortDir = "desc" | "asc"
 export type HoldingsView = "grid" | "list"
 
@@ -41,6 +41,8 @@ export function sortAssets(assets: AssetRow[], key: SortKey, dir: SortDir): Asse
       }
       case "qty":
         return (a.quantity - b.quantity) * m
+      case "price":
+        return ((a.currentPrice ?? -Infinity) - (b.currentPrice ?? -Infinity)) * m
       default:
         return 0
     }

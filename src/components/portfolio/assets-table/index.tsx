@@ -128,6 +128,9 @@ export function PortfolioAssetsTable({
             hideBalance={hideBalance}
             showGameBadge={showGameBadge}
             sparklines={sparklines}
+            sortKey={sortKey}
+            sortDir={sortDir}
+            onSortSelect={handleSortSelect}
           />
         </>
       )}

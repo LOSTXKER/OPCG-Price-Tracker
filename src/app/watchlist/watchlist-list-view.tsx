@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Bell, MoreHorizontal, Pin, Trash2 } from "lucide-react";
 
 import { GameBadge } from "@/components/shared/game-badge";
-import { RarityBadge } from "@/components/shared/rarity-badge";
+import { SortableHeader } from "@/components/shared/sortable-header";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,9 +23,13 @@ import { useUIStore } from "@/stores/ui-store";
 
 import {
   type ChangePeriod,
+  type SortKey,
   type WatchlistEntry,
   getEntryChange,
 } from "./watchlist-types";
+
+/** Columns the desktop header can sort by. */
+export type WatchlistHeaderCol = "name" | "price" | ChangePeriod;
 
 export function WatchlistListView({
   entries,
@@ -40,7 +44,8 @@ export function WatchlistListView({
   onRemove,
   removingIds,
   showGameBadge = false,
-  onPeriodSort,
+  sortKey = "default",
+  onHeaderSort,
 }: {
   entries: WatchlistEntry[];
   period: ChangePeriod;
@@ -54,10 +59,33 @@ export function WatchlistListView({
   onRemove: (entry: WatchlistEntry) => void;
   removingIds: Set<number>;
   showGameBadge?: boolean;
-  /** Desktop 24H/7D/30D column headers act as sort buttons — list view only. */
-  onPeriodSort?: (period: ChangePeriod) => void;
+  sortKey?: SortKey;
+  /** Desktop column headers act as sort buttons (canonical SortableHeader) —
+   *  list view only. Cols: name · price · 24h/7d/30d. */
+  onHeaderSort?: (col: WatchlistHeaderCol) => void;
 }) {
   const lang = useUIStore((s) => s.language);
+
+  // Map the page's sortKey (+active period) onto the header columns so the
+  // canonical SortableHeader can show the active column + direction.
+  const headerSort = ((): { activeCol: WatchlistHeaderCol | null; dir: "asc" | "desc" } => {
+    switch (sortKey) {
+      case "nameAz":
+        return { activeCol: "name", dir: "asc" };
+      case "nameZa":
+        return { activeCol: "name", dir: "desc" };
+      case "priceHigh":
+        return { activeCol: "price", dir: "desc" };
+      case "priceLow":
+        return { activeCol: "price", dir: "asc" };
+      case "gain":
+        return { activeCol: period, dir: "desc" };
+      case "loss":
+        return { activeCol: period, dir: "asc" };
+      default:
+        return { activeCol: null, dir: "desc" };
+    }
+  })();
 
   if (entries.length === 0) return null;
 
@@ -145,33 +173,50 @@ export function WatchlistListView({
         <table className="w-full border-collapse text-left text-body-sm">
           <thead>
             <tr className="border-b border-hair text-eyebrow">
-              <th scope="col" className="px-3 py-2.5">
-                {t(lang, "card")}
-              </th>
-              <th scope="col" className="w-28 px-3 py-2.5 text-right">
-                {t(lang, "price")}
-              </th>
-              <th scope="col" className="w-20 px-3 py-2.5 text-right">
-                <PeriodSortHeaderButton
-                  label="24H"
-                  active={period === "24h"}
-                  onClick={() => onPeriodSort?.("24h")}
-                />
-              </th>
-              <th scope="col" className="w-20 px-3 py-2.5 text-right">
-                <PeriodSortHeaderButton
-                  label="7D"
-                  active={period === "7d"}
-                  onClick={() => onPeriodSort?.("7d")}
-                />
-              </th>
-              <th scope="col" className="hidden w-20 px-3 py-2.5 text-right xl:table-cell">
-                <PeriodSortHeaderButton
-                  label="30D"
-                  active={period === "30d"}
-                  onClick={() => onPeriodSort?.("30d")}
-                />
-              </th>
+              <SortableHeader<WatchlistHeaderCol>
+                label={t(lang, "card")}
+                column="name"
+                activeCol={headerSort.activeCol}
+                dir={headerSort.dir}
+                onClick={(col) => onHeaderSort?.(col)}
+                className="pl-3"
+              />
+              <SortableHeader<WatchlistHeaderCol>
+                label={t(lang, "price")}
+                column="price"
+                activeCol={headerSort.activeCol}
+                dir={headerSort.dir}
+                onClick={(col) => onHeaderSort?.(col)}
+                align="right"
+                className="w-28 px-3"
+              />
+              <SortableHeader<WatchlistHeaderCol>
+                label="24H"
+                column="24h"
+                activeCol={headerSort.activeCol}
+                dir={headerSort.dir}
+                onClick={(col) => onHeaderSort?.(col)}
+                align="right"
+                className="w-20 px-3"
+              />
+              <SortableHeader<WatchlistHeaderCol>
+                label="7D"
+                column="7d"
+                activeCol={headerSort.activeCol}
+                dir={headerSort.dir}
+                onClick={(col) => onHeaderSort?.(col)}
+                align="right"
+                className="w-20 px-3"
+              />
+              <SortableHeader<WatchlistHeaderCol>
+                label="30D"
+                column="30d"
+                activeCol={headerSort.activeCol}
+                dir={headerSort.dir}
+                onClick={(col) => onHeaderSort?.(col)}
+                align="right"
+                className="hidden w-20 px-3 xl:table-cell"
+              />
               {hasAnySparkline && (
                 <th scope="col" className="hidden px-3 py-2.5 text-center lg:table-cell">
                   {t(lang, "priceHistory")}
@@ -205,7 +250,7 @@ export function WatchlistListView({
                   )}
                   onClick={editMode ? () => onToggleSelect(entry.cardId) : undefined}
                 >
-                  <td className="min-w-0 px-3 py-2">
+                  <td className="min-w-0 px-3 py-3">
                     <div className="flex min-w-0 items-center gap-3">
                       {editMode && (
                         <label
@@ -241,7 +286,7 @@ export function WatchlistListView({
                       )}
                     </div>
                   </td>
-                  <td className="w-28 px-3 py-2 text-right">
+                  <td className="w-28 px-3 py-3 text-right">
                     <PriceTag
                       jpy={entry.card.latestPriceJpy}
                       thb={entry.card.latestPriceThb}
@@ -250,7 +295,7 @@ export function WatchlistListView({
                       className="flex-nowrap justify-end whitespace-nowrap"
                     />
                   </td>
-                  <td className="w-20 px-3 py-2 text-right">
+                  <td className="w-20 px-3 py-3 text-right">
                     <PriceTag
                       change={getEntryChange(entry, "24h")}
                       changeOnly
@@ -258,7 +303,7 @@ export function WatchlistListView({
                       size="sm"
                     />
                   </td>
-                  <td className="w-20 px-3 py-2 text-right">
+                  <td className="w-20 px-3 py-3 text-right">
                     <PriceTag
                       change={getEntryChange(entry, "7d")}
                       changeOnly
@@ -266,7 +311,7 @@ export function WatchlistListView({
                       size="sm"
                     />
                   </td>
-                  <td className="hidden w-20 px-3 py-2 text-right xl:table-cell">
+                  <td className="hidden w-20 px-3 py-3 text-right xl:table-cell">
                     <PriceTag
                       change={getEntryChange(entry, "30d")}
                       changeOnly
@@ -275,7 +320,7 @@ export function WatchlistListView({
                     />
                   </td>
                   {hasAnySparkline && (
-                    <td className="hidden px-3 py-2 lg:table-cell">
+                    <td className="hidden px-3 py-3 lg:table-cell">
                       <div className="flex justify-center">
                         {sparklineData?.length >= 2 ? (
                           <MiniSparkline data={sparklineData} width={104} height={28} />
@@ -287,7 +332,7 @@ export function WatchlistListView({
                       </div>
                     </td>
                   )}
-                  <td className="w-24 px-2 py-2 text-right">
+                  <td className="w-24 px-2 py-3 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <WatchlistStatus entry={entry} />
                       {!editMode && (
@@ -307,31 +352,6 @@ export function WatchlistListView({
         </table>
       </div>
     </>
-  );
-}
-
-/** 24H/7D/30D desktop column header — click toggles the active sort period. */
-function PeriodSortHeaderButton({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={cn(
-        "block w-full text-right text-eyebrow transition-colors",
-        active ? "text-foreground font-semibold" : "hover:text-foreground",
-      )}
-    >
-      {label}
-    </button>
   );
 }
 
@@ -379,8 +399,9 @@ function CardIdentity({
       <p className="line-clamp-2 break-words text-body-sm" title={displayName}>
         {displayName}
       </p>
-      <div className="mt-0.5 flex min-w-0 items-center gap-1.5 text-meta">
-        <RarityBadge rarity={entry.card.rarity} size="sm" />
+      {/* Quiet meta line — code only. The rarity pill was visual noise on every
+          row (owner: "ฝั่งซ้ายแน่นไป"); the print suffix already disambiguates. */}
+      <div className="mt-1 flex min-w-0 items-center gap-1.5 text-meta">
         <span className="truncate font-mono text-muted-foreground">
           {entry.card.cardCode}
         </span>

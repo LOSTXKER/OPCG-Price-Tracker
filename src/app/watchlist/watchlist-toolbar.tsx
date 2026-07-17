@@ -323,14 +323,18 @@ export function WatchlistToolbar({
                 size="sm"
               />
 
-              <ToolbarSortDropdown
-                options={sortOptions}
-                activeKey={sortKey}
-                activeDir={sortDirection}
-                onChange={onSortChange}
-                fallbackLabel={t(lang, "watchlistSortBy")}
-                itemClassName="min-h-11 md:min-h-0"
-              />
+              {/* List view sorts at the table headers (SortableHeader) — the
+                  dropdown only backs the grid view, which has no headers. */}
+              {view === "grid" && (
+                <ToolbarSortDropdown
+                  options={sortOptions}
+                  activeKey={sortKey}
+                  activeDir={sortDirection}
+                  onChange={onSortChange}
+                  fallbackLabel={t(lang, "watchlistSortBy")}
+                  itemClassName="min-h-11 md:min-h-0"
+                />
+              )}
 
               <FilterButton
                 ref={desktopFilterButtonRef}

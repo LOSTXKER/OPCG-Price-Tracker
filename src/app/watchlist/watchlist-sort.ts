@@ -172,6 +172,7 @@ export function sortEntries(
       });
       break;
     case "nameAz":
+    case "nameZa":
       arr.sort((a, b) => {
         const pin = pinnedFirst(a, b);
         if (pin !== 0) return pin;
@@ -181,7 +182,9 @@ export function sortEntries(
         const bn = (
           b.card.nameEn ?? b.card.nameJp ?? b.card.cardCode
         ).toLowerCase();
-        return an.localeCompare(bn);
+        return key === "nameZa"
+          ? bn.localeCompare(an)
+          : an.localeCompare(bn);
       });
       break;
   }

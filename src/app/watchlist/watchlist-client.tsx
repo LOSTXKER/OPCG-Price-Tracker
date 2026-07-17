@@ -28,7 +28,10 @@ import { useWatchlistStore } from "@/stores/watchlist-store";
 import { WatchlistAddDialog } from "./watchlist-add-dialog";
 import { WatchlistEmpty } from "./watchlist-empty";
 import { WatchlistGridView } from "./watchlist-grid-view";
-import { WatchlistListView } from "./watchlist-list-view";
+import {
+  WatchlistListView,
+  type WatchlistHeaderCol,
+} from "./watchlist-list-view";
 import {
   createWatchlistLoadRevision,
   shouldSettleWatchlistForeground,
@@ -482,14 +485,21 @@ function WatchlistContent({
     void load(true);
   };
 
-  // Clicking a desktop 24H/7D/30D column header (list view only) switches the
-  // active period to that column and starts sorting by it — tapping the same
-  // column again while already sorted by gain flips to loss, mirroring a
-  // price-table's sort toggle.
-  const handleListPeriodSort = (nextPeriod: ChangePeriod) => {
-    const alreadyGainOnPeriod = period === nextPeriod && sortKey === "gain";
+  // Desktop list view sorts at the column headers (canonical SortableHeader):
+  // name toggles A→Z/Z→A, price toggles high/low, a period column switches the
+  // active period + toggles gain/loss on repeat clicks.
+  const handleHeaderSort = (col: WatchlistHeaderCol) => {
+    if (col === "name") {
+      setSortKey(sortKey === "nameAz" ? "nameZa" : "nameAz");
+      return;
+    }
+    if (col === "price") {
+      setSortKey(sortKey === "priceHigh" ? "priceLow" : "priceHigh");
+      return;
+    }
+    const alreadyGainOnPeriod = period === col && sortKey === "gain";
     setSortKey(alreadyGainOnPeriod ? "loss" : "gain");
-    setPeriod(nextPeriod);
+    setPeriod(col);
   };
 
   const hasAnySparkline = useMemo(
@@ -597,7 +607,8 @@ function WatchlistContent({
               onRemove={(e) => void removeSingle(e)}
               removingIds={removingIds}
               showGameBadge={availableGames.length >= 2}
-              onPeriodSort={handleListPeriodSort}
+              sortKey={sortKey}
+              onHeaderSort={handleHeaderSort}
             />
           ) : (
             <WatchlistGridView
