@@ -22,7 +22,8 @@ describe("watchlist filter panel", () => {
     expect(markup).toContain('role="radiogroup"');
     expect(markup.match(/role="radio"/g)).toHaveLength(3);
     expect(markup.match(/aria-checked="true"/g)).toHaveLength(1);
-    expect(markup.match(/aria-pressed="false"/g)).toHaveLength(2);
+    // One status toggle left (แจ้งเตือน) — the pin filter left with the pin system.
+    expect(markup.match(/aria-pressed="false"/g)).toHaveLength(1);
     expect(markup).toContain('data-compact-visual="true"');
     expect(markup).toContain("md:h-7");
     expect(markup).not.toContain("sm:h-11");

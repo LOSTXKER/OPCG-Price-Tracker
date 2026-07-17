@@ -80,7 +80,6 @@ function renderList({
       onToggleSelect={noop}
       sparklines={hasSparkline ? { 1: [1, 2, 3] } : {}}
       hasAnySparkline={hasSparkline}
-      onTogglePin={noop}
       onSetAlert={noop}
       onRemove={noop}
       removingIds={new Set()}
@@ -107,24 +106,22 @@ describe("watchlist flat list view", () => {
     expect(markup).toContain("<polyline");
   });
 
-  it("drops the overlapping thumbnail badges and moves pin/alert inline next to the card code", () => {
+  it("shows only the alert glyph inline (the pin system is gone)", () => {
     const markup = renderList({ entries: [pinnedAlertedEntry] });
 
     // The old circular badges sat absolutely positioned on top of the artwork.
     expect(markup).not.toContain("ring-2 ring-background");
 
-    // Mobile row (inline icons) + desktop resting WatchlistStatus (bare
-    // icons, no bg circle) both use role="img" for pin/alert — 2 surfaces x
-    // 2 icons.
-    expect(markup.match(/role="img"/g)).toHaveLength(4);
-    expect(markup).toContain(t("TH", "watchlistPinned"));
+    // Mobile row (inline icon) + desktop resting WatchlistStatus — 2 surfaces
+    // x 1 bell icon. No pin glyphs anywhere.
+    expect(markup.match(/role="img"/g)).toHaveLength(2);
+    expect(markup).not.toContain(t("TH", "watchlistPinned"));
     expect(markup).toContain(t("TH", "watchlistHasAlert"));
   });
 
-  it("keeps status icons out of the meta line when a card is neither pinned nor alerted", () => {
+  it("keeps status icons out of the meta line when a card has no alert", () => {
     const markup = renderList({ entries: [entry] });
 
-    expect(markup).not.toContain(t("TH", "watchlistPinned"));
     expect(markup).not.toContain(t("TH", "watchlistHasAlert"));
   });
 

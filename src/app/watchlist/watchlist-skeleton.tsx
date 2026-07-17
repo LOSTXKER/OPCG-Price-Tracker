@@ -34,28 +34,7 @@ export function WatchlistSkeleton({ withHeader = true }: { withHeader?: boolean 
         </div>
       </div>
 
-      {/* Row 4 — "ขยับแรงวันนี้" mover shelf: eyebrow + tile shadows. */}
-      <div>
-        <Skeleton className="mb-2 h-3 w-28" />
-        <div className="no-sb flex gap-3 overflow-x-auto sm:grid sm:grid-cols-6 sm:gap-4 sm:overflow-visible">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="w-[92px] shrink-0 space-y-1.5 sm:w-full">
-              <Skeleton className="aspect-[63/88] w-full rounded-xl" />
-              <Skeleton className="h-3 w-10" />
-              <Skeleton className="h-3 w-14" />
-            </div>
-          ))}
-          {Array.from({ length: 2 }).map((_, i) => (
-            <div key={`sm-${i}`} className="hidden w-full space-y-1.5 sm:block">
-              <Skeleton className="aspect-[63/88] w-full rounded-xl" />
-              <Skeleton className="h-3 w-10" />
-              <Skeleton className="h-3 w-14" />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Row 5+ — list header + row shadows (mobile Apple-Stocks anatomy). */}
+      {/* List header + row shadows (mobile Apple-Stocks anatomy). */}
       <div className="sm:hidden">
         <div className="flex h-9 items-center justify-between border-b border-hair px-1">
           <Skeleton className="h-3 w-14" />

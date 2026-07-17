@@ -46,14 +46,12 @@ export type WatchlistFilters = {
   setCode: string | null;
   direction: "up" | "down" | null;
   hasAlert: boolean;
-  pinnedOnly: boolean;
 };
 
 export const DEFAULT_FILTERS: WatchlistFilters = {
   setCode: null,
   direction: null,
   hasAlert: false,
-  pinnedOnly: false,
 };
 
 export type WatchlistPanelState = {

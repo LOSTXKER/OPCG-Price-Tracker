@@ -35,7 +35,6 @@ export function filterEntries(
 
   return entries.filter((entry) => {
     if (!isEntryInGame(entry, gameFilter)) return false;
-    if (filters.pinnedOnly && entry.pinnedAt == null) return false;
     if (filters.hasAlert && !entry.hasActiveAlert) return false;
     if (filters.setCode && entry.card.set.code !== filters.setCode) return false;
 
@@ -83,9 +82,7 @@ export function countActiveWatchlistModalFilters(
   filters: WatchlistFilters,
 ): number {
   return (
-    Number(filters.direction !== null) +
-    Number(filters.hasAlert) +
-    Number(filters.pinnedOnly)
+    Number(filters.direction !== null) + Number(filters.hasAlert)
   );
 }
 
@@ -104,34 +101,6 @@ export function filterAndSortEntries(
   return sortEntries(filterEntries(entries, options), sortKey, options.period);
 }
 
-/** ขยับแรงวันนี้ shelf — |%change| ≥ 1, biggest swing first, capped at 6. */
-export const WATCHLIST_MOVER_THRESHOLD_PCT = 1;
-export const WATCHLIST_MOVER_LIMIT = 6;
-export const WATCHLIST_MOVER_MIN_ITEMS = 4;
-
-/**
- * Pure membership rule for the mover shelf so "does this card qualify" is
- * unit-testable without mounting the shelf component. Runs over ALL entries
- * (not the filtered/sorted view) — the shelf is a lens on the whole
- * watchlist, independent of the page's search/filter state.
- */
-export function selectWatchlistMovers(
-  entries: readonly WatchlistEntry[],
-  period: ChangePeriod,
-  limit: number = WATCHLIST_MOVER_LIMIT,
-): WatchlistEntry[] {
-  return entries
-    .filter((entry) => {
-      const change = getEntryChange(entry, period);
-      return change != null && Math.abs(change) >= WATCHLIST_MOVER_THRESHOLD_PCT;
-    })
-    .sort(
-      (a, b) =>
-        Math.abs(getEntryChange(b, period) ?? 0) - Math.abs(getEntryChange(a, period) ?? 0),
-    )
-    .slice(0, limit);
-}
-
 export function sortEntries(
   entries: readonly WatchlistEntry[],
   key: SortKey,
@@ -139,34 +108,23 @@ export function sortEntries(
 ): WatchlistEntry[] {
   const arr = [...entries];
 
+  // "default" = newest additions first (the pin system was removed 2026-07-17
+  // by owner decision — no pinned-first tier anywhere).
   if (key === "default") {
-    arr.sort((a, b) => {
-      const aPin = a.pinnedAt ? new Date(a.pinnedAt).getTime() : 0;
-      const bPin = b.pinnedAt ? new Date(b.pinnedAt).getTime() : 0;
-      if (aPin !== bPin) return bPin - aPin;
-      return new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime();
-    });
+    arr.sort(
+      (a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime(),
+    );
     return arr;
   }
-
-  const pinnedFirst = (a: WatchlistEntry, b: WatchlistEntry): number => {
-    const aPin = a.pinnedAt ? 1 : 0;
-    const bPin = b.pinnedAt ? 1 : 0;
-    return bPin - aPin;
-  };
 
   switch (key) {
     case "recent":
       arr.sort((a, b) => {
-        const pin = pinnedFirst(a, b);
-        if (pin !== 0) return pin;
         return new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime();
       });
       break;
     case "gain":
       arr.sort((a, b) => {
-        const pin = pinnedFirst(a, b);
-        if (pin !== 0) return pin;
         const av = getEntryChange(a, period) ?? -Infinity;
         const bv = getEntryChange(b, period) ?? -Infinity;
         return bv - av;
@@ -174,8 +132,6 @@ export function sortEntries(
       break;
     case "loss":
       arr.sort((a, b) => {
-        const pin = pinnedFirst(a, b);
-        if (pin !== 0) return pin;
         const av = getEntryChange(a, period) ?? Infinity;
         const bv = getEntryChange(b, period) ?? Infinity;
         return av - bv;
@@ -183,8 +139,6 @@ export function sortEntries(
       break;
     case "priceHigh":
       arr.sort((a, b) => {
-        const pin = pinnedFirst(a, b);
-        if (pin !== 0) return pin;
         const av = a.card.latestPriceJpy ?? -Infinity;
         const bv = b.card.latestPriceJpy ?? -Infinity;
         return bv - av;
@@ -192,8 +146,6 @@ export function sortEntries(
       break;
     case "priceLow":
       arr.sort((a, b) => {
-        const pin = pinnedFirst(a, b);
-        if (pin !== 0) return pin;
         const av = a.card.latestPriceJpy ?? Infinity;
         const bv = b.card.latestPriceJpy ?? Infinity;
         return av - bv;
@@ -202,8 +154,6 @@ export function sortEntries(
     case "nameAz":
     case "nameZa":
       arr.sort((a, b) => {
-        const pin = pinnedFirst(a, b);
-        if (pin !== 0) return pin;
         const an = (
           a.card.nameEn ?? a.card.nameJp ?? a.card.cardCode
         ).toLowerCase();

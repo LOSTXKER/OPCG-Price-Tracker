@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, Pin, Trash2 } from "lucide-react";
+import { Bell, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 import { GameBadge } from "@/components/shared/game-badge";
@@ -39,7 +39,6 @@ export function WatchlistListView({
   onToggleSelect,
   sparklines,
   hasAnySparkline,
-  onTogglePin,
   onSetAlert,
   onRemove,
   removingIds,
@@ -54,7 +53,6 @@ export function WatchlistListView({
   onToggleSelect: (cardId: number) => void;
   sparklines: Record<number, number[]>;
   hasAnySparkline: boolean;
-  onTogglePin: (entry: WatchlistEntry) => void;
   onSetAlert: (entry: WatchlistEntry) => void;
   onRemove: (entry: WatchlistEntry) => void;
   removingIds: Set<number>;
@@ -327,7 +325,6 @@ export function WatchlistListView({
                       {!editMode && (
                         <WatchlistHoverActions
                           entry={entry}
-                          onTogglePin={() => onTogglePin(entry)}
                           onSetAlert={() => onSetAlert(entry)}
                           onRemove={() => onRemove(entry)}
                         />
@@ -346,7 +343,6 @@ export function WatchlistListView({
           entry={actionEntry}
           open={actionOpen}
           onOpenChange={setActionOpen}
-          onTogglePin={() => onTogglePin(actionEntry)}
           onSetAlert={() => onSetAlert(actionEntry)}
           onRemove={() => onRemove(actionEntry)}
         />
@@ -379,7 +375,6 @@ function WatchlistMobileRow({
   const lang = useUIStore((s) => s.language);
   const displayName = getCardName(lang, entry.card);
   const change = getEntryChange(entry, period);
-  const pinned = entry.pinnedAt != null;
   const longPress = useLongPress(onLongPress);
 
   const identity = (
@@ -403,15 +398,6 @@ function WatchlistMobileRow({
           <span className="truncate font-mono text-muted-foreground">
             {entry.card.cardCode}
           </span>
-          {pinned && (
-            <span
-              role="img"
-              aria-label={t(lang, "watchlistPinned")}
-              className="inline-flex shrink-0 text-primary"
-            >
-              <Pin className="size-3 fill-current" aria-hidden />
-            </span>
-          )}
           {entry.hasActiveAlert && (
             <span
               role="img"
@@ -541,22 +527,11 @@ function DesktopCardIdentity({
 
 function WatchlistStatus({ entry }: { entry: WatchlistEntry }) {
   const lang = useUIStore((s) => s.language);
-  const pinned = entry.pinnedAt != null;
 
-  if (!pinned && !entry.hasActiveAlert) return null;
+  if (!entry.hasActiveAlert) return null;
 
   return (
     <span className="inline-flex items-center gap-1 group-hover:hidden group-focus-within:hidden">
-      {pinned && (
-        <span
-          role="img"
-          aria-label={t(lang, "watchlistPinned")}
-          title={t(lang, "watchlistPinned")}
-          className="inline-flex text-primary"
-        >
-          <Pin className="size-3.5 fill-current" aria-hidden />
-        </span>
-      )}
       {entry.hasActiveAlert && (
         <span
           role="img"
@@ -574,28 +549,17 @@ function WatchlistStatus({ entry }: { entry: WatchlistEntry }) {
 /** Desktop hover/focus-reveal action cluster — replaces the ⋯ dropdown. */
 function WatchlistHoverActions({
   entry,
-  onTogglePin,
   onSetAlert,
   onRemove,
 }: {
   entry: WatchlistEntry;
-  onTogglePin: () => void;
   onSetAlert: () => void;
   onRemove: () => void;
 }) {
   const lang = useUIStore((s) => s.language);
-  const pinned = entry.pinnedAt != null;
 
   return (
     <div className="hidden items-center gap-1 group-hover:flex group-focus-within:flex">
-      <IconButton
-        aria-label={pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
-        size="sm"
-        className={cn("size-8", pinned && "text-primary")}
-        onClick={onTogglePin}
-      >
-        <Pin className={cn("size-4", pinned && "fill-current")} />
-      </IconButton>
       <IconButton
         aria-label={entry.hasActiveAlert ? t(lang, "watchlistHasAlert") : t(lang, "setPriceAlert")}
         size="sm"

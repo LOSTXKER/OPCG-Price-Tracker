@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Bell, Heart, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { AlertsManagerClient } from "@/app/settings/alerts/alerts-manager-client";
 import { PageHeader } from "@/components/layout/page-header";
@@ -20,9 +20,9 @@ import {
 } from "./watchlist-tab-query";
 import type { WatchlistPanelState } from "./watchlist-types";
 
-const TABS: { key: WatchlistTab; labelKey: TranslationKey; icon: typeof Heart }[] = [
-  { key: "cards", labelKey: "watchlistTabCards", icon: Heart },
-  { key: "alerts", labelKey: "watchlistTabAlerts", icon: Bell },
+const TABS: { key: WatchlistTab; labelKey: TranslationKey }[] = [
+  { key: "cards", labelKey: "watchlistTabCards" },
+  { key: "alerts", labelKey: "watchlistTabAlerts" },
 ];
 
 /**
@@ -66,18 +66,18 @@ export default function WatchlistTabs() {
 
   return (
     <div>
+      {/* Header: large title + ONE clear primary (honey) CTA. The CTA follows
+          the active tab — add a card vs create an alert. */}
       <PageHeader
         title={t(lang, "watchlistNav")}
-        className="mb-2 md:mb-3"
+        className="mb-4 md:mb-5"
         actions={
           showHeaderAction ? (
             <Button
-              size="sm"
-              variant="outline"
               onClick={() =>
                 tab === "cards" ? setAddOpen(true) : setCreateAlertOpen(true)
               }
-              className="gap-1.5 sm:min-h-11 md:min-h-0"
+              className="gap-1.5 min-h-11 md:min-h-10"
             >
               <Plus className="size-4" />
               {tab === "cards" ? t(lang, "addCard") : t(lang, "createAlert")}
@@ -91,31 +91,31 @@ export default function WatchlistTabs() {
         onValueChange={(value) => setTab(value === "alerts" ? "alerts" : "cards")}
         className="gap-0"
       >
+        {/* Text-only tabs with real breathing room above the content. */}
         <TabsList
           variant="line"
           aria-label={t(lang, "watchlistNav")}
-          className="w-full justify-start border-b border-hair p-0 group-data-horizontal/tabs:h-11 md:group-data-horizontal/tabs:h-9"
+          className="w-full justify-start gap-1 border-b border-hair p-0 group-data-horizontal/tabs:h-11 md:group-data-horizontal/tabs:h-10"
         >
-          {TABS.map(({ key, labelKey, icon: Icon }) => (
+          {TABS.map(({ key, labelKey }) => (
             <TabsTrigger
               key={key}
               value={key}
-              className="min-h-11 flex-none px-3 group-data-horizontal/tabs:after:bottom-0 md:min-h-9"
+              className="min-h-11 flex-none px-3.5 group-data-horizontal/tabs:after:bottom-0 md:min-h-10"
             >
-              <Icon className="size-4" aria-hidden />
               {t(lang, labelKey)}
             </TabsTrigger>
           ))}
         </TabsList>
 
-        <TabsContent value="cards" className="pt-3 md:pt-2">
+        <TabsContent value="cards" className="pt-4 md:pt-5">
           <WatchlistClient
             addOpen={addOpen}
             onAddOpenChange={setAddOpen}
             onPageStateChange={setCardsState}
           />
         </TabsContent>
-        <TabsContent value="alerts" className="pt-3 md:pt-2">
+        <TabsContent value="alerts" className="pt-4 md:pt-5">
           <AlertsManagerClient
             createOpen={createAlertOpen}
             onCreateOpenChange={setCreateAlertOpen}

@@ -8,7 +8,6 @@ import {
   ensureValidSetCode,
   filterAndSortEntries,
   filterEntries,
-  selectWatchlistMovers,
   sortEntries,
 } from "./watchlist-sort";
 import {
@@ -105,7 +104,6 @@ describe("watchlist filtering", () => {
           setCode: "OP01",
           direction: "up",
           hasAlert: true,
-          pinnedOnly: true,
         }),
         period: "7d",
         search: " เอส ",
@@ -149,33 +147,26 @@ describe("watchlist filtering", () => {
       setCode: "OP01",
       direction: "up",
       hasAlert: true,
-      pinnedOnly: true,
     });
-    expect(countActiveWatchlistModalFilters(active)).toBe(3);
-    expect(countActiveWatchlistFilters(active)).toBe(4);
+    expect(countActiveWatchlistModalFilters(active)).toBe(2);
+    expect(countActiveWatchlistFilters(active)).toBe(3);
   });
 });
 
 describe("watchlist sorting", () => {
-  it("preserves the default pinned-first, newest-first order", () => {
+  it("orders the default view newest-first (the pin tier is gone)", () => {
     const unsorted = [
       entry(4, { addedAt: "2026-07-14T00:00:00.000Z" }),
-      entry(1, {
-        addedAt: "2026-07-01T00:00:00.000Z",
-        pinnedAt: "2026-07-10T00:00:00.000Z",
-      }),
-      entry(3, {
-        addedAt: "2026-07-03T00:00:00.000Z",
-        pinnedAt: "2026-07-12T00:00:00.000Z",
-      }),
+      entry(1, { addedAt: "2026-07-01T00:00:00.000Z" }),
+      entry(3, { addedAt: "2026-07-03T00:00:00.000Z" }),
       entry(2, { addedAt: "2026-07-12T00:00:00.000Z" }),
     ];
 
     expect(sortEntries(unsorted, "default", "7d").map((item) => item.cardId)).toEqual([
-      3,
-      1,
       4,
       2,
+      3,
+      1,
     ]);
     expect(unsorted.map((item) => item.cardId)).toEqual([4, 1, 3, 2]);
   });
@@ -193,37 +184,5 @@ describe("watchlist sorting", () => {
 
     expect(result).toHaveLength(2);
     expect(result.map((item) => item.cardId)).toEqual([1, 2]);
-  });
-});
-
-describe("watchlist mover shelf selection", () => {
-  it("keeps only |change| >= 1%, biggest swing first", () => {
-    const pool = [
-      entry(1, { change: 0.4 }), // below threshold — excluded
-      entry(2, { change: -6 }),
-      entry(3, { change: 2 }),
-      entry(4, { change: null }), // no data — excluded
-      entry(5, { change: -2 }),
-    ];
-
-    expect(selectWatchlistMovers(pool, "7d").map((item) => item.cardId)).toEqual([
-      2, 3, 5,
-    ]);
-  });
-
-  it("caps membership at the given limit", () => {
-    const pool = Array.from({ length: 10 }, (_, i) => entry(i + 1, { change: 10 - i }));
-
-    expect(selectWatchlistMovers(pool, "7d", 6)).toHaveLength(6);
-    expect(selectWatchlistMovers(pool, "7d", 6).map((item) => item.cardId)).toEqual([
-      1, 2, 3, 4, 5, 6,
-    ]);
-  });
-
-  it("reads the change from the requested period, not a fixed one", () => {
-    const mixed = { ...entry(1), card: { ...entry(1).card, priceChange24h: 0.2, priceChange7d: 8 } };
-
-    expect(selectWatchlistMovers([mixed], "24h")).toHaveLength(0);
-    expect(selectWatchlistMovers([mixed], "7d").map((item) => item.cardId)).toEqual([1]);
   });
 });

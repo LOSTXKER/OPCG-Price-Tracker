@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Pin, Trash2 } from "lucide-react";
+import { Bell, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,26 +17,23 @@ import type { WatchlistEntry } from "./watchlist-types";
 
 /**
  * Mobile long-press sheet for a single watchlist row. The Apple-Stocks row
- * anatomy drops the trailing ⋯ menu — its 3 actions moved here (desktop gets
- * the same 3 via the hover-reveal icon cluster in the table).
+ * anatomy drops the trailing ⋯ menu — its actions moved here (desktop gets
+ * the same via the hover-reveal icon cluster in the table).
  */
 export function WatchlistRowActionsDialog({
   entry,
   open,
   onOpenChange,
-  onTogglePin,
   onSetAlert,
   onRemove,
 }: {
   entry: WatchlistEntry;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onTogglePin: () => void;
   onSetAlert: () => void;
   onRemove: () => void;
 }) {
   const lang = useUIStore((s) => s.language);
-  const pinned = entry.pinnedAt != null;
   const displayName = getCardName(lang, entry.card);
 
   const act = (fn: () => void) => () => {
@@ -51,15 +48,6 @@ export function WatchlistRowActionsDialog({
           <DialogTitle className="truncate">{displayName}</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-0.5">
-          <Button
-            type="button"
-            variant="ghost"
-            className="min-h-11 w-full justify-start gap-2.5"
-            onClick={act(onTogglePin)}
-          >
-            <Pin className={cn("size-4", pinned && "fill-current text-primary")} />
-            {pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
-          </Button>
           <Button
             type="button"
             variant="ghost"

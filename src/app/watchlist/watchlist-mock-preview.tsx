@@ -13,7 +13,6 @@ export function WatchlistMockPreview({ lang }: { lang: Language }) {
     { code: "OP08-001", name: "Nami", thb: "245 ฿", jpy: "¥980", change24h: 0, change7d: 2, change30d: -1 },
     { code: "OP07-034", name: "Shanks", thb: "1,025 ฿", jpy: "¥4,100", change24h: -1, change7d: -1, change30d: 7 },
   ];
-  const movers = [cards[0], cards[1], cards[5], cards[2]];
   const upCount = cards.filter((c) => c.change7d > 0).length;
   const downCount = cards.filter((c) => c.change7d < 0).length;
 
@@ -23,7 +22,7 @@ export function WatchlistMockPreview({ lang }: { lang: Language }) {
 
   return (
     <div className="space-y-4 md:space-y-5">
-      <PageHeader title={t(lang, "watchlistNav")} className="mb-3 md:mb-4" />
+      <PageHeader title={t(lang, "watchlistNav")} className="mb-4 md:mb-5" />
 
       <div className="flex h-11 items-center gap-1 border-b border-hair md:h-9">
         <span className="inline-flex min-h-11 items-center border-b-2 border-primary px-3 text-label text-primary md:min-h-9">
@@ -79,23 +78,7 @@ export function WatchlistMockPreview({ lang }: { lang: Language }) {
         </div>
       </div>
 
-      {/* Row 4 — "ขยับแรงวันนี้" mover shelf. */}
-      <div>
-        <p className="text-eyebrow mb-2">{t(lang, "todaysMovers")}</p>
-        <div className="no-sb flex gap-3 overflow-x-auto sm:grid sm:grid-cols-6 sm:gap-4 sm:overflow-visible">
-          {movers.map((card) => (
-            <div key={card.code} className="w-[92px] shrink-0 sm:w-full">
-              <div className="aspect-[63/88] w-full rounded-xl bg-muted ring-1 ring-hair" />
-              <p className={`mt-1.5 text-micro font-medium ${changeTone(card.change7d)}`}>
-                {changeLabel(card.change7d)}
-              </p>
-              <p className="text-meta tabular-nums">{card.thb}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Row 5+ — list. Mobile: Apple-Stocks anatomy. Desktop: 2-line price table. */}
+      {/* List. Mobile: Apple-Stocks anatomy. Desktop: 2-line price table. */}
       <div className="sm:hidden">
         <div className="flex h-9 items-center justify-between border-b border-hair px-1">
           <span className="text-meta tabular-nums">{cards.length} {t(lang, "cardUnit")}</span>

@@ -35,14 +35,12 @@ import {
   shouldSettleWatchlistForeground,
 } from "./watchlist-load-revision";
 import { WatchlistMockPreview } from "./watchlist-mock-preview";
-import { WatchlistMoverShelf } from "./watchlist-mover-shelf";
 import { WatchlistSkeleton } from "./watchlist-skeleton";
 import { WatchlistToolbar } from "./watchlist-toolbar";
 import {
   countActiveWatchlistFilters,
   ensureValidSetCode,
   filterAndSortEntries,
-  selectWatchlistMovers,
 } from "./watchlist-sort";
 import { buildWatchlistTabHref } from "./watchlist-tab-query";
 import {
@@ -438,34 +436,6 @@ function WatchlistContent({
     }
   };
 
-  const togglePin = async (entry: WatchlistEntry) => {
-    if (!loadRevision.beginMutation()) return;
-    const previousItems = items;
-    const nextPinnedAt = entry.pinnedAt ? null : new Date().toISOString();
-    setItems((prev) =>
-      prev.map((x) => (x.cardId === entry.cardId ? { ...x, pinnedAt: nextPinnedAt } : x))
-    );
-    try {
-      const data = await apiPatch<{ item?: WatchlistEntry }>(
-        `/api/watchlist/${entry.cardId}`,
-        { pinnedAt: "toggle" }
-      );
-      if (data?.item) {
-        const fresh = data.item;
-        setItems((prev) =>
-          prev.map((x) =>
-            x.cardId === entry.cardId ? { ...x, pinnedAt: fresh.pinnedAt } : x
-          )
-        );
-      }
-    } catch {
-      setItems(previousItems);
-      toast.error(t(lang, "watchlistUpdateFailed"));
-    } finally {
-      if (loadRevision.finishMutation()) void load(true);
-    }
-  };
-
   const openSetAlert = (entry: WatchlistEntry) => {
     // This card already has an alert — send the user to manage (edit/delete) it
     // instead of silently creating a duplicate (the create API has no unique
@@ -521,12 +491,6 @@ function WatchlistContent({
     return { up, down };
   }, [items, period]);
 
-  // "ขยับแรงวันนี้" shelf membership — also over ALL watched cards.
-  const moverEntries = useMemo(
-    () => selectWatchlistMovers(items, period),
-    [items, period],
-  );
-
   if (loading) {
     return <WatchlistSkeleton withHeader={false} />;
   }
@@ -553,7 +517,7 @@ function WatchlistContent({
   }
 
   return (
-    <div className="space-y-2 md:space-y-3">
+    <div className="space-y-4 md:space-y-5">
       {items.length === 0 ? (
         <WatchlistEmpty onAdd={() => setAddOpen(true)} />
       ) : (
@@ -589,13 +553,6 @@ function WatchlistContent({
             onBulkRemove={() => void removeBulk()}
           />
 
-          <WatchlistMoverShelf
-            entries={moverEntries}
-            period={period}
-            itemCount={items.length}
-            editMode={editMode}
-          />
-
           {filteredEntries.length === 0 ? (
             <EmptyState
               preset="no-results"
@@ -624,7 +581,6 @@ function WatchlistContent({
               onToggleSelect={toggleSelect}
               sparklines={sparklines}
               hasAnySparkline={hasAnySparkline}
-              onTogglePin={(e) => void togglePin(e)}
               onSetAlert={openSetAlert}
               onRemove={(e) => void removeSingle(e)}
               removingIds={removingIds}

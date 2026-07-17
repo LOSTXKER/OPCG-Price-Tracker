@@ -4,7 +4,6 @@ import {
   Bell,
   Check,
   Pencil,
-  Pin,
   Trash2,
   TrendingDown,
   TrendingUp,
@@ -378,14 +377,6 @@ export function WatchlistFilterPanel({
             checked={filters.hasAlert}
             onToggle={() =>
               onFiltersChange({ ...filters, hasAlert: !filters.hasAlert })
-            }
-          />
-          <ToggleRow
-            icon={<Pin className="size-4" />}
-            label={t(lang, "watchlistFilterPinned")}
-            checked={filters.pinnedOnly}
-            onToggle={() =>
-              onFiltersChange({ ...filters, pinnedOnly: !filters.pinnedOnly })
             }
           />
         </div>
