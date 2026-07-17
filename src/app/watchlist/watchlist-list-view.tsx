@@ -457,14 +457,17 @@ function WatchlistMobileRow({
   }
 
   return (
-    <div className={cn("flex min-w-0 items-stretch", removing && "pointer-events-none opacity-40")}>
+    // Hover highlight lives on the WHOLE row (link + ⋯ zone), not just the link.
+    <div
+      className={cn(
+        "ease-chrome flex min-w-0 items-stretch transition-colors hover:bg-muted/70",
+        removing && "pointer-events-none opacity-40",
+      )}
+    >
       <Link
         href={`/${entry.card.set.game?.slug ?? DEFAULT_GAME}/cards/${entry.card.cardCode}`}
         aria-label={displayName}
-        className={cn(
-          "ease-chrome flex min-w-0 flex-1 items-center gap-3 py-2.5 pl-3 pr-1 transition-colors",
-          "hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-        )}
+        className="flex min-w-0 flex-1 items-center gap-3 py-2.5 pl-3 pr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
       >
         {identity}
         {price}
