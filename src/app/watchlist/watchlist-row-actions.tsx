@@ -1,57 +1,90 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
+import { Bell, Pin, Trash2 } from "lucide-react";
 
-import { t } from "@/lib/i18n";
-import { useUIStore } from "@/stores/ui-store";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { getCardName, t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { useUIStore } from "@/stores/ui-store";
 
 import type { WatchlistEntry } from "./watchlist-types";
 
 /**
- * Inline action cluster for a watchlist row/card.
- *
- * Pin, Bell, and the row link to card detail are rendered by the parent
- * because they reflect persistent row state. This component just owns the
- * destructive Remove action so it can be consistently styled across views.
+ * Mobile long-press sheet for a single watchlist row. The Apple-Stocks row
+ * anatomy drops the trailing ⋯ menu — its 3 actions moved here (desktop gets
+ * the same 3 via the hover-reveal icon cluster in the table).
  */
-export function WatchlistRowActions({
+export function WatchlistRowActionsDialog({
+  entry,
+  open,
+  onOpenChange,
+  onTogglePin,
+  onSetAlert,
   onRemove,
-  className,
-  buttonClassName,
-  size = "md",
 }: {
-  /** Reserved for future inline actions; currently unused. */
-  entry?: WatchlistEntry;
+  entry: WatchlistEntry;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onTogglePin: () => void;
+  onSetAlert: () => void;
   onRemove: () => void;
-  className?: string;
-  buttonClassName?: string;
-  size?: "sm" | "md";
 }) {
   const lang = useUIStore((s) => s.language);
+  const pinned = entry.pinnedAt != null;
+  const displayName = getCardName(lang, entry.card);
 
-  const sizeClass = size === "sm" ? "size-7" : "size-8";
-  const iconClass = size === "sm" ? "size-3.5" : "size-4";
+  const act = (fn: () => void) => () => {
+    onOpenChange(false);
+    fn();
+  };
 
   return (
-    <div className={cn("inline-flex items-center", className)}>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onRemove();
-        }}
-        title={t(lang, "removeFromWatchlist")}
-        aria-label={t(lang, "removeFromWatchlist")}
-        className={cn(
-          "inline-flex items-center justify-center rounded-md text-muted-foreground motion-base hover:bg-destructive/10 hover:text-destructive",
-          sizeClass,
-          buttonClassName
-        )}
-      >
-        <Trash2 className={iconClass} />
-      </button>
-    </div>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="gap-3">
+        <DialogHeader>
+          <DialogTitle className="truncate">{displayName}</DialogTitle>
+        </DialogHeader>
+        <div className="flex flex-col gap-0.5">
+          <Button
+            type="button"
+            variant="ghost"
+            className="min-h-11 w-full justify-start gap-2.5"
+            onClick={act(onTogglePin)}
+          >
+            <Pin className={cn("size-4", pinned && "fill-current text-primary")} />
+            {pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className="min-h-11 w-full justify-start gap-2.5"
+            onClick={act(onSetAlert)}
+          >
+            <Bell
+              className={cn(
+                "size-4",
+                entry.hasActiveAlert && "fill-current text-primary",
+              )}
+            />
+            {entry.hasActiveAlert ? t(lang, "watchlistHasAlert") : t(lang, "setPriceAlert")}
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className="min-h-11 w-full justify-start gap-2.5 text-destructive hover:bg-destructive/10 hover:text-destructive"
+            onClick={act(onRemove)}
+          >
+            <Trash2 className="size-4" />
+            {t(lang, "removeFromWatchlist")}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

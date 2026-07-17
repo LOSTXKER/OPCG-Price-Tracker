@@ -12,7 +12,6 @@ import type { SetPickerItem } from "@/components/shared/set-picker";
 import { useConfirm } from "@/components/shared/confirm-dialog";
 import { ApiError, apiDelete, apiGet, apiPatch, apiTry } from "@/lib/api/client";
 import { useAuthState } from "@/hooks/use-auth-state";
-import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useTierLimits } from "@/hooks/use-tier-limits";
 import { invalidateSettings } from "@/hooks/use-settings";
 import { createClient } from "@/lib/supabase/client";
@@ -27,7 +26,6 @@ import { useWatchlistStore } from "@/stores/watchlist-store";
 
 import { WatchlistAddDialog } from "./watchlist-add-dialog";
 import { WatchlistEmpty } from "./watchlist-empty";
-import { WatchlistGridView } from "./watchlist-grid-view";
 import {
   WatchlistListView,
   type WatchlistHeaderCol,
@@ -37,25 +35,25 @@ import {
   shouldSettleWatchlistForeground,
 } from "./watchlist-load-revision";
 import { WatchlistMockPreview } from "./watchlist-mock-preview";
+import { WatchlistMoverShelf } from "./watchlist-mover-shelf";
 import { WatchlistSkeleton } from "./watchlist-skeleton";
 import { WatchlistToolbar } from "./watchlist-toolbar";
 import {
   countActiveWatchlistFilters,
   ensureValidSetCode,
   filterAndSortEntries,
+  selectWatchlistMovers,
 } from "./watchlist-sort";
 import { buildWatchlistTabHref } from "./watchlist-tab-query";
 import {
   DEFAULT_FILTERS,
+  getEntryChange,
   type ChangePeriod,
   type SortKey,
-  type WatchView,
   type WatchlistEntry,
   type WatchlistFilters,
   type WatchlistPanelState,
 } from "./watchlist-types";
-
-const VIEW_STORAGE_KEY = "opcg.watchlist.view";
 
 interface WatchlistClientProps {
   addOpen?: boolean;
@@ -107,7 +105,6 @@ function WatchlistContent({
     });
   };
 
-  const [view, setView] = useLocalStorage<WatchView>(VIEW_STORAGE_KEY, "list");
   const [period, setPeriod] = useState<ChangePeriod>("7d");
   const [sortKey, setSortKey] = useState<SortKey>("default");
   const [filters, setFilters] = useState<WatchlistFilters>(DEFAULT_FILTERS);
@@ -228,9 +225,9 @@ function WatchlistContent({
     onPageStateChange?.({ status: panelStatus, itemCount: items.length });
   }, [items.length, onPageStateChange, panelStatus]);
 
-  // Fetch sparklines for visible cards (list view only, lazy)
+  // Fetch sparklines for visible cards (lazy) — the mobile/desktop list rows
+  // want them; there's only one list view now (grid view was cut).
   useEffect(() => {
-    if (view !== "list") return;
     const ids = items
       .map((i) => i.cardId)
       .filter((id) => !sparklineFetchedRef.current.has(id));
@@ -247,7 +244,7 @@ function WatchlistContent({
         setSparklines((prev) => ({ ...prev, ...data.sparklines }));
       }
     });
-  }, [items, view]);
+  }, [items]);
 
   const setOptions = useMemo<SetPickerItem[]>(() => {
     const seen = new Map<string, SetPickerItem>();
@@ -510,6 +507,26 @@ function WatchlistContent({
     [filteredEntries, sparklines]
   );
 
+  // Row-3 pulse text ("ติดตาม N ใบ · ▲up · ▼down") — over ALL watched cards
+  // for the active period, not the filtered/sorted view.
+  const pulseCounts = useMemo(() => {
+    let up = 0;
+    let down = 0;
+    for (const entry of items) {
+      const change = getEntryChange(entry, period);
+      if (change == null) continue;
+      if (change > 0) up += 1;
+      else if (change < 0) down += 1;
+    }
+    return { up, down };
+  }, [items, period]);
+
+  // "ขยับแรงวันนี้" shelf membership — also over ALL watched cards.
+  const moverEntries = useMemo(
+    () => selectWatchlistMovers(items, period),
+    [items, period],
+  );
+
   if (loading) {
     return <WatchlistSkeleton withHeader={false} />;
   }
@@ -551,12 +568,8 @@ function WatchlistContent({
                 />
               ) : undefined
             }
-            view={view}
-            onViewChange={setView}
             period={period}
             onPeriodChange={setPeriod}
-            sortKey={sortKey}
-            onSortChange={setSortKey}
             filters={filters}
             onFiltersChange={setFilters}
             search={search}
@@ -564,6 +577,8 @@ function WatchlistContent({
             setOptions={setOptions}
             resultCount={filteredEntries.length}
             itemCount={items.length}
+            upCount={pulseCounts.up}
+            downCount={pulseCounts.down}
             limit={limits.watchlistCards}
             editMode={editMode}
             onToggleEditMode={toggleEditMode}
@@ -572,6 +587,13 @@ function WatchlistContent({
             onToggleSelectAll={toggleSelectAll}
             onClearSelection={() => setSelected(new Set())}
             onBulkRemove={() => void removeBulk()}
+          />
+
+          <WatchlistMoverShelf
+            entries={moverEntries}
+            period={period}
+            itemCount={items.length}
+            editMode={editMode}
           />
 
           {filteredEntries.length === 0 ? (
@@ -593,7 +615,7 @@ function WatchlistContent({
                 ) : undefined
               }
             />
-          ) : view === "list" ? (
+          ) : (
             <WatchlistListView
               entries={filteredEntries}
               period={period}
@@ -609,19 +631,6 @@ function WatchlistContent({
               showGameBadge={availableGames.length >= 2}
               sortKey={sortKey}
               onHeaderSort={handleHeaderSort}
-            />
-          ) : (
-            <WatchlistGridView
-              entries={filteredEntries}
-              period={period}
-              editMode={editMode}
-              selected={selected}
-              onToggleSelect={toggleSelect}
-              onTogglePin={(e) => void togglePin(e)}
-              onSetAlert={openSetAlert}
-              onRemove={(e) => void removeSingle(e)}
-              removingIds={removingIds}
-              showGameBadge={availableGames.length >= 2}
             />
           )}
         </>

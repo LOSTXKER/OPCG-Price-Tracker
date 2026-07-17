@@ -1,5 +1,9 @@
 "use client";
 
+// orphaned by the 2026-07-17 redesign — awaiting owner approval to delete.
+// Grid view was cut from /watchlist (list-only now, sort moved to headers).
+// No remaining importers; kept on disk only pending an explicit delete ack.
+
 import { Bell, Check, MoreHorizontal, Pin, Trash2 } from "lucide-react";
 
 import { CardItem } from "@/components/cards/card-item";

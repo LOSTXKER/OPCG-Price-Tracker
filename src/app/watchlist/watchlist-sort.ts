@@ -104,6 +104,34 @@ export function filterAndSortEntries(
   return sortEntries(filterEntries(entries, options), sortKey, options.period);
 }
 
+/** ขยับแรงวันนี้ shelf — |%change| ≥ 1, biggest swing first, capped at 6. */
+export const WATCHLIST_MOVER_THRESHOLD_PCT = 1;
+export const WATCHLIST_MOVER_LIMIT = 6;
+export const WATCHLIST_MOVER_MIN_ITEMS = 4;
+
+/**
+ * Pure membership rule for the mover shelf so "does this card qualify" is
+ * unit-testable without mounting the shelf component. Runs over ALL entries
+ * (not the filtered/sorted view) — the shelf is a lens on the whole
+ * watchlist, independent of the page's search/filter state.
+ */
+export function selectWatchlistMovers(
+  entries: readonly WatchlistEntry[],
+  period: ChangePeriod,
+  limit: number = WATCHLIST_MOVER_LIMIT,
+): WatchlistEntry[] {
+  return entries
+    .filter((entry) => {
+      const change = getEntryChange(entry, period);
+      return change != null && Math.abs(change) >= WATCHLIST_MOVER_THRESHOLD_PCT;
+    })
+    .sort(
+      (a, b) =>
+        Math.abs(getEntryChange(b, period) ?? 0) - Math.abs(getEntryChange(a, period) ?? 0),
+    )
+    .slice(0, limit);
+}
+
 export function sortEntries(
   entries: readonly WatchlistEntry[],
   key: SortKey,

@@ -1,7 +1,22 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-07-17 — **Audit ทั้งเว็บรอบสอง + รื้อ Watchlist เสร็จ (ปรับตาม feedback เบสรอบแรกแล้ว) รอเบสตรวจบน preview** (branch `feat/portfolio-watchlist-teardown`, PR #116)
+อัปเดตล่าสุด: 2026-07-17 — **รื้อ /watchlist ใหม่ทั้งหน้ารอบที่ 2 (ground-up ตาม spec ที่ชนะ panel 3 designer/3 judge) เสร็จ รอเบส eyeball บน preview** (branch `feat/portfolio-watchlist-teardown`, PR #116) — **แทนที่คำอธิบาย toolbar/table เดิมด้านล่างที่ล้าสมัยแล้ว**
+
+## 🆕 Watchlist ground-up rewrite รอบ 2 (2026-07-17 — เพิ่มเติมจากรอบก่อนหน้า)
+
+หน้าตาใหม่ (บน→ล่าง หลัง PageHeader+tabs เดิม): **Row 3** แถวควบคุมบาง (มือถือ = ช่วงเวลา + ไอคอนค้นหา/กรอง/แก้ไข ไม่มีมุมมองกริด/dropdown เรียงแล้ว · desktop = ข้อความ pulse "ติดตาม N ใบ · ▲up · ▼down" + ค้นหา/กรอง/แก้ไข ไม่มี period pill) → **Row 4 ใหม่** shelf "ขยับแรงวันนี้" (การ์ด 6 ใบที่ขยับแรงสุดวันนี้ ≥1%, ซ่อนถ้าการ์ด <4 ใบ/ไม่มีตัวขยับ/edit mode) → **Row 5+** list ใหม่ (มือถือ = แถวใหญ่ขึ้นสไตล์ Apple Stocks พร้อม long-press เปิดเมนู action แทน ⋯ · desktop = ราคาซ้อน 2 บรรทัด ฿/¥ + hover เผยไอคอน pin/bell/ลบแทน dropdown เดิม, ทั้งแถวคลิกไปหน้าการ์ดได้)
+
+**ตัด:** มุมมองกริด (`WatchlistGridView` ยังไม่ลบไฟล์ รออนุมัติ — ใส่ comment orphaned แล้ว) · sort dropdown (ย้ายไปหัวคอลัมน์/หัว list มือถือ) · เมนู ⋯ ทั้งมือถือ/desktop
+
+**ไฟล์หลักที่แก้/สร้าง:** `watchlist-toolbar.tsx` (rewrite), `watchlist-list-view.tsx` (rewrite), `watchlist-client.tsx` (wiring), `watchlist-mover-shelf.tsx` (ใหม่), `use-long-press.ts` (ใหม่), `watchlist-row-actions.tsx` (rewrite เป็น long-press action dialog), `watchlist-summary.tsx` (+ `WatchlistPulseText`), `watchlist-sort.ts` (+ `selectWatchlistMovers` pure fn), `watchlist-types.ts` (+ price-stack helpers), `watchlist-skeleton.tsx`/`watchlist-mock-preview.tsx` (mirror โครงใหม่), i18n +1 key (`watchlistTracking`, reuse `todaysMovers`/`cardUnit` ที่มีอยู่)
+
+**ข้อควรรู้ก่อน merge:**
+- ยังไม่ได้เปิดดูจริงในเบราว์เซอร์ (มีแต่ curl smoke test 200 + skeleton SSR ผ่าน) — **ต้อง eyeball มือถือ 375px + desktop 1280/1440px จริงก่อน merge**
+- ข้าม "hover art-peek" ของตาราง desktop (ดูรูปเต็มตอน hover thumbnail) — เสี่ยง clip ใน table container, spec บอกให้ข้ามได้ถ้าเสี่ยง
+- Verify: tsc 0 · eslint 0 error (30 warning เดิมไม่เกี่ยว) · vitest 284/284 (ไม่ได้รัน `npm run build`)
+
+## 🔒 การตัดสินใจจากเบส (2026-07-17 — อย่าสวน)
 
 ## 🔒 การตัดสินใจจากเบส (2026-07-17 — อย่าสวน)
 

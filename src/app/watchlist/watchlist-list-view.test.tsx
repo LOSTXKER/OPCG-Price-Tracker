@@ -1,7 +1,14 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { t } from "@/lib/i18n";
+
+// The desktop row is fully clickable (router.push to the card) alongside the
+// identity <Link> — this file renders via renderToStaticMarkup with no app
+// router mounted, so useRouter needs a stub.
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: () => undefined }),
+}));
 
 import {
   WatchlistListView,
@@ -106,8 +113,9 @@ describe("watchlist flat list view", () => {
     // The old circular badges sat absolutely positioned on top of the artwork.
     expect(markup).not.toContain("ring-2 ring-background");
 
-    // Mobile CardIdentity (inline icons) + desktop WatchlistStatus (circle
-    // icons) both use role="img" for pin/alert — 2 surfaces x 2 icons.
+    // Mobile row (inline icons) + desktop resting WatchlistStatus (bare
+    // icons, no bg circle) both use role="img" for pin/alert — 2 surfaces x
+    // 2 icons.
     expect(markup.match(/role="img"/g)).toHaveLength(4);
     expect(markup).toContain(t("TH", "watchlistPinned"));
     expect(markup).toContain(t("TH", "watchlistHasAlert"));
@@ -138,5 +146,42 @@ describe("watchlist flat list view", () => {
 
     expect(markup.match(/aria-sort="ascending"/g)).toHaveLength(1);
     expect(markup.match(/aria-sort="descending"/g)).toBeNull();
+  });
+
+  it("never renders a ⋯ menu — mobile moves to long-press, desktop to hover icons", () => {
+    const markup = renderList({ entries: [pinnedAlertedEntry] });
+
+    expect(markup).not.toContain("lucide-more-horizontal");
+  });
+
+  it("shows the mobile list header (count + tap-sort price/change) instead of a count line in the toolbar", () => {
+    const markup = renderList({ entries: [entry, pinnedAlertedEntry] });
+
+    expect(markup).toContain(`2 ${t("TH", "cardUnit")}`);
+    expect(markup.match(/aria-pressed="false"/g)?.length).toBeGreaterThanOrEqual(2);
+    expect(markup).toContain(t("TH", "price"));
+    expect(markup).toContain(t("TH", "change"));
+  });
+
+  it("marks the mobile 'change' tap-sort button pressed via the active period column, not a fixed column", () => {
+    const markup = renderList({ period: "30d", sortKey: "gain" });
+
+    // headerSort maps gain/loss to activeCol=period, and the mobile "change"
+    // button's `column` prop IS the current period — so it (not "price")
+    // reads pressed when a period sort is active.
+    expect(markup).toMatch(/aria-pressed="true"[^>]*>เปลี่ยนแปลง/);
+  });
+
+  it("renders the delta as a chip on mobile rows (not a plain colored change)", () => {
+    const markup = renderList({ entries: [entry] });
+
+    expect(markup).toContain("min-w-[72px]");
+  });
+
+  it("stacks THB (primary) over demoted JPY on the desktop price cell", () => {
+    const markup = renderList({ entries: [entry] });
+
+    expect(markup).toContain("25 ฿");
+    expect(markup).toContain("¥100");
   });
 });

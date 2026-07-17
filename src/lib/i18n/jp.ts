@@ -476,6 +476,8 @@ export const jp = {
   watchlistResetFilters: "リセット",
   watchlistSearchPlaceholder: "ウォッチリスト内を検索...",
   watchlistSummaryCards: "追跡中",
+  /** Row-3 pulse text prefix on desktop: "追跡中 {N}枚 · up · down". */
+  watchlistTracking: "追跡中",
   watchlistSummaryValue: "参照価格の合計",
   watchlistSummaryGainer: "最大上昇",
   watchlistSummaryLoser: "最大下落",

@@ -2,17 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Bell, MoreHorizontal, Pin, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Bell, Pin, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 import { GameBadge } from "@/components/shared/game-badge";
 import { SortableHeader } from "@/components/shared/sortable-header";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { IconButton } from "@/components/ui/icon-button";
 import { MiniSparkline } from "@/components/ui/mini-sparkline";
 import { PriceTag } from "@/components/ui/price-tag";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
@@ -21,14 +17,18 @@ import { getCardName, t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/stores/ui-store";
 
+import { useLongPress } from "./use-long-press";
+import { WatchlistRowActionsDialog } from "./watchlist-row-actions";
 import {
+  formatEntryJpy,
+  formatEntryThb,
+  getEntryChange,
   type ChangePeriod,
   type SortKey,
   type WatchlistEntry,
-  getEntryChange,
 } from "./watchlist-types";
 
-/** Columns the desktop header can sort by. */
+/** Columns the desktop header (and the mobile list header) can sort by. */
 export type WatchlistHeaderCol = "name" | "price" | ChangePeriod;
 
 export function WatchlistListView({
@@ -60,11 +60,14 @@ export function WatchlistListView({
   removingIds: Set<number>;
   showGameBadge?: boolean;
   sortKey?: SortKey;
-  /** Desktop column headers act as sort buttons (canonical SortableHeader) —
-   *  list view only. Cols: name · price · 24h/7d/30d. */
+  /** Desktop column headers + the mobile list header both act as sort buttons
+   *  (canonical SortableHeader) — cols: name · price · 24h/7d/30d. */
   onHeaderSort?: (col: WatchlistHeaderCol) => void;
 }) {
   const lang = useUIStore((s) => s.language);
+  const router = useRouter();
+  const [actionEntry, setActionEntry] = useState<WatchlistEntry | null>(null);
+  const [actionOpen, setActionOpen] = useState(false);
 
   // Map the page's sortKey (+active period) onto the header columns so the
   // canonical SortableHeader can show the active column + direction.
@@ -89,79 +92,58 @@ export function WatchlistListView({
 
   if (entries.length === 0) return null;
 
+  const openRowActions = (entry: WatchlistEntry) => {
+    setActionEntry(entry);
+    setActionOpen(true);
+  };
+
   return (
     <>
-      {/* Mobile list fallback (<sm): the whole primary row opens card detail. */}
-      <div className="panel overflow-hidden sm:hidden">
-        <div className="divide-y divide-hair">
-          {entries.map((entry) => {
-            const displayName = getCardName(lang, entry.card);
-            const change = getEntryChange(entry, period);
-            const removing = removingIds.has(entry.cardId);
+      {/* Mobile (<sm) — Apple-Stocks anatomy: a thin list header (count +
+          tap-sort) above a flat panel of rows. Single-card actions are a
+          long-press sheet — there's no trailing ⋯ on the row. */}
+      <div className="sm:hidden">
+        <div className="flex h-9 items-center justify-between border-b border-hair px-1">
+          <span className="text-meta tabular-nums">
+            {entries.length.toLocaleString()} {t(lang, "cardUnit")}
+          </span>
+          <div className="flex items-center gap-3">
+            <SortableHeader<WatchlistHeaderCol>
+              as="button"
+              label={t(lang, "price")}
+              column="price"
+              activeCol={headerSort.activeCol}
+              dir={headerSort.dir}
+              onClick={(col) => onHeaderSort?.(col)}
+            />
+            <SortableHeader<WatchlistHeaderCol>
+              as="button"
+              label={t(lang, "change")}
+              column={period}
+              activeCol={headerSort.activeCol}
+              dir={headerSort.dir}
+              onClick={() => onHeaderSort?.(period)}
+            />
+          </div>
+        </div>
 
-            return (
-              <div
+        <div className="panel mt-2 overflow-hidden">
+          <div className="divide-y divide-hair">
+            {entries.map((entry) => (
+              <WatchlistMobileRow
                 key={entry.id}
-                className={cn(
-                  "ease-chrome flex min-w-0 items-stretch transition-colors",
-                  removing && "pointer-events-none opacity-40",
-                  editMode
-                    ? selected.has(entry.cardId)
-                      ? "bg-primary/10"
-                      : "hover:bg-muted/60"
-                    : "hover:bg-muted/70",
-                )}
-              >
-                {editMode ? (
-                  <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 px-3 py-3 select-none">
-                    <span className="inline-flex size-11 shrink-0 items-center justify-center">
-                      <input
-                        type="checkbox"
-                        className="size-4 cursor-pointer accent-primary"
-                        checked={selected.has(entry.cardId)}
-                        onChange={() => onToggleSelect(entry.cardId)}
-                        aria-label={displayName}
-                      />
-                    </span>
-                    <WatchlistThumbnail entry={entry} displayName={displayName} />
-                    <CardIdentity
-                      entry={entry}
-                      displayName={displayName}
-                      showGameBadge={showGameBadge}
-                      showStatusIcons
-                    />
-                    <MobilePrice entry={entry} change={change} />
-                  </label>
-                ) : (
-                  <Link
-                    href={`/${entry.card.set.game?.slug ?? DEFAULT_GAME}/cards/${entry.card.cardCode}`}
-                    aria-label={displayName}
-                    className="flex min-w-0 flex-1 items-center gap-3 rounded-sm px-3 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
-                  >
-                    <WatchlistThumbnail entry={entry} displayName={displayName} />
-                    <CardIdentity
-                      entry={entry}
-                      displayName={displayName}
-                      showGameBadge={showGameBadge}
-                      showStatusIcons
-                    />
-                    <MobilePrice entry={entry} change={change} />
-                  </Link>
-                )}
-
-                {!editMode && (
-                  <div className="flex shrink-0 items-center pr-2">
-                    <WatchlistActionsMenu
-                      entry={entry}
-                      onTogglePin={() => onTogglePin(entry)}
-                      onSetAlert={() => onSetAlert(entry)}
-                      onRemove={() => onRemove(entry)}
-                    />
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                entry={entry}
+                period={period}
+                editMode={editMode}
+                selected={selected.has(entry.cardId)}
+                onToggleSelect={() => onToggleSelect(entry.cardId)}
+                sparkline={sparklines[entry.cardId]}
+                removing={removingIds.has(entry.cardId)}
+                showGameBadge={showGameBadge}
+                onLongPress={() => openRowActions(entry)}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
@@ -232,12 +214,13 @@ export function WatchlistListView({
               const displayName = getCardName(lang, entry.card);
               const removing = removingIds.has(entry.cardId);
               const sparklineData = sparklines[entry.cardId];
+              const href = `/${entry.card.set.game?.slug ?? DEFAULT_GAME}/cards/${entry.card.cardCode}`;
 
               return (
                 <tr
                   key={entry.id}
                   className={cn(
-                    "ease-chrome transition-colors",
+                    "group ease-chrome transition-colors",
                     removing && "pointer-events-none opacity-40",
                     editMode
                       ? cn(
@@ -246,11 +229,13 @@ export function WatchlistListView({
                             ? "bg-primary/10"
                             : "hover:bg-muted/60",
                         )
-                      : "hover:bg-muted/50",
+                      : "cursor-pointer hover:bg-muted/50",
                   )}
-                  onClick={editMode ? () => onToggleSelect(entry.cardId) : undefined}
+                  onClick={() =>
+                    editMode ? onToggleSelect(entry.cardId) : router.push(href)
+                  }
                 >
-                  <td className="min-w-0 px-3 py-3">
+                  <td className="min-w-0 px-3 py-2.5">
                     <div className="flex min-w-0 items-center gap-3">
                       {editMode && (
                         <label
@@ -274,7 +259,7 @@ export function WatchlistListView({
                         />
                       ) : (
                         <Link
-                          href={`/${entry.card.set.game?.slug ?? DEFAULT_GAME}/cards/${entry.card.cardCode}`}
+                          href={href}
                           className="flex min-w-0 items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         >
                           <DesktopCardIdentity
@@ -286,16 +271,17 @@ export function WatchlistListView({
                       )}
                     </div>
                   </td>
-                  <td className="w-28 px-3 py-3 text-right">
-                    <PriceTag
-                      jpy={entry.card.latestPriceJpy}
-                      thb={entry.card.latestPriceThb}
-                      size="sm"
-                      showChange={false}
-                      className="flex-nowrap justify-end whitespace-nowrap"
-                    />
+                  <td className="w-28 px-3 py-2.5 text-right">
+                    <div className="flex flex-col items-end tabular-nums">
+                      <span className="text-code font-semibold">
+                        {formatEntryThb(entry.card)}
+                      </span>
+                      {formatEntryJpy(entry.card) && (
+                        <span className="text-meta">{formatEntryJpy(entry.card)}</span>
+                      )}
+                    </div>
                   </td>
-                  <td className="w-20 px-3 py-3 text-right">
+                  <td className="w-20 px-3 py-2.5 text-right">
                     <PriceTag
                       change={getEntryChange(entry, "24h")}
                       changeOnly
@@ -303,7 +289,7 @@ export function WatchlistListView({
                       size="sm"
                     />
                   </td>
-                  <td className="w-20 px-3 py-3 text-right">
+                  <td className="w-20 px-3 py-2.5 text-right">
                     <PriceTag
                       change={getEntryChange(entry, "7d")}
                       changeOnly
@@ -311,7 +297,7 @@ export function WatchlistListView({
                       size="sm"
                     />
                   </td>
-                  <td className="hidden w-20 px-3 py-3 text-right xl:table-cell">
+                  <td className="hidden w-20 px-3 py-2.5 text-right xl:table-cell">
                     <PriceTag
                       change={getEntryChange(entry, "30d")}
                       changeOnly
@@ -320,7 +306,7 @@ export function WatchlistListView({
                     />
                   </td>
                   {hasAnySparkline && (
-                    <td className="hidden px-3 py-3 lg:table-cell">
+                    <td className="hidden px-3 py-2.5 lg:table-cell">
                       <div className="flex justify-center">
                         {sparklineData?.length >= 2 ? (
                           <MiniSparkline data={sparklineData} width={104} height={28} />
@@ -332,11 +318,14 @@ export function WatchlistListView({
                       </div>
                     </td>
                   )}
-                  <td className="w-24 px-2 py-3 text-right">
+                  <td
+                    className="w-24 px-2 py-2.5 text-right"
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     <div className="flex items-center justify-end gap-1">
                       <WatchlistStatus entry={entry} />
                       {!editMode && (
-                        <WatchlistActionsMenu
+                        <WatchlistHoverActions
                           entry={entry}
                           onTogglePin={() => onTogglePin(entry)}
                           onSetAlert={() => onSetAlert(entry)}
@@ -351,83 +340,163 @@ export function WatchlistListView({
           </tbody>
         </table>
       </div>
+
+      {actionEntry && (
+        <WatchlistRowActionsDialog
+          entry={actionEntry}
+          open={actionOpen}
+          onOpenChange={setActionOpen}
+          onTogglePin={() => onTogglePin(actionEntry)}
+          onSetAlert={() => onSetAlert(actionEntry)}
+          onRemove={() => onRemove(actionEntry)}
+        />
+      )}
     </>
   );
 }
 
-function WatchlistThumbnail({
+function WatchlistMobileRow({
   entry,
-  displayName,
-}: {
-  entry: WatchlistEntry;
-  displayName: string;
-}) {
-  return (
-    <div className="relative aspect-[63/88] h-16 shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-hair">
-      {entry.card.imageUrl && (
-        <Image
-          src={entry.card.imageUrl}
-          alt={displayName}
-          fill
-          sizes="46px"
-          className="object-cover"
-          placeholder="blur"
-          blurDataURL={BLUR_DATA_URL}
-        />
-      )}
-    </div>
-  );
-}
-
-function CardIdentity({
-  entry,
-  displayName,
+  period,
+  editMode,
+  selected,
+  onToggleSelect,
+  sparkline,
+  removing,
   showGameBadge,
-  showStatusIcons = false,
+  onLongPress,
 }: {
   entry: WatchlistEntry;
-  displayName: string;
+  period: ChangePeriod;
+  editMode: boolean;
+  selected: boolean;
+  onToggleSelect: () => void;
+  sparkline?: number[];
+  removing: boolean;
   showGameBadge: boolean;
-  /** Mobile rows only — pin/alert live inline here instead of overlapping the artwork. */
-  showStatusIcons?: boolean;
+  onLongPress: () => void;
 }) {
   const lang = useUIStore((s) => s.language);
+  const displayName = getCardName(lang, entry.card);
+  const change = getEntryChange(entry, period);
   const pinned = entry.pinnedAt != null;
+  const longPress = useLongPress(onLongPress);
+
+  const identity = (
+    <>
+      <div className="relative aspect-[63/88] h-[72px] shrink-0 overflow-hidden rounded-lg bg-muted ring-1 ring-hair">
+        {entry.card.imageUrl && (
+          <Image
+            src={entry.card.imageUrl}
+            alt={displayName}
+            fill
+            sizes="52px"
+            className="object-cover"
+            placeholder="blur"
+            blurDataURL={BLUR_DATA_URL}
+          />
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-body-sm font-medium">{displayName}</p>
+        <div className="mt-0.5 flex min-w-0 items-center gap-1.5 text-meta">
+          <span className="truncate font-mono text-muted-foreground">
+            {entry.card.cardCode}
+          </span>
+          {pinned && (
+            <span
+              role="img"
+              aria-label={t(lang, "watchlistPinned")}
+              className="inline-flex shrink-0 text-primary"
+            >
+              <Pin className="size-3 fill-current" aria-hidden />
+            </span>
+          )}
+          {entry.hasActiveAlert && (
+            <span
+              role="img"
+              aria-label={t(lang, "watchlistHasAlert")}
+              className="inline-flex shrink-0 text-primary"
+            >
+              <Bell className="size-3 fill-current" aria-hidden />
+            </span>
+          )}
+          {showGameBadge && <GameBadge game={entry.card.set.game} />}
+        </div>
+        {sparkline && sparkline.length >= 2 && (
+          <div className="mt-1">
+            <MiniSparkline data={sparkline} width={80} height={24} className="h-6 w-20" />
+          </div>
+        )}
+      </div>
+    </>
+  );
+
+  const price = (
+    <div className="flex shrink-0 flex-col items-end gap-1">
+      <PriceTag
+        jpy={entry.card.latestPriceJpy}
+        thb={entry.card.latestPriceThb}
+        size="sm"
+        showChange={false}
+        className="flex-nowrap whitespace-nowrap"
+      />
+      <PriceTag
+        change={change}
+        changeOnly
+        changeStyle="chip"
+        size="sm"
+        className="min-w-[72px] justify-end"
+      />
+    </div>
+  );
+
+  const rowClass = cn(
+    "ease-chrome flex min-w-0 items-center gap-3 px-3 py-2.5 transition-colors",
+    removing && "pointer-events-none opacity-40",
+  );
+
+  if (editMode) {
+    return (
+      <label
+        className={cn(
+          rowClass,
+          "cursor-pointer select-none",
+          selected ? "bg-primary/10" : "hover:bg-muted/60",
+        )}
+      >
+        <span className="inline-flex size-11 shrink-0 items-center justify-center">
+          <input
+            type="checkbox"
+            className="size-4 cursor-pointer accent-primary"
+            checked={selected}
+            onChange={onToggleSelect}
+            aria-label={displayName}
+          />
+        </span>
+        {identity}
+        {price}
+      </label>
+    );
+  }
 
   return (
-    <div className="min-w-0 flex-1">
-      <p className="line-clamp-2 break-words text-body-sm" title={displayName}>
-        {displayName}
-      </p>
-      {/* Quiet meta line — code only. The rarity pill was visual noise on every
-          row (owner: "ฝั่งซ้ายแน่นไป"); the print suffix already disambiguates. */}
-      <div className="mt-1 flex min-w-0 items-center gap-1.5 text-meta">
-        <span className="truncate font-mono text-muted-foreground">
-          {entry.card.cardCode}
-        </span>
-        {showStatusIcons && pinned && (
-          <span
-            role="img"
-            aria-label={t(lang, "watchlistPinned")}
-            title={t(lang, "watchlistPinned")}
-            className="inline-flex shrink-0 text-primary"
-          >
-            <Pin className="size-3 fill-current" aria-hidden />
-          </span>
-        )}
-        {showStatusIcons && entry.hasActiveAlert && (
-          <span
-            role="img"
-            aria-label={t(lang, "watchlistHasAlert")}
-            title={t(lang, "watchlistHasAlert")}
-            className="inline-flex shrink-0 text-primary"
-          >
-            <Bell className="size-3 fill-current" aria-hidden />
-          </span>
-        )}
-        {showGameBadge && <GameBadge game={entry.card.set.game} />}
-      </div>
-    </div>
+    <Link
+      href={`/${entry.card.set.game?.slug ?? DEFAULT_GAME}/cards/${entry.card.cardCode}`}
+      aria-label={displayName}
+      className={cn(
+        rowClass,
+        "hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
+      )}
+      onTouchStart={longPress.onTouchStart}
+      onTouchMove={longPress.onTouchMove}
+      onTouchEnd={longPress.onTouchEnd}
+      onContextMenu={longPress.onContextMenu}
+      onClickCapture={longPress.onClickCapture}
+    >
+      {identity}
+      {price}
+    </Link>
   );
 }
 
@@ -455,38 +524,18 @@ function DesktopCardIdentity({
           />
         )}
       </div>
-      <CardIdentity
-        entry={entry}
-        displayName={displayName}
-        showGameBadge={showGameBadge}
-      />
+      <div className="min-w-0 flex-1">
+        <p className="line-clamp-2 break-words text-body-sm" title={displayName}>
+          {displayName}
+        </p>
+        <div className="mt-1 flex min-w-0 items-center gap-1.5 text-meta">
+          <span className="truncate font-mono text-muted-foreground">
+            {entry.card.cardCode}
+          </span>
+          {showGameBadge && <GameBadge game={entry.card.set.game} />}
+        </div>
+      </div>
     </>
-  );
-}
-
-function MobilePrice({
-  entry,
-  change,
-}: {
-  entry: WatchlistEntry;
-  change: number | null;
-}) {
-  return (
-    <div className="flex shrink-0 flex-col items-end gap-0.5 text-right tabular-nums">
-      <PriceTag
-        jpy={entry.card.latestPriceJpy}
-        thb={entry.card.latestPriceThb}
-        size="sm"
-        showChange={false}
-        className="flex-nowrap whitespace-nowrap"
-      />
-      <PriceTag
-        change={change}
-        changeOnly
-        changeStyle="plain"
-        size="sm"
-      />
-    </div>
   );
 }
 
@@ -494,37 +543,36 @@ function WatchlistStatus({ entry }: { entry: WatchlistEntry }) {
   const lang = useUIStore((s) => s.language);
   const pinned = entry.pinnedAt != null;
 
-  if (!pinned && !entry.hasActiveAlert) {
-    return null;
-  }
+  if (!pinned && !entry.hasActiveAlert) return null;
 
   return (
-    <div className="flex items-center justify-center gap-1">
+    <span className="inline-flex items-center gap-1 group-hover:hidden group-focus-within:hidden">
       {pinned && (
         <span
-          className="inline-flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary"
           role="img"
           aria-label={t(lang, "watchlistPinned")}
           title={t(lang, "watchlistPinned")}
+          className="inline-flex text-primary"
         >
           <Pin className="size-3.5 fill-current" aria-hidden />
         </span>
       )}
       {entry.hasActiveAlert && (
         <span
-          className="inline-flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary"
           role="img"
           aria-label={t(lang, "watchlistHasAlert")}
           title={t(lang, "watchlistHasAlert")}
+          className="inline-flex text-primary"
         >
           <Bell className="size-3.5 fill-current" aria-hidden />
         </span>
       )}
-    </div>
+    </span>
   );
 }
 
-function WatchlistActionsMenu({
+/** Desktop hover/focus-reveal action cluster — replaces the ⋯ dropdown. */
+function WatchlistHoverActions({
   entry,
   onTogglePin,
   onSetAlert,
@@ -539,39 +587,31 @@ function WatchlistActionsMenu({
   const pinned = entry.pinnedAt != null;
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        aria-label={t(lang, "moreActions")}
-        className="ease-chrome inline-flex size-11 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:size-9"
+    <div className="hidden items-center gap-1 group-hover:flex group-focus-within:flex">
+      <IconButton
+        aria-label={pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
+        size="sm"
+        className={cn("size-8", pinned && "text-primary")}
+        onClick={onTogglePin}
       >
-        <MoreHorizontal className="size-5 md:size-4" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem className="min-h-11 md:min-h-0" onClick={onTogglePin}>
-          <Pin className={cn("size-4", pinned && "fill-current text-primary")} />
-          {pinned ? t(lang, "watchlistUnpin") : t(lang, "watchlistPin")}
-        </DropdownMenuItem>
-        <DropdownMenuItem className="min-h-11 md:min-h-0" onClick={onSetAlert}>
-          <Bell
-            className={cn(
-              "size-4",
-              entry.hasActiveAlert && "fill-current text-primary",
-            )}
-          />
-          {entry.hasActiveAlert
-            ? t(lang, "watchlistHasAlert")
-            : t(lang, "setPriceAlert")}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          variant="destructive"
-          className="min-h-11 md:min-h-0"
-          onClick={onRemove}
-        >
-          <Trash2 className="size-4" />
-          {t(lang, "removeFromWatchlist")}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        <Pin className={cn("size-4", pinned && "fill-current")} />
+      </IconButton>
+      <IconButton
+        aria-label={entry.hasActiveAlert ? t(lang, "watchlistHasAlert") : t(lang, "setPriceAlert")}
+        size="sm"
+        className={cn("size-8", entry.hasActiveAlert && "text-primary")}
+        onClick={onSetAlert}
+      >
+        <Bell className={cn("size-4", entry.hasActiveAlert && "fill-current")} />
+      </IconButton>
+      <IconButton
+        aria-label={t(lang, "removeFromWatchlist")}
+        size="sm"
+        className="size-8 hover:text-destructive"
+        onClick={onRemove}
+      >
+        <Trash2 className="size-4" />
+      </IconButton>
+    </div>
   );
 }

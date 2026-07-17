@@ -360,7 +360,7 @@ export const th = {
   invested: "เงินลงทุน",
   avgCost: "ต้นทุนเฉลี่ย",
   cardsAdded: "เพิ่มการ์ด",
-  todaysMovers: "มูฟเวอร์วันนี้",
+  todaysMovers: "ขยับแรงวันนี้",
   transactionHistory: "ประวัติธุรกรรม",
   managePortfolios: "จัดการพอร์ต",
   allPortfolios: "ทุกพอร์ต",
@@ -476,6 +476,8 @@ export const th = {
   watchlistResetFilters: "ล้างตัวกรอง",
   watchlistSearchPlaceholder: "ค้นหาในรายการโปรด...",
   watchlistSummaryCards: "การ์ดที่ติดตาม",
+  /** Row-3 pulse text prefix on desktop: "ติดตาม {N} ใบ · ▲ up · ▼ down". */
+  watchlistTracking: "ติดตาม",
   watchlistSummaryValue: "มูลค่าราคาอ้างอิง",
   watchlistSummaryGainer: "ขึ้นเยอะสุด",
   watchlistSummaryLoser: "ลงเยอะสุด",

@@ -1,3 +1,4 @@
+import { formatJpy, formatThb, jpyToThb } from "@/lib/utils/currency";
 import type { GameRef } from "@/lib/types/portfolio";
 
 export type WatchCard = {
@@ -70,4 +71,26 @@ export function getEntryChange(entry: WatchlistEntry, period: ChangePeriod): num
     default:
       return entry.card.priceChange7d;
   }
+}
+
+/**
+ * Desktop table + mover-shelf tiles always show THB (primary) and JPY
+ * (demoted) side by side, independent of the header currency toggle — the
+ * two-currency stack IS the display, not a currency preference. Mobile rows
+ * keep using `PriceTag` (which respects the toggle) — only these two callers
+ * need the fixed pair.
+ */
+export function getEntryThb(card: WatchCard): number | null {
+  if (card.latestPriceThb != null) return card.latestPriceThb;
+  if (card.latestPriceJpy != null) return jpyToThb(card.latestPriceJpy);
+  return null;
+}
+
+export function formatEntryThb(card: WatchCard): string {
+  const thb = getEntryThb(card);
+  return thb != null ? formatThb(Math.round(thb)) : "—";
+}
+
+export function formatEntryJpy(card: WatchCard): string | null {
+  return card.latestPriceJpy != null ? formatJpy(card.latestPriceJpy) : null;
 }

@@ -50,12 +50,8 @@ describe("watchlist result controls", () => {
 
   it("replaces normal result controls with the selection bar in edit mode", () => {
     const commonProps = {
-      view: "list" as const,
-      onViewChange: noop,
       period: "7d" as const,
       onPeriodChange: noop,
-      sortKey: "default" as const,
-      onSortChange: noop,
       filters: DEFAULT_FILTERS,
       onFiltersChange: noop,
       search: "",
@@ -63,6 +59,8 @@ describe("watchlist result controls", () => {
       setOptions: [],
       resultCount: 4,
       itemCount: 4,
+      upCount: 2,
+      downCount: 1,
       limit: Number.POSITIVE_INFINITY,
       onToggleEditMode: noop,
       selectedCount: 2,
@@ -79,9 +77,72 @@ describe("watchlist result controls", () => {
       <WatchlistToolbar {...commonProps} editMode />,
     );
 
+    // Mobile row-3 keeps the period pill (rows show one delta per period).
     expect(normalMarkup).toContain(">24h<");
     expect(selectionMarkup).not.toContain(">24h<");
     expect(selectionMarkup).toContain(t("TH", "watchlistRemoveSelected"));
     expect(selectionMarkup).toContain(t("TH", "watchlistEditDone"));
+  });
+
+  it("cuts the view toggle and sort dropdown — sort lives at the list headers now", () => {
+    const markup = renderToStaticMarkup(
+      <WatchlistToolbar
+        period="7d"
+        onPeriodChange={noop}
+        filters={DEFAULT_FILTERS}
+        onFiltersChange={noop}
+        search=""
+        onSearchChange={noop}
+        setOptions={[]}
+        resultCount={4}
+        itemCount={4}
+        upCount={2}
+        downCount={1}
+        limit={Number.POSITIVE_INFINITY}
+        editMode={false}
+        onToggleEditMode={noop}
+        selectedCount={0}
+        allVisibleSelected={false}
+        onToggleSelectAll={noop}
+        onClearSelection={noop}
+        onBulkRemove={noop}
+      />,
+    );
+
+    expect(markup).not.toContain("lucide-layout-grid");
+    expect(markup).not.toContain(t("TH", "watchlistSortBy"));
+    expect(markup).not.toContain(t("TH", "watchlistSortDefault"));
+  });
+
+  it("shows the desktop pulse text (tracked count + up/down) instead of the count line", () => {
+    const markup = renderToStaticMarkup(
+      <WatchlistToolbar
+        period="7d"
+        onPeriodChange={noop}
+        filters={DEFAULT_FILTERS}
+        onFiltersChange={noop}
+        search=""
+        onSearchChange={noop}
+        setOptions={[]}
+        resultCount={4}
+        itemCount={9}
+        upCount={5}
+        downCount={2}
+        limit={Number.POSITIVE_INFINITY}
+        editMode={false}
+        onToggleEditMode={noop}
+        selectedCount={0}
+        allVisibleSelected={false}
+        onToggleSelectAll={noop}
+        onClearSelection={noop}
+        onBulkRemove={noop}
+      />,
+    );
+
+    expect(markup).toContain(
+      `${t("TH", "watchlistTracking")} 9 ${t("TH", "cardUnit")}`,
+    );
+    expect(markup).toMatch(/text-price-up">(?:(?!<\/span>)[\s\S])*5<\/span>/);
+    expect(markup).toMatch(/text-price-down">(?:(?!<\/span>)[\s\S])*2<\/span>/);
   });
 });

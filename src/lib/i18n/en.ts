@@ -476,6 +476,8 @@ export const en = {
   watchlistResetFilters: "Reset filters",
   watchlistSearchPlaceholder: "Search in watchlist...",
   watchlistSummaryCards: "Cards tracked",
+  /** Row-3 pulse text prefix on desktop: "Tracking {N} cards · up · down". */
+  watchlistTracking: "Tracking",
   watchlistSummaryValue: "Reference price value",
   watchlistSummaryGainer: "Top gainer",
   watchlistSummaryLoser: "Top loser",

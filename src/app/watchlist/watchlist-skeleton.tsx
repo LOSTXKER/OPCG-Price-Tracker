@@ -15,54 +15,76 @@ export function WatchlistSkeleton({ withHeader = true }: { withHeader?: boolean 
         </>
       )}
 
-      {/* Mobile toolbar (<sm): period pill + icon cluster, then the sort row. */}
-      <div className="space-y-2 sm:hidden">
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-9 w-24 rounded-full" />
-          <div className="ml-auto flex items-center gap-2">
-            <Skeleton className="size-9 rounded-md" />
-            <Skeleton className="size-9 rounded-md" />
-            <Skeleton className="size-9 rounded-md" />
-            <Skeleton className="size-9 rounded-md" />
-          </div>
-        </div>
-        <div className="flex items-center justify-between gap-2">
-          <Skeleton className="h-3 w-14" />
-          <Skeleton className="h-9 w-48 rounded-md" />
+      {/* Row 3 — control row: period pill + 3 icons (mobile) / pulse text +
+          2 controls (desktop). */}
+      <div className="flex items-center gap-2 sm:hidden">
+        <Skeleton className="h-9 w-24 rounded-full" />
+        <div className="ml-auto flex items-center gap-2">
+          <Skeleton className="size-9 rounded-md" />
+          <Skeleton className="size-9 rounded-md" />
+          <Skeleton className="size-9 rounded-md" />
         </div>
       </div>
-
-      {/* Desktop/tablet toolbar (>=sm): one lean row — count left, controls right. */}
       <div className="hidden items-center gap-2 sm:flex">
-        <Skeleton className="h-3 w-20" />
+        <Skeleton className="h-4 w-40" />
         <div className="ml-auto flex items-center gap-1.5">
           <Skeleton className="size-7 rounded-md" />
-          <Skeleton className="h-7 w-32 rounded-md" />
-          <Skeleton className="h-7 w-20 rounded-md" />
           <Skeleton className="h-7 w-20 rounded-md" />
           <Skeleton className="h-7 w-20 rounded-md" />
         </div>
       </div>
 
-      <Surface variant="panel" className="overflow-hidden sm:hidden">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-3 border-b border-hair p-3 last:border-0">
-            <Skeleton className="h-16 w-11 shrink-0 rounded-lg" />
-            <div className="min-w-0 flex-1 space-y-2">
-              <Skeleton className="h-4 w-4/5" />
-              <Skeleton className="h-3 w-2/3" />
+      {/* Row 4 — "ขยับแรงวันนี้" mover shelf: eyebrow + tile shadows. */}
+      <div>
+        <Skeleton className="mb-2 h-3 w-28" />
+        <div className="no-sb flex gap-3 overflow-x-auto sm:grid sm:grid-cols-6 sm:gap-4 sm:overflow-visible">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="w-[92px] shrink-0 space-y-1.5 sm:w-full">
+              <Skeleton className="aspect-[63/88] w-full rounded-xl" />
+              <Skeleton className="h-3 w-10" />
+              <Skeleton className="h-3 w-14" />
             </div>
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-16" />
-              <Skeleton className="h-3 w-12" />
+          ))}
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={`sm-${i}`} className="hidden w-full space-y-1.5 sm:block">
+              <Skeleton className="aspect-[63/88] w-full rounded-xl" />
+              <Skeleton className="h-3 w-10" />
+              <Skeleton className="h-3 w-14" />
             </div>
-            <Skeleton className="size-11 shrink-0 rounded-md" />
-          </div>
-        ))}
-      </Surface>
+          ))}
+        </div>
+      </div>
 
+      {/* Row 5+ — list header + row shadows (mobile Apple-Stocks anatomy). */}
+      <div className="sm:hidden">
+        <div className="flex h-9 items-center justify-between border-b border-hair px-1">
+          <Skeleton className="h-3 w-14" />
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-3 w-10" />
+            <Skeleton className="h-3 w-14" />
+          </div>
+        </div>
+        <Surface variant="panel" className="mt-2 overflow-hidden">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-3 border-b border-hair p-3 last:border-0">
+              <Skeleton className="h-[72px] w-[52px] shrink-0 rounded-lg" />
+              <div className="min-w-0 flex-1 space-y-1.5">
+                <Skeleton className="h-4 w-4/5" />
+                <Skeleton className="h-3 w-1/2" />
+                <Skeleton className="h-6 w-20" />
+              </div>
+              <div className="space-y-1">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-5 w-14 rounded-md" />
+              </div>
+            </div>
+          ))}
+        </Surface>
+      </div>
+
+      {/* Desktop table shadows. */}
       <div className="hidden sm:block">
-        <div className="flex items-center gap-3 border-b border-hair px-3 py-3">
+        <div className="flex items-center gap-3 border-b border-hair px-3 py-2.5">
           <Skeleton className="h-3 flex-1" />
           <Skeleton className="h-3 w-28" />
           <Skeleton className="h-3 w-20" />
@@ -71,13 +93,16 @@ export function WatchlistSkeleton({ withHeader = true }: { withHeader?: boolean 
           <Skeleton className="h-3 w-24" />
         </div>
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-3 px-3 py-2">
+          <div key={i} className="flex items-center gap-3 px-3 py-2.5">
             <Skeleton className="h-12 w-9 shrink-0 rounded-md" />
             <div className="min-w-0 flex-1 space-y-2">
               <Skeleton className="h-4 w-48" />
               <Skeleton className="h-3 w-28" />
             </div>
-            <Skeleton className="h-4 w-28" />
+            <div className="w-28 space-y-1">
+              <Skeleton className="ml-auto h-4 w-16" />
+              <Skeleton className="ml-auto h-3 w-12" />
+            </div>
             <Skeleton className="h-4 w-20" />
             <Skeleton className="h-4 w-20" />
             <Skeleton className="hidden h-4 w-20 xl:block" />

@@ -9,42 +9,31 @@ import {
   TrendingDown,
   TrendingUp,
 } from "lucide-react";
-import { type ReactNode, useMemo, useRef, useState } from "react";
+import { type ReactNode, useRef, useState } from "react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { FilterModal } from "@/components/shared/filter-modal";
 import { IconButton } from "@/components/ui/icon-button";
 import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { ViewModeControl } from "@/components/ui/view-mode-control";
-import {
-  FilterButton,
-  ToolbarSearch,
-  ToolbarSortDropdown,
-} from "@/components/ui/toolbar";
+import { FilterButton, ToolbarSearch } from "@/components/ui/toolbar";
 import { UpgradeBadge } from "@/components/shared/upgrade-badge";
 import { t, type Language } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 
 import { countActiveWatchlistFilters } from "./watchlist-sort";
-import { WatchlistPeriodControl } from "./watchlist-summary";
+import { WatchlistPeriodControl, WatchlistPulseText } from "./watchlist-summary";
 import {
   DEFAULT_FILTERS,
   type ChangePeriod,
-  type SortKey,
-  type WatchView,
   type WatchlistFilters,
 } from "./watchlist-types";
 
 export function WatchlistToolbar({
   scope,
-  view,
-  onViewChange,
   period,
   onPeriodChange,
-  sortKey,
-  onSortChange,
   filters,
   onFiltersChange,
   search,
@@ -52,6 +41,8 @@ export function WatchlistToolbar({
   setOptions,
   resultCount,
   itemCount,
+  upCount,
+  downCount,
   limit,
   editMode,
   onToggleEditMode,
@@ -62,19 +53,19 @@ export function WatchlistToolbar({
   onBulkRemove,
 }: {
   scope?: ReactNode;
-  view: WatchView;
-  onViewChange: (v: WatchView) => void;
   period: ChangePeriod;
   onPeriodChange: (period: ChangePeriod) => void;
-  sortKey: SortKey;
-  onSortChange: (k: SortKey) => void;
   filters: WatchlistFilters;
   onFiltersChange: (next: WatchlistFilters) => void;
   search: string;
   onSearchChange: (s: string) => void;
   setOptions: SetPickerItem[];
+  /** Only needed for the edit-mode "select all" disabled state. */
   resultCount: number;
   itemCount: number;
+  /** Movers over ALL watched cards for the active period — the row-3 pulse. */
+  upCount: number;
+  downCount: number;
   limit: number;
   editMode: boolean;
   onToggleEditMode: () => void;
@@ -91,19 +82,6 @@ export function WatchlistToolbar({
   const mobileFilterButtonRef = useRef<HTMLButtonElement>(null);
   const desktopFilterButtonRef = useRef<HTMLButtonElement>(null);
 
-  const sortOptions: { key: SortKey; label: string }[] = useMemo(
-    () => [
-      { key: "default", label: t(lang, "watchlistSortDefault") },
-      { key: "recent", label: t(lang, "watchlistSortRecent") },
-      { key: "gain", label: t(lang, "watchlistSortGain") },
-      { key: "loss", label: t(lang, "watchlistSortLoss") },
-      { key: "priceHigh", label: t(lang, "watchlistSortPriceHigh") },
-      { key: "priceLow", label: t(lang, "watchlistSortPriceLow") },
-      { key: "nameAz", label: t(lang, "watchlistSortNameAz") },
-    ],
-    [lang]
-  );
-
   const isFinite = Number.isFinite(limit);
   const usagePct = isFinite ? Math.min(100, Math.round((itemCount / limit) * 100)) : 0;
   const isFull = isFinite && itemCount >= limit;
@@ -111,10 +89,6 @@ export function WatchlistToolbar({
 
   const activeFilterCount = countActiveWatchlistFilters(filters);
   const draftFilterCount = countActiveWatchlistFilters(draftFilters);
-  const sortDirection: "asc" | "desc" =
-    sortKey === "loss" || sortKey === "priceLow" || sortKey === "nameAz"
-      ? "asc"
-      : "desc";
 
   const openFilters = () => {
     setDraftFilters(filters);
@@ -164,12 +138,6 @@ export function WatchlistToolbar({
         <UpgradeBadge featureKey="watchlistCards" />
       </div>
     ) : null;
-
-  const resultCountLine = (
-    <span className="shrink-0 text-meta tabular-nums" aria-live="polite">
-      {resultCount.toLocaleString()} {t(lang, "watchlistSummaryCards").toLowerCase()}
-    </span>
-  );
 
   return (
     <div className="space-y-2">
@@ -226,91 +194,14 @@ export function WatchlistToolbar({
         <>
           {scope && <div className="min-w-0">{scope}</div>}
 
-          {/* Mobile (<sm): essentials only — period (rows show one delta) +
-              a compact icon cluster, then sort. Set/movement/status filters
-              all live inside the one FilterModal. */}
-          <div className="space-y-2 sm:hidden">
-            <div className="flex flex-wrap items-center gap-2">
-              <WatchlistPeriodControl period={period} onPeriodChange={onPeriodChange} />
+          {/* Mobile (<sm): period pill (rows show one delta per period) + a
+              compact icon cluster. No count line — the list header owns it —
+              and no view/sort controls: grid view is cut, sort moved to the
+              list header's tap-sort buttons. */}
+          <div className="flex items-center gap-2 sm:hidden">
+            <WatchlistPeriodControl period={period} onPeriodChange={onPeriodChange} />
 
-              <div className="ml-auto flex shrink-0 items-center gap-2">
-                <ToolbarSearch
-                  type="search"
-                  value={search}
-                  onValueChange={onSearchChange}
-                  collapsible
-                  open={searchOpen}
-                  onOpenChange={setSearchOpen}
-                  placeholder={t(lang, "watchlistSearchPlaceholder")}
-                  aria-label={t(lang, "watchlistSearchPlaceholder")}
-                  size="sm"
-                />
-
-                <FilterButton
-                  ref={mobileFilterButtonRef}
-                  onClick={openFilters}
-                  count={activeFilterCount}
-                  active={filterOpen || activeFilterCount > 0}
-                  aria-haspopup="dialog"
-                  aria-expanded={filterOpen}
-                  iconOnly
-                  aria-label={t(lang, "filter")}
-                />
-
-                <ViewModeControl<WatchView>
-                  modes={["list", "grid"]}
-                  value={view}
-                  onChange={onViewChange}
-                />
-
-                <IconButton
-                  aria-label={t(lang, "watchlistEditMode")}
-                  onClick={onToggleEditMode}
-                  size="md"
-                >
-                  <Pencil className="size-4" />
-                </IconButton>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between gap-2">
-              <span className="shrink-0 text-meta">{t(lang, "sortBy")}</span>
-              <ToolbarSortDropdown
-                options={sortOptions}
-                activeKey={sortKey}
-                activeDir={sortDirection}
-                onChange={onSortChange}
-                fallbackLabel={t(lang, "watchlistSortBy")}
-                align="end"
-                stableMobileWidth
-                itemClassName="min-h-11 md:min-h-0"
-                className="ml-auto w-48 min-w-0 flex-none"
-              />
-            </div>
-
-            {limitMeter}
-
-            <p className="text-meta tabular-nums" aria-live="polite">
-              {resultCount.toLocaleString()} {t(lang, "watchlistSummaryCards").toLowerCase()}
-            </p>
-          </div>
-
-          {/* Desktop/tablet (>=sm): one lean row — count on the left, then
-              search · sort · filter · view · edit. The period pill only shows
-              in grid view: the list view's table already has 24H/7D/30D
-              columns, so a period switch there would be a duplicate control. */}
-          <div className="hidden items-center gap-2 sm:flex">
-            {resultCountLine}
-            {limitMeter}
-
-            <div className="ml-auto flex shrink-0 items-center gap-1.5">
-              {view === "grid" && (
-                <>
-                  <WatchlistPeriodControl period={period} onPeriodChange={onPeriodChange} />
-                  <div className="h-5 w-px bg-border/40" />
-                </>
-              )}
-
+            <div className="ml-auto flex shrink-0 items-center gap-2">
               <ToolbarSearch
                 type="search"
                 value={search}
@@ -323,18 +214,49 @@ export function WatchlistToolbar({
                 size="sm"
               />
 
-              {/* List view sorts at the table headers (SortableHeader) — the
-                  dropdown only backs the grid view, which has no headers. */}
-              {view === "grid" && (
-                <ToolbarSortDropdown
-                  options={sortOptions}
-                  activeKey={sortKey}
-                  activeDir={sortDirection}
-                  onChange={onSortChange}
-                  fallbackLabel={t(lang, "watchlistSortBy")}
-                  itemClassName="min-h-11 md:min-h-0"
-                />
-              )}
+              <FilterButton
+                ref={mobileFilterButtonRef}
+                onClick={openFilters}
+                count={activeFilterCount}
+                active={filterOpen || activeFilterCount > 0}
+                aria-haspopup="dialog"
+                aria-expanded={filterOpen}
+                iconOnly
+                aria-label={t(lang, "filter")}
+              />
+
+              <IconButton
+                aria-label={t(lang, "watchlistEditMode")}
+                onClick={onToggleEditMode}
+                size="md"
+              >
+                <Pencil className="size-4" />
+              </IconButton>
+            </div>
+          </div>
+
+          {limitMeter && <div className="sm:hidden">{limitMeter}</div>}
+
+          {/* Desktop/tablet (>=sm): pulse text left (tracked count + ▲/▼ over
+              ALL cards for the active period) + search · filter · edit right.
+              No period control here — the table already has 24H/7D/30D
+              columns, so a period switch would be a duplicate control. */}
+          <div className="hidden items-center gap-2 sm:flex">
+            <WatchlistPulseText itemCount={itemCount} upCount={upCount} downCount={downCount} />
+            {limitMeter}
+
+            <div className="ml-auto flex shrink-0 items-center gap-1.5">
+              <ToolbarSearch
+                type="search"
+                value={search}
+                onValueChange={onSearchChange}
+                collapsible
+                open={searchOpen}
+                onOpenChange={setSearchOpen}
+                placeholder={t(lang, "watchlistSearchPlaceholder")}
+                aria-label={t(lang, "watchlistSearchPlaceholder")}
+                size="sm"
+              />
 
               <FilterButton
                 ref={desktopFilterButtonRef}
@@ -346,12 +268,6 @@ export function WatchlistToolbar({
               >
                 <span>{t(lang, "filter")}</span>
               </FilterButton>
-
-              <ViewModeControl<WatchView>
-                modes={["list", "grid"]}
-                value={view}
-                onChange={onViewChange}
-              />
 
               <button
                 type="button"
