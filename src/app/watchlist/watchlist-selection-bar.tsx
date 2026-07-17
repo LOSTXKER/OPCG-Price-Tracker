@@ -13,6 +13,10 @@ import { useUIStore } from "@/stores/ui-store";
  * under the global chrome while scrolling (owner: "เอาไว้บนหัวตาราง...
  * มันจะตามจอเวลาเลื่อนลง"). Carries the select-all tick + count + actions,
  * Gmail-style; row checkboxes stay on the rows themselves.
+ *
+ * On phone widths (<sm) the bar keeps to ONE line: the select-all text and
+ * the remove label collapse to sr-only / icon+count — the full labels made
+ * the bar wrap to two tall lines on a 375px screen.
  */
 export function WatchlistSelectionBar({
   selectedCount,
@@ -46,7 +50,9 @@ export function WatchlistSelectionBar({
       role="toolbar"
       aria-label={t(lang, "watchlistSelected")}
     >
-      <label className="flex min-h-11 cursor-pointer select-none items-center gap-2.5 px-2 md:min-h-9">
+      {/* min-w-11 + justify-center keep the phone hit area >=44px wide while
+          the text label is sr-only; >=sm the label shows and the row flows. */}
+      <label className="flex min-h-11 min-w-11 cursor-pointer select-none items-center justify-center gap-2.5 px-2 sm:min-w-0 sm:justify-start md:min-h-9">
         <input
           ref={selectAllRef}
           type="checkbox"
@@ -55,7 +61,9 @@ export function WatchlistSelectionBar({
           onChange={onToggleSelectAll}
           disabled={resultCount === 0}
         />
-        <span className="text-label">{t(lang, "watchlistSelectAll")}</span>
+        <span className="text-label sr-only sm:not-sr-only">
+          {t(lang, "watchlistSelectAll")}
+        </span>
       </label>
 
       <span
@@ -75,10 +83,13 @@ export function WatchlistSelectionBar({
           variant="destructive"
           onClick={onBulkRemove}
           disabled={selectedCount === 0}
+          aria-label={t(lang, "watchlistRemoveSelected")}
           className="min-h-11 md:min-h-9"
         >
           <Trash2 className="size-3.5" />
-          {t(lang, "watchlistRemoveSelected")}
+          <span className="hidden sm:inline">
+            {t(lang, "watchlistRemoveSelected")}
+          </span>
           {selectedCount > 0 && (
             <span className="tabular-nums">({selectedCount})</span>
           )}

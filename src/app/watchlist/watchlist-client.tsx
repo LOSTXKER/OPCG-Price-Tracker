@@ -42,6 +42,7 @@ import {
   countActiveWatchlistFilters,
   ensureValidSetCode,
   filterAndSortEntries,
+  pruneSelectedToVisible,
 } from "./watchlist-sort";
 import { buildWatchlistTabHref } from "./watchlist-tab-query";
 import {
@@ -332,6 +333,16 @@ function WatchlistContent({
       return next;
     });
   };
+
+  // Select-mode picks must stay a subset of the visible rows. Search, the
+  // filter modal, the game chips, the period control, and background
+  // refreshes can all hide entries — a pick that lingered on a hidden row
+  // would let the bar count (and bulk-remove delete) cards the user can no
+  // longer see. Reconciling against filteredEntries covers every one of
+  // those paths at once; picks on rows that stay visible survive.
+  useEffect(() => {
+    setSelected((prev) => pruneSelectedToVisible(prev, filteredEntries));
+  }, [filteredEntries]);
 
   const allVisibleSelected =
     filteredEntries.length > 0 &&

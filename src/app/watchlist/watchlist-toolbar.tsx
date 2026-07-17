@@ -44,7 +44,7 @@ export function WatchlistToolbar({
   itemCount: number;
   limit: number;
   /** Select mode — the toggle shows pressed state; actions live on the
-   *  floating WatchlistSelectionBar. */
+   *  sticky WatchlistSelectionBar. */
   editMode: boolean;
   onToggleEditMode: () => void;
 }) {
@@ -113,9 +113,10 @@ export function WatchlistToolbar({
 
   return (
     <div className="space-y-3">
-      {/* Select mode no longer swaps the toolbar away — the floating
-          WatchlistSelectionBar (bottom of the screen) carries the actions,
-          and search/filter stay usable while picking rows. */}
+      {/* Select mode no longer swaps the toolbar away — the sticky
+          WatchlistSelectionBar above the table header carries the actions.
+          Search/filter stay usable while picking rows; picks are pruned to
+          the rows that stay visible (see pruneSelectedToVisible). */}
           {scope && <div className="min-w-0">{scope}</div>}
 
           {/* Mobile (<sm): a visible search field (owner: no icon-collapse) +

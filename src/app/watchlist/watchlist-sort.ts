@@ -62,6 +62,24 @@ export function filterEntries(
   });
 }
 
+/** Keep the select-mode picks a subset of the visible entries. Any constraint
+ *  change (search/filters/game/period) or background refresh can hide rows —
+ *  a pick that lingers on a hidden row would let the selection bar count (and
+ *  bulk-remove delete) cards the user can no longer see. Returns the same Set
+ *  instance when nothing was pruned so state setters can bail out. */
+export function pruneSelectedToVisible(
+  selected: Set<number>,
+  visibleEntries: readonly WatchlistEntry[],
+): Set<number> {
+  if (selected.size === 0) return selected;
+  const visible = new Set(visibleEntries.map((e) => e.cardId));
+  const next = new Set<number>();
+  selected.forEach((id) => {
+    if (visible.has(id)) next.add(id);
+  });
+  return next.size === selected.size ? selected : next;
+}
+
 /** Clear a set selection when it does not belong to the newly selected game. */
 export function ensureValidSetCode(
   entries: readonly WatchlistEntry[],

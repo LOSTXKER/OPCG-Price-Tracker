@@ -8,6 +8,7 @@ import {
   ensureValidSetCode,
   filterAndSortEntries,
   filterEntries,
+  pruneSelectedToVisible,
   sortEntries,
 } from "./watchlist-sort";
 import {
@@ -150,6 +151,20 @@ describe("watchlist filtering", () => {
     });
     expect(countActiveWatchlistModalFilters(active)).toBe(2);
     expect(countActiveWatchlistFilters(active)).toBe(3);
+  });
+
+  it("prunes select-mode picks to the visible entries", () => {
+    const selected = new Set([1, 2, 3]);
+    expect(pruneSelectedToVisible(selected, [entries[0], entries[2]])).toEqual(
+      new Set([1, 3]),
+    );
+  });
+
+  it("returns the same selection instance when nothing is hidden", () => {
+    const selected = new Set([1, 2]);
+    expect(pruneSelectedToVisible(selected, entries)).toBe(selected);
+    const empty = new Set<number>();
+    expect(pruneSelectedToVisible(empty, [])).toBe(empty);
   });
 });
 

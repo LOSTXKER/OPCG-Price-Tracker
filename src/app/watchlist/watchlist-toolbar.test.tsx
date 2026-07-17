@@ -49,7 +49,7 @@ describe("watchlist result controls", () => {
     expect(markup).not.toContain("sm:h-11");
   });
 
-  it("keeps the toolbar during select mode and marks the toggle pressed (actions live on the floating bar)", () => {
+  it("keeps the toolbar during select mode and marks the toggle pressed (actions live on the sticky bar)", () => {
     const commonProps = {
       filters: DEFAULT_FILTERS,
       onFiltersChange: noop,
