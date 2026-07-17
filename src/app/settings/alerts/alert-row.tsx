@@ -26,7 +26,6 @@ import {
 import { GameBadge } from "@/components/shared/game-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Surface } from "@/components/ui/surface";
 import type { PriceAlertItem } from "@/components/alerts/alert-types";
 import { useUIStore } from "@/stores/ui-store";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
@@ -90,9 +89,10 @@ export function AlertRow({
     return { key: c, label: t(lang, "alertChannelEmail"), Icon: Mail };
   });
 
+  // A borderless row — the section panel supplies the frame + dividers
+  // (same list language as the watchlist cards tab).
   return (
-    <Surface
-      variant="outline"
+    <div
       className={cn(
         "p-4 motion-base",
         alert.isActive ? "" : "bg-muted/20",
@@ -285,7 +285,7 @@ export function AlertRow({
           </div>
         </div>
       </div>
-    </Surface>
+    </div>
   );
 }
 

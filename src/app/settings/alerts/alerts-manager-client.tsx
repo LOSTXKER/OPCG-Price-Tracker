@@ -249,12 +249,21 @@ export function AlertsManagerClient({
         showGameBadge={false}
       />
     );
-    if (!grouped) return <div className="space-y-2">{list.map(rowOf)}</div>;
+    // One calm panel of divided rows (same language as the watchlist list)
+    // instead of a stack of separately-outlined boxes.
+    if (!grouped)
+      return (
+        <div className="panel divide-y divide-hair overflow-hidden">
+          {list.map(rowOf)}
+        </div>
+      );
     return (
       <div className="space-y-3">
         {groupAlertsByGame(list).map((g) => (
           <AlertGameGroup key={g.slug} group={g} defaultOpen={mode === "active"}>
-            {g.alerts.map(rowOf)}
+            <div className="panel divide-y divide-hair overflow-hidden">
+              {g.alerts.map(rowOf)}
+            </div>
           </AlertGameGroup>
         ))}
       </div>
@@ -382,13 +391,13 @@ export function AlertSectionHeading({
   title: string;
   count: number;
 }) {
+  // Count sits next to the label (same grammar as the tab badge) instead of
+  // floating detached at the far edge of the row.
   return (
-    <div className="flex items-baseline justify-between gap-3">
-      <h2 id={id} className="text-h4">
-        {title}
-      </h2>
-      <span className="text-meta tabular-nums">{count}</span>
-    </div>
+    <h2 id={id} className="text-h5 flex items-baseline gap-1.5">
+      {title}
+      <span className="text-meta tabular-nums font-normal">{count}</span>
+    </h2>
   );
 }
 

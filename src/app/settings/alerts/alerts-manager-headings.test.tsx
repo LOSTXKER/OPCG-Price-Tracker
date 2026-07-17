@@ -9,10 +9,10 @@ describe("AlertSectionHeading", () => {
       <AlertSectionHeading id="active-alerts-heading" title="Active" count={3} />,
     );
 
-    expect(markup).toContain(
-      '<h2 id="active-alerts-heading" class="text-h4">Active</h2>',
-    );
-    expect(markup).toContain('class="text-meta tabular-nums">3</span>');
+    // Count sits inline next to the label (tab-badge grammar), inside the h2.
+    expect(markup).toContain('id="active-alerts-heading"');
+    expect(markup).toContain("text-h5");
+    expect(markup).toMatch(/<h2[^>]*>Active<span[^>]*>3<\/span><\/h2>/);
     expect(markup).not.toContain("<h3");
   });
 });

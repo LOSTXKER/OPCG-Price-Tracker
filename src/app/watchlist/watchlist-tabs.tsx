@@ -118,14 +118,14 @@ export default function WatchlistTabs() {
           })}
         </TabsList>
 
-        <TabsContent value="cards" className="pt-4 md:pt-5">
+        <TabsContent value="cards" className="pt-5 md:pt-6">
           <WatchlistClient
             addOpen={addOpen}
             onAddOpenChange={setAddOpen}
             onPageStateChange={setCardsState}
           />
         </TabsContent>
-        <TabsContent value="alerts" className="pt-4 md:pt-5">
+        <TabsContent value="alerts" className="pt-5 md:pt-6">
           <AlertsManagerClient
             createOpen={createAlertOpen}
             onCreateOpenChange={setCreateAlertOpen}
