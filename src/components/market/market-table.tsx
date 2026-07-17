@@ -8,13 +8,13 @@ import { MobileCardItem, MobileCardSkeleton } from "@/components/home/mobile-car
 import { t, type Language } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
-import type { CardRow, ColumnId, PriceMode } from "@/components/home/market-types"
+import type { CardRow, ChangePeriod, ColumnId, PriceMode } from "@/components/home/market-types"
 
 import type { MarketColumn } from "./market-columns"
 import { MarketTableRow, MarketTableRowSkeleton } from "./market-table-row"
 
-/** Shared label for desktop sort headers and compact mobile sort controls. */
-export function getMarketColumnLabel(col: MarketColumn, lang: Language) {
+/** Label for the desktop sort headers + this table's own mobile sort dropdown. */
+function getMarketColumnLabel(col: MarketColumn, lang: Language) {
   return col.key === "change24h"
     ? "24h"
     : col.key === "change7d"
@@ -38,6 +38,7 @@ export function MarketTable({
   rankOffset,
   columns,
   priceMode = "raw",
+  changePeriod = "24h",
   sparklines,
   sortCol,
   sortDir,
@@ -54,6 +55,8 @@ export function MarketTable({
   rankOffset: number
   columns: MarketColumn[]
   priceMode?: PriceMode
+  /** Change window the mobile rows' % chip shows (home wires its period pill). */
+  changePeriod?: ChangePeriod
   sparklines: Record<number, number[]>
   sortCol: ColumnId | null
   sortDir: "asc" | "desc"
@@ -117,6 +120,7 @@ export function MarketTable({
                   card={card}
                   rank={rankOffset + i + 1}
                   priceMode={priceMode}
+                  changePeriod={changePeriod}
                   sparkline={sparkFor(card)}
                 />
                 {inFeedAd?.(i)}

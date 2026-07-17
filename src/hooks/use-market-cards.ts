@@ -16,6 +16,8 @@ import {
   type ApiResponse,
   COLUMN_SORTS,
   parseSortColumn,
+  periodForColumn,
+  retargetSortForPeriod,
   PAGE_SIZE,
 } from "@/components/home/market-types"
 
@@ -134,6 +136,24 @@ export function useMarketCards({
       setSort(COLUMN_SORTS[col].desc)
     }
     setPage(1)
+    // Two-way sync (watchlist pattern): sorting a change column also moves
+    // the display period, so the % window shown can never disagree with the
+    // order — including across the desktop table / mobile row / grid views.
+    const period = periodForColumn(col)
+    if (period) setChangePeriod(period)
+  }
+
+  // Changing the display period re-targets an active change sort so the list
+  // order always matches the % window being shown (period pill on the mobile
+  // sort row + grid view). Direction is preserved; price/rarity sorts are
+  // left alone.
+  const handleChangePeriod = (period: ChangePeriod) => {
+    setChangePeriod(period)
+    const next = retargetSortForPeriod(sort, period)
+    if (next) {
+      setSort(next)
+      setPage(1)
+    }
   }
 
   const handleFilterChange = (key: string, values: string[]) => {
@@ -188,6 +208,7 @@ export function useMarketCards({
     setFilterOpen,
     handleTabChange,
     handleColumnSort,
+    handleChangePeriod,
     handleFilterChange,
     clearAllFilters,
   }

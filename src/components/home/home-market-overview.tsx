@@ -11,7 +11,7 @@ import { AdSlot } from "@/components/ads/ad-slot"
 import { Input } from "@/components/ui/input"
 import { Pagination } from "@/components/ui/pagination"
 import { SegmentedControl } from "@/components/ui/segmented-control"
-import { FilterButton, ToolbarSortDropdown } from "@/components/ui/toolbar"
+import { FilterButton } from "@/components/ui/toolbar"
 import { ViewModeControl } from "@/components/ui/view-mode-control"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -20,15 +20,18 @@ import { formatCount } from "@/lib/utils/currency"
 import { getCardTypeLabel, getColorOptions } from "@/lib/constants/card-config"
 import { useMarketCards } from "@/hooks/use-market-cards"
 
-import { getMarketColumnLabel, MarketTable } from "@/components/market/market-table"
+import { MarketTable } from "@/components/market/market-table"
 import { PriceModeControl } from "@/components/market/price-mode-control"
 import { buildMarketColumns } from "@/components/market/market-columns"
 import { CardItem, CardItemSkeleton } from "@/components/cards/card-item"
+import { SortableHeader } from "@/components/shared/sortable-header"
 import {
   type Tab,
   type CardRow,
+  type ChangePeriod,
   type ColumnId,
   CHANGE_PERIODS,
+  PERIOD_COLUMNS,
   PAGE_SIZE,
 } from "./market-types"
 
@@ -104,14 +107,7 @@ export function HomeMarketOverview({
 
   const selectedSets = m.filters.set ?? []
   const columns = useMemo(() => buildMarketColumns({ showViews: m.showViews }), [m.showViews])
-  const mobileSortOptions = columns.flatMap((column) =>
-    column.sort
-      ? [{ key: column.sort, label: getMarketColumnLabel(column, lang) }]
-      : []
-  )
-  const showMobileSort = m.viewMode === "table"
-    && mobileSortOptions.length > 0
-    && (m.isPending || m.cards.length > 0)
+  const showMobileSort = m.viewMode === "table" && (m.isPending || m.cards.length > 0)
 
   // Reset clears only the modal's own facets (rarity/type/color/variant) + price
   // range — NOT the set (its own control up top) and NOT search (outside the modal).
@@ -203,19 +199,48 @@ export function HomeMarketOverview({
             </div>
           </div>
 
+          {/* Sort row — same anatomy as the watchlist mobile list header:
+              period pill left + tap-sort (price · change) right. The change
+              sort follows the pill's period; rarity sort is desktop-only
+              (the filter modal already covers rarity narrowing on mobile).
+              PSA 10 mode hides the % chip on every row, so the period pill
+              and change sort hide with it — price is the only sort there. */}
           {showMobileSort && (
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-meta shrink-0">{t(lang, "sortBy")}</span>
-              <ToolbarSortDropdown
-                options={mobileSortOptions}
-                activeKey={(m.sortCol ?? "") as ColumnId}
-                activeDir={m.sortDir}
-                onChange={(key) => m.handleColumnSort(key)}
-                fallbackLabel={t(lang, "sortBy")}
-                align="end"
-                stableMobileWidth
-                className="ml-auto w-48 min-w-0 flex-none"
-              />
+            <div className="flex items-center justify-between gap-2 border-b border-hair pb-2">
+              {m.priceMode === "raw" ? (
+                <SegmentedControl<ChangePeriod>
+                  size="sm"
+                  variant="pill"
+                  leadingIcon={TrendingUpDown}
+                  options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+                  value={m.changePeriod}
+                  onChange={m.handleChangePeriod}
+                  ariaLabel={t(lang, "pricePeriod")}
+                  className="shrink-0"
+                />
+              ) : (
+                <span aria-hidden />
+              )}
+              <div className="flex items-center gap-3">
+                <SortableHeader<ColumnId>
+                  as="button"
+                  label={t(lang, "price")}
+                  column="price"
+                  activeCol={m.sortCol}
+                  dir={m.sortDir}
+                  onClick={m.handleColumnSort}
+                />
+                {m.priceMode === "raw" && (
+                  <SortableHeader<ColumnId>
+                    as="button"
+                    label={t(lang, "change")}
+                    column={PERIOD_COLUMNS[m.changePeriod]}
+                    activeCol={m.sortCol}
+                    dir={m.sortDir}
+                    onClick={m.handleColumnSort}
+                  />
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -335,6 +360,7 @@ export function HomeMarketOverview({
           rankOffset={(m.page - 1) * PAGE_SIZE}
           columns={columns}
           priceMode={m.priceMode}
+          changePeriod={m.changePeriod}
           sparklines={m.sparklines}
           sortCol={m.sortCol}
           sortDir={m.sortDir}
@@ -350,17 +376,20 @@ export function HomeMarketOverview({
         />
       ) : (
         <div className={cn("p-4", m.isPending && "opacity-50 motion-base")}>
-          <div className="mb-3 flex justify-end">
-            <SegmentedControl
-              size="sm"
-              variant="pill"
-              leadingIcon={TrendingUpDown}
-              options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
-              value={m.changePeriod}
-              onChange={m.setChangePeriod}
-              ariaLabel={t(lang, "change")}
-            />
-          </div>
+          {/* PSA 10 tiles carry no % chip, so the period pill hides with it. */}
+          {m.priceMode === "raw" && (
+            <div className="mb-3 flex justify-end">
+              <SegmentedControl
+                size="sm"
+                variant="pill"
+                leadingIcon={TrendingUpDown}
+                options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+                value={m.changePeriod}
+                onChange={m.handleChangePeriod}
+                ariaLabel={t(lang, "pricePeriod")}
+              />
+            </div>
+          )}
           {m.isPending && m.cards.length === 0 ? (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {Array.from({ length: PAGE_SIZE }).map((_, i) => <CardItemSkeleton key={i} />)}

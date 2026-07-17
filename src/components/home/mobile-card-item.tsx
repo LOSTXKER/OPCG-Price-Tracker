@@ -11,7 +11,7 @@ import { PriceUsd } from "@/components/shared/price-usd"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getCardName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
-import type { CardRow, PriceMode } from "./market-types"
+import type { CardRow, ChangePeriod, PriceMode } from "./market-types"
 import { MiniSparkline } from "@/components/ui/mini-sparkline"
 import { PriceTag } from "@/components/ui/price-tag"
 
@@ -19,16 +19,24 @@ export const MobileCardItem = memo(function MobileCardItem({
   card,
   rank,
   priceMode = "raw",
+  changePeriod = "24h",
   sparkline,
 }: {
   card: CardRow
   rank: number
   priceMode?: PriceMode
+  /** Which change window the % chip shows — follows the page's period pill. */
+  changePeriod?: ChangePeriod
   sparkline?: number[]
 }) {
   const lang = useUIStore((s) => s.language)
   const name = getCardName(lang, card)
-  const c24 = card.priceChange24h
+  const change =
+    changePeriod === "7d"
+      ? card.priceChange7d
+      : changePeriod === "30d"
+        ? card.priceChange30d
+        : card.priceChange24h
   const isPsa = priceMode === "psa10"
 
   return (
@@ -80,7 +88,7 @@ export const MobileCardItem = memo(function MobileCardItem({
               card.latestPriceJpy != null ? <Price jpy={card.latestPriceJpy} /> : "—"
             )}
           </p>
-          {!isPsa && c24 != null && <PriceTag change={c24} changeOnly changeStyle="plain" showArrow={false} size="sm" className="mt-0.5" />}
+          {!isPsa && change != null && <PriceTag change={change} changeOnly changeStyle="plain" showArrow={false} size="sm" className="mt-0.5" />}
         </div>
       </Link>
     </div>
