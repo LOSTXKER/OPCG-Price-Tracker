@@ -4,13 +4,12 @@ import {
   Bell,
   Check,
   ListChecks,
-  Trash2,
   TrendingDown,
   TrendingUp,
 } from "lucide-react";
 import { type ReactNode, useRef, useState } from "react";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { FilterModal } from "@/components/shared/filter-modal";
 import { IconButton } from "@/components/ui/icon-button";
 import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker";
@@ -31,15 +30,10 @@ export function WatchlistToolbar({
   search,
   onSearchChange,
   setOptions,
-  resultCount,
   itemCount,
   limit,
   editMode,
   onToggleEditMode,
-  selectedCount,
-  allVisibleSelected,
-  onToggleSelectAll,
-  onBulkRemove,
 }: {
   scope?: ReactNode;
   filters: WatchlistFilters;
@@ -47,16 +41,12 @@ export function WatchlistToolbar({
   search: string;
   onSearchChange: (s: string) => void;
   setOptions: SetPickerItem[];
-  /** Only needed for the edit-mode "select all" disabled state. */
-  resultCount: number;
   itemCount: number;
   limit: number;
+  /** Select mode — the toggle shows pressed state; actions live on the
+   *  floating WatchlistSelectionBar. */
   editMode: boolean;
   onToggleEditMode: () => void;
-  selectedCount: number;
-  allVisibleSelected: boolean;
-  onToggleSelectAll: () => void;
-  onBulkRemove: () => void;
 }) {
   const lang = useUIStore((s) => s.language);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -123,49 +113,9 @@ export function WatchlistToolbar({
 
   return (
     <div className="space-y-3">
-      {editMode ? (
-        /* Select mode — one calm bar: count · select-all · delete · cancel. */
-        <div
-          className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 p-2"
-          aria-label={t(lang, "watchlistSelected")}
-        >
-          <span className="mr-auto px-1 text-label tabular-nums text-primary">
-            {selectedCount} {t(lang, "watchlistSelected")}
-          </span>
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            onClick={onToggleSelectAll}
-            disabled={resultCount === 0}
-            className="sm:min-h-11 md:min-h-0"
-          >
-            {allVisibleSelected ? t(lang, "deselectAll") : t(lang, "watchlistSelectAll")}
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant="destructive"
-            onClick={onBulkRemove}
-            disabled={selectedCount === 0}
-            className="sm:min-h-11 md:min-h-0"
-          >
-            <Trash2 className="size-3.5" />
-            {t(lang, "watchlistRemoveSelected")}
-            {selectedCount > 0 && <span className="tabular-nums">({selectedCount})</span>}
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant="ghost"
-            onClick={onToggleEditMode}
-            className="sm:min-h-11 md:min-h-0"
-          >
-            {t(lang, "cancel")}
-          </Button>
-        </div>
-      ) : (
-        <>
+      {/* Select mode no longer swaps the toolbar away — the floating
+          WatchlistSelectionBar (bottom of the screen) carries the actions,
+          and search/filter stay usable while picking rows. */}
           {scope && <div className="min-w-0">{scope}</div>}
 
           {/* Mobile (<sm): a visible search field (owner: no icon-collapse) +
@@ -195,8 +145,10 @@ export function WatchlistToolbar({
 
               <IconButton
                 aria-label={t(lang, "watchlistSelectMode")}
+                aria-pressed={editMode}
                 onClick={onToggleEditMode}
                 size="md"
+                className={cn(editMode && "bg-primary/10 text-primary")}
               >
                 <ListChecks className="size-4" />
               </IconButton>
@@ -235,10 +187,11 @@ export function WatchlistToolbar({
               <button
                 type="button"
                 onClick={onToggleEditMode}
-                aria-pressed={false}
+                aria-pressed={editMode}
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
                   "gap-1.5 px-2.5 text-muted-foreground hover:text-foreground",
+                  editMode && "bg-primary/10 text-primary hover:text-primary",
                 )}
               >
                 <ListChecks className="size-3.5" />
@@ -246,8 +199,6 @@ export function WatchlistToolbar({
               </button>
             </div>
           </div>
-        </>
-      )}
 
       <FilterModal
         open={filterOpen}

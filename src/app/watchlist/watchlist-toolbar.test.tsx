@@ -49,21 +49,16 @@ describe("watchlist result controls", () => {
     expect(markup).not.toContain("sm:h-11");
   });
 
-  it("replaces normal result controls with the selection bar in edit mode", () => {
+  it("keeps the toolbar during select mode and marks the toggle pressed (actions live on the floating bar)", () => {
     const commonProps = {
       filters: DEFAULT_FILTERS,
       onFiltersChange: noop,
       search: "",
       onSearchChange: noop,
       setOptions: [],
-      resultCount: 4,
       itemCount: 4,
       limit: Number.POSITIVE_INFINITY,
       onToggleEditMode: noop,
-      selectedCount: 2,
-      allVisibleSelected: false,
-      onToggleSelectAll: noop,
-      onBulkRemove: noop,
     };
 
     const normalMarkup = renderToStaticMarkup(
@@ -73,13 +68,12 @@ describe("watchlist result controls", () => {
       <WatchlistToolbar {...commonProps} editMode />,
     );
 
-    // Normal mode shows the always-visible search field; selection mode
-    // swaps everything for the calm bar (count · select all · delete · cancel).
-    expect(normalMarkup).toContain(t("TH", "watchlistSearchPlaceholder"));
-    expect(selectionMarkup).not.toContain(t("TH", "watchlistSearchPlaceholder"));
-    expect(selectionMarkup).toContain(t("TH", "watchlistRemoveSelected"));
-    expect(selectionMarkup).toContain(t("TH", "cancel"));
-    expect(selectionMarkup).not.toContain(t("TH", "watchlistClearSelection"));
+    // Search/filter stay usable while selecting — no banner swap.
+    expect(selectionMarkup).toContain(t("TH", "watchlistSearchPlaceholder"));
+    expect(selectionMarkup).toContain('aria-pressed="true"');
+    expect(normalMarkup).not.toContain('aria-pressed="true"');
+    // The bulk actions moved off the toolbar entirely.
+    expect(selectionMarkup).not.toContain(t("TH", "watchlistRemoveSelected"));
   });
 
   it("cuts the view toggle and sort dropdown — sort lives at the list headers now", () => {
@@ -90,15 +84,10 @@ describe("watchlist result controls", () => {
         search=""
         onSearchChange={noop}
         setOptions={[]}
-        resultCount={4}
         itemCount={4}
         limit={Number.POSITIVE_INFINITY}
         editMode={false}
         onToggleEditMode={noop}
-        selectedCount={0}
-        allVisibleSelected={false}
-        onToggleSelectAll={noop}
-        onBulkRemove={noop}
       />,
     );
 

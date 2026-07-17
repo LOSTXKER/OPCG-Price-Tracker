@@ -36,6 +36,7 @@ import {
 } from "./watchlist-load-revision";
 import { WatchlistMockPreview } from "./watchlist-mock-preview";
 import { WatchlistSkeleton } from "./watchlist-skeleton";
+import { WatchlistSelectionBar } from "./watchlist-selection-bar";
 import { WatchlistToolbar } from "./watchlist-toolbar";
 import {
   countActiveWatchlistFilters,
@@ -521,15 +522,10 @@ function WatchlistContent({
             search={search}
             onSearchChange={setSearch}
             setOptions={setOptions}
-            resultCount={filteredEntries.length}
             itemCount={items.length}
             limit={limits.watchlistCards}
             editMode={editMode}
             onToggleEditMode={toggleEditMode}
-            selectedCount={selected.size}
-            allVisibleSelected={allVisibleSelected}
-            onToggleSelectAll={toggleSelectAll}
-            onBulkRemove={() => void removeBulk()}
           />
 
           {filteredEntries.length === 0 ? (
@@ -569,6 +565,21 @@ function WatchlistContent({
               onHeaderSort={handleHeaderSort}
             />
           )}
+        </>
+      )}
+
+      {editMode && (
+        <>
+          {/* Keep the last rows reachable above the floating bar. */}
+          <div aria-hidden className="h-20" />
+          <WatchlistSelectionBar
+            selectedCount={selected.size}
+            resultCount={filteredEntries.length}
+            allVisibleSelected={allVisibleSelected}
+            onToggleSelectAll={toggleSelectAll}
+            onBulkRemove={() => void removeBulk()}
+            onCancel={toggleEditMode}
+          />
         </>
       )}
 
