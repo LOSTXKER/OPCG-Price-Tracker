@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bell, MoreHorizontal, Trash2 } from "lucide-react";
-import { useState } from "react";
 
 import { GameBadge } from "@/components/shared/game-badge";
 import { SortableHeader } from "@/components/shared/sortable-header";
@@ -17,8 +16,13 @@ import { getCardName, t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useUIStore } from "@/stores/ui-store";
 
-import { useLongPress } from "./use-long-press";
-import { WatchlistRowActionsDialog } from "./watchlist-row-actions";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { WatchlistPeriodControl } from "./watchlist-summary";
 import {
   formatEntryThb,
@@ -67,9 +71,6 @@ export function WatchlistListView({
 }) {
   const lang = useUIStore((s) => s.language);
   const router = useRouter();
-  const [actionEntry, setActionEntry] = useState<WatchlistEntry | null>(null);
-  const [actionOpen, setActionOpen] = useState(false);
-
   // Map the page's sortKey (+active period) onto the header columns so the
   // canonical SortableHeader can show the active column + direction.
   const headerSort = ((): { activeCol: WatchlistHeaderCol | null; dir: "asc" | "desc" } => {
@@ -93,16 +94,11 @@ export function WatchlistListView({
 
   if (entries.length === 0) return null;
 
-  const openRowActions = (entry: WatchlistEntry) => {
-    setActionEntry(entry);
-    setActionOpen(true);
-  };
-
   return (
     <>
       {/* Mobile (<sm) — Apple-Stocks anatomy: a thin list header (period pill +
-          tap-sort) above a flat panel of rows. Single-card actions are a
-          long-press sheet — there's no trailing ⋯ on the row. */}
+          tap-sort) above a flat panel of rows. Single-card actions live behind
+          the visible ⋯ dropdown at the end of each row. */}
       <div className="sm:hidden">
         <div className="flex items-center justify-between gap-2 border-b border-hair px-1 pb-2">
           {onPeriodChange ? (
@@ -143,7 +139,8 @@ export function WatchlistListView({
                 sparkline={sparklines[entry.cardId]}
                 removing={removingIds.has(entry.cardId)}
                 showGameBadge={showGameBadge}
-                onLongPress={() => openRowActions(entry)}
+                onSetAlert={() => onSetAlert(entry)}
+                onRemove={() => onRemove(entry)}
               />
             ))}
           </div>
@@ -339,15 +336,6 @@ export function WatchlistListView({
         </table>
       </div>
 
-      {actionEntry && (
-        <WatchlistRowActionsDialog
-          entry={actionEntry}
-          open={actionOpen}
-          onOpenChange={setActionOpen}
-          onSetAlert={() => onSetAlert(actionEntry)}
-          onRemove={() => onRemove(actionEntry)}
-        />
-      )}
     </>
   );
 }
@@ -361,7 +349,8 @@ function WatchlistMobileRow({
   sparkline,
   removing,
   showGameBadge,
-  onLongPress,
+  onSetAlert,
+  onRemove,
 }: {
   entry: WatchlistEntry;
   period: ChangePeriod;
@@ -371,12 +360,12 @@ function WatchlistMobileRow({
   sparkline?: number[];
   removing: boolean;
   showGameBadge: boolean;
-  onLongPress: () => void;
+  onSetAlert: () => void;
+  onRemove: () => void;
 }) {
   const lang = useUIStore((s) => s.language);
   const displayName = getCardName(lang, entry.card);
   const change = getEntryChange(entry, period);
-  const longPress = useLongPress(onLongPress);
 
   const identity = (
     <>
@@ -476,26 +465,42 @@ function WatchlistMobileRow({
           "ease-chrome flex min-w-0 flex-1 items-center gap-3 py-2.5 pl-3 pr-1 transition-colors",
           "hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
         )}
-        onTouchStart={longPress.onTouchStart}
-        onTouchMove={longPress.onTouchMove}
-        onTouchEnd={longPress.onTouchEnd}
-        onContextMenu={longPress.onContextMenu}
-        onClickCapture={longPress.onClickCapture}
       >
         {identity}
         {price}
       </Link>
-      {/* Visible per-row entry into the action sheet (owner: long-press alone
-          is undiscoverable) — long-press still opens the same sheet. */}
+      {/* Plain dropdown per row (owner: no centered popup). */}
       <span className="flex shrink-0 items-center pr-2">
-        <IconButton
-          aria-label={t(lang, "moreActions")}
-          size="md"
-          className="text-muted-foreground"
-          onClick={onLongPress}
-        >
-          <MoreHorizontal className="size-4" />
-        </IconButton>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            aria-label={t(lang, "moreActions")}
+            className="ease-chrome inline-flex size-11 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <MoreHorizontal className="size-4" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem className="min-h-11 md:min-h-0" onClick={onSetAlert}>
+              <Bell
+                className={cn(
+                  "size-4",
+                  entry.hasActiveAlert && "fill-current text-primary",
+                )}
+              />
+              {entry.hasActiveAlert
+                ? t(lang, "watchlistHasAlert")
+                : t(lang, "setPriceAlert")}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              variant="destructive"
+              className="min-h-11 md:min-h-0"
+              onClick={onRemove}
+            >
+              <Trash2 className="size-4" />
+              {t(lang, "removeFromWatchlist")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </span>
     </div>
   );
@@ -512,17 +517,40 @@ function DesktopCardIdentity({
 }) {
   return (
     <>
-      <div className="relative aspect-[63/88] h-12 shrink-0 overflow-hidden rounded-md bg-muted ring-1 ring-hair">
+      <div className="relative shrink-0">
+        <div className="relative aspect-[63/88] h-12 overflow-hidden rounded-md bg-muted ring-1 ring-hair">
+          {entry.card.imageUrl && (
+            <Image
+              src={entry.card.imageUrl}
+              alt={displayName}
+              fill
+              sizes="35px"
+              className="object-cover"
+              placeholder="blur"
+              blurDataURL={BLUR_DATA_URL}
+            />
+          )}
+        </div>
+        {/* Hover art peek (owner: "เวลา hover แถว ให้มันแสดงเต็มๆ") — the full
+            card floats beside the thumbnail while the row is hovered. Short
+            delay so scanning the table doesn't strobe artwork. */}
         {entry.card.imageUrl && (
-          <Image
-            src={entry.card.imageUrl}
-            alt={displayName}
-            fill
-            sizes="35px"
-            className="object-cover"
-            placeholder="blur"
-            blurDataURL={BLUR_DATA_URL}
-          />
+          <div
+            aria-hidden
+            className="pointer-events-none invisible absolute left-full top-1/2 z-40 ml-3 -translate-y-1/2 opacity-0 transition-[opacity,visibility] duration-150 group-hover:visible group-hover:opacity-100 group-hover:delay-300"
+          >
+            <div className="relative aspect-[63/88] w-44 overflow-hidden rounded-xl bg-muted ring-1 ring-hair shadow-lg">
+              <Image
+                src={entry.card.imageUrl}
+                alt=""
+                fill
+                sizes="176px"
+                className="object-cover"
+                placeholder="blur"
+                blurDataURL={BLUR_DATA_URL}
+              />
+            </div>
+          </div>
         )}
       </div>
       <div className="min-w-0 flex-1">
