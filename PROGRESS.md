@@ -18,6 +18,12 @@
 - **แท็บแจ้งเตือน**: เงื่อนไขเป็นประโยค ("แจ้งเมื่อราคาขึ้นถึง X") + "ห่างเป้า Y%"/"ถึงเป้าแล้ว" · เรียงตามความใกล้เป้า · ค้นหาโผล่เมื่อ >3 รายการ · สร้างแจ้งเตือนเติมราคาปัจจุบันอัตโนมัติ (ปิด TRACK-04)
 - **ตัวเลือกการ์ด game-first**: refactor ที่ `CardPickerForm`/`SelectStep` จุดเดียว ครอบทุก picker (watchlist/alert/portfolio/compare/marketplace) — แถวเลือกเกมบนสุด ส่ง `game` เข้า /api/sets + fetchCards แล้วล้าง set/facet เมื่อสลับเกม
 
+## ✅ แก้บั๊กระบบ typography token (2026-07-17 — เบสตาไวเจอเอง)
+
+- เบสทักว่าฟอนต์ชิปกรองเกม "แปลกๆ" → สืบแล้วเป็น**บั๊กระดับระบบ**: token ตัวหนังสือ (.text-h1….text-code) ประกาศนอก CSS layer เลยชนะ Tailwind utility เสมอ — `font-medium`/`text-foreground` ที่เขียนคู่ token **เงียบหายทั้งแอป ~22 จุด** (ขัดกับที่ AGENTS.md เขียนไว้เองว่า override ได้)
+- แก้ที่ราก: ห่อ token ทั้งบล็อกใน `@layer components` ใน globals.css → utility ชนะตามลำดับ layer มาตรฐาน · ชิปเกมกลับมาหนา 500 เท่าปุ่ม/แท็บรอบตัว และเจตนา font-medium อีก 22 จุดกลับมาทำงาน
+- วัดจากหน้าจริงยืนยันแล้ว (chip=tab=500/15px) · build ผ่าน
+
 ## ✅ งานอื่นบน branch เดียวกัน
 
 - Audit ทั้งเว็บรอบสอง **319 ข้อ** → [doc/uxui-audit-findings-2026-07-16.md](doc/uxui-audit-findings-2026-07-16.md) (verify แล้ว 21 ข้อ ที่เหลือเช็คโค้ดก่อนใช้ · บทสรุป 6 เรื่องใหญ่หัวไฟล์ — เร่งสุด: card-detail กราฟ mock + % ประดิษฐ์)
