@@ -112,9 +112,9 @@ describe("watchlist flat list view", () => {
     // The old circular badges sat absolutely positioned on top of the artwork.
     expect(markup).not.toContain("ring-2 ring-background");
 
-    // Mobile row (inline icon) + desktop resting WatchlistStatus — 2 surfaces
-    // x 1 bell icon. No pin glyphs anywhere.
-    expect(markup.match(/role="img"/g)).toHaveLength(2);
+    // Mobile inline bell only — the desktop bell is now the always-visible
+    // action button itself (no resting glyph swap). No pin glyphs anywhere.
+    expect(markup.match(/role="img"/g)).toHaveLength(1);
     expect(markup).not.toContain(t("TH", "watchlistPinned"));
     expect(markup).toContain(t("TH", "watchlistHasAlert"));
   });

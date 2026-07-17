@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, Trash2 } from "lucide-react";
+import { Bell, MoreHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 import { GameBadge } from "@/components/shared/game-badge";
@@ -323,9 +323,8 @@ export function WatchlistListView({
                     onClick={(event) => event.stopPropagation()}
                   >
                     <div className="flex items-center justify-end gap-1">
-                      <WatchlistStatus entry={entry} />
                       {!editMode && (
-                        <WatchlistHoverActions
+                        <WatchlistRowActions
                           entry={entry}
                           onSetAlert={() => onSetAlert(entry)}
                           onRemove={() => onRemove(entry)}
@@ -469,22 +468,36 @@ function WatchlistMobileRow({
   }
 
   return (
-    <Link
-      href={`/${entry.card.set.game?.slug ?? DEFAULT_GAME}/cards/${entry.card.cardCode}`}
-      aria-label={displayName}
-      className={cn(
-        rowClass,
-        "hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-      )}
-      onTouchStart={longPress.onTouchStart}
-      onTouchMove={longPress.onTouchMove}
-      onTouchEnd={longPress.onTouchEnd}
-      onContextMenu={longPress.onContextMenu}
-      onClickCapture={longPress.onClickCapture}
-    >
-      {identity}
-      {price}
-    </Link>
+    <div className={cn("flex min-w-0 items-stretch", removing && "pointer-events-none opacity-40")}>
+      <Link
+        href={`/${entry.card.set.game?.slug ?? DEFAULT_GAME}/cards/${entry.card.cardCode}`}
+        aria-label={displayName}
+        className={cn(
+          "ease-chrome flex min-w-0 flex-1 items-center gap-3 py-2.5 pl-3 pr-1 transition-colors",
+          "hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
+        )}
+        onTouchStart={longPress.onTouchStart}
+        onTouchMove={longPress.onTouchMove}
+        onTouchEnd={longPress.onTouchEnd}
+        onContextMenu={longPress.onContextMenu}
+        onClickCapture={longPress.onClickCapture}
+      >
+        {identity}
+        {price}
+      </Link>
+      {/* Visible per-row entry into the action sheet (owner: long-press alone
+          is undiscoverable) — long-press still opens the same sheet. */}
+      <span className="flex shrink-0 items-center pr-2">
+        <IconButton
+          aria-label={t(lang, "moreActions")}
+          size="md"
+          className="text-muted-foreground"
+          onClick={onLongPress}
+        >
+          <MoreHorizontal className="size-4" />
+        </IconButton>
+      </span>
+    </div>
   );
 }
 
@@ -527,29 +540,10 @@ function DesktopCardIdentity({
   );
 }
 
-function WatchlistStatus({ entry }: { entry: WatchlistEntry }) {
-  const lang = useUIStore((s) => s.language);
 
-  if (!entry.hasActiveAlert) return null;
-
-  return (
-    <span className="inline-flex items-center gap-1 group-hover:hidden group-focus-within:hidden">
-      {entry.hasActiveAlert && (
-        <span
-          role="img"
-          aria-label={t(lang, "watchlistHasAlert")}
-          title={t(lang, "watchlistHasAlert")}
-          className="inline-flex text-primary"
-        >
-          <Bell className="size-3.5 fill-current" aria-hidden />
-        </span>
-      )}
-    </span>
-  );
-}
-
-/** Desktop hover/focus-reveal action cluster — replaces the ⋯ dropdown. */
-function WatchlistHoverActions({
+/** Desktop action cluster — always visible (owner: CTA ไม่ต้องซ่อนตรงตาราง).
+ *  The bell doubles as the alert-status indicator via its fill/tone. */
+function WatchlistRowActions({
   entry,
   onSetAlert,
   onRemove,
@@ -561,7 +555,7 @@ function WatchlistHoverActions({
   const lang = useUIStore((s) => s.language);
 
   return (
-    <div className="hidden items-center gap-1 group-hover:flex group-focus-within:flex">
+    <div className="flex items-center gap-1">
       <IconButton
         aria-label={entry.hasActiveAlert ? t(lang, "watchlistHasAlert") : t(lang, "setPriceAlert")}
         size="sm"
