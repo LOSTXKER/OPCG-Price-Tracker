@@ -520,40 +520,17 @@ function DesktopCardIdentity({
 }) {
   return (
     <>
-      <div className="relative shrink-0">
-        <div className="relative aspect-[63/88] h-12 overflow-hidden rounded-md bg-muted ring-1 ring-hair">
-          {entry.card.imageUrl && (
-            <Image
-              src={entry.card.imageUrl}
-              alt={displayName}
-              fill
-              sizes="35px"
-              className="object-cover"
-              placeholder="blur"
-              blurDataURL={BLUR_DATA_URL}
-            />
-          )}
-        </div>
-        {/* Hover art peek (owner: "เวลา hover แถว ให้มันแสดงเต็มๆ") — the full
-            card floats beside the thumbnail while the row is hovered. Short
-            delay so scanning the table doesn't strobe artwork. */}
+      <div className="relative aspect-[63/88] h-12 shrink-0 overflow-hidden rounded-md bg-muted ring-1 ring-hair">
         {entry.card.imageUrl && (
-          <div
-            aria-hidden
-            className="pointer-events-none invisible absolute left-full top-1/2 z-40 ml-3 -translate-y-1/2 opacity-0 transition-[opacity,visibility] duration-150 group-hover:visible group-hover:opacity-100 group-hover:delay-300"
-          >
-            <div className="relative aspect-[63/88] w-44 overflow-hidden rounded-xl bg-muted ring-1 ring-hair shadow-lg">
-              <Image
-                src={entry.card.imageUrl}
-                alt=""
-                fill
-                sizes="176px"
-                className="object-cover"
-                placeholder="blur"
-                blurDataURL={BLUR_DATA_URL}
-              />
-            </div>
-          </div>
+          <Image
+            src={entry.card.imageUrl}
+            alt={displayName}
+            fill
+            sizes="35px"
+            className="object-cover"
+            placeholder="blur"
+            blurDataURL={BLUR_DATA_URL}
+          />
         )}
       </div>
       <div className="min-w-0 flex-1">
