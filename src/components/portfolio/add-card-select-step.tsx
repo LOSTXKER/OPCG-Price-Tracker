@@ -18,12 +18,13 @@ import {
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { FilterModal } from "@/components/shared/filter-modal"
 import { SetPicker } from "@/components/shared/set-picker"
+import { SegmentedControl, type SegmentedOption } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
 import { FilterButton } from "@/components/ui/toolbar"
 import { cn } from "@/lib/utils"
 import { RARITY_HEX } from "@/lib/constants/rarities"
 import { getCardTypeLabel, getColorOptions } from "@/lib/constants/card-config"
-import { getGameConfig } from "@/lib/game-config"
+import { getActiveGameConfigs, getAllGameConfigs, getGameConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
 import { t, type Language } from "@/lib/i18n"
 import { type CardWithSet, type SetInfo } from "./add-card-types"
@@ -200,6 +201,8 @@ export function SelectStep({
   displayCards,
   showEmpty,
   isFiltered,
+  activeGame,
+  onGameChange,
   sets,
   activeSet,
   selectSetCode,
@@ -227,6 +230,13 @@ export function SelectStep({
   displayCards: CardWithSet[]
   showEmpty: boolean
   isFiltered: boolean
+  /** Optional: when provided (CardPickerForm always wires this), scopes the
+   *  picker to one game and renders a game-select chip row above the search
+   *  ("เลือกเกมก่อน" — the picker has no "ทุกเกม" option, unlike the MINE
+   *  rail). Hosts that drive SelectStep directly without game wiring render
+   *  unchanged and fall back to the visitor's global `currentGame`. */
+  activeGame?: string
+  onGameChange?: (game: string) => void
   sets: SetInfo[]
   activeSet: string | null
   selectSetCode: (code: string | null) => void
@@ -256,10 +266,14 @@ export function SelectStep({
   selected?: CardWithSet[]
 }) {
   const lang = useUIStore((s) => s.language)
-  const currentGame = useUIStore((s) => s.currentGame)
+  const storeGame = useUIStore((s) => s.currentGame)
+  // The picker's own game selection wins once a host wires it (CardPickerForm
+  // always does); a direct SelectStep host with no game wiring falls back to
+  // the visitor's global game.
+  const gameSlug = activeGame ?? storeGame
 
-  // Filters follow the current game — no OPCG hardcode. Empty sections vanish.
-  const gameCfg = getGameConfig(currentGame)
+  // Filters follow the picker's active game — no OPCG hardcode. Empty sections vanish.
+  const gameCfg = getGameConfig(gameSlug)
   const rarityOptions = (gameCfg?.rarityFilterOptions ?? []) as RarityOpt[]
   // Colour + type labels are baked English in the config — relabel to the user's
   // language (เบส: ภาษาตัวกรองต้องตรงกับที่ user เลือก).
@@ -275,6 +289,28 @@ export function SelectStep({
   const variantOptions = [
     { code: "regular", label: t(lang, "regular") },
     { code: "parallel", label: t(lang, "parallel") },
+  ]
+
+  // Game FIRST (เบส: เลือกเกมก่อน) — live games are selectable, comingSoon
+  // games render as disabled teaser chips. No "ทุกเกม" option here: the
+  // picker is always scoped to exactly one game, unlike the MINE rail.
+  const gameOptions: SegmentedOption<string>[] = [
+    ...getActiveGameConfigs().map((g) => ({
+      value: g.slug,
+      label: g.filterName ?? g.shortName ?? g.nameEn,
+    })),
+    ...getAllGameConfigs()
+      .filter((g) => g.comingSoon)
+      .map((g) => ({
+        value: g.slug,
+        label: g.filterName ?? g.shortName ?? g.nameEn,
+        disabled: true,
+        badge: (
+          <span className="whitespace-nowrap rounded-full bg-muted px-1.5 py-0.5 text-micro text-muted-foreground">
+            {t(lang, "comingSoon")}
+          </span>
+        ),
+      })),
   ]
 
   // Count only the modal's own facets (set has its own control up top now).
@@ -408,9 +444,19 @@ export function SelectStep({
         </DialogHeader>
       )}
 
-      {/* Set (the primary browse axis — เบส: ผู้ใช้เลือกชุดก่อน) sits prominently
-          above the search + filter row. Rarity/colour/type live in the filter modal. */}
+      {/* Game FIRST (เบส: เลือกเกมก่อน), then set (เบส: ผู้ใช้เลือกชุดก่อน), then
+          search + filter. Rarity/colour/type live in the filter modal. */}
       <div className="space-y-2 border-b border-hair px-4 pt-3 pb-3">
+        {activeGame != null && onGameChange && gameOptions.length > 0 && (
+          <SegmentedControl
+            ariaLabel={t(lang, "filterByGame")}
+            options={gameOptions}
+            value={activeGame}
+            onChange={onGameChange}
+            variant="pill"
+            size="sm"
+          />
+        )}
         <SetPicker
           sets={sets.map((s) => ({ ...s, cardCount: s._count.cards }))}
           selectedCode={activeSet}

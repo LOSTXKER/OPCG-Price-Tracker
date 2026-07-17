@@ -21,7 +21,7 @@ import {
   AlertFormBody,
   type AlertFormValue,
 } from "@/components/alerts/alert-form";
-import { formatJpy } from "@/lib/utils/currency";
+import { formatJpy, jpyToDisplayValue } from "@/lib/utils/currency";
 import { apiPost } from "@/lib/api/client";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
 import type { PriceAlertItem } from "./alert-types";
@@ -38,6 +38,7 @@ export function AlertCreateDialog({
   onCreated?: (next: PriceAlertItem) => void;
 }) {
   const lang = useUIStore((s) => s.language);
+  const currency = useUIStore((s) => s.currency);
   const { submit, submitting, error, setError } = useAlertSubmit();
 
   const [step, setStep] = useState<Step>("pick");
@@ -58,6 +59,14 @@ export function AlertCreateDialog({
 
   const handlePickCard = (c: CardSearchResult) => {
     setCard(c);
+    // Prefill the target field from today's price (same conversion as
+    // CardSetAlertDialog) so the user starts from a sensible number instead
+    // of a blank field.
+    const prefillTarget =
+      c.latestPriceJpy != null
+        ? Math.round(jpyToDisplayValue(c.latestPriceJpy, currency)).toString()
+        : "";
+    setValue((current) => ({ ...current, target: prefillTarget }));
     setStep("form");
     setError(null);
   };

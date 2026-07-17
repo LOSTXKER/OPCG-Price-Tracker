@@ -4,6 +4,8 @@ import { useEffect, useState, type ReactNode } from "react";
 
 import { fetchCards } from "@/lib/api/fetch-cards";
 import { apiGet, apiTry } from "@/lib/api/client";
+import { DEFAULT_GAME } from "@/lib/game/constants";
+import { useUIStore } from "@/stores/ui-store";
 
 import { SelectStep } from "@/components/portfolio/add-card-select-step";
 import {
@@ -49,6 +51,13 @@ export function CardPickerForm({
   const [loading, setLoading] = useState(false);
   const [initialCards, setInitialCards] = useState<CardWithSet[]>([]);
 
+  // Game FIRST (เบส: เลือกเกมก่อน) — starts on the visitor's current game, then
+  // scopes every fetch below (sets / default list / search). Switching games
+  // clears the set + facet filters since rarity/color/type families differ
+  // per game.
+  const storeGame = useUIStore((s) => s.currentGame);
+  const [activeGame, setActiveGameState] = useState(storeGame || DEFAULT_GAME);
+
   const [sets, setSets] = useState<SetInfo[]>([]);
   const [activeSet, setActiveSet] = useState<string | null>(null);
   const [activeRarity, setActiveRarity] = useState<string | null>(null);
@@ -57,17 +66,28 @@ export function CardPickerForm({
   const [activeVariant, setActiveVariant] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Sets for the filter — load once when the form mounts.
+  const setActiveGame = (game: string) => {
+    if (game === activeGame) return;
+    setActiveGameState(game);
+    setActiveSet(null);
+    setActiveRarity(null);
+    setActiveColor(null);
+    setActiveCardType(null);
+    setActiveVariant(null);
+  };
+
+  // Sets for the filter — reload whenever the active game changes.
   useEffect(() => {
-    void apiTry(apiGet<{ sets: SetInfo[] }>("/api/sets")).then((data) => {
+    void apiTry(apiGet<{ sets: SetInfo[] }>(`/api/sets?game=${activeGame}`)).then((data) => {
       if (data) setSets(data.sets ?? []);
     });
-  }, []);
+  }, [activeGame]);
 
-  // Value-sorted default list (shown before any search/filter) — loaded once.
+  // Value-sorted default list (shown before any search/filter) — reload
+  // whenever the active game changes.
   useEffect(() => {
     let cancelled = false;
-    void fetchCards({ sort: "price_desc", limit: 30 })
+    void fetchCards({ sort: "price_desc", limit: 30, game: activeGame })
       .then((data) => {
         if (!cancelled) setInitialCards((data.cards ?? []) as CardWithSet[]);
       })
@@ -75,7 +95,7 @@ export function CardPickerForm({
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeGame]);
 
   const hasAnyFilter =
     activeSet != null ||
@@ -108,6 +128,7 @@ export function CardPickerForm({
         void fetchCards({
           limit: 40,
           search: hasSearch ? q : undefined,
+          game: activeGame,
           set: activeSet ?? undefined,
           // Base rarity now expands to its P- family server-side (กด SEC เจอ P-SEC ด้วย);
           // the `variant` facet narrows regular/parallel.
@@ -129,6 +150,7 @@ export function CardPickerForm({
     };
   }, [
     query,
+    activeGame,
     activeSet,
     activeRarity,
     activeColor,
@@ -157,6 +179,8 @@ export function CardPickerForm({
       displayCards={displayCards}
       showEmpty={showEmpty}
       isFiltered={isFiltered}
+      activeGame={activeGame}
+      onGameChange={setActiveGame}
       sets={sets}
       activeSet={activeSet}
       selectSetCode={setActiveSet}

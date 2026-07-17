@@ -1594,6 +1594,7 @@ export const en = {
   noActiveAlerts: "No active price alerts",
   noActiveAlertsDesc: "Set a target price on a card and we'll let you know when it hits.",
   browseCardsToAlert: "Browse cards",
+  alertsSearchPlaceholder: "Search alerts...",
   deleteAlertConfirm: "Delete this price alert?",
   alertWhenAtOrAbove: "At or above",
   alertWhenAtOrBelow: "At or below",

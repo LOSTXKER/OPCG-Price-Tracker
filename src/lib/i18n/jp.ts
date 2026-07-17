@@ -1567,6 +1567,7 @@ export const jp = {
   noActiveAlerts: "有効な価格アラートはありません",
   noActiveAlertsDesc: "カードに目標価格を設定すると、達成時にお知らせします。",
   browseCardsToAlert: "カードを探す",
+  alertsSearchPlaceholder: "アラートを検索...",
   deleteAlertConfirm: "この価格アラートを削除しますか？",
   alertWhenAtOrAbove: "以上",
   alertWhenAtOrBelow: "以下",

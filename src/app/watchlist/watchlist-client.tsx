@@ -292,10 +292,10 @@ function WatchlistContent({
     return { count, logo };
   }, [items]);
 
-  // Chips for games the user actually watches cards in (count > 0). A single
-  // live game is not a meaningful filter, so this page only mounts the rail
-  // once the collection truly spans multiple games. The canonical component
-  // still keeps its always-visible roadmap behavior for callers that need it.
+  // Chips for games the user actually watches cards in (count > 0). The rail
+  // is always mounted (owner: same "ทุกเกม · One Piece · Pokémon เร็วๆนี้"
+  // state as portfolio) — GameFilterChips itself appends the coming-soon
+  // roadmap teaser, so even a single-game collection still shows the rail.
   const gameChips = useMemo<GameChip[]>(
     () =>
       [...gameMeta.count.entries()]
@@ -510,13 +510,11 @@ function WatchlistContent({
         <>
           <WatchlistToolbar
             scope={
-              gameChips.length > 1 ? (
-                <GameFilterChips
-                  games={gameChips}
-                  activeGame={gameFilter}
-                  onSelect={setGameFilter}
-                />
-              ) : undefined
+              <GameFilterChips
+                games={gameChips}
+                activeGame={gameFilter}
+                onSelect={setGameFilter}
+              />
             }
             filters={filters}
             onFiltersChange={setFilters}

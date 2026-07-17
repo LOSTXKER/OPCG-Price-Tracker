@@ -5,6 +5,7 @@ import { Bell, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ToolbarSearch } from "@/components/ui/toolbar";
 import { EmptyState } from "@/components/shared/empty-state";
 import { AlertEditDialog } from "@/components/alerts/alert-edit-dialog";
 import { AlertCreateDialog } from "@/components/alerts/alert-create-dialog";
@@ -21,6 +22,7 @@ import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants";
 import { getGameConfig } from "@/lib/game-config";
 import { AlertRow, type FeedbackKind } from "./alert-row";
 import { groupAlertsByGame, AlertGameGroup } from "./alert-groups";
+import { filterAlertsBySearch, sortAlertsByUrgency } from "./alerts-sort";
 
 type Feedback = {
   alertId: number;
@@ -55,6 +57,7 @@ export function AlertsManagerClient({
   // One unified alerts list across every game, filtered in-view by game. The
   // filter is PER-PAGE (local, session-only) — never shared with portfolio/watchlist.
   const [gameFilter, setGameFilter] = useState<string>(ALL_GAMES);
+  const [search, setSearch] = useState("");
   const demo = useMultigameDemo();
   const availableGames = useMemo(
     () => [...new Set(alerts.map((a) => a.card.set?.game?.slug ?? DEFAULT_GAME))],
@@ -120,15 +123,25 @@ export function AlertsManagerClient({
     [alerts, gameFilter],
   );
 
+  // Search stays out of the way until there's enough alerts to need it
+  // (เบส: ไม่ใส่ chrome ให้หน้าที่มีแค่ 1 แจ้งเตือน).
+  const showSearch = alerts.length > 3;
+  const searchedAlerts = useMemo(
+    () => (showSearch ? filterAlertsBySearch(scopedAlerts, lang, search) : scopedAlerts),
+    [scopedAlerts, lang, search, showSearch],
+  );
+
   const { active, history } = useMemo(() => {
     const a: PriceAlertItem[] = [];
     const h: PriceAlertItem[] = [];
-    for (const alert of scopedAlerts) {
+    for (const alert of searchedAlerts) {
       if (alert.isActive) a.push(alert);
       else h.push(alert);
     }
-    return { active: a, history: h };
-  }, [scopedAlerts]);
+    // Active section sorts by urgency (closest to firing first); history
+    // keeps its natural order (most recently triggered first, from the API).
+    return { active: sortAlertsByUrgency(a), history: h };
+  }, [searchedAlerts]);
 
   // Games + logos for the chip rail (cross-game, from all alerts).
   const gameMeta = useMemo(() => {
@@ -143,8 +156,10 @@ export function AlertsManagerClient({
     return { slugs, logo };
   }, [alerts]);
 
-  // Chips for games the user actually has alerts in. This page only needs the
-  // rail once there is a real choice between multiple live games.
+  // Chips for games the user actually has alerts in. The rail is always
+  // mounted (owner: same "ทุกเกม · One Piece · Pokémon เร็วๆนี้" state as
+  // portfolio/watchlist) — GameFilterChips appends the coming-soon roadmap
+  // teaser itself, so a single-game collection still shows the rail.
   const gameChips = useMemo<GameChip[]>(
     () =>
       [...gameMeta.slugs].map((slug) => ({
@@ -287,12 +302,26 @@ export function AlertsManagerClient({
 
   return (
     <div className="space-y-4 md:space-y-5">
-      {gameChips.length > 1 && (
-        <GameFilterChips
-          games={gameChips}
-          activeGame={gameFilter}
-          onSelect={setGameFilter}
-        />
+      <GameFilterChips
+        games={gameChips}
+        activeGame={gameFilter}
+        onSelect={setGameFilter}
+      />
+
+      {/* Same row grammar as the watchlist cards tab: visible search, left,
+          nothing else needed. Only shows once there's enough alerts to search
+          through (เบส: ไม่ใส่ chrome ให้หน้าที่มีแค่ 1 แจ้งเตือน). */}
+      {showSearch && (
+        <div className="flex items-center gap-2">
+          <ToolbarSearch
+            type="search"
+            value={search}
+            onValueChange={setSearch}
+            placeholder={t(lang, "alertsSearchPlaceholder")}
+            aria-label={t(lang, "alertsSearchPlaceholder")}
+            containerClassName="min-w-0 flex-1 border-border bg-background py-0 md:w-72"
+          />
+        </div>
       )}
 
       <section className="space-y-3" aria-labelledby="active-alerts-heading">

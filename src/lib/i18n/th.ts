@@ -1567,6 +1567,7 @@ export const th = {
   noActiveAlerts: "ยังไม่มีแจ้งเตือนราคา",
   noActiveAlertsDesc: "ตั้งราคาเป้าหมายบนการ์ด แล้วเราจะแจ้งให้คุณรู้ทันทีที่ถึงราคา",
   browseCardsToAlert: "เลือกการ์ด",
+  alertsSearchPlaceholder: "ค้นหาแจ้งเตือน...",
   deleteAlertConfirm: "ลบแจ้งเตือนราคานี้?",
   alertWhenAtOrAbove: "ตั้งแต่",
   alertWhenAtOrBelow: "ไม่เกิน",
