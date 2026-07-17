@@ -1,6 +1,7 @@
 "use client";
 
-import { Trash2, X } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { t } from "@/lib/i18n";
@@ -8,11 +9,10 @@ import { cn } from "@/lib/utils";
 import { useUIStore } from "@/stores/ui-store";
 
 /**
- * Floating selection action bar — pinned to the bottom edge so the actions sit
- * under the thumb/cursor while ticking rows. (The previous top banner replaced
- * the toolbar, so on long lists you had to scroll back up to delete.)
- * Mobile floats above the bottom-nav (same offset math as the profile CTA bar);
- * desktop floats centered near the bottom.
+ * Select-mode action bar — sits directly above the table header and sticks
+ * under the global chrome while scrolling (owner: "เอาไว้บนหัวตาราง...
+ * มันจะตามจอเวลาเลื่อนลง"). Carries the select-all tick + count + actions,
+ * Gmail-style; row checkboxes stay on the rows themselves.
  */
 export function WatchlistSelectionBar({
   selectedCount,
@@ -30,64 +30,69 @@ export function WatchlistSelectionBar({
   onCancel: () => void;
 }) {
   const lang = useUIStore((s) => s.language);
+  const selectAllRef = useRef<HTMLInputElement>(null);
+
+  // Partial selection shows the standard indeterminate dash on the tick.
+  useEffect(() => {
+    if (selectAllRef.current) {
+      selectAllRef.current.indeterminate =
+        selectedCount > 0 && !allVisibleSelected;
+    }
+  }, [selectedCount, allVisibleSelected]);
 
   return (
     <div
-      className="fixed inset-x-0 z-40 flex justify-center px-3 md:bottom-6"
-      style={{ bottom: "calc(4rem + env(safe-area-inset-bottom) + 0.75rem)" }}
+      className="sticky top-[var(--chrome-h)] z-30 -mx-1 flex flex-wrap items-center gap-2 border-b border-hair bg-background/95 px-1 py-2 backdrop-blur-sm"
       role="toolbar"
       aria-label={t(lang, "watchlistSelected")}
     >
-      <div className="flex w-full max-w-xl flex-wrap items-center gap-2 rounded-2xl border border-primary/30 bg-card p-2 [box-shadow:var(--elev-raised)] md:w-auto md:flex-nowrap">
-        <span
-          className={cn(
-            "px-2 text-label tabular-nums",
-            selectedCount > 0 ? "text-primary" : "text-muted-foreground",
-          )}
-          aria-live="polite"
+      <label className="flex min-h-11 cursor-pointer select-none items-center gap-2.5 px-2 md:min-h-9">
+        <input
+          ref={selectAllRef}
+          type="checkbox"
+          className="size-4 cursor-pointer accent-primary"
+          checked={allVisibleSelected && resultCount > 0}
+          onChange={onToggleSelectAll}
+          disabled={resultCount === 0}
+        />
+        <span className="text-label">{t(lang, "watchlistSelectAll")}</span>
+      </label>
+
+      <span
+        className={cn(
+          "text-meta tabular-nums",
+          selectedCount > 0 && "text-primary",
+        )}
+        aria-live="polite"
+      >
+        {selectedCount} {t(lang, "watchlistSelected")}
+      </span>
+
+      <div className="ml-auto flex shrink-0 items-center gap-1.5">
+        <Button
+          type="button"
+          size="sm"
+          variant="destructive"
+          onClick={onBulkRemove}
+          disabled={selectedCount === 0}
+          className="min-h-11 md:min-h-9"
         >
-          {selectedCount} {t(lang, "watchlistSelected")}
-        </span>
+          <Trash2 className="size-3.5" />
+          {t(lang, "watchlistRemoveSelected")}
+          {selectedCount > 0 && (
+            <span className="tabular-nums">({selectedCount})</span>
+          )}
+        </Button>
 
-        <div className="ml-auto flex items-center gap-2">
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            onClick={onToggleSelectAll}
-            disabled={resultCount === 0}
-            className="min-h-11 md:min-h-9"
-          >
-            {allVisibleSelected ? t(lang, "deselectAll") : t(lang, "watchlistSelectAll")}
-          </Button>
-
-          <Button
-            type="button"
-            size="sm"
-            variant="destructive"
-            onClick={onBulkRemove}
-            disabled={selectedCount === 0}
-            className="min-h-11 md:min-h-9"
-          >
-            <Trash2 className="size-3.5" />
-            {t(lang, "watchlistRemoveSelected")}
-            {selectedCount > 0 && (
-              <span className="tabular-nums">({selectedCount})</span>
-            )}
-          </Button>
-
-          <Button
-            type="button"
-            size="sm"
-            variant="ghost"
-            onClick={onCancel}
-            className="min-h-11 md:min-h-9"
-            aria-label={t(lang, "cancel")}
-          >
-            <X className="size-4 md:hidden" aria-hidden />
-            <span className="hidden md:inline">{t(lang, "cancel")}</span>
-          </Button>
-        </div>
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          onClick={onCancel}
+          className="min-h-11 md:min-h-9"
+        >
+          {t(lang, "cancel")}
+        </Button>
       </div>
     </div>
   );

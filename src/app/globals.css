@@ -188,6 +188,15 @@
   --neutral-soft: var(--muted);
 }
 
+/* Desktop top chrome = ticker (h-11 = 44px) + header (h-14 = 56px) = 100px.
+   Kept OUTSIDE @layer (and outside :root's body) — a layered override would
+   lose to the unlayered base value above. */
+@media (min-width: 768px) {
+  :root {
+    --chrome-h: 6.25rem;
+  }
+}
+
 .dark {
   /* WARM premium (espresso + honey-gold) — redesign default for dark mode */
   --background: #100C09;
@@ -558,11 +567,6 @@
   letter-spacing: -0.02em;
 }
 @media (min-width: 768px) {
-  /* Desktop top chrome = ticker (44px) + header (56px). See --chrome-h above. */
-  :root {
-    --chrome-h: 6.25rem;
-  }
-
   /* Desktop keeps the existing page-title scale (matches .text-h1) — the
      iOS large-title treatment is a mobile-only affordance (PageHeader). */
   .text-large-title {

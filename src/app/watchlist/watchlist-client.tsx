@@ -528,6 +528,17 @@ function WatchlistContent({
             onToggleEditMode={toggleEditMode}
           />
 
+          {editMode && (
+            <WatchlistSelectionBar
+              selectedCount={selected.size}
+              resultCount={filteredEntries.length}
+              allVisibleSelected={allVisibleSelected}
+              onToggleSelectAll={toggleSelectAll}
+              onBulkRemove={() => void removeBulk()}
+              onCancel={toggleEditMode}
+            />
+          )}
+
           {filteredEntries.length === 0 ? (
             <EmptyState
               preset="no-results"
@@ -565,21 +576,6 @@ function WatchlistContent({
               onHeaderSort={handleHeaderSort}
             />
           )}
-        </>
-      )}
-
-      {editMode && (
-        <>
-          {/* Keep the last rows reachable above the floating bar. */}
-          <div aria-hidden className="h-20" />
-          <WatchlistSelectionBar
-            selectedCount={selected.size}
-            resultCount={filteredEntries.length}
-            allVisibleSelected={allVisibleSelected}
-            onToggleSelectAll={toggleSelectAll}
-            onBulkRemove={() => void removeBulk()}
-            onCancel={toggleEditMode}
-          />
         </>
       )}
 
