@@ -30,9 +30,8 @@ export function WatchlistMockPreview({ lang }: { lang: Language }) {
         </span>
       </div>
 
-      {/* Mobile toolbar (<sm): prominent set bar, control row, sort row. */}
+      {/* Mobile toolbar (<sm): period pill + icon cluster, then sort row. */}
       <div className="space-y-2 sm:hidden">
-        <div className="h-10 w-full rounded-lg border border-primary/25 bg-primary/5" />
         <div className="flex items-center gap-2">
           <div className="relative flex h-9 shrink-0 items-center gap-0.5 rounded-full bg-muted/50 px-0.5">
             <TrendingUpDown aria-hidden className="mx-1.5 size-3.5 shrink-0 text-muted-foreground/50" />
@@ -63,26 +62,13 @@ export function WatchlistMockPreview({ lang }: { lang: Language }) {
         </p>
       </div>
 
-      {/* Desktop/tablet toolbar (>=sm): one row. */}
+      {/* Desktop/tablet toolbar (>=sm): one lean row — count left, controls right. */}
       <div className="hidden items-center gap-2 sm:flex">
-        <div className="h-9 w-[19rem] rounded-lg border border-hair bg-card" />
         <span className="text-meta tabular-nums">
           {cards.length} {t(lang, "watchlistSummaryCards").toLowerCase()}
         </span>
         <div className="ml-auto flex items-center gap-1.5">
-          <div className="relative flex h-7 shrink-0 items-center gap-0.5 rounded-full bg-muted/50 px-0.5">
-            {(["24h", "7d", "30d"] as const).map((value) => (
-              <span
-                key={value}
-                className={`inline-flex h-7 items-center justify-center rounded-full px-2.5 text-micro ${
-                  value === "7d" ? "bg-primary/15 text-primary" : "text-muted-foreground"
-                }`}
-              >
-                {value}
-              </span>
-            ))}
-          </div>
-          <div className="h-5 w-px bg-border/40" />
+          <div className="size-7 rounded-md bg-muted/50" />
           <div className="h-7 w-32 rounded-md bg-muted/50" />
           <div className="h-7 w-20 rounded-md bg-muted/50" />
           <div className="h-7 w-20 rounded-md bg-muted/50" />

@@ -27,7 +27,7 @@ import { t, type Language } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 
-import { countActiveWatchlistModalFilters } from "./watchlist-sort";
+import { countActiveWatchlistFilters } from "./watchlist-sort";
 import { WatchlistPeriodControl } from "./watchlist-summary";
 import {
   DEFAULT_FILTERS,
@@ -109,8 +109,8 @@ export function WatchlistToolbar({
   const isFull = isFinite && itemCount >= limit;
   const isHigh = isFinite && !isFull && usagePct >= 80;
 
-  const activeFilterCount = countActiveWatchlistModalFilters(filters);
-  const draftFilterCount = countActiveWatchlistModalFilters(draftFilters);
+  const activeFilterCount = countActiveWatchlistFilters(filters);
+  const draftFilterCount = countActiveWatchlistFilters(draftFilters);
   const sortDirection: "asc" | "desc" =
     sortKey === "loss" || sortKey === "priceLow" || sortKey === "nameAz"
       ? "asc"
@@ -226,21 +226,10 @@ export function WatchlistToolbar({
         <>
           {scope && <div className="min-w-0">{scope}</div>}
 
-          {/* Mobile (<sm), stacked: set is the primary browse axis and owns its
-              own full-width row, then a control cluster, then sort — mirrors
-              the home-market-overview grammar so browsing feels identical
-              across pages. */}
+          {/* Mobile (<sm): essentials only — period (rows show one delta) +
+              a compact icon cluster, then sort. Set/movement/status filters
+              all live inside the one FilterModal. */}
           <div className="space-y-2 sm:hidden">
-            <SetPicker
-              sets={setOptions}
-              selectedCode={filters.setCode}
-              onSelect={(setCode) => onFiltersChange({ ...filters, setCode })}
-              variant="inline"
-              nullable
-              prominent
-              triggerClassName="tap-safe h-10 rounded-lg border-primary/25 bg-primary/5 hover:border-primary/35 hover:bg-primary/10 aria-expanded:rounded-b-none aria-expanded:border-primary/35 aria-expanded:bg-primary/10"
-            />
-
             <div className="flex flex-wrap items-center gap-2">
               <WatchlistPeriodControl period={period} onPeriodChange={onPeriodChange} />
 
@@ -306,27 +295,21 @@ export function WatchlistToolbar({
             </p>
           </div>
 
-          {/* Desktop/tablet (>=sm): one row, mirrors home-market-overview's
-              desktop toolbar — set on the left, count next to it, then the
-              display/action cluster pinned to the right. */}
+          {/* Desktop/tablet (>=sm): one lean row — count on the left, then
+              search · sort · filter · view · edit. The period pill only shows
+              in grid view: the list view's table already has 24H/7D/30D
+              columns, so a period switch there would be a duplicate control. */}
           <div className="hidden items-center gap-2 sm:flex">
-            <div className="w-[19rem] flex-none">
-              <SetPicker
-                sets={setOptions}
-                selectedCode={filters.setCode}
-                onSelect={(setCode) => onFiltersChange({ ...filters, setCode })}
-                variant="inline"
-                nullable
-              />
-            </div>
-
             {resultCountLine}
             {limitMeter}
 
             <div className="ml-auto flex shrink-0 items-center gap-1.5">
-              <WatchlistPeriodControl period={period} onPeriodChange={onPeriodChange} />
-
-              <div className="h-5 w-px bg-border/40" />
+              {view === "grid" && (
+                <>
+                  <WatchlistPeriodControl period={period} onPeriodChange={onPeriodChange} />
+                  <div className="h-5 w-px bg-border/40" />
+                </>
+              )}
 
               <ToolbarSearch
                 type="search"
@@ -386,9 +369,7 @@ export function WatchlistToolbar({
       <FilterModal
         open={filterOpen}
         onOpenChange={handleFilterOpenChange}
-        onReset={() =>
-          setDraftFilters({ ...DEFAULT_FILTERS, setCode: filters.setCode })
-        }
+        onReset={() => setDraftFilters(DEFAULT_FILTERS)}
         resetDisabled={draftFilterCount === 0}
         onApply={() => onFiltersChange(draftFilters)}
       >
@@ -396,24 +377,40 @@ export function WatchlistToolbar({
           lang={lang}
           filters={draftFilters}
           onFiltersChange={setDraftFilters}
+          setOptions={setOptions}
         />
       </FilterModal>
     </div>
   );
 }
 
-/** Draft-only movement/status controls rendered inside the canonical FilterModal. */
+/** Draft-only set/movement/status controls rendered inside the canonical FilterModal. */
 export function WatchlistFilterPanel({
   lang,
   filters,
   onFiltersChange,
+  setOptions = [],
 }: {
   lang: Language;
   filters: WatchlistFilters;
   onFiltersChange: (next: WatchlistFilters) => void;
+  setOptions?: SetPickerItem[];
 }) {
   return (
     <>
+      {setOptions.length > 0 && (
+        <div>
+          <span className="text-eyebrow mb-2 block">{t(lang, "setFilter")}</span>
+          <SetPicker
+            sets={setOptions}
+            selectedCode={filters.setCode}
+            onSelect={(setCode) => onFiltersChange({ ...filters, setCode })}
+            variant="inline"
+            nullable
+          />
+        </div>
+      )}
+
       <div>
         <span className="text-eyebrow mb-2 block">
           {t(lang, "watchlistFilterMovement")}

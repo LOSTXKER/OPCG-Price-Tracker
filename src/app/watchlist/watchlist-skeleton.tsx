@@ -15,10 +15,8 @@ export function WatchlistSkeleton({ withHeader = true }: { withHeader?: boolean 
         </>
       )}
 
-      {/* Mobile toolbar (<sm): prominent set bar, then a control row, then the
-          sort row — mirrors the home-market-overview grammar. */}
+      {/* Mobile toolbar (<sm): period pill + icon cluster, then the sort row. */}
       <div className="space-y-2 sm:hidden">
-        <Skeleton className="h-10 w-full rounded-lg" />
         <div className="flex items-center gap-2">
           <Skeleton className="h-9 w-24 rounded-full" />
           <div className="ml-auto flex items-center gap-2">
@@ -34,16 +32,15 @@ export function WatchlistSkeleton({ withHeader = true }: { withHeader?: boolean 
         </div>
       </div>
 
-      {/* Desktop/tablet toolbar (>=sm): one row. */}
+      {/* Desktop/tablet toolbar (>=sm): one lean row — count left, controls right. */}
       <div className="hidden items-center gap-2 sm:flex">
-        <Skeleton className="h-9 w-[19rem] rounded-lg" />
         <Skeleton className="h-3 w-20" />
         <div className="ml-auto flex items-center gap-1.5">
-          <Skeleton className="h-7 w-24 rounded-full" />
+          <Skeleton className="size-7 rounded-md" />
           <Skeleton className="h-7 w-32 rounded-md" />
           <Skeleton className="h-7 w-20 rounded-md" />
           <Skeleton className="h-7 w-20 rounded-md" />
-          <Skeleton className="size-7 rounded-md" />
+          <Skeleton className="h-7 w-20 rounded-md" />
         </div>
       </div>
 
