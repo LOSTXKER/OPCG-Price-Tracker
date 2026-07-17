@@ -467,6 +467,7 @@ export const jp = {
   watchlistFiltersButton: "フィルタ",
   watchlistRefine: "調整",
   watchlistEditMode: "編集",
+  watchlistSelectMode: "選択",
   watchlistEditDone: "完了",
   watchlistFilterMovement: "値動き",
   watchlistFilterMovementAll: "すべて",

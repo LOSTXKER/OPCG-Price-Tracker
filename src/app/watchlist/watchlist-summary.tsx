@@ -40,32 +40,3 @@ export function WatchlistPeriodControl({
  * (the table already has 24H/7D/30D columns). Computed over ALL watched
  * cards for the active period, not the filtered/sorted view.
  */
-export function WatchlistPulseText({
-  itemCount,
-  upCount,
-  downCount,
-}: {
-  itemCount: number;
-  upCount: number;
-  downCount: number;
-}) {
-  const lang = useUIStore((s) => s.language);
-
-  return (
-    <p className="shrink-0 text-body-sm tabular-nums" aria-live="polite">
-      <span className="text-muted-foreground">
-        {t(lang, "watchlistTracking")} {itemCount.toLocaleString()} {t(lang, "cardUnit")}
-      </span>
-      <span className="mx-1.5 text-muted-foreground/30">·</span>
-      <span className="inline-flex items-center gap-0.5 font-medium text-price-up">
-        <ArrowUp className="size-3" aria-hidden />
-        {upCount.toLocaleString()}
-      </span>
-      <span className="mx-1.5 text-muted-foreground/30">·</span>
-      <span className="inline-flex items-center gap-0.5 font-medium text-price-down">
-        <ArrowDown className="size-3" aria-hidden />
-        {downCount.toLocaleString()}
-      </span>
-    </p>
-  );
-}

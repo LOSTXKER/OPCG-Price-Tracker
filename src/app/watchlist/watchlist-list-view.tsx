@@ -19,8 +19,8 @@ import { useUIStore } from "@/stores/ui-store";
 
 import { useLongPress } from "./use-long-press";
 import { WatchlistRowActionsDialog } from "./watchlist-row-actions";
+import { WatchlistPeriodControl } from "./watchlist-summary";
 import {
-  formatEntryJpy,
   formatEntryThb,
   getEntryChange,
   type ChangePeriod,
@@ -34,6 +34,7 @@ export type WatchlistHeaderCol = "name" | "price" | ChangePeriod;
 export function WatchlistListView({
   entries,
   period,
+  onPeriodChange,
   editMode,
   selected,
   onToggleSelect,
@@ -48,6 +49,8 @@ export function WatchlistListView({
 }: {
   entries: WatchlistEntry[];
   period: ChangePeriod;
+  /** Mobile only — the period pill sits on the list header row. */
+  onPeriodChange?: (period: ChangePeriod) => void;
   editMode: boolean;
   selected: Set<number>;
   onToggleSelect: (cardId: number) => void;
@@ -97,14 +100,16 @@ export function WatchlistListView({
 
   return (
     <>
-      {/* Mobile (<sm) — Apple-Stocks anatomy: a thin list header (count +
+      {/* Mobile (<sm) — Apple-Stocks anatomy: a thin list header (period pill +
           tap-sort) above a flat panel of rows. Single-card actions are a
           long-press sheet — there's no trailing ⋯ on the row. */}
       <div className="sm:hidden">
-        <div className="flex h-9 items-center justify-between border-b border-hair px-1">
-          <span className="text-meta tabular-nums">
-            {entries.length.toLocaleString()} {t(lang, "cardUnit")}
-          </span>
+        <div className="flex items-center justify-between gap-2 border-b border-hair px-1 pb-2">
+          {onPeriodChange ? (
+            <WatchlistPeriodControl period={period} onPeriodChange={onPeriodChange} />
+          ) : (
+            <span aria-hidden />
+          )}
           <div className="flex items-center gap-3">
             <SortableHeader<WatchlistHeaderCol>
               as="button"
@@ -274,9 +279,6 @@ export function WatchlistListView({
                       <span className="text-code font-semibold">
                         {formatEntryThb(entry.card)}
                       </span>
-                      {formatEntryJpy(entry.card) && (
-                        <span className="text-meta">{formatEntryJpy(entry.card)}</span>
-                      )}
                     </div>
                   </td>
                   <td className="w-20 px-3 py-2.5 text-right">

@@ -97,15 +97,25 @@ export default function WatchlistTabs() {
           aria-label={t(lang, "watchlistNav")}
           className="w-full justify-start gap-1 border-b border-hair p-0 group-data-horizontal/tabs:h-11 md:group-data-horizontal/tabs:h-10"
         >
-          {TABS.map(({ key, labelKey }) => (
-            <TabsTrigger
-              key={key}
-              value={key}
-              className="min-h-11 flex-none px-3.5 group-data-horizontal/tabs:after:bottom-0 md:min-h-10"
-            >
-              {t(lang, labelKey)}
-            </TabsTrigger>
-          ))}
+          {TABS.map(({ key, labelKey }) => {
+            const state = key === "cards" ? cardsState : alertsState;
+            const showCount = state.status === "ready" && state.itemCount > 0;
+            return (
+              <TabsTrigger
+                key={key}
+                value={key}
+                className="min-h-11 flex-none px-3.5 group-data-horizontal/tabs:after:bottom-0 md:min-h-10"
+              >
+                {t(lang, labelKey)}
+                {/* จำนวนของแท็บอยู่บนแท็บ — แทนที่บรรทัด "ติดตาม N ใบ" เดิม */}
+                {showCount && (
+                  <span className="text-micro tabular-nums opacity-60">
+                    {state.itemCount.toLocaleString()}
+                  </span>
+                )}
+              </TabsTrigger>
+            );
+          })}
         </TabsList>
 
         <TabsContent value="cards" className="pt-4 md:pt-5">

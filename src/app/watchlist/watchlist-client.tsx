@@ -477,20 +477,6 @@ function WatchlistContent({
     [filteredEntries, sparklines]
   );
 
-  // Row-3 pulse text ("ติดตาม N ใบ · ▲up · ▼down") — over ALL watched cards
-  // for the active period, not the filtered/sorted view.
-  const pulseCounts = useMemo(() => {
-    let up = 0;
-    let down = 0;
-    for (const entry of items) {
-      const change = getEntryChange(entry, period);
-      if (change == null) continue;
-      if (change > 0) up += 1;
-      else if (change < 0) down += 1;
-    }
-    return { up, down };
-  }, [items, period]);
-
   if (loading) {
     return <WatchlistSkeleton withHeader={false} />;
   }
@@ -532,8 +518,6 @@ function WatchlistContent({
                 />
               ) : undefined
             }
-            period={period}
-            onPeriodChange={setPeriod}
             filters={filters}
             onFiltersChange={setFilters}
             search={search}
@@ -541,15 +525,12 @@ function WatchlistContent({
             setOptions={setOptions}
             resultCount={filteredEntries.length}
             itemCount={items.length}
-            upCount={pulseCounts.up}
-            downCount={pulseCounts.down}
             limit={limits.watchlistCards}
             editMode={editMode}
             onToggleEditMode={toggleEditMode}
             selectedCount={selected.size}
             allVisibleSelected={allVisibleSelected}
             onToggleSelectAll={toggleSelectAll}
-            onClearSelection={() => setSelected(new Set())}
             onBulkRemove={() => void removeBulk()}
           />
 
@@ -576,6 +557,7 @@ function WatchlistContent({
             <WatchlistListView
               entries={filteredEntries}
               period={period}
+              onPeriodChange={setPeriod}
               editMode={editMode}
               selected={selected}
               onToggleSelect={toggleSelect}

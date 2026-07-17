@@ -25,54 +25,25 @@ export function WatchlistMockPreview({ lang }: { lang: Language }) {
       <PageHeader title={t(lang, "watchlistNav")} className="mb-4 md:mb-5" />
 
       <div className="flex h-11 items-center gap-1 border-b border-hair md:h-9">
-        <span className="inline-flex min-h-11 items-center border-b-2 border-primary px-3 text-label text-primary md:min-h-9">
+        <span className="inline-flex min-h-11 items-center gap-1.5 border-b-2 border-primary px-3 text-label text-primary md:min-h-9">
           {t(lang, "watchlistTabCards")}
+          <span className="text-micro tabular-nums opacity-60">{cards.length}</span>
         </span>
         <span className="inline-flex min-h-11 items-center px-3 text-label text-muted-foreground md:min-h-9">
           {t(lang, "watchlistTabAlerts")}
         </span>
       </div>
 
-      {/* Row 3 — control row: period pill + icons (mobile) / pulse text + icons (desktop). */}
+      {/* Control row: visible search + filter/select. */}
       <div className="flex items-center gap-2 sm:hidden">
-        <div className="relative flex h-9 shrink-0 items-center gap-0.5 rounded-full bg-muted/50 px-0.5">
-          <TrendingUpDown aria-hidden className="mx-1.5 size-3.5 shrink-0 text-muted-foreground/50" />
-          {(["24h", "7d", "30d"] as const).map((value) => (
-            <span
-              key={value}
-              className={`inline-flex h-7 items-center justify-center rounded-full px-2.5 text-micro ${
-                value === "7d" ? "bg-primary/15 text-primary" : "text-muted-foreground"
-              }`}
-            >
-              {value}
-            </span>
-          ))}
-        </div>
-        <div className="ml-auto flex items-center gap-2">
-          <div className="size-9 rounded-md bg-muted/50" />
-          <div className="size-9 rounded-md bg-muted/50" />
-          <div className="size-9 rounded-md bg-muted/50" />
-        </div>
+        <div className="h-11 flex-1 rounded-lg border border-border bg-background" />
+        <div className="size-9 rounded-md bg-muted/50" />
+        <div className="size-9 rounded-md bg-muted/50" />
       </div>
 
       <div className="hidden items-center gap-2 sm:flex">
-        <p className="shrink-0 text-body-sm tabular-nums">
-          <span className="text-muted-foreground">
-            {t(lang, "watchlistTracking")} {cards.length} {t(lang, "cardUnit")}
-          </span>
-          <span className="mx-1.5 text-muted-foreground/30">·</span>
-          <span className="inline-flex items-center gap-0.5 font-medium text-price-up">
-            <ArrowUp className="size-3" aria-hidden />
-            {upCount}
-          </span>
-          <span className="mx-1.5 text-muted-foreground/30">·</span>
-          <span className="inline-flex items-center gap-0.5 font-medium text-price-down">
-            <ArrowDown className="size-3" aria-hidden />
-            {downCount}
-          </span>
-        </p>
+        <div className="h-9 w-72 rounded-lg border border-border bg-background" />
         <div className="ml-auto flex items-center gap-1.5">
-          <div className="size-7 rounded-md bg-muted/50" />
           <div className="h-7 w-20 rounded-md bg-muted/50" />
           <div className="h-7 w-20 rounded-md bg-muted/50" />
         </div>
@@ -80,8 +51,20 @@ export function WatchlistMockPreview({ lang }: { lang: Language }) {
 
       {/* List. Mobile: Apple-Stocks anatomy. Desktop: 2-line price table. */}
       <div className="sm:hidden">
-        <div className="flex h-9 items-center justify-between border-b border-hair px-1">
-          <span className="text-meta tabular-nums">{cards.length} {t(lang, "cardUnit")}</span>
+        <div className="flex items-center justify-between gap-2 border-b border-hair px-1 pb-2">
+          <div className="relative flex h-9 shrink-0 items-center gap-0.5 rounded-full bg-muted/50 px-0.5">
+            <TrendingUpDown aria-hidden className="mx-1.5 size-3.5 shrink-0 text-muted-foreground/50" />
+            {(["24h", "7d", "30d"] as const).map((value) => (
+              <span
+                key={value}
+                className={`inline-flex h-7 items-center justify-center rounded-full px-2.5 text-micro ${
+                  value === "7d" ? "bg-primary/15 text-primary" : "text-muted-foreground"
+                }`}
+              >
+                {value}
+              </span>
+            ))}
+          </div>
           <div className="flex items-center gap-3 text-meta">
             <span>{t(lang, "price")}</span>
             <span>{t(lang, "change")}</span>
@@ -131,10 +114,7 @@ export function WatchlistMockPreview({ lang }: { lang: Language }) {
                   </div>
                 </td>
                 <td className="px-3 py-2.5 text-right tabular-nums">
-                  <div className="flex flex-col items-end">
-                    <span className="text-code font-semibold">{card.thb}</span>
-                    <span className="text-meta">{card.jpy}</span>
-                  </div>
+                  <span className="text-code font-semibold">{card.thb}</span>
                 </td>
                 <td className={`px-3 py-2.5 text-right ${changeTone(card.change24h)}`}>{changeLabel(card.change24h)}</td>
                 <td className={`px-3 py-2.5 text-right ${changeTone(card.change7d)}`}>{changeLabel(card.change7d)}</td>

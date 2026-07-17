@@ -1,4 +1,4 @@
-import { formatJpy, formatThb, jpyToThb } from "@/lib/utils/currency";
+import { formatThb, jpyToThb } from "@/lib/utils/currency";
 import type { GameRef } from "@/lib/types/portfolio";
 
 export type WatchCard = {
@@ -89,6 +89,3 @@ export function formatEntryThb(card: WatchCard): string {
   return thb != null ? formatThb(Math.round(thb)) : "—";
 }
 
-export function formatEntryJpy(card: WatchCard): string | null {
-  return card.latestPriceJpy != null ? formatJpy(card.latestPriceJpy) : null;
-}

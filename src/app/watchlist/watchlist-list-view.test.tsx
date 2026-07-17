@@ -151,10 +151,10 @@ describe("watchlist flat list view", () => {
     expect(markup).not.toContain("lucide-more-horizontal");
   });
 
-  it("shows the mobile list header (count + tap-sort price/change) instead of a count line in the toolbar", () => {
+  it("shows the mobile list header (tap-sort price/change) — the count moved to the tab badge", () => {
     const markup = renderList({ entries: [entry, pinnedAlertedEntry] });
 
-    expect(markup).toContain(`2 ${t("TH", "cardUnit")}`);
+    expect(markup).not.toContain(`2 ${t("TH", "cardUnit")}`);
     expect(markup.match(/aria-pressed="false"/g)?.length).toBeGreaterThanOrEqual(2);
     expect(markup).toContain(t("TH", "price"));
     expect(markup).toContain(t("TH", "change"));
@@ -175,10 +175,10 @@ describe("watchlist flat list view", () => {
     expect(markup).toContain("min-w-[72px]");
   });
 
-  it("stacks THB (primary) over demoted JPY on the desktop price cell", () => {
+  it("shows THB only on the desktop price cell (JPY was cut by owner decision)", () => {
     const markup = renderList({ entries: [entry] });
 
     expect(markup).toContain("25 ฿");
-    expect(markup).toContain("¥100");
+    expect(markup).not.toContain("¥100");
   });
 });

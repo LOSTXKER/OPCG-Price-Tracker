@@ -15,20 +15,15 @@ export function WatchlistSkeleton({ withHeader = true }: { withHeader?: boolean 
         </>
       )}
 
-      {/* Row 3 — control row: period pill + 3 icons (mobile) / pulse text +
-          2 controls (desktop). */}
+      {/* Control row: visible search + filter/select (both breakpoints). */}
       <div className="flex items-center gap-2 sm:hidden">
-        <Skeleton className="h-9 w-24 rounded-full" />
-        <div className="ml-auto flex items-center gap-2">
-          <Skeleton className="size-9 rounded-md" />
-          <Skeleton className="size-9 rounded-md" />
-          <Skeleton className="size-9 rounded-md" />
-        </div>
+        <Skeleton className="h-11 flex-1 rounded-lg" />
+        <Skeleton className="size-9 rounded-md" />
+        <Skeleton className="size-9 rounded-md" />
       </div>
       <div className="hidden items-center gap-2 sm:flex">
-        <Skeleton className="h-4 w-40" />
+        <Skeleton className="h-9 w-72 rounded-lg" />
         <div className="ml-auto flex items-center gap-1.5">
-          <Skeleton className="size-7 rounded-md" />
           <Skeleton className="h-7 w-20 rounded-md" />
           <Skeleton className="h-7 w-20 rounded-md" />
         </div>
@@ -36,8 +31,8 @@ export function WatchlistSkeleton({ withHeader = true }: { withHeader?: boolean 
 
       {/* List header + row shadows (mobile Apple-Stocks anatomy). */}
       <div className="sm:hidden">
-        <div className="flex h-9 items-center justify-between border-b border-hair px-1">
-          <Skeleton className="h-3 w-14" />
+        <div className="flex items-center justify-between gap-2 border-b border-hair px-1 pb-2">
+          <Skeleton className="h-9 w-24 rounded-full" />
           <div className="flex items-center gap-3">
             <Skeleton className="h-3 w-10" />
             <Skeleton className="h-3 w-14" />

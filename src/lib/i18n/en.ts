@@ -467,6 +467,7 @@ export const en = {
   watchlistFiltersButton: "Filters",
   watchlistRefine: "Adjust",
   watchlistEditMode: "Edit",
+  watchlistSelectMode: "Select",
   watchlistEditDone: "Done",
   watchlistFilterMovement: "Movement",
   watchlistFilterMovementAll: "All",

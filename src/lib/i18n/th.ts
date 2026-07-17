@@ -467,6 +467,7 @@ export const th = {
   watchlistFiltersButton: "ตัวกรอง",
   watchlistRefine: "ปรับ",
   watchlistEditMode: "แก้ไข",
+  watchlistSelectMode: "เลือก",
   watchlistEditDone: "เสร็จ",
   watchlistFilterMovement: "การเคลื่อนไหว",
   watchlistFilterMovementAll: "ทั้งหมด",
