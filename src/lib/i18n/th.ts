@@ -1572,6 +1572,10 @@ export const th = {
   alertWhenAtOrBelow: "ไม่เกิน",
   alertTargetLabel: "เป้า",
   alertNowLabel: "ตอนนี้",
+  alertWhenAbove: "แจ้งเมื่อราคาขึ้นถึง",
+  alertWhenBelow: "แจ้งเมื่อราคาลงถึง",
+  alertGapToTarget: "ห่างเป้า",
+  alertAtTarget: "ถึงเป้าแล้ว",
   failedToLoad: "โหลดไม่สำเร็จ",
   delete: "ลบ",
 

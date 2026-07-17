@@ -1572,6 +1572,10 @@ export const jp = {
   alertWhenAtOrBelow: "以下",
   alertTargetLabel: "目標",
   alertNowLabel: "現在",
+  alertWhenAbove: "ここまで上がったら通知",
+  alertWhenBelow: "ここまで下がったら通知",
+  alertGapToTarget: "目標まで",
+  alertAtTarget: "目標到達",
   failedToLoad: "読み込みに失敗しました",
   delete: "削除",
 

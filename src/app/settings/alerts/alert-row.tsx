@@ -67,8 +67,18 @@ export function AlertRow({
   const dirIsAbove = alert.direction === "ABOVE";
   const directionTone = dirIsAbove ? "text-price-up-on-soft" : "text-price-down-on-soft";
   const directionBg = dirIsAbove ? "bg-price-up/10" : "bg-price-down/10";
-  const operator = dirIsAbove ? "≥" : "≤";
   const DirectionIcon = dirIsAbove ? ArrowUp : ArrowDown;
+
+  // How far today's price sits from the target (active alerts only) — the
+  // one number that tells the owner whether this alert matters today.
+  const currentJpy = alert.card.latestPriceJpy;
+  const gapPct =
+    alert.isActive && currentJpy != null && currentJpy > 0
+      ? dirIsAbove
+        ? ((alert.targetPrice - currentJpy) / currentJpy) * 100
+        : ((currentJpy - alert.targetPrice) / currentJpy) * 100
+      : null;
+  const atTarget = gapPct != null && gapPct <= 0;
 
   const channelEntries: Array<{
     key: string;
@@ -212,8 +222,9 @@ export function AlertRow({
             </div>
           </div>
 
-          {/* Trigger condition — primary info */}
-          <div className="mt-2 flex items-baseline gap-2">
+          {/* Trigger condition — a plain sentence, not "≥"-glyph shorthand:
+              "แจ้งเมื่อราคาขึ้นถึง 290,000 ฿" reads exactly as configured. */}
+          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
             <span
               className={cn(
                 "inline-flex size-5 shrink-0 items-center justify-center rounded-full",
@@ -224,21 +235,35 @@ export function AlertRow({
             >
               <DirectionIcon className="size-3" strokeWidth={2.5} />
             </span>
-            <span className="text-eyebrow shrink-0 text-muted-foreground">
-              {t(lang, "alertTargetLabel")}
+            <span className="text-body-sm text-muted-foreground">
+              {t(lang, dirIsAbove ? "alertWhenAbove" : "alertWhenBelow")}
             </span>
             <span className="text-base font-semibold tabular-nums leading-none text-foreground">
-              {operator} {target}
+              {target}
             </span>
           </div>
 
-          {/* Supporting info — current price + channels */}
+          {/* Supporting info — current price, distance to target, channels */}
           <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-muted-foreground">
             {current != null && (
               <span>
                 {t(lang, "alertNowLabel")}{" "}
                 <span className="font-medium text-foreground tabular-nums">{current}</span>
               </span>
+            )}
+            {gapPct != null && (
+              <>
+                <span aria-hidden className="text-muted-foreground/30">·</span>
+                {atTarget ? (
+                  <span className="font-medium text-primary">
+                    {t(lang, "alertAtTarget")}
+                  </span>
+                ) : (
+                  <span className="tabular-nums">
+                    {t(lang, "alertGapToTarget")} {gapPct.toFixed(1)}%
+                  </span>
+                )}
+              </>
             )}
             {current != null && channelEntries.length > 0 && (
               <span aria-hidden className="text-muted-foreground/30">·</span>

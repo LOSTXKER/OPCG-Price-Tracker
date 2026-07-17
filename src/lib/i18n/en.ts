@@ -1599,6 +1599,10 @@ export const en = {
   alertWhenAtOrBelow: "At or below",
   alertTargetLabel: "Target",
   alertNowLabel: "Now",
+  alertWhenAbove: "Alert when the price rises to",
+  alertWhenBelow: "Alert when the price falls to",
+  alertGapToTarget: "To target",
+  alertAtTarget: "Target reached",
   failedToLoad: "Failed to load",
   delete: "Delete",
 
