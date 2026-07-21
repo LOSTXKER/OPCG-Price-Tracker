@@ -1,6 +1,7 @@
 # 🌏 VISION — Meecard ระดับ World-Class (design north-star + build spec)
 
 > **ไฟล์เดียวคุมทิศดีไซน์ทั้งหมด** · อ่านก่อนแตะ UI ทุกหน้า · redesign = แก้ของเดิม **in-place** (ไม่มีเวอร์ชัน v1/v2)
+> ⚠️ **กติกาการแก้ไฟล์นี้ (2026-07-21):** กฎ/คำห้ามในไฟล์นี้ = วินัยที่ตั้งใจจาก research (มีเหตุผล+แหล่งกำกับ) — ไม่ใช่ฟีดแบ็กสะสม · **ฟีดแบ็กรายรอบของเบส ("ไม่เอา X") ห้ามจดเพิ่มเป็นข้อห้ามถาวรที่นี่** — จดเป็น "ตอนนี้ใช้ A แทน B (วันที่) · ทบทวนได้" ใน PLAN/PROGRESS · ทุกกฎทบทวนได้เมื่อเบสเปิดทิศใหม่ · งาน UI ทิศใหม่ = ทำหน้าเทียบ 2-3 ทิศให้เบสเห็นภาพจริงก่อน implement
 > โจทย์: ฟีเจอร์มหาศาล (pricing หลายเกรด/แหล่ง · marketplace+escrow · chat · profile · deck/meta/tier · ads · multi-game · portfolio) แต่ต้อง **ไม่รก · เป็นสัดส่วน · ดูโปรระดับ platform โลก** · mobile-first และ desktop จริง
 > สังเคราะห์จากงานวิจัย platform ระดับโลก: StockX · PSA · Card Ladder · TCGplayer · 130point · SNKRDUNK · Cardmarket · eBay Vault · Mercari · Whatnot · Robinhood · Collectr · Moxfield · Archidekt · Limitless · EDHREC · untapped.gg · Grailed · Stripe · Linear · Vercel/Geist (ดู §8)
 
