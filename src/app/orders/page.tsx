@@ -6,17 +6,10 @@ import { Loader2, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { EmptyState } from "@/components/shared/empty-state";
-import { LoadingState } from "@/components/shared/loading-state";
 import { OrderCard, type OrderListItem } from "@/components/orders/order-card";
+import { OrdersListSkeleton } from "@/components/orders/orders-list-skeleton";
 import { PageHeader } from "@/components/layout/page-header";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import { ApiError, apiGet, apiPatch } from "@/lib/api/client";
@@ -137,53 +130,21 @@ export default function BuyerOrdersPage() {
         }
       />
 
-      {/* Mobile: select dropdown */}
-      <div className="sm:hidden">
-        <Select
-          value={activeTab}
-          onValueChange={(v) => v && handleTabChange(v)}
-        >
-          <SelectTrigger className="w-full" aria-label="Filter orders by status">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {STATUS_TABS.map((tab) => {
-              const count =
-                tab.key === "ALL" ? totalAll : (data?.statusCounts[tab.key] ?? 0);
-              return (
-                <SelectItem key={tab.key} value={tab.key}>
-                  <span className="flex items-center gap-2">
-                    {t(lang, tab.labelKey)}
-                    {count > 0 && (
-                      <span className="rounded-full bg-muted px-1.5 text-xs tabular-nums">
-                        {count}
-                      </span>
-                    )}
-                  </span>
-                </SelectItem>
-              );
-            })}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Desktop: segmented tabs */}
-      <div className="hidden sm:block">
+      {/* One touch-safe status rail on every viewport. Keeping the same
+          control avoids mobile/desktop state and accessibility drift. */}
+      <div className="no-sb -mx-5 overflow-x-auto px-5 sm:mx-0 sm:px-0">
         <SegmentedControl
           options={segmentedOptions}
           value={activeTab}
           onChange={handleTabChange}
           ariaLabel="Filter orders by status"
+          className="shrink-0"
         />
       </div>
 
       {/* Content */}
       {loading ? (
-        <LoadingState
-          variant="skeleton-list"
-          count={5}
-          label={t(lang, "loading")}
-        />
+        <OrdersListSkeleton label={t(lang, "loading")} />
       ) : error ? (
         <EmptyState
           variant="error"

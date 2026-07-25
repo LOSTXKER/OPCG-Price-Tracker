@@ -8,7 +8,6 @@ import {
   type TabId,
   type Tab,
   type SortKey,
-  type PriceMode,
   type ViewMode,
   type ChangePeriod,
   type ColumnId,
@@ -20,6 +19,10 @@ import {
   retargetSortForPeriod,
   PAGE_SIZE,
 } from "@/components/home/market-types"
+import {
+  isRawGrade,
+  type GradeKey,
+} from "@/lib/pricing/grade-tiers"
 
 export type UseMarketCardsOptions = {
   initialCards: CardRow[]
@@ -50,7 +53,7 @@ export function useMarketCards({
   const [maxPrice, setMaxPrice] = useState("")
   const sparklines = useSparklines(cards)
   const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d")
-  const [priceMode, setPriceMode] = useState<PriceMode>("raw")
+  const [grade, setGrade] = useState<GradeKey>("raw")
   const [filterOpen, setFilterOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const isInitialMount = useRef(true)
@@ -67,7 +70,7 @@ export function useMarketCards({
   }, [initialSearch])
 
   const fetchCards = useCallback(
-    (tab: TabId, sortKey: SortKey, pg: number, q: string, f: Record<string, string[]>, pMin: string, pMax: string, mode: PriceMode = "raw") => {
+    (tab: TabId, sortKey: SortKey, pg: number, q: string, f: Record<string, string[]>, pMin: string, pMax: string, selectedGrade: GradeKey = "raw") => {
       const tabDef = tabsRef.current.find((t) => t.id === tab) ?? tabsRef.current[0]
       const minP = parseInt(pMin)
       const maxP = parseInt(pMax)
@@ -83,7 +86,7 @@ export function useMarketCards({
         search: q.trim() || undefined,
         minPrice: minP > 0 ? minP : undefined,
         maxPrice: maxP > 0 ? maxP : undefined,
-        priceMode: mode === "psa10" ? "psa10" : undefined,
+        grade: isRawGrade(selectedGrade) ? undefined : selectedGrade,
         ...tabDef.extraParams,
         ...filterParams,
       })
@@ -116,19 +119,29 @@ export function useMarketCards({
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false
-      if (!initialSearchRef.current && priceMode === "raw") return
+      if (!initialSearchRef.current && isRawGrade(grade)) return
     }
-    fetchCards(activeTab, sort, page, search, filters, minPrice, maxPrice, priceMode)
-  }, [activeTab, sort, page, search, filters, minPrice, maxPrice, priceMode, fetchCards])
+    fetchCards(activeTab, sort, page, search, filters, minPrice, maxPrice, grade)
+  }, [activeTab, sort, page, search, filters, minPrice, maxPrice, grade, fetchCards])
 
   const handleTabChange = (tab: TabId) => {
     const tabDef = tabs.find((t) => t.id === tab) ?? tabs[0]
+    const defaultColumn = parseSortColumn(tabDef.defaultSort).col
+    const nextSort =
+      !isRawGrade(grade) &&
+      (defaultColumn === "price" ||
+        (defaultColumn && periodForColumn(defaultColumn) !== null))
+        ? "newest"
+        : tabDef.defaultSort
     setActiveTab(tab)
-    setSort(tabDef.defaultSort)
+    setSort(nextSort)
     setPage(1)
   }
 
   const handleColumnSort = (col: ColumnId) => {
+    if (!isRawGrade(grade) && (col === "price" || periodForColumn(col) !== null)) {
+      return
+    }
     const current = parseSortColumn(sort)
     if (current.col === col) {
       setSort(COLUMN_SORTS[col][current.dir === "desc" ? "asc" : "desc"])
@@ -149,6 +162,7 @@ export function useMarketCards({
   // left alone.
   const handleChangePeriod = (period: ChangePeriod) => {
     setChangePeriod(period)
+    if (!isRawGrade(grade)) return
     const next = retargetSortForPeriod(sort, period)
     if (next) {
       setSort(next)
@@ -174,6 +188,23 @@ export function useMarketCards({
     setPage(1)
   }
 
+  const handleGradeChange = (nextGrade: GradeKey) => {
+    setGrade(nextGrade)
+    setPage(1)
+
+    if (isRawGrade(nextGrade)) return
+
+    // Range + price/change sorting are backed by Raw scalar columns today.
+    // Clear/normalize them rather than applying invisible Raw constraints to a
+    // graded lens. Rarity/views/name/newest remain valid across grades.
+    setMinPrice("")
+    setMaxPrice("")
+    const active = parseSortColumn(sort)
+    if (active.col === "price" || (active.col && periodForColumn(active.col))) {
+      setSort("newest")
+    }
+  }
+
   const { col: sortCol, dir: sortDir } = parseSortColumn(sort)
 
   return {
@@ -192,7 +223,7 @@ export function useMarketCards({
     maxPrice,
     sparklines,
     changePeriod,
-    priceMode,
+    grade,
     filterOpen,
     sortCol,
     sortDir,
@@ -204,11 +235,11 @@ export function useMarketCards({
     setMinPrice,
     setMaxPrice,
     setChangePeriod,
-    setPriceMode,
     setFilterOpen,
     handleTabChange,
     handleColumnSort,
     handleChangePeriod,
+    handleGradeChange,
     handleFilterChange,
     clearAllFilters,
   }

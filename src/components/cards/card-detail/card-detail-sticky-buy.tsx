@@ -3,6 +3,7 @@
 import { ShoppingBag } from "lucide-react"
 
 import { CardAddToPortfolio } from "@/components/cards/card-add-to-portfolio"
+import type { CardWithSet } from "@/components/portfolio/add-card-types"
 import { t, type Currency, type Language } from "@/lib/i18n"
 import { formatByCurrency, formatDisplayValue } from "@/lib/utils/currency"
 
@@ -10,7 +11,7 @@ import type { CardListing } from "./types"
 
 interface CardDetailStickyBuyProps {
   visible: boolean
-  cardId: number
+  card: CardWithSet
   cardName: string
   gradeLabel: string
   lowestListing: CardListing | null
@@ -22,7 +23,7 @@ interface CardDetailStickyBuyProps {
 /** Mobile-only transact bar shown after the hero buy box leaves the viewport. */
 export function CardDetailStickyBuy({
   visible,
-  cardId,
+  card,
   cardName,
   gradeLabel,
   lowestListing,
@@ -36,7 +37,8 @@ export function CardDetailStickyBuy({
     <div
       className="ease-chrome fixed inset-x-0 z-40 bg-background md:hidden"
       style={{
-        bottom: "calc(4rem + env(safe-area-inset-bottom))",
+        bottom:
+          "calc(4rem + env(safe-area-inset-bottom) + var(--floating-ad-clearance))",
         boxShadow: "inset 0 1px 0 0 var(--p-hair)",
       }}
     >
@@ -56,7 +58,7 @@ export function CardDetailStickyBuy({
           </p>
         </div>
         <CardAddToPortfolio
-          cardId={cardId}
+          card={card}
           cardName={cardName}
           variant="outline"
           iconOnly

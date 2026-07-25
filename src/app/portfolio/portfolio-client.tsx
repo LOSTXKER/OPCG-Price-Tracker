@@ -44,7 +44,13 @@ function EmptyPortfolioGateway() {
   const [createOpen, setCreateOpen] = useState(false)
   const navigatingRef = useRef(false)
   const creatingRef = useRef(false)
-  const { loading, error, portfolioMetas, createPortfolio, reload } = usePortfolioApi()
+  const {
+    loading,
+    error,
+    portfolioMetas,
+    createPortfolio,
+    reload,
+  } = usePortfolioApi()
 
   useEffect(() => {
     if (

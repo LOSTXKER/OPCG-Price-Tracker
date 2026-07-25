@@ -5,6 +5,11 @@ import { parseJsonBody } from "@/lib/api/request-body";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { effectiveTier, getLimits } from "@/lib/billing";
+import {
+  ownerPortfolioLotOrderBy,
+  ownerPortfolioLotSelect,
+  toOwnerPortfolioItemDto,
+} from "@/lib/portfolio/lots";
 import { CreatePortfolioSchema } from "@/lib/portfolio/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -39,16 +44,26 @@ export const GET = apiHandler(async () => {
     include: {
       items: {
         orderBy: { addedAt: "desc" },
-        include: { card: { include: gameCardInclude } },
+        include: {
+          card: { include: gameCardInclude },
+          lots: {
+            orderBy: [...ownerPortfolioLotOrderBy],
+            select: ownerPortfolioLotSelect,
+          },
+        },
       },
     },
   });
+  const ownerPortfolios = portfolios.map((portfolio) => ({
+    ...portfolio,
+    items: portfolio.items.map(toOwnerPortfolioItemDto),
+  }));
 
   const tier = effectiveTier(auth.user.tier, auth.user.tierExpiresAt);
   const limits = getLimits(tier);
 
   return NextResponse.json({
-    portfolios,
+    portfolios: ownerPortfolios,
     effectiveTier: tier,
     limits: {
       portfolioCount:
@@ -70,7 +85,7 @@ export const POST = apiHandler(async (request: NextRequest) => {
 
   const tier = effectiveTier(auth.user.tier, auth.user.tierExpiresAt);
   const limits = getLimits(tier);
-  let portfolio: Awaited<ReturnType<typeof prisma.portfolio.create>> | null = null;
+  let portfolio: object | null = null;
   for (let attempt = 0; attempt < MAX_SERIALIZABLE_ATTEMPTS; attempt += 1) {
     try {
       portfolio = await prisma.$transaction(
@@ -87,7 +102,7 @@ export const POST = apiHandler(async (request: NextRequest) => {
             }
           }
 
-          return tx.portfolio.create({
+          const created = await tx.portfolio.create({
             data: {
               userId: auth.user.id,
               name,
@@ -95,10 +110,20 @@ export const POST = apiHandler(async (request: NextRequest) => {
             },
             include: {
               items: {
-                include: { card: { include: cardInclude } },
+                include: {
+                  card: { include: cardInclude },
+                  lots: {
+                    orderBy: [...ownerPortfolioLotOrderBy],
+                    select: ownerPortfolioLotSelect,
+                  },
+                },
               },
             },
           });
+          return {
+            ...created,
+            items: created.items.map(toOwnerPortfolioItemDto),
+          };
         },
         { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
       );

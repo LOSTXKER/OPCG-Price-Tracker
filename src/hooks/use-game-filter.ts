@@ -4,11 +4,16 @@ import { useEffect } from "react"
 
 import { ALL_GAMES } from "@/lib/game/constants"
 
+/** @internal Pure decision kept separate for regression coverage. */
+export function shouldResetGameFilter(gameFilter: string, availableGames: string[]) {
+  if (gameFilter === ALL_GAMES) return false
+  return !availableGames.includes(gameFilter)
+}
+
 /**
  * Keep a MINE page's game filter honest: reset it to "all" the moment the active
- * game leaves the data — a holding/alert removed, or the chip rail dropping below
- * two games and self-hiding. Without this, a stale filter strands the user on an
- * empty list with no visible control to clear it.
+ * game leaves the data. The control remains visible with one launch-ready game,
+ * so a valid single-game scope must survive data refreshes.
  *
  * Each MINE surface (portfolio / watchlist / alerts) owns its OWN filter — plain
  * local state, session-only, deliberately NOT shared through a global store. A
@@ -21,7 +26,7 @@ export function useGameFilterReset(
   availableGames: string[],
   setGameFilter: (game: string) => void,
 ) {
-  const stranded = gameFilter !== ALL_GAMES && !availableGames.includes(gameFilter)
+  const stranded = shouldResetGameFilter(gameFilter, availableGames)
   useEffect(() => {
     if (stranded) setGameFilter(ALL_GAMES)
   }, [stranded, setGameFilter])

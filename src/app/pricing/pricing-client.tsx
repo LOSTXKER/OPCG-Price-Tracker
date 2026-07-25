@@ -20,11 +20,14 @@ import { useAuthState } from "@/hooks/use-auth-state";
 import {
   buildFeatureSections,
   checkoutPlanFor,
+  effectiveTier,
+  isLifetime,
   isPlanCurrent,
   parseCheckoutPlan,
   type CheckoutPlanKey,
   type TierKey,
 } from "@/lib/billing";
+import type { UserTier } from "@/generated/prisma/client";
 
 const pricingFeatureSections = buildFeatureSections();
 const CHECKOUT_INTENT_KEY = "meecard:checkout-intent";
@@ -61,6 +64,12 @@ export default function PricingClient({
   const [loading, setLoading] = useState<string | null>(null);
   const [billingFailure, setBillingFailure] = useState<BillingFailure | null>(null);
   const resumedPlanRef = useRef<CheckoutPlanKey | null>(null);
+  const activeTier = settings
+    ? effectiveTier(
+        settings.tier as UserTier,
+        settings.tierExpiresAt ? new Date(settings.tierExpiresAt) : null,
+      )
+    : "FREE";
 
   const handleSubscribe = useCallback(async (plan: CheckoutPlanKey) => {
     const returnPath = `/pricing?checkout=${encodeURIComponent(plan)}`;
@@ -139,22 +148,25 @@ export default function PricingClient({
       return;
     }
     if (sessionStorage.getItem(CHECKOUT_INTENT_KEY) !== resumedPlan) return;
-    sessionStorage.removeItem(CHECKOUT_INTENT_KEY);
-    resumedPlanRef.current = resumedPlan;
     const resumedTier: TierKey = resumedPlan.startsWith("PRO_PLUS")
       ? "PRO_PLUS"
       : "PRO";
     if (
       settings.stripeSubscriptionId ||
-      isPlanCurrent(resumedTier, settings.tier)
+      isLifetime(settings.tier as UserTier) ||
+      isPlanCurrent(resumedTier, activeTier)
     ) {
+      sessionStorage.removeItem(CHECKOUT_INTENT_KEY);
+      resumedPlanRef.current = resumedPlan;
       return;
     }
+    sessionStorage.removeItem(CHECKOUT_INTENT_KEY);
+    resumedPlanRef.current = resumedPlan;
     void handleSubscribe(resumedPlan);
-  }, [authed, handleSubscribe, resumedPlan, settings]);
+  }, [activeTier, authed, handleSubscribe, resumedPlan, settings]);
 
   const isCurrentPlan = (planKey: TierKey) =>
-    settings ? isPlanCurrent(planKey, settings.tier) : false;
+    settings ? isPlanCurrent(planKey, activeTier) : false;
   const resumeTier: TierKey | null = resumedPlan
     ? resumedPlan.startsWith("PRO_PLUS")
       ? "PRO_PLUS"
@@ -170,9 +182,8 @@ export default function PricingClient({
       authed === true &&
       settings &&
       !settings.stripeSubscriptionId &&
-      settings.tier !== "LIFETIME_PRO" &&
-      settings.tier !== "LIFETIME_PRO_PLUS" &&
-      !isPlanCurrent(resumeTier, settings.tier),
+      !isLifetime(settings.tier as UserTier) &&
+      !isPlanCurrent(resumeTier, activeTier),
   );
 
   return (
@@ -322,7 +333,7 @@ export default function PricingClient({
 
       {/* Trial active banner (compact) */}
       {settings?.trialStartedAt &&
-        settings.tier !== "FREE" &&
+        activeTier !== "FREE" &&
         !settings.stripeSubscriptionId && (
           <div className="mx-auto flex max-w-lg items-center justify-center gap-3 rounded-xl border border-transparent dark:border-hair bg-muted/30 px-5 py-3">
             <Badge variant="secondary">

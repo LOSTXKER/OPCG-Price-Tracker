@@ -1,32 +1,17 @@
 "use client"
 
-import { useSyncExternalStore } from "react"
-
 import type { ItemRow } from "@/hooks/use-portfolio-api"
 import type { GameRef } from "@/lib/types/portfolio"
 import type { WatchlistEntry } from "@/app/watchlist/watchlist-types"
 import type { PriceAlertItem } from "@/components/alerts/alert-types"
 
 /**
- * DEMO-ONLY multi-game mock. Pokémon has no real data yet, but the multi-game
- * MINE UI (game chips, per-row badges, scope label) only becomes visible with
- * ≥2 games. Append `?demo=multigame` to /portfolio, /watchlist, or
- * /settings/alerts to splice these synthetic Pokémon entries into the fetched
- * lists — CLIENT-ONLY, never touches the DB or real users, reversible by
- * dropping the query param. Delete this file + its call sites once real Pokémon
- * data lands.
+ * Historical visual fixtures retained for component tests. Runtime injection is
+ * deliberately disabled: roadmap data must never enter real collection surfaces,
+ * even through a query parameter or after an unrelated second game launches.
  */
-const noopSubscribe = () => () => {}
-
 export function useMultigameDemo(): boolean {
-  // useSyncExternalStore reads the query param straight from the client snapshot
-  // (false on the server), so it's hydration-safe WITHOUT a setState-in-effect —
-  // and dodges useSearchParams()'s Suspense/CSR-bailout on these static shells.
-  return useSyncExternalStore(
-    noopSubscribe,
-    () => new URLSearchParams(window.location.search).get("demo") === "multigame",
-    () => false,
-  )
+  return false
 }
 
 const POKEMON: GameRef = {
@@ -42,6 +27,21 @@ export const MOCK_POKEMON_PORTFOLIO_ITEMS: ItemRow[] = [
   {
     id: -9001,
     quantity: 2,
+    lots: [
+      {
+        id: -9001,
+        quantity: 2,
+        unitCostJpy: 12000,
+        acquiredAt: null,
+        note: null,
+        source: "LEGACY_OPENING_BALANCE",
+        createdAt: "2026-06-20T00:00:00.000Z",
+        updatedAt: "2026-06-20T00:00:00.000Z",
+      },
+    ],
+    lotCount: 1,
+    recordedCostJpy: 24000,
+    costedCopyCount: 2,
     purchasePrice: 12000,
     condition: "NM",
     card: {
@@ -62,6 +62,21 @@ export const MOCK_POKEMON_PORTFOLIO_ITEMS: ItemRow[] = [
   {
     id: -9002,
     quantity: 1,
+    lots: [
+      {
+        id: -9002,
+        quantity: 1,
+        unitCostJpy: 5200,
+        acquiredAt: null,
+        note: null,
+        source: "LEGACY_OPENING_BALANCE",
+        createdAt: "2026-06-20T00:00:00.000Z",
+        updatedAt: "2026-06-20T00:00:00.000Z",
+      },
+    ],
+    lotCount: 1,
+    recordedCostJpy: 5200,
+    costedCopyCount: 1,
     purchasePrice: 5200,
     condition: "NM",
     card: {
@@ -82,6 +97,21 @@ export const MOCK_POKEMON_PORTFOLIO_ITEMS: ItemRow[] = [
   {
     id: -9003,
     quantity: 4,
+    lots: [
+      {
+        id: -9003,
+        quantity: 4,
+        unitCostJpy: 700,
+        acquiredAt: null,
+        note: null,
+        source: "LEGACY_OPENING_BALANCE",
+        createdAt: "2026-06-20T00:00:00.000Z",
+        updatedAt: "2026-06-20T00:00:00.000Z",
+      },
+    ],
+    lotCount: 1,
+    recordedCostJpy: 2800,
+    costedCopyCount: 4,
     purchasePrice: 700,
     condition: "NM",
     card: {

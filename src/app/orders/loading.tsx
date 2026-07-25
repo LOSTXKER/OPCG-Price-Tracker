@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { Surface } from "@/components/ui/surface";
+import { OrdersListSkeleton } from "@/components/orders/orders-list-skeleton";
 
 export default function OrdersLoading() {
   return (
@@ -7,26 +7,13 @@ export default function OrdersLoading() {
       <Skeleton className="h-4 w-40" />
       <Skeleton className="h-8 w-48" />
 
-      <div className="flex gap-1 rounded-lg bg-muted/50 p-1">
+      <div className="no-sb flex h-11 max-w-full gap-0.5 overflow-hidden rounded-xl bg-muted/50 sm:h-10 sm:p-1">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-8 w-20 rounded-md" />
+          <Skeleton key={i} className="h-11 w-20 shrink-0 rounded-lg sm:h-8 sm:rounded-md" />
         ))}
       </div>
 
-      <div className="space-y-3">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Surface key={i} variant="panel" padding="md">
-            <div className="flex items-center gap-4">
-              <Skeleton className="size-12 rounded-lg" />
-              <div className="flex-1 space-y-2">
-                <Skeleton className="h-4 w-40" />
-                <Skeleton className="h-3 w-24" />
-              </div>
-              <Skeleton className="h-8 w-24 rounded-lg" />
-            </div>
-          </Surface>
-        ))}
-      </div>
+      <OrdersListSkeleton />
     </div>
   );
 }

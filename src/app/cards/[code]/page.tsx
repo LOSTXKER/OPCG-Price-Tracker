@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getAdminConfig } from "@/lib/admin/config";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { CardDetail } from "@/components/cards/card-detail";
+import { AdPageContentReady } from "@/components/ads/ad-audience-provider";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { productJsonLd, breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import {
@@ -108,6 +109,7 @@ export default async function CardDetailPage(props: {
 
   return (
     <>
+      <AdPageContentReady />
       <JsonLd
         data={productJsonLd({
           cardCode: card.cardCode,

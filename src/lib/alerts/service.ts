@@ -53,7 +53,9 @@ export async function createAlert(
   const tier = effectiveTier(user.tier, user.tierExpiresAt);
   const limits = getLimits(tier);
   if (limits.priceAlerts !== Infinity) {
-    const count = await prisma.priceAlert.count({ where: { userId: user.id } });
+    const count = await prisma.priceAlert.count({
+      where: { userId: user.id, isActive: true },
+    });
     if (count >= limits.priceAlerts) {
       return {
         ok: false,

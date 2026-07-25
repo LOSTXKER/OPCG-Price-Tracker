@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Eye, EyeOff, Trash2 } from "lucide-react"
+import { Eye, EyeOff, Loader2, Trash2 } from "lucide-react"
+import { toast } from "sonner"
 
 import { Price } from "@/components/shared/price-inline"
 import { useConfirm } from "@/components/shared/confirm-dialog"
@@ -92,24 +93,13 @@ function CardEditFull({
           </p>
           {row.currentPrice != null && (
             <div className="mt-3 flex items-center gap-2">
-              {hideBalance ? (
-                <>
-                  <span className="tabular-nums text-lg font-bold leading-none">{MASKED}</span>
-                  {pnlResult?.pct != null && (
-                    <span className="rounded-full bg-muted px-2 py-0.5 tabular-nums text-micro text-muted-foreground">
-                      {MASKED}
-                    </span>
-                  )}
-                </>
-              ) : (
-                <span className="tabular-nums text-lg font-bold leading-none">
-                  <Price jpy={row.currentPrice} />
-                </span>
-              )}
-              {!hideBalance && pnlResult?.pct != null && (
+              <span className="font-price tabular-nums text-lg font-bold leading-none">
+                {hideBalance ? MASKED : <Price jpy={row.currentPrice} />}
+              </span>
+              {pnlResult?.pct != null && (
                 <span
                   className={cn(
-                    "rounded-full px-2 py-0.5 tabular-nums text-micro",
+                    "rounded-full px-2 py-0.5 font-price tabular-nums text-micro",
                     pnlResult.pnl >= 0
                       ? "bg-price-up/10 text-price-up-on-soft"
                       : "bg-price-down/10 text-price-down-on-soft",
@@ -142,7 +132,7 @@ function CardEditFull({
             {t(lang, "costBasis")}
           </label>
           {hideBalance ? (
-            <div className="flex min-h-10 items-center rounded-lg border border-hair bg-muted/20 px-3 text-sm tabular-nums text-muted-foreground">
+            <div className="flex min-h-10 items-center rounded-lg border border-hair bg-muted/20 px-3 text-sm font-price tabular-nums text-muted-foreground">
               {MASKED}
             </div>
           ) : (
@@ -232,7 +222,7 @@ export function SingleEditDialog({
       isPrivate?: boolean
       notes?: string | null
     },
-  ) => void
+  ) => Promise<boolean>
   onRemove: (itemId: number) => void
 }) {
   const lang = useUIStore((s) => s.language)
@@ -242,6 +232,7 @@ export function SingleEditDialog({
   const [cost, setCost] = useState("")
   const [notes, setNotes] = useState("")
   const [isPrivate, setIsPrivate] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [initialized, setInitialized] = useState<number | null>(null)
 
   // Cost is stored in JPY but edited in the user's display currency, matching the
@@ -273,8 +264,8 @@ export function SingleEditDialog({
     return qtyChanged || costChanged || privacyChanged || notesChanged
   }, [qty, cost, initialCost, notes, isPrivate, row, hideBalance])
 
-  const handleSave = () => {
-    if (!row) return
+  const handleSave = async () => {
+    if (!row || saving) return
     const data: {
       quantity?: number
       purchasePrice?: number | null
@@ -293,15 +284,34 @@ export function SingleEditDialog({
     const trimmedNotes = notes.trim()
     const nextNotes = trimmedNotes.length === 0 ? null : trimmedNotes
     if (nextNotes !== (row.notes ?? null)) data.notes = nextNotes
-    if (Object.keys(data).length > 0) onUpdate(row.itemId, data)
-    onOpenChange(false)
+    if (Object.keys(data).length === 0) return
+
+    setSaving(true)
+    try {
+      const saved = await onUpdate(row.itemId, data)
+      if (!saved) {
+        toast.error(t(lang, "saveFailed"))
+        return
+      }
+      toast.success(t(lang, "saved"))
+      onOpenChange(false)
+    } catch {
+      toast.error(t(lang, "saveFailed"))
+    } finally {
+      setSaving(false)
+    }
   }
 
   if (!row) return null
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-sm">
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (nextOpen || !saving) onOpenChange(nextOpen)
+      }}
+    >
+      <DialogContent className="sm:max-w-sm" showCloseButton={!saving}>
         <DialogHeader>
           <DialogTitle>{t(lang, "edit")}</DialogTitle>
         </DialogHeader>
@@ -326,11 +336,28 @@ export function SingleEditDialog({
         />
 
         <DialogFooter className="gap-2 sm:gap-2">
-          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={saving}
+            onClick={() => onOpenChange(false)}
+          >
             {t(lang, "cancel")}
           </Button>
-          <Button size="sm" disabled={!dirty} onClick={handleSave}>
-            {t(lang, "save")}
+          <Button
+            size="sm"
+            disabled={!dirty || saving}
+            aria-busy={saving}
+            onClick={() => void handleSave()}
+          >
+            {saving ? (
+              <>
+                <Loader2 className="size-3.5 animate-spin" aria-hidden />
+                {t(lang, "saving")}
+              </>
+            ) : (
+              t(lang, "save")
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

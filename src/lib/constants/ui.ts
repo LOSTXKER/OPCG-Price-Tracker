@@ -16,6 +16,8 @@ export const CARDS_PAGE_SIZE = 20
 /** Listing and portfolio item quantity bounds (shared between UI schema and API validation) */
 export const MIN_LISTING_QUANTITY = 1
 export const MAX_LISTING_QUANTITY = 999
+/** Maximum distinct card+condition rows accepted by one portfolio batch request. */
+export const MAX_PORTFOLIO_BATCH_ITEMS = 100
 
 /** Default card condition for new listings and portfolio items */
 export const DEFAULT_CARD_CONDITION = "NM" as const

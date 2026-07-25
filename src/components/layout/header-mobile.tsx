@@ -31,13 +31,13 @@ export function HeaderMobile({ isAuthenticated }: { isAuthenticated: boolean }) 
         scrolled ? "hairline-b bg-background" : "bg-transparent",
       )}
     >
-      <div className="flex h-14 items-center gap-1 px-5">
+      <div className="flex h-14 items-center gap-0.5 px-4">
         <Link href="/" className="flex min-h-11 shrink-0 items-center gap-2">
           <Image
             src="/meecard.png"
             alt="Meecard"
-            width={32}
-            height={29}
+            width={754}
+            height={694}
             className="h-auto shrink-0 select-none"
             style={{ width: 26, height: "auto" }}
           />

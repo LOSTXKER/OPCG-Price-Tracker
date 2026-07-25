@@ -6,6 +6,7 @@ import { ALL_GAMES } from "@/lib/game/constants"
 import {
   GameFilterChips,
   getGameFilterTargetIndex,
+  getLaunchReadyGameChips,
   type GameChip,
 } from "./game-filter-chips"
 
@@ -18,57 +19,64 @@ function renderRail(games: GameChip[], activeGame = ALL_GAMES) {
   )
 }
 
+function renderSelect(games: GameChip[], activeGame = ALL_GAMES) {
+  return renderToStaticMarkup(
+    <GameFilterChips
+      games={games}
+      activeGame={activeGame}
+      onSelect={() => undefined}
+      variant="select"
+    />,
+  )
+}
+
 describe("GameFilterChips", () => {
-  it("renders All, One Piece, and the Pokémon teaser for one OPCG collection", () => {
+  it("keeps game context visible when the collection has one launch-ready game", () => {
     const markup = renderRail([opcg])
 
+    expect(markup).toContain('role="radiogroup"')
     expect(markup.match(/role="radio"/g)).toHaveLength(2)
-    expect(markup).toContain(">ทุกเกม</span>")
-    expect(markup).toContain(">One Piece</span>")
-    expect(markup).not.toContain(">OPCG</span>")
-    expect(markup).toContain('href="/coming-soon?game=pokemon"')
-    expect(markup).toContain(">Pokémon</span>")
-    expect(markup).toContain(">เร็ว ๆ นี้</span>")
-    expect(markup).toContain("h-11")
-    expect(markup).toContain("before:inset-y-1")
-    expect(markup).toContain("before:bg-muted/50")
-    expect(markup).toContain("md:h-8")
-    expect(markup).toContain("md:bg-muted/50")
-    expect(markup).toContain("md:p-0.5")
-    expect(markup).toContain("md:before:hidden")
-    expect(markup).toContain("before:bg-primary/15")
-    expect(markup).toContain("overflow-x-auto")
-    expect(markup.match(/tabindex="0"/g)).toHaveLength(1)
-    expect(markup.match(/tabindex="-1"/g)).toHaveLength(1)
+    expect(markup).toContain("One Piece")
+    expect(markup).not.toContain("Pokémon")
   })
 
-  it("keeps multi-game entries live and does not duplicate Pokémon as a teaser", () => {
+  it("keeps the ready game visible while excluding a passed roadmap game", () => {
     const markup = renderRail([opcg, pokemon])
 
-    expect(markup.match(/role="radio"/g)).toHaveLength(3)
-    expect(markup).toContain(">One Piece</span>")
-    expect(markup).toContain(">Pokémon</span>")
-    expect(markup).not.toContain('href="/coming-soon?game=pokemon"')
-    expect(markup).not.toContain(">เร็ว ๆ นี้</span>")
-  })
-
-  it("keeps a single Pokémon data game selectable instead of hiding the rail", () => {
-    const markup = renderRail([pokemon], "pokemon")
-
+    expect(getLaunchReadyGameChips([opcg, pokemon])).toEqual([opcg])
+    expect(markup).toContain('role="radiogroup"')
     expect(markup.match(/role="radio"/g)).toHaveLength(2)
-    expect(markup).toContain(">ทุกเกม</span>")
-    expect(markup).toContain(">Pokémon</span>")
-    expect(markup).toContain('aria-checked="true"')
-    expect(markup).not.toContain('href="/coming-soon?game=pokemon"')
+    expect(markup).toContain("One Piece")
+    expect(markup).not.toContain("Pokémon")
   })
 
-  it("renders only the roadmap teaser when there are no data games", () => {
+  it("supports two launch-ready games and removes duplicate chips", () => {
+    const chips = getLaunchReadyGameChips(
+      [opcg, pokemon, { ...pokemon, label: "Duplicate" }],
+      new Set(["opcg", "pokemon"]),
+    )
+
+    expect(chips).toEqual([opcg, pokemon])
+  })
+
+  it("renders nothing when there are no data games", () => {
     const markup = renderRail([])
 
-    expect(markup).not.toContain('role="radiogroup"')
-    expect(markup).not.toContain('role="radio"')
-    expect(markup).toContain('href="/coming-soon?game=pokemon"')
-    expect(markup).toContain(">เร็ว ๆ นี้</span>")
+    expect(markup).toBe("")
+  })
+
+  it("offers a compact toolbar scope without turning it into a third tab rail", () => {
+    const allMarkup = renderSelect([opcg])
+    const gameMarkup = renderSelect([opcg, pokemon], "opcg")
+
+    expect(allMarkup).toContain('data-slot="game-scope-select"')
+    expect(allMarkup).toContain('aria-label="กรองตามเกม: ทุกเกม"')
+    expect(allMarkup).toContain("h-11")
+    expect(allMarkup).toContain("sm:h-9")
+    expect(allMarkup).toContain("เกม:")
+    expect(allMarkup).not.toContain('role="radiogroup"')
+    expect(gameMarkup).toContain("One Piece")
+    expect(gameMarkup).not.toContain("Pokémon")
   })
 
   it.each([

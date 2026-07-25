@@ -1,3 +1,4 @@
+import { load } from "cheerio";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
@@ -28,6 +29,24 @@ describe("watchlist filter panel", () => {
     expect(markup).toContain("md:h-7");
     expect(markup).not.toContain("sm:h-11");
   });
+
+  it.each(["psa_10", "psa_9", "psa_8", "bgs_95"] as const)(
+    "hides Raw-only movement and alert facets in %s mode",
+    (grade) => {
+      const markup = renderToStaticMarkup(
+        <WatchlistFilterPanel
+          lang="TH"
+          filters={DEFAULT_FILTERS}
+          onFiltersChange={noop}
+          grade={grade}
+        />,
+      );
+
+      expect(markup).not.toContain(t("TH", "watchlistFilterMovement"));
+      expect(markup).not.toContain(t("TH", "watchlistFilterStatus"));
+      expect(markup).not.toContain(t("TH", "watchlistFilterAlerts"));
+    },
+  );
 });
 
 describe("watchlist result controls", () => {
@@ -56,9 +75,9 @@ describe("watchlist result controls", () => {
       search: "",
       onSearchChange: noop,
       setOptions: [],
-      itemCount: 4,
-      limit: Number.POSITIVE_INFINITY,
       onToggleEditMode: noop,
+      grade: "raw" as const,
+      onGradeChange: noop,
     };
 
     const normalMarkup = renderToStaticMarkup(
@@ -84,10 +103,10 @@ describe("watchlist result controls", () => {
         search=""
         onSearchChange={noop}
         setOptions={[]}
-        itemCount={4}
-        limit={Number.POSITIVE_INFINITY}
         editMode={false}
         onToggleEditMode={noop}
+        grade="raw"
+        onGradeChange={noop}
       />,
     );
 
@@ -99,6 +118,44 @@ describe("watchlist result controls", () => {
     expect(markup).not.toContain(">24h<");
     expect(markup).toContain(t("TH", "watchlistSelectMode"));
     expect(markup).not.toContain(t("TH", "watchlistEditMode"));
+    expect(markup).toContain(`aria-label="${t("TH", "chooseGrade")}"`);
+    expect(markup).toContain("Raw");
+  });
+
+  it("integrates the game scope with the same responsive toolbar", () => {
+    const markup = renderToStaticMarkup(
+      <WatchlistToolbar
+        scope={<span data-slot="scope-probe">Game scope</span>}
+        filters={DEFAULT_FILTERS}
+        onFiltersChange={noop}
+        search=""
+        onSearchChange={noop}
+        setOptions={[]}
+        editMode={false}
+        onToggleEditMode={noop}
+        grade="raw"
+        onGradeChange={noop}
+      />,
+    );
+    const $ = load(markup);
+    const toolbar = $('[data-slot="watchlist-toolbar"]');
+
+    expect(toolbar).toHaveLength(1);
+    expect(toolbar.find('[data-slot="watchlist-game-scope"]')).toHaveLength(1);
+    expect(toolbar.find('[data-slot="scope-probe"]')).toHaveLength(1);
+    expect(toolbar.find('[data-slot="watchlist-toolbar-controls"]')).toHaveLength(1);
+    expect(toolbar.attr("class")).toContain(
+      "sm:grid-cols-[auto_minmax(0,1fr)]",
+    );
+    expect(toolbar.attr("class")).toContain(
+      "lg:grid-cols-[auto_minmax(0,1fr)_auto]",
+    );
+    expect(
+      toolbar.find('[data-slot="watchlist-toolbar-search"]'),
+    ).toHaveLength(1);
+    expect(
+      toolbar.find('[data-slot="watchlist-toolbar-actions"]'),
+    ).toHaveLength(1);
   });
 
 });

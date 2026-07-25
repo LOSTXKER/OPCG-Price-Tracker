@@ -11,6 +11,15 @@ import { effectiveTier, getLimits } from "@/lib/billing";
 import { MAX_LISTING_QUANTITY } from "@/lib/constants/ui";
 import { prisma } from "@/lib/db";
 import { triggerAchievementCheck } from "@/lib/honey";
+import {
+  appendPortfolioLot,
+  createPortfolioItemWithLot,
+  getPortfolioLotAggregate,
+  ownerPortfolioLotOrderBy,
+  ownerPortfolioLotSelect,
+  portfolioLotDateFromInput,
+  PortfolioLotQuantityError,
+} from "@/lib/portfolio/lots";
 import { CreatePortfolioItemsBatchSchema } from "@/lib/portfolio/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -41,14 +50,26 @@ function getPayloadHash(
   items: Array<{
     cardId: number;
     quantity: number;
-    purchasePrice: number | null;
+    purchasePrice: number;
     condition: CardCondition;
     notes: string | null;
+    acquiredAt: string;
+    lotNote: string | null;
   }>,
 ): string {
-  const canonicalItems = [...items].sort(
-    (a, b) => a.cardId - b.cardId || a.condition.localeCompare(b.condition),
-  );
+  const canonicalItems = [...items]
+    .sort(
+      (a, b) => a.cardId - b.cardId || a.condition.localeCompare(b.condition),
+    )
+    .map((item) => ({
+      cardId: item.cardId,
+      quantity: item.quantity,
+      purchasePrice: item.purchasePrice,
+      condition: item.condition,
+      notes: item.notes,
+      acquiredAt: item.acquiredAt,
+      ...(item.lotNote !== null ? { lotNote: item.lotNote } : {}),
+    }));
   return createHash("sha256")
     .update(JSON.stringify({ portfolioId, items: canonicalItems }))
     .digest("hex");
@@ -65,10 +86,11 @@ export const POST = apiHandler(async (request: NextRequest) => {
   const items = parsed.body.items.map((item) => ({
     cardId: item.cardId,
     quantity: item.quantity,
-    purchasePrice:
-      item.purchasePrice == null ? null : Math.round(item.purchasePrice),
+    purchasePrice: Math.round(item.purchasePrice),
     condition: item.condition ?? CardCondition.NM,
     notes: item.notes ?? null,
+    acquiredAt: item.acquiredAt,
+    lotNote: item.lotNote ?? null,
   }));
   const markerPrefix = `${BATCH_NOTE_PREFIX}${requestId}:`;
   const marker = `${markerPrefix}${getPayloadHash(portfolioId, items)}`;
@@ -129,9 +151,16 @@ export const POST = apiHandler(async (request: NextRequest) => {
           },
           select: {
             id: true,
+            portfolioId: true,
             cardId: true,
             condition: true,
             quantity: true,
+            purchasePrice: true,
+            addedAt: true,
+            lots: {
+              orderBy: [...ownerPortfolioLotOrderBy],
+              select: ownerPortfolioLotSelect,
+            },
           },
         });
         const existingByKey = new Map(
@@ -144,7 +173,8 @@ export const POST = apiHandler(async (request: NextRequest) => {
           const existing = existingByKey.get(`${item.cardId}:${item.condition}`);
           return (
             existing != null &&
-            existing.quantity + item.quantity > MAX_LISTING_QUANTITY
+            getPortfolioLotAggregate(existing).quantity + item.quantity >
+              MAX_LISTING_QUANTITY
           );
         });
         if (quantityOverflow) {
@@ -175,26 +205,30 @@ export const POST = apiHandler(async (request: NextRequest) => {
           const key = `${item.cardId}:${item.condition}`;
           const existing = existingByKey.get(key);
           if (existing) {
-            await tx.portfolioItem.update({
-              where: { id: existing.id },
-              data: {
-                quantity: existing.quantity + item.quantity,
-                ...(item.purchasePrice !== null
-                  ? { purchasePrice: item.purchasePrice }
-                  : {}),
-                ...(item.notes !== null ? { notes: item.notes } : {}),
-              },
+            await appendPortfolioLot(tx, existing, {
+              quantity: item.quantity,
+              unitCostJpy: item.purchasePrice,
+              acquiredAt: portfolioLotDateFromInput(item.acquiredAt),
+              note: item.lotNote,
             });
+            if (item.notes !== null) {
+              await tx.portfolioItem.update({
+                where: { id: existing.id },
+                data: { notes: item.notes },
+              });
+            }
             updated += 1;
           } else {
-            await tx.portfolioItem.create({
-              data: {
-                portfolioId,
-                cardId: item.cardId,
+            await createPortfolioItemWithLot(tx, {
+              portfolioId,
+              cardId: item.cardId,
+              condition: item.condition,
+              notes: item.notes,
+              lot: {
                 quantity: item.quantity,
-                purchasePrice: item.purchasePrice,
-                condition: item.condition,
-                notes: item.notes,
+                unitCostJpy: item.purchasePrice,
+                acquiredAt: portfolioLotDateFromInput(item.acquiredAt),
+                note: item.lotNote,
               },
             });
             added += 1;
@@ -222,6 +256,12 @@ export const POST = apiHandler(async (request: NextRequest) => {
         return NextResponse.json(
           { error: error.message },
           { status: error.status },
+        );
+      }
+      if (error instanceof PortfolioLotQuantityError) {
+        return NextResponse.json(
+          { error: error.message },
+          { status: 400 },
         );
       }
       if (

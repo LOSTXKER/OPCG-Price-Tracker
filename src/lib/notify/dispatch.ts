@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/generated/prisma/client";
+import { effectiveTier, getLimits } from "@/lib/billing";
 import { sendEmail } from "@/lib/email";
 import { sendLineMessage } from "@/lib/line";
 import { createLog } from "@/lib/logger";
@@ -89,6 +90,11 @@ export async function notify(input: NotifyDispatchInput): Promise<{
     select: {
       email: true,
       lineUserId: true,
+      tier: true,
+      tierExpiresAt: true,
+      entitlements: {
+        select: { lineAlertsUntil: true },
+      },
       notificationPrefs: true,
     },
   });
@@ -110,6 +116,11 @@ export async function notify(input: NotifyDispatchInput): Promise<{
 
   const fields = KIND_PREF_FIELDS[input.kind];
   const allowedChannels = input.channels ?? ["WEB", "EMAIL", "LINE"];
+  const effectiveLimits = getLimits(
+    effectiveTier(row.tier, row.tierExpiresAt),
+  );
+  const hasActiveLinePass =
+    (row.entitlements?.lineAlertsUntil?.getTime() ?? 0) > Date.now();
 
   const wantWeb =
     allowedChannels.includes("WEB") && (user as Record<string, unknown>)[fields.web] === true;
@@ -119,6 +130,7 @@ export async function notify(input: NotifyDispatchInput): Promise<{
     (user as Record<string, unknown>)[fields.email] === true;
   const wantLine =
     allowedChannels.includes("LINE") &&
+    (effectiveLimits.lineAlerts || hasActiveLinePass) &&
     user.lineAlerts &&
     !!user.lineUserId &&
     (user as Record<string, unknown>)[fields.line] === true;

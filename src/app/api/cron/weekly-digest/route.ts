@@ -43,7 +43,7 @@ export const GET = cronHandler(async () => {
         {
           OR: [
             { notificationPrefs: { is: null } },
-            { notificationPrefs: { weeklyDigest: true } },
+            { notificationPrefs: { notifyDigestEmail: true } },
           ],
         },
         {

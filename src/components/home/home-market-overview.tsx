@@ -2,12 +2,12 @@
 
 import { TrendingUpDown } from "lucide-react"
 
-import { useMemo } from "react"
+import { Fragment, useMemo } from "react"
 
+import { AdInventorySlot } from "@/components/ads/ad-inventory-slot"
 import { type FilterDefinition } from "@/components/shared/filter-chips"
 import { FilterModal } from "@/components/shared/filter-modal"
 import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker"
-import { AdSlot } from "@/components/ads/ad-slot"
 import { Input } from "@/components/ui/input"
 import { Pagination } from "@/components/ui/pagination"
 import { SegmentedControl } from "@/components/ui/segmented-control"
@@ -21,12 +21,13 @@ import { getCardTypeLabel, getColorOptions } from "@/lib/constants/card-config"
 import { useMarketCards } from "@/hooks/use-market-cards"
 
 import { MarketTable } from "@/components/market/market-table"
-import { PriceModeControl } from "@/components/market/price-mode-control"
+import { GradeControl } from "@/components/market/price-mode-control"
 import { buildMarketColumns } from "@/components/market/market-columns"
 import { CardItem, CardItemSkeleton } from "@/components/cards/card-item"
 import { SortableHeader } from "@/components/shared/sortable-header"
 import {
   type Tab,
+  type TabId,
   type CardRow,
   type ChangePeriod,
   type ColumnId,
@@ -34,6 +35,7 @@ import {
   PERIOD_COLUMNS,
   PAGE_SIZE,
 } from "./market-types"
+import { isRawGrade } from "@/lib/pricing/grade-tiers"
 
 export type { CardRow }
 
@@ -42,6 +44,30 @@ function buildTabs(labels: { all: string; popular: string }): Tab[] {
     { id: "all", label: labels.all, defaultSort: "price_desc" },
     { id: "popular", label: labels.popular, defaultSort: "views_desc" },
   ]
+}
+
+export function HomeMarketScopeControl({
+  tabs,
+  value,
+  onChange,
+  ariaLabel,
+}: {
+  tabs: Tab[]
+  value: TabId
+  onChange: (value: TabId) => void
+  ariaLabel: string
+}) {
+  return (
+    <SegmentedControl<TabId>
+      options={tabs.map((tab) => ({ value: tab.id, label: tab.label }))}
+      value={value}
+      onChange={onChange}
+      ariaLabel={ariaLabel}
+      size="sm"
+      compactVisual={false}
+      className="no-sb flex w-full justify-start gap-1 overflow-x-auto rounded-none border-b border-hair bg-transparent p-0 px-3 sm:rounded-none sm:p-0 sm:px-4 [&>[role=radio]]:-mb-px [&>[role=radio]]:h-11 [&>[role=radio]]:min-w-0 [&>[role=radio]]:shrink-0 [&>[role=radio]]:rounded-none [&>[role=radio]]:border-b-2 [&>[role=radio]]:border-transparent [&>[role=radio]]:bg-transparent [&>[role=radio]]:px-2.5 [&>[role=radio]]:py-2.5 [&>[role=radio]]:text-xs [&>[role=radio]]:font-semibold [&>[role=radio][aria-checked=true]]:border-primary [&>[role=radio][aria-checked=true]]:bg-transparent"
+    />
+  )
 }
 
 export function HomeMarketOverview({
@@ -106,8 +132,10 @@ export function HomeMarketOverview({
   })
 
   const selectedSets = m.filters.set ?? []
+  const rawGrade = isRawGrade(m.grade)
   const columns = useMemo(() => buildMarketColumns({ showViews: m.showViews }), [m.showViews])
   const showMobileSort = m.viewMode === "table" && (m.isPending || m.cards.length > 0)
+  const showResultsAd = !m.isPending && !m.error && m.cards.length > 8
 
   // Reset clears only the modal's own facets (rarity/type/color/variant) + price
   // range — NOT the set (its own control up top) and NOT search (outside the modal).
@@ -152,24 +180,14 @@ export function HomeMarketOverview({
     <div>
       {/* Toolbar — 2 rows: scope (tabs) on top, browse + display controls below */}
       <div>
-        {/* Row 1: tab bar — sits on a hairline baseline. Active tab's border-b-2
-            uses -mb-px to overlap (cover) the hairline so it reads as one edge. */}
-        <div className="flex items-center gap-1 border-b border-hair px-3 sm:px-4">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => m.handleTabChange(tab.id)}
-              className={cn(
-                "ease-chrome relative -mb-px min-h-11 shrink-0 border-b-2 px-2.5 py-2.5 text-xs font-semibold",
-                m.activeTab === tab.id
-                  ? "border-primary text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        {/* Row 1: canonical single-choice scope rail. Its active border overlaps
+            the baseline so the compact underline treatment remains unchanged. */}
+        <HomeMarketScopeControl
+          tabs={tabs}
+          value={m.activeTab}
+          onChange={m.handleTabChange}
+          ariaLabel={t(lang, "filter")}
+        />
 
         {/* Mobile browse controls: the set is the primary axis and owns the
             first row. Display actions stay together, while sorting gets enough
@@ -188,10 +206,7 @@ export function HomeMarketOverview({
           )}
 
           <div className="flex flex-wrap items-center gap-2">
-            <PriceModeControl
-              value={m.priceMode}
-              onChange={(mode) => { m.setPriceMode(mode); m.setPage(1) }}
-            />
+            <GradeControl value={m.grade} onChange={m.handleGradeChange} />
 
             <div className="ml-auto flex shrink-0 items-center gap-2">
               {renderFilterTrigger(false)}
@@ -203,34 +218,34 @@ export function HomeMarketOverview({
               period pill left + tap-sort (price · change) right. The change
               sort follows the pill's period; rarity sort is desktop-only
               (the filter modal already covers rarity narrowing on mobile).
-              PSA 10 mode hides the % chip on every row, so the period pill
-              and change sort hide with it — price is the only sort there. */}
+              Graded lenses retain the row geometry but expose non-sortable
+              labels because their historical deltas are not real yet. */}
           {showMobileSort && (
             <div className="flex items-center justify-between gap-2 border-b border-hair pb-2">
-              {m.priceMode === "raw" ? (
-                <SegmentedControl<ChangePeriod>
-                  size="sm"
-                  variant="pill"
-                  leadingIcon={TrendingUpDown}
-                  options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
-                  value={m.changePeriod}
-                  onChange={m.handleChangePeriod}
-                  ariaLabel={t(lang, "pricePeriod")}
-                  className="shrink-0"
-                />
-              ) : (
-                <span aria-hidden />
-              )}
+              <SegmentedControl<ChangePeriod>
+                size="sm"
+                variant="pill"
+                leadingIcon={TrendingUpDown}
+                options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+                value={m.changePeriod}
+                onChange={m.handleChangePeriod}
+                ariaLabel={t(lang, "pricePeriod")}
+                className="shrink-0"
+              />
               <div className="flex items-center gap-3">
-                <SortableHeader<ColumnId>
-                  as="button"
-                  label={t(lang, "price")}
-                  column="price"
-                  activeCol={m.sortCol}
-                  dir={m.sortDir}
-                  onClick={m.handleColumnSort}
-                />
-                {m.priceMode === "raw" && (
+                {rawGrade ? (
+                  <SortableHeader<ColumnId>
+                    as="button"
+                    label={t(lang, "price")}
+                    column="price"
+                    activeCol={m.sortCol}
+                    dir={m.sortDir}
+                    onClick={m.handleColumnSort}
+                  />
+                ) : (
+                  <span className="text-eyebrow text-foreground">{t(lang, "price")}</span>
+                )}
+                {rawGrade ? (
                   <SortableHeader<ColumnId>
                     as="button"
                     label={t(lang, "change")}
@@ -239,6 +254,8 @@ export function HomeMarketOverview({
                     dir={m.sortDir}
                     onClick={m.handleColumnSort}
                   />
+                ) : (
+                  <span className="text-eyebrow">{t(lang, "change")}</span>
                 )}
               </div>
             </div>
@@ -248,7 +265,7 @@ export function HomeMarketOverview({
         {/* Desktop/tablet keeps the established single-row toolbar. */}
         <div className="hidden items-center gap-2 px-4 py-2 sm:flex">
           {sets.length > 0 && (
-            <div className="w-[19rem] flex-none">
+            <div className="w-[15rem] flex-none lg:w-[19rem]">
               <SetPicker
                 sets={sets}
                 selectedCode={selectedSets[0] ?? null}
@@ -259,11 +276,8 @@ export function HomeMarketOverview({
             </div>
           )}
 
-          <div className="ml-auto flex shrink-0 items-center justify-end gap-1.5">
-            <PriceModeControl
-              value={m.priceMode}
-              onChange={(mode) => { m.setPriceMode(mode); m.setPage(1) }}
-            />
+          <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-1.5">
+            <GradeControl value={m.grade} onChange={m.handleGradeChange} />
 
             <div className="h-5 w-px bg-border/40" />
 
@@ -327,9 +341,10 @@ export function HomeMarketOverview({
           })}
         </div>
 
-        <div>
-          <span className="mb-1.5 block text-eyebrow">{t(lang, "priceLabel")}</span>
-          <div className="flex items-center gap-1.5">
+        {rawGrade && (
+          <div>
+            <span className="mb-1.5 block text-eyebrow">{t(lang, "priceLabel")}</span>
+            <div className="flex items-center gap-1.5">
             <Input
               type="number"
               placeholder={t(lang, "min")}
@@ -347,8 +362,9 @@ export function HomeMarketOverview({
               onChange={(e) => { m.setMaxPrice(e.target.value); m.setPage(1) }}
               min={0}
             />
+            </div>
           </div>
-        </div>
+        )}
       </FilterModal>
 
       {/* Content: Table or Grid */}
@@ -359,7 +375,7 @@ export function HomeMarketOverview({
           cards={m.cards}
           rankOffset={(m.page - 1) * PAGE_SIZE}
           columns={columns}
-          priceMode={m.priceMode}
+          grade={m.grade}
           changePeriod={m.changePeriod}
           sparklines={m.sparklines}
           sortCol={m.sortCol}
@@ -368,16 +384,27 @@ export function HomeMarketOverview({
           isPending={m.isPending}
           skeletonRows={PAGE_SIZE}
           emptyText={t(lang, "noData")}
-          inFeedAd={(i) =>
-            i === 9 && m.cards.length > 12 ? (
-              <AdSlot placement="browse-in-feed" className="aspect-[6/1]" />
-            ) : null
+          insetAfter={showResultsAd ? 8 : undefined}
+          mobileInset={
+            <AdInventorySlot
+              zone="home-results-after-8"
+              contentAvailable={showResultsAd}
+              className="my-5"
+            />
+          }
+          tableInset={
+            <AdInventorySlot
+              zone="home-results-after-8"
+              contentAvailable={showResultsAd}
+              presentation="TABLE_ROW"
+              tableColumnCount={columns.length}
+            />
           }
         />
       ) : (
         <div className={cn("p-4", m.isPending && "opacity-50 motion-base")}>
-          {/* PSA 10 tiles carry no % chip, so the period pill hides with it. */}
-          {m.priceMode === "raw" && (
+          {/* Graded tiles have no real % series, so the period pill hides. */}
+          {rawGrade && (
             <div className="mb-3 flex justify-end">
               <SegmentedControl
                 size="sm"
@@ -398,26 +425,34 @@ export function HomeMarketOverview({
             <p className="py-12 text-center text-sm text-muted-foreground">{t(lang, "noData")}</p>
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-              {m.cards.map((card) => (
-                <CardItem
-                  key={card.cardCode}
-                  cardCode={card.cardCode}
-                  cardId={card.id}
-                  nameJp={card.nameJp}
-                  nameEn={card.nameEn}
-                  nameTh={card.nameTh}
-                  rarity={card.rarity}
-                  imageUrl={card.imageUrl}
-                  setCode={card.set?.code ?? card.setCode}
-                  priceJpy={card.latestPriceJpy}
-                  priceChange24h={card.priceChange24h}
-                  priceChange7d={card.priceChange7d}
-                  priceChange30d={card.priceChange30d}
-                  psa10PriceUsd={card.psa10PriceUsd}
-                  changePeriod={m.changePeriod}
-                  priceMode={m.priceMode}
-                  linkSet
-                />
+              {m.cards.map((card, index) => (
+                <Fragment key={card.cardCode}>
+                  <CardItem
+                    cardCode={card.cardCode}
+                    cardId={card.id}
+                    nameJp={card.nameJp}
+                    nameEn={card.nameEn}
+                    nameTh={card.nameTh}
+                    rarity={card.rarity}
+                    imageUrl={card.imageUrl}
+                    setCode={card.set?.code ?? card.setCode}
+                    priceJpy={card.latestPriceJpy}
+                    priceChange24h={card.priceChange24h}
+                    priceChange7d={card.priceChange7d}
+                    priceChange30d={card.priceChange30d}
+                    psa10PriceUsd={card.psa10PriceUsd}
+                    changePeriod={m.changePeriod}
+                    grade={m.grade}
+                    linkSet
+                  />
+                  {index === 7 && (
+                    <AdInventorySlot
+                      zone="home-results-after-8"
+                      contentAvailable={showResultsAd}
+                      className="col-span-full my-2 sm:my-4"
+                    />
+                  )}
+                </Fragment>
               ))}
             </div>
           )}

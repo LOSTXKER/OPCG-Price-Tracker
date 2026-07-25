@@ -17,9 +17,13 @@ import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import { useConfirm } from "@/components/shared/confirm-dialog";
 import { ApiError, apiDelete, apiGet, apiPatch } from "@/lib/api/client";
 import { t, type Language } from "@/lib/i18n";
-import { GameFilterChips, type GameChip } from "@/components/shared/game-filter-chips";
+import {
+  GameFilterChips,
+  getLaunchReadyGameChips,
+  type GameChip,
+} from "@/components/shared/game-filter-chips";
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants";
-import { getGameConfig } from "@/lib/game-config";
+import { getGameConfig, isGameSlugLaunchReady } from "@/lib/game-config";
 import { AlertRow, type FeedbackKind } from "./alert-row";
 import { groupAlertsByGame, AlertGameGroup } from "./alert-groups";
 import { filterAlertsBySearch, sortAlertsByUrgency } from "./alerts-sort";
@@ -32,6 +36,7 @@ type Feedback = {
 export type AlertsPanelState = {
   status: "loading" | "error" | "empty" | "ready";
   itemCount: number;
+  quotaCount?: number;
 };
 
 interface AlertsManagerClientProps {
@@ -60,7 +65,13 @@ export function AlertsManagerClient({
   const [search, setSearch] = useState("");
   const demo = useMultigameDemo();
   const availableGames = useMemo(
-    () => [...new Set(alerts.map((a) => a.card.set?.game?.slug ?? DEFAULT_GAME))],
+    () => [
+      ...new Set(
+        alerts
+          .map((a) => a.card.set?.game?.slug ?? DEFAULT_GAME)
+          .filter(isGameSlugLaunchReady),
+      ),
+    ],
     [alerts],
   );
   useGameFilterReset(gameFilter, availableGames, setGameFilter);
@@ -106,10 +117,6 @@ export function AlertsManagerClient({
         : "ready";
 
   useEffect(() => {
-    onPageStateChange?.({ status: panelStatus, itemCount: alerts.length });
-  }, [alerts.length, onPageStateChange, panelStatus]);
-
-  useEffect(() => {
     if (!feedback) return;
     const timer = setTimeout(() => setFeedback(null), 2000);
     return () => clearTimeout(timer);
@@ -142,6 +149,18 @@ export function AlertsManagerClient({
     // keeps its natural order (most recently triggered first, from the API).
     return { active: sortAlertsByUrgency(a), history: h };
   }, [searchedAlerts]);
+  const activeQuotaCount = alerts.reduce(
+    (count, alert) => count + (alert.id > 0 && alert.isActive ? 1 : 0),
+    0,
+  );
+
+  useEffect(() => {
+    onPageStateChange?.({
+      status: panelStatus,
+      itemCount: alerts.length,
+      quotaCount: activeQuotaCount,
+    });
+  }, [activeQuotaCount, alerts.length, onPageStateChange, panelStatus]);
 
   // Games + logos for the chip rail (cross-game, from all alerts).
   const gameMeta = useMemo(() => {
@@ -156,10 +175,8 @@ export function AlertsManagerClient({
     return { slugs, logo };
   }, [alerts]);
 
-  // Chips for games the user actually has alerts in. The rail is always
-  // mounted (owner: same "ทุกเกม · One Piece · Pokémon เร็วๆนี้" state as
-  // portfolio/watchlist) — GameFilterChips appends the coming-soon roadmap
-  // teaser itself, so a single-game collection still shows the rail.
+  // Chips for games the user actually has alerts in. Keep the launch-ready game
+  // context visible even when every alert currently belongs to one game.
   const gameChips = useMemo<GameChip[]>(
     () =>
       [...gameMeta.slugs].map((slug) => ({
@@ -168,6 +185,10 @@ export function AlertsManagerClient({
         logoUrl: gameMeta.logo.get(slug) ?? null,
       })),
     [gameMeta],
+  );
+  const launchReadyGameChips = useMemo(
+    () => getLaunchReadyGameChips(gameChips),
+    [gameChips],
   );
 
   const onEdit = (alert: PriceAlertItem) => {
@@ -271,21 +292,7 @@ export function AlertsManagerClient({
   };
 
   if (loading) {
-    return (
-      <div className="space-y-4 md:space-y-5">
-        <div className="space-y-3">
-          <div className="flex items-baseline justify-between gap-3">
-            <Skeleton className="h-5 w-24" />
-            <Skeleton className="h-4 w-5" />
-          </div>
-          <div className="space-y-3">
-            {[0, 1, 2].map((i) => (
-              <Skeleton key={i} className="h-24 rounded-xl" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <AlertsManagerSkeleton />;
   }
 
   if (error) {
@@ -311,34 +318,50 @@ export function AlertsManagerClient({
 
   return (
     <div className="space-y-4 md:space-y-5">
-      <GameFilterChips
-        games={gameChips}
-        activeGame={gameFilter}
-        onSelect={setGameFilter}
-      />
-
-      {/* Same row grammar as the watchlist cards tab: visible search, left,
-          nothing else needed. Only shows once there's enough alerts to search
-          through (เบส: ไม่ใส่ chrome ให้หน้าที่มีแค่ 1 แจ้งเตือน). */}
-      {showSearch && (
-        <div className="flex items-center gap-2">
-          <ToolbarSearch
-            type="search"
-            value={search}
-            onValueChange={setSearch}
-            placeholder={t(lang, "alertsSearchPlaceholder")}
-            aria-label={t(lang, "alertsSearchPlaceholder")}
-            containerClassName="min-w-0 flex-1 border-border bg-background py-0 md:w-72"
-          />
-        </div>
-      )}
-
       <section className="space-y-3" aria-labelledby="active-alerts-heading">
-        <AlertSectionHeading
-          id="active-alerts-heading"
-          title={t(lang, "activeAlerts")}
-          count={active.length}
-        />
+        <div
+          className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+          data-slot="alerts-section-head"
+        >
+          <AlertSectionHeading
+            id="active-alerts-heading"
+            title={t(lang, "activeAlerts")}
+            count={active.length}
+          />
+
+          {/* The game scope belongs to the list it controls, so keep it on the
+              section-heading baseline instead of leaving a detached third row
+              under the tabs. Search joins the same compact toolbar only once
+              there are enough alerts to need it. */}
+          {(launchReadyGameChips.length > 0 || showSearch) && (
+            <div
+              className="flex min-w-0 flex-col gap-3 sm:ml-auto sm:flex-row sm:items-center"
+              data-slot="alerts-toolbar"
+            >
+              {launchReadyGameChips.length > 0 && (
+                <div className="shrink-0" data-slot="alerts-game-scope">
+                  <GameFilterChips
+                    games={launchReadyGameChips}
+                    activeGame={gameFilter}
+                    onSelect={setGameFilter}
+                    variant="select"
+                  />
+                </div>
+              )}
+
+              {showSearch && (
+                <ToolbarSearch
+                  type="search"
+                  value={search}
+                  onValueChange={setSearch}
+                  placeholder={t(lang, "alertsSearchPlaceholder")}
+                  aria-label={t(lang, "alertsSearchPlaceholder")}
+                  containerClassName="min-w-0 flex-1 border-border bg-background py-0 sm:max-w-72"
+                />
+              )}
+            </div>
+          )}
+        </div>
         {active.length === 0 ? (
           gameFilter !== ALL_GAMES ? (
             <FilteredEmpty lang={lang} onShowAll={() => setGameFilter(ALL_GAMES)} />
@@ -378,6 +401,42 @@ export function AlertsManagerClient({
         onOpenChange={setCreateOpen}
         onCreated={onCreated}
       />
+    </div>
+  );
+}
+
+export function AlertsManagerSkeleton() {
+  return (
+    <div className="space-y-4 md:space-y-5">
+      <div className="space-y-3">
+        <div
+          className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+          data-slot="alerts-skeleton-section-head"
+        >
+          <div className="flex items-baseline gap-2">
+            <Skeleton className="h-5 w-24" />
+            <Skeleton className="h-4 w-5" />
+          </div>
+          <div
+            className="flex min-w-0 flex-col gap-3 sm:ml-auto sm:flex-row sm:items-center"
+            data-slot="alerts-skeleton-toolbar"
+          >
+            <Skeleton
+              className="h-11 w-32 rounded-lg sm:h-9"
+              data-slot="alerts-skeleton-game-filter"
+            />
+            <Skeleton
+              className="h-11 min-w-0 rounded-lg sm:h-9 sm:w-72"
+              data-slot="alerts-skeleton-search"
+            />
+          </div>
+        </div>
+        <div className="space-y-3">
+          {[0, 1, 2].map((i) => (
+            <Skeleton key={i} className="h-24 rounded-xl" />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

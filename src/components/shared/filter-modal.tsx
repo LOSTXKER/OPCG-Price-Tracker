@@ -8,6 +8,7 @@ import { ResponsiveDialogContent } from "@/components/ui/responsive-dialog-conte
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import { t } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import { useUIStore } from "@/stores/ui-store";
 
 /**
@@ -26,6 +27,7 @@ export function FilterModal({
   resetDisabled,
   onApply,
   applyLabel,
+  blurBackdrop = false,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
@@ -39,6 +41,8 @@ export function FilterModal({
   /** Runs on Apply (before the modal closes). Applying always closes the modal. */
   onApply?: () => void;
   applyLabel?: string;
+  /** Show a visible, blurred layer when this filter opens above another dialog. */
+  blurBackdrop?: boolean;
 }) {
   const lang = useUIStore((s) => s.language);
 
@@ -46,6 +50,10 @@ export function FilterModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <ResponsiveDialogContent
         showCloseButton={false}
+        overlayForceRender={blurBackdrop}
+        overlayClassName={cn(
+          blurBackdrop && "md:bg-black/20 md:backdrop-blur-sm",
+        )}
         className="md:max-w-[26rem]"
       >
         <div className="flex items-center justify-between border-b border-hair px-4 py-3">

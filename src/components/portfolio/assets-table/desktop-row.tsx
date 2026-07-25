@@ -3,22 +3,27 @@
 import { memo } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ChevronRight, StickyNote } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 
 import { Price } from "@/components/shared/price-inline"
-import { MiniSparkline } from "@/components/ui/mini-sparkline"
 import { PriceTag } from "@/components/ui/price-tag"
 import { getGameConfig, getGameAccentTint } from "@/lib/game-config"
 import { DEFAULT_GAME } from "@/lib/game/constants"
 import { MASKED } from "@/lib/constants/ui"
 import { getCardName, t, type Language } from "@/lib/i18n"
-import type { AssetRow } from "@/lib/types/portfolio"
+import type { PortfolioPurchaseRow } from "@/lib/types/portfolio"
 import { cn } from "@/lib/utils"
 import { formatJpyAmount } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
-import { AssetEditButton } from "./action-menu"
-import { holdingValue, pnlCalc } from "./utils"
+import { AssetDetailsButton } from "./action-menu"
+import { PurchaseNotePreview } from "./purchase-note-preview"
+import {
+  formatPurchaseRowDate,
+  formatPurchaseRowQuantity,
+  getPurchaseRowLabel,
+  purchaseRowPnlCalc,
+} from "./utils"
 
 export const AssetRowComponent = memo(function AssetRowComponent({
   row,
@@ -26,20 +31,21 @@ export const AssetRowComponent = memo(function AssetRowComponent({
   onEdit,
   hideBalance = false,
   showGameBadge = false,
-  sparkline,
+  eagerImage = false,
 }: {
-  row: AssetRow
+  row: PortfolioPurchaseRow
   lang: Language
   onEdit: () => void
   hideBalance?: boolean
   showGameBadge?: boolean
-  /** 7-day price series for the trend column (lg+). */
-  sparkline?: number[]
+  /** The first visible row is an above-the-fold LCP candidate. */
+  eagerImage?: boolean
 }) {
   const currency = useUIStore((s) => s.currency)
   const name = getCardName(lang as "TH" | "EN" | "JP", row)
-  const value = holdingValue(row)
-  const pnlResult = pnlCalc(row)
+  const pnlResult = purchaseRowPnlCalc(row)
+  const purchaseLabel = getPurchaseRowLabel(row, lang)
+  const editContext = `${name} · ${purchaseLabel}`
   const detailHref = `/opcg/cards/${row.cardCode}`
   const viewLabel = t(lang, "viewDetails")
 
@@ -48,38 +54,58 @@ export const AssetRowComponent = memo(function AssetRowComponent({
     getGameConfig(gameSlug)?.shortName ?? row.game?.nameEn ?? gameSlug.toUpperCase()
 
   return (
-    <tr className="group ease-chrome transition-colors hover:bg-muted/40">
-      {/* การ์ด — art + name · code ×qty · game dot (no separate columns) */}
-      <td className="py-2.5 pr-3 align-middle">
-        <div className="flex items-center gap-2.5">
-          <Link href={detailHref} className="shrink-0" aria-label={viewLabel}>
-            <div className="relative aspect-[63/88] w-8 overflow-hidden rounded-sm bg-muted/60 ring-1 ring-hair transition-transform group-hover:scale-[1.03]">
+    <tr
+      className="group cursor-pointer ease-chrome transition-colors hover:bg-muted/40 focus-within:bg-muted/40"
+      onClick={onEdit}
+      data-slot="portfolio-purchase-row"
+      data-row-action="open-purchase-details"
+      data-lot-id={row.lotId ?? "compat"}
+    >
+      {/* การ์ด — art + name · code/date · note preview */}
+      <td className="py-3 pr-3 align-middle">
+        <div className="flex items-center gap-3">
+          <Link
+            href={detailHref}
+            className="shrink-0"
+            aria-label={viewLabel}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="relative aspect-[63/88] w-10 overflow-hidden rounded-md bg-muted/60 ring-1 ring-hair transition-transform group-hover:scale-[1.03]">
               {row.imageUrl ? (
-                <Image src={row.imageUrl} alt={name} fill className="object-cover" sizes="32px" />
+                <Image
+                  src={row.imageUrl}
+                  alt={name}
+                  fill
+                  className="object-cover"
+                  sizes="40px"
+                  loading={eagerImage ? "eager" : "lazy"}
+                />
               ) : (
                 <div className="flex size-full items-center justify-center text-overlay text-muted-foreground/40" />
               )}
             </div>
           </Link>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <Link
               href={detailHref}
               className="group/link inline-flex max-w-full items-center gap-1"
               title={viewLabel}
+              onClick={(event) => event.stopPropagation()}
             >
               <span className="truncate text-body-sm font-medium transition-colors group-hover/link:text-primary">
                 {name}
               </span>
               <ChevronRight
                 aria-hidden
-                className="size-3 shrink-0 text-muted-foreground/30 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100"
+                className="size-3 shrink-0 text-muted-foreground/30 opacity-0 transition-all group-hover/link:translate-x-0.5 group-hover/link:opacity-100"
               />
             </Link>
-            <p className="flex items-center gap-1.5 font-mono text-meta text-muted-foreground/60">
-              {row.baseCode ?? row.cardCode}
-              <span className="font-sans text-foreground/40">×{row.quantity}</span>
+            <p className="mt-0.5 flex min-w-0 items-center gap-1.5 text-meta">
+              <span className="shrink-0 font-mono">
+                {row.baseCode ?? row.cardCode}
+              </span>
               {showGameBadge && (
-                <span className="inline-flex items-center gap-1 font-sans">
+                <span className="inline-flex shrink-0 items-center gap-1 font-sans">
                   <span
                     aria-hidden
                     className="size-1.5 shrink-0 rounded-full"
@@ -90,86 +116,98 @@ export const AssetRowComponent = memo(function AssetRowComponent({
                   {gameShort}
                 </span>
               )}
-              {row.notes && (
-                <span className="inline-flex items-center text-muted-foreground/50" title={row.notes}>
-                  <StickyNote className="size-3" />
-                </span>
-              )}
+              <span aria-hidden>·</span>
+              <span
+                className={cn(
+                  "shrink-0 whitespace-nowrap font-sans",
+                  row.acquiredAt == null && "text-primary",
+                )}
+                data-slot="portfolio-purchase-date"
+                data-state={row.acquiredAt == null ? "missing" : "recorded"}
+              >
+                {formatPurchaseRowDate(row.acquiredAt, lang)}
+              </span>
             </p>
+            <PurchaseNotePreview note={row.purchaseNote} lang={lang} />
           </div>
         </div>
       </td>
 
+      {/* จำนวนการ์ดในรายการซื้อนี้ */}
+      <td
+        className="py-3 pr-3 text-right align-middle"
+        data-slot="portfolio-asset-quantity"
+      >
+        <span className="whitespace-nowrap text-body-sm font-medium tabular-nums">
+          {formatPurchaseRowQuantity(row.quantity, lang)}
+        </span>
+      </td>
+
       {/* ราคา (ตลาด ต่อใบ) */}
-      <td className="py-2.5 pr-3 text-right align-middle">
+      <td className="py-3 pr-3 text-right align-middle" data-slot="portfolio-asset-price">
         {row.currentPrice != null ? (
-          <span className="text-body-sm tabular-nums">
-            <Price jpy={row.currentPrice} />
+          <span className="text-body-sm font-price tabular-nums">
+            {hideBalance ? MASKED : <Price jpy={row.currentPrice} />}
           </span>
         ) : (
           <span className="text-xs text-muted-foreground/40">—</span>
         )}
       </td>
 
-      {/* 24h */}
-      <td className="py-2.5 pr-3 text-right align-middle">
-        <PriceTag change={row.priceChange24h} changeOnly changeStyle="plain" size="sm" />
-      </td>
-
-      {/* 7d trend — CMC-style micro line (lg+) */}
-      <td className="hidden py-2.5 pr-3 text-right align-middle lg:table-cell">
-        {sparkline && sparkline.length >= 2 ? (
-          <MiniSparkline data={sparkline} width={64} height={22} className="ml-auto" />
+      {/* ต้นทุนต่อใบของรายการซื้อนี้ */}
+      <td className="py-3 pr-3 text-right align-middle" data-slot="portfolio-asset-cost">
+        {row.unitCostJpy != null ? (
+          <span className="text-body-sm font-price tabular-nums">
+            {hideBalance ? MASKED : <Price jpy={row.unitCostJpy} />}
+          </span>
         ) : (
-          <span className="text-xs text-muted-foreground/40">—</span>
+          <span className="text-meta">{t(lang, "costNotRecorded")}</span>
         )}
       </td>
 
-      {/* กำไร/ขาดทุน — one figure + quiet % */}
-      <td className="py-2.5 pr-3 text-right align-middle">
+      {/* กำไร/ขาดทุน — amount and percentage scan as a pair */}
+      <td className="py-3 pr-3 text-right align-middle" data-slot="portfolio-asset-pnl">
         {pnlResult ? (
-          hideBalance ? (
-            <span className="text-body-sm tabular-nums text-muted-foreground/40">{MASKED}</span>
-          ) : (
+          <div
+            className={cn(
+              "flex min-w-0 flex-col items-end gap-0.5 whitespace-nowrap font-price tabular-nums",
+              pnlResult.pnl >= 0 ? "text-price-up" : "text-price-down",
+            )}
+          >
             <span
-              className={cn(
-                "text-body-sm font-medium tabular-nums",
-                pnlResult.pnl >= 0 ? "text-price-up" : "text-price-down",
-              )}
+              className="text-body-sm font-medium"
+              aria-label={hideBalance ? t(lang, "balanceHidden") : undefined}
             >
-              {pnlResult.pnl >= 0 ? "+" : ""}
-              {formatJpyAmount(pnlResult.pnl, currency)}
-              {pnlResult.pct != null && (
-                <span className="ml-1 font-normal opacity-70">
-                  (
-                  <PriceTag
-                    change={pnlResult.pct}
-                    changeOnly
-                    changeStyle="plain"
-                    showArrow={false}
-                    size="sm"
-                    className="text-micro"
-                  />
-                  )
-                </span>
-              )}
+              {hideBalance
+                ? MASKED
+                : `${pnlResult.pnl >= 0 ? "+" : ""}${formatJpyAmount(
+                    pnlResult.pnl,
+                    currency,
+                  )}`}
             </span>
-          )
+            {pnlResult.pct != null && (
+              <PriceTag
+                change={pnlResult.pct}
+                changeOnly
+                changeStyle="plain"
+                showArrow={false}
+                size="sm"
+                className="text-micro font-normal opacity-80"
+              />
+            )}
+          </div>
         ) : (
           <span className="text-xs text-muted-foreground/40">—</span>
         )}
       </td>
 
-      {/* มูลค่า */}
-      <td className="py-2.5 pr-3 text-right align-middle">
-        <span className="text-body-sm font-semibold tabular-nums">
-          {hideBalance ? MASKED : <Price jpy={value} />}
-        </span>
-      </td>
-
-      {/* แก้ไข — ghost */}
-      <td className="py-2.5 pl-1 text-right align-middle">
-        <AssetEditButton lang={lang} onEdit={onEdit} />
+      {/* รายละเอียด — explicit keyboard target; row click is a pointer shortcut. */}
+      <td className="py-3 text-center align-middle">
+        <AssetDetailsButton
+          lang={lang}
+          onOpen={onEdit}
+          contextLabel={editContext}
+        />
       </td>
     </tr>
   )

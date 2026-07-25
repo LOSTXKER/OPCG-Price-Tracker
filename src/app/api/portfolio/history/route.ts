@@ -1,6 +1,7 @@
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
+import { getHonestPortfolioSnapshotPnl } from "@/lib/portfolio/snapshot";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = apiHandler(async (request: NextRequest) => {
@@ -38,11 +39,18 @@ export const GET = apiHandler(async (request: NextRequest) => {
       netInvestedJpy: true,
       pnl: true,
       cardCount: true,
+      totalCopyCount: true,
+      costedCopyCount: true,
       snapshotAt: true,
     },
   });
 
   snapshots.reverse();
 
-  return NextResponse.json({ snapshots });
+  return NextResponse.json({
+    snapshots: snapshots.map((snapshot) => ({
+      ...snapshot,
+      pnl: getHonestPortfolioSnapshotPnl(snapshot),
+    })),
+  });
 });

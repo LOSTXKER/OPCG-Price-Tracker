@@ -3,11 +3,64 @@ import Link from "next/link";
 import { Crown, Package } from "lucide-react";
 
 import { Price } from "@/components/shared/price-inline";
+import { PriceUsd } from "@/components/shared/price-usd";
 import { FormattedDate } from "@/components/shared/formatted-date";
 import { DropRateDialog } from "@/app/sets/[setCode]/set-page-client";
 import { t, type Language } from "@/lib/i18n";
-import type { RarityGroup } from "@/components/sets/set-detail-content";
-import type { SetDetailTopCard } from "@/lib/data/set-detail";
+import type {
+  CardData,
+  RarityGroup,
+} from "@/components/sets/set-detail-content";
+import {
+  GRADE_TIER_BY_KEY,
+  getGradePriceValue,
+  type GradeKey,
+  type GradePriceValue,
+} from "@/lib/pricing/grade-tiers";
+
+export type SetHighestGradeCard = {
+  card: CardData;
+  price: GradePriceValue;
+};
+
+/** Resolve the set-wide leader within one grade without mixing JPY and USD. */
+export function getSetHighestGradeCard(
+  groups: RarityGroup[],
+  grade: GradeKey,
+): SetHighestGradeCard | null {
+  let highest: SetHighestGradeCard | null = null;
+
+  for (const card of groups.flatMap((group) => group.cards)) {
+    const price = getGradePriceValue(
+      {
+        rawPriceJpy: card.latestPriceJpy,
+        psa10PriceUsd: card.psa10PriceUsd,
+      },
+      grade,
+    );
+    if (!price) continue;
+    if (!highest || price.amount > highest.price.amount) {
+      highest = { card, price };
+    }
+  }
+
+  return highest;
+}
+
+export interface SetHeroProps {
+  lang: Language;
+  code: string;
+  name: string;
+  type: string;
+  releaseDate: Date | string | null;
+  boxImage: string | null;
+  cardCount: number;
+  rarityGroups: RarityGroup[];
+  packsPerBox: number | null;
+  cardsPerPack: number | null;
+  hasDropRates: boolean;
+  grade: GradeKey;
+}
 
 /**
  * Set hero — identity-led (not a financial dashboard): the box art is the ONE
@@ -24,25 +77,16 @@ export function SetHero({
   releaseDate,
   boxImage,
   cardCount,
-  topCard,
   rarityGroups,
   packsPerBox,
   cardsPerPack,
   hasDropRates,
-}: {
-  lang: Language;
-  code: string;
-  name: string;
-  type: string;
-  releaseDate: Date | null;
-  boxImage: string | null;
-  cardCount: number;
-  topCard: SetDetailTopCard | null;
-  rarityGroups: RarityGroup[];
-  packsPerBox: number | null;
-  cardsPerPack: number | null;
-  hasDropRates: boolean;
-}) {
+  grade,
+}: SetHeroProps) {
+  const highest = getSetHighestGradeCard(rarityGroups, grade);
+  const topCard = highest?.card ?? null;
+  const tier = GRADE_TIER_BY_KEY[grade];
+
   return (
     <header className="relative flex flex-row items-center gap-4 sm:gap-7 lg:gap-10">
       {/* box art — the one saturated element (lit by the page's overhead glow).
@@ -120,10 +164,17 @@ export function SetHero({
                 <span className="flex flex-col leading-tight">
                   <span className="text-meta flex items-center gap-1">
                     <Crown className="size-3 text-primary" />
-                    {t(lang, "highestValue")}
+                    {t(lang, "highestValue")} · {tier.label}
                   </span>
-                  <span className="text-price tnum text-foreground group-hover:text-primary">
-                    <Price jpy={topCard.latestPriceJpy ?? 0} />
+                  <span className="text-price tnum inline-flex flex-wrap items-baseline gap-1 text-foreground group-hover:text-primary">
+                    {highest?.price.currency === "USD" ? (
+                      <PriceUsd usd={highest.price.amount} />
+                    ) : (
+                      <Price
+                        jpy={highest?.price.amount ?? 0}
+                        thb={topCard.latestPriceThb}
+                      />
+                    )}
                   </span>
                 </span>
               </Link>

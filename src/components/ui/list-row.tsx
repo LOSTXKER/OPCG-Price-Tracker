@@ -36,6 +36,8 @@ export type ListRowProps = {
   chevron?: boolean
   className?: string
   ariaLabel?: string
+  /** Selection state for button rows used as single/multi pickers. */
+  ariaPressed?: boolean
 }
 
 const ROW =
@@ -51,6 +53,7 @@ export function ListRow({
   chevron,
   className,
   ariaLabel,
+  ariaPressed,
 }: ListRowProps) {
   const body = (
     <>
@@ -77,7 +80,13 @@ export function ListRow({
   }
   if (onClick) {
     return (
-      <button type="button" onClick={onClick} className={cn(ROW, className)} aria-label={ariaLabel}>
+      <button
+        type="button"
+        onClick={onClick}
+        className={cn(ROW, className)}
+        aria-label={ariaLabel}
+        aria-pressed={ariaPressed}
+      >
         {body}
       </button>
     )

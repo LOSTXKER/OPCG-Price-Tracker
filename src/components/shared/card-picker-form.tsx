@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 
 import { fetchCards } from "@/lib/api/fetch-cards";
 import { apiGet, apiTry } from "@/lib/api/client";
+import { getActiveGameConfigs } from "@/lib/game-config";
 import { DEFAULT_GAME } from "@/lib/game/constants";
 import { useUIStore } from "@/stores/ui-store";
 
@@ -14,6 +15,21 @@ import {
 } from "@/components/portfolio/add-card-types";
 
 export type { CardWithSet };
+
+const ACTIVE_GAMES = getActiveGameConfigs();
+
+type PickerLoadState = {
+  requestKey: string;
+  cards: CardWithSet[];
+  error: boolean;
+};
+
+/** @internal Keeps a stale coming-soon preference from producing an empty picker. */
+export function getInitialPickerGame(preferredGame: string) {
+  return ACTIVE_GAMES.some((game) => game.slug === preferredGame)
+    ? preferredGame
+    : ACTIVE_GAMES[0]?.slug ?? DEFAULT_GAME;
+}
 
 /**
  * The ONE "search / filter → pick a card" form for the whole app (เบส: ทุกหน้า
@@ -47,16 +63,23 @@ export function CardPickerForm({
   selected?: CardWithSet[];
 }) {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<CardWithSet[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [initialCards, setInitialCards] = useState<CardWithSet[]>([]);
+  const [resultsState, setResultsState] = useState<PickerLoadState>({
+    requestKey: "",
+    cards: [],
+    error: false,
+  });
+  const [initialState, setInitialState] = useState<PickerLoadState>({
+    requestKey: "",
+    cards: [],
+    error: false,
+  });
+  const [loadRevision, setLoadRevision] = useState(0);
 
-  // Game FIRST (เบส: เลือกเกมก่อน) — starts on the visitor's current game, then
-  // scopes every fetch below (sets / default list / search). Switching games
-  // clears the set + facet filters since rarity/color/type families differ
-  // per game.
+  // The picker starts on the visitor's current launch-ready game and scopes every
+  // fetch below. A stale coming-soon preference falls back to the first live
+  // game; SelectStep still shows that game context when it is the only option.
   const storeGame = useUIStore((s) => s.currentGame);
-  const [activeGame, setActiveGameState] = useState(storeGame || DEFAULT_GAME);
+  const [activeGame, setActiveGameState] = useState(() => getInitialPickerGame(storeGame));
 
   const [sets, setSets] = useState<SetInfo[]>([]);
   const [activeSet, setActiveSet] = useState<string | null>(null);
@@ -69,6 +92,7 @@ export function CardPickerForm({
   const setActiveGame = (game: string) => {
     if (game === activeGame) return;
     setActiveGameState(game);
+    setSets([]);
     setActiveSet(null);
     setActiveRarity(null);
     setActiveColor(null);
@@ -78,24 +102,45 @@ export function CardPickerForm({
 
   // Sets for the filter — reload whenever the active game changes.
   useEffect(() => {
+    let cancelled = false;
     void apiTry(apiGet<{ sets: SetInfo[] }>(`/api/sets?game=${activeGame}`)).then((data) => {
-      if (data) setSets(data.sets ?? []);
+      if (!cancelled && data) setSets(data.sets ?? []);
     });
-  }, [activeGame]);
+    return () => {
+      cancelled = true;
+    };
+  }, [activeGame, loadRevision]);
+
+  const initialRequestKey = JSON.stringify([activeGame, loadRevision]);
 
   // Value-sorted default list (shown before any search/filter) — reload
   // whenever the active game changes.
   useEffect(() => {
-    let cancelled = false;
-    void fetchCards({ sort: "price_desc", limit: 30, game: activeGame })
+    const controller = new AbortController();
+
+    void fetchCards(
+      { sort: "price_desc", limit: 30, game: activeGame },
+      { signal: controller.signal },
+    )
       .then((data) => {
-        if (!cancelled) setInitialCards((data.cards ?? []) as CardWithSet[]);
+        if (!controller.signal.aborted) {
+          setInitialState({
+            requestKey: initialRequestKey,
+            cards: (data.cards ?? []) as CardWithSet[],
+            error: false,
+          });
+        }
       })
-      .catch(() => {});
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          setInitialState({ requestKey: initialRequestKey, cards: [], error: true });
+        }
+      });
+
     return () => {
-      cancelled = true;
+      controller.abort();
     };
-  }, [activeGame]);
+  }, [activeGame, initialRequestKey]);
 
   const hasAnyFilter =
     activeSet != null ||
@@ -111,52 +156,79 @@ export function CardPickerForm({
     activeVariant,
   ].filter(Boolean).length;
 
+  const trimmedQuery = query.trim();
+  const hasSearch = trimmedQuery.length >= 2;
+  const isFiltered = hasSearch || hasAnyFilter;
+  const filteredRequestKey = JSON.stringify([
+    activeGame,
+    trimmedQuery,
+    activeSet,
+    activeRarity,
+    activeColor,
+    activeCardType,
+    activeVariant,
+    loadRevision,
+  ]);
+
   useEffect(() => {
-    const q = query.trim();
-    const hasSearch = q.length >= 2;
+    if (!isFiltered) return;
 
-    if (!hasSearch && !hasAnyFilter) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- clear stale results when the query + filters both clear
-      setResults([]);
-      return;
-    }
-
-    setLoading(true);
+    const controller = new AbortController();
 
     const timer = window.setTimeout(
       () => {
-        void fetchCards({
-          limit: 40,
-          search: hasSearch ? q : undefined,
-          game: activeGame,
-          set: activeSet ?? undefined,
-          // Base rarity now expands to its P- family server-side (กด SEC เจอ P-SEC ด้วย);
-          // the `variant` facet narrows regular/parallel.
-          rarity: activeRarity ?? undefined,
-          color: activeColor ?? undefined,
-          type: activeCardType ?? undefined,
-          variant: activeVariant ?? undefined,
-        })
-          .then((data) => setResults((data.cards ?? []) as CardWithSet[]))
-          .catch(() => setResults([]))
-          .finally(() => setLoading(false));
+        void fetchCards(
+          {
+            limit: 40,
+            search: hasSearch ? trimmedQuery : undefined,
+            game: activeGame,
+            set: activeSet ?? undefined,
+            // Base rarity now expands to its P- family server-side (กด SEC เจอ P-SEC ด้วย);
+            // the `variant` facet narrows regular/parallel.
+            rarity: activeRarity ?? undefined,
+            color: activeColor ?? undefined,
+            type: activeCardType ?? undefined,
+            variant: activeVariant ?? undefined,
+          },
+          { signal: controller.signal },
+        )
+          .then((data) => {
+            if (!controller.signal.aborted) {
+              setResultsState({
+                requestKey: filteredRequestKey,
+                cards: (data.cards ?? []) as CardWithSet[],
+                error: false,
+              });
+            }
+          })
+          .catch(() => {
+            if (!controller.signal.aborted) {
+              setResultsState({
+                requestKey: filteredRequestKey,
+                cards: [],
+                error: true,
+              });
+            }
+          });
       },
       hasSearch ? 300 : 50,
     );
 
     return () => {
       window.clearTimeout(timer);
-      setLoading(false);
+      controller.abort();
     };
   }, [
-    query,
-    activeGame,
-    activeSet,
-    activeRarity,
-    activeColor,
     activeCardType,
+    activeColor,
+    activeGame,
+    activeRarity,
+    activeSet,
     activeVariant,
-    hasAnyFilter,
+    filteredRequestKey,
+    hasSearch,
+    isFiltered,
+    trimmedQuery,
   ]);
 
   const clearAllFilters = () => {
@@ -167,15 +239,26 @@ export function CardPickerForm({
     setActiveVariant(null);
   };
 
-  const isFiltered = query.trim().length >= 2 || hasAnyFilter;
+  const initialCurrent = initialState.requestKey === initialRequestKey;
+  const resultsCurrent = resultsState.requestKey === filteredRequestKey;
+  const initialCards = initialCurrent ? initialState.cards : [];
+  const results = resultsCurrent ? resultsState.cards : [];
+  const initialLoading = !initialCurrent;
+  const resultsLoading = isFiltered && !resultsCurrent;
+  const initialError = initialCurrent && initialState.error;
+  const resultsError = resultsCurrent && resultsState.error;
   const displayCards = isFiltered ? results : initialCards;
-  const showEmpty = isFiltered && !loading && results.length === 0;
+  const loading = isFiltered ? resultsLoading : initialLoading;
+  const loadError = isFiltered ? resultsError : initialError;
+  const showEmpty = isFiltered && !loading && !loadError && results.length === 0;
 
   return (
     <SelectStep
       query={query}
       setQuery={setQuery}
       loading={loading}
+      loadError={loadError}
+      onRetry={() => setLoadRevision((revision) => revision + 1)}
       displayCards={displayCards}
       showEmpty={showEmpty}
       isFiltered={isFiltered}

@@ -24,7 +24,15 @@ export type DashboardUser = {
 export async function getDashboardSnapshot(user: DashboardUser) {
   const userId = user.id;
 
-  const [listings, counts, portfolioItems, latestSnapshot, canCheckin, level] = await Promise.all([
+  const [
+    listings,
+    counts,
+    portfolioItems,
+    latestSnapshot,
+    activePriceAlertCount,
+    canCheckin,
+    level,
+  ] = await Promise.all([
     prisma.listing.findMany({
       where: { userId, status: ListingStatus.ACTIVE },
       orderBy: { createdAt: "desc" },
@@ -38,7 +46,6 @@ export async function getDashboardSnapshot(user: DashboardUser) {
           select: {
             portfolios: true,
             watchlistItems: true,
-            priceAlerts: true,
             decks: true,
             listings: true,
             reviewsReceived: true,
@@ -54,6 +61,9 @@ export async function getDashboardSnapshot(user: DashboardUser) {
       where: { portfolio: { userId } },
       orderBy: { snapshotAt: "desc" },
       select: { totalJpy: true },
+    }),
+    prisma.priceAlert.count({
+      where: { userId, isActive: true },
     }),
     canCheckinToday(userId),
     getHoneyLevel(user.honeyLifetimeEarned),
@@ -71,7 +81,7 @@ export async function getDashboardSnapshot(user: DashboardUser) {
     portfolioTotalValueJpy,
     portfolioCardCount: portfolioItems.length,
     watchlistCount: counts?._count.watchlistItems ?? 0,
-    priceAlertCount: counts?._count.priceAlerts ?? 0,
+    priceAlertCount: activePriceAlertCount,
     deckCount: counts?._count.decks ?? 0,
     activeListingCount: counts?._count.listings ?? 0,
     reviewCount: counts?._count.reviewsReceived ?? 0,

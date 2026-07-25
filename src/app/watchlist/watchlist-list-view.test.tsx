@@ -2,6 +2,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
 import { t } from "@/lib/i18n";
+import { formatUsdByCurrency } from "@/lib/utils/currency";
+import type { GradeKey } from "@/lib/pricing/grade-tiers";
 
 // The desktop row is fully clickable (router.push to the card) alongside the
 // identity <Link> — this file renders via renderToStaticMarkup with no app
@@ -33,6 +35,7 @@ const entry: WatchlistEntry = {
     imageUrl: null,
     latestPriceJpy: 100,
     latestPriceThb: 25,
+    psa10PriceUsd: 100,
     priceChange24h: 1,
     priceChange7d: 2,
     priceChange30d: 3,
@@ -64,22 +67,26 @@ function renderList({
   period = "7d" as const,
   sortKey = "default" as SortKey,
   onHeaderSort,
+  grade = "raw",
+  editMode = false,
 }: {
   hasSparkline?: boolean;
   entries?: WatchlistEntry[];
   period?: "24h" | "7d" | "30d";
   sortKey?: SortKey;
   onHeaderSort?: (col: WatchlistHeaderCol) => void;
+  grade?: GradeKey;
+  editMode?: boolean;
 } = {}) {
   return renderToStaticMarkup(
     <WatchlistListView
       entries={entries}
+      grade={grade}
       period={period}
-      editMode={false}
+      editMode={editMode}
       selected={new Set()}
       onToggleSelect={noop}
       sparklines={hasSparkline ? { 1: [1, 2, 3] } : {}}
-      hasAnySparkline={hasSparkline}
       onSetAlert={noop}
       onRemove={noop}
       removingIds={new Set()}
@@ -89,20 +96,24 @@ function renderList({
   );
 }
 
-describe("watchlist flat list view", () => {
-  it("keeps the desktop table on the page canvas and omits empty utility columns", () => {
+describe("watchlist market table view", () => {
+  it("uses the same fixed desktop table anatomy and data columns as Home", () => {
     const markup = renderList();
 
-    expect(markup).toContain('class="hidden sm:block"');
-    expect(markup).not.toContain('class="panel hidden');
-    expect(markup).not.toContain(t("TH", "priceHistory"));
+    expect(markup).toContain('class="hidden overflow-x-auto sm:block"');
+    expect(markup).toContain('class="w-full table-fixed text-left text-sm"');
+    expect(markup).toContain('class="sticky top-0 z-10 bg-background"');
+    expect(markup).toContain('class="w-[100px]"');
+    expect(markup).toContain(t("TH", "set"));
+    expect(markup).toContain(t("TH", "rarity"));
+    expect(markup).toContain(t("TH", "sparkline30d"));
     expect(markup).not.toContain(t("TH", "watchlistFilterStatus"));
   });
 
-  it("restores the history column only when sparkline data is useful", () => {
+  it("fills the 30-day graph column when Raw data has at least two points", () => {
     const markup = renderList({ hasSparkline: true });
 
-    expect(markup).toContain(t("TH", "priceHistory"));
+    expect(markup).toContain(t("TH", "sparkline30d"));
     expect(markup).toContain("<polyline");
   });
 
@@ -128,14 +139,14 @@ describe("watchlist flat list view", () => {
   it("renders every data column as a canonical SortableHeader with the active sort exposed", () => {
     const markup = renderList({ period: "7d", sortKey: "gain" });
 
-    expect(markup).toContain("24H");
-    expect(markup).toContain("7D");
-    expect(markup).toContain("30D");
+    expect(markup).toContain("24h");
+    expect(markup).toContain("7d");
+    expect(markup).toContain("30d");
     // sortKey=gain + period=7d → the 7D column is the single descending header
     // (name/price/24h/30d stay aria-sort="none").
     expect(markup.match(/aria-sort="descending"/g)).toHaveLength(1);
     expect(markup.match(/aria-sort="none"/g)).toHaveLength(4);
-    expect(markup).toContain("xl:table-cell");
+    expect(markup).toContain("lg:table-cell");
   });
 
   it("marks the name column ascending when sorting A→Z", () => {
@@ -145,10 +156,22 @@ describe("watchlist flat list view", () => {
     expect(markup.match(/aria-sort="descending"/g)).toBeNull();
   });
 
-  it("never renders a ⋯ menu — mobile moves to long-press, desktop to hover icons", () => {
+  it("keeps the visible mobile row menu and desktop management actions", () => {
     const markup = renderList({ entries: [pinnedAlertedEntry] });
 
-    expect(markup).not.toContain("lucide-more-horizontal");
+    expect(markup).toContain('data-slot="dropdown-menu-trigger"');
+    expect(markup).toContain(t("TH", "moreActions"));
+    expect(markup).toContain(t("TH", "removeFromWatchlist"));
+  });
+
+  it("turns links and actions into one full-row selection target in edit mode", () => {
+    const markup = renderList({ editMode: true });
+
+    expect(markup).not.toContain('href="/opcg/sets/op01"');
+    expect(markup).not.toContain('href="/opcg/cards/OP01-001"');
+    expect(markup).toContain("size-11");
+    expect(markup).toContain("md:size-9");
+    expect(markup).not.toContain(t("TH", "removeFromWatchlist"));
   });
 
   it("shows the mobile list header (tap-sort price/change) — the count moved to the tab badge", () => {
@@ -169,10 +192,11 @@ describe("watchlist flat list view", () => {
     expect(markup).toMatch(/aria-pressed="true"[^>]*>เปลี่ยนแปลง/);
   });
 
-  it("renders the delta as a chip on mobile rows (not a plain colored change)", () => {
+  it("renders the mobile delta as the same plain market value used on Home", () => {
     const markup = renderList({ entries: [entry] });
 
-    expect(markup).toContain("min-w-[72px]");
+    expect(markup).not.toContain("min-w-[72px]");
+    expect(markup).not.toContain("rounded-md px-1.5 py-0.5");
   });
 
   it("shows THB only on the desktop price cell (JPY was cut by owner decision)", () => {
@@ -181,4 +205,38 @@ describe("watchlist flat list view", () => {
     expect(markup).toContain("25 ฿");
     expect(markup).not.toContain("¥100");
   });
+
+  it("keeps the Raw table anatomy in PSA 10 while showing unavailable market history honestly", () => {
+    const markup = renderList({
+      hasSparkline: true,
+      entries: [pinnedAlertedEntry],
+      grade: "psa_10",
+    });
+
+    expect(markup).toContain(formatUsdByCurrency(100, "THB").primary);
+    expect(markup).toContain("24h");
+    expect(markup).toContain("7d");
+    expect(markup).toContain("30d");
+    expect(markup).toContain(t("TH", "change"));
+    expect(markup).toContain(t("TH", "sparkline30d"));
+    expect(markup).not.toContain("<polyline");
+    expect(markup).not.toContain("+2.0%");
+    expect(markup).toContain(`${t("TH", "watchlistHasAlert")} · Raw`);
+    // Non-Raw change columns are plain headings, not sortable buttons.
+    expect(markup.match(/aria-sort="none"/g)).toHaveLength(2);
+  });
+
+  it.each([
+    ["psa_9", 50],
+    ["psa_8", 32],
+    ["bgs_95", 115],
+  ] as const)("shows derived %s prices without an estimate badge", (grade, usd) => {
+    const markup = renderList({ entries: [entry], grade });
+
+    expect(markup).toContain(formatUsdByCurrency(usd, "THB").primary);
+    expect(markup).not.toContain("est.");
+    expect(markup).not.toContain(t("TH", "sampleEstimate"));
+    expect(markup).not.toContain("+2.0%");
+  });
+
 });

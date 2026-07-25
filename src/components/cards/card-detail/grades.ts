@@ -7,46 +7,52 @@
  *   - Raw family  → Yuyutei market price (JPY)  [card.price]
  *   - PSA 10      → SNKRDUNK ask/sold (USD)      [snkrdunkPrices]
  *
- * To show the FULL picture (เบส: "เติมตัวอย่าง + ติดป้าย est"), every stat is
- * filled. Anything NOT backed by a real scrape is a modeled estimate carrying
- * `isEst: true`, and the UI puts an "est" marker on exactly those values — so a
- * modeled number is never read as real. When the Grade enum + comps pipeline
- * land (VISION §6) buildGradeData swaps estimates for real data; no component
- * changes.
+ * Grades without a real scrape remain modeled values carrying `isEst: true` in
+ * the data layer. The owner intentionally removed estimate markers from the UI;
+ * keep the flag so a future per-grade comps pipeline can replace derived values
+ * without changing the component contract.
  *
  * ⚠️ PROTOTYPE: the EST_* multipliers + sales-sample are representative
  * placeholders. Replace with real per-grade pricing + comp counts later.
  */
 
-export type GradeFamily = "raw" | "psa" | "bgs"
-export type GradeKey =
-  | "raw"
-  | "psa_10" | "psa_9" | "psa_8"
-  | "bgs_95"
+import {
+  GRADE_TIER_BY_KEY,
+  GRADE_TIERS,
+  getGradePriceUsd,
+  type GradeKey,
+  type GradeTier,
+} from "@/lib/pricing/grade-tiers"
 
-export interface GradeTier {
-  key: GradeKey
-  label: string
-  short: string
-  family: GradeFamily
-}
-
-// Best-first by family (VISION §5.1): a single ungraded Raw, then PSA 10·9·8, then
-// BGS. Raw is ONE grade — Yuyutei prices ungraded cards as a single market price,
-// not A/B/C condition tiers. Order is presentation-only (lookups are by key).
-export const GRADE_TIERS: GradeTier[] = [
-  { key: "raw", label: "Raw", short: "Raw", family: "raw" },
-  { key: "psa_10", label: "PSA 10", short: "PSA 10", family: "psa" },
-  { key: "psa_9", label: "PSA 9", short: "PSA 9", family: "psa" },
-  { key: "psa_8", label: "PSA 8", short: "PSA 8", family: "psa" },
-  { key: "bgs_95", label: "BGS 9.5", short: "BGS 9.5", family: "bgs" },
-]
+// Compatibility exports: card-detail callers historically imported the grade
+// registry from this module. Keep that public surface while the actual model is
+// now shared by every price/grade filter in the app.
+export {
+  GLOBAL_GRADE_TIERS,
+  GRADE_PRICE_MULTIPLIERS,
+  GRADE_TIER_BY_KEY,
+  GRADE_TIERS,
+  getGradePriceUsd,
+  getGradePriceValue,
+  getGradeTier,
+  hasGradePrice,
+  isModeledGrade,
+  isRawGrade,
+  type GradeDataKind,
+  type GradeFamily,
+  type GradeKey,
+  type GradeNativeCurrency,
+  type GradePriceAnchors,
+  type GradePriceSource,
+  type GradePriceValue,
+  type GradeTier,
+} from "@/lib/pricing/grade-tiers"
 
 /** A money stat in its native currency, flagged when modeled. */
 export interface Stat {
   jpy: number | null
   usd: number | null
-  /** true = modeled estimate (UI shows an "est" marker); false = real scrape. */
+  /** true = modeled estimate; false = real scrape. */
   isEst: boolean
 }
 
@@ -67,8 +73,6 @@ export interface GradeDatum {
   hasData: boolean
 }
 
-const EST_PSA: Record<"psa_10" | "psa_9" | "psa_8", number> = { psa_10: 1, psa_9: 0.5, psa_8: 0.32 }
-const EST_BGS95_FROM_PSA10 = 1.15
 const EST_LAST_SALE = 0.96 // settled sales sit a touch under market
 const EST_LOWEST_ASK = 1.03 // lowest ask a touch over market
 
@@ -86,7 +90,7 @@ const r = (n: number) => Math.round(n)
 export function buildGradeData(input: GradeInput): Record<GradeKey, GradeDatum> {
   const { rawAnchorJpy, psa10AskUsd, psa10SoldUsd, rawLastSoldUsd, rawDelta30d } = input
   const psa10Anchor = psa10AskUsd ?? psa10SoldUsd ?? null
-  const byKey = Object.fromEntries(GRADE_TIERS.map((t) => [t.key, t])) as Record<GradeKey, GradeTier>
+  const byKey = GRADE_TIER_BY_KEY
 
   function rawDatum(): GradeDatum {
     // Raw is a single REAL market price (Yuyutei, JPY) — no modeled A/B/C tiers.
@@ -111,7 +115,9 @@ export function buildGradeData(input: GradeInput): Record<GradeKey, GradeDatum> 
   function psaDatum(key: "psa_10" | "psa_9" | "psa_8"): GradeDatum {
     const real = key === "psa_10"
     const has = psa10Anchor != null && psa10Anchor > 0
-    const v = real ? psa10AskUsd ?? psa10SoldUsd : has ? r(psa10Anchor! * EST_PSA[key]) : null
+    const v = real
+      ? psa10AskUsd ?? psa10SoldUsd
+      : getGradePriceUsd(psa10Anchor, key)
     const realSale = real && psa10SoldUsd != null
     return {
       tier: byKey[key],
@@ -132,7 +138,7 @@ export function buildGradeData(input: GradeInput): Record<GradeKey, GradeDatum> 
     }
   }
 
-  const bgsV = psa10Anchor != null && psa10Anchor > 0 ? r(psa10Anchor * EST_BGS95_FROM_PSA10) : null
+  const bgsV = getGradePriceUsd(psa10Anchor, "bgs_95")
 
   return {
     raw: rawDatum(),

@@ -39,6 +39,10 @@ export function ViewModeControl<T extends ViewMode>({
       ariaLabel={labels.join(" / ")}
       className={cn(
         "shrink-0 gap-0 before:inset-x-1 md:gap-0.5 md:before:inset-x-0 [&_button]:before:inset-x-1 md:[&_button]:before:inset-x-0 [&_svg]:size-4",
+        // Labelled view switches are a true two/three-way choice, so their
+        // geometry must not change with the active translation. Icon-only
+        // controls stay content-sized and square.
+        showLabels && "[&_button]:w-20 [&_button]:min-w-20",
         className,
       )}
       options={modes.map((mode, index) => ({

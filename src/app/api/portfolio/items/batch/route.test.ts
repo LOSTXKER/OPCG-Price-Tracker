@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   itemCount: vi.fn(),
   itemCreate: vi.fn(),
   itemUpdate: vi.fn(),
+  lotCreate: vi.fn(),
   transactionCreate: vi.fn(),
   triggerAchievementCheck: vi.fn(),
 }));
@@ -47,6 +48,9 @@ const tx = {
     create: mocks.itemCreate,
     update: mocks.itemUpdate,
   },
+  portfolioLot: {
+    create: mocks.lotCreate,
+  },
 };
 
 const requestId = "123e4567-e89b-42d3-a456-426614174000";
@@ -58,20 +62,36 @@ const defaultBatchMarker = `__portfolio_batch__:${requestId}:${createHash("sha25
         {
           cardId: 10,
           quantity: 1,
-          purchasePrice: null,
+          purchasePrice: 100,
           condition: "NM",
           notes: null,
+          acquiredAt: "2026-07-23",
         },
       ],
     }),
   )
   .digest("hex")}`;
 
-function request(items = [{ cardId: 10, quantity: 1, condition: "NM" }]) {
+function request(
+  items: Array<{
+    cardId: number;
+    quantity: number;
+    condition: string;
+    purchasePrice?: number | null;
+    notes?: string;
+    acquiredAt?: string | null;
+    lotNote?: string | null;
+  }> = [{ cardId: 10, quantity: 1, condition: "NM" }],
+) {
+  const completeItems = items.map((item) => ({
+    purchasePrice: 100,
+    acquiredAt: "2026-07-23",
+    ...item,
+  }));
   return new NextRequest("https://meecard.test/api/portfolio/items/batch", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ portfolioId: 1, requestId, items }),
+    body: JSON.stringify({ portfolioId: 1, requestId, items: completeItems }),
   });
 }
 
@@ -90,9 +110,76 @@ describe("portfolio batch items route", () => {
     mocks.cardFindMany.mockResolvedValue([{ id: 10 }, { id: 11 }]);
     mocks.itemFindMany.mockResolvedValue([]);
     mocks.itemCount.mockResolvedValue(0);
-    mocks.itemCreate.mockResolvedValue({ id: 1 });
+    mocks.itemCreate.mockImplementation(
+      ({ data }: { data: Record<string, unknown> }) => ({
+        id: 1,
+        ...data,
+        addedAt: new Date("2026-07-23T00:00:00.000Z"),
+      }),
+    );
     mocks.itemUpdate.mockResolvedValue({ id: 1 });
+    mocks.lotCreate.mockImplementation(
+      ({ data }: { data: Record<string, unknown> }) => ({
+        id: mocks.lotCreate.mock.calls.length,
+        quantity: data.quantity,
+        unitCostJpy: data.unitCostJpy ?? null,
+        acquiredAt: data.acquiredAt ?? null,
+        note: data.note ?? null,
+        source: data.source ?? "MANUAL",
+        createdAt: new Date("2026-07-23T00:00:00.000Z"),
+        updatedAt: new Date("2026-07-23T00:00:00.000Z"),
+      }),
+    );
     mocks.transactionCreate.mockResolvedValue({ id: 1 });
+  });
+
+  it("rejects every batch item that is missing a real cost or date", async () => {
+    const missingCost = await POST(
+      request([
+        {
+          cardId: 10,
+          quantity: 1,
+          condition: "NM",
+          purchasePrice: undefined,
+        },
+      ]),
+    );
+    const nullCost = await POST(
+      request([
+        {
+          cardId: 10,
+          quantity: 1,
+          condition: "NM",
+          purchasePrice: null,
+        },
+      ]),
+    );
+    const missingDate = await POST(
+      request([
+        {
+          cardId: 10,
+          quantity: 1,
+          condition: "NM",
+          acquiredAt: undefined,
+        },
+      ]),
+    );
+    const nullDate = await POST(
+      request([
+        {
+          cardId: 10,
+          quantity: 1,
+          condition: "NM",
+          acquiredAt: null,
+        },
+      ]),
+    );
+
+    expect(missingCost.status).toBe(400);
+    expect(nullCost.status).toBe(400);
+    expect(missingDate.status).toBe(400);
+    expect(nullDate.status).toBe(400);
+    expect(mocks.transaction).not.toHaveBeenCalled();
   });
 
   it("returns 401 before opening a transaction", async () => {
@@ -131,6 +218,7 @@ describe("portfolio batch items route", () => {
     expect(response.status).toBe(404);
     expect(mocks.itemCreate).not.toHaveBeenCalled();
     expect(mocks.itemUpdate).not.toHaveBeenCalled();
+    expect(mocks.lotCreate).not.toHaveBeenCalled();
   });
 
   it("checks the whole batch against quota before writing", async () => {
@@ -145,12 +233,34 @@ describe("portfolio batch items route", () => {
 
     expect(response.status).toBe(403);
     expect(mocks.itemCreate).not.toHaveBeenCalled();
+    expect(mocks.lotCreate).not.toHaveBeenCalled();
     expect(mocks.transactionCreate).not.toHaveBeenCalled();
   });
 
   it("updates an existing holding without consuming another quota row", async () => {
+    mocks.itemCount.mockResolvedValue(30);
     mocks.itemFindMany.mockResolvedValue([
-      { id: 7, cardId: 10, condition: "NM", quantity: 2 },
+      {
+        id: 7,
+        portfolioId: 1,
+        cardId: 10,
+        condition: "NM",
+        quantity: 2,
+        purchasePrice: 100,
+        addedAt: new Date("2026-07-01T00:00:00.000Z"),
+        lots: [
+          {
+            id: 70,
+            quantity: 2,
+            unitCostJpy: 100,
+            acquiredAt: null,
+            note: null,
+            source: "LEGACY_OPENING_BALANCE",
+            createdAt: new Date("2026-07-01T00:00:00.000Z"),
+            updatedAt: new Date("2026-07-01T00:00:00.000Z"),
+          },
+        ],
+      },
     ]);
 
     const response = await POST(request());
@@ -160,13 +270,151 @@ describe("portfolio batch items route", () => {
     expect(body).toMatchObject({ ok: true, added: 0, updated: 1, replayed: false });
     expect(mocks.itemCount).not.toHaveBeenCalled();
     expect(mocks.itemUpdate).toHaveBeenCalledWith(
-      expect.objectContaining({ data: expect.objectContaining({ quantity: 3 }) }),
+      expect.objectContaining({
+        data: expect.objectContaining({
+          quantity: 3,
+          purchasePrice: 100,
+        }),
+      }),
+    );
+    expect(mocks.lotCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          portfolioItemId: 7,
+          quantity: 1,
+          unitCostJpy: 100,
+          acquiredAt: new Date("2026-07-23T00:00:00.000Z"),
+          source: "MANUAL",
+        }),
+      }),
+    );
+  });
+
+  it("keeps exact lot costs when adding copies at a different price", async () => {
+    mocks.itemFindMany.mockResolvedValue([
+      {
+        id: 7,
+        portfolioId: 1,
+        cardId: 10,
+        condition: "NM",
+        quantity: 1,
+        purchasePrice: 100,
+        addedAt: new Date("2026-07-01T00:00:00.000Z"),
+        lots: [
+          {
+            id: 70,
+            quantity: 1,
+            unitCostJpy: 100,
+            acquiredAt: null,
+            note: null,
+            source: "LEGACY_OPENING_BALANCE",
+            createdAt: new Date("2026-07-01T00:00:00.000Z"),
+            updatedAt: new Date("2026-07-01T00:00:00.000Z"),
+          },
+        ],
+      },
+    ]);
+
+    const response = await POST(
+      request([
+        {
+          cardId: 10,
+          quantity: 2,
+          purchasePrice: 200,
+          condition: "NM",
+        },
+      ]),
+    );
+
+    expect(response.status).toBe(200);
+    expect(mocks.lotCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          quantity: 2,
+          unitCostJpy: 200,
+        }),
+      }),
+    );
+    expect(mocks.itemUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: {
+          quantity: 3,
+          purchasePrice: 167,
+        },
+      }),
+    );
+  });
+
+  it("persists a separate date and note on every new acquisition lot", async () => {
+    const response = await POST(
+      request([
+        {
+          cardId: 10,
+          quantity: 2,
+          purchasePrice: 200,
+          condition: "NM",
+          acquiredAt: "2026-07-20",
+          lotNote: "ซื้อจากร้าน A",
+        },
+        {
+          cardId: 11,
+          quantity: 1,
+          purchasePrice: 0,
+          condition: "NM",
+          acquiredAt: "2026-07-24",
+          lotNote: null,
+        },
+      ]),
+    );
+
+    expect(response.status).toBe(200);
+    expect(mocks.lotCreate).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        data: expect.objectContaining({
+          quantity: 2,
+          unitCostJpy: 200,
+          acquiredAt: new Date("2026-07-20T00:00:00.000Z"),
+          note: "ซื้อจากร้าน A",
+        }),
+      }),
+    );
+    expect(mocks.lotCreate).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        data: expect.objectContaining({
+          quantity: 1,
+          unitCostJpy: 0,
+          acquiredAt: new Date("2026-07-24T00:00:00.000Z"),
+          note: null,
+        }),
+      }),
     );
   });
 
   it("rejects a merged holding quantity above the item maximum before writing", async () => {
     mocks.itemFindMany.mockResolvedValue([
-      { id: 7, cardId: 10, condition: "NM", quantity: 999 },
+      {
+        id: 7,
+        portfolioId: 1,
+        cardId: 10,
+        condition: "NM",
+        quantity: 999,
+        purchasePrice: null,
+        addedAt: new Date("2026-07-01T00:00:00.000Z"),
+        lots: [
+          {
+            id: 70,
+            quantity: 999,
+            unitCostJpy: null,
+            acquiredAt: null,
+            note: null,
+            source: "LEGACY_OPENING_BALANCE",
+            createdAt: new Date("2026-07-01T00:00:00.000Z"),
+            updatedAt: new Date("2026-07-01T00:00:00.000Z"),
+          },
+        ],
+      },
     ]);
 
     const response = await POST(request());
@@ -174,6 +422,7 @@ describe("portfolio batch items route", () => {
     expect(response.status).toBe(400);
     expect(mocks.itemCreate).not.toHaveBeenCalled();
     expect(mocks.itemUpdate).not.toHaveBeenCalled();
+    expect(mocks.lotCreate).not.toHaveBeenCalled();
     expect(mocks.transactionCreate).not.toHaveBeenCalled();
   });
 
@@ -190,6 +439,7 @@ describe("portfolio batch items route", () => {
     expect(body).toMatchObject({ ok: true, added: 0, updated: 0, replayed: true });
     expect(mocks.cardFindMany).toHaveBeenCalledTimes(1);
     expect(mocks.itemCreate).toHaveBeenCalledTimes(1);
+    expect(mocks.lotCreate).toHaveBeenCalledTimes(1);
   });
 
   it("rejects reuse of a requestId for a different payload", async () => {
@@ -204,7 +454,39 @@ describe("portfolio batch items route", () => {
 
     expect(response.status).toBe(409);
     expect(mocks.itemCreate).toHaveBeenCalledTimes(1);
+    expect(mocks.lotCreate).toHaveBeenCalledTimes(1);
     expect(mocks.itemUpdate).not.toHaveBeenCalled();
+  });
+
+  it("includes the purchase-lot note in the idempotency payload hash", async () => {
+    const firstResponse = await POST(
+      request([
+        {
+          cardId: 10,
+          quantity: 1,
+          condition: "NM",
+          lotNote: "ร้าน A",
+        },
+      ]),
+    );
+    const marker = mocks.transactionCreate.mock.calls[0]?.[0]?.data?.note;
+    expect(firstResponse.status).toBe(200);
+    mocks.replayFindFirst.mockResolvedValue({ id: 99, note: marker });
+
+    const response = await POST(
+      request([
+        {
+          cardId: 10,
+          quantity: 1,
+          condition: "NM",
+          lotNote: "ร้าน B",
+        },
+      ]),
+    );
+
+    expect(response.status).toBe(409);
+    expect(mocks.itemCreate).toHaveBeenCalledTimes(1);
+    expect(mocks.lotCreate).toHaveBeenCalledTimes(1);
   });
 
   it("retries a serializable conflict with the same validated batch", async () => {

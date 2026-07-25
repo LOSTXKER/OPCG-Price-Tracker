@@ -44,6 +44,24 @@ export interface DeckRules {
   requiresLeader?: boolean;
 }
 
+export interface GameReleaseReadiness {
+  /**
+   * Product/config gate. ROADMAP games may appear in the canonical Header
+   * switcher as a teaser, but can never become the active catalog.
+   */
+  status: "ROADMAP" | "LIVE";
+  /**
+   * Data-plane gate. Flip to READY only after the Game row, linked sets/cards
+   * and required price data pass the server-side launch preflight.
+   */
+  data: "STUB" | "READY";
+  /**
+   * Routing gate. Flip to READY only after every game-owned route/query/nav
+   * path is scoped correctly. Public routing still requires all three gates.
+   */
+  routes: "BLOCKED" | "READY";
+}
+
 export interface GameConfig {
   slug: string;
   name: string;
@@ -52,8 +70,8 @@ export interface GameConfig {
   shortName?: string;
   /** Friendly label for the unified MINE game rail (e.g. "One Piece"). */
   filterName?: string;
-  /** Registered but not yet browsable — switcher shows it disabled. */
-  comingSoon?: boolean;
+  /** Single source of truth for roadmap visibility, data readiness and routing. */
+  release: GameReleaseReadiness;
   /** Thin per-game tint layered OVER the honey baseline (crest dot / top-glow /
    *  card-frame only — never a repaint of fills/CTA/focus). Omit for the baseline
    *  game so it falls back to `--primary` and reads as no skin. */

@@ -2,12 +2,14 @@
 
 import { Crown, Lock, Sparkles } from "lucide-react";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
+import { useTierLimits } from "@/hooks/use-tier-limits";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import type {
   RequiredTier,
   TierFeatureKey,
 } from "@/lib/tier-features";
+import { getTierFeature, resolveUpgradeTier } from "@/lib/billing";
 import { cn } from "@/lib/utils";
 
 type CommonProps = {
@@ -36,16 +38,28 @@ function getLabel(tier: RequiredTier) {
   return tier === "PRO_PLUS" ? "Pro+" : "Pro";
 }
 
+function useUpgradeTarget(
+  featureKey: TierFeatureKey | undefined,
+  tierOverride: RequiredTier | undefined,
+): RequiredTier {
+  const { tier } = useTierLimits();
+  const requiredTier =
+    tierOverride ??
+    (featureKey ? getTierFeature(featureKey).requiredTier : "PRO");
+  return resolveUpgradeTier(tier, requiredTier);
+}
+
 /**
  * Compact badge that opens the shared upgrade dialog when clicked.
  * Suitable for inline placement next to labels, table headers, etc.
  */
 export function UpgradeBadge({
   featureKey,
-  tier = "PRO",
+  tier: tierOverride,
   className,
 }: CommonProps) {
   const { openUpgradeDialog } = useUpgradeDialog();
+  const tier = useUpgradeTarget(featureKey, tierOverride);
   const label = getLabel(tier);
 
   return (
@@ -78,13 +92,14 @@ export function LockOverlay({
   children,
   locked,
   featureKey,
-  tier = "PRO",
+  tier: tierOverride,
   className,
 }: CommonProps & {
   children: React.ReactNode;
   locked: boolean;
 }) {
   const { openUpgradeDialog } = useUpgradeDialog();
+  const tier = useUpgradeTarget(featureKey, tierOverride);
   const label = getLabel(tier);
 
   if (!locked) return <>{children}</>;
@@ -121,11 +136,12 @@ export function LockOverlay({
  */
 export function LockChip({
   featureKey,
-  tier = "PRO",
+  tier: tierOverride,
   className,
 }: CommonProps) {
   const { openUpgradeDialog } = useUpgradeDialog();
   const lang = useUIStore((s) => s.language);
+  const tier = useUpgradeTarget(featureKey, tierOverride);
   const label = getLabel(tier);
   const requiresKey = tier === "PRO_PLUS" ? "requiresProPlus" : "requiresPro";
 
@@ -162,12 +178,13 @@ export function LockChip({
  */
 export function LockTab({
   featureKey,
-  tier = "PRO",
+  tier: tierOverride,
   className,
   children,
 }: CommonProps & { children: React.ReactNode }) {
   const { openUpgradeDialog } = useUpgradeDialog();
   const lang = useUIStore((s) => s.language);
+  const tier = useUpgradeTarget(featureKey, tierOverride);
 
   return (
     <button

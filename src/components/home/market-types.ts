@@ -1,3 +1,5 @@
+import type { GradeKey } from "@/lib/pricing/grade-tiers"
+
 export type TabId = "all" | "popular" | "latest"
 
 export interface Tab {
@@ -22,7 +24,8 @@ export type SortKey =
   | "newest"
   | "name"
 
-export type PriceMode = "raw" | "psa10"
+/** @deprecated Use GradeKey and the `grade` prop/query parameter. */
+export type PriceMode = GradeKey
 
 export type ViewMode = "table" | "grid"
 

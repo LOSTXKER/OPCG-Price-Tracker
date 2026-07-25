@@ -29,6 +29,7 @@ export function QtyStepper({
   showInput = true,
   disabled,
   decreaseLabel = "Decrease",
+  inputLabel = "Quantity",
   increaseLabel = "Increase",
   className,
 }: {
@@ -41,6 +42,7 @@ export function QtyStepper({
   showInput?: boolean
   disabled?: boolean
   decreaseLabel?: string
+  inputLabel?: string
   increaseLabel?: string
   className?: string
 }) {
@@ -73,6 +75,7 @@ export function QtyStepper({
           pattern="[0-9]*"
           value={value}
           disabled={disabled}
+          aria-label={inputLabel}
           onChange={(e) => {
             const v = e.target.value.replace(/\D/g, "")
             onChange(clamp(Number(v) || min))

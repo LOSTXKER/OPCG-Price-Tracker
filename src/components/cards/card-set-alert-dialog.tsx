@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Bell, Check } from "lucide-react"
 
 import {
@@ -54,19 +54,17 @@ export function CardSetAlertDialog({
       onOpenChange?.(next)
     }
   }
-  const initialTarget =
-    currentPriceJpy != null
-      ? Math.round(jpyToDisplayValue(currentPriceJpy, currency)).toString()
-      : ""
   const [value, setValue] = useState<AlertFormValue>({
     direction: "BELOW",
     channels: ["EMAIL"],
-    target: initialTarget,
+    target: "",
   })
   const { submit, submitting, error, setError } = useAlertSubmit()
   const [done, setDone] = useState(false)
 
-  const reset = () => {
+  useEffect(() => {
+    if (!open) return
+
     setValue({
       direction: "BELOW" as AlertDirection,
       channels: ["EMAIL"],
@@ -77,7 +75,9 @@ export function CardSetAlertDialog({
     })
     setDone(false)
     setError(null)
-  }
+    // Reset on every fresh open and reformat if the browser preference changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- setError is a stable useState setter from useAlertSubmit
+  }, [open, currentPriceJpy, currency])
 
   const handleSubmit = () =>
     submit({
@@ -110,7 +110,6 @@ export function CardSetAlertDialog({
           size="sm"
           onClick={() => {
             setOpen(true)
-            reset()
           }}
           className="gap-1.5"
         >
@@ -123,7 +122,6 @@ export function CardSetAlertDialog({
         open={open}
         onOpenChange={(next) => {
           setOpen(next)
-          if (next) reset()
         }}
       >
         <DialogContent className="sm:max-w-sm">

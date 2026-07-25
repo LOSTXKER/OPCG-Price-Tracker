@@ -7,7 +7,15 @@ import { getCardName, getLocale, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { invalidateSettings } from "@/hooks/use-settings"
 import { DEFAULT_CARD_CONDITION } from "@/lib/constants/ui"
+import {
+  clearPortfolioBatchRequestScope,
+  createScopedPortfolioBatchKey,
+} from "@/lib/portfolio/batch-request"
 import { getPortfolioFinancials } from "@/lib/portfolio/financials"
+import {
+  toPortfolioHistoryPoints,
+  type PortfolioHistorySnapshot,
+} from "@/lib/portfolio/history-points"
 import type {
   PortfolioStats,
   AllocationSlice,
@@ -19,7 +27,12 @@ import type {
   PortfolioBatchResult,
   PortfolioMutationResult,
   PortfolioQuota,
+  PortfolioLot,
 } from "@/lib/types/portfolio"
+import type {
+  CreatePortfolioLotInput,
+  UpdatePortfolioLotInput,
+} from "@/lib/portfolio/schemas"
 import type { CartItem } from "@/components/portfolio/add-card-types"
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants"
 import { useMultigameDemo, MOCK_POKEMON_PORTFOLIO_ITEMS } from "@/lib/mock/multigame-demo"
@@ -42,6 +55,10 @@ type CardData = {
 export type ItemRow = {
   id: number
   quantity: number
+  lots: PortfolioLot[]
+  lotCount: number
+  recordedCostJpy: number
+  costedCopyCount: number
   purchasePrice: number | null
   condition: string
   isPrivate?: boolean
@@ -91,6 +108,10 @@ function toAssetRow(it: ItemRow): AssetRow {
     rarity: it.card.rarity,
     imageUrl: it.card.imageUrl,
     quantity: it.quantity,
+    lots: it.lots,
+    lotCount: it.lotCount,
+    recordedCostJpy: it.recordedCostJpy,
+    costedCopyCount: it.costedCopyCount,
     purchasePrice: it.purchasePrice,
     currentPrice: it.card.latestPriceJpy,
     currentPriceThb: it.card.latestPriceThb ?? null,
@@ -137,16 +158,6 @@ function buildGameBreakdown(items: ItemRow[]): GameBreakdown[] {
       }
     })
     .sort((a, b) => b.valueJpy - a.valueJpy)
-}
-
-type SnapshotRow = {
-  totalJpy: number
-  totalThb: number | null
-  totalCost: number
-  netInvestedJpy: number | null
-  pnl: number
-  cardCount: number
-  snapshotAt: string
 }
 
 /**
@@ -213,25 +224,13 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES, activePortfolioId
   const loadHistory = useCallback(
     async (portfolioId: number, revision: number) => {
       const hData = await apiTry(
-        apiGet<{ snapshots: SnapshotRow[] }>(`/api/portfolio/history?portfolioId=${portfolioId}`),
+        apiGet<{ snapshots: PortfolioHistorySnapshot[] }>(
+          `/api/portfolio/history?portfolioId=${portfolioId}`,
+        ),
       )
       if (!hData || revision !== historyRequestRevision.current) return
       const locale = getLocale(lang)
-      let prevInvested: number | null = null
-      const points: HistoryPoint[] = (hData.snapshots ?? []).map((s) => {
-        const netInvested = s.netInvestedJpy ?? s.totalCost
-        const isInflow = prevInvested != null && netInvested > prevInvested
-        prevInvested = netInvested
-        return {
-          label: new Date(s.snapshotAt).toLocaleDateString(locale, { month: "short", day: "numeric" }),
-          date: s.snapshotAt,
-          value: s.totalJpy,
-          cost: s.totalCost,
-          netInvested,
-          cardCount: s.cardCount,
-          isInflow,
-        }
-      })
+      const points = toPortfolioHistoryPoints(hData.snapshots ?? [], locale)
       setHistory(points)
       setHistoryPortfolioId(portfolioId)
     },
@@ -293,14 +292,12 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES, activePortfolioId
     if (financials.performanceComplete) {
       for (const it of scopedItems) {
         const px = it.card.latestPriceJpy
-        if (px == null || it.purchasePrice == null) continue
-        const cost = it.purchasePrice * it.quantity
+        if (px == null || it.costedCopyCount !== it.quantity) continue
+        const cost = it.recordedCostJpy
         const value = px * it.quantity
         const linePnl = value - cost
         const linePct =
-          it.purchasePrice > 0
-            ? ((px - it.purchasePrice) / it.purchasePrice) * 100
-            : null
+          cost > 0 ? (linePnl / cost) * 100 : null
         const name = getCardName(lang, it.card)
         if (!best || linePnl > best.pnl) best = { name, pnl: linePnl, pnlPercent: linePct }
         if (!worst || linePnl < worst.pnl) worst = { name, pnl: linePnl, pnlPercent: linePct }
@@ -468,6 +465,7 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES, activePortfolioId
   const addCardsBatch = async (
     portfolioId: number,
     cartItems: CartItem[],
+    requestScopeId?: string,
   ): Promise<PortfolioBatchResult> => {
     if (cartItems.length === 0) {
       return {
@@ -480,17 +478,23 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES, activePortfolioId
     }
 
     try {
-      const batchKey = JSON.stringify({
+      const payloadKey = JSON.stringify({
         portfolioId,
         items: cartItems
           .map((item) => ({
             cardId: item.card.id,
             quantity: item.quantity,
             purchasePrice: item.purchasePrice,
+            acquiredAt: item.acquiredAt,
+            lotNote: item.lotNote,
             condition: DEFAULT_CARD_CONDITION,
           }))
           .sort((a, b) => a.cardId - b.cardId),
       })
+      const batchKey = createScopedPortfolioBatchKey(
+        requestScopeId,
+        payloadKey,
+      )
       const requestId =
         batchRequestIds.current.get(batchKey) ?? globalThis.crypto.randomUUID()
       batchRequestIds.current.set(batchKey, requestId)
@@ -504,6 +508,8 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES, activePortfolioId
             cardId: item.card.id,
             quantity: item.quantity,
             purchasePrice: item.purchasePrice,
+            acquiredAt: item.acquiredAt,
+            lotNote: item.lotNote,
             condition: DEFAULT_CARD_CONDITION,
           })),
         }
@@ -527,25 +533,61 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES, activePortfolioId
     }
   }
 
+  const resetAddCardsBatchSession = useCallback((requestScopeId: string) => {
+    clearPortfolioBatchRequestScope(batchRequestIds.current, requestScopeId)
+  }, [])
+
   const updateItem = async (
     itemId: number,
     data: {
       quantity?: number
       purchasePrice?: number | null
+      acquiredAt?: string | null
+      lotNote?: string | null
+      condition?: string
       isPrivate?: boolean
       notes?: string | null
     },
   ): Promise<boolean> => {
     const res = await apiTry(apiPatch(`/api/portfolio/items/${itemId}`, data))
     if (res === null) return false
-    void load()
+    await load()
+    return true
+  }
+
+  const addLot = async (
+    itemId: number,
+    data: CreatePortfolioLotInput,
+  ): Promise<boolean> => {
+    const res = await apiTry(
+      apiPost(`/api/portfolio/items/${itemId}/lots`, data),
+    )
+    if (res === null) return false
+    await load()
+    return true
+  }
+
+  const updateLot = async (
+    lotId: number,
+    data: UpdatePortfolioLotInput,
+  ): Promise<boolean> => {
+    const res = await apiTry(apiPatch(`/api/portfolio/lots/${lotId}`, data))
+    if (res === null) return false
+    await load()
+    return true
+  }
+
+  const removeLot = async (lotId: number): Promise<boolean> => {
+    const res = await apiTry(apiDelete(`/api/portfolio/lots/${lotId}`))
+    if (res === null) return false
+    await load()
     return true
   }
 
   const removeItem = async (itemId: number): Promise<boolean> => {
     const res = await apiTry(apiDelete(`/api/portfolio/items/${itemId}`))
     if (res === null) return false
-    void load()
+    await load()
     return true
   }
 
@@ -572,7 +614,11 @@ export function usePortfolioApi(gameScope: string = ALL_GAMES, activePortfolioId
     setPortfolioVisibility,
     deletePortfolio,
     addCardsBatch,
+    resetAddCardsBatchSession,
     updateItem,
+    addLot,
+    updateLot,
+    removeLot,
     removeItem,
   }
 }

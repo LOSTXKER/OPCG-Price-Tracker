@@ -91,6 +91,80 @@ describe("portfolio collection route", () => {
     expect(body.limits).toEqual({ portfolioCount: null, portfolioCards: null });
   });
 
+  it("returns owner lot details with exact cost coverage fields", async () => {
+    const createdAt = new Date("2026-07-23T00:00:00.000Z");
+    mocks.findMany.mockResolvedValue([
+      {
+        id: 1,
+        name: "Main",
+        isPublic: false,
+        items: [
+          {
+            id: 7,
+            quantity: 3,
+            purchasePrice: 999,
+            card: { id: 10 },
+            lots: [
+              {
+                id: 70,
+                quantity: 1,
+                unitCostJpy: 100,
+                acquiredAt: null,
+                note: null,
+                source: "MANUAL",
+                createdAt,
+                updatedAt: createdAt,
+              },
+              {
+                id: 71,
+                quantity: 2,
+                unitCostJpy: null,
+                acquiredAt: null,
+                note: "ไม่ทราบต้นทุน",
+                source: "MANUAL",
+                createdAt,
+                updatedAt: createdAt,
+              },
+            ],
+          },
+        ],
+      },
+    ]);
+
+    const response = await GET(
+      new NextRequest("https://meecard.test/api/portfolio"),
+    );
+    const body = await response.json();
+
+    expect(body.portfolios[0].items[0]).toMatchObject({
+      id: 7,
+      quantity: 3,
+      purchasePrice: null,
+      lotCount: 2,
+      recordedCostJpy: 100,
+      costedCopyCount: 1,
+      lots: [
+        { id: 70, quantity: 1, unitCostJpy: 100 },
+        { id: 71, quantity: 2, unitCostJpy: null },
+      ],
+    });
+    expect(mocks.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        include: {
+          items: expect.objectContaining({
+            include: expect.objectContaining({
+              lots: expect.objectContaining({
+                select: expect.objectContaining({
+                  unitCostJpy: true,
+                }),
+              }),
+            }),
+          }),
+        },
+      }),
+    );
+  });
+
   it("rejects creation without privacy before writing", async () => {
     const response = await POST(
       new NextRequest("https://meecard.test/api/portfolio", {

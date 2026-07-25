@@ -27,7 +27,7 @@ export function PeriodChip({
         <TooltipTrigger
           aria-label={t(lang, "marketPeriodHint")}
           className={cn(
-            "inline-flex shrink-0 items-center gap-1 rounded-full border border-transparent dark:border-hair bg-muted/40 px-1.5 py-0.5 text-micro font-mono uppercase tracking-wider text-muted-foreground motion-base hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+            "tap-safe inline-flex shrink-0 items-center gap-1 rounded-full border border-transparent bg-muted/40 px-1.5 py-0.5 text-micro font-mono uppercase tracking-wider text-muted-foreground motion-base hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring dark:border-hair",
             className,
           )}
         >

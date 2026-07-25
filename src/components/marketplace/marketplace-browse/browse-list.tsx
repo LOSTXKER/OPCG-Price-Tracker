@@ -2,9 +2,9 @@
 
 import Link from "next/link"
 
+import { Price } from "@/components/shared/price-inline"
 import { Badge } from "@/components/ui/badge"
 import { getCardName } from "@/lib/i18n"
-import { formatJpy, formatThb } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
 import type { MarketplaceBrowseListing } from "./types"
@@ -50,12 +50,11 @@ function ListingRow({ listing: l }: { listing: MarketplaceBrowseListing }) {
         </p>
       </div>
       <div className="shrink-0 text-right">
-        <p className="text-sm font-bold tabular-nums">{formatJpy(l.priceJpy)}</p>
-        {l.priceThb != null && (
-          <p className="text-xs text-muted-foreground tabular-nums">
-            {formatThb(l.priceThb)}
-          </p>
-        )}
+        <Price
+          jpy={l.priceJpy}
+          thb={l.priceThb}
+          className="text-sm font-bold tabular-nums"
+        />
       </div>
     </Link>
   )

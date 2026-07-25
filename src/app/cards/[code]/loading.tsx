@@ -26,11 +26,13 @@ export default function CardDetailLoading() {
           </div>
 
           {/* edition toggle + grade rail chips */}
-          <Skeleton className="h-8 w-28 rounded-lg" />
-          <div className="flex gap-2">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-14 w-20 shrink-0 rounded-lg" />
-            ))}
+          <Skeleton className="h-11 w-28 rounded-full md:h-9" />
+          <div className="no-sb -mx-1 max-w-full overflow-hidden px-1">
+            <div className="flex w-max gap-2">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Skeleton key={i} className="h-14 w-20 shrink-0 rounded-lg" />
+              ))}
+            </div>
           </div>
 
           {/* hero price + delta */}
@@ -69,7 +71,7 @@ export default function CardDetailLoading() {
       </div>
 
       {/* chart */}
-      <Skeleton className="mt-6 h-72 w-full rounded-xl" />
+      <Skeleton className="mt-6 h-[210px] w-full rounded-xl sm:h-[280px] lg:h-[320px]" />
     </div>
   );
 }

@@ -11,6 +11,7 @@ import {
 import { RankTierIcon } from "@/components/shared/rank-icon";
 import { useRankTiers } from "@/hooks/use-rank-tiers";
 import { getStreakReward } from "@/lib/honey/streak";
+import { cn } from "@/lib/utils";
 import type { HoneyLevel, ActiveEvent, ShopItem } from "../types";
 import { RankGuideContent } from "./rank-info-popover";
 import { HowToEarnGuideContent } from "./how-to-earn-popover";
@@ -95,10 +96,17 @@ export function HoneyStatusBar(props: StatusProps) {
       {/* Multiplier pills — render plan and event multipliers separately so
           users can see exactly what their subscription contributes vs. the
           time-bound seasonal event. Both stack at earn time. */}
-      {(tierMultiplier > 1 || activeEvent) && (
+      {(tierMultiplier >= 1 || activeEvent) && (
         <div className="flex flex-wrap items-center gap-2">
-          {tierMultiplier > 1 && (
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/5 px-3 py-1 text-xs font-bold text-amber-600 dark:text-amber-400">
+          {tierMultiplier >= 1 && (
+            <div
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold",
+                tierMultiplier > 1
+                  ? "border-amber-500/30 bg-amber-500/5 text-amber-600 dark:text-amber-400"
+                  : "border-hair bg-muted/40 text-muted-foreground",
+              )}
+            >
               <Sparkles className="size-3.5" />
               <span>
                 {tierMultiplier}x{" "}

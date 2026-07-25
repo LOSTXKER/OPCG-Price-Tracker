@@ -5,13 +5,13 @@ import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useUIStore } from "@/stores/ui-store";
-import { useSettings } from "@/hooks/use-settings";
+import { useTierLimits } from "@/hooks/use-tier-limits";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import {
   currencySymbol,
-  formatJpy,
+  formatJpyAmount,
   jpyToDisplayValue,
 } from "@/lib/utils/currency";
 
@@ -29,7 +29,7 @@ export type AlertFormValue = {
 export type AlertFormBodyProps = {
   value: AlertFormValue;
   onChange: (value: AlertFormValue) => void;
-  /** Market price in JPY (shown as a hint under the input) */
+  /** Market price in JPY (formatted to the user's display currency in the hint) */
   currentPriceJpy?: number | null;
   error?: string | null;
   submitting: boolean;
@@ -48,13 +48,8 @@ export function AlertFormBody({
 }: AlertFormBodyProps) {
   const lang = useUIStore((s) => s.language);
   const currency = useUIStore((s) => s.currency);
-  const { settings } = useSettings();
-  const tier = settings?.tier ?? "FREE";
-  const isPro =
-    tier === "PRO" ||
-    tier === "PRO_PLUS" ||
-    tier === "LIFETIME_PRO" ||
-    tier === "LIFETIME_PRO_PLUS";
+  const { limits } = useTierLimits();
+  const canUseLineAlerts = limits.lineAlerts;
   const { openUpgradeDialog } = useUpgradeDialog();
 
   const symbol = currencySymbol(currency);
@@ -80,7 +75,7 @@ export function AlertFormBody({
   };
 
   const onPickLine = () => {
-    if (!isPro) {
+    if (!canUseLineAlerts) {
       openUpgradeDialog({ featureKey: "lineAlerts" });
       return;
     }
@@ -91,18 +86,24 @@ export function AlertFormBody({
     <div className="space-y-3">
       <div>
         <p className="mb-1.5 text-label">{t(lang, "whenPriceGoes")}</p>
-        <div className="grid grid-cols-2 gap-1.5">
+        <div
+          role="radiogroup"
+          aria-label={t(lang, "whenPriceGoes")}
+          className="grid grid-cols-2 gap-1.5"
+        >
           <DirectionPill
-            active={value.direction === "BELOW"}
+            value="BELOW"
+            selectedValue={value.direction}
             tone="down"
             label={t(lang, "whenBelow")}
-            onClick={() => setDirection("BELOW")}
+            onSelect={setDirection}
           />
           <DirectionPill
-            active={value.direction === "ABOVE"}
+            value="ABOVE"
+            selectedValue={value.direction}
             tone="up"
             label={t(lang, "whenAbove")}
-            onClick={() => setDirection("ABOVE")}
+            onSelect={setDirection}
           />
         </div>
       </div>
@@ -125,7 +126,7 @@ export function AlertFormBody({
         </div>
         {currentPriceJpy != null && (
           <p className="mt-1 text-meta text-muted-foreground/70">
-            {t(lang, "marketPrice")}: {formatJpy(currentPriceJpy)}
+            {t(lang, "marketPrice")}: {formatJpyAmount(currentPriceJpy, currency)}
           </p>
         )}
       </div>
@@ -154,9 +155,9 @@ export function AlertFormBody({
             icon={MessageCircle}
             label={t(lang, "alertChannelLine")}
             active={value.channels.includes("LINE")}
-            locked={!isPro}
+            locked={!canUseLineAlerts}
             onClick={onPickLine}
-            title={!isPro ? t(lang, "requiresPro") : undefined}
+            title={!canUseLineAlerts ? t(lang, "requiresPro") : undefined}
           />
         </div>
       </div>
@@ -171,16 +172,19 @@ export function AlertFormBody({
 }
 
 function DirectionPill({
-  active,
+  value,
+  selectedValue,
   tone,
   label,
-  onClick,
+  onSelect,
 }: {
-  active: boolean;
+  value: AlertDirection;
+  selectedValue: AlertDirection;
   tone: "up" | "down";
   label: string;
-  onClick: () => void;
+  onSelect: (value: AlertDirection) => void;
 }) {
+  const active = value === selectedValue;
   const activeCls =
     tone === "up"
       ? "border-price-up/40 bg-price-up/10 text-price-up-on-soft"
@@ -188,7 +192,36 @@ function DirectionPill({
   return (
     <button
       type="button"
-      onClick={onClick}
+      role="radio"
+      aria-checked={active}
+      tabIndex={active ? 0 : -1}
+      data-direction={value}
+      onClick={() => onSelect(value)}
+      onKeyDown={(event) => {
+        if (
+          event.key !== "ArrowLeft" &&
+          event.key !== "ArrowRight" &&
+          event.key !== "ArrowUp" &&
+          event.key !== "ArrowDown" &&
+          event.key !== "Home" &&
+          event.key !== "End"
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+        const nextValue: AlertDirection =
+          event.key === "ArrowLeft" ||
+          event.key === "ArrowUp" ||
+          event.key === "Home"
+            ? "BELOW"
+            : "ABOVE";
+        const nextButton = event.currentTarget.parentElement?.querySelector<HTMLButtonElement>(
+          `[data-direction="${nextValue}"]`,
+        );
+        onSelect(nextValue);
+        nextButton?.focus();
+      }}
       className={cn(
         "h-11 rounded-md border px-2 text-xs font-medium transition-all md:h-8",
         active

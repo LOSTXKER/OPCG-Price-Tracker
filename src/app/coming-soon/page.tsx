@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { getGameConfig, getGameAccentTint } from "@/lib/game-config";
+import {
+  getGameAccentTint,
+  getGameConfig,
+  isGameLaunchReady,
+} from "@/lib/game-config";
 import { getServerLanguage } from "@/lib/i18n/server";
 import { t } from "@/lib/i18n";
 
@@ -15,11 +20,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * Teaser landing for a registered-but-not-live game (`comingSoon` in the config,
- * e.g. Pokémon). The game-switcher routes here with `?game=<slug>` instead of
- * navigating into that game's empty catalog — so the switch actually *does*
- * something. Deliberately does NOT change the active game (no cookie/store
- * write), so the rest of the app stays on the live game and nothing breaks.
+ * Teaser landing for a registered roadmap game (e.g. Pokémon). The Header
+ * switcher routes here instead of navigating into an empty catalog and does not
+ * change the active game, cookie or store.
  */
 export default async function ComingSoonPage({
   searchParams,
@@ -28,9 +31,12 @@ export default async function ComingSoonPage({
 }) {
   const [{ game }, lang] = await Promise.all([searchParams, getServerLanguage()]);
   const config = game ? getGameConfig(game) : undefined;
-  const name = config?.nameEn ?? config?.name ?? "Meecard";
+  if (!config) notFound();
+  if (isGameLaunchReady(config)) redirect(`/${config.slug}`);
+
+  const name = config.nameEn ?? config.name;
   // Thin per-game tint over the honey baseline — a whisper of the game's skin.
-  const tint = getGameAccentTint(game ?? "");
+  const tint = getGameAccentTint(config.slug);
 
   return (
     <div className="relative mx-auto flex min-h-[55vh] max-w-md flex-col items-center justify-center text-center">

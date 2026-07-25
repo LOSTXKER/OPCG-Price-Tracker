@@ -3,6 +3,7 @@ import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { prisma } from "@/lib/db";
 import { effectiveTier, getLimits } from "@/lib/tier";
+import { buildPortfolioLotsCsv } from "@/lib/portfolio/export";
 
 export const GET = apiHandler(async (request: NextRequest) => {
   const auth = await requireAuthUser();
@@ -23,6 +24,9 @@ export const GET = apiHandler(async (request: NextRequest) => {
       include: {
         items: {
           include: {
+            lots: {
+              orderBy: [{ acquiredAt: "asc" }, { createdAt: "asc" }],
+            },
             card: {
               select: {
                 cardCode: true,
@@ -42,24 +46,9 @@ export const GET = apiHandler(async (request: NextRequest) => {
       return NextResponse.json({ error: "No portfolio found" }, { status: 404 });
     }
 
-    const header = "Card Code,Name,Set,Rarity,Quantity,Purchase Price (JPY),Current Price (JPY),Condition\n";
-    const rows = portfolio.items
-      .map((item) => {
-        const c = item.card;
-        return [
-          c.cardCode,
-          `"${(c.nameEn ?? c.nameJp).replace(/"/g, '""')}"`,
-          c.set.code,
-          c.rarity,
-          item.quantity,
-          item.purchasePrice ?? "",
-          c.latestPriceJpy ?? "",
-          item.condition,
-        ].join(",");
-      })
-      .join("\n");
+    const csv = buildPortfolioLotsCsv(portfolio.items);
 
-    return new NextResponse(header + rows, {
+    return new NextResponse(csv, {
       headers: {
         "Content-Type": "text/csv",
         "Content-Disposition": `attachment; filename="portfolio-${new Date().toISOString().slice(0, 10)}.csv"`,

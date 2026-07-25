@@ -1,6 +1,14 @@
 export type PortfolioFinancialItem = {
   quantity: number
   purchasePrice: number | null
+  /**
+   * Exact sum of the known acquisition lots for this holding. New lot-aware
+   * reads should provide this together with `costedCopyCount`; callers that do
+   * not yet include lots continue to fall back to `purchasePrice * quantity`.
+   */
+  recordedCostJpy?: number
+  /** Number of physical copies whose lot cost is known (zero is still known). */
+  costedCopyCount?: number
   card: {
     latestPriceJpy: number | null
   }
@@ -43,7 +51,13 @@ export function getPortfolioFinancials(
       valuedCopyCount += quantity
     }
 
-    if (item.purchasePrice !== null) {
+    if (
+      item.recordedCostJpy !== undefined &&
+      item.costedCopyCount !== undefined
+    ) {
+      recordedCostJpy += item.recordedCostJpy
+      costedCopyCount += item.costedCopyCount
+    } else if (item.purchasePrice !== null) {
       recordedCostJpy += item.purchasePrice * quantity
       costedCopyCount += quantity
     }

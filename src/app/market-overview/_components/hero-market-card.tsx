@@ -3,14 +3,17 @@
 import { ArrowDown, ArrowRight, ArrowUp, Layers, Package, TrendingUp } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
-import { Price } from "@/components/shared/price-inline"
+import { HeroNumber } from "@/components/ui/hero-number"
+import { PriceTag } from "@/components/ui/price-tag"
 import { Surface } from "@/components/ui/surface"
 import { cn } from "@/lib/utils"
 import { t, type Language } from "@/lib/i18n"
-import { formatCount } from "@/lib/utils/currency"
-
-import { PeriodChip } from "./period-chip"
-import { RawValueHint } from "./raw-value-hint"
+import {
+  formatCount,
+  formatDisplayValue,
+  jpyToDisplayValue,
+} from "@/lib/utils/currency"
+import { useUIStore } from "@/stores/ui-store"
 
 type Movers = { up: number; down: number; flat: number }
 
@@ -31,36 +34,44 @@ export function MarketSnapshot({
   setCount: number
   lang: Language
 }) {
+  const currency = useUIStore((s) => s.currency)
   const total = movers.up + movers.down + movers.flat
   const upPct = total > 0 ? (movers.up / total) * 100 : 0
   const downPct = total > 0 ? (movers.down / total) * 100 : 0
   const flatPct = Math.max(0, 100 - upPct - downPct)
 
   return (
-    <Surface variant="panel" className="overflow-hidden">
+    <Surface
+      variant="hero"
+      className="overflow-hidden"
+      data-slot="market-snapshot"
+    >
       {/* Top: hero metric + sentiment gauge */}
-      <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10">
+      <div className="grid gap-5 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10">
         {/* Headline value */}
         <div className="min-w-0">
-          <div className="flex items-center gap-1.5">
-            <p className="text-eyebrow">{t(lang, "totalValue")}</p>
-            <RawValueHint lang={lang} />
+          <p className="text-eyebrow">{t(lang, "totalValue")}</p>
+          <div className="mt-2 min-w-0 overflow-hidden">
+            <HeroNumber
+              value={jpyToDisplayValue(totalValue, currency)}
+              format={(value) => formatDisplayValue(value, currency)}
+              className="block truncate font-price text-foreground"
+            />
           </div>
-          <p className="mt-2 truncate font-price text-display text-foreground">
-            <Price jpy={totalValue} />
-          </p>
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <DeltaPill delta={weightedDelta7d} period="7d" />
+            <PriceTag
+              change={weightedDelta7d}
+              changeOnly
+              decimals={2}
+              size="sm"
+            />
             <span className="text-meta">{t(lang, "marketHeroDeltaLabel")}</span>
           </div>
         </div>
 
         {/* Movers gauge: stacked bar with inline % + 3-column legend below */}
         <div className="min-w-0 lg:border-l lg:border-hair lg:pl-10">
-          <div className="flex items-center gap-1.5">
-            <p className="text-eyebrow">{t(lang, "marketMoversTitle")}</p>
-            <PeriodChip lang={lang} />
-          </div>
+          <p className="text-eyebrow">{t(lang, "marketMoversTitle")}</p>
 
           {/* Stacked proportional bar with inline % labels — segment widths
               represent share of cards in each direction, not price change. */}
@@ -150,8 +161,7 @@ export function MarketSnapshot({
         <SecondaryStat
           icon={TrendingUp}
           label={t(lang, "avgPrice")}
-          value={<Price jpy={avgPrice} />}
-          hint={<RawValueHint lang={lang} />}
+          value={formatDisplayValue(jpyToDisplayValue(avgPrice, currency), currency)}
         />
         <SecondaryStat
           icon={Layers}
@@ -184,19 +194,21 @@ function MoverLegend({
   muted?: boolean
 }) {
   return (
-    <div className="flex min-w-0 items-center gap-1.5">
-      <Icon
-        className={cn("size-3.5 shrink-0", muted && "text-muted-foreground")}
-        style={muted ? undefined : { color }}
-        aria-hidden="true"
-      />
-      <span className="truncate">
+    <div className="min-w-0 text-center sm:text-left">
+      <div className="flex items-center justify-center gap-1.5 sm:justify-start">
+        <Icon
+          className={cn("size-3.5 shrink-0", muted && "text-muted-foreground")}
+          style={muted ? undefined : { color }}
+          aria-hidden="true"
+        />
         <span className="font-price font-semibold tabular-nums text-foreground">
           {formatCount(count)}
-        </span>{" "}
-        <span className="text-muted-foreground">{unit}</span>{" "}
-        <span className="text-foreground">{label}</span>
-      </span>
+        </span>
+        <span className="hidden truncate text-muted-foreground sm:inline">
+          {unit} <span className="text-foreground">{label}</span>
+        </span>
+      </div>
+      <p className="mt-0.5 text-micro text-muted-foreground sm:hidden">{label}</p>
     </div>
   )
 }
@@ -205,89 +217,20 @@ function SecondaryStat({
   icon: Icon,
   label,
   value,
-  hint,
 }: {
   icon: LucideIcon
   label: string
-  value: React.ReactNode
-  hint?: React.ReactNode
+  value: string
 }) {
   return (
-    <div className="min-w-0 px-4 py-3 sm:px-5 sm:py-4">
-      <div className="flex items-center gap-1.5">
-        <Icon className="size-3.5 text-muted-foreground" aria-hidden="true" />
-        <p className="text-eyebrow">{label}</p>
-        {hint}
+    <div className="min-w-0 px-3 py-3 text-center sm:px-5 sm:py-4 sm:text-left">
+      <div className="flex items-center justify-center gap-1.5 sm:justify-start">
+        <Icon className="hidden size-3.5 text-muted-foreground sm:block" aria-hidden="true" />
+        <p className="whitespace-nowrap text-meta sm:text-eyebrow">{label}</p>
       </div>
-      <p className="mt-1 truncate font-price text-h3 text-foreground">{value}</p>
+      <p className="mt-1 truncate font-price text-h4 text-foreground sm:text-h3">
+        {value}
+      </p>
     </div>
-  )
-}
-
-export function DeltaPill({
-  delta,
-  size = "md",
-  period,
-}: {
-  delta: number | null
-  size?: "sm" | "md"
-  /**
-   * Optional time-window label (e.g. "24h"). When provided, sets a native
-   * tooltip and—on `md` size—renders the label inline so the % value
-   * never appears without its time context.
-   */
-  period?: string
-}) {
-  if (delta == null) {
-    return (
-      <span
-        className={cn(
-          "inline-flex items-center gap-1 rounded-full bg-muted text-muted-foreground",
-          size === "sm" ? "px-1.5 py-0.5 text-micro" : "px-2 py-0.5 text-xs font-semibold",
-        )}
-        title={period ? `${period}: —` : undefined}
-      >
-        {period && size === "md" && (
-          <span className="text-micro font-mono uppercase tracking-wider opacity-70">
-            {period}
-          </span>
-        )}
-        —
-      </span>
-    )
-  }
-
-  const isUp = delta > 0.0001
-  const isDown = delta < -0.0001
-  const Icon = isUp ? ArrowUp : isDown ? ArrowDown : ArrowRight
-  const color = isUp
-    ? "var(--price-up-text-on-soft)"
-    : isDown
-      ? "var(--price-down-text-on-soft)"
-      : "var(--muted-foreground)"
-  const bg = isUp
-    ? "color-mix(in srgb, var(--price-up) 14%, transparent)"
-    : isDown
-      ? "color-mix(in srgb, var(--price-down) 14%, transparent)"
-      : "var(--muted)"
-  const display = `${isUp ? "+" : ""}${delta.toFixed(2)}%`
-
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1 rounded-full font-price tabular-nums",
-        size === "sm" ? "px-1.5 py-0.5 text-micro" : "px-2 py-0.5 text-xs font-semibold",
-      )}
-      style={{ color, background: bg }}
-      title={period ? `${period}: ${display}` : undefined}
-    >
-      {period && size === "md" && (
-        <span className="text-micro font-mono uppercase tracking-wider opacity-70">
-          {period}
-        </span>
-      )}
-      <Icon className={size === "sm" ? "size-3" : "size-3.5"} aria-hidden="true" />
-      {display}
-    </span>
   )
 }

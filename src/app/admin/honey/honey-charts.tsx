@@ -14,8 +14,8 @@ import {
   Cell,
   Legend,
 } from "recharts";
-import { cn } from "@/lib/utils";
 import { Surface } from "@/components/ui/surface";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { getTypeInfo } from "./honey-type-labels";
 
 interface DailyData {
@@ -35,10 +35,12 @@ interface HoneyChartsProps {
 }
 
 const PERIOD_OPTIONS = [
-  { label: "7 วัน", days: 7 },
-  { label: "14 วัน", days: 14 },
-  { label: "30 วัน", days: 30 },
+  { value: "7", label: "7 วัน", days: 7 },
+  { value: "14", label: "14 วัน", days: 14 },
+  { value: "30", label: "30 วัน", days: 30 },
 ] as const;
+
+type PeriodValue = (typeof PERIOD_OPTIONS)[number]["value"];
 
 const tooltipStyle = {
   backgroundColor: "hsl(var(--popover))",
@@ -49,7 +51,8 @@ const tooltipStyle = {
 };
 
 export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
-  const [period, setPeriod] = useState(30);
+  const [periodValue, setPeriodValue] = useState<PeriodValue>("30");
+  const period = Number(periodValue);
   const filtered = dailyData.slice(-period);
 
   const sortedTypes = [...typeCounts].sort((a, b) => b.count - a.count).slice(0, 10);
@@ -59,23 +62,15 @@ export function HoneyCharts({ dailyData, typeCounts }: HoneyChartsProps) {
       <Surface variant="outline" padding="lg" className="lg:col-span-3">
         <div className="flex items-center justify-between">
           <h3 className="text-h4">เทรนด์ Honey รายวัน</h3>
-          <div className="flex gap-1 rounded-lg bg-muted/50 p-0.5">
-            {PERIOD_OPTIONS.map((opt) => (
-              <button
-                key={opt.days}
-                type="button"
-                onClick={() => setPeriod(opt.days)}
-                className={cn(
-                  "min-h-11 rounded-md px-2.5 py-1 text-xs font-medium motion-base lg:min-h-0",
-                  period === opt.days
-                    ? "bg-primary/15 text-primary"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
+          <SegmentedControl<PeriodValue>
+            value={periodValue}
+            onChange={setPeriodValue}
+            options={PERIOD_OPTIONS}
+            size="sm"
+            variant="pill"
+            className="md:h-11! md:bg-transparent! md:p-0! md:before:block! lg:h-auto! lg:bg-muted/50! lg:p-0.5! lg:before:hidden! md:[&_button]:h-11! md:[&_button]:min-w-11! md:[&_button]:before:block! lg:[&_button]:h-7! lg:[&_button]:min-w-0! lg:[&_button]:before:hidden!"
+            ariaLabel="ช่วงข้อมูล Honey"
+          />
         </div>
         <div className="mt-4 h-56">
           <ResponsiveContainer

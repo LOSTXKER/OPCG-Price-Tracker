@@ -2,7 +2,8 @@
 
 import { useCallback, useMemo, useState } from "react"
 import Image from "next/image"
-import { Search, Trash2, X } from "lucide-react"
+import { Loader2, Search, Trash2, X } from "lucide-react"
+import { toast } from "sonner"
 
 import { useConfirm } from "@/components/shared/confirm-dialog"
 import { Button } from "@/components/ui/button"
@@ -181,13 +182,14 @@ export function BulkEditDialog({
       isPrivate?: boolean
       notes?: string | null
     },
-  ) => void
+  ) => Promise<boolean>
   onRemove: (itemId: number) => void
 }) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
   const [bulkSearch, setBulkSearch] = useState("")
   const [edits, setEdits] = useState<Record<number, RowEditState>>({})
+  const [saving, setSaving] = useState(false)
 
   const getRowState = useCallback(
     (row: AssetRow): RowEditState => {
@@ -240,7 +242,13 @@ export function BulkEditDialog({
     })
   }, [edits, assets, currency, hideBalance])
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (saving) return
+    const updates: Array<{
+      itemId: number
+      data: { quantity?: number; purchasePrice?: number | null; isPrivate?: boolean }
+    }> = []
+
     for (const row of assets) {
       const local = edits[row.itemId]
       if (!local) continue
@@ -254,14 +262,32 @@ export function BulkEditDialog({
         }
       }
       if (local.isPrivate !== row.isPrivate) data.isPrivate = local.isPrivate
-      if (Object.keys(data).length > 0) onUpdate(row.itemId, data)
+      if (Object.keys(data).length > 0) updates.push({ itemId: row.itemId, data })
     }
-    setEdits({})
-    setBulkSearch("")
-    onOpenChange(false)
+
+    if (updates.length === 0) return
+    setSaving(true)
+    try {
+      const results = await Promise.all(
+        updates.map(({ itemId, data }) => onUpdate(itemId, data)),
+      )
+      if (results.some((saved) => !saved)) {
+        toast.error(t(lang, "saveFailed"))
+        return
+      }
+      toast.success(t(lang, "saved"))
+      setEdits({})
+      setBulkSearch("")
+      onOpenChange(false)
+    } catch {
+      toast.error(t(lang, "saveFailed"))
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleClose = () => {
+    if (saving) return
     setEdits({})
     setBulkSearch("")
     onOpenChange(false)
@@ -285,7 +311,10 @@ export function BulkEditDialog({
         else onOpenChange(v)
       }}
     >
-      <DialogContent className="max-h-[85vh] overflow-hidden sm:max-w-lg">
+      <DialogContent
+        className="max-h-[85vh] overflow-hidden sm:max-w-lg"
+        showCloseButton={!saving}
+      >
         <DialogHeader>
           <DialogTitle>{t(lang, "bulkEdit")}</DialogTitle>
           <DialogDescription>
@@ -342,11 +371,23 @@ export function BulkEditDialog({
         </div>
 
         <DialogFooter className="gap-2 sm:gap-2">
-          <Button variant="outline" size="sm" onClick={handleClose}>
+          <Button variant="outline" size="sm" disabled={saving} onClick={handleClose}>
             {t(lang, "cancel")}
           </Button>
-          <Button size="sm" disabled={!dirty} onClick={handleSave}>
-            {t(lang, "save")}
+          <Button
+            size="sm"
+            disabled={!dirty || saving}
+            aria-busy={saving}
+            onClick={() => void handleSave()}
+          >
+            {saving ? (
+              <>
+                <Loader2 className="size-3.5 animate-spin" aria-hidden />
+                {t(lang, "saving")}
+              </>
+            ) : (
+              t(lang, "save")
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

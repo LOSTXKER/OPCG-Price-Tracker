@@ -3,6 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Price } from "@/components/shared/price-inline";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
@@ -119,15 +120,15 @@ export function StepPricing({
                 size="xs"
                 onClick={() => update({ priceJpy: qp.value })}
               >
-                {qp.label} (¥{qp.value.toLocaleString()})
+                {qp.label} (<Price jpy={qp.value} />)
               </Button>
             ))}
           </div>
         )}
         {marketPriceJpy != null && (
           <p className="text-meta">
-            {t(lang, "mktPriceMarketPrice").replace("{n}", marketPriceJpy.toLocaleString())}
-            {marketPriceThb != null && ` (~฿${marketPriceThb.toLocaleString()})`}
+            {t(lang, "marketPrice")}:{" "}
+            <Price jpy={marketPriceJpy} thb={marketPriceThb} />
           </p>
         )}
         {diffPct != null && (

@@ -2,15 +2,16 @@
 
 import { SortableHeader } from "@/components/shared/sortable-header"
 import { t, type Language } from "@/lib/i18n"
-import type { AssetRow } from "@/lib/types/portfolio"
+import type { PortfolioPurchaseRow } from "@/lib/types/portfolio"
 
 import { AssetRowComponent } from "./desktop-row"
-import type { SortDir, SortKey } from "./utils"
+import type { PurchaseSortKey, SortDir } from "./utils"
 
 /**
- * Quiet columns (owner: "ตารางรก ซ้ำซ้อน"): card · price · 24h · 7d trend
- * (lg+, CMC-style) · P/L · value. Cost basis lives in the edit dialog and
- * Insights; the game reads as a tint dot on the card's code line.
+ * Decision-first purchase columns: purchase identity · quantity · market price ·
+ * unit cost · P/L.
+ * The game reads as a tint dot on the card's code line; details stays a quiet
+ * trailing chevron. Fixed widths keep privacy masking from shifting columns.
  */
 export function DesktopAssetsTable({
   rows,
@@ -18,78 +19,98 @@ export function DesktopAssetsTable({
   onEdit,
   hideBalance = false,
   showGameBadge = false,
-  sparklines,
   sortKey,
   sortDir,
   onSortSelect,
 }: {
-  rows: AssetRow[]
+  rows: PortfolioPurchaseRow[]
   lang: Language
-  onEdit: (row: AssetRow) => void
+  onEdit: (row: PortfolioPurchaseRow) => void
   hideBalance?: boolean
   /** ≥2 games → tint dot + short name on each row's code line. */
   showGameBadge?: boolean
-  /** 7-day price series keyed by cardId (optional trend column). */
-  sparklines?: Record<number, number[]>
-  sortKey: SortKey
+  sortKey: PurchaseSortKey
   sortDir: SortDir
   /** Column headers sort in place (canonical SortableHeader, all tables). */
-  onSortSelect: (key: SortKey) => void
+  onSortSelect: (key: PurchaseSortKey) => void
 }) {
   return (
     <div className="hidden sm:block">
-      <table className="w-full border-collapse text-left text-sm">
+      <table
+        className="w-full table-fixed border-collapse text-left text-sm"
+        data-slot="portfolio-assets-table"
+      >
+        <colgroup data-slot="portfolio-assets-colgroup">
+          <col className="w-[28%]" />
+          <col className="w-[10%]" />
+          <col className="w-[17%]" />
+          <col className="w-[17%]" />
+          <col className="w-[20%]" />
+          <col className="w-[8%]" />
+        </colgroup>
         {/* Not sticky: the global header is sticky z-50, so a top-0 thead
             would pin underneath it. Revisit when --chrome-h (TOKENS-04) lands. */}
-        <thead className="bg-background">
-          <tr className="border-b border-hair text-eyebrow text-muted-foreground/60">
-            <th className="py-3 pr-3 font-medium">{t(lang, "card")}</th>
-            <SortableHeader<SortKey>
-              label={t(lang, "price")}
+        <thead className="bg-transparent" data-slot="portfolio-assets-head">
+          <tr className="border-b border-hair text-eyebrow">
+            <SortableHeader<PurchaseSortKey>
+              label={`${t(lang, "card")} / ${t(lang, "acquiredDate")}`}
+              column="date"
+              activeCol={sortKey}
+              dir={sortDir}
+              onClick={onSortSelect}
+              wrapLabel
+            />
+            <SortableHeader<PurchaseSortKey>
+              label={t(lang, "quantity")}
+              column="qty"
+              activeCol={sortKey}
+              dir={sortDir}
+              onClick={onSortSelect}
+              align="right"
+              wrapLabel
+            />
+            <SortableHeader<PurchaseSortKey>
+              label={t(lang, "marketPricePerCard")}
               column="price"
               activeCol={sortKey}
               dir={sortDir}
               onClick={onSortSelect}
               align="right"
+              wrapLabel
             />
-            <SortableHeader<SortKey>
-              label="24h"
-              column="change24h"
+            <SortableHeader<PurchaseSortKey>
+              label={t(lang, "unitCost")}
+              column="cost"
               activeCol={sortKey}
               dir={sortDir}
               onClick={onSortSelect}
               align="right"
+              wrapLabel
             />
-            <th className="hidden py-3 pr-3 text-right font-medium lg:table-cell">7d</th>
-            <SortableHeader<SortKey>
+            <SortableHeader<PurchaseSortKey>
               label={t(lang, "pnl")}
               column="pnl"
               activeCol={sortKey}
               dir={sortDir}
               onClick={onSortSelect}
               align="right"
+              wrapLabel
             />
-            <SortableHeader<SortKey>
-              label={t(lang, "value")}
-              column="value"
-              activeCol={sortKey}
-              dir={sortDir}
-              onClick={onSortSelect}
-              align="right"
-            />
-            <th className="w-10 py-3 pl-1" />
+            <th className="py-3 pl-1 text-right font-medium">
+              <span className="sr-only">{t(lang, "details")}</span>
+            </th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
+          {rows.map((row, index) => (
             <AssetRowComponent
-              key={row.itemId}
+              key={row.rowKey}
               row={row}
               lang={lang}
               onEdit={() => onEdit(row)}
               hideBalance={hideBalance}
               showGameBadge={showGameBadge}
-              sparkline={sparklines?.[row.cardId]}
+              eagerImage={index === 0}
             />
           ))}
         </tbody>

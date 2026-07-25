@@ -50,14 +50,21 @@ function DialogContent({
   children,
   showCloseButton = true,
   overlayClassName,
+  overlayForceRender = false,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
   overlayClassName?: string
+  /** Base UI hides nested backdrops by default. Opt in only when the upper
+   * dialog needs a visible layer between it and the dialog underneath. */
+  overlayForceRender?: boolean
 }) {
   return (
     <DialogPortal>
-      <DialogOverlay className={overlayClassName} />
+      <DialogOverlay
+        className={overlayClassName}
+        forceRender={overlayForceRender}
+      />
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(

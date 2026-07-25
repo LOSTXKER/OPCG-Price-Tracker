@@ -4,21 +4,6 @@ import { formatPct } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
-/** Small "est" marker — honesty flag on any modeled value. Discoverable via
- *  title + aria-label (not hover-only). */
-export function EstMark({ lang, className }: { lang: Language; className?: string }) {
-  const note = t(lang, "estimateNote")
-  return (
-    <span
-      title={note}
-      aria-label={note}
-      className={cn("text-overlay shrink-0 cursor-help uppercase text-muted-foreground/50", className)}
-    >
-      est
-    </span>
-  )
-}
-
 /** Signed % delta — the +/− sign carries direction, color reinforces (a11y).
  *  Rounds-to-0.0% renders neutral (muted, no sign) — never a false up/down. */
 export function Delta({

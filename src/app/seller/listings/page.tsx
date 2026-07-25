@@ -214,11 +214,12 @@ export default function SellerListingsPage() {
         }
       />
 
-      <div className="overflow-x-auto">
+      <div className="no-sb overflow-x-auto">
         <SegmentedControl
           value={activeTab}
           onChange={handleTabChange}
           ariaLabel="Filter listings by status"
+          className="shrink-0"
           options={STATUS_TABS.map((tab) => {
             const count =
               tab.key === "ALL"

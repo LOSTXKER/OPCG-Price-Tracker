@@ -1,21 +1,20 @@
 "use client"
 
-import { Edit2 } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
 import {
   Toolbar,
   ToolbarSearch,
   ToolbarSortDropdown,
   type ToolbarSortOption,
 } from "@/components/ui/toolbar"
-import { t, type Language } from "@/lib/i18n"
+import { LimitCounter } from "@/components/shared/limit-counter"
+import { getLocale, t, type Language } from "@/lib/i18n"
 
-import type { SortDir, SortKey } from "./utils"
+import type { PurchaseSortKey, SortDir } from "./utils"
 
 export function AssetsToolbar({
   lang,
-  count,
+  purchaseCount,
+  copyCount,
   searchQuery,
   onSearchChange,
   searchOpen,
@@ -23,38 +22,51 @@ export function AssetsToolbar({
   sortKey,
   sortDir,
   onSortSelect,
-  onBulkEdit,
-  hasAssets,
   leading,
+  quotaCurrent,
+  quotaMax,
 }: {
   lang: Language
-  count: number
+  purchaseCount: number
+  copyCount: number
   searchQuery: string
   onSearchChange: (v: string) => void
   searchOpen: boolean
   onSearchOpenChange: (v: boolean) => void
-  sortKey: SortKey
+  sortKey: PurchaseSortKey
   sortDir: SortDir
-  onSortSelect: (key: SortKey) => void
-  onBulkEdit: () => void
-  hasAssets: boolean
-  /** Replaces the default "สินทรัพย์ · count" heading — e.g. the game tabs. */
+  onSortSelect: (key: PurchaseSortKey) => void
+  /** Replaces the default purchase/copy summary — e.g. the game tabs. */
   leading?: React.ReactNode
+  /** Account-wide card-entry quota. This stays beside the holdings list so it
+   * is never confused with the visible rows after search/game filtering. */
+  quotaCurrent?: number
+  quotaMax?: number
 }) {
-  const sortOptions: ToolbarSortOption<SortKey>[] = [
-    { key: "value", label: t(lang, "value") },
+  const sortOptions: ToolbarSortOption<PurchaseSortKey>[] = [
+    { key: "date", label: t(lang, "acquiredDate") },
+    { key: "price", label: t(lang, "marketPricePerCard") },
+    { key: "cost", label: t(lang, "unitCost") },
     { key: "pnl", label: t(lang, "pnl") },
-    { key: "change24h", label: "24h" },
-    { key: "cost", label: t(lang, "costBasis") },
     { key: "qty", label: t(lang, "quantity") },
   ]
+  const countSummary = t(lang, "portfolioPurchaseCountSummary")
+    .replace("{purchases}", purchaseCount.toLocaleString(getLocale(lang)))
+    .replace("{copies}", copyCount.toLocaleString(getLocale(lang)))
+  const compactCountSummary =
+    purchaseCount === copyCount
+      ? t(lang, "purchaseLotCount").replace(
+          "{count}",
+          purchaseCount.toLocaleString(getLocale(lang)),
+        )
+      : countSummary
 
   return (
     <Toolbar
       variant="bare"
-      className="border-b border-hair pb-3"
+      className="pb-3 [&>div:last-child]:min-w-0 [&>div:last-child]:flex-1 [&>div:last-child]:justify-end"
       right={
-        <>
+        <div className="flex min-w-0 flex-wrap items-center justify-end gap-2 sm:flex-nowrap">
           <ToolbarSearch
             value={searchQuery}
             onValueChange={onSearchChange}
@@ -74,27 +86,34 @@ export function AssetsToolbar({
               fallbackLabel={t(lang, "toolbarSort")}
             />
           </div>
-          {hasAssets && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="xs"
-              onClick={onBulkEdit}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <Edit2 className="size-3" />
-              {t(lang, "bulkEdit")}
-            </Button>
-          )}
-        </>
+        </div>
       }
     >
-      {leading ?? (
-        <p className="text-eyebrow">
-          {t(lang, "assets")}
-          <span className="ml-2 tabular-nums text-muted-foreground/70">{count}</span>
-        </p>
-      )}
+      <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+        {leading ?? (
+          <p
+            className="text-h5 tabular-nums"
+            data-slot="portfolio-assets-summary"
+          >
+            <span data-slot="portfolio-assets-count-summary">
+              {compactCountSummary}
+            </span>
+          </p>
+        )}
+        {quotaCurrent != null && quotaMax != null ? (
+          <span
+            className="inline-flex items-center gap-1.5 whitespace-nowrap text-meta"
+            data-slot="portfolio-assets-quota"
+          >
+            <span>{t(lang, "portfolioQuotaUsageCompact")}</span>
+            <LimitCounter
+              label={t(lang, "portfolioHoldingsQuota")}
+              current={quotaCurrent}
+              max={quotaMax}
+            />
+          </span>
+        ) : null}
+      </div>
     </Toolbar>
   )
 }

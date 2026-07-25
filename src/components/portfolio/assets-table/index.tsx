@@ -3,72 +3,94 @@
 import { useMemo, useState } from "react"
 
 import { EmptyState } from "@/components/shared/empty-state"
-import { getCardName, t } from "@/lib/i18n"
-import { useSparklines } from "@/hooks/use-sparklines"
-import type { AssetRow } from "@/lib/types/portfolio"
+import { t } from "@/lib/i18n"
+import type {
+  AssetRow,
+  PortfolioPurchaseRow,
+} from "@/lib/types/portfolio"
+import type {
+  CreatePortfolioLotInput,
+  UpdatePortfolioLotInput,
+} from "@/lib/portfolio/schemas"
 import { useUIStore } from "@/stores/ui-store"
 
 import { AssetsToolbar } from "./assets-toolbar"
-import { BulkEditDialog } from "./bulk-edit-dialog"
 import { DesktopAssetsTable } from "./desktop-table"
 import { MobileAssetCard } from "./mobile-card"
-import { SingleEditDialog } from "./single-edit-dialog"
-import { sortAssets, type SortDir, type SortKey } from "./utils"
+import {
+  PurchaseLotsDialog,
+  type PortfolioItemUpdateInput,
+} from "./purchase-lots-dialog"
+import {
+  mapAssetsToPurchaseRows,
+  matchesPurchaseRow,
+  getPurchaseRowEditTarget,
+  sortPurchaseRows,
+  type PurchaseSortKey,
+  type SortDir,
+} from "./utils"
 
 export type { AssetRow } from "@/lib/types/portfolio"
+
+const unsupportedRemoveItem = async (): Promise<boolean> => false
 
 export function PortfolioAssetsTable({
   assets,
   onUpdate,
-  onRemove,
+  onAddLot,
+  onUpdateLot,
+  onRemoveLot,
+  onRemoveItem = unsupportedRemoveItem,
   hideBalance = false,
   showGameBadge = false,
   leading,
+  quotaCurrent,
+  quotaMax,
 }: {
   assets: AssetRow[]
   onUpdate: (
     itemId: number,
-    data: {
-      quantity?: number
-      purchasePrice?: number | null
-      isPrivate?: boolean
-      notes?: string | null
-    },
-  ) => void
-  onRemove: (itemId: number) => void
+    data: PortfolioItemUpdateInput,
+  ) => Promise<boolean>
+  onAddLot: (itemId: number, data: CreatePortfolioLotInput) => Promise<boolean>
+  onUpdateLot: (lotId: number, data: UpdatePortfolioLotInput) => Promise<boolean>
+  onRemoveLot: (lotId: number) => Promise<boolean>
+  onRemoveItem?: (itemId: number) => Promise<boolean>
   hideBalance?: boolean
   /** Show a per-row game tag — pass true only when holdings span ≥2 games. */
   showGameBadge?: boolean
   /** Replaces the toolbar's default heading (e.g. the page's game tabs). */
   leading?: React.ReactNode
+  /** Account-wide card-entry quota, shown contextually in the list toolbar. */
+  quotaCurrent?: number
+  quotaMax?: number
 }) {
   const lang = useUIStore((s) => s.language)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchOpen, setSearchOpen] = useState(false)
-  const [sortKey, setSortKey] = useState<SortKey>("value")
+  const [sortKey, setSortKey] = useState<PurchaseSortKey>("date")
   const [sortDir, setSortDir] = useState<SortDir>("desc")
   const [editOpen, setEditOpen] = useState(false)
   const [editFocusId, setEditFocusId] = useState<number | null>(null)
+  const [initialLotId, setInitialLotId] = useState<number | null>(null)
+  const [initialCompatibilityRow, setInitialCompatibilityRow] = useState(false)
+  const purchaseRows = useMemo(() => mapAssetsToPurchaseRows(assets), [assets])
+  const totalCopyCount = purchaseRows.reduce(
+    (sum, row) => sum + row.quantity,
+    0,
+  )
 
-  // 7-day trend column (CMC-style) — same endpoint/pattern as the home market
-  // table and watchlist. Optional eye-candy; rows render "—" until data lands.
-  const sparkCards = useMemo(() => assets.map((a) => ({ id: a.cardId })), [assets])
-  const sparklines = useSparklines(sparkCards)
-
-  const filteredAssets = useMemo(() => {
-    let result = assets
+  const filteredRows = useMemo(() => {
+    let result = purchaseRows
     if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase()
-      result = result.filter((row) => {
-        const name = getCardName(lang as "TH" | "EN" | "JP", row).toLowerCase()
-        const code = (row.baseCode ?? row.cardCode).toLowerCase()
-        return name.includes(q) || code.includes(q)
-      })
+      result = result.filter((row) =>
+        matchesPurchaseRow(row, searchQuery, lang),
+      )
     }
-    return sortAssets(result, sortKey, sortDir)
-  }, [assets, searchQuery, sortKey, sortDir, lang])
+    return sortPurchaseRows(result, sortKey, sortDir)
+  }, [purchaseRows, searchQuery, sortKey, sortDir, lang])
 
-  const handleSortSelect = (key: SortKey) => {
+  const handleSortSelect = (key: PurchaseSortKey) => {
     if (key === sortKey) {
       setSortDir((d) => (d === "desc" ? "asc" : "desc"))
     } else {
@@ -77,21 +99,22 @@ export function PortfolioAssetsTable({
     }
   }
 
-  const openEdit = (row: AssetRow) => {
-    setEditFocusId(row.itemId)
+  const openEdit = (row: PortfolioPurchaseRow) => {
+    const target = getPurchaseRowEditTarget(row)
+    setEditFocusId(target.itemId)
+    setInitialLotId(target.initialLotId)
+    setInitialCompatibilityRow(row.isCompatibilityRow)
     setEditOpen(true)
   }
 
-  const openBulkEdit = () => {
-    setEditFocusId(null)
-    setEditOpen(true)
-  }
+  const focusedRow = assets.find((row) => row.itemId === editFocusId) ?? null
 
   return (
     <>
       <AssetsToolbar
         lang={lang}
-        count={assets.length}
+        purchaseCount={purchaseRows.length}
+        copyCount={totalCopyCount}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         searchOpen={searchOpen}
@@ -99,35 +122,38 @@ export function PortfolioAssetsTable({
         sortKey={sortKey}
         sortDir={sortDir}
         onSortSelect={handleSortSelect}
-        onBulkEdit={openBulkEdit}
-        hasAssets={assets.length > 0}
         leading={leading}
+        quotaCurrent={quotaCurrent}
+        quotaMax={quotaMax}
       />
 
-      {filteredAssets.length === 0 ? (
+      {filteredRows.length === 0 ? (
         <EmptyState variant="plain" title={t(lang, "noResults")} />
       ) : (
         <>
-          <div className="divide-y divide-hair sm:hidden">
-            {filteredAssets.map((row) => (
+          <div
+            className="divide-y divide-hair sm:hidden"
+            data-slot="portfolio-assets-mobile-list"
+          >
+            {filteredRows.map((row, index) => (
               <MobileAssetCard
-                key={row.itemId}
+                key={row.rowKey}
                 row={row}
                 lang={lang}
                 onEdit={() => openEdit(row)}
                 hideBalance={hideBalance}
                 showGameBadge={showGameBadge}
+                eagerImage={index === 0}
               />
             ))}
           </div>
 
           <DesktopAssetsTable
-            rows={filteredAssets}
+            rows={filteredRows}
             lang={lang}
             onEdit={openEdit}
             hideBalance={hideBalance}
             showGameBadge={showGameBadge}
-            sparklines={sparklines}
             sortKey={sortKey}
             sortDir={sortDir}
             onSortSelect={handleSortSelect}
@@ -135,26 +161,22 @@ export function PortfolioAssetsTable({
         </>
       )}
 
-      {editFocusId != null ? (
-        <SingleEditDialog
+      {focusedRow ? (
+        <PurchaseLotsDialog
+          key={`${focusedRow.itemId}-${initialLotId ?? "list"}-${initialCompatibilityRow ? "compat" : "lot"}-${editOpen ? "open" : "closed"}`}
           open={editOpen}
           onOpenChange={setEditOpen}
-          assets={assets}
-          focusItemId={editFocusId}
+          row={focusedRow}
+          initialLotId={initialLotId}
+          initialCompatibilityRow={initialCompatibilityRow}
           hideBalance={hideBalance}
-          onUpdate={onUpdate}
-          onRemove={onRemove}
+          onUpdateItem={onUpdate}
+          onAddLot={onAddLot}
+          onUpdateLot={onUpdateLot}
+          onRemoveLot={onRemoveLot}
+          onRemoveItem={onRemoveItem}
         />
-      ) : (
-        <BulkEditDialog
-          open={editOpen}
-          onOpenChange={setEditOpen}
-          assets={assets}
-          hideBalance={hideBalance}
-          onUpdate={onUpdate}
-          onRemove={onRemove}
-        />
-      )}
+      ) : null}
     </>
   )
 }

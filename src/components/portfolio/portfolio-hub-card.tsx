@@ -118,10 +118,10 @@ export function PortfolioHubCard({
           <p className="mt-1.5 text-price-lg tabular-nums">
             {hideBalance ? MASKED : formatJpyAmount(meta.totalValue, currency)}
           </p>
-          {hasCost && !hideBalance && (
+          {hasCost && (
             <span
               className={cn(
-                "inline-flex items-center gap-0.5 text-micro font-semibold tabular-nums",
+                "inline-flex items-center gap-0.5 text-micro font-price font-semibold tabular-nums",
                 pnlUp ? "text-price-up" : "text-price-down",
               )}
             >

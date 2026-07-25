@@ -2,7 +2,7 @@ import { opcgConfig } from "./opcg";
 import { pokemonConfig } from "./pokemon";
 import type { GameConfig } from "./types";
 
-export type { GameConfig, DeckRules } from "./types";
+export type { GameConfig, DeckRules, GameReleaseReadiness } from "./types";
 export type {
   CardTypeOption,
   ColorOption,
@@ -10,6 +10,10 @@ export type {
   BoxPattern,
   PullRateConfig,
 } from "./types";
+export {
+  getGameDataReadinessIssues,
+  type GameDataReadinessSnapshot,
+} from "./launch-preflight";
 
 const GAME_CONFIGS: Record<string, GameConfig> = {
   opcg: opcgConfig,
@@ -20,14 +24,47 @@ export function getGameConfig(slug: string): GameConfig | undefined {
   return GAME_CONFIGS[slug];
 }
 
-/** All registered games, including `comingSoon` ones (for the switcher UI). */
+/** All registered games, including roadmap entries shown only in the Header. */
 export function getAllGameConfigs(): GameConfig[] {
   return Object.values(GAME_CONFIGS);
 }
 
-/** Only browsable games (exclude `comingSoon`) — use for queries / routing. */
+/** Data-plane readiness only. Server seed/preflight mirrors this to Game.isActive. */
+export function isGameDataReady(config: GameConfig): boolean {
+  return config.release.data === "READY";
+}
+
+/**
+ * Public launch gate. A game must pass product/config, data and routing gates
+ * together before it can enter active selectors, cookies or URL namespaces.
+ */
+export function isGameLaunchReady(config: GameConfig): boolean {
+  return (
+    config.release.status === "LIVE" &&
+    isGameDataReady(config) &&
+    config.release.routes === "READY"
+  );
+}
+
+/** Fail-closed slug check for data-derived UI state and request boundaries. */
+export function isGameSlugLaunchReady(slug: string): boolean {
+  const config = getGameConfig(slug);
+  return config != null && isGameLaunchReady(config);
+}
+
+/** Only publicly browsable games — canonical source for selectors and routing. */
+export function getLaunchReadyGameConfigs(): GameConfig[] {
+  return Object.values(GAME_CONFIGS).filter(isGameLaunchReady);
+}
+
+/** Compatibility name retained for existing callers; "active" means launch-ready. */
 export function getActiveGameConfigs(): GameConfig[] {
-  return Object.values(GAME_CONFIGS).filter((g) => !g.comingSoon);
+  return getLaunchReadyGameConfigs();
+}
+
+/** True only when an in-page selector can offer a real choice. */
+export function hasMultipleActiveGames(): boolean {
+  return getLaunchReadyGameConfigs().length >= 2;
 }
 
 export function getGameSlugs(): string[] {

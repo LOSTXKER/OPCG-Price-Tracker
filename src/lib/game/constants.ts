@@ -1,4 +1,4 @@
-import { getGameSlugs } from "@/lib/game-config"
+import { getGameSlugs, getLaunchReadyGameConfigs } from "@/lib/game-config"
 
 /** Cookie persisting the visitor's active game (mirrors the `currentGame` store
  *  + the `kuma-lang` language cookie). Read by middleware to resolve the game
@@ -54,21 +54,32 @@ export const GAME_AGNOSTIC_FEATURES: ReadonlySet<string> = new Set([
 ])
 
 const VALID_PREFIXES: ReadonlySet<string> = new Set([...getGameSlugs(), ALL_GAMES])
-/** Routing stays pinned until card/set/search queries are genuinely scoped by
- * game. Flipping a UI `comingSoon` flag must never expose OPCG data under a
- * second namespace by accident. */
-export const ROUTABLE_GAME_PREFIXES: ReadonlySet<string> = new Set([DEFAULT_GAME])
+/**
+ * Routing and active UI selectors share the same fail-closed launch gate.
+ * Registering a roadmap game or preparing its data alone can never expose a
+ * namespace before every game-owned route/query is ready.
+ */
+export const ROUTABLE_GAME_PREFIXES: ReadonlySet<string> = new Set(
+  getLaunchReadyGameConfigs().map((game) => game.slug),
+)
+
+if (!ROUTABLE_GAME_PREFIXES.has(DEFAULT_GAME)) {
+  throw new Error(`Default game "${DEFAULT_GAME}" must pass the public launch gate`)
+}
 
 /** True when `seg` is a usable game URL prefix (`opcg` / `pokemon` / `all`). */
 export function isGamePrefix(seg: string | undefined | null): seg is string {
   return seg != null && VALID_PREFIXES.has(seg)
 }
 
-/** True when `seg` is a game whose catalog is currently browsable. Registered
- * `comingSoon` games remain valid UI identities, but must not resolve catalog
- * routes until their data is live. */
+/** True when `seg` is a game whose config, data and routes are launch-ready. */
 export function isActiveGamePrefix(seg: string | undefined | null): seg is string {
   return seg != null && ROUTABLE_GAME_PREFIXES.has(seg)
+}
+
+/** Normalize stale, unknown or roadmap preferences to the launch-ready default. */
+export function resolveActiveGamePrefix(seg: string | undefined | null): string {
+  return isActiveGamePrefix(seg) ? seg : DEFAULT_GAME
 }
 
 /** True when `seg` is a feature that belongs under a game namespace. */

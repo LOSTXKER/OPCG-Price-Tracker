@@ -3,15 +3,14 @@
 import { useEffect, useState } from "react"
 import { apiGet } from "@/lib/api/client"
 
+const SPARKLINE_BATCH_SIZE = 50
+
 /**
- * Fetches 7-day price sparkline series for a set of cards from
+ * Fetches 30-day price sparkline series for a set of cards from
  * `/api/cards/sparklines`, keyed by card id. Abortable; refetches whenever the
  * card array reference changes (i.e. after a new page/filter fetch). Shared by
  * the home market table (`useMarketCards`) and `/search` (`useSearch`) so both
  * render the same trend lines from one implementation.
- *
- * The endpoint caps at 50 ids, which covers a full page (PAGE_SIZE), so no
- * batching is needed here.
  */
 export function useSparklines(
   cards: { id?: number | null }[],
@@ -19,17 +18,41 @@ export function useSparklines(
   const [sparklines, setSparklines] = useState<Record<number, number[]>>({})
 
   useEffect(() => {
-    const ids = cards.map((c) => c.id).filter((id): id is number => id != null)
+    const ids = [...new Set(
+      cards
+        .map((card) => card.id)
+        .filter((id): id is number => id != null && Number.isInteger(id)),
+    )]
     if (ids.length === 0) return
+
     const controller = new AbortController()
-    apiGet<{ sparklines?: Record<number, number[]> }>(
-      `/api/cards/sparklines?ids=${ids.join(",")}`,
-      controller.signal,
-    )
-      .then((data) => { if (data.sparklines) setSparklines(data.sparklines) })
-      .catch((err: unknown) => {
-        if (err instanceof Error && err.name !== "AbortError") console.error("Sparkline fetch failed:", err)
+    const requests = []
+    for (let index = 0; index < ids.length; index += SPARKLINE_BATCH_SIZE) {
+      const batch = ids.slice(index, index + SPARKLINE_BATCH_SIZE)
+      requests.push(
+        apiGet<{ sparklines?: Record<number, number[]> }>(
+          `/api/cards/sparklines?ids=${batch.join(",")}`,
+          controller.signal,
+        ),
+      )
+    }
+
+    void Promise.all(requests)
+      .then((responses) => {
+        if (controller.signal.aborted) return
+
+        const merged: Record<number, number[]> = {}
+        for (const response of responses) {
+          Object.assign(merged, response.sparklines ?? {})
+        }
+        setSparklines(merged)
       })
+      .catch((err: unknown) => {
+        if (controller.signal.aborted) return
+        if (err instanceof Error && err.name === "AbortError") return
+        console.error("Sparkline fetch failed:", err)
+      })
+
     return () => controller.abort()
   }, [cards])
 

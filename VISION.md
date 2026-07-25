@@ -145,15 +145,16 @@
 - **Cold-start:** auto-feedback 7 วันหลัง DELIVERED ถ้าไม่มี dispute (eBay 2025) → completedDeals โตจากการส่งจริง ไม่ต้องปลอม
 - escrow milestone mirror ทั้งใน order screen + chat EventCard + push · countdown live · dispute rate โชว์จริง (= trust signal)
 
-### 5.6 Monetization & Ads — โปร ไม่ทำลายของ
-2 surface แยกกันชัด: **(A) display ads** (AdSense/house, discovery เท่านั้น) · **(B) promoted listing** (seller-paid, ของจริง) · **(C) ad-free = headline Pro perk**
+### 5.6 Monetization & Ads — เด่นจริง แต่แยกความหมายชัด
+3 surface แยกกันชัด: **(A) Google Ads mockup** (layout-only, ไม่เชื่อม network) · **(B) Direct Sponsor** (ลูกค้าซื้อพื้นที่จาก MeeCard โดยตรง) · **(C) promoted listing** (seller-paid inventory จริง) และ **ad-free = headline Pro perk**
 
-- **`AdSlot` เดียว:** `size` prop → fixed height (reserve ก่อน fill = CLS 0) + skeleton dims เป๊ะ + inherit token (radius/spacing/hairline) → sponsored ดู native · label "Advertisement" เงียบ ไม่ honey
-- **Allowlist + banlist** (`placements.ts` มีแล้ว → เพิ่ม AD_ZONES allowlist + unit test): **ห้ามเด็ดขาด** card-detail ราคา/sold · portfolio ทั้งหมด · checkout/escrow · chat · onboarding/auth/admin/seller
-- **Cadence (index-derived):** `shouldRenderAdAt(i)` — ไม่ใช่อันแรก, อันแรกหลัง index ≥6, ทุก ~10, ≤1/fold, ห้ามติดกัน 2
-- **Tier+consent double-gate, render null** (ไม่ใช่กล่องว่าง) เมื่อซ่อน — paid = layout reflow แน่นขึ้น (felt benefit) · unfilled → fallback House promo (ไม่ยุบ) · consent มี Google consent mode v2 + PDPA
+- **สถานะปัจจุบัน = P0 live:** Home, Search, Set Detail และ Card Detail ใช้ `AdInventorySlot`/registry/provider กลางแล้ว; route อื่นยังไม่มี slot จนกว่า owner รีวิว P0
+- **Google mockup = ค่าเริ่มต้นทุกช่อง:** ใช้ขนาดมาตรฐานเพื่อทดสอบ layout เท่านั้น · ต้องติดป้าย Mockup · ไม่มี script/iframe/pixel/cookie/network/CTA
+- **Direct Sponsor = ตัวแทนช่องเดิมเท่านั้น:** เฉพาะ campaign `ACTIVE` ที่มีผู้ซื้อจริงจึงแทน Google ใน placement ที่อนุญาตด้วย geometry เดียวกัน พร้อมแบรนด์+ข้อความ+CTA+ป้าย Sponsored; ไม่มี campaign ให้ fallback เป็น Google และหน้าเว็บไม่ประกาศขายพื้นที่
+- **Placement เด่นได้โดยไม่รกช่วงบน:** ห้ามวางหลัง hero/header; P0 ใช้ bottom anchor ที่ปิดได้ + contextual in-feed/section boundary และ Card Detail คง rectangle ข้างกราฟกับ marketplace rail โดย anchor ต้องเว้น BottomNav/safe area และ floating controls อื่น; long-form P1 มีได้สูงสุด 3 จุดแต่ห้ามวางสองจุดติดกัน
+- **Ad-free gate:** Pro/Pro+/Lifetime ซ่อน Google mock และ Direct ทั้งหมดโดยไม่เหลือ wrapper/spacing; loading/empty/error ไม่แสดง
+- **Hard deny:** auth/settings/admin/proto และขั้นตอน create/order/chat/seller; route matrix รายหน้าและขนาดอยู่ที่ `doc/advertising-placement-plan-2026-07-24.md`
 - **Promoted listing** = `ListingCard` เดิม + 1 badge "Featured" + relevance floor + cap ≤20%/page + dedup (featured *หรือ* organic ไม่ใช่ทั้งคู่) — ไม่ใช่ banner, เป็น inventory จริงที่เพิ่ม liquidity
-- **House promo** = creative เดียวที่ใช้ honey CTA ได้ (third-party ห้ามยืม accent)
 
 ### 5.7 Multi-Game (Pokémon ต่อไป) — game = namespace ไม่ใช่ tab
 - **URL เดียว canonical:** `/[game]/<feature>/...` (TCGplayer path-prefix) · ห้ามปน subdomain/query (Limitless = cautionary) · middleware resolve `[game]` กับ `Game.slug` · legacy 301 → prefixed · aggregate `/all/portfolio` `/all/search` เท่านั้น

@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useUIStore } from "@/stores/ui-store";
 import type { Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { formatJoinedRelative } from "@/lib/utils/relative-time";
 import type {
   CollectionStats,
@@ -297,29 +298,32 @@ function PublicProfileLayout({
             onJump={setActiveTab}
           />
 
-          <ProfileTabsNav
-            tabs={visibleTabs}
-            active={activeTab}
-            onChange={setActiveTab}
-            lang={lang}
-          />
+          <Tabs
+            value={activeTab}
+            onValueChange={(value) => setActiveTab(value as ProfileTab)}
+            className="gap-0"
+          >
+            <ProfileTabsNav tabs={visibleTabs} lang={lang} />
 
-          <div className="py-6">
-            {isEmptyProfile && (
-              <EmptyProfilePanel
-                user={user}
-                messageHref={messageHref}
-                isOwner={isOwner}
-                lang={lang}
-              />
-            )}
-            {/* `key={activeTab}` triggers an enter animation on every switch
-                so the tab change feels intentional, not jarring. */}
-            <div key={activeTab} className="animate-in fade-in-0 duration-[var(--dur-base)]">
-              {activeTab === "achievements" && (
-                <AchievementsTabContent achievements={achievements} badges={badges} />
+            <div className="py-6">
+              {isEmptyProfile && (
+                <EmptyProfilePanel
+                  user={user}
+                  messageHref={messageHref}
+                  isOwner={isOwner}
+                  lang={lang}
+                />
               )}
-              {activeTab === "listings" && (
+              <TabsContent
+                value="achievements"
+                className="animate-in fade-in-0 duration-[var(--dur-base)]"
+              >
+                <AchievementsTabContent achievements={achievements} badges={badges} />
+              </TabsContent>
+              <TabsContent
+                value="listings"
+                className="animate-in fade-in-0 duration-[var(--dur-base)]"
+              >
                 <ListingsTabContent
                   listings={listings}
                   listingTotal={stats.listingCount}
@@ -327,12 +331,18 @@ function PublicProfileLayout({
                   isOwner={isOwner}
                   lang={lang}
                 />
-              )}
-              {activeTab === "reviews" && (
+              </TabsContent>
+              <TabsContent
+                value="reviews"
+                className="animate-in fade-in-0 duration-[var(--dur-base)]"
+              >
                 <ReviewsTabContent reviews={reviews} lang={lang} />
-              )}
-              {activeTab === "collection" && (
-                privacyFlags.summaryOnly ? (
+              </TabsContent>
+              <TabsContent
+                value="collection"
+                className="animate-in fade-in-0 duration-[var(--dur-base)]"
+              >
+                {privacyFlags.summaryOnly ? (
                   <SummaryOnlyBanner stats={collectionStats} lang={lang} />
                 ) : (
                   <CollectionTabContent
@@ -342,10 +352,10 @@ function PublicProfileLayout({
                     isOwner={isOwner}
                     lang={lang}
                   />
-                )
-              )}
+                )}
+              </TabsContent>
             </div>
-          </div>
+          </Tabs>
         </div>
       </div>
 

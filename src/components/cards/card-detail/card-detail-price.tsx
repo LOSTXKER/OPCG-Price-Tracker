@@ -1,15 +1,24 @@
 "use client"
 
-import { Fragment, type RefObject, type ReactNode } from "react"
+import {
+  Fragment,
+  type KeyboardEvent,
+  type RefObject,
+  type ReactNode,
+} from "react"
 
 import { HeroNumber } from "@/components/ui/hero-number"
+import {
+  getSegmentedNavigationTarget,
+  type SegmentedNavigationKey,
+} from "@/components/ui/segmented-control"
 import { compactDisplayValue, formatDisplayValue } from "@/lib/utils/currency"
 import { t, type Currency, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
 import type { ChartRange } from "./card-chart"
 import { EditionToggle, type Edition } from "./edition-toggle"
-import { Delta, EstMark } from "./grade-value"
+import { Delta } from "./grade-value"
 import { GradeLogo } from "./grade-logo"
 import { GRADE_TIERS, type GradeDatum, type GradeKey } from "./grades"
 import { SourceLogo, sourceLabel } from "./source-logo"
@@ -28,7 +37,6 @@ interface CardDetailPriceProps {
   gradeDisplayValues: Record<GradeKey, number | null>
   selectedGrade: GradeKey
   onGradeChange: (grade: GradeKey) => void
-  datum: GradeDatum
   activeValue: number | null
   shownDelta: number | null
   shownDate: string | null
@@ -37,6 +45,17 @@ interface CardDetailPriceProps {
   priceHigh: number | null
   pricePos: number
   provenance: ProvenanceModel | null
+}
+
+function isGradeNavigationKey(key: string): key is SegmentedNavigationKey {
+  return (
+    key === "ArrowLeft" ||
+    key === "ArrowRight" ||
+    key === "ArrowUp" ||
+    key === "ArrowDown" ||
+    key === "Home" ||
+    key === "End"
+  )
 }
 
 /** Grade selector and the selected grade's headline price instrument. */
@@ -53,7 +72,6 @@ export function CardDetailPrice({
   gradeDisplayValues,
   selectedGrade,
   onGradeChange,
-  datum,
   activeValue,
   shownDelta,
   shownDate,
@@ -63,6 +81,37 @@ export function CardDetailPrice({
   pricePos,
   provenance,
 }: CardDetailPriceProps) {
+  const handleGradeKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!isGradeNavigationKey(event.key)) return
+
+    const currentButton = (event.target as HTMLElement).closest<HTMLButtonElement>(
+      "button[data-grade-key]",
+    )
+    if (!currentButton || !event.currentTarget.contains(currentButton)) return
+
+    const currentIndex = GRADE_TIERS.findIndex(
+      (tier) => tier.key === currentButton.dataset.gradeKey,
+    )
+    const nextIndex = getSegmentedNavigationTarget(
+      GRADE_TIERS.map((tier) => ({
+        disabled:
+          !gradeData[tier.key].hasData && tier.key !== selectedGrade,
+      })),
+      currentIndex,
+      event.key,
+    )
+    if (nextIndex == null) return
+
+    const nextTier = GRADE_TIERS[nextIndex]
+    const nextButton = event.currentTarget.querySelector<HTMLButtonElement>(
+      `button[data-grade-key="${nextTier.key}"]`,
+    )
+
+    event.preventDefault()
+    nextButton?.focus()
+    if (nextTier.key !== selectedGrade) onGradeChange(nextTier.key)
+  }
+
   const provenanceParts: ReactNode[] = []
   if (provenance) {
     provenanceParts.push(
@@ -94,8 +143,9 @@ export function CardDetailPrice({
       <div className="mt-4 space-y-2">
         <EditionToggle value={edition} onChange={onEditionChange} enAvailable={false} />
         <div
-          role="group"
+          role="radiogroup"
           aria-label={t(lang, "chooseGrade")}
+          onKeyDown={handleGradeKeyDown}
           className="no-sb -mx-1 flex items-stretch gap-1 overflow-x-auto px-1"
         >
           {GRADE_TIERS.map((tier, index) => {
@@ -121,8 +171,11 @@ export function CardDetailPrice({
                 <button
                   type="button"
                   ref={active ? gradeActiveRef : undefined}
-                  aria-pressed={active}
+                  role="radio"
+                  aria-checked={active}
                   aria-label={tier.label}
+                  data-grade-key={tier.key}
+                  tabIndex={active ? 0 : -1}
                   disabled={disabled}
                   onClick={() => onGradeChange(tier.key)}
                   className={cn(
@@ -143,7 +196,9 @@ export function CardDetailPrice({
                       active ? "text-foreground/75" : "text-muted-foreground",
                     )}
                   >
-                    {hint != null ? compactDisplayValue(hint, currency) : "—"}
+                    {hint != null ? (
+                      compactDisplayValue(hint, currency)
+                    ) : "—"}
                   </span>
                 </button>
               </Fragment>
@@ -163,9 +218,6 @@ export function CardDetailPrice({
               live={activeIndex != null}
               className="leading-none text-foreground"
             />
-          )}
-          {datum.hasData && datum.value.isEst && (
-            <EstMark lang={lang} className="pb-1.5" />
           )}
           {shownDelta != null && (
             <span className="inline-flex items-baseline gap-x-1.5 pb-1">
@@ -211,7 +263,6 @@ export function CardDetailPrice({
               </div>
               <span className="text-meta tnum inline-flex shrink-0 items-center gap-1 text-muted-foreground">
                 {t(lang, "high")} {compactDisplayValue(priceHigh, currency)}
-                {datum.value.isEst && <EstMark lang={lang} />}
               </span>
             </div>
           </>

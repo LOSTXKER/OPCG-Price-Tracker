@@ -115,4 +115,56 @@ describe("getPortfolioFinancials", () => {
     expect(result.pnlJpy).toBe(300)
     expect(result.roiPct).toBeNull()
   })
+
+  it("uses the exact lot total instead of a rounded average unit cost", () => {
+    const result = getPortfolioFinancials([
+      {
+        quantity: 3,
+        purchasePrice: 167,
+        recordedCostJpy: 500,
+        costedCopyCount: 3,
+        card: { latestPriceJpy: 250 },
+      },
+    ])
+
+    expect(result.recordedCostJpy).toBe(500)
+    expect(result.costedCopyCount).toBe(3)
+    expect(result.pnlJpy).toBe(250)
+    expect(result.roiPct).toBe(50)
+  })
+
+  it("keeps mixed known and unknown lots financially incomplete", () => {
+    const result = getPortfolioFinancials([
+      {
+        quantity: 2,
+        purchasePrice: null,
+        recordedCostJpy: 100,
+        costedCopyCount: 1,
+        card: { latestPriceJpy: 250 },
+      },
+    ])
+
+    expect(result.recordedCostJpy).toBe(100)
+    expect(result.costedCopyCount).toBe(1)
+    expect(result.performanceComplete).toBe(false)
+    expect(result.pnlJpy).toBeNull()
+    expect(result.roiPct).toBeNull()
+  })
+
+  it("treats a zero-cost lot aggregate as fully costed", () => {
+    const result = getPortfolioFinancials([
+      {
+        quantity: 2,
+        purchasePrice: 0,
+        recordedCostJpy: 0,
+        costedCopyCount: 2,
+        card: { latestPriceJpy: 10 },
+      },
+    ])
+
+    expect(result.costedCopyCount).toBe(2)
+    expect(result.performanceComplete).toBe(true)
+    expect(result.pnlJpy).toBe(20)
+    expect(result.roiPct).toBeNull()
+  })
 })

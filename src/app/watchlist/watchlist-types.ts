@@ -12,6 +12,8 @@ export type WatchCard = {
   imageUrl: string | null;
   latestPriceJpy: number | null;
   latestPriceThb: number | null;
+  /** Latest real PSA 10 asking price from SNKRDUNK (USD-denominated). */
+  psa10PriceUsd?: number | null;
   priceChange24h: number | null;
   priceChange7d: number | null;
   priceChange30d: number | null;
@@ -57,6 +59,8 @@ export const DEFAULT_FILTERS: WatchlistFilters = {
 export type WatchlistPanelState = {
   status: "loading" | "ready" | "empty" | "error";
   itemCount: number;
+  /** Quota-bearing rows; excludes demo-only or historical entries. */
+  quotaCount?: number;
 };
 
 export function getEntryChange(entry: WatchlistEntry, period: ChangePeriod): number | null {
@@ -88,4 +92,3 @@ export function formatEntryThb(card: WatchCard): string {
   const thb = getEntryThb(card);
   return thb != null ? formatThb(Math.round(thb)) : "—";
 }
-

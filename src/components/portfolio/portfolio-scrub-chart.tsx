@@ -14,32 +14,26 @@ import {
 
 import { SegmentedControl, type SegmentedOption } from "@/components/ui/segmented-control"
 import { useUIStore } from "@/stores/ui-store"
-import { t } from "@/lib/i18n"
+import { getLocale, t } from "@/lib/i18n"
 import { jpyToDisplayValue, formatDisplayValue } from "@/lib/utils/currency"
 import { MASKED } from "@/lib/constants/ui"
-import type { HistoryPoint } from "@/lib/types/portfolio"
+import { cn } from "@/lib/utils"
+import {
+  filterPortfolioHistoryByDays,
+  mergePortfolioHistoryWithLive,
+  type PortfolioInsightHistoryPoint,
+} from "@/lib/portfolio/insights"
+import type { HistoryPoint, PortfolioStats } from "@/lib/types/portfolio"
 
 // ─── Range config ───────────────────────────────────────────────────────────
 
-type RangeId = "1D" | "1W" | "1M" | "3M" | "1Y" | "ALL"
+type RangeId = "7D" | "30D" | "90D"
 
-const RANGES: { id: RangeId; label: string; pts: number }[] = [
-  { id: "1D", label: "1D", pts: 2 },
-  { id: "1W", label: "1W", pts: 7 },
-  { id: "1M", label: "1M", pts: 30 },
-  { id: "3M", label: "3M", pts: 90 },
-  { id: "1Y", label: "1Y", pts: 365 },
-  { id: "ALL", label: "ALL", pts: Infinity },
+const RANGES: { id: RangeId; label: string; days: number }[] = [
+  { id: "7D", label: "7D", days: 7 },
+  { id: "30D", label: "30D", days: 30 },
+  { id: "90D", label: "90D", days: 90 },
 ]
-
-const RANGE_OPTIONS: SegmentedOption<RangeId>[] = RANGES.map((range) => ({
-  value: range.id,
-  label: range.label,
-}))
-
-const DISABLED_RANGE_OPTIONS: SegmentedOption<RangeId>[] = RANGE_OPTIONS.map(
-  (option) => ({ ...option, disabled: true }),
-)
 
 // ─── Color constants — semantic CSS variables only ───────────────────────────
 
@@ -50,38 +44,146 @@ const BG = "var(--background)"
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 /** Shape of each data entry passed to Recharts — HistoryPoint + converted value. */
-type ChartEntry = HistoryPoint & { displayValue: number }
+type ChartEntry = PortfolioInsightHistoryPoint & {
+  displayValue: number
+  trendValue: number | null
+}
 
 export interface PortfolioScrubChartProps {
   data: HistoryPoint[]
+  stats: PortfolioStats
   /** Called with the active HistoryPoint while scrubbing, null on leave. */
   onScrub?: (point: HistoryPoint | null) => void
   /** When true, mask monetary values and hide axis labels. */
   hideBalance?: boolean
+  /** Scoped game values are current-only; persisted history remains all-games. */
+  historyUnavailable?: boolean
+}
+
+function SparseChartState({
+  point,
+  pointLabel,
+  pointValue,
+  message,
+}: {
+  point: ChartEntry | null
+  pointLabel: string | null
+  pointValue: string | null
+  message: string
+}) {
+  return (
+    <div
+      className="flex w-full flex-col gap-3 rounded-lg bg-muted/20 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+      data-slot="portfolio-chart-sparse"
+    >
+      {point ? (
+        <div
+          className="flex min-w-0 items-center gap-3"
+          data-slot="portfolio-chart-live-point"
+          data-partial={point.valuationStatus === "partial" || undefined}
+        >
+          <span
+            aria-hidden
+            className={cn(
+              "size-3 shrink-0 rounded-full ring-4 ring-primary/10",
+              point.valuationStatus === "partial"
+                ? "bg-background outline outline-2 outline-primary"
+                : "bg-primary",
+            )}
+          />
+          <div className="min-w-0">
+            {pointValue ? (
+              <p className="truncate text-body-sm font-price font-semibold tabular-nums">
+                {point.valuationStatus === "partial" ? "≈ " : ""}
+                {pointValue}
+              </p>
+            ) : null}
+            {pointLabel ? (
+              <p className="mt-0.5 truncate text-micro text-muted-foreground">
+                {pointLabel}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
+      <p
+        className={cn(
+          "text-meta",
+          point ? "sm:max-w-sm sm:text-right" : "text-center",
+        )}
+      >
+        {message}
+      </p>
+    </div>
+  )
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function PortfolioScrubChart({
   data,
+  stats,
   onScrub,
   hideBalance = false,
+  historyUnavailable = false,
 }: PortfolioScrubChartProps) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
-  // Default to 1M when there is enough data; fall back to ALL for sparse histories.
-  const defaultRange: RangeId = data.length >= 30 ? "1M" : "ALL"
-  const [range, setRange] = useState<RangeId>(defaultRange)
+  const [now] = useState(() => new Date())
+  const [range, setRange] = useState<RangeId>("30D")
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
 
   // ── Data slicing ──────────────────────────────────────────────────────────
 
-  const filtered = useMemo<HistoryPoint[]>(() => {
-    const pts = RANGES.find((r) => r.id === range)?.pts ?? Infinity
-    if (pts === Infinity) return data
-    return data.slice(-pts)
-  }, [data, range])
+  const merged = useMemo(
+    () =>
+      mergePortfolioHistoryWithLive(historyUnavailable ? [] : data, stats, {
+        now,
+        liveLabel: `${t(lang, "dayToday")} · ${t(lang, "portfolioLatestValue")}`,
+      }),
+    [data, historyUnavailable, lang, now, stats],
+  )
+
+  const rangeOptions = useMemo<SegmentedOption<RangeId>[]>(
+    () =>
+      RANGES.map((rangeOption) => {
+        const points = filterPortfolioHistoryByDays(
+          merged,
+          rangeOption.days,
+          now,
+        )
+        const trendPointCount = points.filter(
+          (point) => point.valuationStatus !== "partial",
+        ).length
+        return {
+          value: rangeOption.id,
+          label: rangeOption.label,
+          disabled: trendPointCount < 2,
+        }
+      }),
+    [merged, now],
+  )
+
+  const fallbackRange =
+    (["30D", "90D", "7D"] as const).find(
+      (candidate) =>
+        !rangeOptions.find((option) => option.value === candidate)?.disabled,
+    ) ?? range
+  const activeRange =
+    rangeOptions.find((option) => option.value === range)?.disabled
+      ? fallbackRange
+      : range
+  const activeDays =
+    RANGES.find((rangeOption) => rangeOption.id === activeRange)?.days ?? 30
+  const rangeFiltered = useMemo(
+    () => filterPortfolioHistoryByDays(merged, activeDays, now),
+    [activeDays, merged, now],
+  )
+  const filtered = rangeOptions.every((option) => option.disabled)
+    ? merged.slice(-1)
+    : rangeFiltered
 
   /** Same slice, but with each point's JPY value converted to display currency. */
   const chartData = useMemo<ChartEntry[]>(
@@ -89,11 +191,18 @@ export function PortfolioScrubChart({
       filtered.map((p) => ({
         ...p,
         displayValue: jpyToDisplayValue(p.value, currency),
+        trendValue:
+          p.valuationStatus === "partial"
+            ? null
+            : jpyToDisplayValue(p.value, currency),
       })),
     [filtered, currency],
   )
 
-  const baseDisplayValue = chartData[0]?.displayValue ?? 0
+  const trendEntries = chartData.filter((entry) => entry.trendValue != null)
+  const hasTrend = trendEntries.length >= 2
+  const baseDisplayValue = trendEntries[0]?.trendValue ?? 0
+  const liveEntry = chartData.find((entry) => entry.source === "live") ?? null
 
   // Tighten the Y domain to the data (Robinhood-style zoom) so the line uses the
   // full height instead of being flattened against a 0 baseline. A small pad keeps
@@ -116,11 +225,11 @@ export function PortfolioScrubChart({
 
   const handlePointer = (clientX: number) => {
     const el = wrapRef.current
-    if (!el || filtered.length < 2) return
+    if (!el || chartData.length < 2) return
     const rect = el.getBoundingClientRect()
     const ratio = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1)
-    const idx = Math.round(ratio * (filtered.length - 1))
-    const point = filtered[idx]
+    const idx = Math.round(ratio * (chartData.length - 1))
+    const point = chartData[idx]
     if (!point) return
     setActiveIndex(idx)
     onScrub?.(point)
@@ -135,7 +244,7 @@ export function PortfolioScrubChart({
   /** Locale-formatted date shown while scrubbing. */
   const scrubDate =
     activeEntry?.date
-      ? new Date(activeEntry.date).toLocaleDateString(undefined, {
+      ? new Date(activeEntry.date).toLocaleDateString(getLocale(lang), {
           month: "short",
           day: "numeric",
         })
@@ -145,57 +254,39 @@ export function PortfolioScrubChart({
     activeDisplayValue != null
       ? hideBalance
         ? MASKED
-        : formatDisplayValue(activeDisplayValue, currency)
+        : `${activeEntry?.valuationStatus === "partial" ? "≈ " : ""}${formatDisplayValue(
+            activeDisplayValue,
+            currency,
+          )}`
       : null
 
-  // ── Not enough data in full dataset ──────────────────────────────────────
+  const sparsePoint = chartData.at(-1) ?? null
+  const sparsePointLabel = sparsePoint
+    ? sparsePoint.source === "live"
+      ? sparsePoint.label
+      : new Date(sparsePoint.date).toLocaleDateString(getLocale(lang), {
+          month: "short",
+          day: "numeric",
+        })
+    : null
+  const sparsePointValue = sparsePoint
+    ? hideBalance
+      ? MASKED
+      : formatDisplayValue(sparsePoint.displayValue, currency)
+    : null
 
-  if (data.length < 2) {
+  // A single observed point is useful current context, but not a trend.
+  if (!hasTrend) {
     return (
-      <div className="space-y-3">
-        <div className="no-sb flex max-w-full overflow-x-auto pb-px">
-          <SegmentedControl<RangeId>
-            options={DISABLED_RANGE_OPTIONS}
-            value={range}
-            onChange={() => {}}
-            size="sm"
-            variant="pill"
-            leadingIcon={CalendarRange}
-            ariaLabel={t(lang, "filter")}
-            className="ml-auto shrink-0"
-          />
-        </div>
-        <div className="flex h-24 w-full items-center justify-center rounded-xl border border-dashed border-hair sm:h-28">
-          <p className="max-w-xs text-center text-meta">{t(lang, "noPortfolioDataDesc")}</p>
-        </div>
-      </div>
-    )
-  }
-
-  // ── Not enough data for the current range ─────────────────────────────────
-
-  if (filtered.length < 2) {
-    return (
-      <div className="space-y-3">
-        <div className="no-sb flex max-w-full overflow-x-auto pb-px">
-          <SegmentedControl<RangeId>
-            options={RANGE_OPTIONS}
-            value={range}
-            onChange={(r) => {
-              setRange(r)
-              clearScrub()
-            }}
-            size="sm"
-            variant="pill"
-            leadingIcon={CalendarRange}
-            ariaLabel={t(lang, "filter")}
-            className="ml-auto shrink-0"
-          />
-        </div>
-        <div className="flex h-24 w-full items-center justify-center rounded-xl border border-dashed border-hair sm:h-28">
-          <p className="max-w-xs text-center text-meta">{t(lang, "noPortfolioDataDesc")}</p>
-        </div>
-      </div>
+      <SparseChartState
+        point={sparsePoint}
+        pointLabel={sparsePointLabel}
+        pointValue={sparsePointValue}
+        message={t(
+          lang,
+          historyUnavailable ? "chartAllGamesOnly" : "noPortfolioDataDesc",
+        )}
+      />
     )
   }
 
@@ -204,10 +295,13 @@ export function PortfolioScrubChart({
   return (
     <div className="space-y-3">
       {/* Range selector */}
-      <div className="no-sb flex max-w-full overflow-x-auto pb-px">
+      <div
+        className="no-sb flex max-w-full overflow-x-auto pb-px"
+        data-slot="portfolio-chart-range"
+      >
         <SegmentedControl<RangeId>
-          options={RANGE_OPTIONS}
-          value={range}
+          options={rangeOptions}
+          value={activeRange}
           onChange={(r) => {
             setRange(r)
             clearScrub()
@@ -233,13 +327,19 @@ export function PortfolioScrubChart({
           <div className="inline-flex items-center gap-1.5 rounded-full bg-muted/70 px-2.5 py-0.5">
             <span className="text-meta tabular-nums">{scrubDate}</span>
             {scrubValue && (
-              <span className="text-meta font-semibold tabular-nums text-foreground">
+              <span className="text-meta font-price font-semibold tabular-nums text-foreground">
                 {scrubValue}
               </span>
             )}
           </div>
         )}
       </div>
+
+      {trendEntries.length < 7 ? (
+        <p className="text-meta text-center" data-slot="portfolio-chart-collecting">
+          {t(lang, "collectingPortfolioData")}
+        </p>
+      ) : null}
 
       {/* Full-bleed chart */}
       <div
@@ -270,7 +370,7 @@ export function PortfolioScrubChart({
             {/* Honey-gold line with a quiet solid area fill */}
             <Area
               type="monotone"
-              dataKey="displayValue"
+              dataKey="trendValue"
               stroke={HONEY}
               strokeWidth={2.25}
               strokeLinecap="round"
@@ -289,7 +389,7 @@ export function PortfolioScrubChart({
               aria-label via the parent; individual dots are decorative.
             */}
             {chartData
-              .filter((p) => p.isInflow)
+              .filter((p) => p.isInflow && p.trendValue != null)
               .map((p) => (
                 <ReferenceDot
                   key={`inflow-${p.label}`}
@@ -302,6 +402,20 @@ export function PortfolioScrubChart({
                   aria-label={t(lang, "cardsAdded")}
                 />
               ))}
+
+            {liveEntry ? (
+              <ReferenceDot
+                x={liveEntry.label}
+                y={liveEntry.displayValue}
+                r={4.5}
+                fill={
+                  liveEntry.valuationStatus === "partial" ? BG : HONEY
+                }
+                stroke={HONEY}
+                strokeWidth={2.5}
+                aria-label={liveEntry.label}
+              />
+            ) : null}
 
             {/* Scrub cursor — vertical hairline + active dot on the hovered point */}
             {activeLabel != null && activeDisplayValue != null && (

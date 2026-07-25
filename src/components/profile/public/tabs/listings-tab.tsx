@@ -5,7 +5,12 @@ import Link from "next/link";
 import { ChevronRight, Package, Store } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { t, type Language } from "@/lib/i18n";
+import { t, type Currency, type Language } from "@/lib/i18n";
+import {
+  formatDisplayValue,
+  jpyToDisplayValue,
+} from "@/lib/utils/currency";
+import { useUIStore } from "@/stores/ui-store";
 
 import { ProfileListingCard } from "../cards/profile-listing-card";
 import type { SerializedListing } from "../types";
@@ -34,6 +39,7 @@ export function ListingsTabContent({
 }) {
   const [filter, setFilter] = useState<ListingFilter>("all");
   const [sort, setSort] = useState<ListingSort>("recent");
+  const currency = useUIStore((state) => state.currency);
 
   const filtered = useMemo(() => {
     let arr = listings.slice();
@@ -84,11 +90,14 @@ export function ListingsTabContent({
   }
 
   // Build a single concise meta line under the title:
-  //   "1 รายการ · ฿268,758"  or  "12 รายการ · ฿120 – ฿268,758"
+  //   "1 รายการ · 268,758 ฿" or the equivalent range in the selected currency.
   // We skip the meta entirely when there's a single listing because the tab
   // nav already tells you the count and the card itself shows the price —
   // repeating it as a panel header just adds visual noise.
-  const metaLine = listings.length > 1 ? buildListingsMeta(listings, lang) : null;
+  const metaLine =
+    listings.length > 1
+      ? buildListingsMeta(listings, lang, currency)
+      : null;
 
   // Filtering only adds value when there's a real range to filter through.
   const showToolbar = listings.length >= TOOLBAR_THRESHOLD;
@@ -170,11 +179,23 @@ export function ListingsTabContent({
 function buildListingsMeta(
   listings: SerializedListing[],
   lang: Language,
+  currency: Currency,
 ): string {
   const prices = listings
-    .map((l) => l.priceThb)
-    .filter((p): p is number => typeof p === "number" && p > 0);
-  const fmt = (n: number) => `฿${Math.round(n).toLocaleString()}`;
+    .map((listing) => {
+      if (
+        currency === "THB" &&
+        listing.priceThb != null &&
+        Number.isFinite(listing.priceThb) &&
+        listing.priceThb > 0
+      ) {
+        return listing.priceThb;
+      }
+
+      return jpyToDisplayValue(listing.priceJpy, currency);
+    })
+    .filter((price) => Number.isFinite(price) && price > 0);
+  const fmt = (price: number) => formatDisplayValue(price, currency);
   const countLabel = `${listings.length.toLocaleString()} ${t(lang, "tabListings").toLowerCase()}`;
 
   if (prices.length === 0) return countLabel;

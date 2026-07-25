@@ -88,9 +88,9 @@ export function Footer() {
               <Image
                 src="/meecard.png"
                 alt="Meecard"
-                width={32}
-                height={29}
-                className="h-auto select-none"
+                width={754}
+                height={694}
+                className="h-auto w-8 select-none"
               />
               <span className="text-base font-bold tracking-tight">Meecard</span>
             </Link>

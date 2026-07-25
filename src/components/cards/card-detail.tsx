@@ -5,7 +5,7 @@ import Image from "next/image"
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
-import { AdSlot } from "@/components/ads/ad-slot"
+import { AdInventorySlot } from "@/components/ads/ad-inventory-slot"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
@@ -137,7 +137,6 @@ export function CardDetail(props: CardDetailProps) {
             gradeDisplayValues={gradeDisplayValues}
             selectedGrade={selectedGrade}
             onGradeChange={setSelectedGrade}
-            datum={datum}
             activeValue={activeValue}
             shownDelta={shownDelta}
             shownDate={shownDate}
@@ -170,29 +169,40 @@ export function CardDetail(props: CardDetailProps) {
         onSelect={scrollToSection}
       />
 
-      <CardDetailChartSection
-        lang={displayLang}
-        currency={currency}
-        hydrated={hydrated}
-        latestUpdatedAt={latestUpdatedAt}
-        gradeLabel={gradeLabel}
-        selectedGrade={selectedGrade}
-        datum={datum}
-        range={range}
-        onRangeChange={selectRange}
-        series={seriesList}
-        activeIndex={activeIndex}
-        onScrub={setActiveIndex}
-        activeValue={activeValue}
-        shownDate={shownDate}
-        windowLabel={windowLabel}
-      />
+      {/* The contextual ad stays beside the chart on desktop and follows the
+          chart on smaller screens. If the slot collapses, the chart remains
+          the only grid item and naturally takes the full width. */}
+      <div
+        data-slot="card-chart-ad-layout"
+        className="grid grid-cols-1 gap-x-8 gap-y-6 lg:items-start lg:gap-x-10 lg:has-data-[ad-zone=card-detail-chart-rail]:grid-cols-[minmax(0,1fr)_320px] xl:has-data-[ad-zone=card-detail-chart-rail]:grid-cols-[minmax(0,1fr)_360px]"
+      >
+        <div className="min-w-0">
+          <CardDetailChartSection
+            lang={displayLang}
+            currency={currency}
+            hydrated={hydrated}
+            latestUpdatedAt={latestUpdatedAt}
+            gradeLabel={gradeLabel}
+            selectedGrade={selectedGrade}
+            datum={datum}
+            range={range}
+            onRangeChange={selectRange}
+            series={seriesList}
+            activeIndex={activeIndex}
+            onScrub={setActiveIndex}
+            activeValue={activeValue}
+            shownDate={shownDate}
+            windowLabel={windowLabel}
+          />
+        </div>
+        <AdInventorySlot
+          zone="card-detail-chart-rail"
+          className="lg:mt-6 lg:justify-self-end"
+        />
+      </div>
 
-      {/* ── below the chart — two paired rows on lg:
-          ROW 1: ประวัติการซื้อขายล่าสุด (left) · ข้อมูลการ์ด (right)
-          ROW 2: ขายอยู่บน Meecard (left) · โฆษณา (right)
-          Right rail is 320–360px under the chart's side-ad for one continuous
-          right column. Not sticky — scrolls with the page. <lg stacks. ───────── */}
+      {/* ── below the chart — recent sales + card info on lg.
+          The right rail is 320–360px and scrolls with the page; <lg stacks. ── */}
       <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
         {/* ROW 1 LEFT — recent sales */}
         <section id="sources" className="min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
@@ -220,8 +230,11 @@ export function CardDetail(props: CardDetailProps) {
         </aside>
       </div>
 
-      <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
-        {/* ROW 2 LEFT — Meecard asks */}
+      {/* Marketplace keeps its ad adjacent on desktop and stacked below on mobile. */}
+      <div
+        data-slot="card-marketplace-ad-layout"
+        className="mt-14 grid grid-cols-1 gap-x-8 gap-y-8 lg:items-start lg:gap-x-10 lg:has-data-[ad-zone=card-detail-marketplace-rail]:grid-cols-[minmax(0,1fr)_320px] xl:has-data-[ad-zone=card-detail-marketplace-rail]:grid-cols-[minmax(0,1fr)_360px]"
+      >
         <section id="market" className="min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
           <MeecardAsksRail
             cardId={card.id}
@@ -234,17 +247,10 @@ export function CardDetail(props: CardDetailProps) {
             lang={displayLang}
           />
         </section>
-
-        {/* ROW 2 RIGHT — ad column. Desktop: side rail beside Meecard asks. Mobile:
-            stacks BELOW the asks (single column) — i.e. in the discovery transition
-            right before "other versions", which sits OUTSIDE the VISION §5.6 price/sold
-            zone, so it's the single ad mobile carries now that the page-tail banner is
-            gone. The chart-side ad stays hidden <lg (that one IS in the price zone). */}
-        <aside className="min-w-0">
-          <div className="lg:pl-8">
-            <AdSlot placement="card-detail-info-below" className="min-h-[120px] w-full lg:min-h-[320px]" />
-          </div>
-        </aside>
+        <AdInventorySlot
+          zone="card-detail-marketplace-rail"
+          className="lg:justify-self-end"
+        />
       </div>
 
       {/* ── full width: other versions + other cards in the set ─────────────── */}

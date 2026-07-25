@@ -54,9 +54,17 @@ describe("portfolio financial honesty copy", () => {
       estimatedValue: "มูลค่าโดยประมาณ",
       partialValue: "ราคาบางใบยังไม่ครบ",
       unavailableValue: "ยังไม่มีข้อมูลราคา",
-      incompletePerformance: "เพิ่มราคาและต้นทุนให้ครบเพื่อดูผลตอบแทน",
+      incompletePerformance: "ยังคำนวณกำไร/ขาดทุนไม่ได้ เพราะข้อมูลราคาหรือต้นทุนไม่ครบ",
       noCards: "ยังไม่มีการ์ด",
       balanceHidden: "ยอดถูกซ่อน",
+      dataCoverage: "ข้อมูลที่ใช้คำนวณ",
+      sparseHistory: "แสดงมูลค่าวันนี้แล้ว กราฟเส้นจะเริ่มเมื่อมีข้อมูลอย่างน้อย 2 วัน",
+      countSummary: "{holdings} แบบ · รวม {copies} ใบ",
+      purchaseCountSummary: "{purchases} รายการซื้อ · รวม {copies} ใบ",
+      marketPricePerCard: "ราคาตลาด/ใบ",
+      averageCostPerCard: "ต้นทุนเฉลี่ย/ใบ",
+      freeCost: "ฟรี",
+      largestPortfolioShare: "สัดส่วนสูงสุด",
     },
     {
       language: "EN",
@@ -66,6 +74,14 @@ describe("portfolio financial honesty copy", () => {
       incompletePerformance: "Add all prices and costs to see portfolio returns",
       noCards: "No cards yet",
       balanceHidden: "Balance hidden",
+      dataCoverage: "Data coverage",
+      sparseHistory: "Current value is shown; the trend begins after at least 2 daily points",
+      countSummary: "{holdings} types · {copies} cards",
+      purchaseCountSummary: "{purchases} purchases · {copies} cards",
+      marketPricePerCard: "Market price / card",
+      averageCostPerCard: "Avg. cost / card",
+      freeCost: "Free",
+      largestPortfolioShare: "Largest share",
     },
     {
       language: "JP",
@@ -75,6 +91,14 @@ describe("portfolio financial honesty copy", () => {
       incompletePerformance: "すべての価格と取得コストを登録すると、収益を確認できます",
       noCards: "カードはまだありません",
       balanceHidden: "残高は非表示です",
+      dataCoverage: "データ充足率",
+      sparseHistory: "現在価値を表示中です。日次データが2点以上になると推移を表示します",
+      countSummary: "{holdings}種類 · 合計{copies}枚",
+      purchaseCountSummary: "購入{purchases}件 · 合計{copies}枚",
+      marketPricePerCard: "市場価格 / 1枚",
+      averageCostPerCard: "1枚あたり平均コスト",
+      freeCost: "無料",
+      largestPortfolioShare: "最大構成比",
     },
   ] as const)("keeps the coverage states explicit in $language", (copy) => {
     expect(t(copy.language, "portfolioEstimatedValue")).toBe(copy.estimatedValue);
@@ -83,5 +107,15 @@ describe("portfolio financial honesty copy", () => {
     expect(t(copy.language, "portfolioPerformanceIncomplete")).toBe(copy.incompletePerformance);
     expect(t(copy.language, "portfolioNoCards")).toBe(copy.noCards);
     expect(t(copy.language, "balanceHidden")).toBe(copy.balanceHidden);
+    expect(t(copy.language, "dataCoverage")).toBe(copy.dataCoverage);
+    expect(t(copy.language, "noPortfolioDataDesc")).toBe(copy.sparseHistory);
+    expect(t(copy.language, "portfolioCardCountSummary")).toBe(copy.countSummary);
+    expect(t(copy.language, "portfolioPurchaseCountSummary")).toBe(
+      copy.purchaseCountSummary,
+    );
+    expect(t(copy.language, "marketPricePerCard")).toBe(copy.marketPricePerCard);
+    expect(t(copy.language, "averageCostPerCard")).toBe(copy.averageCostPerCard);
+    expect(t(copy.language, "portfolioFreeCost")).toBe(copy.freeCost);
+    expect(t(copy.language, "largestPortfolioShare")).toBe(copy.largestPortfolioShare);
   });
 });

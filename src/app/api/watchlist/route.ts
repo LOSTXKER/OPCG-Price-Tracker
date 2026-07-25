@@ -2,11 +2,26 @@ import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
 import { gameCardInclude } from "@/lib/api/query-fragments";
 import { parseJsonBody } from "@/lib/api/request-body";
+import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { prisma } from "@/lib/db";
 import { triggerAchievementCheck } from "@/lib/honey";
 import { effectiveTier, getLimits } from "@/lib/billing";
 import { CreateWatchlistSchema } from "@/lib/watchlist/schemas";
 import { NextRequest, NextResponse } from "next/server";
+
+const watchlistCardInclude = {
+  ...gameCardInclude,
+  prices: {
+    where: {
+      source: PRICE_SOURCE.SNKRDUNK,
+      gradeCondition: PRICE_SOURCE.PSA_10,
+      type: "SELL",
+    },
+    orderBy: { scrapedAt: "desc" },
+    take: 1,
+    select: { priceUsd: true },
+  },
+} as const;
 
 export const GET = apiHandler(async () => {
   const auth = await requireAuthUser();
@@ -18,7 +33,11 @@ export const GET = apiHandler(async () => {
       { pinnedAt: { sort: "desc", nulls: "last" } },
       { addedAt: "desc" },
     ],
-    include: { card: { include: gameCardInclude } },
+    include: {
+      card: {
+        include: watchlistCardInclude,
+      },
+    },
   });
 
   const cardIds = items.map((i) => i.cardId);
@@ -35,10 +54,17 @@ export const GET = apiHandler(async () => {
     for (const a of alerts) alertCardIds.add(a.cardId);
   }
 
-  const augmented = items.map((item) => ({
-    ...item,
-    hasActiveAlert: alertCardIds.has(item.cardId),
-  }));
+  const augmented = items.map((item) => {
+    const { prices, ...card } = item.card;
+    return {
+      ...item,
+      card: {
+        ...card,
+        psa10PriceUsd: prices[0]?.priceUsd ?? null,
+      },
+      hasActiveAlert: alertCardIds.has(item.cardId),
+    };
+  });
 
   return NextResponse.json({ items: augmented });
 });
@@ -83,12 +109,24 @@ export const POST = apiHandler(async (request: NextRequest) => {
       cardId,
     },
     update: {},
-    include: { card: { include: gameCardInclude } },
+    include: { card: { include: watchlistCardInclude } },
   });
 
   triggerAchievementCheck(auth.user.id);
 
-  return NextResponse.json({ item }, { status: 201 });
+  const { prices, ...itemCard } = item.card;
+  return NextResponse.json(
+    {
+      item: {
+        ...item,
+        card: {
+          ...itemCard,
+          psa10PriceUsd: prices[0]?.priceUsd ?? null,
+        },
+      },
+    },
+    { status: 201 },
+  );
 });
 
 export const DELETE = apiHandler(async (request: NextRequest) => {

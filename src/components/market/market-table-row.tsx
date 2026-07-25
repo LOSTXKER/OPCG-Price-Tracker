@@ -15,19 +15,16 @@ import { getCardName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import { formatCount } from "@/lib/utils/currency"
-import type { CardRow, PriceMode } from "@/components/home/market-types"
+import type { CardRow } from "@/components/home/market-types"
+import {
+  getGradePriceUsd,
+  isRawGrade,
+  type GradeKey,
+} from "@/lib/pricing/grade-tiers"
 
 import type { MarketColumn } from "./market-columns"
+import { marketTableCellClass } from "./market-table-layout"
 import { PriceTag } from "@/components/ui/price-tag"
-
-function cellClass(col: MarketColumn) {
-  return cn(
-    "py-3 align-middle",
-    col.key === "star" ? "pl-3 pr-0" : col.key === "rank" ? "px-1" : "pr-3 pl-2",
-    col.cell,
-    col.align === "right" && "text-right",
-  )
-}
 
 function Dash() {
   return <span className="font-price text-xs text-muted-foreground/40">—</span>
@@ -37,19 +34,20 @@ export const MarketTableRow = memo(function MarketTableRow({
   card,
   rank,
   columns,
-  priceMode = "raw",
+  grade = "raw",
   sparkline,
 }: {
   card: CardRow
   rank: number
   columns: MarketColumn[]
-  priceMode?: PriceMode
+  grade?: GradeKey
   sparkline?: number[]
 }) {
   const lang = useUIStore((s) => s.language)
   const name = getCardName(lang, card)
   const setCode = card.set?.code ?? card.setCode ?? ""
-  const isPsa = priceMode === "psa10"
+  const rawGrade = isRawGrade(grade)
+  const gradePriceUsd = getGradePriceUsd(card.psa10PriceUsd, grade)
 
   function renderCell(col: MarketColumn) {
     switch (col.key) {
@@ -107,8 +105,10 @@ export const MarketTableRow = memo(function MarketTableRow({
       case "price":
         return (
           <span className="text-price">
-            {isPsa ? (
-              card.psa10PriceUsd != null ? <PriceUsd usd={card.psa10PriceUsd} /> : <Dash />
+            {!rawGrade ? (
+              gradePriceUsd != null ? (
+                <PriceUsd usd={gradePriceUsd} />
+              ) : <Dash />
             ) : card.latestPriceJpy != null ? (
               <Price jpy={card.latestPriceJpy} />
             ) : (
@@ -117,17 +117,17 @@ export const MarketTableRow = memo(function MarketTableRow({
           </span>
         )
       case "change24h":
-        return isPsa ? <Dash /> : <PriceTag change={card.priceChange24h} changeOnly changeStyle="plain" showArrow={false} size="sm" />
+        return rawGrade ? <PriceTag change={card.priceChange24h} changeOnly changeStyle="plain" showArrow={false} size="sm" /> : <Dash />
       case "change7d":
-        return isPsa ? <Dash /> : <PriceTag change={card.priceChange7d} changeOnly changeStyle="plain" showArrow={false} size="sm" />
+        return rawGrade ? <PriceTag change={card.priceChange7d} changeOnly changeStyle="plain" showArrow={false} size="sm" /> : <Dash />
       case "change30d":
-        return isPsa ? <Dash /> : <PriceTag change={card.priceChange30d} changeOnly changeStyle="plain" showArrow={false} size="sm" />
+        return rawGrade ? <PriceTag change={card.priceChange30d} changeOnly changeStyle="plain" showArrow={false} size="sm" /> : <Dash />
       case "views":
         return <span className="font-price text-xs text-muted-foreground">{formatCount(card.viewCount ?? 0)}</span>
       case "sparkline":
-        return !isPsa && sparkline && sparkline.length >= 2 ? (
+        return rawGrade && sparkline && sparkline.length >= 2 ? (
           <MiniSparkline data={sparkline} width={88} height={28} className="inline-block align-middle" />
-        ) : null
+        ) : <Dash />
       default:
         return null
     }
@@ -136,7 +136,7 @@ export const MarketTableRow = memo(function MarketTableRow({
   return (
     <tr className="ease-chrome hover:bg-muted/70">
       {columns.map((col) => (
-        <td key={col.key} className={cellClass(col)}>
+        <td key={col.key} className={marketTableCellClass(col)}>
           {renderCell(col)}
         </td>
       ))}
@@ -148,7 +148,7 @@ export function MarketTableRowSkeleton({ columns }: { columns: MarketColumn[] })
   return (
     <tr>
       {columns.map((col) => (
-        <td key={col.key} className={cellClass(col)}>
+        <td key={col.key} className={marketTableCellClass(col)}>
           {col.key === "card" ? (
             <div className="flex items-center gap-3">
               <Skeleton className="size-9 rounded-sm" />

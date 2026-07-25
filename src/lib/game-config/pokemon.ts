@@ -1,12 +1,12 @@
 import type { GameConfig } from "./types";
 
 /**
- * Pokémon TCG — registered stub (REDESIGN.md P4). `comingSoon: true` so the
- * game switcher surfaces it (disabled) and `?game=pokemon` resolves to a
- * "coming soon" state instead of silently falling back to OPCG. Real sets /
- * rarities / card types / pull-rates + scrapers land when Pokémon data is
- * seeded (P4.2+). Card types use the approved widened enum (POKEMON / TRAINER /
- * ENERGY / STADIUM / SUPPORTER / TOOL) once data exists.
+ * Pokémon TCG — registered roadmap stub (REDESIGN.md P4). It stays visible in
+ * the canonical Header switcher, but the release gate keeps it out of active
+ * selectors, cookies and catalog routes until both data and routing are ready.
+ * Real sets / rarities / card types / pull-rates + scrapers land when Pokémon
+ * data is seeded (P4.2+). Card types use the approved widened enum (POKEMON /
+ * TRAINER / ENERGY / STADIUM / SUPPORTER / TOOL) once data exists.
  */
 export const pokemonConfig: GameConfig = {
   slug: "pokemon",
@@ -14,7 +14,11 @@ export const pokemonConfig: GameConfig = {
   nameEn: "Pokémon TCG",
   shortName: "Pokémon",
   filterName: "Pokémon",
-  comingSoon: true,
+  release: {
+    status: "ROADMAP",
+    data: "STUB",
+    routes: "BLOCKED",
+  },
   accentTint: "#F2C744", // thin yellow skin over honey (whisper, not repaint)
 
   sets: [],

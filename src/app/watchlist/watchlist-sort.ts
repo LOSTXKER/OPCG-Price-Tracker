@@ -6,12 +6,19 @@ import {
   type WatchlistFilters,
 } from "./watchlist-types";
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants";
+import {
+  getGradePriceUsd,
+  hasGradePrice,
+  isRawGrade,
+  type GradeKey,
+} from "@/lib/pricing/grade-tiers";
 
 export type WatchlistFilterOptions = {
   filters: WatchlistFilters;
   period: ChangePeriod;
   search?: string;
   gameFilter?: string;
+  grade?: GradeKey;
 };
 
 function isEntryInGame(entry: WatchlistEntry, gameFilter: string): boolean {
@@ -19,6 +26,15 @@ function isEntryInGame(entry: WatchlistEntry, gameFilter: string): boolean {
     gameFilter === ALL_GAMES ||
     (entry.card.set.game?.slug ?? DEFAULT_GAME) === gameFilter
   );
+}
+
+function getEntryGradePrice(
+  entry: WatchlistEntry,
+  grade: GradeKey,
+): number | null {
+  return isRawGrade(grade)
+    ? entry.card.latestPriceJpy
+    : getGradePriceUsd(entry.card.psa10PriceUsd, grade);
 }
 
 /** Apply the watchlist's in-page filters without mutating or reordering input. */
@@ -29,16 +45,30 @@ export function filterEntries(
     period,
     search = "",
     gameFilter = ALL_GAMES,
+    grade = "raw",
   }: WatchlistFilterOptions,
 ): WatchlistEntry[] {
   const query = search.trim().toLocaleLowerCase();
+  const rawGrade = isRawGrade(grade);
 
   return entries.filter((entry) => {
     if (!isEntryInGame(entry, gameFilter)) return false;
-    if (filters.hasAlert && !entry.hasActiveAlert) return false;
+    if (
+      !rawGrade &&
+      !hasGradePrice(
+        {
+          rawPriceJpy: entry.card.latestPriceJpy,
+          psa10PriceUsd: entry.card.psa10PriceUsd,
+        },
+        grade,
+      )
+    ) {
+      return false;
+    }
+    if (rawGrade && filters.hasAlert && !entry.hasActiveAlert) return false;
     if (filters.setCode && entry.card.set.code !== filters.setCode) return false;
 
-    if (filters.direction) {
+    if (rawGrade && filters.direction) {
       const change = getEntryChange(entry, period);
       if (change == null) return false;
       if (filters.direction === "up" && change <= 0) return false;
@@ -111,18 +141,36 @@ export function countActiveWatchlistFilters(filters: WatchlistFilters): number {
   );
 }
 
+/** Graded lenses have no real change series, so a hidden Raw-only mover sort
+ * must resolve to the visible price column when the grade changes. */
+export function normalizeWatchlistSortForGrade(
+  sortKey: SortKey,
+  grade: GradeKey,
+): SortKey {
+  return !isRawGrade(grade) && (sortKey === "gain" || sortKey === "loss")
+    ? "priceHigh"
+    : sortKey;
+}
+
 export function filterAndSortEntries(
   entries: readonly WatchlistEntry[],
   options: WatchlistFilterOptions,
   sortKey: SortKey,
 ): WatchlistEntry[] {
-  return sortEntries(filterEntries(entries, options), sortKey, options.period);
+  const grade = options.grade ?? "raw";
+  return sortEntries(
+    filterEntries(entries, options),
+    normalizeWatchlistSortForGrade(sortKey, grade),
+    options.period,
+    grade,
+  );
 }
 
 export function sortEntries(
   entries: readonly WatchlistEntry[],
   key: SortKey,
   period: ChangePeriod,
+  grade: GradeKey = "raw",
 ): WatchlistEntry[] {
   const arr = [...entries];
 
@@ -157,15 +205,15 @@ export function sortEntries(
       break;
     case "priceHigh":
       arr.sort((a, b) => {
-        const av = a.card.latestPriceJpy ?? -Infinity;
-        const bv = b.card.latestPriceJpy ?? -Infinity;
+        const av = getEntryGradePrice(a, grade) ?? -Infinity;
+        const bv = getEntryGradePrice(b, grade) ?? -Infinity;
         return bv - av;
       });
       break;
     case "priceLow":
       arr.sort((a, b) => {
-        const av = a.card.latestPriceJpy ?? Infinity;
-        const bv = b.card.latestPriceJpy ?? Infinity;
+        const av = getEntryGradePrice(a, grade) ?? Infinity;
+        const bv = getEntryGradePrice(b, grade) ?? Infinity;
         return av - bv;
       });
       break;

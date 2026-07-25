@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import DropCalculatorClient from "./drop-calculator-client";
@@ -15,7 +14,6 @@ export default function DropCalculatorPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Drop Calculator", href: "/opcg/drop-calculator" }])} />
-      <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "dropCalculator" }]} />
       <DropCalculatorClient />
     </>
   );

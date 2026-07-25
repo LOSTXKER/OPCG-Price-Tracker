@@ -20,6 +20,12 @@ export function daysUntil(date: string | Date): number {
   return Math.ceil((new Date(date).getTime() - Date.now()) / 86_400_000);
 }
 
+/** Local calendar date for a native date input (`YYYY-MM-DD`). */
+export function localDateInputValue(date: Date = new Date()): string {
+  const localTime = date.getTime() - date.getTimezoneOffset() * 60_000;
+  return new Date(localTime).toISOString().slice(0, 10);
+}
+
 export function formatChatTime(iso: string) {
   return new Date(iso).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
 }

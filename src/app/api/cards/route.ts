@@ -5,6 +5,11 @@ import { buildCardSearchFacets } from "@/lib/cards/search-filters";
 import { prisma } from "@/lib/db";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { buildCardSetScope } from "@/lib/game/card-scope";
+import {
+  GRADE_TIER_BY_KEY,
+  isRawGrade,
+  type GradeKey,
+} from "@/lib/pricing/grade-tiers";
 import { NextRequest, NextResponse } from "next/server";
 
 function splitCsv(value: string): string[] {
@@ -20,7 +25,7 @@ export const GET = apiHandler(async (request: NextRequest) => {
   const color = searchParams.get("color") || "";
   const minPrice = parseInt(searchParams.get("minPrice") || "0", 10) || 0;
   const maxPrice = parseInt(searchParams.get("maxPrice") || "0", 10) || 0;
-  const sort = searchParams.get("sort") || "newest";
+  const requestedSort = searchParams.get("sort") || "newest";
   const { page, limit, skip } = parsePageLimit(searchParams);
 
   const codes = searchParams.get("codes") || "";
@@ -74,7 +79,23 @@ export const GET = apiHandler(async (request: NextRequest) => {
     if (colorFilters.length > 0) where.AND = [{ OR: colorFilters }];
   }
   const variant = searchParams.get("variant") || "";
-  if (minPrice > 0 || maxPrice > 0) {
+  const gradeParam = searchParams.get("grade");
+  if (gradeParam && !Object.hasOwn(GRADE_TIER_BY_KEY, gradeParam)) {
+    return NextResponse.json({ error: "Invalid grade" }, { status: 400 });
+  }
+  // Temporary compatibility for callers from the former Raw/PSA 10 lens.
+  // New surfaces send the canonical grade key (`psa_10`).
+  const legacyPriceMode = searchParams.get("priceMode");
+  const grade: GradeKey = gradeParam
+    ? (gradeParam as GradeKey)
+    : legacyPriceMode === "psa10"
+      ? "psa_10"
+      : "raw";
+  const rawGrade = isRawGrade(grade);
+
+  // Price-range inputs are currently backed by Card.latestPriceJpy (Raw) only.
+  // Never apply a hidden Raw constraint while the user is viewing a graded lens.
+  if (rawGrade && (minPrice > 0 || maxPrice > 0)) {
     where.latestPriceJpy = {
       ...(minPrice > 0 ? { gte: minPrice } : {}),
       ...(maxPrice > 0 ? { lte: maxPrice } : {}),
@@ -86,8 +107,7 @@ export const GET = apiHandler(async (request: NextRequest) => {
     where.isParallel = false;
   }
 
-  const priceMode = searchParams.get("priceMode") || "";
-  if (priceMode === "psa10") {
+  if (!rawGrade) {
     where.prices = {
       some: {
         source: PRICE_SOURCE.SNKRDUNK,
@@ -96,6 +116,14 @@ export const GET = apiHandler(async (request: NextRequest) => {
       },
     };
   }
+
+  // Prisma cannot order Card rows by the latest value in a to-many price
+  // relation. Until graded snapshots have a flattened sort field, fall back to
+  // newest instead of silently sorting a graded table by Raw price/change.
+  const sort =
+    !rawGrade && /^(price_|change_)/.test(requestedSort)
+      ? "newest"
+      : requestedSort;
 
   const orderBy: Record<string, unknown> = {};
   switch (sort) {

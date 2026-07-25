@@ -9,6 +9,11 @@ export const opcgConfig: GameConfig = {
   nameEn: "One Piece Card Game",
   shortName: "OPCG",
   filterName: "One Piece",
+  release: {
+    status: "LIVE",
+    data: "READY",
+    routes: "READY",
+  },
   supportsMarketplace: true,
   deckRules: { mainDeckSize: 50, maxCopies: 4, requiresLeader: true },
 

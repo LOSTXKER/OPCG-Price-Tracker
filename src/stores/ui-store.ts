@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LANG_COOKIE, type Language, type Currency } from "@/lib/i18n";
+import { resolveActiveGamePrefix } from "@/lib/game/constants";
 
 export type { Language, Currency };
 type CardView = "grid" | "list";
@@ -14,8 +15,6 @@ function writeLangCookie(lang: Language) {
   if (typeof document === "undefined") return;
   document.cookie = `${LANG_COOKIE}=${lang}; path=/; max-age=31536000; samesite=lax`;
 }
-/** null = undecided (banner shows when ads are live); set on user choice. */
-export type AdConsent = "granted" | "denied" | null;
 
 const CURRENCY_CYCLE: Currency[] = ["THB", "JPY", "USD"];
 const LANGUAGE_CYCLE: Language[] = ["TH", "EN", "JP"];
@@ -27,8 +26,6 @@ export interface UIState {
   currentGame: string;
   cardView: CardView;
   dismissedBanner: boolean;
-  /** Ad/cookie consent for ad networks (AdSense). House ads don't need it. */
-  adConsent: AdConsent;
   searchOpen: boolean;
   unreadMessages: number;
   /** Dismiss-once hint clarifying that the header game pill navigates the
@@ -41,7 +38,6 @@ export interface UIState {
   setCurrency: (currency: Currency) => void;
   cycleCurrency: () => void;
   setCurrentGame: (slug: string) => void;
-  setAdConsent: (consent: AdConsent) => void;
   setCardView: (view: CardView) => void;
   dismissBanner: () => void;
   setSearchOpen: (open: boolean) => void;
@@ -57,7 +53,6 @@ export function selectPersistedUIState(state: UIState) {
     currentGame: state.currentGame,
     cardView: state.cardView,
     dismissedBanner: state.dismissedBanner,
-    adConsent: state.adConsent,
     dismissedSwitcherHint: state.dismissedSwitcherHint,
     portfolioBalanceHidden: state.portfolioBalanceHidden,
   };
@@ -71,7 +66,6 @@ export const useUIStore = create<UIState>()(
       currentGame: "opcg",
       cardView: "grid",
       dismissedBanner: false,
-      adConsent: null,
       searchOpen: false,
       unreadMessages: 0,
       dismissedSwitcherHint: false,
@@ -92,8 +86,8 @@ export const useUIStore = create<UIState>()(
           const idx = CURRENCY_CYCLE.indexOf(state.currency);
           return { currency: CURRENCY_CYCLE[(idx + 1) % CURRENCY_CYCLE.length] };
         }),
-      setCurrentGame: (currentGame) => set({ currentGame }),
-      setAdConsent: (adConsent) => set({ adConsent }),
+      setCurrentGame: (currentGame) =>
+        set({ currentGame: resolveActiveGamePrefix(currentGame) }),
       setCardView: (cardView) => set({ cardView }),
       dismissBanner: () => set({ dismissedBanner: true }),
       setSearchOpen: (open) => set({ searchOpen: open }),
@@ -110,6 +104,16 @@ export const useUIStore = create<UIState>()(
       // so the first paint matches the server and prefs swap in cleanly afterwards.
       skipHydration: true,
       partialize: selectPersistedUIState,
+      // A removed/roadmap game may survive in older localStorage. Fail closed
+      // during hydration so every direct store consumer sees a routable catalog.
+      merge: (persistedState, currentState) => {
+        const persisted = persistedState as Partial<UIState>;
+        return {
+          ...currentState,
+          ...persisted,
+          currentGame: resolveActiveGamePrefix(persisted.currentGame),
+        };
+      },
       // Backfill the lang cookie for users whose preference predates it, so
       // server components match the client on the first load after this ships.
       onRehydrateStorage: () => (state) => {

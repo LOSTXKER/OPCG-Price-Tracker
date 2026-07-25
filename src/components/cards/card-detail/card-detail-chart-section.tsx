@@ -2,12 +2,13 @@
 
 import { MoveHorizontal } from "lucide-react"
 
-import { AdSlot } from "@/components/ads/ad-slot"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useTierLimits } from "@/hooks/use-tier-limits"
 import { t, type Currency, type Language } from "@/lib/i18n"
 import { formatDisplayValue } from "@/lib/utils/currency"
 import { cn } from "@/lib/utils"
+import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
 
 import {
   RANGES,
@@ -35,7 +36,22 @@ interface CardDetailChartSectionProps {
   windowLabel: string
 }
 
-/** Selected-grade chart, range controls, live announcement, and desktop ad rail. */
+const RANGE_DAYS: Record<ChartRange, number> = {
+  "7D": 7,
+  "1M": 30,
+  "3M": 90,
+  "1Y": 365,
+  All: Infinity,
+}
+
+export function isPriceHistoryRangeLocked(
+  range: ChartRange,
+  maxDays: number,
+): boolean {
+  return Number.isFinite(maxDays) && RANGE_DAYS[range] > maxDays
+}
+
+/** Selected-grade chart, range controls, and live announcement. */
 export function CardDetailChartSection({
   lang,
   currency,
@@ -54,25 +70,44 @@ export function CardDetailChartSection({
   windowLabel,
 }: CardDetailChartSectionProps) {
   const chartHeights = "h-[210px] sm:h-[280px] lg:h-[320px]"
+  const { limits, loaded: limitsLoaded } = useTierLimits()
+  const { openUpgradeDialog } = useUpgradeDialog()
 
   return (
-    <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+    <div className="mt-6">
       <div className="min-w-0">
         <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-eyebrow">
             {t(lang, "priceHistory")} · {gradeLabel}
           </p>
-          <SegmentedControl<ChartRange>
-            options={RANGES.map((rangeOption) => ({
-              value: rangeOption,
-              label: rangeOption,
-            }))}
-            value={range}
-            onChange={onRangeChange}
-            size="sm"
-            variant="pill"
-            ariaLabel={t(lang, "priceHistory")}
-          />
+          {limitsLoaded ? (
+            <SegmentedControl<ChartRange>
+              options={RANGES.map((rangeOption) => ({
+                value: rangeOption,
+                label: rangeOption,
+                locked: isPriceHistoryRangeLocked(
+                  rangeOption,
+                  limits.priceHistoryDays,
+                ),
+                ariaLabel: isPriceHistoryRangeLocked(
+                  rangeOption,
+                  limits.priceHistoryDays,
+                )
+                    ? t(lang, "upgradeToUnlock")
+                    : undefined,
+              }))}
+              value={range}
+              onChange={onRangeChange}
+              onLocked={() =>
+                openUpgradeDialog({ featureKey: "priceHistoryExtended" })
+              }
+              size="sm"
+              variant="pill"
+              ariaLabel={t(lang, "priceHistory")}
+            />
+          ) : (
+            <Skeleton className="h-8 w-52 rounded-full" />
+          )}
         </div>
 
         {!datum.hasData ? (
@@ -119,12 +154,6 @@ export function CardDetailChartSection({
         )}
       </div>
 
-      <aside className="order-last hidden min-w-0 lg:order-none lg:block">
-        <AdSlot
-          placement="card-detail-chart-side"
-          className="min-h-[320px] w-full lg:w-[320px] xl:w-[360px]"
-        />
-      </aside>
     </div>
   )
 }

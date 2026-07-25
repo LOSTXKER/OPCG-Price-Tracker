@@ -40,7 +40,7 @@ export function CardDetailBuyBox({
     "ease-chrome ring-inset flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-transparent text-sm font-semibold text-foreground ring-1 ring-hair hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
 
   return (
-    <div className="order-3 min-w-0 pt-4 lg:order-none lg:col-start-3 lg:row-start-1 lg:pl-8 lg:pt-0">
+    <div className="order-4 min-w-0 pt-4 lg:order-none lg:col-start-3 lg:row-start-1 lg:pl-8 lg:pt-0">
       <div className="space-y-2">
         <a
           href="#market"
@@ -60,7 +60,7 @@ export function CardDetailBuyBox({
             <Tag className="size-4" aria-hidden /> {t(lang, "sellCta")}
           </a>
           <CardAddToPortfolio
-            cardId={card.id}
+            card={card}
             cardName={displayName}
             variant="ghost"
             className={secondaryButton}

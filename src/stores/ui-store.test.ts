@@ -16,3 +16,17 @@ describe("portfolio balance privacy preference", () => {
     consoleError.mockRestore()
   })
 })
+
+describe("current game preference", () => {
+  it("rejects roadmap and unknown games at the shared store boundary", () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined)
+
+    useUIStore.getState().setCurrentGame("pokemon")
+    expect(useUIStore.getState().currentGame).toBe("opcg")
+
+    useUIStore.getState().setCurrentGame("missing")
+    expect(useUIStore.getState().currentGame).toBe("opcg")
+
+    consoleError.mockRestore()
+  })
+})

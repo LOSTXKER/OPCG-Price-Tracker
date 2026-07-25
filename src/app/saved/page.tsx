@@ -9,10 +9,10 @@ import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/shared/empty-state";
 import { LoadingState } from "@/components/shared/loading-state";
+import { Price } from "@/components/shared/price-inline";
 import { Surface } from "@/components/ui/surface";
 import { useUIStore } from "@/stores/ui-store";
 import { ApiError, apiGet, apiPost } from "@/lib/api/client";
-import { formatJpy, formatThb } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -208,15 +208,12 @@ export default function SavedListingsPage() {
                       <p className="text-meta">
                         {listing.card.cardCode} • {listing.card.rarity}
                       </p>
-                      <div className="mt-2 flex items-baseline justify-between">
-                        <span className="font-bold font-price">
-                          {formatJpy(listing.priceJpy)}
-                        </span>
-                        {listing.priceThb != null && (
-                          <span className="text-meta">
-                            {formatThb(listing.priceThb)}
-                          </span>
-                        )}
+                      <div className="mt-2">
+                        <Price
+                          jpy={listing.priceJpy}
+                          thb={listing.priceThb}
+                          className="font-bold"
+                        />
                       </div>
                       <p className="mt-1 text-meta">
                         {listing.user.displayName ?? t(lang, "seller")} •{" "}

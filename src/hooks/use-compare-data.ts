@@ -61,7 +61,9 @@ export function useCompareData(codes: string[]) {
   const [priceHistory, setPriceHistory] = useState<
     Record<string, PriceHistoryEntry[]>
   >({});
-  const [days, setDays] = useState(90);
+  // Free includes 30 days. Start from the universally available range so the
+  // selected control never claims 90 days while the API silently caps to 30.
+  const [days, setDays] = useState(30);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [chartLocked, setChartLocked] = useState(false);

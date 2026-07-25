@@ -9,7 +9,10 @@ import type { GameBreakdown } from "@/lib/types/portfolio"
  * Portfolio's game filter — one chip per game the user actually holds
  * (count > 0). Chips are NAME-ONLY: the per-game money lives in exactly one
  * place (the "by game" breakdown panel), so the rail stays a clean control
- * instead of a second stats row. The rail self-hides below two games.
+ * instead of a second stats row. The rail remains visible with one launch-ready
+ * game so the collection's scope stays explicit. MINE pages use the compact
+ * select presentation so this context can sit inside the main toolbar instead
+ * of becoming a third row of tabs.
  */
 export function PortfolioGameChips({
   breakdown,
@@ -34,5 +37,12 @@ export function PortfolioGameChips({
       }
     })
 
-  return <GameFilterChips games={games} activeGame={activeGame} onSelect={onSelect} />
+  return (
+    <GameFilterChips
+      games={games}
+      activeGame={activeGame}
+      onSelect={onSelect}
+      variant="select"
+    />
+  )
 }

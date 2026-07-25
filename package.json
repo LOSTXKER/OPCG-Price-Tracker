@@ -17,6 +17,7 @@
     "translate:thai": "tsx scripts/translate-thai.ts",
     "seed:users": "tsx scripts/seed-users.ts",
     "seed:games": "tsx scripts/seed-games.ts",
+    "check:game-launch": "tsx scripts/check-game-launch-readiness.ts",
     "seed:prices": "tsx scripts/seed-price-history.ts",
     "seed:honey-shop": "tsx scripts/seed-honey-shop.ts",
     "seed:achievements": "tsx scripts/seed-achievements.ts",

@@ -1,9 +1,8 @@
 "use client";
 
-import { useId, useRef } from "react";
-
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { formatTabBadge } from "./tier-banner";
 import type { ProfileTab } from "./types";
@@ -21,45 +20,18 @@ export type TabDescriptor = {
  *     lose the navigation when browsing long listing/collection grids.
  *     Offsets account for both the mobile (h-14 = 56px) and desktop (~86px)
  *     site headers so tabs land flush under whichever header is showing.
- *   - Implements the WAI-ARIA tabs pattern (`role="tablist"`,
- *     `aria-selected`, full keyboard navigation with ←/→/Home/End) so
- *     screen-reader users can scan tabs without picking up extra noise.
- *   - Active tab gets a soft pill background plus the underline for
- *     "obviously selected even at a glance".
+ *   - Uses the canonical tabs primitive for the WAI-ARIA relationship,
+ *     roving focus, and ←/→/Home/End keyboard navigation.
+ *   - Active tab uses one clear underline instead of stacked indicators.
  */
 export function ProfileTabsNav({
   tabs,
-  active,
-  onChange,
   lang,
 }: {
   tabs: TabDescriptor[];
-  active: ProfileTab;
-  onChange: (key: ProfileTab) => void;
   lang: Language;
 }) {
-  const navId = useId();
-  const buttonsRef = useRef<Map<ProfileTab, HTMLButtonElement | null>>(new Map());
-
   if (tabs.length === 0) return null;
-
-  const focusTab = (key: ProfileTab) => {
-    const el = buttonsRef.current.get(key);
-    el?.focus();
-  };
-
-  const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, idx: number) => {
-    let next = idx;
-    if (e.key === "ArrowRight") next = (idx + 1) % tabs.length;
-    else if (e.key === "ArrowLeft") next = (idx - 1 + tabs.length) % tabs.length;
-    else if (e.key === "Home") next = 0;
-    else if (e.key === "End") next = tabs.length - 1;
-    else return;
-    e.preventDefault();
-    const target = tabs[next].key;
-    onChange(target);
-    focusTab(target);
-  };
 
   return (
     <div
@@ -74,55 +46,29 @@ export function ProfileTabsNav({
         "top-[var(--chrome-h)] md:-mx-6 md:px-6 lg:-mx-8 lg:px-8",
       )}
     >
-      <nav
-        id={navId}
-        role="tablist"
+      <TabsList
+        variant="line"
         aria-label="Profile sections"
-        className="-mb-px flex gap-1 overflow-x-auto pb-px scrollbar-none"
+        className="-mb-px flex w-full justify-start gap-1 overflow-x-auto rounded-none bg-background p-0 pb-px scrollbar-none group-data-horizontal/tabs:h-auto"
       >
-        {tabs.map(({ key, labelKey, count }, idx) => {
-          const isActive = active === key;
-          return (
-            <button
-              key={key}
-              ref={(el) => {
-                buttonsRef.current.set(key, el);
-              }}
-              role="tab"
-              aria-selected={isActive}
-              aria-controls={`${navId}-panel-${key}`}
-              tabIndex={isActive ? 0 : -1}
-              onKeyDown={(e) => onKeyDown(e, idx)}
-              onClick={() => onChange(key)}
-              className={cn(
-                // Minimal underline-only treatment — the previous version
-                // stacked a pill background AND a 3px border which read as
-                // double-emphasis. A single 2px underline + primary text
-                // colour is enough to mark the active tab.
-                "group/tab relative inline-flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-3 text-sm font-medium transition-colors sm:px-4",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-t-md",
-                isActive
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {t(lang, labelKey)}
-              {count != null && count > 0 && (
-                <span
-                  className={cn(
-                    "rounded-full px-1.5 text-micro tabular-nums",
-                    isActive
-                      ? "bg-primary/15 text-primary"
-                      : "bg-muted/60 text-muted-foreground",
-                  )}
-                >
-                  {formatTabBadge(count)}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </nav>
+        {tabs.map(({ key, labelKey, count }) => (
+          <TabsTrigger
+            key={key}
+            value={key}
+            className={cn(
+              "group/tab min-h-11 flex-none rounded-none px-3 py-3 text-sm sm:px-4",
+              "group-data-horizontal/tabs:after:bottom-0",
+            )}
+          >
+            {t(lang, labelKey)}
+            {count != null && count > 0 && (
+              <span className="rounded-full bg-muted/60 px-1.5 text-micro tabular-nums text-muted-foreground group-data-[active]/tab:bg-primary/15 group-data-[active]/tab:text-primary">
+                {formatTabBadge(count)}
+              </span>
+            )}
+          </TabsTrigger>
+        ))}
+      </TabsList>
     </div>
   );
 }

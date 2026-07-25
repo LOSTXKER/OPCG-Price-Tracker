@@ -19,6 +19,7 @@ import { useUIStore } from "@/stores/ui-store";
 import { apiGet, apiPost, apiTry } from "@/lib/api/client";
 import { getCardName, getLocale, t, type Language } from "@/lib/i18n";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
+import { formatNotificationDisplayCopy } from "@/lib/notifications/display-copy";
 import { cn } from "@/lib/utils";
 import { formatByCurrency } from "@/lib/utils/currency";
 
@@ -27,6 +28,7 @@ type NotificationItem = {
   type: string;
   title: string;
   message: string;
+  data?: unknown;
   read: boolean;
   createdAt: string;
 };
@@ -35,6 +37,7 @@ type TabKey = "system" | "price";
 
 export function NotificationBell() {
   const lang = useUIStore((s) => s.language);
+  const currency = useUIStore((s) => s.currency);
 
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<TabKey>("system");
@@ -130,7 +133,7 @@ export function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-[22rem] max-w-[calc(100vw-2rem)] rounded-xl border border-hair bg-popover shadow-lg">
+        <div className="fixed inset-x-4 top-[calc(var(--chrome-h)+0.5rem)] z-50 rounded-xl border border-hair bg-popover shadow-lg md:absolute md:left-auto md:right-0 md:top-full md:mt-2 md:w-[22rem] md:max-w-[calc(100vw-2rem)]">
           {/* Header */}
           <div className="flex items-center justify-between border-b px-4 py-2.5">
             <span className="text-sm font-semibold">{t(lang, "notifications")}</span>
@@ -147,8 +150,11 @@ export function NotificationBell() {
           <Tabs value={tab} onValueChange={(next) => setTab(next as TabKey)}>
             {/* Tabs strip */}
             <div className="px-3 pt-2">
-              <TabsList className="w-full">
-                <TabsTrigger value="system" className="flex-1 gap-1.5">
+              <TabsList className="w-full p-0.5 group-data-horizontal/tabs:h-12 md:p-[3px] md:group-data-horizontal/tabs:h-8">
+                <TabsTrigger
+                  value="system"
+                  className="min-h-11 flex-1 gap-1.5 md:min-h-0"
+                >
                   {t(lang, "notificationTabSystem")}
                   {unreadCount > 0 && (
                     <span className="inline-flex min-w-4 items-center justify-center rounded-full bg-danger px-1 text-overlay leading-4 text-danger-foreground">
@@ -156,7 +162,10 @@ export function NotificationBell() {
                     </span>
                   )}
                 </TabsTrigger>
-                <TabsTrigger value="price" className="flex-1 gap-1.5">
+                <TabsTrigger
+                  value="price"
+                  className="min-h-11 flex-1 gap-1.5 md:min-h-0"
+                >
                   {t(lang, "notificationTabPrice")}
                   {priceTabBadge > 0 && (
                     <span className="inline-flex min-w-4 items-center justify-center rounded-full bg-success px-1 text-overlay leading-4 text-success-foreground">
@@ -187,35 +196,44 @@ export function NotificationBell() {
                     {t(lang, "noNotifications")}
                   </p>
                 ) : (
-                  items.map((item) => (
-                    <div
-                      key={item.id}
-                      className={cn(
-                        "flex items-start gap-3 border-b border-hair px-4 py-3 transition-colors ease-chrome hover:bg-muted/70",
-                        !item.read && "bg-primary/5",
-                      )}
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className={cn("text-sm", !item.read && "font-medium")}>
-                          {item.title}
-                        </p>
-                        <p className="mt-0.5 text-meta line-clamp-2">{item.message}</p>
-                        <p className="mt-1 text-meta text-muted-foreground/60">
-                          {formatRelative(item.createdAt, lang)}
-                        </p>
+                  items.map((item) => {
+                    const displayCopy = formatNotificationDisplayCopy(
+                      item,
+                      currency,
+                    );
+
+                    return (
+                      <div
+                        key={item.id}
+                        className={cn(
+                          "flex items-start gap-3 border-b border-hair px-4 py-3 transition-colors ease-chrome hover:bg-muted/70",
+                          !item.read && "bg-primary/5",
+                        )}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className={cn("text-sm", !item.read && "font-medium")}>
+                            {displayCopy.title}
+                          </p>
+                          <p className="mt-0.5 text-meta line-clamp-2">
+                            {displayCopy.message}
+                          </p>
+                          <p className="mt-1 text-meta text-muted-foreground/60">
+                            {formatRelative(item.createdAt, lang)}
+                          </p>
+                        </div>
+                        {!item.read && (
+                          <button
+                            type="button"
+                            onClick={() => void markAsRead(item.id)}
+                            className="tap-safe mt-1 shrink-0 rounded-sm p-1 text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground"
+                            title={t(lang, "markAsRead")}
+                          >
+                            <Check className="size-3.5" />
+                          </button>
+                        )}
                       </div>
-                      {!item.read && (
-                        <button
-                          type="button"
-                          onClick={() => void markAsRead(item.id)}
-                          className="tap-safe mt-1 shrink-0 rounded-sm p-1 text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground"
-                          title={t(lang, "markAsRead")}
-                        >
-                          <Check className="size-3.5" />
-                        </button>
-                      )}
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             </TabsContent>

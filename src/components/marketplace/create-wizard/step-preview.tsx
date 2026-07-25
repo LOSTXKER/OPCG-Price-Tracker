@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { Price } from "@/components/shared/price-inline";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -81,9 +82,11 @@ export function StepPreview({
         <div className="border-t p-4 space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">{t(lang, "mktPreviewPrice")}</span>
-            <span className="text-lg font-bold tabular-nums">
-              ¥{pricing.priceJpy.toLocaleString()}
-            </span>
+            <Price
+              jpy={pricing.priceJpy}
+              thb={pricing.priceThb}
+              className="text-lg font-bold tabular-nums"
+            />
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">{t(lang, "mktPreviewCondition")}</span>

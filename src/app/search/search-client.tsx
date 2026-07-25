@@ -1,13 +1,12 @@
 "use client"
 
-import { Suspense, useState } from "react"
+import { Fragment, Suspense, useState } from "react"
 import {
   Search,
   TrendingUpDown,
   X,
 } from "lucide-react"
 
-import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Pagination } from "@/components/ui/pagination"
@@ -19,11 +18,12 @@ import { FilterModal } from "@/components/shared/filter-modal"
 import { cn } from "@/lib/utils"
 import { FilterButton, ToolbarSortDropdown } from "@/components/ui/toolbar"
 import { SetPicker } from "@/components/shared/set-picker"
-import { CardItem, CardItemSkeleton } from "@/components/cards/card-item"
-import { MobileCardSkeleton } from "@/components/home/mobile-card-item"
+import { CardItem } from "@/components/cards/card-item"
 import { MarketTable } from "@/components/market/market-table"
-import { buildMarketColumns } from "@/components/market/market-columns"
+import { GradeControl } from "@/components/market/price-mode-control"
 import { CardGrid } from "@/components/cards/card-grid"
+import { AdPageContentReady } from "@/components/ads/ad-audience-provider"
+import { AdInventorySlot } from "@/components/ads/ad-inventory-slot"
 import { t } from "@/lib/i18n"
 import { getGameConfig } from "@/lib/game-config"
 import { getCardTypeOptions, getColorOptions } from "@/lib/constants/card-config"
@@ -35,11 +35,13 @@ import {
   PAGE_SIZE,
 } from "@/components/home/market-types"
 import { PhotoSearchButton } from "./photo-search-button"
+import {
+  SearchPageSkeleton,
+  SearchResultsSkeleton,
+} from "./search-loading-skeleton"
+import { SEARCH_COLUMNS } from "./search-market-config"
 import { useSearch } from "./use-search"
-
-// /search renders the shared market table with no "Views" column (views are a
-// home "popular" tab concept). Static — never changes — so build it once.
-const SEARCH_COLUMNS = buildMarketColumns({ showViews: false })
+import { isRawGrade } from "@/lib/pricing/grade-tiers"
 
 type SetOption = {
   id: number
@@ -65,7 +67,6 @@ const SORT_KEYS: { value: SortKey; key: "sortPriceDesc" | "sortPriceAsc" | "sort
 
 function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
   const lang = useUIStore((s) => s.language)
-  const SORT_OPTIONS = SORT_KEYS.map((o) => ({ key: o.value, label: t(lang, o.key) }))
   const [showFilters, setShowFilters] = useState(false)
 
   const {
@@ -84,6 +85,7 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
     setViewMode,
     changePeriod,
     setChangePeriod,
+    grade,
     filters,
     facets,
     inputRef,
@@ -100,11 +102,36 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
     handleMultiFilterToggle,
     handleVariantChange,
     handlePriceChange,
+    handleGradeChange,
     resetModalFilters,
     refetch,
     clearFilters,
     clearInput,
   } = useSearch(game)
+  const rawGrade = isRawGrade(grade)
+  const showInFeedAd =
+    !isPending &&
+    !fetchError &&
+    hasSearched &&
+    Boolean(query.trim()) &&
+    cards.length > 8
+  const showBottomAnchor =
+    !isPending &&
+    !fetchError &&
+    hasSearched &&
+    Boolean(query.trim()) &&
+    cards.length > 0
+  const SORT_OPTIONS = SORT_KEYS
+    .filter(
+      (option) =>
+        rawGrade ||
+        (!option.value.startsWith("price_") &&
+          !option.value.startsWith("change_")),
+    )
+    .map((option) => ({
+      key: option.value,
+      label: t(lang, option.key),
+    }))
 
   const gameConfig = getGameConfig(game) ?? getGameConfig("opcg")
   const isAvailable = (available: string[], selected: string[], value: string) =>
@@ -155,6 +182,8 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
 
   return (
     <div className="space-y-4">
+      {showBottomAnchor && <AdPageContentReady />}
+
       {/* Search bar */}
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <div className="relative flex-1">
@@ -221,6 +250,8 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
               </div>
             )}
 
+            <GradeControl value={grade} onChange={handleGradeChange} />
+
             <FilterButton
               count={modalFilterCount}
               active={showFilters || modalFilterCount > 0}
@@ -234,19 +265,21 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
               {t(lang, "filter")}
             </FilterButton>
 
-            <div className="hidden sm:block">
-              <ToolbarSortDropdown
-                options={SORT_OPTIONS}
-                activeKey={sort}
-                activeDir={sortDir}
-                appearance="outline"
-                onChange={(key) => handleSortChange(key as SortKey)}
-                align="start"
-              />
-            </div>
+            {viewMode === "grid" && (
+              <div className="hidden sm:block">
+                <ToolbarSortDropdown
+                  options={SORT_OPTIONS}
+                  activeKey={sort}
+                  activeDir={sortDir}
+                  appearance="outline"
+                  onChange={(key) => handleSortChange(key as SortKey)}
+                  align="start"
+                />
+              </div>
+            )}
 
             <div className="ml-auto flex items-center gap-1.5">
-              {viewMode === "grid" && (
+              {viewMode === "grid" && rawGrade && (
                 <div className="hidden sm:block">
                   <SegmentedControl
                     options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
@@ -389,9 +422,10 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
           </div>
         )}
 
-        <div>
-          <span className="mb-1.5 block text-eyebrow">{t(lang, "priceLabel")}</span>
-          <div className="flex items-center gap-1.5">
+        {rawGrade && (
+          <div>
+            <span className="mb-1.5 block text-eyebrow">{t(lang, "priceLabel")}</span>
+            <div className="flex items-center gap-1.5">
             <Input
               type="number"
               min={0}
@@ -411,88 +445,82 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
               aria-label={`${t(lang, "priceLabel")} ${t(lang, "max")}`}
               className="surface-1 h-11 w-24 border-hair px-2 tabular-nums placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-1 focus-visible:ring-primary/20 md:h-10"
             />
+            </div>
           </div>
-        </div>
+        )}
       </FilterModal>
 
       {/* Loading */}
-      {isPending && (
-        viewMode === "grid" ? (
-          <CardGrid>
-            {Array.from({ length: 10 }).map((_, i) => (
-              <CardItemSkeleton key={i} />
-            ))}
-          </CardGrid>
-        ) : (
-          <Surface variant="panel" padding="none" className="divide-y divide-hair">
-            <div className="divide-y divide-hair sm:hidden">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <MobileCardSkeleton key={i} />
-              ))}
-            </div>
-            <div className="hidden divide-y divide-hair sm:block">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="flex items-center gap-4 px-4 py-3">
-                  <Skeleton className="size-12 shrink-0 rounded-lg" />
-                  <div className="flex-1 space-y-2">
-                    <Skeleton className="h-4 w-40 rounded-sm" />
-                    <Skeleton className="h-3 w-24 rounded-sm" />
-                  </div>
-                  <Skeleton className="h-4 w-20 rounded-sm" />
-                  <Skeleton className="h-3.5 w-12 rounded-sm" />
-                  <Skeleton className="hidden h-3.5 w-12 rounded-sm md:block" />
-                </div>
-              ))}
-            </div>
-          </Surface>
-        )
-      )}
+      {isPending && <SearchResultsSkeleton view={viewMode} />}
 
       {/* Results — Grid view */}
       {!isPending && cards.length > 0 && viewMode === "grid" && (
         <CardGrid>
-          {cards.map((card) => (
-            <CardItem
-              key={card.cardCode}
-              cardCode={card.cardCode}
-              cardId={card.id}
-              nameJp={card.nameJp}
-              nameEn={card.nameEn}
-              nameTh={card.nameTh}
-              rarity={card.rarity}
-              imageUrl={card.imageUrl}
-              setCode={card.set?.code ?? card.setCode}
-              priceJpy={card.latestPriceJpy}
-              priceChange24h={card.priceChange24h}
-              priceChange7d={card.priceChange7d}
-              priceChange30d={card.priceChange30d}
-              psa10PriceUsd={card.psa10PriceUsd}
-              changePeriod={changePeriod}
-              priceMode="raw"
-              linkSet
-            />
+          {cards.map((card, index) => (
+            <Fragment key={card.cardCode}>
+              <CardItem
+                cardCode={card.cardCode}
+                cardId={card.id}
+                nameJp={card.nameJp}
+                nameEn={card.nameEn}
+                nameTh={card.nameTh}
+                rarity={card.rarity}
+                imageUrl={card.imageUrl}
+                setCode={card.set?.code ?? card.setCode}
+                priceJpy={card.latestPriceJpy}
+                priceChange24h={card.priceChange24h}
+                priceChange7d={card.priceChange7d}
+                priceChange30d={card.priceChange30d}
+                psa10PriceUsd={card.psa10PriceUsd}
+                changePeriod={changePeriod}
+                grade={grade}
+                linkSet
+              />
+              {index === 7 && (
+                <AdInventorySlot
+                  zone="search-results-after-8"
+                  contentAvailable={showInFeedAd}
+                  className="col-span-full my-2 sm:my-4"
+                />
+              )}
+            </Fragment>
           ))}
         </CardGrid>
       )}
 
       {/* Results — Table view (shared market table) */}
       {!isPending && cards.length > 0 && viewMode === "table" && (
-        <Surface variant="panel" padding="none" className="overflow-hidden">
-          <MarketTable
-            cards={cards}
-            rankOffset={(page - 1) * PAGE_SIZE}
-            columns={SEARCH_COLUMNS}
-            priceMode="raw"
-            mobileSortAppearance="outline"
-            sparklines={sparklines}
-            sortCol={sortCol}
-            sortDir={sortDir}
-            onColumnSort={handleColumnSort}
-            isPending={isPending}
-            skeletonRows={PAGE_SIZE}
-            emptyText={t(lang, "noData")}
-          />
-        </Surface>
+        <MarketTable
+          surface="canvas"
+          cards={cards}
+          rankOffset={(page - 1) * PAGE_SIZE}
+          columns={SEARCH_COLUMNS}
+          grade={grade}
+          mobileSortAppearance="outline"
+          sparklines={sparklines}
+          sortCol={sortCol}
+          sortDir={sortDir}
+          onColumnSort={handleColumnSort}
+          isPending={isPending}
+          skeletonRows={PAGE_SIZE}
+          emptyText={t(lang, "noData")}
+          insetAfter={showInFeedAd ? 8 : undefined}
+          mobileInset={
+            <AdInventorySlot
+              zone="search-results-after-8"
+              contentAvailable={showInFeedAd}
+              className="my-5"
+            />
+          }
+          tableInset={
+            <AdInventorySlot
+              zone="search-results-after-8"
+              contentAvailable={showInFeedAd}
+              presentation="TABLE_ROW"
+              tableColumnCount={SEARCH_COLUMNS.length}
+            />
+          }
+        />
       )}
 
       {/* Pagination */}
@@ -550,13 +578,7 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
 export default function SearchClient({ sets, game }: { sets: SetOption[]; game: string }) {
   return (
     <Suspense
-      fallback={
-        <div className="space-y-4">
-          <Skeleton className="h-12 w-full rounded-xl" />
-          <Skeleton className="h-24 w-full rounded-xl" />
-          <Skeleton className="h-96 w-full rounded-xl shadow-[var(--panel-shadow)]" />
-        </div>
-      }
+      fallback={<SearchPageSkeleton />}
     >
       <SearchContent sets={sets} game={game} />
     </Suspense>

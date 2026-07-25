@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import {
+  ArrowRight,
   ArrowRightLeft,
   Dices,
   Flame,
@@ -15,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { t, type TranslationKey } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { Surface } from "@/components/ui/surface";
+import { Button } from "@/components/ui/button";
 
 type Tool = {
   href: string;
@@ -100,9 +102,23 @@ export default function DecksHubPage() {
 
       <section className="mt-8">
         <h2 className="mb-3 text-h3">{t(lang, "myDecks")}</h2>
-        <div className="rounded-xl border border-dashed border-hair p-8 text-center">
-          <p className="text-meta">{t(lang, "comingSoon")}</p>
-        </div>
+        <Surface
+          variant="outline"
+          padding="lg"
+          className="flex flex-col items-start gap-4 sm:flex-row sm:items-center"
+        >
+          <p className="text-body-sm min-w-0 flex-1 text-muted-foreground">
+            {t(lang, "manageDecksDesc")}
+          </p>
+          <Button
+            size="sm"
+            className="min-h-11 shrink-0 gap-1.5 sm:min-h-9"
+            render={<Link href="/opcg/deck-calculator" />}
+          >
+            {t(lang, "openDeckBuilder")}
+            <ArrowRight className="size-3.5" aria-hidden />
+          </Button>
+        </Surface>
       </section>
     </div>
   );

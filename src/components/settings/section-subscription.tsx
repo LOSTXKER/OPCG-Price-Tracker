@@ -37,6 +37,7 @@ import type { Language } from "@/lib/i18n";
 import { type ProfileStats, type SubscriptionData } from "@/components/profile/profile-types";
 import {
   buildFeatureSections,
+  effectiveTier,
   getLimits,
   isPlanCurrent,
   type TierKey,
@@ -135,9 +136,15 @@ export function SectionSubscription({
   onRefreshCheckout,
 }: Props) {
   const lang = useUIStore((s) => s.language);
-  const limits = getLimitsForTier(subscription.tier);
+  const activeTier = effectiveTier(
+    subscription.tier as UserTier,
+    subscription.tierExpiresAt
+      ? new Date(subscription.tierExpiresAt)
+      : null,
+  );
+  const limits = getLimitsForTier(activeTier);
   const isCurrentPlan = (planKey: TierKey) =>
-    isPlanCurrent(planKey, subscription.tier);
+    isPlanCurrent(planKey, activeTier);
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(null);
   const [loadingPM, setLoadingPM] = useState(!!subscription.hasStripeSubscription);
@@ -188,11 +195,18 @@ export function SectionSubscription({
     }
   }, [cancelReason, cancelComment, openPortal]);
 
-  const isTrial = subscription.trialStartedAt && !subscription.hasStripeSubscription && subscription.tier !== "FREE";
+  const isTrial =
+    subscription.trialStartedAt &&
+    !subscription.hasStripeSubscription &&
+    activeTier !== "FREE";
   const trialDaysLeft = subscription.tierExpiresAt
     ? Math.max(0, Math.ceil((new Date(subscription.tierExpiresAt).getTime() - Date.now()) / 86400000))
     : 0;
-  const isFreeNoTrial = subscription.tier === "FREE" && !subscription.trialUsed;
+  // Keep this aligned with POST /api/subscription/trial, which only accepts a
+  // stored FREE tier. An expired Honey/trial pass is effectively Free for
+  // entitlements, but is not eligible to start a second trial.
+  const isFreeNoTrial =
+    subscription.tier === "FREE" && !subscription.trialUsed;
 
   return (
     <div className="space-y-8">

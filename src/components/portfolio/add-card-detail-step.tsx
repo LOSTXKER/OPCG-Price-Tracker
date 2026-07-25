@@ -1,173 +1,79 @@
 "use client"
 
-import Image from "next/image"
-import {
-  ArrowLeft,
-  Loader2,
-  Package,
-} from "lucide-react"
-
-import { QtyStepper } from "@/components/ui/qty-stepper"
+import { ArrowLeft } from "lucide-react"
 
 import {
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { RarityBadge } from "@/components/shared/rarity-badge"
-import { useUIStore } from "@/stores/ui-store"
+import { IconButton } from "@/components/ui/icon-button"
 import { t } from "@/lib/i18n"
-import { formatJpyAmount, formatDisplayValue, jpyToDisplayValue, currencySymbol } from "@/lib/utils/currency"
-import type { CardWithSet } from "./add-card-types"
+import { useUIStore } from "@/stores/ui-store"
 
-export function DetailStep({
-  card,
-  quantity,
-  setQuantity,
-  purchasePrice,
-  setPurchasePrice,
+import type { CardWithSet } from "./add-card-types"
+import { CardAcquisitionForm } from "./card-acquisition-form"
+import type {
+  CardAcquisitionDraft,
+  CardAcquisitionDrafts,
+} from "./card-acquisition"
+
+export function AddCardDetailStep({
+  cards,
+  drafts,
+  onDraftChange,
+  defaultAcquiredAt,
+  existingHoldingQuantities,
   submitting,
   onBack,
   onSubmit,
 }: {
-  card: CardWithSet
-  quantity: number
-  setQuantity: (q: number) => void
-  purchasePrice: string
-  setPurchasePrice: (p: string) => void
+  cards: CardWithSet[]
+  drafts: CardAcquisitionDrafts
+  onDraftChange: (
+    cardId: number,
+    patch: Partial<CardAcquisitionDraft>,
+  ) => void
+  defaultAcquiredAt: string
+  existingHoldingQuantities: Record<number, number>
   submitting: boolean
   onBack: () => void
   onSubmit: () => void
 }) {
   const lang = useUIStore((s) => s.language)
-  const currency = useUIStore((s) => s.currency)
 
   return (
-    <>
-      <DialogHeader className="border-b border-hair px-5 pt-5 pb-4">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onBack}
-            className="tap-safe ease-chrome flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          >
-            <ArrowLeft className="size-4" />
-          </button>
-          <div>
-            <DialogTitle>{t(lang, "addToPortfolio")}</DialogTitle>
-            <DialogDescription className="sr-only">{t(lang, "addToPortfolioDesc")}</DialogDescription>
-          </div>
-        </div>
-      </DialogHeader>
-
-      <div className="flex-1 overflow-y-auto px-5 py-5">
-        <div className="flex items-center gap-3 rounded-xl border border-hair bg-muted/20 p-3">
-          <div className="relative aspect-[63/88] w-14 shrink-0 overflow-hidden rounded-lg bg-muted/60">
-            {card.imageUrl ? (
-              <Image
-                src={card.imageUrl}
-                alt={card.nameEn ?? card.nameJp}
-                fill
-                className="object-contain"
-                sizes="56px"
-              />
-            ) : (
-              <div className="flex size-full items-center justify-center">
-                <Package className="size-5 text-muted-foreground/30" />
-              </div>
-            )}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold">
-              {card.nameEn ?? card.nameJp}
-            </p>
-            <div className="mt-0.5 flex items-center gap-1.5">
-              <span className="font-mono text-xs text-muted-foreground">
-                {card.cardCode}
-              </span>
-              {card.rarity && <RarityBadge rarity={card.rarity} size="sm" />}
+    <CardAcquisitionForm
+      cards={cards}
+      drafts={drafts}
+      onDraftChange={onDraftChange}
+      defaultAcquiredAt={defaultAcquiredAt}
+      existingHoldingQuantities={existingHoldingQuantities}
+      submitting={submitting}
+      onCancel={onBack}
+      onSubmit={onSubmit}
+      header={
+        <DialogHeader className="border-b border-hair px-5 pt-5 pb-4">
+          <div className="flex items-center gap-3">
+            <IconButton
+              type="button"
+              variant="ghost"
+              size="sm"
+              aria-label={t(lang, "back")}
+              onClick={onBack}
+              disabled={submitting}
+            >
+              <ArrowLeft className="size-4" />
+            </IconButton>
+            <div className="min-w-0">
+              <DialogTitle>{t(lang, "newPurchaseLot")}</DialogTitle>
+              <DialogDescription className="text-meta">
+                {t(lang, "addToPortfolioDesc")}
+              </DialogDescription>
             </div>
-            {card.latestPriceJpy != null && (
-              <p className="mt-1 tabular-nums text-sm font-semibold text-primary">
-                {formatJpyAmount(card.latestPriceJpy, currency)}
-              </p>
-            )}
           </div>
-        </div>
-
-        <div className="mt-6 space-y-5">
-          <div>
-            <label className="mb-2 block text-sm font-medium">{t(lang, "quantity")}</label>
-            <QtyStepper
-              value={quantity}
-              onChange={setQuantity}
-              min={1}
-              size="md"
-              decreaseLabel={t(lang, "decrease")}
-              increaseLabel={t(lang, "increase")}
-              className="gap-3"
-            />
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium">{t(lang, "purchasePrice")}</label>
-            <div className="relative">
-              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground/50">
-                {currencySymbol(currency)}
-              </span>
-              <input
-                type="number"
-                min={0}
-                placeholder={
-                  card.latestPriceJpy != null
-                    ? Math.round(jpyToDisplayValue(card.latestPriceJpy, currency)).toLocaleString()
-                    : "0"
-                }
-                value={purchasePrice}
-                onChange={(e) => setPurchasePrice(e.target.value)}
-                className="h-10 w-full rounded-lg border border-hair bg-background pl-7 pr-4 text-sm tabular-nums outline-none placeholder:text-muted-foreground focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
-              />
-            </div>
-            <p className="mt-1.5 text-meta text-muted-foreground/60">
-              {t(lang, "useMarketPrice")}
-            </p>
-          </div>
-
-          {(purchasePrice.trim() !== "" || card.latestPriceJpy != null) && (
-            <div className="rounded-xl border border-hair bg-muted/20 px-4 py-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">{t(lang, "totalValue")}</span>
-                <span className="tabular-nums text-lg font-bold">
-                  {formatDisplayValue(
-                    (purchasePrice.trim() !== ""
-                      ? parseInt(purchasePrice) || 0
-                      : Math.round(jpyToDisplayValue(card.latestPriceJpy ?? 0, currency))) * quantity,
-                    currency
-                  )}
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="border-t border-hair px-5 py-4">
-        <Button
-          className="w-full gap-2"
-          size="lg"
-          disabled={submitting}
-          onClick={onSubmit}
-        >
-          {submitting ? (
-            <>
-              <Loader2 className="size-4 animate-spin" />
-              {t(lang, "adding")}
-            </>
-          ) : (
-            t(lang, "addToPort")
-          )}
-        </Button>
-      </div>
-    </>
+        </DialogHeader>
+      }
+    />
   )
 }

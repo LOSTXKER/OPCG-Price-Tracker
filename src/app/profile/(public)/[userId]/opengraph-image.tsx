@@ -125,6 +125,7 @@ export default async function ProfileOG(props: {
             {user.avatarUrl ? (
               <img
                 src={user.avatarUrl}
+                alt={name}
                 width={220}
                 height={220}
                 style={{ objectFit: "cover" }}

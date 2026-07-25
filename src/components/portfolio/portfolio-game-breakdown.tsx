@@ -3,7 +3,6 @@
 import Image from "next/image"
 import { ArrowDown, ArrowUp } from "lucide-react"
 
-import { Surface } from "@/components/ui/surface"
 import { getGameAccentTint, getGameConfig } from "@/lib/game-config"
 import { DEFAULT_GAME } from "@/lib/game/constants"
 import { MASKED } from "@/lib/constants/ui"
@@ -22,7 +21,7 @@ import type { GameBreakdown } from "@/lib/types/portfolio"
  *
  * Returns null when breakdown.length <= 1 — single-game today means no
  * clutter; the panel lights up automatically when a second game has holdings.
- * When two or more games are present, renders a frameless panel with one row
+ * When two or more games are present, renders a flat section with one row
  * per game showing logo, name, card count, value, share bar, and P/L delta.
  */
 export function PortfolioGameBreakdown({
@@ -30,6 +29,7 @@ export function PortfolioGameBreakdown({
   totalValueJpy,
   onSelect,
   hideBalance = false,
+  showHeading = true,
 }: {
   breakdown: GameBreakdown[]
   totalValueJpy: number
@@ -38,6 +38,7 @@ export function PortfolioGameBreakdown({
    *  which has no single game-scoped view to jump to). */
   onSelect?: (game: string) => void
   hideBalance?: boolean
+  showHeading?: boolean
 }) {
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -50,14 +51,16 @@ export function PortfolioGameBreakdown({
   const valuationComplete = breakdown.every((entry) => entry.valuationComplete)
 
   return (
-    <Surface variant="panel" className="overflow-hidden">
+    <section data-slot="portfolio-game-breakdown">
       {/* Panel heading — "by game", NOT "all games" (that's the chip above) */}
-      <div className="px-4 pb-2 pt-4 sm:px-5 sm:pt-5">
-        <p className="text-h5">{t(lang, "byGame")}</p>
-      </div>
+      {showHeading ? (
+        <div className="pb-2">
+          <h2 className="text-h5">{t(lang, "byGame")}</h2>
+        </div>
+      ) : null}
 
       {/* One row per game */}
-      <div className="divide-y divide-hair">
+      <div className="space-y-1">
         {sorted.map((b) => {
           const hasPerformance = b.performanceComplete && b.pnlPercent != null
           const isUp = (b.pnlPercent ?? 0) >= 0
@@ -75,7 +78,7 @@ export function PortfolioGameBreakdown({
           const firstLetter = gameName.charAt(0).toUpperCase()
 
           const rowClassName = cn(
-            "block w-full px-4 py-3 text-left sm:px-5",
+            "block min-h-11 w-full py-3 text-left",
             onSelect &&
               "ease-chrome cursor-pointer transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           )
@@ -104,14 +107,14 @@ export function PortfolioGameBreakdown({
                 {/* Name + card count */}
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold">{gameName}</p>
-                  <p className="text-meta tabular-nums">
+                  <p className="text-meta font-price tabular-nums">
                     {b.count} {t(lang, "card")}
                   </p>
                 </div>
 
                 {/* Value + P/L delta */}
                 <div className="shrink-0 text-right">
-                  <p className="tabular-nums text-sm font-bold">
+                  <p className="font-price tabular-nums text-sm font-bold">
                     {hideBalance
                       ? MASKED
                       : b.valuedCopyCount === 0
@@ -124,23 +127,16 @@ export function PortfolioGameBreakdown({
                   {hasPerformance && (
                     <span
                       className={cn(
-                        "inline-flex items-center gap-0.5 tabular-nums text-micro font-semibold",
-                        hideBalance
-                          ? "text-foreground"
-                          : isUp
-                            ? "text-price-up"
-                            : "text-price-down",
+                        "inline-flex items-center gap-0.5 font-price tabular-nums text-micro font-semibold",
+                        isUp ? "text-price-up" : "text-price-down",
                       )}
                     >
-                      {!hideBalance &&
-                        (isUp ? (
-                          <ArrowUp className="size-3" aria-hidden />
-                        ) : (
-                          <ArrowDown className="size-3" aria-hidden />
-                        ))}
-                      {hideBalance
-                        ? MASKED
-                        : `${formatPct(Math.abs(b.pnlPercent ?? 0), 1)}%`}
+                      {isUp ? (
+                        <ArrowUp className="size-3" aria-hidden />
+                      ) : (
+                        <ArrowDown className="size-3" aria-hidden />
+                      )}
+                      {formatPct(Math.abs(b.pnlPercent ?? 0), 1)}%
                     </span>
                   )}
                 </div>
@@ -175,6 +171,6 @@ export function PortfolioGameBreakdown({
           )
         })}
       </div>
-    </Surface>
+    </section>
   )
 }

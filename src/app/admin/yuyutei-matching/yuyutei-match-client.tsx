@@ -24,6 +24,7 @@ import {
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { Lightbox } from "@/components/admin/matching-ui";
 import { Button } from "@/components/ui/button";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Surface } from "@/components/ui/surface";
 import { adminFetch, buildAdminQuery } from "@/lib/admin/admin-fetch";
 import { SetPicker } from "@/components/shared/set-picker";
@@ -44,12 +45,68 @@ import { API, METHOD_INFO, yuyuHd } from "./yuyutei-types";
 /* ── Status tab config ── */
 
 const STATUS_TABS = [
-  { key: "", label: "ทั้งหมด", dotColor: "bg-foreground/40", textColor: "text-foreground", activeBg: "bg-primary/15" },
-  { key: "suggested", label: "มีคำแนะนำ", dotColor: "bg-info", textColor: "text-info", activeBg: "bg-primary/15" },
-  { key: "pending", label: "รอดำเนินการ", dotColor: "bg-warning", textColor: "text-warning", activeBg: "bg-primary/15" },
-  { key: "matched", label: "จับคู่แล้ว", dotColor: "bg-success", textColor: "text-success", activeBg: "bg-primary/15" },
-  { key: "rejected", label: "ปฏิเสธแล้ว", dotColor: "bg-danger", textColor: "text-danger", activeBg: "bg-primary/15" },
+  { key: "", label: "ทั้งหมด", dotColor: "bg-foreground/40", textColor: "text-foreground" },
+  { key: "suggested", label: "มีคำแนะนำ", dotColor: "bg-info", textColor: "text-info" },
+  { key: "pending", label: "รอดำเนินการ", dotColor: "bg-warning", textColor: "text-warning" },
+  { key: "matched", label: "จับคู่แล้ว", dotColor: "bg-success", textColor: "text-success" },
+  { key: "rejected", label: "ปฏิเสธแล้ว", dotColor: "bg-danger", textColor: "text-danger" },
 ] as const;
+
+type YuyuteiStatusKey = (typeof STATUS_TABS)[number]["key"];
+
+export function YuyuteiStatusFilter({
+  counts,
+  value,
+  onChange,
+}: {
+  counts?: ApiResponse["counts"];
+  value: string;
+  onChange: (value: YuyuteiStatusKey) => void;
+}) {
+  const selectedValue = STATUS_TABS.some((tab) => tab.key === value)
+    ? (value as YuyuteiStatusKey)
+    : "";
+  const total = counts
+    ? counts.suggested + counts.pending + counts.matched + counts.rejected
+    : 0;
+
+  return (
+    <div className="no-sb min-w-0 max-w-full overflow-x-auto">
+      <SegmentedControl<YuyuteiStatusKey>
+        options={STATUS_TABS.map((tab) => {
+          const active = selectedValue === tab.key;
+          const count = tab.key === "" ? total : (counts?.[tab.key] ?? 0);
+
+          return {
+            value: tab.key,
+            label: (
+              <span className={cn("inline-flex items-center gap-1.5", active && tab.textColor)}>
+                <span aria-hidden className={cn("size-1.5 rounded-full", tab.dotColor)} />
+                {tab.label}
+              </span>
+            ),
+            badge: (
+              <span
+                className={cn(
+                  "font-mono text-micro font-bold tabular-nums",
+                  active ? tab.textColor : "text-muted-foreground/60",
+                )}
+              >
+                {count}
+              </span>
+            ),
+          };
+        })}
+        value={selectedValue}
+        onChange={onChange}
+        ariaLabel="กรองตามสถานะ"
+        size="sm"
+        compactVisual
+        className="w-max shrink-0 before:bg-muted/60 md:bg-muted/60"
+      />
+    </div>
+  );
+}
 
 /* ══════════ MAIN ══════════ */
 
@@ -444,39 +501,11 @@ export function YuyuteiMatchClient() {
       <Surface variant="outline" className="overflow-hidden">
         {/* Status tabs */}
         <div className="flex flex-col items-stretch gap-2 border-b border-hair bg-muted/20 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
-          <div className="no-sb flex max-w-full items-center gap-0.5 overflow-x-auto rounded-lg bg-muted/60 p-0.5">
-            {STATUS_TABS.map((tab) => {
-              const count =
-                tab.key === ""
-                  ? totalAll
-                  : data?.counts[tab.key as keyof typeof data.counts] ?? 0;
-              const isActive = statusFilter === tab.key;
-              return (
-                <button
-                  key={tab.key}
-                  type="button"
-                  onClick={() => patch({ status: tab.key, page: 1 })}
-                  className={cn(
-                    "flex min-h-11 shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-xs motion-base sm:min-h-0",
-                    isActive
-                      ? `${tab.activeBg} ${tab.textColor} font-semibold`
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  <span className={cn("size-1.5 rounded-full", tab.dotColor)} />
-                  <span>{tab.label}</span>
-                  <span
-                    className={cn(
-                      "font-mono font-bold tabular-nums",
-                      isActive ? tab.textColor : "text-muted-foreground/60",
-                    )}
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          <YuyuteiStatusFilter
+            counts={data?.counts}
+            value={statusFilter}
+            onChange={(status) => patch({ status, page: 1 })}
+          />
 
           {/* Set completion indicator */}
           {setFilter && data && totalAll > 0 && (

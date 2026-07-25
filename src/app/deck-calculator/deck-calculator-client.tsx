@@ -29,7 +29,6 @@ import { useUIStore } from "@/stores/ui-store";
 import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { LimitCounter } from "@/components/shared/limit-counter";
-import { UpgradeBadge } from "@/components/shared/upgrade-badge";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import { PageHeader } from "@/components/layout/page-header";
 
@@ -233,6 +232,14 @@ function DeckCalculatorContent() {
 
       {error && <p className="text-destructive text-sm">{error}</p>}
 
+      <LimitCounter
+        variant="meter"
+        featureKey="deckCount"
+        label={t(lang, "deckBuilds")}
+        current={decks.length}
+        max={limits.deckCount}
+      />
+
       <div className="flex flex-wrap items-end gap-2">
         <div
           className={cn(
@@ -252,21 +259,12 @@ function DeckCalculatorContent() {
             disabled={deckLimitReached}
           />
         </div>
-        {deckLimitReached ? (
-          <div className="flex items-center gap-2 text-meta">
-            <LimitCounter current={decks.length} max={limits.deckCount} />
-            <UpgradeBadge featureKey="deckCount" />
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Button onClick={() => void createDeck()} disabled={!newDeckName.trim()}>
-              {t(lang, "createDeck")}
-            </Button>
-            {isFinite(limits.deckCount) && (
-              <LimitCounter current={decks.length} max={limits.deckCount} />
-            )}
-          </div>
-        )}
+        <Button
+          onClick={() => void createDeck()}
+          disabled={deckLimitReached || !newDeckName.trim()}
+        >
+          {t(lang, "createDeck")}
+        </Button>
       </div>
 
       {decks.length > 1 && (
@@ -464,9 +462,9 @@ function DeckCalculatorContent() {
 
 function DeckMockPreview({ lang }: { lang: Language }) {
   const mockCards = [
-    { code: "OP09-019", name: "Roronoa Zoro", price: "¥2,800", qty: 4 },
-    { code: "OP09-044", name: "Boa Hancock", price: "¥1,900", qty: 4 },
-    { code: "OP09-033", name: "Sanji", price: "¥450", qty: 4 },
+    { code: "OP09-019", name: "Roronoa Zoro", priceJpy: 2_800, qty: 4 },
+    { code: "OP09-044", name: "Boa Hancock", priceJpy: 1_900, qty: 4 },
+    { code: "OP09-033", name: "Sanji", priceJpy: 450, qty: 4 },
   ];
 
   return (
@@ -496,7 +494,11 @@ function DeckMockPreview({ lang }: { lang: Language }) {
         <Surface variant="outline" padding="md">
           <div className="flex items-center justify-between">
             <p className="text-muted-foreground text-sm font-medium">{t(lang, "totalValue")}</p>
-            <p className="font-price text-lg font-bold">¥23,400</p>
+            <PriceTag
+              jpy={23_400}
+              showChange={false}
+              size="card"
+            />
           </div>
         </Surface>
 
@@ -510,7 +512,11 @@ function DeckMockPreview({ lang }: { lang: Language }) {
               <p className="truncate text-sm font-medium">Monkey D. Luffy</p>
               <p className="text-muted-foreground font-mono text-xs">OP09-001</p>
             </div>
-            <p className="font-price text-sm font-semibold">¥3,200</p>
+            <PriceTag
+              jpy={3_200}
+              showChange={false}
+              size="sm"
+            />
           </div>
         </div>
 
@@ -524,7 +530,11 @@ function DeckMockPreview({ lang }: { lang: Language }) {
                   <p className="truncate text-sm font-medium">{c.name}</p>
                   <p className="text-muted-foreground font-mono text-xs">{c.code} x{c.qty}</p>
                 </div>
-                <p className="font-price text-sm font-semibold">{c.price}</p>
+                <PriceTag
+                  jpy={c.priceJpy}
+                  showChange={false}
+                  size="sm"
+                />
               </div>
             ))}
           </div>

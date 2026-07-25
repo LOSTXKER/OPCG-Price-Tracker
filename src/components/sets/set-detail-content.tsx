@@ -1,9 +1,17 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, type ReactNode } from "react";
+import {
+  Fragment,
+  useState,
+  useMemo,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from "react";
 import { TrendingUpDown } from "lucide-react";
 
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { GradeControl } from "@/components/market/price-mode-control";
 import {
   Select,
   SelectContent,
@@ -14,8 +22,17 @@ import { RarityBadge } from "@/components/shared/rarity-badge";
 import { RARITY_BAR_COLOR } from "@/lib/constants/rarities";
 import { type ChangePeriod } from "@/components/cards/card-item";
 import { SetCardTile } from "./set-card-tile";
+import { AdInventorySlot } from "@/components/ads/ad-inventory-slot";
 import { EmptyState } from "@/components/shared/empty-state";
-import { CHANGE_PERIODS } from "@/components/home/market-types";
+import {
+  CHANGE_PERIODS,
+} from "@/components/home/market-types";
+import {
+  getGradePriceUsd,
+  hasGradePrice,
+  isRawGrade,
+  type GradeKey,
+} from "@/lib/pricing/grade-tiers";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
@@ -62,9 +79,73 @@ export type RarityGroup = {
   pullChancePerBox?: number;
 };
 
+export function getSetAdHeadingGroupIndex(
+  groupCardCounts: readonly number[],
+): number | null {
+  let precedingCardCount = 0;
+
+  for (let groupIndex = 0; groupIndex < groupCardCounts.length; groupIndex += 1) {
+    if (groupIndex > 0 && precedingCardCount >= 12) return groupIndex;
+    precedingCardCount += groupCardCounts[groupIndex] ?? 0;
+  }
+
+  return null;
+}
+
+export function getVisibleSetGroups(
+  groups: RarityGroup[],
+  {
+    activeType,
+    activeColor,
+    grade,
+  }: {
+    activeType: string;
+    activeColor: string;
+    grade: GradeKey;
+  },
+): RarityGroup[] {
+  if (
+    activeType === "all" &&
+    activeColor === "all" &&
+    isRawGrade(grade)
+  ) {
+    return groups;
+  }
+
+  return groups
+    .map((group) => {
+      const cards = group.cards.filter(
+        (card) =>
+          (activeType === "all" || card.cardType === activeType) &&
+          (activeColor === "all" || card.color.includes(activeColor)) &&
+          (isRawGrade(grade) ||
+            hasGradePrice(
+              {
+                rawPriceJpy: card.latestPriceJpy,
+                psa10PriceUsd: card.psa10PriceUsd,
+              },
+              grade,
+            )),
+      );
+
+      if (!isRawGrade(grade)) {
+        cards.sort(
+          (a, b) =>
+            (getGradePriceUsd(b.psa10PriceUsd, grade) ?? 0) -
+            (getGradePriceUsd(a.psa10PriceUsd, grade) ?? 0),
+        );
+      }
+
+      return { ...group, cards };
+    })
+    .filter((group) => group.cards.length > 0);
+}
+
 interface SetDetailContentProps {
   groups: RarityGroup[];
   totalCards: number;
+  grade: GradeKey;
+  onGradeChange: (grade: GradeKey) => void;
 }
 
 /* ------------------------------------------------------------------ */
@@ -134,6 +215,8 @@ function FilterSelect({
 export function SetDetailContent({
   groups,
   totalCards,
+  grade,
+  onGradeChange,
 }: SetDetailContentProps) {
   const [activeType, setActiveType] = useState<string>("all");
   const [activeColor, setActiveColor] = useState<string>("all");
@@ -163,19 +246,11 @@ export function SetDetailContent({
   }, [allCards]);
 
   // type/color narrow which cards (and therefore which rarities) are available.
-  const visibleGroups = useMemo(() => {
-    if (activeType === "all" && activeColor === "all") return groups;
-    return groups
-      .map((g) => ({
-        ...g,
-        cards: g.cards.filter(
-          (c) =>
-            (activeType === "all" || c.cardType === activeType) &&
-            (activeColor === "all" || c.color.includes(activeColor)),
-        ),
-      }))
-      .filter((g) => g.cards.length > 0);
-  }, [groups, activeType, activeColor]);
+  const visibleGroups = useMemo(
+    () =>
+      getVisibleSetGroups(groups, { activeType, activeColor, grade }),
+    [groups, activeType, activeColor, grade],
+  );
 
   // Scrollspy — the rail highlights whichever rarity section is currently below
   // the sticky header line (the last one whose top has passed ~120px).
@@ -205,6 +280,9 @@ export function SetDetailContent({
   // type/color narrow the cards within each section.
   const displayGroups = visibleGroups;
   const totalVisible = visibleGroups.reduce((s, g) => s + g.cards.length, 0);
+  const adHeadingGroupIndex = getSetAdHeadingGroupIndex(
+    displayGroups.map((group) => group.cards.length),
+  );
 
   // Click a rarity → smooth-scroll its section to sit comfortably below the
   // sticky navbar (offset = navbar height + breathing room).
@@ -334,20 +412,27 @@ export function SetDetailContent({
             </div>
           )}
 
-          {/* Period (%-change window) */}
           <div className="space-y-1.5">
-            <p className="text-eyebrow px-0.5">{t(lang, "pricePeriod")}</p>
-            <SegmentedControl
-              size="sm"
-              variant="pill"
-              fullWidth
-              leadingIcon={TrendingUpDown}
-              options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
-              value={changePeriod}
-              onChange={setChangePeriod}
-              ariaLabel={t(lang, "pricePeriod")}
-            />
+            <p className="text-eyebrow px-0.5">{t(lang, "chooseGrade")}</p>
+            <GradeControl value={grade} onChange={onGradeChange} />
           </div>
+
+          {/* Period (%-change window) */}
+          {isRawGrade(grade) && (
+            <div className="space-y-1.5">
+              <p className="text-eyebrow px-0.5">{t(lang, "pricePeriod")}</p>
+              <SegmentedControl
+                size="sm"
+                variant="pill"
+                fullWidth
+                leadingIcon={TrendingUpDown}
+                options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+                value={changePeriod}
+                onChange={setChangePeriod}
+                ariaLabel={t(lang, "pricePeriod")}
+              />
+            </div>
+          )}
 
           {/* Rarity jump-nav group (scrollspy highlights the section in view) */}
           <nav aria-label={t(lang, "rarity")} className="space-y-1.5 pt-1">
@@ -368,6 +453,7 @@ export function SetDetailContent({
             on one wrapping row, then the rarity jump-chips. */}
         <div className="mb-6 space-y-3 lg:hidden">
           <div className="flex flex-wrap items-center gap-2">
+            <GradeControl value={grade} onChange={onGradeChange} />
             {availableTypes.length > 1 && (
               <FilterSelect
                 label={t(lang, "type")}
@@ -384,15 +470,17 @@ export function SetDetailContent({
                 options={colorOptions}
               />
             )}
-            <SegmentedControl
-              size="sm"
-              variant="pill"
-              leadingIcon={TrendingUpDown}
-              options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
-              value={changePeriod}
-              onChange={setChangePeriod}
-              ariaLabel={t(lang, "pricePeriod")}
-            />
+            {isRawGrade(grade) && (
+              <SegmentedControl
+                size="sm"
+                variant="pill"
+                leadingIcon={TrendingUpDown}
+                options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+                value={changePeriod}
+                onChange={setChangePeriod}
+                ariaLabel={t(lang, "pricePeriod")}
+              />
+            )}
           </div>
           <div className="no-sb -mx-5 flex items-center gap-1.5 overflow-x-auto px-5">
             {rarityNav.map((rt) => rarityButton(rt, "chip"))}
@@ -400,9 +488,12 @@ export function SetDetailContent({
         </div>
 
         <div className="space-y-8">
-            {displayGroups.map((g) => (
+          {displayGroups.map((g, groupIndex) => (
+            <Fragment key={g.rarity}>
+              {groupIndex === adHeadingGroupIndex && (
+                <AdInventorySlot zone="set-detail-before-rarity" />
+              )}
               <section
-                key={g.rarity}
                 id={`rar-${g.rarity}`}
                 data-rarity={g.rarity}
                 className="scroll-mt-32"
@@ -420,17 +511,23 @@ export function SetDetailContent({
                 </div>
                 <div className="grid grid-cols-3 gap-x-2.5 gap-y-4 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                   {g.cards.map((c) => (
-                    <SetCardTile key={c.id} card={c} changePeriod={changePeriod} />
+                    <SetCardTile
+                      key={c.id}
+                      card={c}
+                      changePeriod={changePeriod}
+                      grade={grade}
+                    />
                   ))}
                 </div>
               </section>
-            ))}
+            </Fragment>
+          ))}
 
-            {displayGroups.length === 0 && (
-              <div className="py-16 text-center text-sm text-muted-foreground">
-                {t(lang, "noData")}
-              </div>
-            )}
+          {displayGroups.length === 0 && (
+            <div className="py-16 text-center text-sm text-muted-foreground">
+              {t(lang, "noData")}
+            </div>
+          )}
         </div>
       </div>
     </div>

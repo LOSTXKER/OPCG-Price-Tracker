@@ -2,21 +2,10 @@
 
 import { Info } from "lucide-react"
 
+import { SegmentedControl } from "@/components/ui/segmented-control"
 import { formatDisplayValue, jpyToDisplayValue, type Currency } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
-
-/** Compact segmented control — chart range + condition filter. Stays compact on
- *  desktop (24px) so a secondary filter never competes with the section heading or
- *  the table data below it, but grows to a 40px touch target on mobile (<md) where a
- *  24px pill is too small to tap reliably. rounded-full pills sit concentric in a
- *  rounded-full track; short chip labels (7D / Raw / PSA), not reading copy. */
-export const SEGMENT_TRACK =
-  "inline-flex max-w-full flex-wrap items-center gap-0.5 rounded-full bg-foreground/5 p-0.5 ring-1 ring-hair"
-export const SEGMENT_BTN =
-  "ease-chrome inline-flex h-11 min-w-11 shrink-0 items-center justify-center rounded-full px-2.5 text-xs font-medium leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset md:h-6 md:min-w-0"
-export const SEGMENT_ACTIVE = "bg-foreground/10 text-foreground"
-export const SEGMENT_IDLE = "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
 
 const GRADE_FILTER_LABEL: Record<string, string> = { psa: "PSA", bgs: "BGS", cgc: "CGC", ars: "ARS" }
 
@@ -76,18 +65,19 @@ export function ConditionFilter({
   return (
     <div>
       <p className="text-eyebrow mb-1.5">{label}</p>
-      <div role="group" aria-label={label} className={SEGMENT_TRACK}>
-        {options.map((g) => (
-          <button
-            key={g}
-            type="button"
-            aria-pressed={active === g}
-            onClick={() => onSelect(g)}
-            className={cn(SEGMENT_BTN, active === g ? SEGMENT_ACTIVE : SEGMENT_IDLE)}
-          >
-            {render(g)}
-          </button>
-        ))}
+      <div className="no-sb max-w-full overflow-x-auto">
+        <SegmentedControl
+          value={active}
+          onChange={onSelect}
+          options={options.map((value) => ({
+            value,
+            label: render(value),
+          }))}
+          size="sm"
+          variant="pill"
+          ariaLabel={label}
+          className="shrink-0"
+        />
       </div>
     </div>
   )

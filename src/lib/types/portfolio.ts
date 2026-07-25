@@ -25,6 +25,23 @@ export type AllocationSlice = {
   cardCode?: string | null
 }
 
+export type PortfolioLotSource = "MANUAL" | "LEGACY_OPENING_BALANCE"
+
+/**
+ * One real acquisition event under a grouped holding. Costs are stored in JPY
+ * per physical copy; `null` means unknown while `0` means acquired for free.
+ */
+export type PortfolioLot = {
+  id: number
+  quantity: number
+  unitCostJpy: number | null
+  acquiredAt: string | null
+  note: string | null
+  source: PortfolioLotSource
+  createdAt: string
+  updatedAt: string
+}
+
 export type AssetRow = {
   itemId: number
   cardId: number
@@ -35,6 +52,14 @@ export type AssetRow = {
   rarity: string
   imageUrl: string | null
   quantity: number
+  lots: PortfolioLot[]
+  /** Number of separate acquisition events under this grouped holding. */
+  lotCount: number
+  /** Exact sum of costs from lots whose unit cost is known. */
+  recordedCostJpy: number
+  /** Number of physical copies whose lot cost is known. */
+  costedCopyCount: number
+  /** Rollout-only weighted average; lot-aware UI must not use this for totals. */
   purchasePrice: number | null
   currentPrice: number | null
   /** Card's own THB price when scraped — preferred over JPY→THB estimate. */
@@ -45,6 +70,41 @@ export type AssetRow = {
   isPrivate?: boolean
   notes: string | null
   /** Owning game (via the card's set). Null when no game is linked yet. */
+  game: GameRef | null
+}
+
+/**
+ * Owner-only view model for the Overview list. A holding can produce multiple
+ * rows — one for each acquisition lot — while `AssetRow` remains the grouped
+ * holding contract used by Insights and public/share surfaces.
+ */
+export type PortfolioPurchaseRow = {
+  rowKey: string
+  itemId: number
+  lotId: number | null
+  /** One-based position within the holding's acquisition history. */
+  lotIndex: number
+  purchaseCount: number
+  isCompatibilityRow: boolean
+  source: PortfolioLotSource
+  cardId: number
+  cardCode: string
+  baseCode: string | null
+  nameJp: string
+  nameEn: string | null
+  rarity: string
+  imageUrl: string | null
+  quantity: number
+  /** Cost in JPY per physical copy. `null` is unknown; `0` is free. */
+  unitCostJpy: number | null
+  acquiredAt: string | null
+  /** Immutable-ish creation time used only as a deterministic sort fallback. */
+  purchaseCreatedAt: string | null
+  purchaseNote: string | null
+  currentPrice: number | null
+  currentPriceThb: number | null
+  condition: string
+  isPrivate?: boolean
   game: GameRef | null
 }
 
@@ -126,6 +186,10 @@ export type HistoryPoint = {
   cost: number
   netInvested: number
   cardCount: number
+  /** Optional on legacy snapshots created before acquisition-lot coverage. */
+  totalCopyCount?: number | null
+  /** Optional on legacy snapshots created before acquisition-lot coverage. */
+  costedCopyCount?: number | null
   isInflow: boolean
 }
 

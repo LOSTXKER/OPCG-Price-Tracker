@@ -61,6 +61,8 @@ export interface ToolbarSearchProps
   onOpenChange?: (open: boolean) => void;
   size?: "sm" | "md";
   containerClassName?: string;
+  /** Accessible label for the clear button. */
+  clearLabel?: string;
 }
 
 export function ToolbarSearch({
@@ -73,6 +75,7 @@ export function ToolbarSearch({
   size = "md",
   className,
   containerClassName,
+  clearLabel = "Clear",
   onKeyDown,
   ...rest
 }: ToolbarSearchProps) {
@@ -128,7 +131,7 @@ export function ToolbarSearch({
             if (collapsible) onOpenChange?.(false);
           }}
           className="tap-safe rounded-sm p-0.5 text-muted-foreground/60 motion-base hover:text-foreground"
-          aria-label="Clear"
+          aria-label={clearLabel}
         >
           <X className="size-3" />
         </button>

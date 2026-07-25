@@ -1,4 +1,6 @@
 import type { TranslationKey } from "@/lib/i18n";
+import type { UserTier } from "@/generated/prisma/client";
+import { tierRank } from "./limits";
 
 export type RequiredTier = "PRO" | "PRO_PLUS";
 
@@ -17,7 +19,8 @@ export type TierFeatureKey =
   | "bulkPriceLookup"
   | "autoPricing"
   | "listingBoost"
-  | "adFree";
+  | "adFree"
+  | "honeyMultiplier";
 
 export type TierFeatureDef = {
   /** Minimum tier required to use the feature */
@@ -31,7 +34,23 @@ export type TierFeatureDef = {
    * Pulled from the existing `feat*` strings used by `/pricing`.
    */
   benefitKeys: TranslationKey[];
+  /** Numeric quota to compare between the current and target plans. */
+  limitKey?: QuantifiedTierLimitKey;
+  /** Optional localized template for a finite value, e.g. "{n} days". */
+  limitFormatKey?: TranslationKey;
 };
+
+export type QuantifiedTierLimitKey =
+  | "portfolioCards"
+  | "portfolioCount"
+  | "watchlistCards"
+  | "priceAlerts"
+  | "deckCount"
+  | "savedFilters"
+  | "priceHistoryDays"
+  | "compareCards"
+  | "bulkPriceLookup"
+  | "honeyMultiplier";
 
 /**
  * Single source of truth for the upgrade dialog content. Each surface in the
@@ -42,6 +61,8 @@ export const TIER_FEATURES: Record<TierFeatureKey, TierFeatureDef> = {
   priceHistoryExtended: {
     requiredTier: "PRO",
     titleKey: "featPriceHistory",
+    limitKey: "priceHistoryDays",
+    limitFormatKey: "pricingHistoryDaysValue",
     benefitKeys: [
       "featPriceHistory",
       "featCardCompare",
@@ -52,6 +73,7 @@ export const TIER_FEATURES: Record<TierFeatureKey, TierFeatureDef> = {
   priceAlerts: {
     requiredTier: "PRO",
     titleKey: "featPriceAlerts",
+    limitKey: "priceAlerts",
     benefitKeys: [
       "featPriceAlerts",
       "featLineAlerts",
@@ -92,6 +114,7 @@ export const TIER_FEATURES: Record<TierFeatureKey, TierFeatureDef> = {
   comparePlus: {
     requiredTier: "PRO",
     titleKey: "featCardCompare",
+    limitKey: "compareCards",
     benefitKeys: [
       "featCardCompare",
       "featPriceHistory",
@@ -102,6 +125,7 @@ export const TIER_FEATURES: Record<TierFeatureKey, TierFeatureDef> = {
   portfolioCount: {
     requiredTier: "PRO",
     titleKey: "featPortfolioCount",
+    limitKey: "portfolioCount",
     benefitKeys: [
       "featPortfolioCount",
       "featPortfolioCards",
@@ -112,6 +136,7 @@ export const TIER_FEATURES: Record<TierFeatureKey, TierFeatureDef> = {
   portfolioCards: {
     requiredTier: "PRO",
     titleKey: "featPortfolioCards",
+    limitKey: "portfolioCards",
     benefitKeys: [
       "featPortfolioCards",
       "featPortfolioCount",
@@ -122,6 +147,7 @@ export const TIER_FEATURES: Record<TierFeatureKey, TierFeatureDef> = {
   watchlistCards: {
     requiredTier: "PRO",
     titleKey: "featWatchlistCards",
+    limitKey: "watchlistCards",
     benefitKeys: [
       "featWatchlistCards",
       "featPriceAlerts",
@@ -132,6 +158,7 @@ export const TIER_FEATURES: Record<TierFeatureKey, TierFeatureDef> = {
   deckCount: {
     requiredTier: "PRO",
     titleKey: "featDecks",
+    limitKey: "deckCount",
     benefitKeys: [
       "featDecks",
       "featPortfolioCount",
@@ -145,6 +172,7 @@ export const TIER_FEATURES: Record<TierFeatureKey, TierFeatureDef> = {
   savedFilters: {
     requiredTier: "PRO",
     titleKey: "featCardCompare",
+    limitKey: "savedFilters",
     benefitKeys: [
       "featCardCompare",
       "featPriceHistory",
@@ -155,6 +183,7 @@ export const TIER_FEATURES: Record<TierFeatureKey, TierFeatureDef> = {
   bulkPriceLookup: {
     requiredTier: "PRO",
     titleKey: "featBulkPriceLookup",
+    limitKey: "bulkPriceLookup",
     benefitKeys: [
       "featBulkPriceLookup",
       "featCsvExport",
@@ -192,8 +221,43 @@ export const TIER_FEATURES: Record<TierFeatureKey, TierFeatureDef> = {
       "featCsvExport",
     ],
   },
+  honeyMultiplier: {
+    requiredTier: "PRO",
+    titleKey: "featHoneyMultiplier",
+    limitKey: "honeyMultiplier",
+    limitFormatKey: "pricingHoneyMultiplierValue",
+    benefitKeys: [
+      "featHoneyMultiplier",
+      "featPriceHistory",
+      "featPortfolioCards",
+      "featPriceAlerts",
+    ],
+  },
 };
 
 export function getTierFeature(key: TierFeatureKey): TierFeatureDef {
   return TIER_FEATURES[key];
+}
+
+/**
+ * Quota features remain useful on Pro, but hitting their Pro cap should offer
+ * Pro+ rather than sending the user back to the plan they already have.
+ */
+export function resolveUpgradeTier(
+  currentTier: UserTier,
+  requiredTier: RequiredTier,
+): RequiredTier {
+  // Lifetime plans cannot currently be replaced by recurring subscriptions.
+  // Keep their required tier unchanged; the dialog explains that there is no
+  // direct upgrade path instead of presenting a checkout that the API rejects.
+  if (
+    currentTier === "LIFETIME_PRO" ||
+    currentTier === "LIFETIME_PRO_PLUS"
+  ) {
+    return requiredTier;
+  }
+  if (requiredTier === "PRO" && tierRank(currentTier) >= tierRank("PRO")) {
+    return "PRO_PLUS";
+  }
+  return requiredTier;
 }

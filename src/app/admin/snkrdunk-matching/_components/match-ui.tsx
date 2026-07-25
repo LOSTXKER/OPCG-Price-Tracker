@@ -5,6 +5,7 @@ import {
   AdminStatusBadge,
   type AdminStatusTone,
 } from "@/components/admin/admin-status-badge";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import type { Mapping, SortKey } from "./types";
 
 const STATUS_TONE: Record<string, AdminStatusTone> = {
@@ -105,11 +106,20 @@ export function SortableHeader({
   );
 }
 
-const STATUS_META: { key: string; label: string; color: string }[] = [
-  { key: "pending", label: "รอดำเนินการ", color: "bg-warning-soft text-warning hover:bg-warning/20" },
-  { key: "matched", label: "จับคู่แล้ว", color: "bg-success-soft text-success hover:bg-success/20" },
-  { key: "rejected", label: "ปฏิเสธแล้ว", color: "bg-danger-soft text-danger hover:bg-danger/20" },
-];
+const STATUS_META = [
+  { key: "pending", label: "รอดำเนินการ", dotColor: "bg-warning", textColor: "text-warning" },
+  { key: "matched", label: "จับคู่แล้ว", dotColor: "bg-success", textColor: "text-success" },
+  { key: "rejected", label: "ปฏิเสธแล้ว", dotColor: "bg-danger", textColor: "text-danger" },
+] as const;
+
+type SnkrdunkStatusKey = "" | (typeof STATUS_META)[number]["key"];
+
+export function resolveSnkrdunkStatusSelection(
+  activeFilter: string,
+  nextFilter: SnkrdunkStatusKey,
+): SnkrdunkStatusKey {
+  return nextFilter !== "" && activeFilter === nextFilter ? "" : nextFilter;
+}
 
 export function StatsBar({
   counts,
@@ -121,36 +131,57 @@ export function StatsBar({
   onFilter: (s: string) => void;
 }) {
   const totalAll = Object.values(counts).reduce((a, b) => a + b, 0);
+  const selectedValue: SnkrdunkStatusKey = STATUS_META.some(
+    (status) => status.key === activeFilter,
+  )
+    ? (activeFilter as SnkrdunkStatusKey)
+    : "";
+
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <button
-        type="button"
-        onClick={() => onFilter("")}
-        className={cn(
-          "min-h-11 rounded-full px-3 py-1 text-xs font-medium motion-base sm:min-h-0",
-          activeFilter === ""
-            ? "bg-primary text-primary-foreground"
-            : "bg-muted text-muted-foreground hover:bg-muted/70"
-        )}
-      >
-        ทั้งหมด {totalAll}
-      </button>
-      {STATUS_META.map((s) => (
-        <button
-          key={s.key}
-          type="button"
-          onClick={() => onFilter(activeFilter === s.key ? "" : s.key)}
-          className={cn(
-            "min-h-11 rounded-full px-3 py-1 text-xs font-medium motion-base sm:min-h-0",
-            activeFilter === s.key
-              ? "ring-2 ring-offset-1 ring-offset-background ring-current"
-              : "",
-            s.color
-          )}
-        >
-          {s.label} {counts[s.key] ?? 0}
-        </button>
-      ))}
+    <div className="no-sb max-w-full overflow-x-auto">
+      <SegmentedControl<SnkrdunkStatusKey>
+        options={[
+          {
+            value: "",
+            label: "ทั้งหมด",
+            badge: (
+              <span className="font-mono text-micro font-bold tabular-nums">
+                {totalAll}
+              </span>
+            ),
+          },
+          ...STATUS_META.map((status) => {
+            const active = selectedValue === status.key;
+            return {
+              value: status.key,
+              label: (
+                <span className={cn("inline-flex items-center gap-1.5", active && status.textColor)}>
+                  <span aria-hidden className={cn("size-1.5 rounded-full", status.dotColor)} />
+                  {status.label}
+                </span>
+              ),
+              badge: (
+                <span
+                  className={cn(
+                    "font-mono text-micro font-bold tabular-nums",
+                    active ? status.textColor : "text-muted-foreground/60",
+                  )}
+                >
+                  {counts[status.key] ?? 0}
+                </span>
+              ),
+            };
+          }),
+        ]}
+        value={selectedValue}
+        onChange={(nextFilter) =>
+          onFilter(resolveSnkrdunkStatusSelection(activeFilter, nextFilter))
+        }
+        ariaLabel="กรองตามสถานะ"
+        size="sm"
+        compactVisual
+        className="w-max shrink-0"
+      />
     </div>
   );
 }

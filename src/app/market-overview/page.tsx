@@ -7,7 +7,8 @@ import { prisma } from "@/lib/db"
 import { MarketOverviewClient } from "./market-overview-client"
 
 // ISR only — the page reads no request data, so `force-dynamic` (a leftover from
-// a build-error sweep) just made every visit re-run the aggregate queries.
+// a build-error sweep) just made every visit re-run the aggregate queries. Keep
+// responsive presentation in MarketOverviewClient so this route stays cacheable.
 export const revalidate = 300
 
 export const metadata: Metadata = {

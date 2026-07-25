@@ -14,6 +14,11 @@ import { getCardName } from "@/lib/i18n"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Surface } from "@/components/ui/surface"
 import { useUIStore } from "@/stores/ui-store"
+import {
+  getGradePriceUsd,
+  isRawGrade,
+  type GradeKey,
+} from "@/lib/pricing/grade-tiers"
 
 export type ChangePeriod = "24h" | "7d" | "30d"
 
@@ -43,10 +48,9 @@ export interface CardItemProps {
    */
   pullChancePerBox?: number
   psa10PriceUsd?: number | null
-  /** Price display. `undefined` = raw price + a secondary PSA10 line (default for
-   *  pages with no price toggle: watchlist, drop-calc…). `"raw"` = raw only.
-   *  `"psa10"` = PSA10 price as the main price (pages with a Raw/PSA toggle). */
-  priceMode?: "raw" | "psa10"
+  /** Price display. `undefined` = Raw plus the real PSA 10 secondary line.
+   *  A grade key makes that grade the primary price. */
+  grade?: GradeKey
   /** Make the set code a link to /opcg/sets/[code] (home/search). Default: plain text. */
   linkSet?: boolean
   /**
@@ -76,7 +80,7 @@ function CardItemBase({
   setCode,
   gameSlug = "opcg",
   psa10PriceUsd,
-  priceMode,
+  grade,
   linkSet,
   actionRow,
 }: CardItemProps) {
@@ -89,6 +93,9 @@ function CardItemBase({
       : changePeriod === "30d"
         ? priceChange30d
         : priceChange7d
+  const gradePriceUsd = grade
+    ? getGradePriceUsd(psa10PriceUsd ?? null, grade)
+    : null
 
   const previewCard = {
     cardCode,
@@ -158,9 +165,9 @@ function CardItemBase({
           {displayName}
         </p>
         <div className="mt-auto pt-1.5">
-          {priceMode === "psa10" ? (
-            psa10PriceUsd != null ? (
-              <PriceUsd usd={psa10PriceUsd} className="text-lg font-semibold" />
+          {grade && !isRawGrade(grade) ? (
+            gradePriceUsd != null ? (
+              <PriceUsd usd={gradePriceUsd} className="text-lg font-semibold" />
             ) : (
               <span className="font-price text-lg font-semibold text-muted-foreground/50">
                 —
@@ -177,7 +184,7 @@ function CardItemBase({
               />
               {/* PSA10 secondary line — only when there's a real graded price, so
                   cards without PSA data don't show an empty "PSA 10 —" (เบส). */}
-              {priceMode === undefined && psa10PriceUsd != null && (
+              {grade === undefined && psa10PriceUsd != null && (
                 <div className="mt-1 flex items-baseline gap-1.5 text-meta">
                   <span className="font-medium text-amber-500">PSA 10</span>
                   <PriceUsd usd={psa10PriceUsd} className="text-foreground/70" />

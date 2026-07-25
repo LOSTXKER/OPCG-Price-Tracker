@@ -788,6 +788,10 @@ model PortfolioSnapshot {
   // stay null and the UI falls back to `totalCost`. Written going forward by the
   // snapshot cron. See VISION §5.3 (portfolio honesty) / §6.
   netInvestedJpy Int?
+  // Copy-level coverage is nullable so historical snapshots remain honest instead
+  // of pretending every legacy holding had a known acquisition cost.
+  totalCopyCount  Int?
+  costedCopyCount Int?
   pnl         Int
   cardCount   Int
   snapshotAt  DateTime @default(now())
@@ -807,11 +811,27 @@ model PortfolioItem {
   notes         String?
   isPrivate     Boolean       @default(false)
   addedAt       DateTime      @default(now())
+  lots          PortfolioLot[]
 
   @@unique([portfolioId, cardId, condition])
   @@index([portfolioId])
   @@index([cardId])
   @@index([portfolioId, isPrivate])
+}
+
+model PortfolioLot {
+  id              Int                @id @default(autoincrement())
+  portfolioItemId Int
+  portfolioItem   PortfolioItem      @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  quantity        Int                @default(1)
+  unitCostJpy     Int?
+  acquiredAt      DateTime?
+  note            String?
+  source          PortfolioLotSource @default(MANUAL)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([portfolioItemId, acquiredAt(sort: Desc)])
 }
 
 model PortfolioTransaction {
@@ -833,6 +853,11 @@ model PortfolioTransaction {
 enum TransactionType {
   BUY
   REMOVE
+}
+
+enum PortfolioLotSource {
+  MANUAL
+  LEGACY_OPENING_BALANCE
 }
 
 enum CardCondition {

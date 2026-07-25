@@ -170,12 +170,13 @@ export default function SellerReviewsPage() {
       )}
 
       {/* Rating filter tabs */}
-      <div className="overflow-x-auto">
+      <div className="no-sb overflow-x-auto">
         <SegmentedControl
           options={filterOptions}
           value={activeFilterValue}
           onChange={(v) => handleRatingFilter(v === "ALL" ? null : Number(v))}
           ariaLabel="Filter reviews by rating"
+          className="shrink-0"
         />
       </div>
 

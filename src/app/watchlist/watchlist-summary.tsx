@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown, ArrowUp, TrendingUpDown } from "lucide-react";
+import { TrendingUpDown } from "lucide-react";
 
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { t } from "@/lib/i18n";

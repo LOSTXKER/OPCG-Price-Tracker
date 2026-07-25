@@ -9,7 +9,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getAllGameConfigs, getGameAccentTint } from "@/lib/game-config";
+import {
+  getAllGameConfigs,
+  getGameAccentTint,
+  hasMultipleActiveGames,
+  isGameLaunchReady,
+  type GameConfig,
+} from "@/lib/game-config";
 import {
   GAME_AGNOSTIC_FEATURES,
   GAME_COOKIE,
@@ -23,6 +29,27 @@ import { cn } from "@/lib/utils";
 
 const GAMES = getAllGameConfigs();
 
+/** @internal Pure state builder for launch-gate regression coverage. */
+export function getGameSwitcherState(
+  currentGame: string,
+  games: readonly GameConfig[] = GAMES,
+) {
+  const launchReadyGames = games.filter(isGameLaunchReady);
+  const active =
+    launchReadyGames.find((game) => game.slug === currentGame) ??
+    launchReadyGames[0] ??
+    games[0];
+
+  return {
+    active,
+    options: games.map((game) => ({
+      game,
+      isActive: game.slug === active?.slug,
+      launchReady: isGameLaunchReady(game),
+    })),
+  };
+}
+
 /** Persist the chosen game client-side so middleware redirects un-prefixed URLs
  *  to it. Module-scoped so the cookie write isn't inside component/hook code. */
 function persistGameCookie(slug: string) {
@@ -30,25 +57,29 @@ function persistGameCookie(slug: string) {
 }
 
 /**
- * Game-switcher pill (REDESIGN.md §3.3). Shows the active game; opens a menu of
- * registered games. `comingSoon` games (Pokémon for now) render disabled, so the
- * slot is reserved and Pokémon becomes a real toggle the day its data lands —
- * no nav rebuild. `currentGame` lives in ui-store (persisted).
+ * Canonical catalog switcher. Registered roadmap games remain visible here as
+ * coming-soon entries, while only launch-ready games may change the active
+ * catalog, cookie or URL. In-page MINE filters remain data-driven and separate.
  */
 export function GameSwitcher({ className }: { className?: string }) {
+  if (GAMES.length === 0) return null;
+  return <ActiveGameSwitcher className={className} />;
+}
+
+function ActiveGameSwitcher({ className }: { className?: string }) {
   const lang = useUIStore((s) => s.language);
   const currentGame = useUIStore((s) => s.currentGame);
   const setCurrentGame = useUIStore((s) => s.setCurrentGame);
-  const active = GAMES.find((g) => g.slug === currentGame) ?? GAMES[0];
+  const { active, options } = getGameSwitcherState(currentGame);
   const router = useRouter();
   const pathname = usePathname();
   const dismissedHint = useUIStore((s) => s.dismissedSwitcherHint);
   const dismissHint = useUIStore((s) => s.dismissSwitcherHint);
-  const activeTint = getGameAccentTint(active.slug);
-  // On a MINE route the pill does nothing to the list — surface a one-time hint
-  // pointing users at the in-page filter chips instead.
+  // On a MINE route the pill does nothing to the list. Once multiple catalogs
+  // are genuinely live, surface a one-time hint toward the in-page filter.
   const seg0 = pathname.split("/").filter(Boolean)[0] ?? "";
   const isMineRoute = GAME_AGNOSTIC_FEATURES.has(seg0);
+  const activeTint = getGameAccentTint(active!.slug);
 
   // Switch game = stay on the same feature, swap the `/[game]` segment. Persist
   // the cookie so middleware redirects un-prefixed URLs to the chosen game too.
@@ -71,14 +102,12 @@ export function GameSwitcher({ className }: { className?: string }) {
     // the next browse navigation picks it up.
   };
 
-  // A `comingSoon` game has no catalog yet — send the user to a teaser instead
-  // of a broken empty page, and DON'T change the active game (no cookie/store
-  // write), so browsing elsewhere stays on the live game.
+  // A blocked/roadmap game has no public catalog yet. Show the roadmap page
+  // without mutating the current game, cookie or namespace.
   const goComingSoon = (slug: string) => {
     router.push(`/coming-soon?game=${slug}`);
   };
 
-  // Single registered game → nothing to switch; render a static badge.
   if (GAMES.length < 2) {
     return (
       <span
@@ -88,7 +117,7 @@ export function GameSwitcher({ className }: { className?: string }) {
         )}
       >
         <span className="size-2 rounded-full" style={{ background: activeTint }} aria-hidden />
-        {active.shortName ?? active.slug.toUpperCase()}
+        {active!.shortName ?? active!.slug.toUpperCase()}
       </span>
     );
   }
@@ -103,7 +132,7 @@ export function GameSwitcher({ className }: { className?: string }) {
         )}
       >
         <span className="size-2 rounded-full" style={{ background: activeTint }} aria-hidden />
-        {active.shortName ?? active.slug.toUpperCase()}
+        {active!.shortName ?? active!.slug.toUpperCase()}
         <ChevronDown className="size-3 text-muted-foreground" aria-hidden />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" sideOffset={8} className="min-w-[220px]">
@@ -112,29 +141,29 @@ export function GameSwitcher({ className }: { className?: string }) {
         <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/70">
           {t(lang, "browseCatalog")}
         </p>
-        {GAMES.map((g) => {
-          const isActive = g.slug === currentGame;
-          const comingSoon = Boolean(g.comingSoon);
+        {options.map(({ game, isActive, launchReady }) => {
           return (
             <DropdownMenuItem
-              key={g.slug}
-              onClick={() => (comingSoon ? goComingSoon(g.slug) : switchGame(g.slug))}
+              key={game.slug}
+              onClick={() => (launchReady ? switchGame(game.slug) : goComingSoon(game.slug))}
               className={cn("flex items-center gap-2", isActive && "font-semibold text-foreground")}
             >
               <span
                 aria-hidden
                 className="size-2 shrink-0 rounded-full"
-                style={{ background: `color-mix(in srgb, ${getGameAccentTint(g.slug)} 70%, transparent)` }}
+                style={{
+                  background: `color-mix(in srgb, ${getGameAccentTint(game.slug)} 70%, transparent)`,
+                }}
               />
-              <span className="flex-1">{g.nameEn}</span>
+              <span className="flex-1">{game.nameEn}</span>
               {isActive && <Check className="size-4 text-primary" aria-hidden />}
-              {comingSoon && (
+              {!launchReady && (
                 <span className="text-micro text-muted-foreground">{t(lang, "comingSoon")}</span>
               )}
             </DropdownMenuItem>
           );
         })}
-        {isMineRoute && !dismissedHint && (
+        {isMineRoute && hasMultipleActiveGames() && !dismissedHint && (
           <button
             type="button"
             onClick={dismissHint}

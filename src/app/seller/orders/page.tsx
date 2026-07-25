@@ -105,11 +105,12 @@ export default function SellerOrdersPage() {
         description={t(lang, "sellerOrdersDesc")}
       />
 
-      <div className="overflow-x-auto">
+      <div className="no-sb overflow-x-auto">
         <SegmentedControl
           value={activeTab}
           onChange={handleTabChange}
           ariaLabel="Filter orders by status"
+          className="shrink-0"
           options={STATUS_TABS.map((tab) => {
             const count =
               tab.key === "ALL" ? totalAll : (data?.statusCounts[tab.key] ?? 0);

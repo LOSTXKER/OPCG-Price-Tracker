@@ -4,14 +4,12 @@ import { useState } from "react"
 import { ChevronDown } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
-import { Price } from "@/components/shared/price-inline"
+import { PriceTag } from "@/components/ui/price-tag"
 import { Surface } from "@/components/ui/surface"
 import { cn } from "@/lib/utils"
 import { RARITY_BAR_COLOR } from "@/lib/constants/rarities"
 import { t, type Language } from "@/lib/i18n"
 import { formatCount } from "@/lib/utils/currency"
-
-import { RawValueHint } from "./raw-value-hint"
 
 type RarityRow = { rarity: string; count: number; totalValue: number }
 
@@ -44,31 +42,26 @@ export function RarityBreakdown({
   const maxValue = Math.max(...rows.map((r) => r.totalValue), 1)
 
   return (
-    <Surface variant="panel" className="overflow-hidden">
-      <div className="flex items-end justify-between gap-3 border-b border-hair px-5 py-3.5">
-        <div className="min-w-0">
-          <div className="flex items-center gap-1.5">
-            <h2 className="text-h4">{t(lang, "valueByRarity")}</h2>
-            <RawValueHint lang={lang} />
-          </div>
-          <p className="text-meta">{t(lang, "valueByRarityCaption")}</p>
-        </div>
-        <span className="shrink-0 text-meta tabular-nums">{formatCount(rows.length)}</span>
-      </div>
-
+    <Surface
+      variant="panel"
+      className="overflow-hidden"
+      data-slot="market-rarity-panel"
+    >
       {/* Column eyebrows */}
-      <div className="flex items-center gap-3 px-5 pt-3 pb-1">
-        <div className="w-16 shrink-0">
-          <span className="text-eyebrow">Rarity</span>
+      <div className="flex items-center gap-2 px-4 pt-3 pb-1 sm:gap-3 sm:px-5">
+        <div className="w-14 shrink-0 sm:w-16">
+          <span className="text-eyebrow">{t(lang, "rarity")}</span>
         </div>
         <div className="min-w-0 flex-1" />
-        <span className="w-9 shrink-0 text-right text-eyebrow">{t(lang, "marketRarityShare")}</span>
-        <div className="w-28 shrink-0 text-right">
+        <span className="w-10 shrink-0 text-right text-eyebrow">
+          {t(lang, "marketRarityShare")}
+        </span>
+        <div className="w-24 shrink-0 text-right sm:w-28">
           <span className="text-eyebrow">{t(lang, "marketRarityValue")}</span>
         </div>
       </div>
 
-      <div className="divide-y divide-hair">
+      <div id="market-rarity-rows" className="divide-y divide-hair">
         {visible.map((r) => {
           const isOthers = r.rarity === "OTHERS"
           const pct = (r.totalValue / denom) * 100
@@ -78,9 +71,9 @@ export function RarityBreakdown({
           return (
             <div
               key={r.rarity}
-              className="flex items-center gap-3 px-5 py-3 motion-base hover:bg-muted/70"
+              className="flex items-center gap-2 px-4 py-3 motion-base hover:bg-muted/70 sm:gap-3 sm:px-5"
             >
-              <div className="w-16 shrink-0">
+              <div className="w-14 shrink-0 sm:w-16">
                 {isOthers ? (
                   <span className="inline-flex items-center whitespace-nowrap rounded-sm bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
                     +{rest.length}
@@ -100,13 +93,16 @@ export function RarityBreakdown({
                   <p className="mt-1 text-meta">{t(lang, "marketRarityOthers")}</p>
                 )}
               </div>
-              <span className="w-9 shrink-0 text-right text-meta tabular-nums">
+              <span className="w-10 shrink-0 text-right text-meta tabular-nums">
                 {pct.toFixed(1)}%
               </span>
-              <div className="w-28 shrink-0 text-right">
-                <p className="whitespace-nowrap font-price text-sm font-semibold tabular-nums">
-                  <Price jpy={r.totalValue} />
-                </p>
+              <div className="w-24 shrink-0 text-right sm:w-28">
+                <PriceTag
+                  jpy={r.totalValue}
+                  showChange={false}
+                  size="sm"
+                  className="justify-end whitespace-nowrap"
+                />
                 <p className="whitespace-nowrap text-meta tabular-nums">
                   {formatCount(r.count)} {t(lang, "cardUnit")}
                 </p>
@@ -120,7 +116,9 @@ export function RarityBreakdown({
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="flex w-full items-center justify-center gap-1 border-t border-hair px-5 py-2.5 text-meta motion-base hover:bg-muted/70 hover:text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          aria-expanded={expanded}
+          aria-controls="market-rarity-rows"
+          className="flex min-h-11 w-full items-center justify-center gap-1 border-t border-hair px-5 py-2.5 text-meta motion-base hover:bg-muted/70 hover:text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
           {expanded ? t(lang, "marketShowLess") : t(lang, "marketShowAll")}
           <ChevronDown

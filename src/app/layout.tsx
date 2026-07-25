@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Kanit, JetBrains_Mono } from "next/font/google";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { MainChrome, SiteChrome, FooterChrome, PageContent, SkipToContent } from "@/components/layout/main-chrome";
 import { CompareFloatingBar } from "@/components/compare/compare-floating-bar";
-import { ConsentBanner } from "@/components/ads/consent-banner";
 import { ScrollToTop } from "@/components/shared/scroll-to-top";
 import { MissionTracker } from "@/components/honey/mission-tracker";
 import { CardMiniPreviewDialog } from "@/components/shared/card-mini-preview-dialog";
+import { AdAudienceProvider } from "@/components/ads/ad-audience-provider";
+import { FloatingBottomAd } from "@/components/ads/floating-bottom-ad";
 
 import { ThemeProvider } from "@/providers/theme-provider";
 import { StoreHydrator } from "@/components/providers/store-hydrator";
@@ -84,7 +86,11 @@ export default function RootLayout({
   return (
     <html lang="th" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: INITIAL_HTML_LANG_SCRIPT }} />
+        <Script
+          id="initial-html-language"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: INITIAL_HTML_LANG_SCRIPT }}
+        />
         <JsonLd data={websiteJsonLd()} />
       </head>
       <body
@@ -100,23 +106,25 @@ export default function RootLayout({
           <TooltipProvider>
             <ConfirmDialogProvider>
               <UpgradeDialogProvider>
-                <SiteChrome>
-                  <SkipToContent />
-                  <Header />
-                </SiteChrome>
-                <PageContent>{children}</PageContent>
-                <FooterChrome>
-                  <Footer />
-                </FooterChrome>
-                <MainChrome>
-                  <BottomNav />
-                </MainChrome>
-                <CompareFloatingBar />
-                <CardMiniPreviewDialog />
-                <ScrollToTop />
-                <MissionTracker />
-                <ConsentBanner />
-                <Toaster position="top-center" />
+                <AdAudienceProvider>
+                  <SiteChrome>
+                    <SkipToContent />
+                    <Header />
+                  </SiteChrome>
+                  <PageContent>{children}</PageContent>
+                  <FooterChrome>
+                    <Footer />
+                  </FooterChrome>
+                  <MainChrome>
+                    <FloatingBottomAd />
+                    <BottomNav />
+                  </MainChrome>
+                  <CompareFloatingBar />
+                  <CardMiniPreviewDialog />
+                  <ScrollToTop />
+                  <MissionTracker />
+                  <Toaster position="top-center" />
+                </AdAudienceProvider>
               </UpgradeDialogProvider>
             </ConfirmDialogProvider>
           </TooltipProvider>

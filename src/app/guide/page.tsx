@@ -272,6 +272,7 @@ export default async function GuideLandingPage() {
         </div>
         <FaqSection title="" items={buildFaq(lang)} />
       </section>
+
     </div>
   );
 }

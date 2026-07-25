@@ -21,7 +21,7 @@ import {
   AlertFormBody,
   type AlertFormValue,
 } from "@/components/alerts/alert-form";
-import { formatJpy, jpyToDisplayValue } from "@/lib/utils/currency";
+import { formatJpyAmount, jpyToDisplayValue } from "@/lib/utils/currency";
 import { apiPost } from "@/lib/api/client";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
 import type { PriceAlertItem } from "./alert-types";
@@ -161,7 +161,9 @@ export function AlertCreateDialog({
                     {card.latestPriceJpy != null && (
                       <>
                         {" · "}
-                        <span className="tabular-nums">{formatJpy(card.latestPriceJpy)}</span>
+                        <span className="tabular-nums">
+                          {formatJpyAmount(card.latestPriceJpy, currency)}
+                        </span>
                       </>
                     )}
                   </p>

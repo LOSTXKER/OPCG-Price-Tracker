@@ -23,7 +23,12 @@ export type SetInfo = {
 export type CartItem = {
   card: CardWithSet
   quantity: number
-  purchasePrice: number | null
+  /** Cost per copy, normalized to JPY before this item reaches the API hook. */
+  purchasePrice: number
+  /** Calendar date for the acquisition lot, formatted as YYYY-MM-DD. */
+  acquiredAt: string
+  /** Note attached to this purchase lot, not the parent holding. */
+  lotNote: string | null
 }
 
 export const SET_TYPE_LABELS: Record<string, string> = {

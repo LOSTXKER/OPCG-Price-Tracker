@@ -42,7 +42,7 @@ export function HomeFeaturedCard({
             sizes="100px"
             placeholder="blur"
             blurDataURL={BLUR_DATA_URL}
-            preload
+            loading="eager"
           />
         )}
       </div>

@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { ArrowLeft, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
@@ -62,23 +63,18 @@ export function ConversationSidebar({
         <h1 className="text-h4">{t(lang, "msgConvTitle")}</h1>
       </div>
 
-      <div className="flex gap-1 border-b px-3 py-1.5">
-        {tabs.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            onClick={() => setTab(t.key)}
-            aria-pressed={tab === t.key}
-            className={cn(
-              "min-h-11 rounded-md px-2.5 py-1 text-xs font-medium transition-colors sm:min-h-0",
-              tab === t.key
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-muted"
-            )}
-          >
-            {t.label}
-          </button>
-        ))}
+      <div className="border-b px-3 py-1.5">
+        <SegmentedControl<TabFilter>
+          value={tab}
+          onChange={setTab}
+          options={tabs.map((item) => ({
+            value: item.key,
+            label: item.label,
+          }))}
+          fullWidth
+          size="sm"
+          ariaLabel={t(lang, "msgConvTitle")}
+        />
       </div>
 
       <div className="px-3 py-2">

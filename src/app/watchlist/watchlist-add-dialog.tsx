@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { CardBatchPickerDialog } from "@/components/shared/card-batch-picker-dialog";
 import type { CardWithSet } from "@/components/shared/card-picker-form";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
+import { useTierLimits } from "@/hooks/use-tier-limits";
 import { ApiError, apiPost } from "@/lib/api/client";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
@@ -19,13 +20,19 @@ export function WatchlistAddDialog({
   open,
   onOpenChange,
   onAdded,
+  currentCount,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   onAdded: () => void;
+  currentCount: number;
 }) {
   const lang = useUIStore((s) => s.language);
   const { openUpgradeDialog } = useUpgradeDialog();
+  const { limits } = useTierLimits();
+  const remaining = Number.isFinite(limits.watchlistCards)
+    ? Math.max(0, limits.watchlistCards - currentCount)
+    : Number.POSITIVE_INFINITY;
 
   const addCards = async (cards: CardWithSet[]) => {
     let addedCount = 0;
@@ -59,7 +66,19 @@ export function WatchlistAddDialog({
       onOpenChange={onOpenChange}
       onSubmit={addCards}
       emptySubmitLabel={t(lang, "selectCardsToAdd")}
+      submittingLabel={t(lang, "adding")}
       submitLabel={(count) => `${t(lang, "addToWatchlist")} (${count})`}
+      maxSelection={remaining}
+      selectionLimitLabel={
+        Number.isFinite(remaining)
+          ? t(
+              lang,
+              remaining === 0
+                ? "watchlistQuotaFull"
+                : "watchlistPickerRemaining",
+            ).replace("{count}", String(remaining))
+          : undefined
+      }
     />
   );
 }

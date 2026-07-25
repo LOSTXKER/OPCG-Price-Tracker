@@ -8,6 +8,7 @@ import {
   ensureValidSetCode,
   filterAndSortEntries,
   filterEntries,
+  normalizeWatchlistSortForGrade,
   pruneSelectedToVisible,
   sortEntries,
 } from "./watchlist-sort";
@@ -29,6 +30,7 @@ function entry(
     nameJp?: string;
     nameTh?: string | null;
     pinnedAt?: string | null;
+    psaPrice?: number | null;
     setCode?: string;
   } = {},
 ): WatchlistEntry {
@@ -50,6 +52,7 @@ function entry(
       imageUrl: null,
       latestPriceJpy: id * 100,
       latestPriceThb: id * 25,
+      psa10PriceUsd: overrides.psaPrice ?? null,
       priceChange24h: overrides.change ?? null,
       priceChange7d: overrides.change ?? null,
       priceChange30d: overrides.change ?? null,
@@ -200,4 +203,79 @@ describe("watchlist sorting", () => {
     expect(result).toHaveLength(2);
     expect(result.map((item) => item.cardId)).toEqual([1, 2]);
   });
+
+  it.each(["psa_10", "psa_9", "psa_8", "bgs_95"] as const)(
+    "keeps only cards with a real PSA 10 anchor in the %s lens",
+    (grade) => {
+      const result = filterEntries(
+        [
+          entry(1, { psaPrice: 45 }),
+          entry(2, { psaPrice: null }),
+          entry(3, { psaPrice: 0 }),
+        ],
+        {
+          filters: filters(),
+          period: "7d",
+          grade,
+        },
+      );
+
+      expect(result.map((item) => item.cardId)).toEqual([1]);
+    },
+  );
+
+  it("normalizes Raw-only change sorts when leaving the Raw lens", () => {
+    expect(normalizeWatchlistSortForGrade("gain", "psa_10")).toBe("priceHigh");
+    expect(normalizeWatchlistSortForGrade("loss", "psa_9")).toBe("priceHigh");
+    expect(normalizeWatchlistSortForGrade("gain", "raw")).toBe("gain");
+    expect(normalizeWatchlistSortForGrade("nameAz", "bgs_95")).toBe("nameAz");
+  });
+
+  it("applies the normalized price sort even during a grade transition", () => {
+    const result = filterAndSortEntries(
+      [
+        entry(1, { change: 99, psaPrice: 12 }),
+        entry(2, { change: -99, psaPrice: 45 }),
+      ],
+      { filters: filters(), period: "7d", grade: "psa_9" },
+      "gain",
+    );
+
+    expect(result.map((item) => item.cardId)).toEqual([2, 1]);
+  });
+
+  it("ignores stale Raw-only filters after switching to a graded lens", () => {
+    const result = filterEntries(
+      [entry(1, { alert: false, change: -5, psaPrice: 45 })],
+      {
+        filters: filters({ direction: "up", hasAlert: true }),
+        period: "7d",
+        grade: "psa_10",
+      },
+    );
+
+    expect(result.map((item) => item.cardId)).toEqual([1]);
+  });
+
+  it.each(["psa_10", "psa_9", "psa_8", "bgs_95"] as const)(
+    "sorts the derived %s price and keeps missing anchors last",
+    (grade) => {
+      const priced = [
+        entry(1, { psaPrice: 45 }),
+        entry(2, { psaPrice: 12 }),
+        entry(3, { psaPrice: null }),
+      ];
+
+      expect(
+        sortEntries(priced, "priceHigh", "7d", grade).map(
+          (item) => item.cardId,
+        ),
+      ).toEqual([1, 2, 3]);
+      expect(
+        sortEntries(priced, "priceLow", "7d", grade).map(
+          (item) => item.cardId,
+        ),
+      ).toEqual([2, 1, 3]);
+    },
+  );
 });

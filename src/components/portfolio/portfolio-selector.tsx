@@ -28,12 +28,19 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useConfirm } from "@/components/shared/confirm-dialog"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
+import { TIER_LIMITS, type RequiredTier } from "@/lib/billing"
 
 export type { PortfolioMeta } from "@/lib/types/portfolio"
 import type { PortfolioMeta, PortfolioMutationResult } from "@/lib/types/portfolio"
 
 export function shouldConfirmPortfolioVisibility(nextIsPublic: boolean) {
   return nextIsPublic
+}
+
+export function getPortfolioUpgradeTier(
+  maxPortfolios?: number,
+): RequiredTier {
+  return maxPortfolios === TIER_LIMITS.PRO.portfolioCount ? "PRO_PLUS" : "PRO"
 }
 
 export function PortfolioSidebar({
@@ -46,6 +53,7 @@ export function PortfolioSidebar({
   onDelete,
   hideBalance,
   maxPortfolios,
+  onUpgradeRequest,
 }: {
   portfolios: PortfolioMeta[]
   activeId: number | null
@@ -59,6 +67,8 @@ export function PortfolioSidebar({
   onDelete: (id: number) => Promise<PortfolioMutationResult<unknown>>
   hideBalance?: boolean
   maxPortfolios?: number
+  /** Lets a containing management dialog close before the upgrade dialog opens. */
+  onUpgradeRequest?: () => void
 }) {
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editName, setEditName] = useState("")
@@ -166,6 +176,20 @@ export function PortfolioSidebar({
     isFinite(maxPortfolios) &&
     portfolios.length >= maxPortfolios
   const { openUpgradeDialog } = useUpgradeDialog()
+  const handleCreateClick = () => {
+    if (atLimit) {
+      if (onUpgradeRequest) {
+        onUpgradeRequest()
+      } else {
+        openUpgradeDialog({
+          featureKey: "portfolioCount",
+          requiredTier: getPortfolioUpgradeTier(maxPortfolios),
+        })
+      }
+      return
+    }
+    onCreateRequest()
+  }
 
   return (
     <div className="p-1.5">
@@ -240,7 +264,7 @@ export function PortfolioSidebar({
                     )}
                   </span>
                   <span className="flex items-baseline gap-1.5">
-                    <span className="text-meta">
+                    <span className="text-meta font-price">
                       {hideBalance
                         ? MASKED
                         : p.valuedCopyCount === 0
@@ -303,43 +327,20 @@ export function PortfolioSidebar({
         )
       })}
 
-      {/* Add portfolio */}
-      {atLimit ? (
-        /* At the plan limit — say so plainly and sell the upgrade, instead of a
-           plus button that silently bounces to a dialog. */
-        <div className="mt-0.5 px-1">
-          <button
-            type="button"
-            onClick={() => openUpgradeDialog({ featureKey: "portfolioCount" })}
-            className="ease-chrome flex min-h-11 w-full items-center gap-2.5 rounded-lg bg-primary/6 px-2 py-2 text-left transition-colors hover:bg-primary/10"
-          >
-            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/12 text-primary">
-              <Lock className="size-3.5" />
-            </div>
-            <span className="min-w-0 flex-1">
-              <span className="block text-xs font-medium leading-tight">
-                {t(lang, "portfolioLimitUpTo").replace("{max}", String(maxPortfolios))}
-              </span>
-              <span className="block text-micro font-semibold text-primary">
-                {t(lang, "upgradeForMorePortfolios")} →
-              </span>
-            </span>
-          </button>
-        </div>
-      ) : (
-        <div className="mt-0.5 px-1">
-          <button
-            type="button"
-            onClick={onCreateRequest}
-            className="ease-chrome flex min-h-11 w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            <div className="flex size-7 items-center justify-center rounded-lg border border-dashed border-hair">
-              <Plus className="size-3.5" />
-            </div>
-            <span className="text-xs font-medium">{t(lang, "createPortfolio")}</span>
-          </button>
-        </div>
-      )}
+      {/* Keep creation discoverable on every plan. Quota is explained only
+          after intent, through the shared upgrade dialog. */}
+      <div className="mt-0.5 px-1">
+        <button
+          type="button"
+          onClick={handleCreateClick}
+          className="ease-chrome flex min-h-11 w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
+          <div className="flex size-7 items-center justify-center rounded-lg border border-dashed border-hair">
+            <Plus className="size-3.5" aria-hidden />
+          </div>
+          <span className="text-xs font-medium">{t(lang, "createPortfolio")}</span>
+        </button>
+      </div>
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import type { CardSearchFacets } from "@/lib/cards/search-filters";
+import type { GradeKey } from "@/lib/pricing/grade-tiers";
 
 export interface FetchCardsParams {
   search?: string;
@@ -13,7 +14,9 @@ export interface FetchCardsParams {
   limit?: number;
   minPrice?: number;
   maxPrice?: number;
-  priceMode?: string;
+  grade?: GradeKey;
+  /** @deprecated Compatibility with the former Raw/PSA 10 query. */
+  priceMode?: "psa10";
   popular?: boolean;
   includeFacets?: boolean;
   ids?: number[];

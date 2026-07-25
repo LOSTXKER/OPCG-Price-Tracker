@@ -62,5 +62,7 @@ describe("ViewModeControl", () => {
 
     expect(markup).toContain(`<span class="truncate">${t("TH", "table")}</span>`);
     expect(markup).toContain(`<span class="truncate">${t("TH", "grid")}</span>`);
+    expect(markup).toContain("[&amp;_button]:w-20");
+    expect(markup).toContain("[&amp;_button]:min-w-20");
   });
 });

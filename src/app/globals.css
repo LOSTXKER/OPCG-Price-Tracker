@@ -125,6 +125,7 @@
      = ticker (h-11 = 44px) + header (h-14 = 56px) = 100px. Sticky offsets and
      scroll-margins read from this single var (TOKENS-04) instead of magic numbers. */
   --chrome-h: 3.5rem;
+  --floating-ad-clearance: 0rem;
 
   /* Frameless in light: .panel lifts by the warm --card fill alone (no hairline).
      Dark keeps --elev-flat (luminance edge) since there card≠bg is subtle. */
@@ -194,6 +195,19 @@
 @media (min-width: 768px) {
   :root {
     --chrome-h: 6.25rem;
+  }
+}
+
+/* Bottom-anchor ads share one dynamic clearance with the other floating
+   controls. Once the dismissible dock leaves the DOM, every control returns to
+   its original bottom offset without route-specific state or duplicated logic. */
+:root:has([data-floating-ad-dock]) {
+  --floating-ad-clearance: 5rem;
+}
+
+@media (min-width: 640px) {
+  :root:has([data-floating-ad-dock]) {
+    --floating-ad-clearance: 6.5rem;
   }
 }
 
@@ -413,6 +427,25 @@
 .surface-1 { background: var(--p-s1); }
 .surface-2 { background: var(--p-s2); }
 .surface-3 { background: var(--p-s3); }
+
+/* Owner-approved exception to the flat-surface rule: one quiet, directional
+   gradient for the Portfolio financial summary. It stays token-driven so the
+   tint remains legible in both themes and never implies gain when P/L is down. */
+.portfolio-financial-gradient {
+  --portfolio-gradient-accent: var(--primary);
+  background: linear-gradient(
+    112deg,
+    var(--card) 0%,
+    color-mix(in srgb, var(--portfolio-gradient-accent) 2%, var(--card)) 58%,
+    color-mix(in srgb, var(--portfolio-gradient-accent) 14%, var(--card)) 100%
+  );
+}
+.portfolio-financial-gradient[data-trend="up"] {
+  --portfolio-gradient-accent: var(--price-up);
+}
+.portfolio-financial-gradient[data-trend="down"] {
+  --portfolio-gradient-accent: var(--price-down);
+}
 
 /* hairline as inset shadow — never clips rounded corners */
 .hairline { box-shadow: inset 0 0 0 1px var(--p-hair); }

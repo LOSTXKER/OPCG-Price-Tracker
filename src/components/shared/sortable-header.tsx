@@ -12,6 +12,8 @@ interface SortableHeaderProps<TCol extends string> {
   align?: "left" | "right";
   className?: string;
   as?: "th" | "button";
+  /** Allow long localized labels to use a second line in dense tables. */
+  wrapLabel?: boolean;
 }
 
 export function SortableHeader<TCol extends string>({
@@ -23,6 +25,7 @@ export function SortableHeader<TCol extends string>({
   align = "left",
   className,
   as = "th",
+  wrapLabel = false,
 }: SortableHeaderProps<TCol>) {
   const isActive = activeCol === column;
   const Icon = isActive ? (dir === "asc" ? ArrowUp : ArrowDown) : ArrowUpDown;
@@ -50,7 +53,8 @@ export function SortableHeader<TCol extends string>({
     <th
       aria-sort={isActive ? (dir === "asc" ? "ascending" : "descending") : "none"}
       className={cn(
-        "select-none whitespace-nowrap pr-3 font-medium",
+        "select-none pr-3 font-medium",
+        wrapLabel ? "whitespace-normal" : "whitespace-nowrap",
         align === "right" && "text-right",
         isActive && "text-foreground",
         className
@@ -61,10 +65,15 @@ export function SortableHeader<TCol extends string>({
         onClick={() => onClick(column)}
         className={cn(
           "group inline-flex min-h-11 items-center gap-1 py-2.5 motion-base hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-0",
-          align === "right" && "flex-row-reverse"
+          align === "right" && "flex-row-reverse",
+          wrapLabel && "w-full min-w-0 whitespace-normal leading-tight",
         )}
       >
-        {label}
+        {wrapLabel ? (
+          <span className="min-w-0 whitespace-normal leading-tight">{label}</span>
+        ) : (
+          label
+        )}
         <span className="inline-flex size-3 shrink-0 items-center justify-center">
           <Icon
             className={cn(

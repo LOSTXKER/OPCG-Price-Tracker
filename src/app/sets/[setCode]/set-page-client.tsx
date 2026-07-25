@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { cn } from "@/lib/utils";
 import {
   pullChance,
@@ -82,7 +83,7 @@ export function DropRateDialog({
 
   return (
     <Dialog>
-      <DialogTrigger className="ease-chrome inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+      <DialogTrigger className="ease-chrome inline-flex min-h-11 items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:min-h-9">
         <BarChart3 className="size-3.5 text-primary" />
         {t(lang, "dropRate")}
         <span className="tnum text-muted-foreground/60">{pullRateGroups.length}</span>
@@ -105,22 +106,18 @@ export function DropRateDialog({
 
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="inline-flex rounded-lg bg-muted/60 p-0.5">
-              {PULL_UNITS.map((u) => (
-                <button
-                  key={u}
-                  onClick={() => setUnit(u)}
-                  className={cn(
-                    "rounded-lg px-3 py-1 text-xs font-medium transition-all ease-chrome",
-                    unit === u
-                      ? "bg-background text-foreground"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  {t(lang, UNIT_I18N_KEYS[u])}
-                </button>
-              ))}
-            </div>
+            <SegmentedControl<Unit>
+              value={unit}
+              onChange={setUnit}
+              options={PULL_UNITS.map((value) => ({
+                value,
+                label: t(lang, UNIT_I18N_KEYS[value]),
+              }))}
+              fullWidth
+              size="sm"
+              ariaLabel={t(lang, "dropRate")}
+              className="w-full sm:w-64"
+            />
             {packsPerBox && cardsPerPack && (
               <span className="text-meta">
                 {packsPerBox} {t(lang, "perUnit")}/{t(lang, "packUnit")} ·{" "}

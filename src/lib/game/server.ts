@@ -2,7 +2,13 @@ import { cookies, headers } from "next/headers"
 
 import { getGameConfig, type GameConfig } from "@/lib/game-config"
 
-import { ALL_GAMES, DEFAULT_GAME, GAME_COOKIE, GAME_HEADER } from "./constants"
+import {
+  ALL_GAMES,
+  GAME_COOKIE,
+  GAME_HEADER,
+  isActiveGamePrefix,
+  resolveActiveGamePrefix,
+} from "./constants"
 
 /**
  * Resolve the active game for SERVER components / route handlers. Reads the
@@ -16,10 +22,11 @@ import { ALL_GAMES, DEFAULT_GAME, GAME_COOKIE, GAME_HEADER } from "./constants"
 export async function getServerGame(): Promise<string> {
   const h = await headers()
   const fromHeader = h.get(GAME_HEADER)
-  if (fromHeader) return fromHeader
+  if (fromHeader === ALL_GAMES || isActiveGamePrefix(fromHeader)) return fromHeader
 
   const store = await cookies()
-  return store.get(GAME_COOKIE)?.value ?? DEFAULT_GAME
+  const fromCookie = store.get(GAME_COOKIE)?.value
+  return resolveActiveGamePrefix(fromCookie)
 }
 
 /**

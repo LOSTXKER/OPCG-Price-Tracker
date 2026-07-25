@@ -1,13 +1,14 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { AlertTriangle, Calculator, ListChecks, Package, LayoutGrid } from "lucide-react"
+import Image from "next/image"
+import { AlertTriangle, Calculator, Check, ChevronLeft, Package, Trash2, X } from "lucide-react"
 
-import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Surface } from "@/components/ui/surface"
 import { PageHeader } from "@/components/layout/page-header"
-import { SetPicker } from "@/components/shared/set-picker"
+import { SectionHead } from "@/components/shared/section-head"
 import { PurchaseConfig } from "@/components/drop-calculator/purchase-config"
 import { WantList } from "@/components/drop-calculator/want-list"
 import { CardPicker } from "@/components/drop-calculator/card-picker"
@@ -15,7 +16,7 @@ import type { SetListItem, SetDetail, DropRate, CardItem, Unit } from "@/compone
 import { raritySort } from "@/lib/constants/rarities"
 import { getGameConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
-import { t } from "@/lib/i18n"
+import { getCardName, t, type Language } from "@/lib/i18n"
 import { apiGet, apiTry } from "@/lib/api/client"
 import {
   pullChance,
@@ -25,6 +26,186 @@ import {
   BOXES_PER_CARTON,
   EXPECTED_PARALLEL_SLOTS_PER_BOX,
 } from "@/lib/utils/pull-rate"
+
+type WizardStep = 1 | 2 | 3
+
+export function getDefaultDropSetCode(sets: SetListItem[]) {
+  return sets[0]?.code ?? ""
+}
+
+export function DropCalculatorWizard({
+  lang,
+  currentStep,
+}: {
+  lang: Language
+  currentStep: WizardStep
+}) {
+  const steps = [
+    { step: 1, label: t(lang, "selectSet") },
+    { step: 2, label: t(lang, "selectWantedCards") },
+    { step: 3, label: t(lang, "viewResults") },
+  ] as const
+
+  return (
+    <nav aria-label={t(lang, "dropCalculator")} className="px-0.5">
+      <div className="flex items-center gap-3 sm:hidden">
+        <span aria-current="step" className="sr-only">
+          {steps[currentStep - 1].label}
+        </span>
+        <div aria-hidden className="grid flex-1 grid-cols-3 gap-1.5">
+          {steps.map(({ step }) => (
+            <span
+              key={step}
+              className={`h-1 rounded-full ${
+                step <= currentStep ? "bg-primary" : "bg-muted"
+              }`}
+            />
+          ))}
+        </div>
+        <span aria-hidden className="text-code text-muted-foreground">
+          {currentStep} / {steps.length}
+        </span>
+      </div>
+
+      <ol className="hidden grid-cols-3 sm:grid">
+        {steps.map(({ step, label }, index) => {
+          const isComplete = step < currentStep
+          const isCurrent = step === currentStep
+
+          return (
+            <li
+              key={step}
+              aria-current={isCurrent ? "step" : undefined}
+              className="relative flex min-w-0 items-center justify-center gap-2 text-center"
+            >
+              {index < steps.length - 1 && (
+                <span
+                  aria-hidden
+                  className={`absolute left-1/2 top-3 h-px w-full ${
+                    isComplete ? "bg-primary/50" : "bg-hair"
+                  }`}
+                />
+              )}
+              <span
+                className={`relative z-10 flex size-6 shrink-0 items-center justify-center rounded-full text-micro tabular-nums ${
+                  isComplete
+                    ? "bg-primary/15 text-primary"
+                    : isCurrent
+                      ? "bg-primary text-primary-foreground"
+                      : "border border-hair bg-background text-muted-foreground"
+                }`}
+              >
+                {isComplete ? <Check className="size-3.5" aria-hidden /> : step}
+              </span>
+              <span
+                className={`relative z-10 max-w-36 bg-background px-1 text-label ${
+                  isCurrent ? "text-foreground" : "text-muted-foreground"
+                }`}
+              >
+                {label}
+              </span>
+            </li>
+          )
+        })}
+      </ol>
+    </nav>
+  )
+}
+
+function focusCalculatorSection(id: string) {
+  window.requestAnimationFrame(() => {
+    const target = document.getElementById(id)
+    target?.focus({ preventScroll: true })
+    target?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+      block: "start",
+    })
+  })
+}
+
+function SelectedCardsTray({
+  lang,
+  cards,
+  onRemove,
+  onClear,
+  onCalculate,
+}: {
+  lang: Language
+  cards: CardItem[]
+  onRemove: (cardId: number) => void
+  onClear: () => void
+  onCalculate: () => void
+}) {
+  return (
+    <Surface
+      as="aside"
+      variant="outline"
+      aria-label={t(lang, "selectedCards")}
+      className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] left-1/2 z-40 w-[min(48rem,calc(100%-2rem))] -translate-x-1/2 overflow-hidden bg-card/95 shadow-[var(--elev-overlay)] backdrop-blur md:bottom-5"
+    >
+      <div className="flex items-center gap-1.5 p-2 sm:gap-2">
+        <div className="flex shrink-0 items-center gap-2">
+          <span className="flex size-8 items-center justify-center rounded-full bg-primary/15 text-label tabular-nums text-primary">
+            {cards.length}
+          </span>
+          <span className="hidden text-label sm:inline">{t(lang, "selectedCards")}</span>
+        </div>
+
+        <span aria-hidden className="mx-0.5 h-9 w-px shrink-0 bg-hair" />
+
+        <div className="no-sb flex min-w-0 flex-1 gap-1.5 overflow-x-auto py-0.5">
+          {cards.map((card) => {
+            const name = getCardName(lang, card as never)
+            return (
+              <button
+                key={card.id}
+                type="button"
+                aria-label={`${t(lang, "remove")} ${name}`}
+                onClick={() => onRemove(card.id)}
+                className="group/thumb ease-chrome relative w-9 shrink-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <span className="relative block aspect-[63/88] w-full overflow-hidden rounded-md border border-hair bg-muted">
+                  {card.imageUrl ? (
+                    <Image
+                      src={card.imageUrl}
+                      alt=""
+                      fill
+                      className="object-contain"
+                      sizes="36px"
+                    />
+                  ) : (
+                    <span className="flex size-full items-center justify-center">
+                      <Package className="size-3.5 text-muted-foreground/30" />
+                    </span>
+                  )}
+                </span>
+                <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-foreground text-background shadow-[var(--elev-raised)] group-hover/thumb:bg-destructive group-hover/thumb:text-destructive-foreground">
+                  <X className="size-2.5" />
+                </span>
+              </button>
+            )
+          })}
+        </div>
+
+        <Button
+          onClick={onClear}
+          variant="ghost"
+          size="icon-xs"
+          aria-label={t(lang, "clearAll")}
+          title={t(lang, "clearAll")}
+        >
+          <Trash2 className="size-3.5" />
+        </Button>
+        <Button onClick={onCalculate} className="px-3 sm:min-w-32">
+          <Calculator className="size-4" />
+          {t(lang, "calculate")}
+        </Button>
+      </div>
+    </Surface>
+  )
+}
 
 export default function DropCalculatorClient() {
   const lang = useUIStore((s) => s.language)
@@ -41,24 +222,17 @@ export default function DropCalculatorClient() {
   const [cardSearch, setCardSearch] = useState("")
   const [rarityFilter, setRarityFilter] = useState<string[]>([])
   const [variantFilter, setVariantFilter] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<"cards" | "results">("cards")
-
-  useEffect(() => {
-    let cancelled = false
-    void apiTry(apiGet<{ sets?: SetListItem[] }>("/api/drop-calculator"))
-      .then((d) => { if (!cancelled) setSets(d?.sets ?? []) })
-      .finally(() => { if (!cancelled) setSetsLoading(false) })
-    return () => { cancelled = true }
-  }, [])
+  const [activeView, setActiveView] = useState<"selection" | "results">("selection")
 
   const loadSet = useCallback(async (code: string) => {
     setSelectedCode(code)
+    setDetail(null)
     setWantList(new Set())
     setCardSearch("")
     setRarityFilter([])
     setVariantFilter(null)
-    setActiveTab("cards")
-    if (!code) { setDetail(null); return }
+    setActiveView("selection")
+    if (!code) return
     setLoading(true)
     try {
       const data = await apiTry(apiGet<SetDetail>(`/api/drop-calculator?set=${code}`))
@@ -68,6 +242,20 @@ export default function DropCalculatorClient() {
     }
   }, [])
 
+  useEffect(() => {
+    let cancelled = false
+    void apiTry(apiGet<{ sets?: SetListItem[] }>("/api/drop-calculator"))
+      .then(async (d) => {
+        if (cancelled) return
+        const nextSets = d?.sets ?? []
+        setSets(nextSets)
+        const defaultCode = getDefaultDropSetCode(nextSets)
+        if (defaultCode) await loadSet(defaultCode)
+      })
+      .finally(() => { if (!cancelled) setSetsLoading(false) })
+    return () => { cancelled = true }
+  }, [loadSet])
+
   const toggleWant = useCallback((cardId: number) => {
     setWantList((prev) => {
       const next = new Set(prev)
@@ -76,6 +264,32 @@ export default function DropCalculatorClient() {
       return next
     })
   }, [])
+
+  const showSelection = useCallback(() => {
+    setActiveView("selection")
+    focusCalculatorSection("drop-calculator-selection")
+  }, [])
+
+  const showResults = useCallback(() => {
+    if (wantList.size === 0) return
+    setActiveView("results")
+    focusCalculatorSection("drop-calculator-results")
+  }, [wantList.size])
+
+  const clearWantList = useCallback(() => {
+    setWantList(new Set())
+    setActiveView("selection")
+    focusCalculatorSection("drop-calculator-selection")
+  }, [])
+
+  const removeResultCard = useCallback((cardId: number) => {
+    const removingLastCard = wantList.size === 1 && wantList.has(cardId)
+    toggleWant(cardId)
+    if (removingLastCard) {
+      setActiveView("selection")
+      focusCalculatorSection("drop-calculator-selection")
+    }
+  }, [toggleWant, wantList])
 
   const dropRateMap = useMemo(() => {
     if (!detail) return new Map<string, DropRate>()
@@ -199,145 +413,75 @@ export default function DropCalculatorClient() {
     return msrp * PACKS_PER_BOX * BOXES_PER_CARTON * quantity
   }, [detail, unit, quantity])
 
-  const selectCardsLabel = t(lang, "selectWantedCards")
-  const resultsLabel = t(lang, "viewResults")
-
-  const showEmpty = !selectedCode
-  const showLoading = !!selectedCode && loading
+  const wizardStep: WizardStep = activeView === "results" ? 3 : selectedCode ? 2 : 1
+  const showLoading = setsLoading || loading
+  const noSets = !setsLoading && sets.length === 0
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title={t(lang, "dropCalculator")}
-        description={t(lang, "dropCalculatorDesc")}
-        icon={Calculator}
-        actions={
-          selectedCode ? (
-            <SetPicker
-              sets={sets}
-              selectedCode={selectedCode || null}
-              loading={setsLoading}
-              onSelect={(code) => void loadSet(code ?? "")}
-            />
-          ) : undefined
-        }
-      />
+    <div className="space-y-5 pt-3 sm:space-y-6 sm:pt-5">
+      <div className="border-b border-hair pb-5 sm:pb-6">
+        <PageHeader
+          title={t(lang, "dropCalculator")}
+          size="sm"
+          className="mb-4 sm:mb-5"
+        >
+          <p className="mt-1 hidden text-meta sm:block">
+            {t(lang, "dropCalculatorDesc")}
+          </p>
+        </PageHeader>
+        <DropCalculatorWizard lang={lang} currentStep={wizardStep} />
+      </div>
 
-      {showEmpty && (
-        <Surface variant="panel" className="flex flex-col items-center justify-center gap-4 px-6 py-12 text-center sm:py-16">
-          <div className="flex size-14 items-center justify-center rounded-full bg-primary/10">
-            <Package className="size-6 text-primary" />
+      {showLoading && !noSets && (
+        <div className="lg:flex lg:gap-8">
+          <aside className="hidden w-52 shrink-0 space-y-5 lg:block">
+            <Skeleton className="h-5 w-32" />
+            <Skeleton className="h-10 w-full rounded-lg" />
+            <Skeleton className="h-5 w-24" />
+            <div className="space-y-2">
+              {Array.from({ length: 5 }, (_, index) => (
+                <Skeleton key={index} className="h-9 w-full rounded-md" />
+              ))}
+            </div>
+          </aside>
+          <div className="min-w-0 flex-1">
+            <div className="mb-5 space-y-3 lg:hidden">
+              <Skeleton className="h-10 w-full rounded-lg" />
+              <Skeleton className="h-10 w-full rounded-lg" />
+            </div>
+            <div className="grid grid-cols-3 gap-x-2.5 gap-y-4 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+              {Array.from({ length: 12 }, (_, index) => (
+                <div key={index} className="min-w-0 space-y-2">
+                  <Skeleton className="aspect-[63/88] w-full rounded-lg" />
+                  <Skeleton className="h-4 w-4/5" />
+                  <Skeleton className="h-3.5 w-2/5" />
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="space-y-1">
-            <p className="text-h4">{t(lang, "selectSet")}</p>
-            <p className="mx-auto max-w-md text-meta">{t(lang, "dropCalculatorEmptyHint")}</p>
-          </div>
-          <SetPicker
-            sets={sets}
-            selectedCode={selectedCode || null}
-            loading={setsLoading}
-            onSelect={(code) => void loadSet(code ?? "")}
-            variant="cta"
-          />
-        </Surface>
-      )}
-
-      {showLoading && (
-        <div className="space-y-3">
-          <Skeleton className="h-14 w-full rounded-lg" />
-          <Skeleton className="h-64 w-full rounded-lg shadow-[var(--panel-shadow)]" />
         </div>
       )}
 
-      {!showEmpty && !showLoading && detail && (
+      {noSets && (
+        <Surface variant="subtle" className="px-4 py-8 text-center">
+          <p className="text-meta">{t(lang, "noSetsFound")}</p>
+        </Surface>
+      )}
+
+      {!showLoading && !noSets && detail && (
         <>
-          {/* Mobile: tabs */}
-          <div className="lg:hidden">
-            <div className="flex rounded-lg border border-transparent dark:border-hair bg-muted/40 p-0.5">
-              <button
-                onClick={() => setActiveTab("cards")}
-                className={cn(
-                  "ease-chrome flex h-10 flex-1 items-center justify-center gap-2 rounded-lg text-label",
-                  activeTab === "cards"
-                    ? "bg-background text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <LayoutGrid className="size-4" />
-                {selectCardsLabel}
-              </button>
-              <button
-                onClick={() => setActiveTab("results")}
-                className={cn(
-                  "ease-chrome flex h-10 flex-1 items-center justify-center gap-2 rounded-lg text-label",
-                  activeTab === "results"
-                    ? "bg-background text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <ListChecks className="size-4" />
-                {resultsLabel}
-                {wantCards.length > 0 && (
-                  <span className="flex size-5 items-center justify-center rounded-full bg-primary text-micro text-primary-foreground">
-                    {wantCards.length}
-                  </span>
-                )}
-              </button>
-            </div>
-
-            <div className="mt-4">
-              {activeTab === "cards" && (
-                <>
-                  <CardPicker
-                    cards={filteredCards}
-                    uniqueRarities={uniqueRarities}
-                    wantSet={wantList}
-                    wantCount={wantCards.length}
-                    cardSearch={cardSearch}
-                    rarityFilter={rarityFilter}
-                    variantFilter={variantFilter}
-                    onToggleWant={toggleWant}
-                    onSearchChange={setCardSearch}
-                    onRarityChange={setRarityFilter}
-                    onVariantChange={setVariantFilter}
-                  />
-                  <p className="mt-3 flex items-center gap-1.5 text-meta text-muted-foreground/60">
-                    <AlertTriangle className="size-3 shrink-0" />
-                    {t(lang, "communityEstimate")}
-                  </p>
-                </>
-              )}
-              {activeTab === "results" && (
-                <Surface variant="panel" className="space-y-4 p-4">
-                  <PurchaseConfig
-                    unit={unit}
-                    quantity={quantity}
-                    dropRates={detail.dropRates}
-                    onUnitChange={setUnit}
-                    onQuantityChange={setQuantity}
-                  />
-                  <div className="border-t border-hair pt-4">
-                    <WantList
-                      wantCards={wantCards}
-                      wantResults={wantResults}
-                      allChance={allChance}
-                      totalWantValue={totalWantValue}
-                      purchaseCost={purchaseCost}
-                      unit={unit}
-                      quantity={quantity}
-                      onRemove={toggleWant}
-                      onClearAll={() => setWantList(new Set())}
-                    />
-                  </div>
-                </Surface>
-              )}
-            </div>
-          </div>
-
-          {/* Desktop: two-column layout */}
-          <div className="hidden lg:grid lg:grid-cols-[1fr_360px] lg:items-start lg:gap-6 xl:grid-cols-[1fr_320px]">
-            <div className="min-w-0">
+          {activeView === "selection" ? (
+            <div
+              id="drop-calculator-selection"
+              tabIndex={-1}
+              className={wantCards.length > 0
+                ? "scroll-mt-20 pb-40 outline-none sm:scroll-mt-24 md:pb-24"
+                : "scroll-mt-20 outline-none sm:scroll-mt-24"}
+            >
               <CardPicker
+                sets={sets}
+                selectedCode={selectedCode}
+                setsLoading={setsLoading}
                 cards={filteredCards}
                 uniqueRarities={uniqueRarities}
                 wantSet={wantList}
@@ -349,36 +493,76 @@ export default function DropCalculatorClient() {
                 onSearchChange={setCardSearch}
                 onRarityChange={setRarityFilter}
                 onVariantChange={setVariantFilter}
+                onSetChange={(code) => void loadSet(code)}
               />
               <p className="mt-3 flex items-center gap-1.5 text-meta text-muted-foreground/60">
                 <AlertTriangle className="size-3 shrink-0" />
                 {t(lang, "communityEstimate")}
               </p>
             </div>
-
-            <Surface as="aside" variant="panel" className="space-y-4 p-4">
-              <PurchaseConfig
-                unit={unit}
-                quantity={quantity}
-                dropRates={detail.dropRates}
-                onUnitChange={setUnit}
-                onQuantityChange={setQuantity}
+          ) : (
+            <div
+              id="drop-calculator-results"
+              tabIndex={-1}
+              className="scroll-mt-20 outline-none sm:scroll-mt-24"
+            >
+              <SectionHead
+                title={t(lang, "viewResults")}
+                action={(
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={showSelection}
+                    aria-label={`${t(lang, "edit")} ${t(lang, "selectedCards")}`}
+                  >
+                  <ChevronLeft className="size-4" />
+                    {t(lang, "edit")}
+                  </Button>
+                )}
               />
-              <div className="border-t border-hair pt-4">
-                <WantList
-                  wantCards={wantCards}
-                  wantResults={wantResults}
-                  allChance={allChance}
-                  totalWantValue={totalWantValue}
-                  purchaseCost={purchaseCost}
-                  unit={unit}
-                  quantity={quantity}
-                  onRemove={toggleWant}
-                  onClearAll={() => setWantList(new Set())}
-                />
+
+              <div className="grid items-start gap-4 lg:grid-cols-[18rem_minmax(0,1fr)]">
+                <Surface variant="panel" className="order-1 p-4 sm:p-5 lg:order-2">
+                  <WantList
+                    wantCards={wantCards}
+                    wantResults={wantResults}
+                    allChance={allChance}
+                    totalWantValue={totalWantValue}
+                    purchaseCost={purchaseCost}
+                    unit={unit}
+                    quantity={quantity}
+                    onRemove={removeResultCard}
+                    onClearAll={clearWantList}
+                  />
+                </Surface>
+                <Surface variant="panel" className="order-2 p-4 sm:p-5 lg:order-1">
+                  <PurchaseConfig
+                    unit={unit}
+                    quantity={quantity}
+                    dropRates={detail.dropRates}
+                    onUnitChange={setUnit}
+                    onQuantityChange={setQuantity}
+                  />
+                </Surface>
               </div>
-            </Surface>
-          </div>
+
+              <p className="mt-4 flex items-center gap-1.5 text-meta text-muted-foreground/60">
+                <AlertTriangle className="size-3 shrink-0" />
+                {t(lang, "communityEstimate")}
+              </p>
+
+            </div>
+          )}
+
+          {activeView === "selection" && wantCards.length > 0 && (
+            <SelectedCardsTray
+              lang={lang}
+              cards={wantCards}
+              onRemove={toggleWant}
+              onClear={clearWantList}
+              onCalculate={showResults}
+            />
+          )}
         </>
       )}
     </div>

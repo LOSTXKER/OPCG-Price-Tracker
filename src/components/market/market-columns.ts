@@ -1,7 +1,5 @@
-import { Shield, type LucideIcon } from "lucide-react"
-
-import type { TranslationKey } from "@/lib/i18n"
-import type { ColumnId, PriceMode } from "@/components/home/market-types"
+import { t, type Language, type TranslationKey } from "@/lib/i18n"
+import type { ColumnId } from "@/components/home/market-types"
 
 /**
  * Column model for the shared market table. The home and /search pages render
@@ -12,8 +10,8 @@ import type { ColumnId, PriceMode } from "@/components/home/market-types"
  *
  * Responsive policy (AGENTS.md): nothing critical below `sm` (the whole table is
  * replaced by the mobile list `<sm`); `md:` adds Set + 7d/Views; `lg:` adds the
- * sparkline (the "optional polish" column — momentum still lives in the 24h/7d
- * pills, so the trend line is never the only signal).
+ * 30-day sparkline (the "optional polish" column — momentum still lives in the
+ * 24h/7d pills, so the trend line is never the only signal).
  */
 export type MarketColumnKey =
   | "star"
@@ -41,6 +39,22 @@ export interface MarketColumn {
   labelKey?: TranslationKey
 }
 
+/** One label contract for Home, Search and market-like tables such as Watchlist. */
+export function getMarketColumnLabel(
+  column: { key: string; labelKey?: TranslationKey },
+  lang: Language,
+) {
+  return column.key === "change24h"
+    ? "24h"
+    : column.key === "change7d"
+      ? "7d"
+      : column.key === "change30d"
+        ? "30d"
+        : column.labelKey
+          ? t(lang, column.labelKey)
+          : column.key
+}
+
 export function buildMarketColumns({ showViews }: { showViews: boolean }): MarketColumn[] {
   const cols: MarketColumn[] = [
     { key: "star", col: "w-8", cell: "" },
@@ -61,33 +75,13 @@ export function buildMarketColumns({ showViews }: { showViews: boolean }): Marke
     )
   }
 
-  // 7-day trend chart — last column (CMC/Coinbase). Shares `lg:` with 30d; both
-  // fit the wide desktop container.
-  cols.push({ key: "sparkline", col: "hidden w-[96px] lg:table-column", cell: "hidden lg:table-cell", align: "right" })
+  // Raw 30-day trend chart — last column (CMC/Coinbase). Shares `lg:` with the
+  // 30d delta; both fit the wide desktop container.
+  cols.push({ key: "sparkline", col: "hidden w-[96px] lg:table-column", cell: "hidden lg:table-cell", align: "right", labelKey: "sparkline30d" })
   return cols
 }
 
-/**
- * Extensible grade/price tiers for the price-mode control. Design-first: only
- * `real: true` tiers (the scraped data — Raw = Yuyutei JPY, PSA 10 = SNKRDUNK
- * USD) surface today. PSA 9 / PSA 8 / BGS are MODELED estimates (see
- * card-detail/grades.ts) and must NOT appear as plain numbers in a scannable
- * table — when a real per-grade series lands, add them here with `real: false`
- * and the row will mark them "est" and blank their deltas (the gate is `real`).
- */
-export interface MarketGradeTier {
-  key: string
-  label: string
-  mode: PriceMode
-  real: boolean
-  icon?: LucideIcon
-}
-
-export const MARKET_GRADE_TIERS: MarketGradeTier[] = [
-  { key: "raw", label: "Raw", mode: "raw", real: true },
-  { key: "psa_10", label: "PSA 10", mode: "psa10", real: true, icon: Shield },
-  // Future (modeled — gate behind `real` + an "est" marker before surfacing):
-  // { key: "psa_9",  label: "PSA 9",   mode: "psa10", real: false },
-  // { key: "psa_8",  label: "PSA 8",   mode: "psa10", real: false },
-  // { key: "bgs_95", label: "BGS 9.5", mode: "psa10", real: false },
-]
+/** @deprecated Import the shared registry from `@/lib/pricing/grade-tiers`. */
+export { GRADE_TIERS as MARKET_GRADE_TIERS } from "@/lib/pricing/grade-tiers"
+/** @deprecated Import `GradeTier` from `@/lib/pricing/grade-tiers`. */
+export type { GradeTier as MarketGradeTier } from "@/lib/pricing/grade-tiers"

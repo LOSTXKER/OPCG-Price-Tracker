@@ -4,12 +4,11 @@ import { useMemo, useState } from "react";
 
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
-import { AdSlot } from "@/components/ads/ad-slot";
 import { PageHeader } from "@/components/layout/page-header";
 import { SectionHead } from "@/components/shared/section-head";
 import { EmptyState } from "@/components/shared/empty-state";
 import { SetPosterTile } from "@/components/sets/set-poster-tile";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 
 export type SetWithCard = {
   id: number;
@@ -35,6 +34,46 @@ const TYPE_LABEL: Record<string, string> = {
 };
 
 const ALL_TYPES = "ALL";
+
+export type SetTypeFilterOption = {
+  value: string;
+  label: string;
+  count: number;
+};
+
+export function SetTypeFilter({
+  options,
+  value,
+  onChange,
+  ariaLabel,
+}: {
+  options: SetTypeFilterOption[];
+  value: string;
+  onChange: (value: string) => void;
+  ariaLabel: string;
+}) {
+  return (
+    <div className="no-sb -mx-5 overflow-x-auto px-5 sm:mx-0 sm:px-0">
+      <SegmentedControl
+        options={options.map((option) => ({
+          value: option.value,
+          label: option.label,
+          badge: (
+            <span className="rounded-full bg-background/70 px-1.5 text-micro tabular-nums text-current opacity-70">
+              {option.count}
+            </span>
+          ),
+        }))}
+        value={value}
+        onChange={onChange}
+        ariaLabel={ariaLabel}
+        size="sm"
+        compactVisual
+        className="w-max shrink-0"
+      />
+    </div>
+  );
+}
 
 // ─── Header ──────────────────────────────────────────────────────────
 
@@ -98,37 +137,14 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
 
   return (
     <>
-      {/* Type filter — horizontal scrollable tab bar. Static (not sticky): it
-          scrolls away with the page instead of floating over the grid. */}
-      <div className="no-sb -mx-5 flex items-center gap-1 overflow-x-auto border-b border-hair px-5 sm:mx-0 sm:px-0">
-        {filterOptions.map((opt) => {
-          const active = activeType === opt.value;
-          return (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => setActiveType(opt.value)}
-              aria-pressed={active}
-              className={cn(
-                "ease-chrome relative -mb-px shrink-0 border-b-2 px-2.5 py-2.5 text-xs font-semibold transition-colors",
-                active
-                  ? "border-primary text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {opt.label}
-              <span
-                className={cn(
-                  "ml-1.5 tabular-nums",
-                  active ? "text-primary/60" : "text-muted-foreground/60"
-                )}
-              >
-                {opt.count}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+      {/* Type filter — canonical single-choice rail. Static (not sticky): it
+          scrolls away with the page and remains horizontally scrollable. */}
+      <SetTypeFilter
+        options={filterOptions}
+        value={activeType}
+        onChange={setActiveType}
+        ariaLabel={`${t(lang, "filter")} ${t(lang, "setsTitle")}`}
+      />
 
       {visibleTypes.length === 0 ? (
         <EmptyState variant="plain" title={t(lang, "noCardsFound")} />
@@ -158,10 +174,6 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
                     />
                   ))}
                 </div>
-
-                {idx === 0 && (
-                  <AdSlot placement="browse-in-feed" className="mt-6 py-2.5" />
-                )}
               </section>
             );
           })}

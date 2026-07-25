@@ -28,6 +28,10 @@ import {
   PAGE_SIZE,
 } from "@/components/home/market-types"
 import { useSparklines } from "@/hooks/use-sparklines"
+import {
+  isRawGrade,
+  type GradeKey,
+} from "@/lib/pricing/grade-tiers"
 
 /**
  * Owns all of /search's query state and data fetching: the debounced URL-driven
@@ -52,11 +56,13 @@ export function useSearch(game: string) {
   const [fetchError, setFetchError] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>("table")
   const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d")
+  const [grade, setGrade] = useState<GradeKey>("raw")
   const [filters, setFilters] = useState<SearchFilters>(createEmptySearchFilters)
   const [facets, setFacets] = useState<CardSearchFacets | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const fetchAbortRef = useRef<AbortController | null>(null)
   const sortRef = useRef(sort)
+  const gradeRef = useRef<GradeKey>(grade)
   const filtersRef = useRef(filters)
   const facetsRef = useRef<CardSearchFacets | null>(null)
 
@@ -81,6 +87,7 @@ export function useSearch(game: string) {
       pg: number,
       activeFilters: SearchFilters,
       includeFacets = facetsRef.current === null,
+      selectedGrade = gradeRef.current,
     ) => {
       fetchAbortRef.current?.abort()
       if (!q.trim()) {
@@ -108,6 +115,7 @@ export function useSearch(game: string) {
               game: game === ALL_GAMES ? undefined : game,
               ...serializedFilters,
               includeFacets,
+              grade: isRawGrade(selectedGrade) ? undefined : selectedGrade,
             },
             { signal: controller.signal },
           )
@@ -173,7 +181,15 @@ export function useSearch(game: string) {
   }
 
   const handleSortChange = (newSort: SortKey) => {
+    const column = parseSortColumn(newSort).col
+    if (
+      !isRawGrade(gradeRef.current) &&
+      (column === "price" || (column && column.startsWith("change")))
+    ) {
+      return
+    }
     setSort(newSort)
+    sortRef.current = newSort
     setPage(1)
     fetchResults(query, newSort, 1, filtersRef.current)
   }
@@ -221,6 +237,29 @@ export function useSearch(game: string) {
     inputRef.current?.focus()
   }
 
+  const handleGradeChange = (nextGrade: GradeKey) => {
+    gradeRef.current = nextGrade
+    setGrade(nextGrade)
+    setPage(1)
+
+    let nextFilters = filtersRef.current
+    let nextSort = sortRef.current
+    if (!isRawGrade(nextGrade)) {
+      // Price ranges and price/change sorting are currently backed by Raw
+      // scalar columns. Never carry those constraints into a graded lens.
+      nextFilters = { ...nextFilters, minPrice: "", maxPrice: "" }
+      const column = parseSortColumn(nextSort).col
+      if (column === "price" || (column && column.startsWith("change"))) {
+        nextSort = "newest"
+      }
+    }
+
+    replaceFilters(nextFilters)
+    sortRef.current = nextSort
+    setSort(nextSort)
+    fetchResults(query, nextSort, 1, nextFilters, false, nextGrade)
+  }
+
   const { col: sortCol, dir: sortDir } = parseSortColumn(sort)
   const modalFilterCount = countSearchModalFilters(filters)
   const activeFilterCount = countAllSearchFilters(filters)
@@ -241,6 +280,7 @@ export function useSearch(game: string) {
     setViewMode,
     changePeriod,
     setChangePeriod,
+    grade,
     filters,
     facets,
     inputRef,
@@ -257,6 +297,7 @@ export function useSearch(game: string) {
     handleMultiFilterToggle,
     handleVariantChange,
     handlePriceChange,
+    handleGradeChange,
     resetModalFilters,
     refetch,
     clearFilters,

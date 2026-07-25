@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { Price } from "@/components/shared/price-inline";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -60,12 +61,12 @@ export function StepCardSelect({
 
       {/* Central card picker (owns its own search + filter + list). Inline wizard
           step → showHeader={false} (the step already has its own heading above,
-          and DialogTitle can't render outside a Dialog). Bounded-height flex-col
-          so the list's flex-1 overflow-y-auto scrolls internally instead of
-          pushing the Next button off-screen. */}
+          and DialogTitle can't render outside a Dialog). Leave enough viewport
+          height for the compact context controls plus useful results on short phones;
+          the page itself can still scroll to the selected preview and Next. */}
       <div
         className="flex flex-col overflow-hidden rounded-lg border border-hair"
-        style={{ height: "min(28rem, 60dvh)" }}
+        style={{ height: "min(34rem, calc(100dvh - 8rem))" }}
       >
         <CardPickerForm onSelect={handlePick} showHeader={false} />
       </div>
@@ -80,6 +81,7 @@ export function StepCardSelect({
                   alt={selected.nameEn ?? selected.nameJp}
                   fill
                   className="object-contain"
+                  sizes="96px"
                 />
               ) : (
                 <span className="flex size-full items-center justify-center text-meta">
@@ -101,12 +103,12 @@ export function StepCardSelect({
               </div>
               {selected.latestPriceJpy != null && (
                 <p className="text-sm">
-                  {t(lang, "mktSelectMarketPrice")} <span className="font-semibold">¥{selected.latestPriceJpy.toLocaleString()}</span>
-                  {selected.latestPriceThb != null && (
-                    <span className="text-muted-foreground">
-                      {" "}(~฿{selected.latestPriceThb.toLocaleString()})
-                    </span>
-                  )}
+                  {t(lang, "mktSelectMarketPrice")}{" "}
+                  <Price
+                    jpy={selected.latestPriceJpy}
+                    thb={selected.latestPriceThb}
+                    className="font-semibold"
+                  />
                 </p>
               )}
             </div>

@@ -101,6 +101,11 @@ export const FEATURE_SECTIONS: FeatureSection[] = [
         values: tierValues((l) => l.csvExport),
       },
       {
+        key: "adFree",
+        labelKey: "featAdFree",
+        values: tierValues((l) => l.adFree),
+      },
+      {
         key: "honeyMultiplier",
         labelKey: "featHoneyMultiplier",
         values: tierValues((l) => `${l.honeyMultiplier}x`),

@@ -8,9 +8,9 @@ import { t } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
 import { formatCount } from "@/lib/utils/currency";
 import { getSet, getSetDetailData, getOtherSets } from "@/lib/data/set-detail";
-import { SetHero } from "@/components/sets/set-hero";
-import { SetDetailContent } from "@/components/sets/set-detail-content";
+import { SetDetailView } from "@/components/sets/set-detail-view";
 import { OtherSets } from "@/components/sets/other-sets";
+import { AdPageContentReady } from "@/components/ads/ad-audience-provider";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +46,7 @@ export default async function SetDetailPage(props: {
 
   return (
     <>
+      {data.cardCount > 0 && <AdPageContentReady />}
       <JsonLd
         data={breadcrumbJsonLd([
           { name: t(lang, "home"), href: "/" },
@@ -66,29 +67,31 @@ export default async function SetDetailPage(props: {
               { label: set.code.toUpperCase() },
             ]}
           />
-          <SetHero
-            lang={lang}
-            code={set.code}
-            name={data.setName}
-            type={data.setType}
-            releaseDate={set.releaseDate}
-            boxImage={data.boxImage}
-            cardCount={data.cardCount}
-            topCard={data.topCard}
-            rarityGroups={data.rarityGroups}
-            packsPerBox={set.packsPerBox}
-            cardsPerPack={set.cardsPerPack}
-            hasDropRates={set.dropRates.length > 0}
+          <SetDetailView
+            hero={{
+              lang,
+              code: set.code,
+              name: data.setName,
+              type: data.setType,
+              releaseDate: set.releaseDate,
+              boxImage: data.boxImage,
+              cardCount: data.cardCount,
+              packsPerBox: set.packsPerBox,
+              cardsPerPack: set.cardsPerPack,
+              hasDropRates: set.dropRates.length > 0,
+            }}
+            groups={data.rarityGroups}
+            totalCards={data.cardCount}
           />
         </div>
 
-        <SetDetailContent groups={data.rarityGroups} totalCards={data.cardCount} />
-
-        <OtherSets
-          sets={otherSets}
-          title={t(lang, "otherSets")}
-          viewAllLabel={t(lang, "viewAll")}
-        />
+        {otherSets.length > 0 && (
+          <OtherSets
+            sets={otherSets}
+            title={t(lang, "otherSets")}
+            viewAllLabel={t(lang, "viewAll")}
+          />
+        )}
       </div>
     </>
   );

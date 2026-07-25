@@ -1,35 +1,47 @@
 import { prisma } from "./_db";
+import {
+  getAllGameConfigs,
+  isGameDataReady,
+} from "../src/lib/game-config";
+import { DEFAULT_GAME } from "../src/lib/game/constants";
 
 async function main() {
-  const opcg = await prisma.game.upsert({
-    where: { slug: "opcg" },
-    update: {},
-    create: {
-      slug: "opcg",
-      name: "ONE PIECE CARD GAME",
-      nameEn: "One Piece Card Game",
-      isActive: true,
-    },
-  });
-  console.log(`Game created/found: ${opcg.name} (id: ${opcg.id})`);
+  const gamesBySlug = new Map<string, { id: number; name: string }>();
+
+  for (const config of getAllGameConfigs()) {
+    // Game.isActive mirrors the data plane only. Public catalog activation still
+    // requires status + data + routes through isGameLaunchReady().
+    const dataReady = isGameDataReady(config);
+    const game = await prisma.game.upsert({
+      where: { slug: config.slug },
+      update: {
+        name: config.name,
+        nameEn: config.nameEn,
+        isActive: dataReady,
+      },
+      create: {
+        slug: config.slug,
+        name: config.name,
+        nameEn: config.nameEn,
+        isActive: dataReady,
+      },
+    });
+    gamesBySlug.set(config.slug, game);
+    console.log(
+      `Game synced: ${game.name} (id: ${game.id}, data: ${dataReady ? "ready" : "stub"})`,
+    );
+  }
+
+  const defaultGame = gamesBySlug.get(DEFAULT_GAME);
+  if (!defaultGame) {
+    throw new Error(`Default game "${DEFAULT_GAME}" is missing from the game registry`);
+  }
 
   const result = await prisma.cardSet.updateMany({
     where: { gameId: null },
-    data: { gameId: opcg.id },
+    data: { gameId: defaultGame.id },
   });
-  console.log(`Linked ${result.count} sets to OPCG game`);
-
-  const pokemon = await prisma.game.upsert({
-    where: { slug: "pokemon" },
-    update: {},
-    create: {
-      slug: "pokemon",
-      name: "ポケモンカードゲーム",
-      nameEn: "Pokemon TCG",
-      isActive: false,
-    },
-  });
-  console.log(`Game placeholder created: ${pokemon.nameEn} (id: ${pokemon.id}, inactive)`);
+  console.log(`Linked ${result.count} orphaned sets to ${defaultGame.name}`);
 }
 
 main()

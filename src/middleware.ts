@@ -3,7 +3,6 @@ import { updateSession } from "@/lib/supabase/middleware";
 import { isAuthBypassed } from "@/lib/env";
 import {
   ALL_GAMES,
-  DEFAULT_GAME,
   GAME_AGNOSTIC_FEATURES,
   GAME_COOKIE,
   GAME_COOKIE_MAX_AGE,
@@ -11,6 +10,7 @@ import {
   isActiveGamePrefix,
   isGameNamespaceRoute,
   isGameScopedSegment,
+  resolveActiveGamePrefix,
 } from "@/lib/game/constants";
 
 const GAME_COOKIE_OPTS = {
@@ -53,9 +53,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Only active games + real game-owned segments may rewrite. `/all` is valid
-  // solely for aggregate search, and registered `comingSoon` games do not own
-  // catalog routes yet.
+  // Only launch-ready games + real game-owned segments may rewrite. `/all` is
+  // valid solely for aggregate search; roadmap games do not own catalog routes.
   if (isGameNamespaceRoute(seg1, gameSegment)) {
     const game = seg1;
     const url = request.nextUrl.clone();
@@ -80,7 +79,7 @@ export async function middleware(request: NextRequest) {
   // redirected request hits the rewrite branch above (no loop).
   if (isGameScopedSegment(seg1)) {
     const cookieGame = request.cookies.get(GAME_COOKIE)?.value;
-    const game = isActiveGamePrefix(cookieGame) ? cookieGame : DEFAULT_GAME;
+    const game = resolveActiveGamePrefix(cookieGame);
     const url = request.nextUrl.clone();
     url.pathname = `/${game}${pathname}`;
     return NextResponse.redirect(url);

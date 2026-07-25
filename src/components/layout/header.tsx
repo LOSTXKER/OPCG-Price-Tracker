@@ -117,8 +117,8 @@ export function Header() {
             <Image
               src="/meecard.png"
               alt="Meecard"
-              width={32}
-              height={29}
+              width={754}
+              height={694}
               className="h-auto shrink-0 select-none"
               style={{ width: 28, height: "auto" }}
             />

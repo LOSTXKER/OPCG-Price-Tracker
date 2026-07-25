@@ -69,6 +69,7 @@ export default async function CardOG(props: {
           {card.imageUrl ? (
             <img
               src={card.imageUrl}
+              alt={displayName}
               width={300}
               height={420}
               style={{ borderRadius: 12, objectFit: "cover" }}

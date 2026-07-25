@@ -24,6 +24,8 @@ const VISIBILITY_OPTIONS = [
   { value: "private", labelKey: "visibilityPrivate" as const, descKey: "visibilityPrivateDesc" as const, icon: Lock },
 ] as const;
 
+type ProfileVisibility = (typeof VISIBILITY_OPTIONS)[number]["value"];
+
 const SECTION_TOGGLES = [
   { field: "showCollection" as const, labelKey: "showCollection" as const, descKey: "showCollectionDesc" as const, icon: Layers },
   { field: "showListings" as const, labelKey: "showListings" as const, descKey: "showListingsDesc" as const, icon: ShoppingBag },
@@ -49,7 +51,9 @@ type AccountPrivacySectionProps = {
 };
 
 export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPrivacySectionProps) {
-  const [profileVisibility, setProfileVisibility] = useState(user.profileVisibility ?? "public");
+  const [profileVisibility, setProfileVisibility] = useState<ProfileVisibility>(
+    user.profileVisibility === "private" ? "private" : "public",
+  );
   const [sectionFlags, setSectionFlags] = useState({
     showCollection: user.showCollection ?? true,
     showListings: user.showListings ?? true,
@@ -89,6 +93,10 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
   );
 
   const activeVisibility = VISIBILITY_OPTIONS.find((o) => o.value === profileVisibility);
+  const selectVisibility = (value: ProfileVisibility) => {
+    setProfileVisibility(value);
+    void patchPrivacy("profileVisibility", value);
+  };
 
   return (
     <div id="privacy" className="space-y-5 scroll-mt-24">
@@ -105,18 +113,53 @@ export function AccountPrivacySection({ user, lang, onUserUpdate }: AccountPriva
           subtitle={t(lang, "privacyVisibilitySubtitle")}
           feedback={<PrivacyFeedback field="profileVisibility" errorField={errorField} savedField={savedField} lang={lang} />}
         />
-        <div className="grid gap-2 px-5 pb-5 sm:grid-cols-2">
-          {VISIBILITY_OPTIONS.map(({ value, labelKey, descKey, icon: Icon }) => {
+        <div
+          role="radiogroup"
+          aria-label={t(lang, "privacyVisibilityTitle")}
+          className="grid gap-2 px-5 pb-5 sm:grid-cols-2"
+        >
+          {VISIBILITY_OPTIONS.map(({ value, labelKey, descKey, icon: Icon }, index) => {
             const active = profileVisibility === value;
             return (
               <button
                 key={value}
                 type="button"
-                onClick={() => {
-                  setProfileVisibility(value);
-                  void patchPrivacy("profileVisibility", value);
+                role="radio"
+                aria-checked={active}
+                tabIndex={active ? 0 : -1}
+                data-visibility={value}
+                onClick={() => selectVisibility(value)}
+                onKeyDown={(event) => {
+                  if (
+                    event.key !== "ArrowLeft" &&
+                    event.key !== "ArrowRight" &&
+                    event.key !== "ArrowUp" &&
+                    event.key !== "ArrowDown" &&
+                    event.key !== "Home" &&
+                    event.key !== "End"
+                  ) {
+                    return;
+                  }
+
+                  event.preventDefault();
+                  const movingBackward =
+                    event.key === "ArrowLeft" || event.key === "ArrowUp";
+                  const nextIndex =
+                    event.key === "Home"
+                      ? 0
+                      : event.key === "End"
+                        ? VISIBILITY_OPTIONS.length - 1
+                        : (index + (movingBackward ? -1 : 1) + VISIBILITY_OPTIONS.length) %
+                          VISIBILITY_OPTIONS.length;
+                  const nextValue = VISIBILITY_OPTIONS[nextIndex]?.value;
+                  if (!nextValue) return;
+
+                  const nextButton = event.currentTarget.parentElement?.querySelector<HTMLButtonElement>(
+                    `[data-visibility="${nextValue}"]`,
+                  );
+                  selectVisibility(nextValue);
+                  nextButton?.focus();
                 }}
-                aria-pressed={active}
                 className={cn(
                   "group flex items-start gap-3 rounded-xl border px-4 py-3 text-left transition-all",
                   active
