@@ -4,27 +4,37 @@ import { type ReactNode } from "react"
 import Image from "next/image"
 import {
   Check,
-  ChevronDown,
+  CircleAlert,
+  Gamepad2,
   Loader2,
   Package,
   Search,
   X,
 } from "lucide-react"
 
+import { EmptyState } from "@/components/shared/empty-state"
 import {
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { ListRow } from "@/components/ui/list-row"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { FilterModal } from "@/components/shared/filter-modal"
 import { SetPicker } from "@/components/shared/set-picker"
-import { SegmentedControl, type SegmentedOption } from "@/components/ui/segmented-control"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
-import { FilterButton } from "@/components/ui/toolbar"
+import { FilterButton, ToolbarSearch } from "@/components/ui/toolbar"
 import { cn } from "@/lib/utils"
 import { RARITY_HEX } from "@/lib/constants/rarities"
 import { getCardTypeLabel, getColorOptions } from "@/lib/constants/card-config"
-import { getActiveGameConfigs, getAllGameConfigs, getGameConfig } from "@/lib/game-config"
+import { getActiveGameConfigs, getGameConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
 import { t, type Language } from "@/lib/i18n"
 import { type CardWithSet, type SetInfo } from "./add-card-types"
@@ -198,6 +208,8 @@ export function SelectStep({
   query,
   setQuery,
   loading,
+  loadError = false,
+  onRetry,
   displayCards,
   showEmpty,
   isFiltered,
@@ -227,14 +239,16 @@ export function SelectStep({
   query: string
   setQuery: (q: string) => void
   loading: boolean
+  loadError?: boolean
+  onRetry?: () => void
   displayCards: CardWithSet[]
   showEmpty: boolean
   isFiltered: boolean
   /** Optional: when provided (CardPickerForm always wires this), scopes the
-   *  picker to one game and renders a game-select chip row above the search
-   *  ("เลือกเกมก่อน" — the picker has no "ทุกเกม" option, unlike the MINE
-   *  rail). Hosts that drive SelectStep directly without game wiring render
-   *  unchanged and fall back to the visitor's global `currentGame`. */
+   *  picker to one game and keeps that context before set/search. A single
+   *  launch-ready game is shown as fixed context; 2+ games render a Select.
+   *  Hosts that drive SelectStep directly without game wiring fall back to the
+   *  visitor's global `currentGame`. */
   activeGame?: string
   onGameChange?: (game: string) => void
   sets: SetInfo[]
@@ -291,27 +305,14 @@ export function SelectStep({
     { code: "parallel", label: t(lang, "parallel") },
   ]
 
-  // Game FIRST (เบส: เลือกเกมก่อน) — live games are selectable, comingSoon
-  // games render as disabled teaser chips. No "ทุกเกม" option here: the
-  // picker is always scoped to exactly one game, unlike the MINE rail.
-  const gameOptions: SegmentedOption<string>[] = [
-    ...getActiveGameConfigs().map((g) => ({
-      value: g.slug,
-      label: g.filterName ?? g.shortName ?? g.nameEn,
-    })),
-    ...getAllGameConfigs()
-      .filter((g) => g.comingSoon)
-      .map((g) => ({
-        value: g.slug,
-        label: g.filterName ?? g.shortName ?? g.nameEn,
-        disabled: true,
-        badge: (
-          <span className="whitespace-nowrap rounded-full bg-muted px-1.5 py-0.5 text-micro text-muted-foreground">
-            {t(lang, "comingSoon")}
-          </span>
-        ),
-      })),
-  ]
+  // The picker is scoped to exactly one launch-ready game. Keep that game context
+  // visible before set/card selection even while only one catalog is available.
+  // Roadmap games never enter getActiveGameConfigs().
+  const gameOptions = getActiveGameConfigs().map((g) => ({
+    value: g.slug,
+    label: g.filterName ?? g.shortName ?? g.nameEn,
+  }))
+  const activeGameOption = gameOptions.find((game) => game.value === activeGame)
 
   // Count only the modal's own facets (set has its own control up top now).
   const modalFilterCount = [
@@ -342,13 +343,16 @@ export function SelectStep({
   const list = (
     <>
       {!isFiltered && (
-        <p className="px-4 pt-2 pb-1 text-meta text-muted-foreground/60">
-          {t(lang, "highestValue")}
-        </p>
+        <div className="border-b border-hair bg-muted/20 px-5 py-2">
+          <p className="text-label text-muted-foreground">
+            {t(lang, "highestValue")}
+          </p>
+        </div>
       )}
 
       {loading && displayCards.length === 0 ? (
-        <div className="space-y-0.5 px-2 pt-1">
+        <div className="space-y-0.5 px-2 pt-1" role="status" aria-live="polite">
+          <span className="sr-only">{t(lang, "loading")}</span>
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3 rounded-lg px-3 py-2.5">
               <Skeleton className="size-10 shrink-0 rounded-sm" />
@@ -359,6 +363,22 @@ export function SelectStep({
             </div>
           ))}
         </div>
+      ) : loadError ? (
+        <EmptyState
+          icon={CircleAlert}
+          variant="error"
+          size="sm"
+          title={t(lang, "loadFailed")}
+          description={t(lang, "loadCardsFailedDesc")}
+          className="mx-4 my-3"
+          action={
+            onRetry ? (
+              <Button type="button" variant="outline" size="sm" onClick={onRetry}>
+                {t(lang, "retry")}
+              </Button>
+            ) : undefined
+          }
+        />
       ) : showEmpty ? (
         <div className="flex h-40 flex-col items-center justify-center gap-1.5">
           <Search className="size-7 text-muted-foreground/15" />
@@ -366,71 +386,84 @@ export function SelectStep({
           <p className="text-meta text-muted-foreground/60">{t(lang, "noCardsFoundDesc")}</p>
         </div>
       ) : (
-        <div className="space-y-0.5 px-2 pb-3 pt-1">
-          {displayCards.map((card) => (
-            <button
-              key={card.id}
-              type="button"
-              onClick={() => onSelectCard(card)}
-              className={cn(
-                "ease-chrome flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-muted/70",
-                isSelected?.(card) && "bg-primary/5"
-              )}
-            >
-              <div className="relative aspect-[63/88] w-10 shrink-0 overflow-hidden rounded-sm bg-muted/50">
-                {card.imageUrl ? (
-                  <Image
-                    src={card.imageUrl}
-                    alt={card.nameEn ?? card.nameJp}
-                    fill
-                    className="object-contain"
-                    sizes="40px"
-                  />
-                ) : (
-                  <div className="flex size-full items-center justify-center">
-                    <Package className="size-4 text-muted-foreground/30" />
-                  </div>
+        <div
+          data-slot="card-picker-results-list"
+          className="divide-y divide-hair pb-3"
+        >
+          {displayCards.map((card) => {
+            const selectedState = Boolean(isSelected?.(card))
+            const cardName = card.nameEn ?? card.nameJp
+
+            return (
+              <ListRow
+                key={card.id}
+                onClick={() => onSelectCard(card)}
+                ariaLabel={`${cardName} ${card.cardCode}`}
+                ariaPressed={isSelected ? selectedState : undefined}
+                className={cn(
+                  "min-h-0 px-5 py-2",
+                  selectedState && "bg-primary/5",
                 )}
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">
-                  {card.nameEn ?? card.nameJp}
-                </p>
-                <div className="mt-0.5 flex items-center gap-1.5">
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {card.cardCode}
-                  </span>
-                  {card.rarity && <RarityBadge rarity={card.rarity} size="sm" />}
-                </div>
-              </div>
-
-              {/* Trailing affordance tells you what a tap does: a checkbox on
-                  select-then-confirm surfaces (isSelected passed), a chevron on
-                  surfaces that advance to a next step (portfolio/alerts). No price
-                  here — picking a card is about identity, not value. */}
-              {isSelected ? (
-                <span
-                  className={cn(
-                    "ease-chrome flex size-5 shrink-0 items-center justify-center rounded-full border",
-                    isSelected(card)
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border"
-                  )}
-                >
-                  {isSelected(card) && <Check className="size-3" strokeWidth={3} />}
-                </span>
-              ) : (
-                <ChevronDown className="size-4 shrink-0 -rotate-90 text-muted-foreground/30" />
-              )}
-            </button>
-          ))}
+                leading={
+                  <div className="relative aspect-[63/88] w-10 overflow-hidden rounded-sm bg-muted/50">
+                    {card.imageUrl ? (
+                      <Image
+                        src={card.imageUrl}
+                        alt={cardName}
+                        fill
+                        className="object-contain"
+                        sizes="40px"
+                      />
+                    ) : (
+                      <div className="flex size-full items-center justify-center">
+                        <Package className="size-4 text-muted-foreground/30" />
+                      </div>
+                    )}
+                  </div>
+                }
+                title={cardName}
+                subtitle={
+                  <>
+                    <span className="text-code text-muted-foreground">
+                      {card.cardCode}
+                    </span>
+                    {card.rarity && (
+                      <RarityBadge rarity={card.rarity} size="sm" />
+                    )}
+                  </>
+                }
+                trailing={
+                  isSelected ? (
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "ease-chrome flex size-6 items-center justify-center rounded-full border",
+                        selectedState
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border bg-background",
+                      )}
+                    >
+                      {selectedState && (
+                        <Check className="size-3.5" strokeWidth={3} />
+                      )}
+                    </span>
+                  ) : undefined
+                }
+                chevron={!isSelected}
+              />
+            )
+          })}
         </div>
       )}
 
       {loading && displayCards.length > 0 && (
-        <div className="flex items-center justify-center py-3">
+        <div
+          className="flex items-center justify-center py-3"
+          role="status"
+          aria-live="polite"
+        >
           <Loader2 className="size-4 animate-spin text-muted-foreground" />
+          <span className="sr-only">{t(lang, "loading")}</span>
         </div>
       )}
     </>
@@ -439,72 +472,131 @@ export function SelectStep({
   return (
     <div className="relative flex min-h-0 flex-1 flex-col">
       {showHeader && (
-        <DialogHeader className="border-b border-hair px-5 pt-4 pb-3">
-          <DialogTitle>{t(lang, "addCardToPortfolio")}</DialogTitle>
+        <DialogHeader className="border-b border-hair px-5 py-4">
+          <DialogTitle className="text-h4">
+            {t(lang, "addCardToPortfolio")}
+          </DialogTitle>
+          <DialogDescription className="mt-1 text-meta">
+            {t(lang, "cardPickerDescription")}
+          </DialogDescription>
         </DialogHeader>
       )}
 
-      {/* Game FIRST (เบส: เลือกเกมก่อน), then set (เบส: ผู้ใช้เลือกชุดก่อน), then
-          search + filter. Rarity/colour/type live in the filter modal. */}
-      <div className="space-y-2 border-b border-hair px-4 pt-3 pb-3">
-        {activeGame != null && onGameChange && gameOptions.length > 0 && (
-          <SegmentedControl
-            ariaLabel={t(lang, "filterByGame")}
-            options={gameOptions}
-            value={activeGame}
-            onChange={onGameChange}
-            variant="pill"
-            size="sm"
-          />
-        )}
-        <SetPicker
-          sets={sets.map((s) => ({ ...s, cardCount: s._count.cards }))}
-          selectedCode={activeSet}
-          onSelect={selectSetCode}
-          variant="inline"
-          nullable
-          prominent
-          triggerClassName="tap-safe h-10 sm:h-9"
-        />
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/50" />
-            <input
+      {/* Compact browse controls: game context + set, then search + facets.
+          Rarity/colour/type live in the filter modal. Only launch-ready games
+          enter the game control. */}
+      <div className="border-b border-hair bg-muted/15 px-4 py-3 sm:px-5 sm:py-4">
+        <div
+          data-slot="card-picker-context-controls"
+          className="grid gap-2 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.4fr)]"
+        >
+          {activeGame != null && onGameChange && gameOptions.length > 0 && (
+            <div data-slot="card-picker-game-control" className="min-w-0">
+              {gameOptions.length === 1 ? (
+                /* Read-only context: same shell + same leading mark as the set
+                   trigger beside it (เบส: ไอคอนชุดกับเกมต้องตรงกัน) — only the
+                   soft fill and the missing chevron say "ไม่ต้องกด". */
+                <div
+                  data-slot="card-picker-game-static"
+                  className="flex h-11 items-center gap-2 rounded-lg border border-hair bg-muted/45 px-2.5 text-sm sm:h-10"
+                >
+                  <span className="flex size-6 shrink-0 items-center justify-center rounded-sm bg-muted">
+                    <Gamepad2
+                      aria-hidden
+                      className="size-3.5 text-muted-foreground/60"
+                    />
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-foreground">
+                    {activeGameOption?.label}
+                  </span>
+                </div>
+              ) : (
+                <Select
+                  value={activeGame}
+                  onValueChange={(value) => {
+                    if (value) onGameChange(value)
+                  }}
+                >
+                  <SelectTrigger
+                    aria-label={t(lang, "chooseGame")}
+                    className="h-11 w-full border-hair bg-background px-2.5 text-sm sm:h-10"
+                  >
+                    <span
+                      data-slot="select-value"
+                      className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                    >
+                      <span className="flex size-6 shrink-0 items-center justify-center rounded-sm bg-muted">
+                        <Gamepad2
+                          aria-hidden
+                          className="size-3.5 text-muted-foreground/60"
+                        />
+                      </span>
+                      <span className="truncate text-foreground">
+                        {activeGameOption?.label}
+                      </span>
+                    </span>
+                  </SelectTrigger>
+                  <SelectContent
+                    align="start"
+                    alignItemWithTrigger={false}
+                    sideOffset={6}
+                  >
+                    {gameOptions.map((game) => (
+                      <SelectItem key={game.value} value={game.value}>
+                        <Gamepad2
+                          aria-hidden
+                          className="size-3.5 text-muted-foreground/60"
+                        />
+                        <span>{game.label}</span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+          )}
+
+          <div data-slot="card-picker-set-control" className="min-w-0">
+            <SetPicker
+              sets={sets.map((s) => ({ ...s, cardCount: s._count.cards }))}
+              selectedCode={activeSet}
+              onSelect={selectSetCode}
+              variant="inline"
+              nullable
+              triggerClassName="h-11 border-hair bg-background sm:h-10"
+            />
+          </div>
+        </div>
+
+        <div data-slot="card-picker-search-control" className="mt-2 min-w-0">
+          <div className="flex items-center gap-2">
+            <ToolbarSearch
               type="search"
+              value={query}
+              onValueChange={setQuery}
               placeholder={t(lang, "searchLong")}
               aria-label={t(lang, "searchLong")}
-              className="h-11 w-full rounded-lg border border-hair bg-muted/30 pl-9 pr-8 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary/40 focus:bg-background focus:ring-1 focus:ring-primary/20 md:h-9"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
               autoComplete="off"
               autoFocus
+              clearLabel={t(lang, "clearAll")}
+              containerClassName="h-11 flex-1 border-hair bg-background sm:h-10 dark:bg-background"
+              className="w-full"
             />
-            {query && (
-              <button
-                type="button"
-                aria-label={t(lang, "clearAll")}
-                onClick={() => setQuery("")}
-                className="tap-safe absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-foreground"
-              >
-                <X className="size-3.5" />
-              </button>
-            )}
-          </div>
 
-          {/* Opens the filter modal (centered on desktop, full-screen on mobile).
-              Badge counts only the modal's facets — set has its own control above. */}
-          <FilterButton
-            count={modalFilterCount}
-            active={showFilters || modalFilterCount > 0}
-            onClick={() => setShowFilters(!showFilters)}
-            aria-label={t(lang, "filter")}
-            aria-haspopup="dialog"
-            aria-expanded={showFilters}
-            iconOnly
-            className="shrink-0"
-          >
-            <span className="hidden sm:inline">{t(lang, "filter")}</span>
-          </FilterButton>
+            {/* Opens the filter modal (centered on desktop, full-screen on mobile).
+                Badge counts only the modal's facets — set has its own control above. */}
+            <FilterButton
+              count={modalFilterCount}
+              active={showFilters || modalFilterCount > 0}
+              onClick={() => setShowFilters(!showFilters)}
+              aria-label={t(lang, "filter")}
+              aria-haspopup="dialog"
+              aria-expanded={showFilters}
+              appearance="outline"
+              iconOnly
+              className="h-11 shrink-0 sm:h-10"
+            />
+          </div>
         </div>
       </div>
 
@@ -558,6 +650,7 @@ export function SelectStep({
       <FilterModal
         open={showFilters}
         onOpenChange={setShowFilters}
+        blurBackdrop
         onReset={() => {
           setActiveRarity(null)
           setActiveColor(null)

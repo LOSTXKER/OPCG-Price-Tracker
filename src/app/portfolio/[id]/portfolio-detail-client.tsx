@@ -2,32 +2,42 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import dynamic from "next/dynamic"
 import { Eye, EyeOff, Plus, Share2 } from "lucide-react"
+import { toast } from "sonner"
 
 import { EmptyState } from "@/components/shared/empty-state"
 import { AuthPreviewGate } from "@/components/shared/login-gate"
+import { Breadcrumb } from "@/components/shared/breadcrumb"
+import {
+  getLimitPresentation,
+  LimitCounter,
+} from "@/components/shared/limit-counter"
+import { PageHeader } from "@/components/layout/page-header"
 import { useAuthState } from "@/hooks/use-auth-state"
-import { PortfolioSwitcher } from "@/components/portfolio/portfolio-switcher"
-import { PortfolioHero } from "@/components/portfolio/portfolio-hero"
-import { PortfolioHeroPanel } from "@/components/portfolio/portfolio-hero-panel"
-import { PortfolioAllocationPanel } from "@/components/portfolio/portfolio-allocation-panel"
-import { PortfolioMovers } from "@/components/portfolio/portfolio-movers"
+import {
+  getPortfolioCountLabel,
+  PortfolioSwitcher,
+} from "@/components/portfolio/portfolio-switcher"
+import { PortfolioSidebar } from "@/components/portfolio/portfolio-selector"
+import { PortfolioSummary } from "@/components/portfolio/portfolio-hero-panel"
+import { PortfolioInsights } from "@/components/portfolio/portfolio-insights"
 import { PortfolioGameChips } from "@/components/portfolio/portfolio-game-chips"
-import { PortfolioGameBreakdown } from "@/components/portfolio/portfolio-game-breakdown"
 import { PortfolioAssetsTable } from "@/components/portfolio/portfolio-assets-table"
 import { PortfolioDetailSkeleton } from "@/components/portfolio/portfolio-detail-skeleton"
 import { PortfolioShareDialog } from "@/components/portfolio/portfolio-share-dialog"
 import { AddCardDialog } from "@/components/portfolio/add-card-dialog"
+import { PortfolioCreateDialog } from "@/components/portfolio/portfolio-create-dialog"
+import { getPortfolioCreateCopy } from "@/components/portfolio/portfolio-create-copy"
 import { Button } from "@/components/ui/button"
 import { IconButton } from "@/components/ui/icon-button"
-import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Surface } from "@/components/ui/surface"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { useGameFilterReset } from "@/hooks/use-game-filter"
+import { DEFAULT_CARD_CONDITION } from "@/lib/constants/ui"
 import { ALL_GAMES, DEFAULT_GAME } from "@/lib/game/constants"
-import { getGameConfig } from "@/lib/game-config"
+import { getGameConfig, isGameSlugLaunchReady } from "@/lib/game-config"
 import {
   clearLastActivePortfolioId,
   setLastActivePortfolioId,
@@ -36,19 +46,7 @@ import { usePortfolioApi } from "@/hooks/use-portfolio-api"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
 import { PortfolioMockPreview } from "../portfolio-mock-preview"
 import type { CartItem } from "@/components/portfolio/add-card-types"
-import type { HistoryPoint } from "@/lib/types/portfolio"
 import { getPortfolioIdAfterDelete } from "./portfolio-navigation"
-
-const PortfolioScrubChart = dynamic(
-  () =>
-    import("@/components/portfolio/portfolio-scrub-chart").then(
-      (m) => m.PortfolioScrubChart,
-    ),
-  {
-    ssr: false,
-    loading: () => <div className="h-44 animate-pulse rounded-xl bg-muted sm:h-56" />,
-  },
-)
 
 type PortfolioTab = "overview" | "insights"
 
@@ -61,33 +59,62 @@ export default function PortfolioDetailClient({
 }) {
   const { authed, error: authError, retry: retryAuth } = useAuthState()
   const lang = useUIStore((s) => s.language)
+  const pageHeader = (
+    <PageHeader
+      title={t(lang, "portfolioNav")}
+      description={t(lang, "portfolioPageDesc")}
+      breadcrumb={
+        <Breadcrumb
+          items={[
+            { label: t(lang, "home"), href: "/" },
+            { label: t(lang, "portfolioNav") },
+          ]}
+        />
+      }
+    />
+  )
 
   if (authed === null) {
     if (authError) {
       return (
-        <EmptyState
-          preset="error"
-          variant="error"
-          lang={lang}
-          action={<Button onClick={retryAuth}>{t(lang, "retry")}</Button>}
-        />
+        <>
+          {pageHeader}
+          <EmptyState
+            preset="error"
+            variant="error"
+            lang={lang}
+            action={<Button onClick={retryAuth}>{t(lang, "retry")}</Button>}
+          />
+        </>
       )
     }
-    return <PortfolioDetailSkeleton />
+    return (
+      <>
+        {pageHeader}
+        <PortfolioDetailSkeleton />
+      </>
+    )
   }
 
   if (authed === false) {
-    return <AuthPreviewGate preview={<PortfolioMockPreview lang={lang} />} />
+    return (
+      <>
+        {pageHeader}
+        <AuthPreviewGate preview={<PortfolioMockPreview lang={lang} />} />
+      </>
+    )
   }
 
   return (
-    <PortfolioDetailContent
-      portfolioId={portfolioId}
-      openAddOnLoad={openAddOnLoad}
-    />
+    <>
+      {pageHeader}
+      <PortfolioDetailContent
+        portfolioId={portfolioId}
+        openAddOnLoad={openAddOnLoad}
+      />
+    </>
   )
 }
-
 function PortfolioDetailContent({
   portfolioId,
   openAddOnLoad,
@@ -99,6 +126,7 @@ function PortfolioDetailContent({
   const router = useRouter()
   const [manualDialogOpen, setDialogOpen] = useState(false)
   const dialogOpen = openAddOnLoad || manualDialogOpen
+  const [createOpen, setCreateOpen] = useState(false)
   const addButtonRef = useRef<HTMLButtonElement>(null)
   const wasDialogOpenRef = useRef(dialogOpen)
   const [shareOpen, setShareOpen] = useState(false)
@@ -107,8 +135,6 @@ function PortfolioDetailContent({
   const setHideBalance = useUIStore((s) => s.setPortfolioBalanceHidden)
   // Overview = value + the collection · Insights = chart/by-game/movers/allocation.
   const [tab, setTab] = useState<PortfolioTab>("overview")
-  // The point under the finger while scrubbing the value chart; null when idle.
-  const [scrub, setScrub] = useState<HistoryPoint | null>(null)
   // Per-page game filter — local, session-only (never shared with watchlist/alerts).
   const [gameFilter, setGameFilter] = useState<string>(ALL_GAMES)
 
@@ -122,6 +148,7 @@ function PortfolioDetailContent({
     stats,
     allocation,
     assets,
+    allAssets,
     gameBreakdown,
     portfolioMetas,
     portfolioQuota,
@@ -131,13 +158,24 @@ function PortfolioDetailContent({
     setPortfolioVisibility,
     deletePortfolio,
     addCardsBatch,
+    resetAddCardsBatchSession,
     updateItem,
+    addLot,
+    updateLot,
+    removeLot,
     removeItem,
     reload,
   } = p
 
   const availableGames = useMemo(
-    () => gameBreakdown.filter((b) => b.count > 0).map((b) => b.game?.slug ?? DEFAULT_GAME),
+    () => [
+      ...new Set(
+        gameBreakdown
+          .filter((b) => b.count > 0)
+          .map((b) => b.game?.slug ?? DEFAULT_GAME)
+          .filter(isGameSlugLaunchReady),
+      ),
+    ],
     [gameBreakdown],
   )
   useGameFilterReset(gameFilter, availableGames, setGameFilter)
@@ -151,6 +189,7 @@ function PortfolioDetailContent({
 
   const { openUpgradeDialog } = useUpgradeDialog()
   const maxPortfolios = portfolioQuota?.portfolioCount ?? Infinity
+  const maxPortfolioCards = portfolioQuota?.portfolioCards ?? Infinity
 
   // Only remember an id after the portfolio API confirms it belongs to the
   // signed-in user. A stale or foreign route id must never become the gateway
@@ -179,8 +218,8 @@ function PortfolioDetailContent({
   )
 
   const addCardsBatchWithGate = useCallback(
-    async (cartItems: CartItem[]) => {
-      const res = await addCardsBatch(portfolioId, cartItems)
+    async (cartItems: CartItem[], requestScopeId: string) => {
+      const res = await addCardsBatch(portfolioId, cartItems, requestScopeId)
       if (res.limitReached) {
         openUpgradeDialog({ featureKey: "portfolioCards" })
       }
@@ -215,18 +254,18 @@ function PortfolioDetailContent({
   )
 
   const items = activePortfolio?.items ?? []
-
-  const activeScrub = gameFilter === ALL_GAMES ? scrub : null
-  const heroValueJpy = activeScrub ? activeScrub.value : stats.totalValueJpy
-  // Legacy snapshots do not record price/cost coverage. Scrubbing therefore
-  // changes the estimated value only; deriving historical P/L would imply a
-  // level of completeness the stored data cannot prove.
-  const heroDeltaJpy = activeScrub ? null : stats.unrealizedPnl
-  const heroDeltaPct = activeScrub ? null : stats.unrealizedPnlPercent
-  const heroHasPnl = !activeScrub && stats.performanceComplete
+  const existingHoldingQuantities = useMemo(
+    () =>
+      Object.fromEntries(
+        (activePortfolio?.items ?? [])
+          .filter((item) => item.condition === DEFAULT_CARD_CONDITION)
+          .map((item) => [item.card.id, item.quantity]),
+      ),
+    [activePortfolio?.items],
+  )
 
   if (loading || deletedActiveId === portfolioId) {
-    return <PortfolioDetailSkeleton />
+    return <PortfolioDetailSkeleton tab={tab} />
   }
 
   if (error) {
@@ -258,162 +297,266 @@ function PortfolioDetailContent({
     )
   }
 
-  const tabControl = (
-    <SegmentedControl<PortfolioTab>
-      options={[
-        { value: "overview", label: t(lang, "overviewTab") },
-        { value: "insights", label: t(lang, "insightsTab") },
-      ]}
-      value={tab}
-      onChange={setTab}
-      size="sm"
-      ariaLabel={t(lang, "portfolio")}
+  const switcher = (
+    <PortfolioSwitcher
+      portfolios={portfolioMetas}
+      activeId={activePortfolio.id}
+      onSelect={(id) => router.push(`/portfolio/${id}`)}
+      onCreate={createPortfolio}
+      onCreateRequest={() => setCreateOpen(true)}
+      onCreatedPortfolio={(id) => router.replace(`/portfolio/${id}?add=1`)}
+      onRename={renamePortfolio}
+      onSetVisibility={setPortfolioVisibility}
+      onDelete={handleDelete}
+      totalAllPortfolios={totalAllPortfolios}
+      hideBalance={hideBalance}
+      totalVisible={gameFilter === ALL_GAMES}
+      maxPortfolios={maxPortfolios}
     />
   )
 
+  const actions = (
+    <div className="flex shrink-0 items-center justify-end gap-2">
+      <IconButton
+        variant="solid"
+        onClick={() => setHideBalance(!hideBalance)}
+        aria-label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
+      >
+        {hideBalance ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+      </IconButton>
+
+      <IconButton
+        variant="solid"
+        onClick={() => setShareOpen(true)}
+        aria-label={t(lang, "sharePortfolio")}
+        disabled={items.length === 0}
+      >
+        <Share2 className="size-4" />
+      </IconButton>
+
+      {/* Label stays visible on phones too (เบส) — `size="sm"` already ships the
+          44px mobile min-height and its own padding, so no width override. */}
+      <Button
+        ref={addButtonRef}
+        onClick={() => setDialogOpen(true)}
+        size="sm"
+      >
+        <Plus className="size-4" />
+        {t(lang, "addCard")}
+      </Button>
+    </div>
+  )
+
+  const portfolioCountLabel = getPortfolioCountLabel(
+    lang,
+    portfolioMetas.length,
+    maxPortfolios,
+  )
+  const holdingsQuota = (
+    <LimitCounter
+      variant="inline"
+      label={t(lang, "portfolioHoldingsQuota")}
+      current={allAssets.length}
+      max={maxPortfolioCards}
+    />
+  )
+  const holdingsQuotaPresentation = getLimitPresentation(
+    allAssets.length,
+    maxPortfolioCards,
+  )
+  const showEmptyHoldingsQuota =
+    holdingsQuotaPresentation.isHigh || holdingsQuotaPresentation.isFull
+  // The scope row (when it renders) already opens the gap under the rail rule,
+  // so the panels take the smaller step instead of stacking two full gaps.
+  const tabPanelPadding =
+    availableGames.length > 0 ? "pt-3" : "pt-4 sm:pt-5"
+
   return (
-    <div className="space-y-4 sm:space-y-5">
-      <h1 className="sr-only">{activePortfolio.name}</h1>
+    <div data-slot="portfolio-detail">
+      <h2 className="sr-only">{activePortfolio.name}</h2>
 
-      {/* Top bar: portfolio switcher/management · tabs · page actions. */}
-      <div className="flex items-center gap-2">
-        <div className="min-w-0 flex-1">
-          <PortfolioSwitcher
-            portfolios={portfolioMetas}
-            activeId={activePortfolio.id}
-            onSelect={(id) => router.push(`/portfolio/${id}`)}
-            onCreate={createPortfolio}
-            onCreatedPortfolio={(id) => router.replace(`/portfolio/${id}?add=1`)}
-            onRename={renamePortfolio}
-            onSetVisibility={setPortfolioVisibility}
-            onDelete={handleDelete}
-            totalAllPortfolios={totalAllPortfolios}
-            hideBalance={hideBalance}
-            totalVisible={gameFilter === ALL_GAMES}
-            maxPortfolios={maxPortfolios}
-          />
-        </div>
-        {items.length > 0 && <div className="hidden min-w-0 md:block">{tabControl}</div>}
-        <div className="hidden flex-1 md:block" />
+      <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start lg:gap-6">
+        <aside
+          className="hidden lg:sticky lg:top-24 lg:block"
+          data-slot="portfolio-detail-sidebar"
+        >
+          <Surface variant="panel" padding="none" className="overflow-hidden">
+            <div className="px-4 pb-2 pt-4">
+              <p className="text-eyebrow tabular-nums">{portfolioCountLabel}</p>
+            </div>
+            <PortfolioSidebar
+              portfolios={portfolioMetas}
+              activeId={activePortfolio.id}
+              onSelect={(id) => router.push(`/portfolio/${id}`)}
+              onCreateRequest={() => setCreateOpen(true)}
+              onRename={renamePortfolio}
+              onSetVisibility={setPortfolioVisibility}
+              onDelete={handleDelete}
+              hideBalance={hideBalance}
+              maxPortfolios={maxPortfolios}
+            />
+          </Surface>
+        </aside>
 
-        <div className="flex shrink-0 items-center gap-1.5">
-          <IconButton
-            variant="solid"
-            onClick={() => setHideBalance(!hideBalance)}
-            aria-label={hideBalance ? t(lang, "showBalance") : t(lang, "hideBalance")}
-          >
-            {hideBalance ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-          </IconButton>
+        <div className="min-w-0 space-y-4 sm:space-y-5">
+          {items.length === 0 ? (
+            <>
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+                <div className="min-w-0 lg:hidden">{switcher}</div>
+                <div className="col-start-2">{actions}</div>
+              </div>
+              <EmptyState
+                preset="empty-portfolio"
+                lang={lang}
+                action={
+                  <div className="flex flex-col items-center gap-1.5">
+                    <Button
+                      onClick={() => setDialogOpen(true)}
+                      className="min-h-11 gap-1.5 md:min-h-10"
+                    >
+                      <Plus className="size-4" />
+                      {t(lang, "addCard")}
+                    </Button>
+                    {showEmptyHoldingsQuota ? holdingsQuota : null}
+                  </div>
+                }
+              />
+            </>
+          ) : (
+            <Tabs
+              value={tab}
+              onValueChange={(value) =>
+                setTab(value === "insights" ? "insights" : "overview")
+              }
+              className="gap-0"
+            >
+              <div
+                className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-0 md:border-b md:border-hair lg:grid-cols-[auto_minmax(0,1fr)]"
+                data-slot="portfolio-detail-toolbar"
+              >
+                <div className="col-start-1 row-start-1 min-w-0 lg:hidden">
+                  {switcher}
+                </div>
 
-          <IconButton
-            variant="solid"
-            onClick={() => setShareOpen(true)}
-            aria-label={t(lang, "sharePortfolio")}
-            disabled={items.length === 0}
-          >
-            <Share2 className="size-4" />
-          </IconButton>
+                {/* Tabs stay 44px tall at every width so their bottom edge is
+                    flush with the rail rule — the active indicator then covers
+                    the hairline (`-bottom-px`) instead of stacking a second line
+                    above it, and the 36px action buttons keep real clearance
+                    from the rule (เบส: เส้นขั้นวางไม่สวย). */}
+                <TabsList
+                  variant="line"
+                  aria-label={t(lang, "portfolio")}
+                  className="col-span-2 row-start-2 w-full justify-start gap-1 border-b border-hair p-0 group-data-horizontal/tabs:h-11 md:col-span-1 md:col-start-1 md:border-b-0 lg:row-start-1 lg:w-auto"
+                >
+                  <TabsTrigger
+                    value="overview"
+                    className="min-h-11 flex-none px-3.5 group-data-horizontal/tabs:after:-bottom-px"
+                  >
+                    {t(lang, "overviewTab")}
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="insights"
+                    className="min-h-11 flex-none px-3.5 group-data-horizontal/tabs:after:-bottom-px"
+                  >
+                    {t(lang, "insightsTab")}
+                  </TabsTrigger>
+                </TabsList>
 
-          <Button
-            ref={addButtonRef}
-            onClick={() => setDialogOpen(true)}
-            size="sm"
-            aria-label={t(lang, "addCard")}
-            className="gap-1.5 sm:min-h-11 md:min-h-0"
-          >
-            <Plus className="size-4" />
-            <span className="hidden sm:inline">{t(lang, "addCard")}</span>
-          </Button>
+                <div className="col-start-2 row-start-1 lg:col-start-2">
+                  {actions}
+                </div>
+              </div>
+
+              {/* Scope filter belongs to the DATA, not the tab rail: wedged
+                  between the tabs and the actions it read as a third tab
+                  (เบส: ไว้ตรงนี้ไม่ค่อยเหมาะ). One instance below the rule
+                  serves both tabs and keeps the same slot at every width. */}
+              {availableGames.length > 0 && (
+                <div
+                  className="pt-3 sm:pt-4"
+                  data-slot="portfolio-detail-game-filter"
+                >
+                  <PortfolioGameChips
+                    breakdown={gameBreakdown}
+                    activeGame={gameFilter}
+                    onSelect={setGameFilter}
+                  />
+                </div>
+              )}
+
+              <TabsContent
+                value="overview"
+                className={tabPanelPadding}
+                data-slot="portfolio-overview"
+              >
+                <div className="space-y-4 sm:space-y-5">
+                  <PortfolioSummary
+                    stats={stats}
+                    hideBalance={hideBalance}
+                    scopeLabel={scopeGameName}
+                  />
+
+                  <Surface
+                    as="section"
+                    variant="panel"
+                    padding="none"
+                    className="overflow-hidden p-4 sm:p-5"
+                    data-slot="portfolio-assets-panel"
+                  >
+                    <PortfolioAssetsTable
+                      assets={assets}
+                      onUpdate={updateItem}
+                      onAddLot={addLot}
+                      onUpdateLot={updateLot}
+                      onRemoveLot={removeLot}
+                      onRemoveItem={removeItem}
+                      hideBalance={hideBalance}
+                      showGameBadge={availableGames.length >= 2}
+                      quotaCurrent={allAssets.length}
+                      quotaMax={maxPortfolioCards}
+                    />
+                  </Surface>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="insights" className={tabPanelPadding}>
+                <PortfolioInsights
+                  history={history}
+                  assets={assets}
+                  allocation={allocation}
+                  gameBreakdown={gameBreakdown}
+                  stats={stats}
+                  scopeLabel={scopeGameName}
+                  gameFilter={gameFilter}
+                  onGameSelect={setGameFilter}
+                  hideBalance={hideBalance}
+                />
+              </TabsContent>
+            </Tabs>
+          )}
         </div>
       </div>
-
-      {/* Mobile/tablet tabs — full-width under the top bar */}
-      {items.length > 0 && <div className="md:hidden">{tabControl}</div>}
-
-      {items.length === 0 ? (
-        <EmptyState
-          preset="empty-portfolio"
-          lang={lang}
-          action={
-            <Button
-              onClick={() => setDialogOpen(true)}
-              className="gap-1.5 sm:min-h-11 md:min-h-0"
-            >
-              <Plus className="size-4" />
-              {t(lang, "addCard")}
-            </Button>
-          }
-        />
-      ) : tab === "overview" ? (
-        <>
-          {/* OVERVIEW — one hero card (value + P/L · Cost · Best · Worst),
-              game chips, then the collection immediately. */}
-          <PortfolioHeroPanel
-            stats={stats}
-            hideBalance={hideBalance}
-            scopeLabel={scopeGameName}
-          />
-          <PortfolioGameChips
-            breakdown={gameBreakdown}
-            activeGame={gameFilter}
-            onSelect={setGameFilter}
-          />
-          <PortfolioAssetsTable
-            assets={assets}
-            onUpdate={updateItem}
-            onRemove={removeItem}
-            hideBalance={hideBalance}
-            showGameBadge={availableGames.length >= 2}
-          />
-        </>
-      ) : (
-        <>
-          {/* INSIGHTS — history (scrub-bound value) → by-game → movers → allocation */}
-          <Surface variant="panel" className="space-y-3 p-4 sm:p-5">
-            <PortfolioHero
-              valueJpy={heroValueJpy}
-              deltaJpy={heroDeltaJpy}
-              deltaPct={heroDeltaPct}
-              hasPnl={heroHasPnl}
-              valueAvailable={activeScrub != null || stats.valuedCopyCount > 0}
-              valuationComplete={activeScrub ? false : stats.valuationComplete}
-              live={!!activeScrub}
-              hideBalance={hideBalance}
-              scopeLabel={scopeGameName}
-            />
-            {gameFilter === ALL_GAMES ? (
-              <PortfolioScrubChart data={history} onScrub={setScrub} hideBalance={hideBalance} />
-            ) : (
-              // No per-game history yet (snapshots are whole-portfolio) — one
-              // honest line instead of a faked curve.
-              <p className="text-meta text-muted-foreground/70">{t(lang, "chartAllGamesOnly")}</p>
-            )}
-          </Surface>
-
-          {gameFilter === ALL_GAMES && (
-            <PortfolioGameBreakdown
-              breakdown={gameBreakdown}
-              totalValueJpy={stats.totalValueJpy}
-              onSelect={setGameFilter}
-              hideBalance={hideBalance}
-            />
-          )}
-
-          <Surface variant="panel" className="p-4 sm:p-5">
-            <PortfolioMovers assets={assets} hideBalance={hideBalance} />
-          </Surface>
-
-          {stats.valuationComplete && (
-            <PortfolioAllocationPanel allocation={allocation} hideBalance={hideBalance} />
-          )}
-        </>
-      )}
 
       <AddCardDialog
         open={dialogOpen}
         onOpenChange={handleAddDialogOpenChange}
         onAddBatch={addCardsBatchWithGate}
+        onEndSession={resetAddCardsBatchSession}
         portfolioName={activePortfolio.name}
+        existingHoldingQuantities={existingHoldingQuantities}
+      />
+
+      <PortfolioCreateDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onCreate={createPortfolio}
+        onCreated={(result, input) => {
+          toast.success(t(lang, "portfolioCreated"), { description: input.name })
+          router.replace(`/portfolio/${result.data.id}?add=1`)
+        }}
+        title={t(lang, "createPortfolioTitle")}
+        description={t(lang, "createPortfolioDesc")}
+        copy={getPortfolioCreateCopy(lang, t(lang, "createAndAddCards"))}
       />
 
       <PortfolioShareDialog

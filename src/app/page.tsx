@@ -6,7 +6,7 @@ import {
 import { HomeMarketOverview } from "@/components/home/home-market-overview";
 import { HomeSearchHero } from "@/components/home/home-search-hero";
 import { HomeSeoContent } from "@/components/home/home-seo-content";
-import { AdSlot } from "@/components/ads/ad-slot";
+import { AdPageContentReady } from "@/components/ads/ad-audience-provider";
 import { getHomeData, mapCardToTrending } from "@/lib/data/home";
 import { CARD_TYPES } from "@/lib/constants/card-config";
 import { getGameConfig } from "@/lib/game-config";
@@ -85,13 +85,18 @@ export default async function HomePage() {
 
   return (
     <>
+      <AdPageContentReady />
+
       {/* Universal search hero — the page's focal point (VISION §5 teleport) */}
       <HomeSearchHero sets={setOptions} trending={gainers} />
 
-      {/* Highlights: Featured · Top Gainers · Top Losers. Minimal — no dividers,
-          no borders, no boxes; columns separated by whitespace alone so the page
-          reads calm and editorial rather than gridded. */}
-      <section className="mt-3 grid gap-x-8 gap-y-6 sm:mt-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Highlights: มูลค่าสูงสุด · ราคาขึ้นมากสุด · ราคาลงมากสุด. Minimal — no
+          dividers, no borders, no boxes; columns separated by whitespace alone so
+          the page reads calm and editorial rather than gridded.
+          HIDDEN ON PHONES (เบส): stacked, the three blocks pushed the market list
+          a full screen down. From `sm` up they sit side by side and cost nothing,
+          so they stay. Kept in the DOM (display:none) — no SEO loss. */}
+      <section className="mt-3 hidden gap-x-8 gap-y-6 sm:mt-4 sm:grid sm:grid-cols-2 lg:grid-cols-3">
         {featured && (
           <div className="sm:col-span-2 lg:col-span-1">
             <HomeFeaturedCard card={featured} />
@@ -100,11 +105,6 @@ export default async function HomePage() {
         <HomeMiniTable cards={gainers} type="gainers" />
         <HomeMiniTable cards={losers} type="losers" />
       </section>
-
-      {/* In-feed ad — mobile only, between highlights and the market table.
-          House ad (first-party) sizes to its compact content; no forced aspect
-          ratio so it stays a slim single nudge rather than a tall block. */}
-      <AdSlot placement="home-in-feed" className="mt-5 py-2.5 md:hidden" />
 
       {/* The market — core browse tool. Generous air above so it reads as its
           own document section, the way card-detail separates its blocks. */}

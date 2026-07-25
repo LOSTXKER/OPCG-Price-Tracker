@@ -29,12 +29,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
-import { t } from "@/lib/i18n"
+import { t, type Language } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { formatJpyAmount } from "@/lib/utils/currency"
 import { MASKED } from "@/lib/constants/ui"
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
-import { PortfolioSidebar } from "./portfolio-selector"
+import {
+  getPortfolioUpgradeTier,
+  PortfolioSidebar,
+} from "./portfolio-selector"
 import {
   PortfolioCreateDialog,
   type PortfolioCreateHandler,
@@ -59,6 +62,25 @@ interface PortfolioSwitcherProps {
   /** Hide the multi-portfolio total while the page is scoped to one game. */
   totalVisible?: boolean
   maxPortfolios?: number
+  /** Compact is the legacy toolbar trigger. Heading promotes the active
+   * portfolio into the page's visual identity while keeping the same
+   * switch/manage behavior. */
+  appearance?: "compact" | "heading"
+  /** Optional lifted create controller. The detail page uses this so the
+   * mobile switcher and permanent desktop sidebar open one shared dialog. */
+  onCreateRequest?: () => void
+}
+
+export function getPortfolioCountLabel(
+  lang: Language,
+  count: number,
+  maxPortfolios?: number,
+) {
+  return maxPortfolios != null && Number.isFinite(maxPortfolios)
+    ? t(lang, "portfolioCountOf")
+        .replace("{n}", String(count))
+        .replace("{max}", String(maxPortfolios))
+    : t(lang, "portfolioCountOnly").replace("{n}", String(count))
 }
 
 export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
@@ -69,6 +91,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
     totalAllPortfolios,
     hideBalance,
     totalVisible = true,
+    appearance = "compact",
   } = props
   const lang = useUIStore((s) => s.language)
   const currency = useUIStore((s) => s.currency)
@@ -92,15 +115,19 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
   const { openUpgradeDialog } = useUpgradeDialog()
 
   const maxPortfolios = props.maxPortfolios
-  const hasLimit = maxPortfolios != null && isFinite(maxPortfolios)
-  const atLimit = hasLimit && portfolios.length >= maxPortfolios
+  const hasLimit = maxPortfolios != null && Number.isFinite(maxPortfolios)
+  const atLimit =
+    maxPortfolios != null && hasLimit && portfolios.length >= maxPortfolios
   // "N/5 พอร์ต" for capped tiers, "N พอร์ต" for unlimited — the counter is the
   // quiet signal that more portfolios exist behind the plan.
-  const countLabel = hasLimit
-    ? t(lang, "portfolioCountOf")
-        .replace("{n}", String(portfolios.length))
-        .replace("{max}", String(maxPortfolios))
-    : t(lang, "portfolioCountOnly").replace("{n}", String(portfolios.length))
+  const countLabel = getPortfolioCountLabel(
+    lang,
+    portfolios.length,
+    maxPortfolios,
+  )
+  const compactCountLabel = `${portfolios.length}/${
+    hasLimit ? maxPortfolios : "∞"
+  }`
   const overallValueLabel = hideBalance
     ? MASKED
     : !overallValueAvailable
@@ -110,7 +137,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
     ? t(lang, activePortfolio.isPublic ? "portfolioPublic" : "portfolioPrivate")
     : null
   const switcherAccessibleLabel = activePortfolio
-    ? `${t(lang, "switchPortfolio")}: ${activePortfolio.name}, ${activePrivacyLabel}`
+    ? `${t(lang, "switchPortfolio")}: ${activePortfolio.name}, ${activePrivacyLabel}, ${countLabel}`
     : t(lang, "switchPortfolio")
 
   const getVisibleSwitcherTrigger = () =>
@@ -119,37 +146,111 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
         element != null && element.getClientRects().length > 0,
     ) ?? null
 
-  const handleCreateClick = () => {
-    if (atLimit) {
-      openUpgradeDialog({ featureKey: "portfolioCount" })
-    } else {
-      // Keep the create dialog outside the management dialog's focus trap.
-      setSheetOpen(false)
-      setCreateOpen(true)
-    }
+  const openPortfolioUpgrade = () => {
+    // Never stack the upgrade dialog over the portfolio management dialog.
+    setSheetOpen(false)
+    openUpgradeDialog({
+      featureKey: "portfolioCount",
+      requiredTier: getPortfolioUpgradeTier(maxPortfolios),
+    })
   }
 
-  const pill = (
-    <span className="flex min-w-0 items-center gap-2.5 rounded-xl border border-hair bg-card px-3 py-2 text-left ease-chrome transition-colors hover:bg-muted/70">
-      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-        <Briefcase className="size-4" />
+  const handleCreateClick = () => {
+    if (atLimit) {
+      openPortfolioUpgrade()
+      return
+    }
+    // Keep the create dialog outside the management dialog's focus trap.
+    setSheetOpen(false)
+    if (props.onCreateRequest) props.onCreateRequest()
+    else setCreateOpen(true)
+  }
+
+  const triggerContent = (
+    <span
+      className={cn(
+        "flex min-w-0 items-center text-left ease-chrome transition-colors",
+        appearance === "heading"
+          ? "gap-3 rounded-lg p-1 hover:bg-muted/40"
+          : "gap-2.5 rounded-xl border border-hair bg-card px-3 py-2 hover:bg-muted/70",
+      )}
+    >
+      <span
+        className={cn(
+          "flex shrink-0 items-center justify-center bg-primary/10 text-primary",
+          appearance === "heading" ? "size-10 rounded-xl" : "size-8 rounded-lg",
+        )}
+      >
+        <Briefcase className={appearance === "heading" ? "size-5" : "size-4"} />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block max-w-[9rem] truncate text-sm font-semibold leading-tight sm:max-w-[12rem]">
+        <span
+          className={cn(
+            "block truncate leading-tight",
+            appearance === "heading"
+              ? "max-w-[min(18rem,65vw)] text-h1 sm:max-w-[24rem]"
+              : "max-w-[9rem] text-sm font-semibold sm:max-w-[12rem]",
+          )}
+        >
           {activePortfolio?.name ?? t(lang, "portfolio")}
         </span>
         {activePortfolio && (
-          <span className="flex items-center gap-1 text-meta leading-tight">
-            {activePortfolio.isPublic ? (
-              <Globe className="size-3" aria-hidden />
-            ) : (
-              <Lock className="size-3" aria-hidden />
+          /* Compact trigger: the phone row is shared with the labelled
+             "เพิ่มการ์ด" button, so this second line only appears from `sm` up —
+             below that the trigger is one line (name + chevron) and privacy /
+             count stay in the sheet and in the button's accessible name. Without
+             this the line had no shrink escape and clipped its own chevron. */
+          <span
+            className={cn(
+              "flex min-w-0 items-center gap-1 text-meta leading-tight",
+              appearance === "heading" ? "mt-1 flex-wrap" : "hidden sm:flex",
             )}
-            {t(lang, activePortfolio.isPublic ? "portfolioPublic" : "portfolioPrivate")}
+          >
+            {activePortfolio.isPublic ? (
+              <Globe className="size-3 shrink-0" aria-hidden />
+            ) : (
+              <Lock className="size-3 shrink-0" aria-hidden />
+            )}
+            <span className="truncate">
+              {t(lang, activePortfolio.isPublic ? "portfolioPublic" : "portfolioPrivate")}
+            </span>
+            {/* On a phone the row is narrow: keep the privacy word readable and
+                drop the "1/1" counter (it is on the sidebar and in the sheet)
+                rather than truncating "สาธารณะ" to "ส..". */}
+            <span
+              aria-hidden
+              className={cn(
+                "shrink-0 text-muted-foreground/40",
+                appearance !== "heading" && "hidden sm:inline",
+              )}
+            >
+              ·
+            </span>
+            <span
+              className={cn(
+                "shrink-0 whitespace-nowrap tabular-nums",
+                appearance !== "heading" && "hidden sm:inline",
+              )}
+            >
+              {appearance === "heading" ? countLabel : compactCountLabel}
+            </span>
+            {appearance === "heading" && (
+              <>
+                <span aria-hidden className="text-muted-foreground/40">·</span>
+                <span>
+                  {activePortfolio.copyCount.toLocaleString()} {t(lang, "card")}
+                </span>
+              </>
+            )}
           </span>
         )}
       </span>
-      <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
+      <ChevronDown
+        className={cn(
+          "shrink-0 text-muted-foreground",
+          appearance === "heading" ? "size-5" : "size-4",
+        )}
+      />
     </span>
   )
 
@@ -159,13 +260,19 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
       <button
         ref={mobileTriggerRef}
         type="button"
-        className="min-w-0 md:hidden"
+        className={cn(
+          "min-w-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/40 md:hidden",
+          // w-full makes the box definite: as a shrink-to-fit inline-block it
+          // inflated to its min-content and clipped its own chevron once the
+          // labelled "เพิ่มการ์ด" button took its share of the phone row.
+          appearance === "heading" ? "max-w-full rounded-lg text-left" : "w-full",
+        )}
         onClick={() => setSheetOpen(true)}
         aria-label={switcherAccessibleLabel}
         aria-haspopup="dialog"
         aria-expanded={sheetOpen}
       >
-        {pill}
+        {triggerContent}
       </button>
 
       {/* Desktop: quick-switch dropdown */}
@@ -173,10 +280,13 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
         <DropdownMenu>
           <DropdownMenuTrigger
             ref={desktopTriggerRef}
-            className="min-w-0 outline-none"
+            className={cn(
+              "min-w-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+              appearance === "heading" && "max-w-full rounded-lg text-left",
+            )}
             aria-label={switcherAccessibleLabel}
           >
-            {pill}
+            {triggerContent}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-72">
             {/* Header — count vs plan limit (always) + all-portfolio total (multi).
@@ -186,7 +296,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
                 <span>{multi ? t(lang, "allPortfolios") : t(lang, "portfolio")}</span>
                 <span className="flex items-center gap-2">
                   {multi && totalVisible && (
-                    <span className="tabular-nums text-foreground">
+                    <span className="font-price tabular-nums text-foreground">
                       {overallValueLabel}
                     </span>
                   )}
@@ -215,7 +325,7 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
                   </span>
                   <span className="min-w-0 flex-1 truncate text-sm">{p.name}</span>
                   <span className="shrink-0 text-right">
-                    <span className="block tabular-nums text-xs">
+                    <span className="block font-price tabular-nums text-xs">
                       {hideBalance
                         ? MASKED
                         : p.valuedCopyCount === 0
@@ -228,20 +338,11 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
               )
             })}
             <DropdownMenuSeparator />
-            {/* Create — always visible so users learn more portfolios exist.
-                At the plan limit it routes to the upgrade dialog instead. */}
+            {/* Creation keeps the same affordance on every plan. At the limit,
+                only the click outcome changes to the shared upgrade dialog. */}
             <DropdownMenuItem onClick={handleCreateClick} className="gap-2.5">
-              {atLimit ? (
-                <Lock className="size-4 text-muted-foreground" />
-              ) : (
-                <Plus className="size-4 text-muted-foreground" />
-              )}
-              <span className="flex-1">{t(lang, "createPortfolio")}</span>
-              {atLimit && (
-                <span className="rounded-full bg-primary/12 px-2 py-0.5 text-micro font-semibold text-primary">
-                  PRO
-                </span>
-              )}
+              <Plus className="size-4 text-muted-foreground" aria-hidden />
+              <span>{t(lang, "createPortfolio")}</span>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setSheetOpen(true)} className="gap-2.5">
               <Settings2 className="size-4 text-muted-foreground" />
@@ -288,23 +389,26 @@ export function PortfolioSwitcher(props: PortfolioSwitcherProps) {
             onDelete={props.onDelete}
             hideBalance={hideBalance}
             maxPortfolios={props.maxPortfolios}
+            onUpgradeRequest={openPortfolioUpgrade}
           />
         </DialogContent>
       </Dialog>
 
-      <PortfolioCreateDialog
-        open={createOpen}
-        onOpenChange={setCreateOpen}
-        onCreate={props.onCreate}
-        onCreated={(result, input) => {
-          toast.success(t(lang, "portfolioCreated"), { description: input.name })
-          props.onCreatedPortfolio(result.data.id)
-        }}
-        title={t(lang, "createPortfolioTitle")}
-        description={t(lang, "createPortfolioDesc")}
-        copy={getPortfolioCreateCopy(lang, t(lang, "createAndAddCards"))}
-        finalFocus={getVisibleSwitcherTrigger}
-      />
+      {!props.onCreateRequest ? (
+        <PortfolioCreateDialog
+          open={createOpen}
+          onOpenChange={setCreateOpen}
+          onCreate={props.onCreate}
+          onCreated={(result, input) => {
+            toast.success(t(lang, "portfolioCreated"), { description: input.name })
+            props.onCreatedPortfolio(result.data.id)
+          }}
+          title={t(lang, "createPortfolioTitle")}
+          description={t(lang, "createPortfolioDesc")}
+          copy={getPortfolioCreateCopy(lang, t(lang, "createAndAddCards"))}
+          finalFocus={getVisibleSwitcherTrigger}
+        />
+      ) : null}
     </>
   )
 }

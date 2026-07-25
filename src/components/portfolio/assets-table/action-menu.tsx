@@ -1,28 +1,50 @@
 "use client"
 
-import { Pencil } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 
+import { IconButton } from "@/components/ui/icon-button"
 import { t, type Language } from "@/lib/i18n"
 
-export function AssetEditButton({
+export function AssetDetailsButton({
   lang,
-  onEdit,
+  onOpen,
+  contextLabel,
+  appearance = "solid",
 }: {
   lang: Language
-  onEdit: () => void
+  onOpen: () => void
+  contextLabel: string
+  /** `ghost` = bare chevron for the mobile list, where the whole row is already
+   *  tappable and a filled circle per row was just weight (tap area stays 44px
+   *  via `tap-safe`). */
+  appearance?: "solid" | "ghost"
 }) {
-  const label = t(lang, "edit")
-  // Ghost icon — no border chrome on every row (minimal pass); aria-label +
-  // title carry the name, hover/focus reveal the affordance.
+  const label = t(lang, "details")
+  const accessibleLabel = `${label}: ${contextLabel}`
+  const ghost = appearance === "ghost"
+
   return (
-    <button
-      type="button"
-      onClick={onEdit}
-      aria-label={label}
+    <IconButton
+      size={ghost ? "sm" : "md"}
+      variant={ghost ? "ghost" : "solid"}
+      onClick={(event) => {
+        event.stopPropagation()
+        onOpen()
+      }}
+      aria-label={accessibleLabel}
       title={label}
-      className="tap-safe inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground/50 transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+      aria-haspopup="dialog"
+      data-slot="portfolio-purchase-details"
+      className={
+        ghost
+          ? "text-muted-foreground/50 group-hover:text-foreground"
+          : "rounded-full bg-muted/40 text-muted-foreground group-hover:bg-muted group-hover:text-foreground"
+      }
     >
-      <Pencil className="size-3.5" />
-    </button>
+      <ChevronRight
+        className="size-4 transition-transform group-hover:translate-x-0.5"
+        aria-hidden
+      />
+    </IconButton>
   )
 }
