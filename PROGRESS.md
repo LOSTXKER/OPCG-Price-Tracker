@@ -89,7 +89,7 @@
 
 ## ⏭ NEXT
 
-1. **รัน prisma migrate บน DB production** ก่อน/พร้อม deploy รอบนี้ (migration ใหม่ 2 ตัวไปกับ `d7030d3` แล้ว) แล้วเช็คหน้าพอร์ตจริงหลัง deploy
+1. ~~รัน prisma migrate บน DB production~~ **ไม่ต้องรัน — DB มี migration ทั้ง 2 ตัวอยู่แล้ว** (session ก่อนรันไว้ ถึงมีสคริปต์ preflight/postflight ค้างในเวิร์กทรี): `npx prisma migrate status` → "42 migrations found … Database schema is up to date!" ที่โฮสต์ `aws-1-ap-southeast-1.pooler.supabase.com` (ตาม `DATABASE_URL` ใน `.env`) · ถ้า Vercel production ชี้ DB อีกตัว ต้องเช็กแยก · เหลือแค่ **เช็คหน้าพอร์ต/หน้าแรกมือถือบน production หลัง deploy**
 2. ค้าง (รอเบสตัดสิน): ทั้งเว็บยังมี "เครื่องหมายเกม" 3 แบบ — จุดสีใน header `GameSwitcher` · `Layers3` ใน game scope ของ MINE toolbar · `Gamepad2` ใน card picker; ถ้าจะยึด "1 concept 1 icon" ต้องเลือกอันเดียวแล้วยุบทั้ง 3 จุด (คนละไฟล์ คนละ surface — งานแยก)
 3. ค้าง (รอเบสตัดสิน): ตัวเลือกเกมในพอร์ตยังโชว์ตอนมีเกมเดียว ทั้งที่ "ทุกเกม" กับ "OPCG" ให้ผลเหมือนกัน — จะซ่อนจนมีเกมที่ 2 ก็ได้
 4. ก่อนเปิด Pokémon จริง ให้ audit/guard launch-ready card ที่ API read/write boundary แยกงาน
