@@ -33,6 +33,7 @@ import {
   type SortKey,
   CHANGE_PERIODS,
   PAGE_SIZE,
+  periodForColumn,
 } from "@/components/home/market-types"
 import { PhotoSearchButton } from "./photo-search-button"
 import {
@@ -496,6 +497,11 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
           rankOffset={(page - 1) * PAGE_SIZE}
           columns={SEARCH_COLUMNS}
           grade={grade}
+          changePeriod={
+            // Phone rows carry no period pill — the sort dropdown IS the period
+            // control here, so the % chip follows the sorted change column.
+            (sortCol ? periodForColumn(sortCol) : null) ?? changePeriod
+          }
           mobileSortAppearance="outline"
           sparklines={sparklines}
           sortCol={sortCol}
