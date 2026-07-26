@@ -8,18 +8,16 @@ import {
   ArrowRightLeft,
   BellRing,
   BookOpen,
-  Briefcase,
   ChevronRight,
   Crown,
   Globe,
   Bookmark,
-  Heart,
   LogOut,
   MessageCircle,
   Moon,
-  Package,
   Settings,
   ShoppingBag,
+  Search,
   Sparkles,
   Store,
   Sun,
@@ -191,11 +189,15 @@ export default function MoreClient() {
         <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-x-6">
           {/* ── Browse ──────────────────────────────────────────────── */}
           <GroupedSection className={SECTION_INSET} label={t(language, "browse")}>
+            {/* ค้นหา lives here because the phone header only carries the
+                magnifier off-home — this menu must never be search-less.
+                ชุดการ์ด is deliberately NOT repeated: the bottom tab bar (and the
+                desktop header) already own it. */}
             <GroupedRow
-              icon={Package}
-              iconClassName="bg-info-soft text-info"
-              title={t(language, "sets")}
-              href="/opcg/sets"
+              icon={Search}
+              iconClassName="bg-muted text-foreground"
+              title={t(language, "search")}
+              href="/opcg/search"
             />
             <GroupedRow
               icon={TrendingUp}
@@ -217,33 +219,17 @@ export default function MoreClient() {
             />
           </GroupedSection>
 
-          {/* ── Track — unified MINE surfaces (signed-in only) ─────────── */}
+          {/* ── My Account (signed-in only) ────────────────────────────── */}
           {authed && (
-            <GroupedSection className={SECTION_INSET} label={t(language, "trackGroup")}>
-              <GroupedRow
-                icon={Briefcase}
-                iconClassName="bg-primary/12 text-primary"
-                title={t(language, "portfolioNav")}
-                href="/portfolio"
-              />
-              <GroupedRow
-                icon={Heart}
-                iconClassName="bg-info-soft text-info"
-                title={t(language, "watchlistNav")}
-                href="/watchlist"
-              />
+            <GroupedSection className={SECTION_INSET} label={t(language, "myAccount")}>
+              {/* พอร์ต / รายการโปรด are tabs in the bottom nav — only the alerts
+                  lens, which has no tab of its own, needs a row here. */}
               <GroupedRow
                 icon={BellRing}
                 iconClassName="bg-warning-soft text-warning"
                 title={t(language, "managePriceAlerts")}
                 href="/watchlist?tab=alerts"
               />
-            </GroupedSection>
-          )}
-
-          {/* ── My Account (signed-in only) ────────────────────────────── */}
-          {authed && (
-            <GroupedSection className={SECTION_INSET} label={t(language, "myAccount")}>
               {marketplaceEnabled && (
                 <>
                   <GroupedRow

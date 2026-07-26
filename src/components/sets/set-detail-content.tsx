@@ -148,6 +148,26 @@ interface SetDetailContentProps {
   onGradeChange: (grade: GradeKey) => void;
 }
 
+/**
+ * How much is docked at the top right now: the global chrome (`--chrome-h`:
+ * 56px phone / 100px from `md`) plus the sticky rarity bar on the breakpoints
+ * where it renders (`offsetParent === null` while `lg:hidden` hides it).
+ * Jump-scroll and scrollspy both read this so no magic number can drift.
+ */
+function getStickyChromeHeight(): number {
+  if (typeof document === "undefined") return 0;
+  const root = document.documentElement;
+  const styles = getComputedStyle(root);
+  const rootFontSize = parseFloat(styles.fontSize) || 16;
+  const chromeRem = parseFloat(styles.getPropertyValue("--chrome-h")) || 3.5;
+  const bar = document.querySelector<HTMLElement>(
+    '[data-slot="set-rarity-nav-sticky"]',
+  );
+  const barHeight =
+    bar && bar.offsetParent !== null ? bar.getBoundingClientRect().height : 0;
+  return chromeRem * rootFontSize + barHeight;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Facet dropdown                                                     */
 /* ------------------------------------------------------------------ */
@@ -225,6 +245,7 @@ export function SetDetailContent({
   // the rarity rail is a jump-nav (เบส): click scrolls to that section.
   const [activeRarity, setActiveRarity] = useState<string>("");
   const sectionsRef = useRef<HTMLDivElement>(null);
+  const chipsRef = useRef<HTMLElement>(null);
   const lang = useUIStore((s) => s.language);
 
   const allCards = useMemo(() => groups.flatMap((g) => g.cards), [groups]);
@@ -253,15 +274,16 @@ export function SetDetailContent({
   );
 
   // Scrollspy — the rail highlights whichever rarity section is currently below
-  // the sticky header line (the last one whose top has passed ~120px).
+  // the docked chrome (the last one whose top has passed that line).
   useEffect(() => {
     const root = sectionsRef.current;
     if (!root) return;
     const onScroll = () => {
+      const line = getStickyChromeHeight() + 24;
       const sections = root.querySelectorAll<HTMLElement>("[data-rarity]");
       let current = "";
       for (const s of sections) {
-        if (s.getBoundingClientRect().top <= 150) current = s.dataset.rarity ?? "";
+        if (s.getBoundingClientRect().top <= line) current = s.dataset.rarity ?? "";
         else break;
       }
       if (!current && sections.length) current = sections[0].dataset.rarity ?? "";
@@ -271,6 +293,30 @@ export function SetDetailContent({
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [visibleGroups]);
+
+  // A set can carry a dozen rarities, so the docked chip strip keeps the section
+  // you are actually reading in view. Only the strip's own horizontal scroll
+  // moves (never `scrollIntoView`, which would yank the page vertically).
+  useEffect(() => {
+    const nav = chipsRef.current;
+    if (!nav || !activeRarity) return;
+    const chip = nav.querySelector<HTMLElement>(
+      `[data-rarity-chip="${activeRarity}"]`,
+    );
+    if (!chip) return;
+    const navRect = nav.getBoundingClientRect();
+    const chipRect = chip.getBoundingClientRect();
+    const fullyVisible =
+      chipRect.left >= navRect.left + 4 && chipRect.right <= navRect.right - 4;
+    if (fullyVisible) return;
+    nav.scrollTo({
+      left:
+        nav.scrollLeft +
+        (chipRect.left - navRect.left) -
+        (navRect.width - chipRect.width) / 2,
+      behavior: "smooth",
+    });
+  }, [activeRarity]);
 
   if (totalCards === 0) {
     return <EmptyState mascot="kuma" title={t(lang, "noCardsInSet")} />;
@@ -284,13 +330,18 @@ export function SetDetailContent({
     displayGroups.map((group) => group.cards.length),
   );
 
-  // Click a rarity → smooth-scroll its section to sit comfortably below the
-  // sticky navbar (offset = navbar height + breathing room).
+  // Click a rarity → smooth-scroll its section to sit comfortably below whatever
+  // is docked at the top (measured, not a magic 132: the top chrome is 56px on a
+  // phone and 100px from `md`, and the sticky rarity bar adds its own height on
+  // the breakpoints where it renders).
   const scrollToRarity = (rarity: string) => {
     const el = document.getElementById(`rar-${rarity}`);
     if (!el) return;
     window.scrollTo({
-      top: el.getBoundingClientRect().top + window.scrollY - 132,
+      top:
+        el.getBoundingClientRect().top +
+        window.scrollY -
+        (getStickyChromeHeight() + 16),
       behavior: "smooth",
     });
   };
@@ -330,6 +381,7 @@ export function SetDetailContent({
         type="button"
         onClick={() => scrollToRarity(rt.value)}
         aria-current={active ? "true" : undefined}
+        data-rarity-chip={variant === "chip" ? rt.value : undefined}
         className={cn(
           "ease-chrome flex items-center gap-1.5 transition-colors",
           variant === "rail"
@@ -451,7 +503,7 @@ export function SetDetailContent({
       <div ref={sectionsRef} className="min-w-0 flex-1">
         {/* MOBILE/TABLET controls (desktop uses the sidebar): filters + period
             on one wrapping row, then the rarity jump-chips. */}
-        <div className="mb-6 space-y-3 lg:hidden">
+        <div className="mb-3 lg:hidden">
           <div className="flex flex-wrap items-center gap-2">
             <GradeControl value={grade} onChange={onGradeChange} />
             {availableTypes.length > 1 && (
@@ -482,12 +534,28 @@ export function SetDetailContent({
               />
             )}
           </div>
-          <div className="no-sb -mx-5 flex items-center gap-1.5 overflow-x-auto px-5">
-            {rarityNav.map((rt) => rarityButton(rt, "chip"))}
-          </div>
         </div>
 
-        <div className="space-y-8">
+        {/* Rarity jump-nav — STICKY under the top chrome so it follows the card
+            wall on the way down (เบส), the same job the desktop sidebar rail
+            already does. It has to be a direct child of the tall sections
+            container: inside the short filters block a sticky element would
+            unstick the moment that block scrolled past. Same docking treatment
+            as the watchlist selection bar. */}
+        <div
+          data-slot="set-rarity-nav-sticky"
+          className="sticky top-[var(--chrome-h)] z-30 -mx-5 border-b border-hair bg-background/95 px-5 py-2 backdrop-blur-sm md:-mx-6 md:px-6 lg:hidden"
+        >
+          <nav
+            ref={chipsRef}
+            aria-label={t(lang, "rarity")}
+            className="no-sb flex items-center gap-1.5 overflow-x-auto"
+          >
+            {rarityNav.map((rt) => rarityButton(rt, "chip"))}
+          </nav>
+        </div>
+
+        <div className="space-y-8 pt-4 lg:pt-0">
           {displayGroups.map((g, groupIndex) => (
             <Fragment key={g.rarity}>
               {groupIndex === adHeadingGroupIndex && (

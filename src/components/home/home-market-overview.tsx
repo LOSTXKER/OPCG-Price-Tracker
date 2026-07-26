@@ -134,7 +134,6 @@ export function HomeMarketOverview({
   const selectedSets = m.filters.set ?? []
   const rawGrade = isRawGrade(m.grade)
   const columns = useMemo(() => buildMarketColumns({ showViews: m.showViews }), [m.showViews])
-  const showMobileSort = m.viewMode === "table" && (m.isPending || m.cards.length > 0)
   const showResultsAd = !m.isPending && !m.error && m.cards.length > 8
 
   // Reset clears only the modal's own facets (rarity/type/color/variant) + price
@@ -159,7 +158,9 @@ export function HomeMarketOverview({
       iconOnly={!showLabel}
       className="shrink-0"
     >
-      {showLabel && <span className="hidden md:inline">{t(lang, "filter")}</span>}
+      {/* The word is spelled out at every width (เบส) — a lone slider glyph read
+          as decoration, not as "ตัวกรอง". */}
+      {showLabel && t(lang, "filter")}
     </FilterButton>
   )
 
@@ -171,6 +172,60 @@ export function HomeMarketOverview({
     />
   )
 
+  /**
+   * The phone list's COLUMN HEADER — not a third toolbar row: period pill on the
+   * left, tap-sort labels on the right sitting over the price column, on the
+   * hairline that starts the list. It docks under the top chrome while you
+   * scroll, and it now renders for BOTH view modes — grid had no sort control at
+   * all and carried a second period pill of its own. Graded lenses keep the
+   * geometry but drop the tap-sort because their historical deltas aren't real.
+   */
+  const mobileListHeader = (m.isPending || m.cards.length > 0) && (
+    <div className="ease-chrome sticky top-[var(--chrome-h)] z-10 flex items-center justify-between gap-2 border-b border-hair bg-background/95 px-4 py-1.5 backdrop-blur-sm sm:hidden">
+      <SegmentedControl<ChangePeriod>
+        size="sm"
+        variant="pill"
+        leadingIcon={TrendingUpDown}
+        options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
+        value={m.changePeriod}
+        onChange={m.handleChangePeriod}
+        ariaLabel={t(lang, "pricePeriod")}
+        className="shrink-0"
+      />
+      {/* Column labels, not buttons-shouting: the row reads muted and the ONE
+          active sort turns dark, so the eye lands on what's sorted. */}
+      <div className="flex items-center gap-2.5 text-muted-foreground">
+        {rawGrade ? (
+          <SortableHeader<ColumnId>
+            as="button"
+            label={t(lang, "price")}
+            column="price"
+            activeCol={m.sortCol}
+            dir={m.sortDir}
+            onClick={m.handleColumnSort}
+            className="aria-pressed:text-foreground"
+          />
+        ) : (
+          <span className="text-eyebrow text-foreground">{t(lang, "price")}</span>
+        )}
+        <span aria-hidden className="h-3 w-px bg-hair" />
+        {rawGrade ? (
+          <SortableHeader<ColumnId>
+            as="button"
+            label={t(lang, "change")}
+            column={PERIOD_COLUMNS[m.changePeriod]}
+            activeCol={m.sortCol}
+            dir={m.sortDir}
+            onClick={m.handleColumnSort}
+            className="aria-pressed:text-foreground"
+          />
+        ) : (
+          <span className="text-eyebrow">{t(lang, "change")}</span>
+        )}
+      </div>
+    </div>
+  )
+
   return (
     <div className="space-y-4">
       {children}
@@ -180,86 +235,60 @@ export function HomeMarketOverview({
     <div>
       {/* Toolbar — 2 rows: scope (tabs) on top, browse + display controls below */}
       <div>
-        {/* Row 1: canonical single-choice scope rail. Its active border overlaps
-            the baseline so the compact underline treatment remains unchanged. */}
-        <HomeMarketScopeControl
-          tabs={tabs}
-          value={m.activeTab}
-          onChange={m.handleTabChange}
-          ariaLabel={t(lang, "filter")}
-        />
+        {/* Canonical single-choice scope rail. Its active border overlaps the
+            baseline so the compact underline treatment remains unchanged.
+            HIDDEN ON PHONES (เบส): "ยอดนิยม" only re-sorts to views_desc and the
+            phone row never renders a views number, so the rail spent a full 44px
+            band on a signal the user could not see. Price/change sorting is on
+            the list header below; the rail returns from `sm` up, where the views
+            column actually exists. */}
+        <div className="hidden sm:block">
+          <HomeMarketScopeControl
+            tabs={tabs}
+            value={m.activeTab}
+            onChange={m.handleTabChange}
+            ariaLabel={t(lang, "filter")}
+          />
+        </div>
 
         {/* Mobile browse controls: the set is the primary axis and owns the
             first row. Display actions stay together, while sorting gets enough
             width to keep its label readable at the narrowest supported size. */}
-        <div className="space-y-2 px-3 py-3 sm:hidden">
-          {sets.length > 0 && (
-            <SetPicker
-              sets={sets}
-              selectedCode={selectedSets[0] ?? null}
-              onSelect={(code) => m.handleFilterChange("set", code ? [code] : [])}
-              variant="inline"
-              nullable
-              prominent
-              triggerClassName="tap-safe h-10 rounded-lg border-primary/25 bg-primary/5 hover:border-primary/35 hover:bg-primary/10 aria-expanded:rounded-b-none aria-expanded:border-primary/35 aria-expanded:bg-primary/10"
-            />
-          )}
+        {/* px-4 (not px-3) so every control lines up with the list rows below —
+            the sort labels then sit exactly over the price column. */}
+        <div className="space-y-2 px-4 py-3 sm:hidden">
+          {/* Row 1: the two BROWSE decisions — which set, which facets. */}
+          <div className="flex items-center gap-2">
+            {sets.length > 0 && (
+              <div className="min-w-0 flex-1">
+                <SetPicker
+                  sets={sets}
+                  selectedCode={selectedSets[0] ?? null}
+                  onSelect={(code) => m.handleFilterChange("set", code ? [code] : [])}
+                  variant="inline"
+                  nullable
+                  prominent
+                  /* No h-10 here: it fought SetPicker's own `h-11 sm:h-9` with
+                     equal specificity, so the row height depended on stylesheet
+                     order and landed at 40px — under the 44px floor. */
+                  triggerClassName="tap-safe rounded-lg border-primary/25 bg-primary/5 hover:border-primary/35 hover:bg-primary/10 aria-expanded:rounded-b-none aria-expanded:border-primary/35 aria-expanded:bg-primary/10"
+                />
+              </div>
+            )}
 
-          <div className="flex flex-wrap items-center gap-2">
-            <GradeControl value={m.grade} onChange={m.handleGradeChange} />
-
-            <div className="ml-auto flex shrink-0 items-center gap-2">
-              {renderFilterTrigger(false)}
-              {renderViewControl()}
-            </div>
+            <div className="ml-auto shrink-0">{renderFilterTrigger(true)}</div>
           </div>
 
-          {/* Sort row — same anatomy as the watchlist mobile list header:
-              period pill left + tap-sort (price · change) right. The change
-              sort follows the pill's period; rarity sort is desktop-only
-              (the filter modal already covers rarity narrowing on mobile).
-              Graded lenses retain the row geometry but expose non-sortable
-              labels because their historical deltas are not real yet. */}
-          {showMobileSort && (
-            <div className="flex items-center justify-between gap-2 border-b border-hair pb-2">
-              <SegmentedControl<ChangePeriod>
-                size="sm"
-                variant="pill"
-                leadingIcon={TrendingUpDown}
-                options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
-                value={m.changePeriod}
-                onChange={m.handleChangePeriod}
-                ariaLabel={t(lang, "pricePeriod")}
-                className="shrink-0"
-              />
-              <div className="flex items-center gap-3">
-                {rawGrade ? (
-                  <SortableHeader<ColumnId>
-                    as="button"
-                    label={t(lang, "price")}
-                    column="price"
-                    activeCol={m.sortCol}
-                    dir={m.sortDir}
-                    onClick={m.handleColumnSort}
-                  />
-                ) : (
-                  <span className="text-eyebrow text-foreground">{t(lang, "price")}</span>
-                )}
-                {rawGrade ? (
-                  <SortableHeader<ColumnId>
-                    as="button"
-                    label={t(lang, "change")}
-                    column={PERIOD_COLUMNS[m.changePeriod]}
-                    activeCol={m.sortCol}
-                    dir={m.sortDir}
-                    onClick={m.handleColumnSort}
-                  />
-                ) : (
-                  <span className="text-eyebrow">{t(lang, "change")}</span>
-                )}
-              </div>
+          {/* Row 2: the two DISPLAY decisions — which price lens, which layout
+              (เบส: มุมมองไปอยู่แถวเดียวกับ grade). The grade strip scrolls
+              sideways inside whatever width the view toggle leaves it. */}
+          <div className="flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <GradeControl value={m.grade} onChange={m.handleGradeChange} />
             </div>
-          )}
+            <div className="shrink-0">{renderViewControl()}</div>
+          </div>
+
         </div>
 
         {/* Desktop/tablet keeps the established single-row toolbar. */}
@@ -367,6 +396,8 @@ export function HomeMarketOverview({
         )}
       </FilterModal>
 
+      {mobileListHeader}
+
       {/* Content: Table or Grid */}
       {m.viewMode === "table" ? (
         <MarketTable
@@ -403,9 +434,11 @@ export function HomeMarketOverview({
         />
       ) : (
         <div className={cn("p-4", m.isPending && "opacity-50 motion-base")}>
-          {/* Graded tiles have no real % series, so the period pill hides. */}
+          {/* Graded tiles have no real % series, so the period pill hides.
+              Phones get the period from the sticky list header above — this copy
+              is desktop-only now (it used to render twice on a phone). */}
           {rawGrade && (
-            <div className="mb-3 flex justify-end">
+            <div className="mb-3 hidden justify-end sm:flex">
               <SegmentedControl
                 size="sm"
                 variant="pill"

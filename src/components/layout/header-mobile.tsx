@@ -2,19 +2,41 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Search } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Moon, Search, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
 import { NotificationBell } from "@/components/layout/notification-bell";
 import { Button } from "@/components/ui/button";
 import { GameSwitcher } from "@/components/layout/game-switcher";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useScrolled } from "@/hooks/use-scrolled";
 import { useUIStore } from "@/stores/ui-store";
+import { stripGamePrefix } from "@/lib/game/constants";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-export function HeaderMobile({ isAuthenticated }: { isAuthenticated: boolean }) {
+/**
+ * Phone chrome: identity (logo + game) on the left, account/appearance on the
+ * right.
+ *
+ * Search is route-aware (เบส): the home hero owns search there, so the icon
+ * would only duplicate it — but it is the ONLY phone trigger for
+ * `CommandSearchModal` everywhere else (the desktop trigger lives in the
+ * md-only ticker), so it renders on every other route.
+ */
+export function HeaderMobile({
+  isAuthenticated,
+  authLoaded = true,
+}: {
+  isAuthenticated: boolean;
+  /** Keeps the guest CTA from flashing before the session resolves. */
+  authLoaded?: boolean;
+}) {
   const language = useUIStore((s) => s.language);
-  const openSearch = useUIStore((s) => s.setSearchOpen);
+  const setSearchOpen = useUIStore((s) => s.setSearchOpen);
+  const pathname = usePathname() ?? "/";
+  const isHome = stripGamePrefix(pathname) === "/";
 
   // Transparent at the top (the page's ambient glow flows through uninterrupted),
   // frosted + hairline once scrolled — same collapsing pattern as the desktop
@@ -23,6 +45,12 @@ export function HeaderMobile({ isAuthenticated }: { isAuthenticated: boolean }) 
   // Same collapsing chrome as the desktop header — starts false (hydration- and
   // scroll-restoration-safe), corrects on mount. CHROME-11: one shared hook.
   const scrolled = useScrolled();
+
+  // next-themes resolves on the client only, so the icon waits for hydration
+  // rather than guessing and flipping (`useHydrated` = the shared guard).
+  const { resolvedTheme, setTheme } = useTheme();
+  const hydrated = useHydrated();
+  const isDark = hydrated && resolvedTheme === "dark";
 
   return (
     <div
@@ -48,18 +76,41 @@ export function HeaderMobile({ isAuthenticated }: { isAuthenticated: boolean }) 
 
         <div className="flex-1" />
 
+        {!isHome && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t(language, "search")}
+            onClick={() => setSearchOpen(true)}
+            className="text-muted-foreground"
+          >
+            <Search className="size-[18px]" />
+          </Button>
+        )}
+
         {isAuthenticated && <NotificationBell />}
 
         <Button
           type="button"
           variant="ghost"
           size="icon-sm"
-          aria-label={t(language, "searchPlaceholder")}
-          onClick={() => openSearch(true)}
+          aria-label={t(language, isDark ? "lightMode" : "darkMode")}
+          onClick={() => setTheme(isDark ? "light" : "dark")}
           className="text-muted-foreground"
         >
-          <Search className="size-[18px]" />
+          {isDark ? (
+            <Sun className="size-[18px]" />
+          ) : (
+            <Moon className="size-[18px]" />
+          )}
         </Button>
+
+        {authLoaded && !isAuthenticated && (
+          <Button size="sm" className="ml-1" render={<Link href="/login" />}>
+            {t(language, "login")}
+          </Button>
+        )}
       </div>
     </div>
   );

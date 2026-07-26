@@ -260,7 +260,10 @@ export function Header() {
       </header>
     </div>
 
-    <HeaderMobile isAuthenticated={authLoaded && Boolean(authUser)} />
+    <HeaderMobile
+      isAuthenticated={authLoaded && Boolean(authUser)}
+      authLoaded={authLoaded}
+    />
 
     <CommandSearchModal open={searchOpen} onClose={closeSearch} />
     </>

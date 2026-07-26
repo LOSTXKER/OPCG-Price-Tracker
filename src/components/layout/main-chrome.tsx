@@ -119,8 +119,15 @@ export function MainChrome({ children }: { children: React.ReactNode }) {
  */
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const hidden = matches(pathname, CHROMELESS_ROUTES) || matches(pathname, NO_HEADER_FOOTER_ROUTES);
-  if (hidden) return null;
+  if (matches(pathname, CHROMELESS_ROUTES)) return null;
+  // `/more` may replace the chrome only where the BottomNav exists (`<md`). The
+  // nav is `md:hidden`, so dropping the header at every width left the page with
+  // no header, no footer and no tab bar on desktop — Back was the only way out.
+  // `md:contents` (not `md:block`) so the header's `sticky` still resolves
+  // against the page, not against a wrapper the height of the header.
+  if (matches(pathname, NO_HEADER_FOOTER_ROUTES)) {
+    return <div className="hidden md:contents">{children}</div>;
+  }
   return <>{children}</>;
 }
 
@@ -146,8 +153,11 @@ export function SkipToContent() {
  */
 export function FooterChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  if (matches(pathname, CHROMELESS_ROUTES) || matches(pathname, NO_HEADER_FOOTER_ROUTES)) {
-    return null;
+  if (matches(pathname, CHROMELESS_ROUTES)) return null;
+  // Same rule as SiteChrome: /more keeps the footer on desktop so the page is
+  // not a dead end there.
+  if (matches(pathname, NO_HEADER_FOOTER_ROUTES)) {
+    return <div className="hidden md:block">{children}</div>;
   }
   if (matches(pathname, NO_MOBILE_FOOTER_ROUTES)) {
     return <div className="hidden md:block">{children}</div>;
