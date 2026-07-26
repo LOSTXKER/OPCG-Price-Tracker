@@ -6,7 +6,7 @@ import { t } from "@/lib/i18n";
 import { ViewModeControl } from "./view-mode-control";
 
 describe("ViewModeControl", () => {
-  it("keeps an icon-only 44px hit box around a square 36px painted control", () => {
+  it("keeps a 44px hit box and lets the thumb nest inside the track", () => {
     const markup = renderToStaticMarkup(
       <ViewModeControl
         modes={["list", "grid"]}
@@ -22,10 +22,14 @@ describe("ViewModeControl", () => {
 
     expect(markup).toContain("h-11");
     expect(markup).toContain("min-w-11");
-    expect(markup).toContain("before:inset-y-1");
-    expect(markup).toContain("before:inset-x-1");
-    expect(markup).toContain("[&amp;_button]:before:inset-x-1");
-    expect(markup).toContain("md:[&amp;_button]:before:inset-x-0");
+    // Track: inset 4px from the 44px hit box. Thumb: 6px, i.e. 2px INSIDE the
+    // track, so their edges/radii never coincide (that read as lopsided).
+    expect(markup).toContain("before:inset-y-1 ");
+    expect(markup).toContain("before:inset-y-1.5");
+    expect(markup).toContain("before:inset-x-0.5");
+    // No per-caller inset overrides any more — the kit owns the nesting.
+    expect(markup).not.toContain("[&amp;_button]:before:inset-x-1");
+    expect(markup).not.toContain("md:[&amp;_button]:before:inset-x-0");
     expect(markup).toContain("md:h-7");
     expect(markup).toContain("md:min-w-0");
     expect(markup).toContain("[&amp;_svg]:size-4");

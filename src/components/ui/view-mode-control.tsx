@@ -38,7 +38,12 @@ export function ViewModeControl<T extends ViewMode>({
       compactVisual
       ariaLabel={labels.join(" / ")}
       className={cn(
-        "shrink-0 gap-0 before:inset-x-1 md:gap-0.5 md:before:inset-x-0 [&_button]:before:inset-x-1 md:[&_button]:before:inset-x-0 [&_svg]:size-4",
+        // No inset overrides: the canonical track/thumb nesting from
+        // SegmentedControl is what keeps this square control symmetric. The old
+        // `before:inset-x-1` pair pulled the track in 4px while the thumb also
+        // sat 4px from the button edge, so the two edges landed on top of each
+        // other with different corner radii.
+        "shrink-0 gap-0 md:gap-0.5 [&_svg]:size-4",
         // Labelled view switches are a true two/three-way choice, so their
         // geometry must not change with the active translation. Icon-only
         // controls stay content-sized and square.

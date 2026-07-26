@@ -17,7 +17,6 @@ import {
   Moon,
   Settings,
   ShoppingBag,
-  Search,
   Sparkles,
   Store,
   Sun,
@@ -68,6 +67,7 @@ function PendingDot() {
   );
 }
 
+
 /** GroupedSection at page scope — the page container already provides the
  *  horizontal inset, so the section's own padding is zeroed out. */
 const SECTION_INSET = "px-0 sm:px-0";
@@ -109,6 +109,7 @@ export default function MoreClient() {
 
   const tier = TIER_DISPLAY[userTier];
   const authed = authLoaded && !!authUser;
+
   const marketplaceEnabled = publicConfig.marketplaceEnabled;
 
   return (
@@ -187,18 +188,10 @@ export default function MoreClient() {
             column when /more is opened on a wide screen). `gap` instead of
             `space-y` so the same wrapper works for both flex and grid. */}
         <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-x-6">
-          {/* ── Browse ──────────────────────────────────────────────── */}
+          {/* ── Browse — the destinations with no tab of their own. ชุดการ์ด is
+              NOT repeated here (bottom tab + desktop header own it) and ค้นหา
+              lives in the phone header, not in this menu (เบส). ── */}
           <GroupedSection className={SECTION_INSET} label={t(language, "browse")}>
-            {/* ค้นหา lives here because the phone header only carries the
-                magnifier off-home — this menu must never be search-less.
-                ชุดการ์ด is deliberately NOT repeated: the bottom tab bar (and the
-                desktop header) already own it. */}
-            <GroupedRow
-              icon={Search}
-              iconClassName="bg-muted text-foreground"
-              title={t(language, "search")}
-              href="/opcg/search"
-            />
             <GroupedRow
               icon={TrendingUp}
               iconClassName="bg-success-soft text-success"
@@ -222,8 +215,8 @@ export default function MoreClient() {
           {/* ── My Account (signed-in only) ────────────────────────────── */}
           {authed && (
             <GroupedSection className={SECTION_INSET} label={t(language, "myAccount")}>
-              {/* พอร์ต / รายการโปรด are tabs in the bottom nav — only the alerts
-                  lens, which has no tab of its own, needs a row here. */}
+              {/* พอร์ต / รายการโปรด are tabs in the bottom nav; the alerts lens
+                  has no tab of its own, so it needs a row here. */}
               <GroupedRow
                 icon={BellRing}
                 iconClassName="bg-warning-soft text-warning"

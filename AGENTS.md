@@ -63,7 +63,7 @@ Concrete consequences:
 | Surface / panel | `Surface` | `ui/surface.tsx` | กล่อง/พาเนลทุกใบ (variant + padding) |
 | Advertising inventory | `AdInventorySlot` | `ads/ad-inventory-slot.tsx` | slot โฆษณากลางทุกหน้า — รับ semantic `zone`, แล้ว registry/provider กลางคุม route, `adFree`, content state และ strategy; Google mock เป็นค่าเริ่มต้น ส่วน Direct ที่ `ACTIVE` จึงแทนช่องเดิม 1:1; ห้ามสร้างกล่องโฆษณา/ข้อความขายพื้นที่หรือเช็ก tier เองใน page |
 | Section heading | `SectionHead` | `shared/section-head.tsx` | หัวข้อ section + action ขวา |
-| Segmented / tab เลือก 1 จาก N | `SegmentedControl` · `ViewModeControl` · `Tabs` | `ui/segmented-control.tsx` · `ui/view-mode-control.tsx` · `ui/tabs.tsx` | pill/แท็บเลือกหนึ่งจากหลายตัว · มุมมอง table/list/grid |
+| Segmented / tab เลือก 1 จาก N | `SegmentedControl` · `ViewModeControl` · `Tabs` | `ui/segmented-control.tsx` · `ui/view-mode-control.tsx` · `ui/tabs.tsx` | pill/แท็บเลือกหนึ่งจากหลายตัว · มุมมอง table/list/grid — บนมือถือ (`compactVisual`) hit box 44px, ราง `before:inset-y-1` และปุ่มที่เลือกซ้อน**ใน**ราง `before:inset-y-1.5 before:inset-x-0.5` (เหลือขอบราง 2px รอบตัว); **ห้าม override `before:inset-*` ที่ caller** เพราะขอบราง/ปุ่มจะทับกันแล้วมุมเบี้ยว |
 | Grade / price lens | `GradeControl` | `market/price-mode-control.tsx` | ตัวเลือกเกรดกลางทั้งเว็บ — แถบปุ่มแนวนอนเลื่อนซ้าย–ขวาได้บนจอแคบ; Raw/PSA 10 ใช้ราคาตลาดจริง ส่วน PSA 9/8/BGS 9.5 ยังอิงสูตรจาก `lib/pricing/grade-tiers.ts` แต่ UI ไม่แสดงป้าย `est.` ตาม owner decision |
 | List row (มือถือ) | `GroupedList`/`GroupedRow` · `ListRow` | `ui/grouped-list.tsx` · `ui/list-row.tsx` | แถวรายการ iOS-style |
 | Empty state | `EmptyState` (หมี Kuma) | `shared/empty-state.tsx` | หน้า/ลิสต์ว่าง |

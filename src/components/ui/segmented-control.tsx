@@ -244,8 +244,13 @@ export function SegmentedControl<T extends string = string>({
                   : "gap-1.5 sm:min-w-0",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
               "disabled:cursor-not-allowed disabled:opacity-50",
+              // The active thumb nests INSIDE the track: the track is inset 4px
+              // (`before:inset-y-1` on the group) so the thumb takes 6px, leaving
+              // a 2px ring of track around it. With both at 4px their edges and
+              // mismatched corner radii coincided and the control read lopsided
+              // (เบส: ปุ่มมุมมองดูไม่สมส่วน).
               useCompactVisual &&
-                "relative isolate before:pointer-events-none before:absolute before:inset-x-0 before:inset-y-1 before:content-[''] md:before:hidden [&>*]:relative [&>*]:z-10",
+                "relative isolate before:pointer-events-none before:absolute before:inset-x-0.5 before:inset-y-1.5 before:content-[''] md:before:hidden [&>*]:relative [&>*]:z-10",
               isPill
                 ? cn("rounded-full", useCompactVisual && "before:rounded-full")
                 : useCompactVisual

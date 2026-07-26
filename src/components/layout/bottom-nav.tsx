@@ -2,19 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import { Briefcase, Heart, LayoutGrid, LineChart, Menu } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
 import { isNavActive } from "@/lib/game/constants";
 import { useUIStore } from "@/stores/ui-store";
-import { MoreSheet } from "@/components/layout/more-sheet";
 
-// The 4 real-destination tabs. "More" is not here — it's the fallback tab that
-// lights up on any deep route none of these own (settings/honey/decks/messages…),
-// so the user never loses their sense of place (iOS tab grammar). `owns` lists
-// tab-less catalog routes that keep ชุดการ์ด lit while browsing.
+// The 4 real-destination tabs. "More" is appended separately: it navigates to
+// /more like the rest, but it also lights up on any deep route none of these own
+// (settings/honey/decks/messages…), so the user never loses their sense of place
+// (iOS tab grammar). `owns` lists tab-less catalog routes that keep ชุดการ์ด lit
+// while browsing.
 const TABS = [
   { href: "/", key: "home", icon: LineChart, owns: [] as readonly string[] },
   { href: "/opcg/sets", key: "sets", icon: LayoutGrid, owns: ["/cards", "/search", "/trending", "/market-overview"] as readonly string[] },
@@ -78,53 +77,24 @@ function TabLink({
   );
 }
 
-function TabButton({
-  label,
-  icon,
-  badge,
-  active,
-  onClick,
-}: {
-  label: string;
-  icon: typeof LineChart;
-  badge?: number;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <li className="min-w-0 flex-1">
-      <button
-        type="button"
-        onClick={onClick}
-        aria-haspopup="dialog"
-        className={cn(TAB_CLASS, active ? "text-primary" : "text-muted-foreground")}
-      >
-        <TabInner icon={icon} label={label} badge={badge} active={active} />
-      </button>
-    </li>
-  );
-}
-
 /**
  * Mobile bottom-nav — 5 FIXED tabs. Tab identity never changes (no feature-flag
  * swapping); flag-gated features (marketplace, messages) live inside ชุดการ์ด /
  * Portfolio / More, not as tabs.
  *
- * The 4 leading tabs navigate. "More" opens a bottom-sheet quick-launcher
- * (<MoreSheet>) over the current page — a curated grid of the important
- * destinations that otherwise felt buried one page deep — with a link to the
- * full /more menu for everything else.
+ * Every tab navigates, "More" included (เบส): it goes straight to /more, whose
+ * first block is the quick-launcher grid the bottom sheet used to hold. One menu,
+ * one source of truth — the sheet + page pair had already drifted apart.
  */
 export function BottomNav({ className }: { className?: string }) {
   const pathname = usePathname() ?? "/";
   const lang = useUIStore((s) => s.language);
   const unread = useUIStore((s) => s.unreadMessages);
-  const [moreOpen, setMoreOpen] = useState(false);
 
   const tabActive = TABS.map((tab) => isNavActive(pathname, tab.href, tab.owns));
-  // "More" owns everything the 4 tabs don't — it's highlighted whenever none of
-  // them are (or while its sheet is open).
-  const moreActive = moreOpen || !tabActive.some(Boolean);
+  // "More" owns everything the 4 tabs don't — /more itself plus every deep route
+  // none of them claim, so it is lit whenever no other tab is.
+  const moreActive = !tabActive.some(Boolean);
 
   return (
     <nav
@@ -144,15 +114,14 @@ export function BottomNav({ className }: { className?: string }) {
             active={tabActive[i]}
           />
         ))}
-        <TabButton
+        <TabLink
+          href="/more"
           label={t(lang, "more")}
           icon={Menu}
           badge={unread}
           active={moreActive}
-          onClick={() => setMoreOpen(true)}
         />
       </ul>
-      <MoreSheet open={moreOpen} onOpenChange={setMoreOpen} />
     </nav>
   );
 }
