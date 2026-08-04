@@ -1,12 +1,13 @@
 "use client"
 
-import { memo, useState } from "react"
+import { Suspense, memo, useCallback, useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { TrendingUp, TrendingDown, TrendingUpDown, Eye } from "lucide-react"
 
 import { PageHeader } from "@/components/layout/page-header"
+import { buildTrendingHeading } from "@/lib/seo/copy/tools"
 import { PriceTag } from "@/components/ui/price-tag"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
@@ -195,22 +196,63 @@ function getChangeValue(card: TrendingCardRow, period: Period): number | null {
   return card.priceChange30d
 }
 
-export function TrendingTabs({ data }: { data: TrendingData }) {
-  // Tab lives in `?tab=` so the page can stay statically rendered (ISR) and the
-  // tab is deep-linkable / back-button friendly.
+const TAB_IDS: TabId[] = ["gainers", "losers", "mostViewed"]
+
+function isTabId(value: string | null): value is TabId {
+  return value != null && TAB_IDS.includes(value as TabId)
+}
+
+/**
+ * Renders nothing — it only bridges the tab state to `?tab=` (deep-linking +
+ * back button). `useSearchParams` lives HERE, behind its own Suspense boundary,
+ * so the bailout-to-CSR it triggers on a prerendered route can never take the
+ * mover table out of the server HTML (the whole point: Google used to receive
+ * an empty Suspense fallback where the table should be).
+ */
+function TrendingTabUrlBridge({
+  onTabFromUrl,
+  registerNavigate,
+}: {
+  onTabFromUrl: (tab: TabId) => void
+  registerNavigate: (navigate: ((tab: TabId) => void) | null) => void
+}) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
   const tabParam = searchParams.get("tab")
-  const activeTab: TabId = (["gainers", "losers", "mostViewed"] as TabId[]).includes(
-    tabParam as TabId,
+
+  // Applying the same tab twice is a no-op state update, so this can safely run
+  // for every `?tab=` change (including the one this component just pushed).
+  useEffect(() => {
+    if (isTabId(tabParam)) onTabFromUrl(tabParam)
+  }, [tabParam, onTabFromUrl])
+
+  useEffect(() => {
+    registerNavigate((next: TabId) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set("tab", next)
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+    })
+    return () => registerNavigate(null)
+  }, [registerNavigate, router, pathname, searchParams])
+
+  return null
+}
+
+export function TrendingTabs({ data }: { data: TrendingData }) {
+  // Default tab renders on the server; `?tab=` is applied by the URL bridge
+  // below once JS is available (progressive enhancement).
+  const [activeTab, setActiveTab] = useState<TabId>("gainers")
+  const navigateRef = useRef<((tab: TabId) => void) | null>(null)
+  const registerNavigate = useCallback(
+    (navigate: ((tab: TabId) => void) | null) => {
+      navigateRef.current = navigate
+    },
+    [],
   )
-    ? (tabParam as TabId)
-    : "gainers"
-  const setActiveTab = (next: TabId) => {
-    const params = new URLSearchParams(searchParams.toString())
-    params.set("tab", next)
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+  const handleTabChange = (next: TabId) => {
+    setActiveTab(next)
+    navigateRef.current?.(next)
   }
   const [period, setPeriod] = useState<Period>("24h")
   const lang = useUIStore((s) => s.language)
@@ -228,6 +270,13 @@ export function TrendingTabs({ data }: { data: TrendingData }) {
 
   return (
     <div className="space-y-4">
+      <Suspense>
+        <TrendingTabUrlBridge
+          onTabFromUrl={setActiveTab}
+          registerNavigate={registerNavigate}
+        />
+      </Suspense>
+
       {/* Tabs */}
       <div className="flex flex-wrap items-center gap-2">
         {/* The Thai labels ("การ์ดที่มีคนดูมากสุด" etc.) don't fit a 3-way
@@ -238,7 +287,7 @@ export function TrendingTabs({ data }: { data: TrendingData }) {
           <SegmentedControl
             options={tabOptions}
             value={activeTab}
-            onChange={setActiveTab}
+            onChange={handleTabChange}
             ariaLabel={t(lang, "trendingTitle")}
           />
         </div>
@@ -335,9 +384,11 @@ export function TrendingTabs({ data }: { data: TrendingData }) {
 
 export function TrendingPageHeader() {
   const lang = useUIStore((s) => s.language)
+  // The single visible H1 carries the target keyword ("การ์ดวันพีซราคาขึ้นแรงสุด")
+  // instead of the generic nav label ("การ์ดมาแรง").
   return (
     <PageHeader
-      title={t(lang, "trendingTitle")}
+      title={buildTrendingHeading(lang).h1}
       description={t(lang, "trendingDesc")}
     />
   )

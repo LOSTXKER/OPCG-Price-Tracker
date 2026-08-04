@@ -31,6 +31,7 @@ export const GAME_SCOPED_SEGMENTS: ReadonlySet<string> = new Set([
   "cards",
   "sets",
   "market-overview",
+  "most-expensive",
   "search",
   "trending",
   "compare",

@@ -26,8 +26,6 @@ import {
   ConditionChip,
   ConditionFilter,
   FeedPriceCell,
-  SampleBadge,
-  SampleDisclosure,
   formatFeedDate,
   gradeFilterLabel,
 } from "./market-feed-shared"
@@ -100,15 +98,17 @@ function FeedSkeleton({ count }: { count: number }) {
 }
 
 /**
- * "Selling on Meecard" — a capped, card-scoped preview. Filtering happens over
- * the complete row set before the cap; the Marketplace owns the full list.
+ * "Selling on Meecard" — a capped, card-scoped preview of REAL active listings.
+ * Filtering happens over the complete row set before the cap; the Marketplace
+ * owns the full list. The old fabricated "sample listings" mode was removed:
+ * mock rows must never reach indexable HTML, and with the marketplace flag off
+ * this simply renders the honest "no listings yet" state.
  */
 export function MeecardAsksRail({
   cardId,
   cardCode,
   cardName,
   listings,
-  isSample = false,
   currentPriceJpy,
   currency,
   lang,
@@ -117,7 +117,6 @@ export function MeecardAsksRail({
   cardCode: string
   cardName: string
   listings: CardListing[]
-  isSample?: boolean
   currentPriceJpy: number | null
   currency: Currency
   lang: Language
@@ -143,7 +142,7 @@ export function MeecardAsksRail({
     () => sorted.filter((l) => listingMatchesConditionFilter(l.condition, activeGrade)),
     [sorted, activeGrade],
   )
-  const preview = getMarketFeedPreview(shown, isSample)
+  const preview = getMarketFeedPreview(shown, false)
 
   const rowClass = "flex items-center justify-between gap-3 py-3 pl-0.5 pr-2"
   const linkedRowClass =
@@ -155,21 +154,15 @@ export function MeecardAsksRail({
     <div>
       <div className="mb-4 min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <h2 className="text-h3">
-            {t(lang, isSample ? "sellingNowSampleTitle" : "sellingNow")}
-          </h2>
-          {isSample && <SampleBadge lang={lang} />}
-          {!isSample && hasListings && (
+          <h2 className="text-h3">{t(lang, "sellingNow")}</h2>
+          {hasListings && (
             <span className="inline-flex items-center gap-1" role="status">
               <span aria-hidden className="size-1.5 rounded-full" style={{ background: "var(--success)" }} />
               <span className="text-meta">{t(lang, "liveLabel")}</span>
             </span>
           )}
         </div>
-        <p className="text-meta mt-0.5">
-          {t(lang, isSample ? "sellingNowSampleDesc" : "sellingNowDesc")}
-        </p>
-        {isSample && <SampleDisclosure lang={lang} kind="listings" />}
+        <p className="text-meta mt-0.5">{t(lang, "sellingNowDesc")}</p>
       </div>
 
       {!hasListings ? (
@@ -191,7 +184,7 @@ export function MeecardAsksRail({
         <FeedSkeleton count={preview.length} />
       ) : (
         <>
-          {!isSample && grades.length > 1 && (
+          {grades.length > 1 && (
             <div className="mb-4">
               <ConditionFilter
                 label={t(lang, "condition")}
@@ -225,16 +218,12 @@ export function MeecardAsksRail({
                         className="border-b border-hair last:border-b-0"
                       >
                         <td className={marketTdLead}>
-                          {isSample ? (
-                            <UserCell listing={l} lang={lang} />
-                          ) : (
-                            <Link
-                              href={`/marketplace/${l.id}`}
-                              className="ease-chrome block min-w-0 rounded-sm hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            >
-                              <UserCell listing={l} lang={lang} withArrow />
-                            </Link>
-                          )}
+                          <Link
+                            href={`/marketplace/${l.id}`}
+                            className="ease-chrome block min-w-0 rounded-sm hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          >
+                            <UserCell listing={l} lang={lang} withArrow />
+                          </Link>
                         </td>
                         <td className={marketTdLead}>
                           <span className="text-meta tnum">{formatFeedDate(l.listedAtIso)}</span>
@@ -252,41 +241,29 @@ export function MeecardAsksRail({
               </div>
 
               <div className="divide-y divide-hair px-1 sm:hidden">
-                {preview.map((l) => {
-                  const content = (
-                    <>
-                      <span className="min-w-0">
-                        <span className="flex items-center gap-2">
-                          <UserCell listing={l} lang={lang} withArrow={!isSample} />
-                          <ConditionChip condition={l.condition} graded={isGradedCondition(l.condition)} />
-                        </span>
-                        <span className="tnum mt-1 block text-meta">{formatFeedDate(l.listedAtIso)}</span>
+                {preview.map((l) => (
+                  <Link key={l.id} href={`/marketplace/${l.id}`} className={linkedRowClass}>
+                    <span className="min-w-0">
+                      <span className="flex items-center gap-2">
+                        <UserCell listing={l} lang={lang} withArrow />
+                        <ConditionChip condition={l.condition} graded={isGradedCondition(l.condition)} />
                       </span>
-                      <FeedPriceCell jpy={l.priceJpy} currency={currency} right />
-                    </>
-                  )
-
-                  return isSample ? (
-                    <div key={l.id} className={rowClass}>{content}</div>
-                  ) : (
-                    <Link key={l.id} href={`/marketplace/${l.id}`} className={linkedRowClass}>
-                      {content}
-                    </Link>
-                  )
-                })}
+                      <span className="tnum mt-1 block text-meta">{formatFeedDate(l.listedAtIso)}</span>
+                    </span>
+                    <FeedPriceCell jpy={l.priceJpy} currency={currency} right />
+                  </Link>
+                ))}
               </div>
 
-              {!isSample && (
-                <div className="hairline-t mt-4 flex justify-end pt-3">
-                  <Link
-                    href={marketHref}
-                    className="ease-chrome text-label inline-flex min-h-11 items-center gap-1 text-muted-foreground hover:text-foreground sm:min-h-0"
-                  >
-                    {t(lang, "viewAllListings")}
-                    <ChevronRight className="size-3.5" aria-hidden />
-                  </Link>
-                </div>
-              )}
+              <div className="hairline-t mt-4 flex justify-end pt-3">
+                <Link
+                  href={marketHref}
+                  className="ease-chrome text-label inline-flex min-h-11 items-center gap-1 text-muted-foreground hover:text-foreground sm:min-h-0"
+                >
+                  {t(lang, "viewAllListings")}
+                  <ChevronRight className="size-3.5" aria-hidden />
+                </Link>
+              </div>
             </>
           )}
         </>

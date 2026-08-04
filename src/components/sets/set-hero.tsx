@@ -6,7 +6,7 @@ import { Price } from "@/components/shared/price-inline";
 import { PriceUsd } from "@/components/shared/price-usd";
 import { FormattedDate } from "@/components/shared/formatted-date";
 import { DropRateDialog } from "@/app/sets/[setCode]/set-page-client";
-import { t, type Language } from "@/lib/i18n";
+import { getCardName, t, type Language } from "@/lib/i18n";
 import type {
   CardData,
   RarityGroup,
@@ -125,12 +125,21 @@ export function SetHero({
             </>
           )}
         </p>
-        <h1 className="text-display mt-1.5 text-foreground">
-          {code.toUpperCase()}
+        {/* One visible H1 carrying BOTH the set code and the set name — the
+            code keeps the display weight, the name sits on its own line inside
+            the same heading (Google reads "OP01 Romance Dawn"). */}
+        <h1 className="mt-1.5">
+          <span className="text-display block text-foreground">
+            {code.toUpperCase()}
+          </span>
+          {/* The two lines are separate blocks, so without this the heading's
+              text content reads "OP01Romance Dawn" to crawlers and screen
+              readers. Visually nothing changes. */}
+          <span className="sr-only"> — </span>
+          <span className="text-h3 mt-0.5 block font-normal text-muted-foreground">
+            {name}
+          </span>
         </h1>
-        <p className="text-h3 mt-0.5 font-normal text-muted-foreground">
-          {name}
-        </p>
 
         {/* calm stat line — count · top card (เบส: avg price dropped) */}
         <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2.5">
@@ -152,7 +161,7 @@ export function SetHero({
                   {topCard.imageUrl ? (
                     <Image
                       src={topCard.imageUrl}
-                      alt={topCard.nameEn ?? topCard.nameJp}
+                      alt={getCardName(lang, topCard)}
                       fill
                       className="object-contain"
                       sizes="28px"

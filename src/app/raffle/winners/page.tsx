@@ -3,19 +3,18 @@ import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { getDrawnRaffles, groupRafflesByMonth } from "@/lib/honey/raffle-winners";
+import { SEO_PAGE_META } from "@/lib/seo/copy/site";
 import { WinnersList } from "./winners-list";
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Prize Winners — Monthly Raffle Announcements",
-  description:
-    "Public archive of monthly raffle winners on Meecard. Browse past prize draws, see who won, and verify the results for full transparency.",
+  title: SEO_PAGE_META.raffleWinners.title,
+  description: SEO_PAGE_META.raffleWinners.description,
   alternates: { canonical: "/raffle/winners" },
   openGraph: {
-    title: "Prize Winners — Monthly Raffle Announcements | Meecard",
-    description:
-      "Public archive of monthly raffle winners on Meecard. Browse past prize draws and verify the results.",
+    title: `${SEO_PAGE_META.raffleWinners.title} | Meecard`,
+    description: SEO_PAGE_META.raffleWinners.description,
     type: "website",
   },
 };

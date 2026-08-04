@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PlanCards } from "@/components/billing/plan-cards";
 import { PlanFeatureComparison } from "@/components/billing/plan-feature-comparison";
-import { PageHeader } from "@/components/layout/page-header";
 import { Surface } from "@/components/ui/surface";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { useUIStore } from "@/stores/ui-store";
@@ -188,12 +187,6 @@ export default function PricingClient({
 
   return (
     <div className="space-y-10">
-      <PageHeader
-        align="center"
-        title={t(lang, "pricing")}
-        description={t(lang, "pricingSubtitle")}
-      />
-
       {checkoutCancelled && (
         <Surface
           variant="subtle"
@@ -434,9 +427,12 @@ export default function PricingClient({
             <Hexagon className="size-7 text-primary" />
           </div>
           <div className="flex-1">
-            <h3 className="text-h5">
+            {/* h2, not h3: this promo is a sibling section of the plan cards
+                and the comparison table (both h2) — an h3 here would skip a
+                level in the document outline. */}
+            <h2 className="text-h5">
               {t(lang, "honeyPassTitle")}
-            </h3>
+            </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               {t(lang, "honeyPassDesc")}
             </p>

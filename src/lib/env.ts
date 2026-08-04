@@ -28,6 +28,8 @@ const clientSchema = z.object({
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
   NEXT_PUBLIC_APP_URL: z.string().url().default("https://meecard.app"),
   NEXT_PUBLIC_LINE_LOGIN_CHANNEL_ID: z.string().optional(),
+  /** Google Search Console verification token — renders the meta tag when set. */
+  NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: z.string().optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;
@@ -51,6 +53,8 @@ function parseClientEnv(): ClientEnv {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_LINE_LOGIN_CHANNEL_ID:
       process.env.NEXT_PUBLIC_LINE_LOGIN_CHANNEL_ID,
+    NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION:
+      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   });
   if (!result.success) {
     const formatted = result.error.issues

@@ -15,6 +15,7 @@ import { Surface } from "@/components/ui/surface"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { useUIStore } from "@/stores/ui-store"
 import { getCardName, t, type Language } from "@/lib/i18n"
+import { buildMarketOverviewHeading } from "@/lib/seo/copy/tools"
 import { formatRelativeAgo } from "@/lib/utils/relative-time"
 import { formatCount } from "@/lib/utils/currency"
 import { cn } from "@/lib/utils"
@@ -67,7 +68,7 @@ export function MarketOverviewClient({ data }: { data: MarketData }) {
   return (
     <div className="space-y-10">
       <PageHeader
-        title={t(lang, "marketOverviewTitle")}
+        title={buildMarketOverviewHeading(lang)}
         description={t(lang, "marketOverviewSubtitle")}
         breadcrumb={
           <Breadcrumb

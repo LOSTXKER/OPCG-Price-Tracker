@@ -1,3 +1,5 @@
+import type { ReactNode } from "react"
+
 export type CardListing = {
   id: string | number
   priceJpy: number
@@ -50,6 +52,16 @@ export interface CardSourcePrice {
 }
 
 export interface CardDetailProps {
+  /**
+   * Server-rendered SEO slots. They are React nodes built in the page's SERVER
+   * component and handed to this client tree, so their markup is in the first
+   * HTML response for every user agent (no hydration or fetch required).
+   */
+  introSlot?: ReactNode
+  /** Real price-history table — replaced the fabricated "sample sales" feed. */
+  historySlot?: ReactNode
+  /** Per-card FAQ (also emits FAQPage JSON-LD). */
+  faqSlot?: ReactNode
   card: {
     id: number
     cardCode: string

@@ -2,6 +2,17 @@
 > งานใหญ่แตกเป็น task ติ๊กได้ · ทำทีละอัน · ติ๊กเมื่อ **verify แล้ว** (ไม่ใช่แค่เขียนเสร็จ)
 > ลำดับ milestone = ข้อเสนอ — เบสสลับได้ · แผนธุรกิจ/north star อยู่ `doc/archive/detailed-plan-2026-04-28.md` (archived snapshot) ไม่ใช่ไฟล์นี้
 
+## 🔍 SEO Pillar + Content (2026-08-04 — จาก audit 11 ทีม · แผนเต็ม: [doc/seo-content-plan.md](doc/seo-content-plan.md))
+> เป้า: เว็บอ่านออกโดย Google เป็น "เว็บไทยเรื่องราคาการ์ดวันพีซ" — โครง 3 ชั้น หน้าแรก → หน้าชุด → หน้าการ์ด + เสาความรู้ /guide
+> ข้อเท็จจริงจาก DB (ตรวจ 2026-08-04): การ์ด 3,838 ใบ · **`Card.nameTh` ไม่ใช่ภาษาไทยเลยสักใบ** (เป็นสำเนาชื่ออังกฤษ — ห้ามเคลมว่าค้นด้วยชื่อไทยได้) แต่ **`effectTh` เป็นไทยจริง 3,478 ใบ** · ชุด 51 (`CardSet.nameTh` ว่างทั้งหมด) · `latestPriceThb` ว่างทั้งหมด (ต้องแปลงจาก JPY ด้วย `jpyToThb`) · ตาราง BlogPost **ไม่มีใน DB** (บล็อกยังไม่ทำงานจริง) · drop rate มี 50/51 ชุด
+
+- [x] **SEO-P0 โครงสร้างพื้นฐาน** — ย้าย canonical ออกจาก layout ราก · meta ไทยระดับเว็บ + verification จาก env · robots แยกหน้าที่ (crawl control) · redirect 308 · `/proto` noindex · `/saved` metadata · sitemap เพิ่ม about/contact/honey/raffle/most-expensive/guide ใหม่ · JSON-LD: Organization + Product ราคา THB/priceValidUntil ไม่เคลม InStock
+- [x] **SEO-P1 หน้ารบ** — หน้าการ์ด (render ไทย · H1+title มีรหัสการ์ด · ย่อหน้าเปิด+FAQ auto · ลบ section ปลอม → ตารางราคาจริง · ย้าย viewCount ออกจาก render) · หน้าชุด (H1 มีชื่อชุด · intro auto · drop rate ใน HTML · FAQ)
+- [x] **SEO-P2 หน้าแรก + เครื่องมือ + guide** — H1 หน้าแรกโชว์จริง + H2 เหนือตาราง + แถบชุด · server-render trending/search/deck-calc · เนื้อ drop-calculator · retitle guide 7 หน้า + ขยาย guide/buying
+- [x] **SEO-P3 หน้าใหม่** — `/opcg/most-expensive` (อันดับสดจาก DB) · `/guide/authenticity` (แท้-ปลอม) · `/guide/versions` (JP/EN — **แทน guide/shops ที่ยกเลิก**: ช่องทางซื้อถูก /guide/buying คลุมหมดแล้ว จะแย่งอันดับกันเอง + ยืนยันชื่อร้านไทยรายตัวไม่ได้) + ลิงก์จากฮับ/sitemap
+- [x] **SEO-V ตรวจรับ** — tsc 0 · lint 0 error (28 warning เดิม) · test 134 files/734 · build 209 หน้า · ตรวจ HTML จริงจาก `next start` (จำลอง production ด้วย `NEXT_PUBLIC_BYPASS_AUTH=false` เพราะเครื่อง dev เปิด bypass ไว้ทำให้หน้า auth-gated ทดสอบเพี้ยน) — title/H1/canonical ถูกทุกหน้า · `/proto` = noindex,nofollow · canonical ไม่มีหน้าไหนชี้ "/" นอกจากหน้าแรก
+- [ ] **SEO-OPS (ต้องทำบน Vercel — โค้ดทำแทนไม่ได้)** — ตั้ง `NEXT_PUBLIC_APP_URL` เป็นโดเมนจริง (ไม่งั้น canonical/sitemap/OG ชี้ `https://meecard.app` ตาม default) · สมัคร Google Search Console แล้วใส่ `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` · submit sitemap
+
 ## 🧭 UX/UI Refactor Master Plan (2026-07-04 — แผนคุมงาน UI ทั้งหมดต่อจากนี้)
 > จาก audit ทั้งเว็บ (workflow 86 agents · 19 auditors + adversarial verify) ได้ 230 findings — **checklist รายข้อ + กติกา: [doc/uxui-refactor-plan.md](doc/uxui-refactor-plan.md)** · หลักฐานราย finding: [doc/uxui-audit-findings-2026-07-04.md](doc/uxui-audit-findings-2026-07-04.md) · ที่นี่ติ๊กระดับ phase เท่านั้น
 > แผนนี้ดูดซับงานค้างเดิม: R1 empty-state → Phase 4 · แตก client ยักษ์ → Phase 2/5 · Declutter Batch 5–6 → Phase 5 (honey/desktop balance)

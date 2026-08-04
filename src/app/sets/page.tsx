@@ -5,24 +5,46 @@ import { RelatedPages } from "@/components/shared/related-pages";
 import { EmptyState } from "@/components/shared/empty-state";
 import { ErrorBanner } from "@/components/shared/error-banner";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { FaqSection } from "@/components/shared/faq-section";
+import { PageHeader } from "@/components/layout/page-header";
 import { JsonLd } from "@/lib/seo/json-ld-script";
-import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
-import { t } from "@/lib/i18n";
+import { t, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
 import {
-  SetsPageHeader,
-  SetsListClient,
-  type SetWithCard,
-} from "./sets-page-client";
+  buildSetsIndexFaq,
+  buildSetsIndexHeading,
+  buildSetsIndexIntro,
+  buildSetsIndexMeta,
+  formatSetMonth,
+  type SetsIndexSeoData,
+} from "@/lib/seo/copy/sets";
+import { SetsListClient, type SetWithCard } from "./sets-page-client";
 
 export const dynamic = "force-dynamic";
 
+/** Thai-first: the copy crawlers see is Thai (doc/seo-content-plan.md §3.8). */
+const SEO_LANG: Language = "TH";
+
+const { title: SEO_TITLE, description: SEO_DESCRIPTION } =
+  buildSetsIndexMeta(SEO_LANG);
+
 export const metadata: Metadata = {
-  title: "Card Sets — Booster Boxes & Decks",
-  description:
-    "Browse all OPCG card sets, booster boxes and starter decks. Card counts and release dates.",
+  title: SEO_TITLE,
+  description: SEO_DESCRIPTION,
   alternates: { canonical: "/opcg/sets" },
+  openGraph: {
+    title: SEO_TITLE,
+    description: SEO_DESCRIPTION,
+    type: "website",
+    locale: "th_TH",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SEO_TITLE,
+    description: SEO_DESCRIPTION,
+  },
 };
 
 export default async function SetsIndexPage() {
@@ -67,6 +89,8 @@ export default async function SetsIndexPage() {
       cardCount: s.cardCount,
       productCardCount: productCountMap.get(s.code) ?? s.cardCount,
       releaseDate: s.releaseDate?.toISOString() ?? null,
+      // Formatted on the server so the tile never re-formats a date client-side.
+      releaseLabel: formatSetMonth(SEO_LANG, s.releaseDate),
       boxImageUrl: s.boxImageUrl,
       topCard: topCardMap.get(s.id) ?? null,
       // Sealed-box SNKRDUNK price — wired in Phase B (scraper + schema).
@@ -77,6 +101,27 @@ export default async function SetsIndexPage() {
     dbError = true;
   }
 
+  // Intro + FAQ are generated from the same data the grid renders, so the page
+  // always ships real Thai prose (numbers alone = thin content).
+  const dated = setsRaw.filter((s) => s.releaseDate);
+  const latestSet = dated.length
+    ? dated.reduce((a, b) => (a.releaseDate! > b.releaseDate! ? a : b))
+    : null;
+  const seoData: SetsIndexSeoData = {
+    setCount: setsRaw.length,
+    cardCount: setsRaw.reduce((sum, s) => sum + s.productCardCount, 0),
+    latest: latestSet
+      ? {
+          code: latestSet.code,
+          name: latestSet.nameEn ?? latestSet.name,
+          releaseDate: latestSet.releaseDate,
+        }
+      : null,
+  };
+  const heading = buildSetsIndexHeading(SEO_LANG);
+  const introParagraphs = buildSetsIndexIntro(SEO_LANG, seoData);
+  const faqItems = buildSetsIndexFaq(SEO_LANG, seoData);
+
   return (
     <>
       <JsonLd
@@ -85,6 +130,18 @@ export default async function SetsIndexPage() {
           { name: t(lang, "sets"), href: "/opcg/sets" },
         ])}
       />
+      {setsRaw.length > 0 && (
+        <JsonLd
+          data={itemListJsonLd(
+            "ชุดการ์ดวันพีซทั้งหมด (One Piece Card Game)",
+            setsRaw.map((s) => ({
+              name: `${s.code.toUpperCase()} ${s.nameEn ?? s.name}`,
+              url: `/opcg/sets/${s.code}`,
+              image: s.boxImageUrl ?? s.topCard?.imageUrl ?? null,
+            })),
+          )}
+        />
+      )}
       <Breadcrumb
         items={[
           { label: t(lang, "home"), href: "/" },
@@ -92,15 +149,28 @@ export default async function SetsIndexPage() {
         ]}
       />
       <div className="space-y-8">
-        <SetsPageHeader />
+        <PageHeader title={heading.title} description={heading.description} />
+
+        <section className="max-w-3xl space-y-2">
+          {introParagraphs.map((paragraph, i) => (
+            <p key={i} className="text-body text-muted-foreground">
+              {paragraph}
+            </p>
+          ))}
+        </section>
 
         {dbError ? (
           <ErrorBanner />
         ) : setsRaw.length === 0 ? (
-          <EmptyState mascot="kuma" title="No card sets yet" />
+          <EmptyState mascot="kuma" title="ยังไม่มีข้อมูลชุดการ์ด" />
         ) : (
           <SetsListClient sets={setsRaw} />
         )}
+
+        <FaqSection
+          title="คำถามที่พบบ่อยเรื่องชุดการ์ดวันพีซ"
+          items={faqItems}
+        />
       </div>
       <RelatedPages
         items={[

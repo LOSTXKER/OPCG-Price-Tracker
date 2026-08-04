@@ -16,7 +16,7 @@ import { CardDetailChartSection } from "./card-detail/card-detail-chart-section"
 import { CardDetailIdentity } from "./card-detail/card-detail-identity"
 import { CardDetailPrice } from "./card-detail/card-detail-price"
 import { CardDetailSectionNav } from "./card-detail/card-detail-section-nav"
-import { RecentSales } from "./card-detail/recent-sales"
+import { CardViewTracker } from "./card-detail/card-view-tracker"
 import { SectionHead } from "./card-detail/section-head"
 import { SiblingGrid } from "./card-detail-sibling-grid"
 import { CardDetailRelated } from "./card-detail-related"
@@ -29,7 +29,7 @@ export type { CardDetailProps, RelatedCard, SiblingCard } from "./card-detail/ty
 
 
 export function CardDetail(props: CardDetailProps) {
-  const { card, siblings, relatedCards, latestUpdatedAt } = props
+  const { card, siblings, relatedCards, latestUpdatedAt, introSlot, historySlot, faqSlot } = props
   const {
     hydrated,
     displayLang,
@@ -72,7 +72,6 @@ export function CardDetail(props: CardDetailProps) {
     tabs,
     handleShare,
     latestSale,
-    saleHistory,
     meecardListings,
   } = useCardDetailModel(props)
 
@@ -124,6 +123,9 @@ export function CardDetail(props: CardDetailProps) {
             onAlert={() => setAlertOpen(true)}
             onShare={() => void handleShare()}
           />
+          {/* Server-rendered Thai intro — sits high in the document so the first
+              thing after the H1 is real, unique prose instead of numbers. */}
+          {introSlot}
           <CardDetailPrice
             hydrated={hydrated}
             lang={displayLang}
@@ -204,9 +206,9 @@ export function CardDetail(props: CardDetailProps) {
       {/* ── below the chart — recent sales + card info on lg.
           The right rail is 320–360px and scrolls with the page; <lg stacks. ── */}
       <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
-        {/* ROW 1 LEFT — recent sales */}
+        {/* ROW 1 LEFT — real price history (server-rendered table, no mock feed) */}
         <section id="sources" className="min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
-          <RecentSales sales={saleHistory} isSample currency={currency} lang={displayLang} />
+          {historySlot}
         </section>
 
         {/* ROW 1 RIGHT — card info (specs + effect) */}
@@ -241,7 +243,6 @@ export function CardDetail(props: CardDetailProps) {
             cardCode={card.cardCode}
             cardName={displayName}
             listings={meecardListings.rows}
-            isSample={meecardListings.isSample}
             currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
             currency={currency}
             lang={displayLang}
@@ -264,6 +265,11 @@ export function CardDetail(props: CardDetailProps) {
       <div className="mt-12">
         <CardDetailRelated relatedCards={relatedCards ?? []} set={set} lang={displayLang} />
       </div>
+
+      {/* Server-rendered per-card FAQ (carries FAQPage JSON-LD). */}
+      {faqSlot}
+
+      <CardViewTracker cardCode={card.cardCode} />
 
       {/* lightbox */}
       <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>

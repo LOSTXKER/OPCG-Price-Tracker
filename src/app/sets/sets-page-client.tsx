@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
-import { PageHeader } from "@/components/layout/page-header";
+import { setTypeHeading } from "@/lib/seo/copy/sets";
 import { SectionHead } from "@/components/shared/section-head";
 import { EmptyState } from "@/components/shared/empty-state";
 import { SetPosterTile } from "@/components/sets/set-poster-tile";
@@ -19,6 +19,9 @@ export type SetWithCard = {
   cardCount: number;
   productCardCount: number;
   releaseDate: string | null;
+  /** Pre-formatted release month from the server (deterministic, no re-format
+   *  on the client) — shown on the tile so the grid carries a real date signal. */
+  releaseLabel: string | null;
   boxImageUrl: string | null;
   topCard: { imageUrl: string | null } | null;
   boxPriceJpy: number | null;
@@ -75,16 +78,9 @@ export function SetTypeFilter({
   );
 }
 
-// ─── Header ──────────────────────────────────────────────────────────
-
-export function SetsPageHeader() {
-  const lang = useUIStore((s) => s.language);
-  return (
-    <PageHeader title={t(lang, "setsTitle")} description={t(lang, "setsDesc")} />
-  );
-}
-
 // ─── Main list with filter ───────────────────────────────────────────
+// (The page header is rendered on the SERVER — see src/app/sets/page.tsx — so
+//  the H1 with the target keyword is in the first HTML response.)
 
 export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
   const lang = useUIStore((s) => s.language);
@@ -156,7 +152,10 @@ export function SetsListClient({ sets }: { sets: SetWithCard[] }) {
               <section key={type}>
                 {showSectionHeads && (
                   <SectionHead
-                    title={TYPE_LABEL[type]!}
+                    // Thai gloss next to the English type name — "บูสเตอร์
+                    // (Booster Pack)" — so the section headings carry Thai
+                    // keywords instead of English-only labels.
+                    title={setTypeHeading(lang, type)}
                     action={
                       <span className="text-meta tabular-nums">
                         {list.length}
@@ -201,6 +200,7 @@ function SetCard({
       showCount
       count={set.productCardCount}
       countLabel={t(lang, "cardsCount")}
+      releaseLabel={set.releaseLabel}
       preload={preload}
     />
   );

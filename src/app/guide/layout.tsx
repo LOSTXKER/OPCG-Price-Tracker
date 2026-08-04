@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 
+import { GUIDE_META } from "@/lib/seo/copy/guide";
+
 export const metadata: Metadata = {
   title: {
-    default: "คู่มือ OPCG",
+    default: GUIDE_META.hub.title,
     template: "%s | Meecard",
   },
-  description: "เรียนรู้ One Piece Card Game ตั้งแต่เริ่มต้น — ประเภทการ์ด ความหายาก สี และอื่นๆ",
+  description: GUIDE_META.hub.description,
   alternates: { canonical: "/guide" },
 };
 

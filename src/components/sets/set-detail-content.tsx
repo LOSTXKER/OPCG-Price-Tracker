@@ -8,6 +8,7 @@ import {
   useRef,
   type ReactNode,
 } from "react";
+import Link from "next/link";
 import { TrendingUpDown } from "lucide-react";
 
 import { SegmentedControl } from "@/components/ui/segmented-control";
@@ -35,6 +36,10 @@ import {
 } from "@/lib/pricing/grade-tiers";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
+import {
+  rarityHeadingLabel,
+  setRarityGuideLinkLabel,
+} from "@/lib/seo/copy/sets";
 import { useUIStore } from "@/stores/ui-store";
 import {
   CARD_COLORS,
@@ -51,6 +56,8 @@ export type CardData = {
   cardCode: string;
   nameJp: string;
   nameEn: string | null;
+  /** Thai card name (populated for ~all cards) — `getCardName` prefers it on TH. */
+  nameTh: string | null;
   rarity: string;
   isParallel: boolean;
   imageUrl: string | null;
@@ -567,16 +574,33 @@ export function SetDetailContent({
                 className="scroll-mt-32"
               >
                 {/* centered section heading (เบส) — name + RarityBadge + count,
-                    flanked by hairlines on both sides. */}
+                    flanked by hairlines on both sides. The Thai gloss next to
+                    the English rarity name is the SEO hook ("ซีเคร็ทแรร์"), and
+                    the first section links out to the rarity guide once. */}
                 <div className="mb-5 flex items-center gap-3 sm:gap-4">
                   <span aria-hidden className="h-px flex-1 bg-hair" />
-                  <div className="flex shrink-0 items-center gap-2">
-                    <h2 className="text-h4">{g.name}</h2>
+                  {/* min-w-0 (not shrink-0): the heading now carries the Thai
+                      gloss too, which is long enough to overflow a phone if the
+                      block refuses to shrink — let it wrap instead. */}
+                  <div className="flex min-w-0 items-center gap-2">
+                    <h2 className="text-h4 min-w-0 text-center">
+                      {rarityHeadingLabel(lang, g.rarity, g.name)}
+                    </h2>
                     <RarityBadge rarity={g.rarity} size="sm" />
                     <span className="text-meta tabular-nums">{g.cards.length}</span>
                   </div>
                   <span aria-hidden className="h-px flex-1 bg-hair" />
                 </div>
+                {groupIndex === 0 && (
+                  <p className="text-meta -mt-3 mb-5 text-center">
+                    <Link
+                      href="/guide/rarities"
+                      className="underline-offset-2 hover:text-foreground hover:underline"
+                    >
+                      {setRarityGuideLinkLabel(lang)}
+                    </Link>
+                  </p>
+                )}
                 <div className="grid grid-cols-3 gap-x-2.5 gap-y-4 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                   {g.cards.map((c) => (
                     <SetCardTile

@@ -17,6 +17,7 @@ export function SetPosterTile({
   showCount = false,
   count,
   countLabel,
+  releaseLabel,
   preload = false,
 }: {
   code: string
@@ -27,6 +28,9 @@ export function SetPosterTile({
   count?: number
   /** pre-translated unit (e.g. "ใบ") — caller owns i18n. */
   countLabel?: string
+  /** Pre-formatted release month (e.g. "ม.ค. 2023"). Formatted by the caller so
+   *  server and client render identical strings. Index grid only. */
+  releaseLabel?: string | null
   /** Only the first above-the-fold poster on an index page should opt in. */
   preload?: boolean
 }) {
@@ -67,6 +71,9 @@ export function SetPosterTile({
           <span className="text-h5 block truncate text-foreground">{code.toUpperCase()}</span>
         )}
         <p className="text-meta truncate">{displayName}</p>
+        {releaseLabel && (
+          <p className="text-meta truncate tabular-nums">{releaseLabel}</p>
+        )}
       </div>
     </Link>
   )

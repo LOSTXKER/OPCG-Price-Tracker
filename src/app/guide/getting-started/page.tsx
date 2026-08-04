@@ -10,8 +10,10 @@ import {
   Swords,
   Zap,
 } from "lucide-react";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/db";
 import { Surface } from "@/components/ui/surface";
+import { FaqSection } from "@/components/shared/faq-section";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
 import { RelatedPages } from "@/components/shared/related-pages";
@@ -21,15 +23,22 @@ import { GuidePrevNext } from "@/components/guide/guide-prev-next";
 import { CardThumbStrip, type ThumbCard } from "@/components/guide/card-thumb-strip";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
-import { t, type Language } from "@/lib/i18n";
+import { t, getSetName, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
+import {
+  GUIDE_META,
+  guideFaqHeading,
+  guideStartFaq,
+  guideStartH1,
+  guideStartStarterHeading,
+  guideStartStarterIntro,
+} from "@/lib/seo/copy/guide";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Getting Started — คู่มือ OPCG",
-  description:
-    "คู่มือเริ่มต้นเล่น One Piece Card Game (OPCG) ครบจบในหน้าเดียว กฎ วิธีเล่น ระบบ DON!! เทิร์น การโจมตี เงื่อนไขชนะ อ้างอิงกฎจาก Bandai",
+  title: GUIDE_META.gettingStarted.title,
+  description: GUIDE_META.gettingStarted.description,
   alternates: { canonical: "/guide/getting-started" },
 };
 
@@ -144,13 +153,46 @@ async function getSetupCards(): Promise<{
   }
 }
 
+type StarterSet = {
+  code: string;
+  name: string;
+  nameEn: string | null;
+  nameTh: string | null;
+  cardCount: number;
+};
+
+/**
+ * Real Starter Deck sets, newest first — the callout used to name "Starter
+ * Deck" without linking anywhere. Cached: the set table changes a few times
+ * a year, and this page is hit by crawlers.
+ */
+const getStarterSets = unstable_cache(
+  async (): Promise<StarterSet[]> => {
+    try {
+      return await prisma.cardSet.findMany({
+        where: { type: "STARTER" },
+        select: { code: true, name: true, nameEn: true, nameTh: true, cardCount: true },
+        orderBy: [{ releaseDate: { sort: "desc", nulls: "last" } }, { code: "desc" }],
+        take: 6,
+      });
+    } catch {
+      return [];
+    }
+  },
+  ["guide-starter-sets"],
+  { revalidate: 3600, tags: ["guide-sets"] }
+);
+
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
 
 export default async function GettingStartedPage() {
   const lang = await getServerLanguage();
-  const { leader, don } = await getSetupCards();
+  const [{ leader, don }, starterSets] = await Promise.all([
+    getSetupCards(),
+    getStarterSets(),
+  ]);
   const turnPhases = buildTurnPhases(lang);
   const combatSteps = buildCombatSteps(lang);
   const exampleCards: ThumbCard[] = [
@@ -184,7 +226,7 @@ export default async function GettingStartedPage() {
           />
         }
         back={{ href: "/guide", label: "Guide" }}
-        title={t(lang, "guideStartHeroTitle")}
+        title={guideStartH1(lang)}
         description={
           <>
             <strong className="text-foreground">One Piece Card Game (OPCG)</strong>
@@ -231,6 +273,34 @@ export default async function GettingStartedPage() {
             <strong className="text-foreground">Tip:</strong>{t(lang, "guideStartTipA")}<strong>Starter Deck</strong>{t(lang, "guideStartTipB")}
           </p>
         </GuideCallout>
+
+        {starterSets.length > 0 && (
+          <div className="space-y-3">
+            <h3 className="text-h4">{guideStartStarterHeading(lang)}</h3>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {guideStartStarterIntro(lang)}
+            </p>
+            <Surface variant="outline" className="divide-y divide-hair">
+              {starterSets.map((set) => (
+                <Link
+                  key={set.code}
+                  href={`/opcg/sets/${set.code}`}
+                  className="flex items-center gap-3 px-4 py-3 motion-base hover:bg-muted/70"
+                >
+                  <span className="shrink-0 rounded-md bg-muted px-2 py-1 font-mono text-xs font-bold">
+                    {set.code}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-sm font-medium">
+                    {getSetName(lang, set)}
+                  </span>
+                  <span className="shrink-0 font-mono text-xs text-muted-foreground">
+                    {set.cardCount}
+                  </span>
+                </Link>
+              ))}
+            </Surface>
+          </div>
+        )}
       </section>
 
       {/* ── 3. เซ็ตอัพ (Game Setup) ── */}
@@ -467,7 +537,10 @@ export default async function GettingStartedPage() {
         </div>
       </section>
 
-      {/* ── 9. แหล่งอ้างอิง ── */}
+      {/* ── 9. FAQ (server-rendered + FAQPage JSON-LD) ── */}
+      <FaqSection title={guideFaqHeading(lang)} items={guideStartFaq(lang)} />
+
+      {/* ── 10. แหล่งอ้างอิง ── */}
       <GuideSourceList
         heading={t(lang, "guideStartSourcesTitle")}
         sources={[

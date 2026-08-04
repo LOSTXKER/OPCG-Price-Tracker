@@ -1,9 +1,17 @@
 import type { Metadata } from "next"
 import { GitCompareArrows, Layers, TrendingUp } from "lucide-react"
+import { FaqSection } from "@/components/shared/faq-section"
 import { RelatedPages } from "@/components/shared/related-pages"
 import { JsonLd } from "@/lib/seo/json-ld-script"
-import { breadcrumbJsonLd } from "@/lib/seo/json-ld"
+import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld"
 import { prisma } from "@/lib/db"
+import { getCardName } from "@/lib/i18n"
+import {
+  TOOL_PAGE_METADATA,
+  buildMarketMethodologyFaq,
+  buildMarketOverviewCopy,
+} from "@/lib/seo/copy/tools"
+import { formatThb, jpyToThb } from "@/lib/utils/currency"
 import { MarketOverviewClient } from "./market-overview-client"
 
 // ISR only — the page reads no request data, so `force-dynamic` (a leftover from
@@ -11,11 +19,14 @@ import { MarketOverviewClient } from "./market-overview-client"
 // responsive presentation in MarketOverviewClient so this route stays cacheable.
 export const revalidate = 300
 
+// Thai-first crawler copy (doc/seo-content-plan.md §3.8); reading the language
+// cookie here would opt this route out of ISR.
+const SEO_LANG = "TH" as const
+
 export const metadata: Metadata = {
-  title: "Market Overview",
-  description:
-    "Comprehensive OPCG market statistics — total cards, market value, average price, rarity breakdowns and top sets by value.",
-  alternates: { canonical: "/opcg/market-overview" },
+  title: TOOL_PAGE_METADATA.marketOverview.title,
+  description: TOOL_PAGE_METADATA.marketOverview.description,
+  alternates: { canonical: TOOL_PAGE_METADATA.marketOverview.canonical },
 }
 
 async function getMarketData() {
@@ -172,10 +183,48 @@ export type MarketOverviewData = Awaited<ReturnType<typeof getMarketData>>
 export default async function MarketOverviewPage() {
   const data = await getMarketData()
 
+  const topSet = data.topSetsByValue[0] ?? null
+  const copy = buildMarketOverviewCopy(SEO_LANG, {
+    totalCards: data.totalCards,
+    setCount: data.setCount,
+    totalValueThb: formatThb(Math.round(jpyToThb(data.totalValue))),
+    avgPriceThb: formatThb(Math.round(jpyToThb(data.avgPrice))),
+    weightedDelta7d: data.weightedDelta7d,
+    topSetCode: topSet?.code.toUpperCase() ?? null,
+    topSetName: topSet?.name ?? null,
+  })
+
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Market Overview", href: "/opcg/market-overview" }])} />
+      <JsonLd
+        data={itemListJsonLd(
+          "การ์ดวันพีซมูลค่าสูงสุด",
+          data.topCards.map((card) => ({
+            name: `${card.cardCode} ${getCardName(SEO_LANG, card)}`,
+            url: `/opcg/cards/${card.cardCode}`,
+            image: card.imageUrl,
+          })),
+        )}
+      />
+      <JsonLd
+        data={itemListJsonLd(
+          "ชุดการ์ดวันพีซที่มูลค่ารวมสูงสุด",
+          data.topSetsByValue.map((set) => ({
+            name: `${set.code.toUpperCase()} ${set.name}`,
+            url: `/opcg/sets/${set.code.toLowerCase()}`,
+            image: set.boxImageUrl,
+          })),
+        )}
+      />
       <MarketOverviewClient data={data} />
+
+      {/* Server-rendered methodology — the page was numbers-only until now. */}
+      <section className="mt-12 space-y-3">
+        <h2 className="text-h2">{copy.methodologyTitle}</h2>
+        <p className="text-body leading-relaxed">{copy.summary}</p>
+        <FaqSection title="" items={buildMarketMethodologyFaq(SEO_LANG)} />
+      </section>
       <RelatedPages
         items={[
           { href: "/opcg/trending", icon: TrendingUp, title: "Trending", description: "การ์ดที่ราคาขยับมากที่สุด" },

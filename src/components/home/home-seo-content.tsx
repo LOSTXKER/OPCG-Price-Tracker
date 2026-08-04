@@ -19,6 +19,10 @@ import {
 } from "@/components/shared/related-pages";
 import { SectionHead } from "@/components/shared/section-head";
 import { t, type Language } from "@/lib/i18n";
+import {
+  buildHomeFaqLinks,
+  buildHomeLongTailFaq,
+} from "@/lib/seo/copy/home";
 import { useUIStore } from "@/stores/ui-store";
 
 function buildFeatures(lang: Language) {
@@ -94,6 +98,10 @@ function buildFaqItems(lang: Language): FaqItem[] {
     { question: t(lang, "seoFaq5Q"), answer: t(lang, "seoFaq5A") },
     { question: t(lang, "seoFaq6Q"), answer: t(lang, "seoFaq6A") },
     { question: t(lang, "seoFaq7Q"), answer: t(lang, "seoFaq7A") },
+    // Long-tail questions from real Thai search behaviour (SEO plan §3.1).
+    // They live in lib/seo/copy/home.ts because they are full paragraphs, not
+    // dictionary labels. Same FaqSection ⇒ one FAQPage JSON-LD covering all 11.
+    ...buildHomeLongTailFaq(lang),
   ];
 }
 
@@ -102,6 +110,7 @@ export function HomeSeoContent() {
   const features = buildFeatures(lang);
   const exploreItems = buildExploreItems(lang);
   const faqItems = buildFaqItems(lang);
+  const faqLinks = buildHomeFaqLinks(lang);
 
   return (
     <div className="space-y-16 pt-6">
@@ -177,7 +186,29 @@ export function HomeSeoContent() {
       <RelatedPages title={t(lang, "seoExploreTitle")} items={exploreItems} />
 
       {/* FAQ */}
-      <FaqSection items={faqItems} />
+      <div>
+        <FaqSection items={faqItems} />
+
+        {/* Destinations for the four long-tail answers above. They sit here as
+            a real link list because FaqSection takes `answer: string` — an
+            anchor cannot be embedded inside an answer without editing a shared
+            component this area does not own. */}
+        <nav className="mt-4" aria-label={faqLinks.heading}>
+          <p className="text-eyebrow">{faqLinks.heading}</p>
+          <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5">
+            {faqLinks.links.map((l) => (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
     </div>
   );
 }

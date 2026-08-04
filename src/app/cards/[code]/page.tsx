@@ -4,9 +4,20 @@ import { notFound } from "next/navigation";
 import { getAdminConfig } from "@/lib/admin/config";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { CardDetail } from "@/components/cards/card-detail";
+import { derivePriceHistory } from "@/components/cards/card-detail/price-history";
+import { CardPriceHistory } from "@/components/cards/card-detail/price-history-table";
+import { FaqSection } from "@/components/shared/faq-section";
 import { AdPageContentReady } from "@/components/ads/ad-audience-provider";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { productJsonLd, breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import {
+  buildCardFaq,
+  buildCardIntro,
+  buildCardSeoDescription,
+  buildCardSeoTitle,
+  cardDisplayName,
+  type CardSeoData,
+} from "@/lib/seo/copy/card";
 import {
   buildChartData,
   deriveLatestPrice,
@@ -17,36 +28,67 @@ import {
   getRelatedFromSameSet,
   getSiblingVariants,
 } from "@/lib/data/card-detail";
-import { prisma } from "@/lib/db";
-import { formatJpy } from "@/lib/utils/currency";
 import { daysSince } from "@/lib/utils/time";
 
-export const dynamic = "force-dynamic";
+/**
+ * Hourly ISR. This page used to be `force-dynamic` *and* wrote a `viewCount`
+ * increment on every render, so every crawler hit meant a fresh DB read plus a
+ * DB write — thousands a day on a ~3,800-URL surface. Nothing here needs
+ * per-request data (no cookies/headers in the server path; language and
+ * currency are client preferences), so the render is cached and the view
+ * increment moved to POST /api/cards/[code]/view.
+ */
+export const revalidate = 3600;
+
+/** Everything the SEO copy builders need, in one place. */
+function toSeoData(card: Awaited<ReturnType<typeof getCardByCode>>): CardSeoData {
+  const c = card!;
+  return {
+    cardCode: c.cardCode,
+    nameTh: c.nameTh,
+    nameLatin: c.nameEn ?? c.nameJp,
+    rarity: c.rarity,
+    isParallel: c.isParallel,
+    setCode: c.set.code,
+    // CardSet.nameTh is NULL for every set — always render the English name and
+    // let the Thai copy wrap it ("จากชุด OP01 Romance Dawn").
+    setName: c.set.nameEn ?? c.set.name,
+    latestPriceJpy: c.latestPriceJpy,
+    latestPriceThb: c.latestPriceThb,
+    priceChange30d: c.priceChange30d,
+    priceScrapedAt: c.prices[0]?.scrapedAt
+      ? new Date(c.prices[0].scrapedAt).toISOString()
+      : null,
+  };
+}
 
 export async function generateMetadata(props: {
   params: Promise<{ code: string }>;
 }): Promise<Metadata> {
   const { code } = await props.params;
   const card = await getCardByCode(code);
-  if (!card) return { title: "Card not found" };
+  if (!card) return { title: "ไม่พบการ์ดใบนี้" };
 
-  const displayName = card.nameEn ?? card.nameJp;
-  const priceText = card.latestPriceJpy != null
-    ? formatJpy(card.latestPriceJpy)
-    : "Price unavailable";
-
-  const title = `${card.cardCode} ${displayName}`;
-  const description = `${priceText} · ${displayName} (${card.rarity}) — One Piece Card Game | Meecard`;
+  const seo = toSeoData(card);
+  const title = buildCardSeoTitle("TH", seo);
+  const description = buildCardSeoDescription("TH", seo);
+  const imageAlt = `${seo.cardCode} ${cardDisplayName("TH", seo)}`;
 
   return {
     title,
     description,
     alternates: { canonical: `/opcg/cards/${card.cardCode}` },
     openGraph: {
+      // A price page is a product-style page, not an article. A page-level
+      // `openGraph` object REPLACES the root one, so siteName/locale are
+      // re-declared here on purpose.
+      type: "website",
+      siteName: "Meecard",
+      locale: "th_TH",
+      url: `/opcg/cards/${card.cardCode}`,
       title,
       description,
-      type: "article",
-      images: card.imageUrl ? [{ url: card.imageUrl, alt: displayName }] : undefined,
+      images: card.imageUrl ? [{ url: card.imageUrl, alt: imageAlt }] : undefined,
     },
     twitter: {
       card: "summary_large_image",
@@ -64,11 +106,6 @@ export default async function CardDetailPage(props: {
   const card = await getCardByCode(code);
   if (!card) notFound();
 
-  await prisma.card.update({
-    where: { id: card.id },
-    data: { viewCount: { increment: 1 } },
-  });
-
   const [siblings, relatedCards, listings, adminConfig] = await Promise.all([
     getSiblingVariants(card.baseCode, card.id),
     getRelatedFromSameSet(card.setId, card.id),
@@ -81,6 +118,11 @@ export default async function CardDetailPage(props: {
   const sourcePricesRaw = deriveSourcePrices(card.prices, "raw");
   const sourcePricesPsa10 = deriveSourcePrices(card.prices, "psa10");
   let chartData = buildChartData(card.prices);
+  // Real price history, derived from the CardPrice rows already fetched — taken
+  // BEFORE the synthetic single-point fallback below so the table never shows a
+  // "today" row that was never actually scraped. The chart above is client-only;
+  // this table is the crawlable version.
+  const priceHistory = derivePriceHistory(chartData);
 
   // Latest update timestamp from the freshest known price for this card.
   // Compute "days since" on the server so the client component renders purely
@@ -104,8 +146,9 @@ export default async function CardDetailPage(props: {
     }];
   }
 
-  const displayName = card.nameEn ?? card.nameJp;
-  const setName = card.set.nameEn ?? card.set.name;
+  const seo = toSeoData(card);
+  const displayName = cardDisplayName("TH", seo);
+  const setName = seo.setName;
 
   return (
     <>
@@ -115,21 +158,37 @@ export default async function CardDetailPage(props: {
           cardCode: card.cardCode,
           nameEn: card.nameEn,
           nameJp: card.nameJp,
+          nameTh: card.nameTh,
           rarity: card.rarity,
           imageUrl: card.imageUrl,
           latestPriceJpy: card.latestPriceJpy,
-          set: { nameEn: card.set.nameEn, name: card.set.name },
+          latestPriceThb: card.latestPriceThb,
+          priceScrapedAt: latestUpdatedAt,
+          set: { nameEn: card.set.nameEn, name: card.set.name, nameTh: card.set.nameTh },
         })}
       />
       <JsonLd
         data={breadcrumbJsonLd([
-          { name: "Home", href: "/" },
-          { name: setName, href: `/opcg/sets/${card.set.code}` },
-          { name: `${card.cardCode} ${displayName}`, href: `/opcg/cards/${card.cardCode}` },
+          { name: "หน้าแรก", href: "/" },
+          { name: "ชุดการ์ดวันพีซ", href: "/opcg/sets" },
+          { name: `ชุด ${card.set.code} ${setName}`, href: `/opcg/sets/${card.set.code}` },
+          {
+            name: `ราคา ${card.cardCode} ${displayName}`,
+            href: `/opcg/cards/${card.cardCode}`,
+          },
         ])}
       />
       <CardDetail
         key={card.id}
+        introSlot={
+          <p className="text-body-sm mt-3 max-w-prose leading-relaxed text-muted-foreground">
+            {buildCardIntro("TH", seo)}
+          </p>
+        }
+        historySlot={
+          <CardPriceHistory cardCode={card.cardCode} history={priceHistory} lang="TH" />
+        }
+        faqSlot={<FaqSection items={buildCardFaq("TH", seo)} />}
         card={{
         id: card.id,
         cardCode: card.cardCode,
@@ -151,7 +210,7 @@ export default async function CardDetailPage(props: {
         effectJp: card.effectJp,
         effectEn: card.effectEn,
         effectTh: card.effectTh,
-        viewCount: card.viewCount + 1,
+        viewCount: card.viewCount,
         imageUrl: card.imageUrl,
         latestPriceJpy: card.latestPriceJpy,
         latestPriceThb: card.latestPriceThb,

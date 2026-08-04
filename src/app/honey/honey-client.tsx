@@ -10,6 +10,7 @@ import { useAuthState } from "@/hooks/use-auth-state";
 import { useUIStore } from "@/stores/ui-store";
 import { useHoneyData } from "@/hooks/use-honey-data";
 import { t } from "@/lib/i18n";
+import { buildHoneyHeading } from "@/lib/seo/copy/site";
 import { HoneyStatusBar } from "./components/honey-status-bar";
 import { HoneyTabNav } from "./components/honey-tab-nav";
 import { HoneyToast } from "./components/honey-toast";
@@ -43,7 +44,7 @@ export default function HoneyClient() {
 
   const header = (
     <PageHeader
-      title={t(lang, "honeyPageTitle")}
+      title={buildHoneyHeading(lang).title}
       description={t(lang, "honeySubtitle")}
       breadcrumb={
         <Breadcrumb items={[{ label: t(lang, "home"), href: "/" }, { label: t(lang, "honeyPageTitle") }]} />

@@ -99,12 +99,46 @@ export async function getHomeData() {
       initialTableTotal,
       initialTableTotalPages: Math.ceil(initialTableTotal / TABLE_PAGE_SIZE),
       sets,
+      // Newest sets first — feeds the home page's crawlable set strip so the
+      // set cluster gets internal links from the pillar page (SEO plan §3.1).
+      // Derived from `sets` (already fetched) instead of a second query.
+      recentSets: pickRecentSets(sets),
       rarityRows,
     }
   } catch (error) {
     log.error("Failed to fetch home data", error)
     throw error
   }
+}
+
+export type HomeSetLink = { code: string; name: string }
+
+/** How many sets the home page links to directly. */
+export const HOME_RECENT_SETS_LIMIT = 12
+
+/**
+ * Newest sets first (undated sets last, then by code descending as a stable
+ * tiebreak). Returns the latin set name — `CardSet.nameTh` is empty for every
+ * set in the database, so Thai context has to come from the surrounding copy.
+ */
+export function pickRecentSets(
+  sets: {
+    code: string
+    name: string
+    nameEn?: string | null
+    releaseDate?: Date | null
+  }[],
+  limit = HOME_RECENT_SETS_LIMIT
+): HomeSetLink[] {
+  return [...sets]
+    .sort((a, b) => {
+      const at = a.releaseDate ? a.releaseDate.getTime() : -Infinity
+      const bt = b.releaseDate ? b.releaseDate.getTime() : -Infinity
+      if (at !== bt) return bt - at
+      return b.code.localeCompare(a.code)
+    })
+    .slice(0, limit)
+    .map((s) => ({ code: s.code, name: s.nameEn?.trim() || s.name }))
 }
 
 export function mapCardToTrending(c: {

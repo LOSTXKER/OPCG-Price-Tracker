@@ -1,22 +1,34 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { Calendar, Eye } from "lucide-react";
+import { BookOpen, Calendar, Eye, Layers, TrendingUp } from "lucide-react";
 
 import { JsonLd } from "@/lib/seo/json-ld-script";
-import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
 import { Surface } from "@/components/ui/surface";
+import { RelatedPages } from "@/components/shared/related-pages";
+import { getServerLanguage } from "@/lib/i18n/server";
+import {
+  SEO_PAGE_META,
+  buildBlogIntro,
+  buildBlogRelated,
+} from "@/lib/seo/copy/site";
 import { BlogEmptyState } from "./blog-empty-state";
 import { BlogPageHeader } from "./blog-page-header";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Blog",
-  description:
-    "OPCG market analysis, set reviews, tips and news from Meecard. Stay updated with the latest One Piece Card Game content.",
+  title: SEO_PAGE_META.blog.title,
+  description: SEO_PAGE_META.blog.description,
   alternates: { canonical: "/blog" },
+};
+
+const RELATED_ICONS: Record<string, typeof TrendingUp> = {
+  "/opcg/trending": TrendingUp,
+  "/opcg/sets": Layers,
+  "/guide": BookOpen,
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -57,6 +69,13 @@ export default async function BlogPage() {
     // table may not exist yet
   }
 
+  const lang = await getServerLanguage();
+  const intro = buildBlogIntro(lang);
+  const related = buildBlogRelated(lang).map((item) => ({
+    ...item,
+    icon: RELATED_ICONS[item.href] ?? BookOpen,
+  }));
+
   return (
     <>
       <JsonLd
@@ -65,8 +84,26 @@ export default async function BlogPage() {
           { name: "Blog", href: "/blog" },
         ])}
       />
+      {/* ItemList only describes posts that actually exist — an empty list
+          would be a structured-data lie on a blog with no articles yet. */}
+      {posts.length > 0 && (
+        <JsonLd
+          data={itemListJsonLd(
+            SEO_PAGE_META.blog.title,
+            posts.map((post) => ({ name: post.title, url: `/blog/${post.slug}`, image: post.coverImage })),
+          )}
+        />
+      )}
       <div className="space-y-8">
         <BlogPageHeader />
+
+        <div className="max-w-3xl space-y-2">
+          {intro.map((paragraph) => (
+            <p key={paragraph} className="text-body-sm leading-relaxed text-muted-foreground">
+              {paragraph}
+            </p>
+          ))}
+        </div>
 
         {posts.length === 0 ? (
           <BlogEmptyState />
@@ -125,6 +162,8 @@ export default async function BlogPage() {
             ))}
           </div>
         )}
+
+        <RelatedPages items={related} />
       </div>
     </>
   );

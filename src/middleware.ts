@@ -50,7 +50,9 @@ export async function middleware(request: NextRequest) {
   ) {
     const url = request.nextUrl.clone();
     url.pathname = "/" + segments.slice(1).join("/");
-    return NextResponse.redirect(url);
+    // Deterministic canonical rule → 308 permanent, so link equity from the
+    // prefixed alias consolidates onto the flat canonical URL.
+    return NextResponse.redirect(url, 308);
   }
 
   // Only launch-ready games + real game-owned segments may rewrite. `/all` is
@@ -82,7 +84,12 @@ export async function middleware(request: NextRequest) {
     const game = resolveActiveGamePrefix(cookieGame);
     const url = request.nextUrl.clone();
     url.pathname = `/${game}${pathname}`;
-    return NextResponse.redirect(url);
+    // Permanent only when the destination is NOT cookie-dependent: a crawler
+    // (or first-time visitor) always resolves to the default game, so that
+    // mapping is stable and worth consolidating. A visitor steered by their
+    // game cookie gets a temporary redirect — browsers cache 308 forever and
+    // would keep sending them to the wrong game after they switch.
+    return NextResponse.redirect(url, cookieGame ? 307 : 308);
   }
 
   // ── Non-namespaced routes (account / system / api / content) ──────────────

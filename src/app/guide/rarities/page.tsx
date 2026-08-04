@@ -8,9 +8,11 @@ import {
   Swords,
   Users,
 } from "lucide-react";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/db";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { FaqSection } from "@/components/shared/faq-section";
 import { PageHeader } from "@/components/layout/page-header";
 import { GuideSourceList } from "@/components/guide/guide-source-list";
 import { GuideCallout } from "@/components/guide/guide-callout";
@@ -20,13 +22,21 @@ import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { t, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
+import {
+  GUIDE_META,
+  guideFaqHeading,
+  guideRarityBoxHeading,
+  guideRarityFactorsHeading,
+  guideRarityFaq,
+  guideRarityH1,
+  rarityAnchorId,
+} from "@/lib/seo/copy/guide";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "ความหายาก (Rarities) — คู่มือ OPCG",
-  description:
-    "คู่มือระดับความหายากของ One Piece Card Game ครบทุก Rarity: C, UC, R, SR, SEC, SP, TR พร้อม Parallel, Box Pattern, ปัจจัยราคา อ้างอิงจาก Bandai",
+  title: GUIDE_META.rarities.title,
+  description: GUIDE_META.rarities.description,
   alternates: { canonical: "/guide/rarities" },
 };
 
@@ -224,50 +234,58 @@ type ExampleCard = {
   imageUrl: string | null;
 };
 
-async function getExampleCards(): Promise<{
-  byRarity: Record<string, ExampleCard[]>;
-  parallels: ExampleCard[];
-}> {
-  try {
-    const [cards, parallels] = await Promise.all([
-      prisma.card.findMany({
-        where: { imageUrl: { not: null }, isParallel: false },
-        select: {
-          cardCode: true,
-          nameEn: true,
-          nameJp: true,
-          imageUrl: true,
-          rarity: true,
-        },
-        orderBy: { cardCode: "asc" },
-      }),
-      prisma.card.findMany({
-        where: { imageUrl: { not: null }, isParallel: true },
-        select: {
-          cardCode: true,
-          nameEn: true,
-          nameJp: true,
-          imageUrl: true,
-          rarity: true,
-        },
-        orderBy: { cardCode: "asc" },
-        take: 6,
-      }),
-    ]);
+/**
+ * Only the prominent tiers (TR / SP / SEC) render example thumbnails, so we ask
+ * for four cards per tier instead of scanning the whole card table on every
+ * request. Cached for an hour — the examples are illustrative, not live data.
+ */
+const EXAMPLE_RARITIES = ["TR", "SP", "SEC"] as const;
 
-    const byRarity: Record<string, ExampleCard[]> = {};
-    for (const c of cards) {
-      if (!byRarity[c.rarity]) byRarity[c.rarity] = [];
-      if (byRarity[c.rarity].length < 4) {
-        byRarity[c.rarity].push(c);
-      }
+const getExampleCards = unstable_cache(
+  async (): Promise<{
+    byRarity: Record<string, ExampleCard[]>;
+    parallels: ExampleCard[];
+  }> => {
+    try {
+      const select = {
+        cardCode: true,
+        nameEn: true,
+        nameJp: true,
+        imageUrl: true,
+      } as const;
+
+      const [tiers, parallels] = await Promise.all([
+        Promise.all(
+          EXAMPLE_RARITIES.map((rarity) =>
+            prisma.card.findMany({
+              where: { imageUrl: { not: null }, isParallel: false, rarity },
+              select,
+              orderBy: { cardCode: "asc" },
+              take: 4,
+            })
+          )
+        ),
+        prisma.card.findMany({
+          where: { imageUrl: { not: null }, isParallel: true },
+          select,
+          orderBy: { cardCode: "asc" },
+          take: 6,
+        }),
+      ]);
+
+      const byRarity: Record<string, ExampleCard[]> = {};
+      EXAMPLE_RARITIES.forEach((rarity, i) => {
+        byRarity[rarity] = tiers[i] ?? [];
+      });
+
+      return { byRarity, parallels };
+    } catch {
+      return { byRarity: {}, parallels: [] };
     }
-
-    return { byRarity, parallels };
-  } catch {
-    return { byRarity: {}, parallels: [] };
-  }
-}
+  },
+  ["guide-rarity-examples"],
+  { revalidate: 3600, tags: ["guide-cards"] }
+);
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
@@ -303,7 +321,7 @@ export default async function RaritiesPage() {
           />
         }
         back={{ href: "/guide", label: "Guide" }}
-        title={t(lang, "guideRarityTitle")}
+        title={guideRarityH1(lang)}
         description={
           <>
             {t(lang, "guideRarityIntroA")}
@@ -329,7 +347,8 @@ export default async function RaritiesPage() {
             return (
               <div
                 key={rarity.code}
-                className="overflow-hidden rounded-2xl border bg-card"
+                id={rarityAnchorId(rarity.code)}
+                className="scroll-mt-24 overflow-hidden rounded-2xl border bg-card"
                 style={{ borderColor: `${rarity.color}30` }}
               >
                 <div className="flex items-start gap-4 p-5">
@@ -378,8 +397,9 @@ export default async function RaritiesPage() {
           {regular.map((rarity) => (
             <Surface
               key={rarity.code}
+              id={rarityAnchorId(rarity.code)}
               variant="outline"
-              className="flex items-start gap-3 p-4"
+              className="flex scroll-mt-24 items-start gap-3 p-4"
             >
               <div
                 className="flex size-10 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
@@ -496,7 +516,7 @@ export default async function RaritiesPage() {
       {/* ── 5. Box Pattern ── */}
       <section className="space-y-6">
         <div>
-          <h2 className="text-h2">{t(lang, "guideRarityBoxHeading")}</h2>
+          <h2 className="text-h2">{guideRarityBoxHeading(lang)}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             {t(lang, "guideRarityBoxIntro")}
           </p>
@@ -610,7 +630,7 @@ export default async function RaritiesPage() {
 
       {/* ── 6. Price Factors ── */}
       <section className="space-y-4">
-        <h2 className="text-h2">{t(lang, "guideRarityFactorsHeading")}</h2>
+        <h2 className="text-h2">{guideRarityFactorsHeading(lang)}</h2>
         <p className="text-sm text-muted-foreground">
           {t(lang, "guideRarityFactorsIntro")}
         </p>
@@ -629,7 +649,10 @@ export default async function RaritiesPage() {
         </div>
       </section>
 
-      {/* ── 7. Sources ── */}
+      {/* ── 7. FAQ — owns "SEC คือ" / "Parallel คือ" (+ FAQPage JSON-LD) ── */}
+      <FaqSection title={guideFaqHeading(lang)} items={guideRarityFaq(lang)} />
+
+      {/* ── 8. Sources ── */}
       <GuideSourceList heading={t(lang, "guideRaritySourcesHeading")} sources={buildSources(lang)} />
 
       {/* ── Navigation ── */}

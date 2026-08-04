@@ -17,6 +17,7 @@ import { raritySort } from "@/lib/constants/rarities"
 import { getGameConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
 import { getCardName, t, type Language } from "@/lib/i18n"
+import { buildDropCalculatorCopy } from "@/lib/seo/copy/tools"
 import { apiGet, apiTry } from "@/lib/api/client"
 import {
   pullChance,
@@ -421,7 +422,7 @@ export default function DropCalculatorClient() {
     <div className="space-y-5 pt-3 sm:space-y-6 sm:pt-5">
       <div className="border-b border-hair pb-5 sm:pb-6">
         <PageHeader
-          title={t(lang, "dropCalculator")}
+          title={buildDropCalculatorCopy(lang).h1}
           size="sm"
           className="mb-4 sm:mb-5"
         >

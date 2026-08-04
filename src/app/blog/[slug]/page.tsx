@@ -35,16 +35,18 @@ const getPost = cache(async (slug: string) => {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
-  if (!post) return { title: "Post not found" };
+  if (!post) return { title: "ไม่พบบทความ" };
 
   return {
     title: post.title,
     description: post.excerpt,
     alternates: { canonical: `/blog/${post.slug}` },
+    keywords: post.tags.length > 0 ? post.tags : undefined,
     openGraph: {
       title: post.title,
       description: post.excerpt,
       type: "article",
+      locale: "th_TH",
       publishedTime: post.publishedAt?.toISOString(),
       images: post.coverImage ? [post.coverImage] : undefined,
     },

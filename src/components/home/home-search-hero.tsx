@@ -3,6 +3,10 @@
 import { t, type Language } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { TypewriterText } from "@/components/shared/typewriter-text"
+import {
+  buildHomeHeroHeading,
+  buildHomeHeroSubtitle,
+} from "@/lib/seo/copy/home"
 import { HeroSearchBar, type SetSuggestion } from "./hero-search-bar"
 
 export type HeroTrendingCard = {
@@ -37,15 +41,22 @@ export function HomeSearchHero({ sets, trending }: { sets: SetSuggestion[]; tren
     <section className="relative z-30">
       <div className="mx-auto max-w-2xl px-1 pb-6 pt-4 sm:pb-8 sm:pt-8">
         <div className="text-center">
-          {/* Eyebrow teaser + rotating subject.
-              sr-only carries a stable heading; the animated line is aria-hidden. */}
+          {/* Eyebrow teaser → visible H1 → rotating subject.
+              The H1 is the page's one keyword-bearing heading and must be real
+              visible text (SEO plan §3.1) — it used to be sr-only with only the
+              animation on screen, so Google saw a heading with no keyword. The
+              typewriter keeps the energy but is now a SUBTITLE: still decorative
+              (aria-hidden), with an sr-only static line carrying the same list. */}
           <p className="text-meta">{t(lang, "heroTeaser")}</p>
-          <h1 className="mt-1.5 text-3xl font-extrabold leading-[1.12] tracking-tight text-foreground sm:text-5xl">
-            <span className="sr-only">{t(lang, "heroSearchTitle")}</span>
+          <h1 className="mt-1.5 text-3xl font-extrabold leading-[1.12] tracking-tight text-foreground sm:text-4xl">
+            {buildHomeHeroHeading(lang)}
+          </h1>
+          <p className="mt-2 text-lg font-semibold leading-snug tracking-tight text-foreground sm:mt-3 sm:text-2xl">
+            <span className="sr-only">{buildHomeHeroSubtitle(lang)}</span>
             <span aria-hidden>
               <TypewriterText words={ROTATING[lang]} holdMs={2600} className="text-foreground" />
             </span>
-          </h1>
+          </p>
         </div>
 
         <div className="mt-6">

@@ -18,6 +18,11 @@ import { Surface } from "@/components/ui/surface";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
+import {
+  SUPPORT_EMAIL,
+  buildAboutHeading,
+  buildAboutMethodology,
+} from "@/lib/seo/copy/site";
 
 interface FeatureCard {
   icon: LucideIcon;
@@ -31,6 +36,8 @@ interface FeatureCard {
     | "aboutFeaturePortfolioDesc"
     | "aboutFeatureMarketplaceDesc"
     | "aboutFeatureToolsDesc";
+  /** Page this blurb describes. Omitted when the feature has no live route. */
+  href?: string;
 }
 
 const FEATURES: FeatureCard[] = [
@@ -38,13 +45,17 @@ const FEATURES: FeatureCard[] = [
     icon: BarChart3,
     titleKey: "aboutFeaturePrices",
     descKey: "aboutFeaturePricesDesc",
+    href: "/opcg/trending",
   },
   {
     icon: Star,
     titleKey: "aboutFeaturePortfolio",
     descKey: "aboutFeaturePortfolioDesc",
+    href: "/portfolio",
   },
   {
+    // No href: the marketplace ships behind `marketplaceEnabled=false` and its
+    // route 404s, so linking here would be a broken internal link.
     icon: Store,
     titleKey: "aboutFeatureMarketplace",
     descKey: "aboutFeatureMarketplaceDesc",
@@ -53,11 +64,14 @@ const FEATURES: FeatureCard[] = [
     icon: Wrench,
     titleKey: "aboutFeatureTools",
     descKey: "aboutFeatureToolsDesc",
+    href: "/opcg/drop-calculator",
   },
 ];
 
 export default function AboutClient() {
   const lang = useUIStore((s) => s.language);
+  const aboutHeading = buildAboutHeading(lang);
+  const methodology = buildAboutMethodology(lang);
 
   return (
     <div className="space-y-10">
@@ -70,7 +84,7 @@ export default function AboutClient() {
             ]}
           />
         }
-        title={t(lang, "aboutTitle")}
+        title={aboutHeading.title}
         description={t(lang, "aboutTagline")}
       />
 
@@ -107,7 +121,18 @@ export default function AboutClient() {
                   <Icon className="size-5 text-muted-foreground" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-h5">{t(lang, feature.titleKey)}</h3>
+                  <h3 className="text-h5">
+                    {feature.href ? (
+                      <Link
+                        href={feature.href}
+                        className="motion-base hover:text-primary hover:underline"
+                      >
+                        {t(lang, feature.titleKey)}
+                      </Link>
+                    ) : (
+                      t(lang, feature.titleKey)
+                    )}
+                  </h3>
                   <p className="mt-1 text-meta">{t(lang, feature.descKey)}</p>
                 </div>
               </Surface>
@@ -116,14 +141,39 @@ export default function AboutClient() {
         </div>
       </section>
 
+      {/* Methodology — the site's trust anchor. Kept as prose + a definition
+          list so answer engines can quote "where do the prices come from". */}
       <section>
         <Surface variant="outline" padding="none" className="p-6 sm:p-7">
           <div className="flex items-center gap-2">
             <Database className="size-5 text-muted-foreground" />
-            <h2 className="text-h3">{t(lang, "aboutSourcesTitle")}</h2>
+            <h2 className="text-h3">{methodology.title}</h2>
           </div>
-          <p className="mt-3 max-w-3xl text-body-sm text-muted-foreground">
-            {t(lang, "aboutSourcesBody")}
+          <div className="mt-3 max-w-3xl space-y-2">
+            {methodology.intro.map((paragraph) => (
+              <p key={paragraph} className="text-body-sm text-muted-foreground">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+          <dl className="mt-5 grid gap-4 sm:grid-cols-2">
+            {methodology.items.map((item) => (
+              <div key={item.term} className="min-w-0">
+                <dt className="text-h5">{item.term}</dt>
+                <dd className="mt-1 text-body-sm leading-relaxed text-muted-foreground">
+                  {item.detail}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-5 text-meta">
+            {methodology.correctionsPrefix}{" "}
+            <a
+              href={`mailto:${SUPPORT_EMAIL}`}
+              className="font-medium text-primary hover:underline"
+            >
+              {SUPPORT_EMAIL}
+            </a>
           </p>
         </Surface>
       </section>

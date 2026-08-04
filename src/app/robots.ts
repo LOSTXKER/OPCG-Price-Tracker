@@ -9,18 +9,22 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
+        // Disallow = crawl control (app surfaces nobody links, don't spend
+        // crawl budget). Index control lives in each page's `robots: { index:
+        // false }` metadata instead — blocking a page here would stop Google
+        // from ever READING that noindex, which is why /portfolio, /watchlist,
+        // /login and /register are deliberately crawlable. /profile stays
+        // crawlable so its canonical → /@handle can consolidate.
         disallow: [
           "/api/",
           "/admin/",
           "/admin-login",
-          "/portfolio",
-          "/watchlist",
-          "/profile",
           "/settings",
-          "/marketplace/create",
           "/messages",
-          "/login",
-          "/register",
+          "/orders",
+          "/seller/",
+          "/marketplace/create",
+          "/ref/",
         ],
       },
     ],

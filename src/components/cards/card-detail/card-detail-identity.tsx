@@ -6,6 +6,7 @@ import { RarityBadge } from "@/components/shared/rarity-badge"
 import { WatchlistHeart } from "@/components/shared/watchlist-heart"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { t, type Language } from "@/lib/i18n"
+import { formatCardCodeLabel } from "@/lib/seo/copy/card"
 
 import type { CardDetailProps } from "./types"
 
@@ -31,8 +32,14 @@ export function CardDetailIdentity({
   return (
     <div className="min-w-0">
       <div className="flex items-center gap-3">
+        {/* The card code lives INSIDE the H1: it is the highest-intent Thai
+            query shape ("OP05-119 ราคา") and it is what makes each parallel
+            printing's H1 unique instead of a duplicate of the base card. */}
         <h1 className="text-h2 min-w-0 break-words text-foreground sm:text-h1">
-          {displayName}
+          {displayName}{" "}
+          <span className="text-h4 align-baseline font-semibold text-muted-foreground sm:text-h3">
+            {formatCardCodeLabel(card.cardCode)}
+          </span>
         </h1>
         <div className="flex shrink-0 items-center gap-1">
           <WatchlistHeart
@@ -75,8 +82,8 @@ export function CardDetailIdentity({
         </div>
       </div>
       <div className="text-meta mt-1 flex flex-wrap items-center gap-1.5">
+        {/* The code moved up into the H1 — repeating it here would be noise. */}
         <RarityBadge rarity={card.rarity} size="sm" />
-        <span>· {card.baseCode ?? card.cardCode}</span>
         <span
           className="inline-flex items-center gap-1 tnum"
           title={t(lang, "views")}

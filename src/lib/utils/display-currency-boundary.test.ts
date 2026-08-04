@@ -12,12 +12,16 @@ const UI_ROOTS = ["src/app", "src/components"] as const;
 const NATIVE_CURRENCY_ALLOWLIST = {
   "src/app/cards/[code]/opengraph-image.tsx":
     "OpenGraph output is cacheable and cannot read a browser-local preference.",
-  "src/app/cards/[code]/page.tsx":
-    "Card metadata is canonical server output, not personalized browser UI.",
+  "src/components/cards/card-detail/price-history-table.tsx":
+    "The crawlable price-history table must ship in the first HTML response, so it renders on the server and cannot read the browser currency store.",
   "src/app/guide/rarities/page.tsx":
     "The guide explains Japanese source-market price ranges in JPY.",
+  "src/app/market-overview/page.tsx":
+    "The server-rendered market summary is crawlable SEO copy — it cannot read a browser-local currency preference.",
   "src/app/marketplace/[listingId]/page.tsx":
     "Marketplace SEO metadata uses the listing's canonical transaction currency.",
+  "src/app/search/search-seo-blocks.tsx":
+    "Server-rendered search results exist for crawlers and no-JS clients; the hydrated client list is preference-aware.",
   "src/app/orders/[id]/page.tsx":
     "An order receipt preserves the actual THB transaction and JPY listing amounts.",
   "src/app/seller/listings/page.tsx":
@@ -26,6 +30,10 @@ const NATIVE_CURRENCY_ALLOWLIST = {
     "A seller order receipt preserves the actual transaction currencies.",
   "src/app/seller/page.tsx":
     "Seller revenue and order totals are actual THB transaction amounts.",
+  "src/app/trending/page.tsx":
+    "The auto-generated Thai summary sentence is canonical server output for crawlers, not personalized browser UI.",
+  "src/app/trending/trending-movers-sections.tsx":
+    "The server-rendered mover lists must be in the first HTML response, so they cannot depend on the client currency store.",
   "src/components/marketplace/create-wizard/step-pricing.tsx":
     "The asking-price input is explicitly labeled JPY and persists priceJpy.",
   "src/components/messages/conversation-item.tsx":
