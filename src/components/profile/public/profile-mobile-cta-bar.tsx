@@ -10,7 +10,7 @@ import { SaveSellerButton } from "./save-seller-button";
  * buyers can always reach the seller without scrolling back up. Hidden on
  * `md:` and above where the hero already has a Message button.
  *
- * Sits ABOVE the global BottomNav (z-50, 4rem tall) — this route is not
+ * Sits ABOVE the global BottomNav (`z-chrome`, 4rem tall) — this route is not
  * chromeless so the nav renders; without the offset the nav would cover the
  * CTA entirely. Same lift pattern as the card-detail sticky buy bar.
  */

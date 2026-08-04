@@ -48,7 +48,7 @@ export function DesktopAssetsTable({
           <col className="w-[20%]" />
           <col className="w-[8%]" />
         </colgroup>
-        {/* Not sticky: the global header is sticky z-50, so a top-0 thead
+        {/* Not sticky: the global header is sticky `z-chrome`, so a top-0 thead
             would pin underneath it. Revisit when --chrome-h (TOKENS-04) lands. */}
         <thead className="bg-transparent" data-slot="portfolio-assets-head">
           <tr className="border-b border-hair text-eyebrow">

@@ -118,7 +118,8 @@
                               `[data-sonner-toaster] { z-index: 999999999 }` and sits above
                               this scale — left alone on purpose, a toast should always
                               be visible. */
-  --z-index-skip: 100;     /* skip-to-content — must beat everything */
+  --z-index-skip: 100;     /* skip-to-content — top of THIS scale (sonner's own
+                              toaster still sits above it, see --z-index-toast) */
 }
 
 :root {

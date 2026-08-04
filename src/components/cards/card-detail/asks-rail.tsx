@@ -181,7 +181,7 @@ export function MeecardAsksRail({
             </span>
           )}
         </div>
-        <p className="text-meta mt-0.5">{t(lang, "sellingNowDesc")}</p>
+        <p className="text-body-sm mt-1 max-w-prose text-muted-foreground">{t(lang, "sellingNowDesc")}</p>
       </div>
 
       {!hasListings ? (
@@ -276,7 +276,7 @@ export function MeecardAsksRail({
                           </Link>
                         </td>
                         <td className={marketTdLead}>
-                          <span className="text-meta tnum">{formatFeedDate(l.listedAtIso)}</span>
+                          <span className="tnum text-body-sm text-muted-foreground">{formatFeedDate(l.listedAtIso)}</span>
                         </td>
                         <td className={marketTdLead}>
                           <ConditionChip condition={l.condition} graded={isGradedCondition(l.condition)} />

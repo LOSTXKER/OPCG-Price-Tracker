@@ -47,7 +47,11 @@ export function HoneyToast({
   return (
     <div
       className={cn(
-        "fixed inset-x-0 bottom-[env(safe-area-inset-bottom,1rem)] z-toast mx-auto mb-4 flex w-fit max-w-[90vw] animate-in fade-in slide-in-from-bottom-2 items-center gap-2.5 rounded-xl border px-4 py-3 shadow-[var(--elev-raised)] duration-[var(--dur-base)] sm:max-w-md",
+        // Clears the mobile tab bar + any floating ad the same way the compare
+        // bar and scroll-to-top do. It used to sit at `bottom-0` on `z-50`, i.e.
+        // geometrically INSIDE the nav band and on the nav's own layer — the nav
+        // is later in the DOM, so the toast was 100% invisible on phones.
+        "fixed inset-x-0 bottom-[calc(5rem+var(--floating-ad-clearance))] z-toast mx-auto flex w-fit max-w-[90vw] animate-in fade-in slide-in-from-bottom-2 items-center gap-2.5 rounded-xl border px-4 py-3 shadow-[var(--elev-raised)] duration-[var(--dur-base)] sm:max-w-md md:bottom-[calc(1.5rem+var(--floating-ad-clearance))]",
         accent,
       )}
     >

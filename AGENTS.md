@@ -52,6 +52,30 @@ Concrete consequences:
 - **Chromeless shells** (admin, seller, messages, auth): own their own `<main>` padding. They don't have a bottom-nav so they don't need bottom-nav padding either. Use `<PageContainer inShell>` to inherit max-width without re-applying `px-*`.
 - **Mobile-first**: write the mobile rule with no prefix, then layer in `sm:` / `md:` / `lg:`. Don't write desktop-first with `max-md:` / `max-sm:` overrides — it inverts the mental model and makes diffs harder to read.
 
+## Stacking layers (z-index)
+
+There is **one** scale, defined as `--z-index-*` tokens in the `@theme` block of [src/app/globals.css](src/app/globals.css). Anything `fixed` or `sticky` takes its z from a token — never a bare number, never `z-[57]`.
+
+| Token         | Value | Belongs to it                                                                        |
+| ------------- | ----- | ------------------------------------------------------------------------------------ |
+| `z-sticky`    | 30    | in-page sticky sub-bars: section nav, rarity rail, selection bar, admin save bar     |
+| `z-ad`        | 35    | fixed ad slots (bottom anchor)                                                       |
+| `z-floating`  | 40    | floating action bars: compare pill, scroll-to-top, sticky-buy, drop-calc tray        |
+| `z-chrome`    | 50    | site chrome only: desktop header, mobile header, bottom nav, admin/seller headers    |
+| `z-dropdown`  | 55    | **inline (non-portaled)** dropdowns anchored in page content — above chrome, below modals |
+| `z-modal`     | 70    | modal / sheet surface **and its backdrop** (same layer on purpose)                   |
+| `z-popup`     | 80    | **portaled** popover · menu · select · tooltip — can open from inside a modal        |
+| `z-toast`     | 90    | in-app toasts (sonner keeps its own higher layer)                                    |
+| `z-skip`      | 100   | skip-to-content                                                                        |
+
+Rules — the two CSS facts this scale exists to defend against:
+
+- **A z-index inside a stacking context is inert.** `position: sticky` creates a stacking context **even with `z-index: auto`**, and `relative`/`fixed` create one as soon as they carry any z-index — as do `transform`, `filter`, `backdrop-filter`, `opacity < 1`, `isolate`, `will-change` and `contain`. A dropdown written inside one can never out-paint the site chrome no matter what number it carries. If a hand-rolled dropdown can open inside a `sticky` / transformed / `overflow-hidden` container, it must be **portaled** — use `Popover`, don't raise the number.
+- **Equal z-index falls back to DOM order**, and the bottom nav is mounted near the end of `<body>` — so it wins every tie. That is exactly why nothing should share `z-chrome`.
+- `z-modal` covers both the backdrop and the surface **deliberately**. Give the backdrop a lower tier and a dialog opened on top of another dialog loses its scrim, because ordering then stops falling to DOM order.
+- Plain `z-0` / `z-10` / `z-20` stay fine for layering **inside** one component (table `thead`, image overlay, focus ring). Never for a `fixed` element.
+- `/proto/**` is out of scope by design — it renders its own shell and doesn't mix with the global chrome.
+
 ## Component Kit (canon — เช็คตารางนี้ก่อนสร้าง component ใหม่)
 
 **กฎเหล็ก:** ก่อนสร้าง component ใหม่ **ต้องเช็คตารางนี้ก่อน** — ถ้ามี canonical แล้วให้ใช้/ต่อยอดอันนั้น ห้ามสร้างซ้ำ. จะ deprecate ของเดิมหรือเพิ่ม canonical ใหม่ = อัปเดตตารางนี้ในคอมมิตเดียวกัน. เป้าหมาย: ตอบได้ใน 10 วิว่า "kit ทางการมีอะไร" และของซ้ำทุกคู่เหลือตัวเดียว.

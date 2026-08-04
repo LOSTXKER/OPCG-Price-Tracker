@@ -203,7 +203,7 @@ export function RecentSales({
               <SourceRef source={sale.source} interactive={!isSample} />
             </td>
             <td className={marketTdLead}>
-              <span className="text-meta tnum">{formatFeedDate(sale.soldAtIso)}</span>
+              <span className="tnum text-body-sm text-muted-foreground">{formatFeedDate(sale.soldAtIso)}</span>
             </td>
             <td className={marketTdLead}>
               <ConditionChip condition={sale.condition} graded={sale.family != null} />
@@ -240,7 +240,7 @@ export function RecentSales({
             dominated the section. One quiet line stays: these rows are invented,
             the site is public, and an unlabelled fake sale price on a price
             tracker is the one thing this page must never show. */}
-        <p className="text-meta mt-0.5">
+        <p className="text-body-sm mt-1 max-w-prose text-muted-foreground">
           {t(lang, isSample ? "saleHistorySampleDesc" : "saleHistoryDesc")}
         </p>
       </div>
