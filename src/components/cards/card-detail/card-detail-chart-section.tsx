@@ -2,13 +2,11 @@
 
 import { MoveHorizontal } from "lucide-react"
 
-import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useTierLimits } from "@/hooks/use-tier-limits"
 import { t, type Currency, type Language } from "@/lib/i18n"
 import { formatDisplayValue } from "@/lib/utils/currency"
 import { cn } from "@/lib/utils"
-import { useUpgradeDialog } from "@/components/shared/upgrade-dialog"
+import { PriceRangeControl } from "./price-range-control"
 
 import {
   RANGES,
@@ -44,13 +42,6 @@ const RANGE_DAYS: Record<ChartRange, number> = {
   All: Infinity,
 }
 
-export function isPriceHistoryRangeLocked(
-  range: ChartRange,
-  maxDays: number,
-): boolean {
-  return Number.isFinite(maxDays) && RANGE_DAYS[range] > maxDays
-}
-
 /** Selected-grade chart, range controls, and live announcement. */
 export function CardDetailChartSection({
   lang,
@@ -70,8 +61,6 @@ export function CardDetailChartSection({
   windowLabel,
 }: CardDetailChartSectionProps) {
   const chartHeights = "h-[210px] sm:h-[280px] lg:h-[320px]"
-  const { limits, loaded: limitsLoaded } = useTierLimits()
-  const { openUpgradeDialog } = useUpgradeDialog()
 
   return (
     <div className="mt-6">
@@ -80,34 +69,7 @@ export function CardDetailChartSection({
           <p className="text-eyebrow">
             {t(lang, "priceHistory")} · {gradeLabel}
           </p>
-          {limitsLoaded ? (
-            <SegmentedControl<ChartRange>
-              options={RANGES.map((rangeOption) => ({
-                value: rangeOption,
-                label: rangeOption,
-                locked: isPriceHistoryRangeLocked(
-                  rangeOption,
-                  limits.priceHistoryDays,
-                ),
-                ariaLabel: isPriceHistoryRangeLocked(
-                  rangeOption,
-                  limits.priceHistoryDays,
-                )
-                    ? t(lang, "upgradeToUnlock")
-                    : undefined,
-              }))}
-              value={range}
-              onChange={onRangeChange}
-              onLocked={() =>
-                openUpgradeDialog({ featureKey: "priceHistoryExtended" })
-              }
-              size="sm"
-              variant="pill"
-              ariaLabel={t(lang, "priceHistory")}
-            />
-          ) : (
-            <Skeleton className="h-8 w-52 rounded-full" />
-          )}
+          <PriceRangeControl lang={lang} range={range} onRangeChange={onRangeChange} />
         </div>
 
         {!datum.hasData ? (

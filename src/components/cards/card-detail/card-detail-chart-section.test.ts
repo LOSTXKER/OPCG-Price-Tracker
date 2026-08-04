@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isPriceHistoryRangeLocked } from "./card-detail-chart-section";
+import { isPriceHistoryRangeLocked } from "./price-range-control";
 
 describe("card detail price-history range gates", () => {
   it("keeps Free at 30 days", () => {

@@ -216,14 +216,16 @@ export function CardDetail(props: CardDetailProps) {
       <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
         {/* ROW 1 LEFT — real price history (server-rendered table, no mock feed) */}
         <section id="sources" className="min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
-          {/* Each block owns its controls (owner decision) — the table has its
-              own period filter rather than following the chart's pills, which
-              sit too far up the page to read as connected. */}
+          {/* Same selector as the chart, same state, rendered in both blocks:
+              they stay in sync and each block shows the control next to the
+              data it governs — including the identical Pro locks. */}
           {priceHistory && (
             <CardPriceHistory
               cardCode={card.cardCode}
               history={priceHistory}
               lang={displayLang}
+              range={range}
+              onRangeChange={selectRange}
             />
           )}
           {/* Settled sales — REAL rows from the database now (CardPrice where

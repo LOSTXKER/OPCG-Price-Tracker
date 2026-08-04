@@ -1,7 +1,5 @@
 "use client"
 
-import { useState } from "react"
-
 import { t, type Language } from "@/lib/i18n"
 import {
   buildPriceHistoryCopy,
@@ -10,12 +8,10 @@ import {
 } from "@/lib/seo/copy/card"
 import { changeToneClass, formatJpy, formatSignedPct, formatThb } from "@/lib/utils/currency"
 
+import { RANGE_DAYS, type ChartRange } from "./card-chart"
 import { FeedScrollBox } from "./feed-scroll-box"
-import { ConditionFilter } from "./market-feed-shared"
 import type { PriceHistorySummary } from "./price-history"
-
-/** Local period options (days). "all" = every row that was derived. */
-const HISTORY_PERIODS = ["7", "30"]
+import { PriceRangeControl } from "./price-range-control"
 
 /**
  * Real, server-rendered price history — the block that replaced the fabricated
@@ -29,20 +25,20 @@ export function CardPriceHistory({
   cardCode,
   history,
   lang = "TH",
+  range = "1M",
+  onRangeChange,
 }: {
   cardCode: string
   history: PriceHistorySummary
   lang?: Language
+  /** Shared with the chart — the same selector, the same state, shown twice. */
+  range?: ChartRange
+  onRangeChange?: (range: ChartRange) => void
 }) {
-  // Own control, like every other block on this page. It used to follow the
-  // chart's range pills, but those sit a long way up the page — a control you
-  // cannot see while reading the table is not a control.
-  const [period, setPeriod] = useState<string>("all")
-
-  // Every derived row ships in the HTML and the period only hides rows, so a
-  // crawler always sees the full set (default "all"). Nothing is refetched.
-  const points =
-    period === "all" ? history.points : history.points.slice(0, Number(period))
+  // The range only decides how many of the already-delivered rows are visible.
+  // SSR runs at the default 1M, so the full 30-row set is in the HTML for every
+  // crawler no matter which range a visitor later picks — and nothing refetches.
+  const points = history.points.slice(0, RANGE_DAYS[range])
   const latestDate = formatSeoDate(history.latestIso, lang)
   const copy = buildPriceHistoryCopy(lang, {
     cardCode,
@@ -58,17 +54,10 @@ export function CardPriceHistory({
         <p className="text-body-sm mt-1 text-muted-foreground">{copy.lead}</p>
       </div>
 
-      {history.points.length > 1 && (
-        <div className="mb-4">
-          <ConditionFilter
-            label={t(lang, "salePeriodFilter")}
-            grades={HISTORY_PERIODS}
-            active={period}
-            onSelect={setPeriod}
-            render={(v) =>
-              v === "all" ? t(lang, "filterAll") : t(lang, "saleWithinDays").replace("{n}", v)
-            }
-          />
+      {onRangeChange && history.points.length > 1 && (
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <p className="text-eyebrow">{t(lang, "salePeriodFilter")}</p>
+          <PriceRangeControl lang={lang} range={range} onRangeChange={onRangeChange} />
         </div>
       )}
 
