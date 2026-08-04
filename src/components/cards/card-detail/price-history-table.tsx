@@ -6,7 +6,13 @@ import {
 } from "@/lib/seo/copy/card"
 import { changeToneClass, formatJpy, formatSignedPct, formatThb } from "@/lib/utils/currency"
 
+import { RANGE_DAYS, type ChartRange } from "./card-chart"
 import type { PriceHistorySummary } from "./price-history"
+
+/** How many daily rows a chart range shows in the table. */
+function rangeRowCount(range: ChartRange): number {
+  return RANGE_DAYS[range]
+}
 
 /**
  * Real, server-rendered price history — the block that replaced the fabricated
@@ -20,16 +26,23 @@ export function CardPriceHistory({
   cardCode,
   history,
   lang = "TH",
+  range = "1M",
 }: {
   cardCode: string
   history: PriceHistorySummary
   lang?: Language
+  /** Driven by the chart's range control — one selector governs both views. */
+  range?: ChartRange
 }) {
+  // Every derived row ships in the HTML; the range only decides how many of
+  // them are shown. Nothing is fetched when the selector changes, so a crawler
+  // always sees the full default (1M) set.
+  const points = history.points.slice(0, rangeRowCount(range))
   const latestDate = formatSeoDate(history.latestIso, lang)
   const copy = buildPriceHistoryCopy(lang, {
     cardCode,
     latestDate,
-    pointCount: history.points.length,
+    pointCount: points.length,
   })
   const labels = priceHistoryLabels(lang)
 
@@ -40,7 +53,7 @@ export function CardPriceHistory({
         <p className="text-body-sm mt-1 text-muted-foreground">{copy.lead}</p>
       </div>
 
-      {history.points.length === 0 ? (
+      {points.length === 0 ? (
         <p className="text-meta py-6 text-center">{copy.emptyText}</p>
       ) : (
         <>
@@ -62,7 +75,7 @@ export function CardPriceHistory({
                 </tr>
               </thead>
               <tbody>
-                {history.points.map((p) => (
+                {points.map((p) => (
                   <tr
                     key={p.dateIso}
                     className="border-b border-hair last:border-b-0 hover:bg-muted/40"
@@ -86,7 +99,7 @@ export function CardPriceHistory({
           </div>
 
           <div className="divide-y divide-hair px-1 sm:hidden">
-            {history.points.map((p) => (
+            {points.map((p) => (
               <div key={p.dateIso} className="flex items-center justify-between gap-3 py-3">
                 <span className="min-w-0">
                   <span className="tnum block text-label font-medium text-foreground">

@@ -1,5 +1,7 @@
 import type { ReactNode } from "react"
 
+import type { PriceHistorySummary } from "./price-history"
+
 export type CardListing = {
   id: string | number
   priceJpy: number
@@ -58,8 +60,13 @@ export interface CardDetailProps {
    * HTML response for every user agent (no hydration or fetch required).
    */
   introSlot?: ReactNode
-  /** Real price-history table — replaced the fabricated "sample sales" feed. */
-  historySlot?: ReactNode
+  /**
+   * Derived price history (server-computed, serialisable). Passed as DATA, not
+   * as a prebuilt node, so the chart's range control can govern how many rows
+   * the table shows. Every row still renders during SSR at the default range,
+   * so the crawler sees the full set.
+   */
+  priceHistory?: PriceHistorySummary
   /** Per-card FAQ (also emits FAQPage JSON-LD). */
   faqSlot?: ReactNode
   card: {

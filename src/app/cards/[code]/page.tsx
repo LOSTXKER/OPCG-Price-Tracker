@@ -5,7 +5,6 @@ import { getAdminConfig } from "@/lib/admin/config";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { CardDetail } from "@/components/cards/card-detail";
 import { derivePriceHistory } from "@/components/cards/card-detail/price-history";
-import { CardPriceHistory } from "@/components/cards/card-detail/price-history-table";
 import { FaqSection } from "@/components/shared/faq-section";
 import { AdPageContentReady } from "@/components/ads/ad-audience-provider";
 import { JsonLd } from "@/lib/seo/json-ld-script";
@@ -122,7 +121,11 @@ export default async function CardDetailPage(props: {
   // BEFORE the synthetic single-point fallback below so the table never shows a
   // "today" row that was never actually scraped. The chart above is client-only;
   // this table is the crawlable version.
-  const priceHistory = derivePriceHistory(chartData);
+  // 30 daily rows = the free tier's own price-history quota (TIER_LIMITS.FREE
+  // .priceHistoryDays), so an anonymous visitor and Googlebot see exactly what
+  // the pricing page promises for free. The chart's range control decides how
+  // many of those rows are on screen.
+  const priceHistory = derivePriceHistory(chartData, { maxPoints: 30 });
 
   // Latest update timestamp from the freshest known price for this card.
   // Compute "days since" on the server so the client component renders purely
@@ -189,9 +192,7 @@ export default async function CardDetailPage(props: {
             ))}
           </section>
         }
-        historySlot={
-          <CardPriceHistory cardCode={card.cardCode} history={priceHistory} lang="TH" />
-        }
+        priceHistory={priceHistory}
         faqSlot={<FaqSection items={buildCardFaq("TH", seo)} />}
         card={{
         id: card.id,

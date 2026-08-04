@@ -16,6 +16,7 @@ import { CardDetailChartSection } from "./card-detail/card-detail-chart-section"
 import { CardDetailIdentity } from "./card-detail/card-detail-identity"
 import { CardDetailPrice } from "./card-detail/card-detail-price"
 import { CardDetailSectionNav } from "./card-detail/card-detail-section-nav"
+import { CardPriceHistory } from "./card-detail/price-history-table"
 import { CardViewTracker } from "./card-detail/card-view-tracker"
 import { RecentSales } from "./card-detail/recent-sales"
 import { SectionHead } from "./card-detail/section-head"
@@ -30,7 +31,7 @@ export type { CardDetailProps, RelatedCard, SiblingCard } from "./card-detail/ty
 
 
 export function CardDetail(props: CardDetailProps) {
-  const { card, siblings, relatedCards, latestUpdatedAt, introSlot, historySlot, faqSlot } = props
+  const { card, siblings, relatedCards, latestUpdatedAt, introSlot, priceHistory, faqSlot } = props
   const {
     hydrated,
     displayLang,
@@ -216,7 +217,18 @@ export function CardDetail(props: CardDetailProps) {
       <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
         {/* ROW 1 LEFT — real price history (server-rendered table, no mock feed) */}
         <section id="sources" className="min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
-          {historySlot}
+          {/* One range control: the chart's 7D/1M/… selector governs this table
+              too, so there is no second period picker on the page. The rows are
+              sliced from data already sent with the page — switching range never
+              refetches, and SSR (default 1M) puts the full set in the HTML. */}
+          {priceHistory && (
+            <CardPriceHistory
+              cardCode={card.cardCode}
+              history={priceHistory}
+              lang={displayLang}
+              range={range}
+            />
+          )}
           {/* Sample multi-market feed, restored at the owner's request. It sits
               BELOW the real price history so the page leads with actual data,
               and carries `data-nosnippet`: the rows are deterministic mock

@@ -13,7 +13,10 @@ import { useUIStore } from "@/stores/ui-store"
 export const INTRADAY_ENABLED = false
 export const RANGES = ["7D", "1M", "3M", "1Y", "All"] as const
 export type ChartRange = (typeof RANGES)[number]
-const SPAN_DAYS: Record<ChartRange, number> = { "7D": 7, "1M": 30, "3M": 90, "1Y": 365, All: 730 }
+/** Days each range covers — shared with the price-history table so one range
+ *  control governs both the chart and the dated rows. */
+export const RANGE_DAYS: Record<ChartRange, number> = { "7D": 7, "1M": 30, "3M": 90, "1Y": 365, All: 730 }
+const SPAN_DAYS = RANGE_DAYS
 const DAY_MS = 86_400_000
 // Long ranges (1Y/All) span more than one calendar year, so a bare "5 เม.ย." is
 // ambiguous — add a 2-digit year there. Short ranges keep day+month.
