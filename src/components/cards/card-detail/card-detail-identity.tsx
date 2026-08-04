@@ -6,7 +6,7 @@ import { RarityBadge } from "@/components/shared/rarity-badge"
 import { WatchlistHeart } from "@/components/shared/watchlist-heart"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { t, type Language } from "@/lib/i18n"
-import { formatCardCodeLabel } from "@/lib/seo/copy/card"
+import { baseCardCode } from "@/lib/seo/copy/card"
 
 import type { CardDetailProps } from "./types"
 
@@ -82,9 +82,9 @@ export function CardDetailIdentity({
       </div>
       <div className="text-meta mt-1 flex flex-wrap items-center gap-1.5">
         <RarityBadge rarity={card.rarity} size="sm" />
-        {/* Full printing code (not baseCode): this is what tells a parallel
-            apart from the base card once the heading no longer carries it. */}
-        <span>· {formatCardCodeLabel(card.cardCode)}</span>
+        {/* The official card number, without our internal `_p3` printing suffix
+            (owner decision) — the rarity badge beside it already says P-SEC. */}
+        <span>· {baseCardCode(card.cardCode)}</span>
         <span
           className="inline-flex items-center gap-1 tnum"
           title={t(lang, "views")}

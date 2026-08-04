@@ -90,6 +90,17 @@ export function formatCardCodeLabel(cardCode: string): string {
   return match ? `${match[1]} (Parallel ${match[2]})` : cardCode;
 }
 
+/**
+ * The official Bandai card number — `OP13-118_p3` → `OP13-118`. The `_p3`/`_r1`
+ * suffix is our own scraper's way of separating printings, not something Bandai
+ * prints on the card, so this is the code to show a reader (owner decision,
+ * เบส 2026-08-04). The suffixed form stays in URLs, `sku` and the <title>, where
+ * it is what keeps four same-name P-SEC printings apart.
+ */
+export function baseCardCode(cardCode: string): string {
+  return cardCode.replace(/_[a-z]\d+$/i, "");
+}
+
 /** Name shown to Thai readers (falls back to the Latin name when nameTh is null). */
 export function cardDisplayName(lang: Language, data: CardSeoData): string {
   if (lang === "TH" && data.nameTh?.trim()) return data.nameTh.trim();
@@ -133,7 +144,9 @@ export function buildCardSeoTitle(lang: Language, data: CardSeoData): string {
  */
 export function buildCardSeoDescription(lang: Language, data: CardSeoData): string {
   const name = cardDisplayName(lang, data);
-  const code = formatCardCodeLabel(data.cardCode);
+  // Base code: nobody searches the `_p3` suffix. Four same-name printings stay
+  // distinguishable here because the price is interpolated into the snippet.
+  const code = baseCardCode(data.cardCode);
   const thb = cardPriceThbText(data);
   const jpy = cardPriceJpyText(data);
   const change =
@@ -161,36 +174,35 @@ export function buildCardSeoDescription(lang: Language, data: CardSeoData): stri
  * sentence Google can read without burying the price it sits under.
  */
 export function buildCardIntro(lang: Language, data: CardSeoData): string[] {
-  const code = formatCardCodeLabel(data.cardCode);
+  // Reader-facing code = the official card number, without our `_p3` printing
+  // suffix (owner decision). The suffix still lives in the URL and the <title>.
+  const code = baseCardCode(data.cardCode);
   const hasPrice = cardPriceThbText(data) != null;
 
-  // One short line, owner-specified length (เบส, 2026-08-04). Two rules behind
-  // the wording:
-  //   1. It does not restate the price, the 30-day move or the update date —
-  //      all three render on screen above/below this copy, and repeating them
-  //      made it a five-line wall between the card name and the price.
-  //   2. Every clause is per-card data (name, code, printing, rarity, set,
-  //      source). A tail listing the page's own sections ("พร้อมข้อมูลการ์ด
-  //      กราฟราคา ประวัติราคา") would be byte-identical on all 3,838 cards —
-  //      boilerplate that adds a keyword but no information.
+  // Wording supplied by the owner (เบส, 2026-08-04). It does NOT restate the
+  // price, the 30-day move or the update date — all three already render on
+  // screen around this line, and repeating them turned it into a five-line wall
+  // between the card name and the price.
   if (lang === "TH") {
     const nameTh = data.nameTh?.trim();
     const namePart =
       nameTh && nameTh !== data.nameLatin ? `${nameTh} (${data.nameLatin})` : data.nameLatin;
-    // No "(code)" wrapper and no separate parallel clause: formatCardCodeLabel
-    // already returns "OP13-118 (Parallel 3)", so both would double up into
-    // "(OP13-118 (Parallel 3)) แบบ parallel".
+    const head = `การ์ด ${namePart} รหัส ${code} ความหายาก ${data.rarity} จากชุด ${data.setName} ในเกมการ์ดวันพีช (One Piece Card Game)`;
+
     return [
       hasPrice
-        ? `เช็คราคาการ์ด ${namePart} รหัส ${code} ความหายาก ${data.rarity} จากชุด ${data.setName} ในเกมการ์ดวันพีช (One Piece Card Game) ราคากลางจาก Yuyu-tei ตลาดญี่ปุ่น อัปเดตทุกวัน`
-        : `การ์ด ${namePart} รหัส ${code} ความหายาก ${data.rarity} จากชุด ${data.setName} ในเกมการ์ดวันพีช (One Piece Card Game) ตอนนี้ยังไม่มีราคากลางล่าสุด เพราะยังไม่พบประกาศขายจากแหล่งที่เราติดตาม (Yuyu-tei ตลาดญี่ปุ่น) เราเก็บราคาใหม่ทุกวัน`,
+        ? // "ความหายาก" is not repeated in the tail — it already appears above,
+          // and the owner's draft carried it twice.
+          `เช็คราคา${head} พร้อมข้อมูลการ์ด กราฟราคา และประวัติราคา อัปเดตทุกวัน`
+        : `${head} ตอนนี้ยังไม่มีราคากลางล่าสุด เพราะยังไม่พบประกาศขายจากแหล่งที่เราติดตาม (Yuyu-tei ตลาดญี่ปุ่น) เราเก็บราคาใหม่ทุกวัน`,
     ];
   }
 
+  const head = `${data.nameLatin}, card ${code}, a ${data.rarity} card from ${data.setName} in the One Piece Card Game`;
   return [
     hasPrice
-      ? `Check the price of ${data.nameLatin}, card ${code}, a ${data.rarity} card from ${data.setName} in the One Piece Card Game. The reference price tracks the Japanese market via Yuyu-tei and is refreshed daily.`
-      : `${data.nameLatin}, card ${code}, is a ${data.rarity} card from ${data.setName} in the One Piece Card Game. There is no reference price yet — we have not seen it listed by the sources we track (Yuyu-tei in Japan), and prices are collected daily.`,
+      ? `Check the price of ${head}, with card details, a price chart and full price history, updated daily.`
+      : `${head}. There is no reference price yet — we have not seen it listed by the sources we track (Yuyu-tei in Japan), and prices are collected daily.`,
   ];
 }
 
@@ -202,7 +214,7 @@ export interface CardFaqItem {
 /** Per-card FAQ, templated from real data. Feeds FAQPage JSON-LD via FaqSection. */
 export function buildCardFaq(lang: Language, data: CardSeoData): CardFaqItem[] {
   const name = cardDisplayName(lang, data);
-  const code = formatCardCodeLabel(data.cardCode);
+  const code = baseCardCode(data.cardCode);
   const thb = cardPriceThbText(data);
   const jpy = cardPriceJpyText(data);
   const change = data.priceChange30d != null ? formatSignedPct(data.priceChange30d) : null;
@@ -260,7 +272,7 @@ export function buildPriceHistoryCopy(
   lang: Language,
   data: { cardCode: string; latestDate: string | null; pointCount: number },
 ): { title: string; lead: string; recentTitle: string; windowsTitle: string; emptyText: string } {
-  const code = formatCardCodeLabel(data.cardCode);
+  const code = baseCardCode(data.cardCode);
   if (lang === "TH") {
     return {
       title: `ประวัติราคา ${code}`,

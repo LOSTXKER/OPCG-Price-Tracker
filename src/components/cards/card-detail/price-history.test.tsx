@@ -6,6 +6,7 @@ import {
   buildCardIntro,
   buildCardSeoDescription,
   buildCardSeoTitle,
+  baseCardCode,
   formatCardCodeLabel,
   type CardSeoData,
 } from "@/lib/seo/copy/card"
@@ -151,10 +152,26 @@ describe("card SEO copy", () => {
     expect(formatCardCodeLabel("EB01-001_p1")).toBe("EB01-001 (Parallel 1)")
 
     const parallel: CardSeoData = { ...seo, cardCode: "EB01-001_p1", isParallel: true }
+    // The <title> keeps the printing marker: four same-name P-SEC printings of
+    // OP13-118 differ 128x in price, and the title carries no price to tell them
+    // apart otherwise.
     expect(buildCardSeoTitle("TH", parallel)).toContain("EB01-001 (Parallel 1)")
     expect(buildCardSeoTitle("TH", parallel).length).toBeLessThanOrEqual(60)
-    expect(buildCardIntro("TH", parallel).join(" ")).toContain("EB01-001 (Parallel 1)")
     expect(buildCardFaq("TH", parallel)[3]!.answer).toContain("แบบ parallel")
+  })
+
+  it("shows readers the official card number, not our _pN printing suffix", () => {
+    expect(baseCardCode("OP13-118_p3")).toBe("OP13-118")
+    expect(baseCardCode("P-041_r1")).toBe("P-041")
+    expect(baseCardCode("OP01-003")).toBe("OP01-003")
+
+    const parallel: CardSeoData = { ...seo, cardCode: "EB01-001_p1", isParallel: true }
+    const intro = buildCardIntro("TH", parallel).join(" ")
+
+    expect(intro).toContain("EB01-001")
+    expect(intro).not.toContain("Parallel 1")
+    expect(intro).not.toContain("_p1")
+    expect(buildCardFaq("TH", parallel)[0]!.question).not.toContain("Parallel 1")
   })
 
   it("covers both Thai spellings across title + description", () => {
@@ -185,9 +202,10 @@ describe("card SEO copy", () => {
     expect(intro).toContain("OP01-003")
     expect(intro).toContain("SR")
     expect(intro).toContain("Romance Dawn")
-    expect(intro).toContain("Yuyu-tei")
     // Second Thai spelling lives in the body copy.
     expect(intro).toContain("วันพีช")
+    // Source attribution moved out of this line (owner-specified wording) but is
+    // still on the page — see the description and FAQ assertions below.
     // Owner-specified length: one line, not a paragraph block. Measured on the
     // worst case that production actually renders — a parallel printing (its
     // code expands to "OP13-118 (Parallel 3)") in a set with a long name. The
@@ -202,12 +220,8 @@ describe("card SEO copy", () => {
       setName: "Carrying on His Will",
     }).join(" ")
 
-    expect(worstCase.length).toBeLessThanOrEqual(185)
-    // formatCardCodeLabel already emits "(Parallel 3)" — the copy must not wrap
-    // it in another pair of brackets or repeat the word.
+    expect(worstCase.length).toBeLessThanOrEqual(200)
     expect(worstCase).not.toContain("((")
-    expect(worstCase).not.toContain("(Parallel 3)) ")
-    expect(worstCase.match(/parallel/gi) ?? []).toHaveLength(1)
   })
 
   it("does not restate figures the page already renders", () => {
