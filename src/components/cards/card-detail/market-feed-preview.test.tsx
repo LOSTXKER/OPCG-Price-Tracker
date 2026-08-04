@@ -19,7 +19,7 @@ describe("card-detail market feed previews", () => {
     expect(getMarketFeedPreview(rows, false)).toEqual([0, 1, 2, 3, 4])
   })
 
-  it("renders simulated sales as a disclosed, non-interactive short preview", () => {
+  it("keeps simulated sales disclosed, in one quiet line, and non-interactive", () => {
     const sales = mockRecentSales(
       1_200,
       "2026-07-11T12:00:00.000Z",
@@ -29,9 +29,12 @@ describe("card-detail market feed previews", () => {
       <RecentSales sales={sales} isSample currency="THB" lang="TH" />,
     )
 
-    expect(markup).toContain("ตัวอย่างประวัติการซื้อขาย")
+    // The owner asked for the loud badge and the boxed callout to go (they
+    // dominated the section). The DISCLOSURE itself must survive that cleanup:
+    // this block prints invented prices on a public price tracker, so one plain
+    // line has to say so. Assert the fact, not the old chrome.
     expect(markup).toContain("ไม่ใช่ธุรกรรมจริง")
-    expect(markup).toContain('role="note"')
+    expect(markup).not.toContain('role="note"')
     expect(markup).not.toContain('role="region"')
     expect(markup).not.toContain("overflow-y-auto")
     expect(markup).not.toContain("<a ")

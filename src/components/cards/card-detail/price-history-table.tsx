@@ -44,49 +44,31 @@ export function CardPriceHistory({
         <p className="text-meta py-6 text-center">{copy.emptyText}</p>
       ) : (
         <>
+          {/* Windows as stat tiles, not a second table: two identically-styled
+              tables stacked read as one long grey slab and the eye cannot tell
+              the summary from the daily rows. Tiles are scannable and give the
+              section a shape. */}
           {history.windows.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-h5 mb-2">{copy.windowsTitle}</h3>
-
-              <div className="hidden sm:block">
-                <table className="w-full table-fixed border-collapse">
-                  <thead className="bg-background">
-                    <tr className="text-eyebrow border-b border-hair">
-                      <th scope="col" className="py-2.5 pl-1 pr-3 text-left">{labels.window}</th>
-                      <th scope="col" className="py-2.5 pl-2 pr-3 text-right">{labels.low}</th>
-                      <th scope="col" className="py-2.5 pl-2 pr-3 text-right">{labels.high}</th>
-                      <th scope="col" className="py-2.5 pl-2 pr-1 text-right">{labels.avg}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {history.windows.map((w) => (
-                      <tr key={w.days} className="border-b border-hair last:border-b-0">
-                        <th scope="row" className="py-3 pl-1 pr-3 text-left text-label font-medium text-foreground">
-                          {labels.days(w.days)}
-                          <span className="text-meta ml-2">{labels.samples(w.count)}</span>
-                        </th>
-                        <td className="tnum py-3 pl-2 pr-3 text-right text-label text-foreground">
-                          {formatThb(w.lowThb)}
-                        </td>
-                        <td className="tnum py-3 pl-2 pr-3 text-right text-label text-foreground">
-                          {formatThb(w.highThb)}
-                        </td>
-                        <td className="tnum py-3 pl-2 pr-1 text-right text-label font-semibold text-foreground">
-                          {formatThb(w.avgThb)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="divide-y divide-hair px-1 sm:hidden">
+            <div className="mb-7">
+              <h3 className="text-h5 mb-2.5">{copy.windowsTitle}</h3>
+              <div className="grid gap-2.5 sm:grid-cols-3">
                 {history.windows.map((w) => (
-                  <div key={w.days} className="py-3">
-                    <p className="text-label font-medium text-foreground">{labels.days(w.days)}</p>
-                    <p className="tnum text-meta mt-0.5">
-                      {labels.low} {formatThb(w.lowThb)} · {labels.high} {formatThb(w.highThb)} ·{" "}
-                      {labels.avg} {formatThb(w.avgThb)}
+                  <div
+                    key={w.days}
+                    className="surface-1 rounded-xl hairline px-4 py-3.5"
+                  >
+                    <div className="flex items-baseline justify-between gap-2">
+                      <p className="text-label font-medium text-foreground">
+                        {labels.days(w.days)}
+                      </p>
+                      <p className="text-meta">{labels.samples(w.count)}</p>
+                    </div>
+                    <p className="tnum mt-2 text-h4 font-semibold text-foreground">
+                      {formatThb(w.avgThb)}
+                    </p>
+                    <p className="text-meta mt-0.5">{labels.avg}</p>
+                    <p className="tnum text-meta mt-2 border-t border-hair pt-2">
+                      {formatThb(w.lowThb)} – {formatThb(w.highThb)}
                     </p>
                   </div>
                 ))}
@@ -96,29 +78,34 @@ export function CardPriceHistory({
 
           <h3 className="text-h5 mb-2">{copy.recentTitle}</h3>
 
+          {/* ฿ and ¥ share one cell — the yen figure is provenance, not a value
+              to compare down a column, and giving it equal weight made four
+              columns of numbers with no clear reading order. */}
           <div className="hidden sm:block">
             <table className="w-full table-fixed border-collapse">
-              <thead className="bg-background">
+              <thead>
                 <tr className="text-eyebrow border-b border-hair">
-                  <th scope="col" className="py-2.5 pl-1 pr-3 text-left">{labels.date}</th>
+                  <th scope="col" className="w-2/5 py-2.5 pl-1 pr-3 text-left">{labels.date}</th>
                   <th scope="col" className="py-2.5 pl-2 pr-3 text-right">{labels.priceThb}</th>
-                  <th scope="col" className="py-2.5 pl-2 pr-3 text-right">{labels.priceJpy}</th>
-                  <th scope="col" className="py-2.5 pl-2 pr-1 text-right">{labels.changeCol}</th>
+                  <th scope="col" className="w-1/5 py-2.5 pl-2 pr-1 text-right">{labels.changeCol}</th>
                 </tr>
               </thead>
               <tbody>
                 {history.points.map((p) => (
-                  <tr key={p.dateIso} className="border-b border-hair last:border-b-0">
-                    <th scope="row" className="tnum py-3 pl-1 pr-3 text-left text-label font-medium text-foreground">
+                  <tr
+                    key={p.dateIso}
+                    className="border-b border-hair last:border-b-0 hover:bg-muted/40"
+                  >
+                    <th scope="row" className="tnum py-2.5 pl-1 pr-3 text-left text-label font-medium text-foreground">
                       {formatSeoDate(p.dateIso, lang)}
                     </th>
-                    <td className="tnum py-3 pl-2 pr-3 text-right text-label font-semibold text-foreground">
-                      {formatThb(p.priceThb)}
+                    <td className="py-2.5 pl-2 pr-3 text-right">
+                      <span className="tnum block text-label font-semibold text-foreground">
+                        {formatThb(p.priceThb)}
+                      </span>
+                      <span className="tnum text-meta block">{formatJpy(p.priceJpy)}</span>
                     </td>
-                    <td className="tnum py-3 pl-2 pr-3 text-right text-label text-muted-foreground">
-                      {formatJpy(p.priceJpy)}
-                    </td>
-                    <td className={`tnum py-3 pl-2 pr-1 text-right text-label ${changeToneClass(p.changePct)}`}>
+                    <td className={`tnum py-2.5 pl-2 pr-1 text-right text-label ${changeToneClass(p.changePct)}`}>
                       {p.changePct != null ? formatSignedPct(p.changePct) : "—"}
                     </td>
                   </tr>

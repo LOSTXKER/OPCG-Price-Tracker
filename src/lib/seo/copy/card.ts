@@ -277,20 +277,20 @@ export function buildPriceHistoryCopy(
     return {
       title: `ประวัติราคา ${code}`,
       lead: data.pointCount
-        ? `ราคากลางของ ${code} ที่ Meecard เก็บได้จากตลาดญี่ปุ่น${data.latestDate ? ` ล่าสุดเมื่อ ${data.latestDate}` : ""} ใช้ดูว่าราคากำลังขึ้นหรือลงก่อนตัดสินใจซื้อ–ขาย ทุกช่วงคำนวณย้อนหลังจากวันที่อัปเดตล่าสุด`
+        ? `ราคากลางจากตลาดญี่ปุ่น${data.latestDate ? ` อัปเดตล่าสุด ${data.latestDate}` : ""} ทุกช่วงคำนวณย้อนหลังจากวันที่อัปเดตล่าสุด`
         : `ยังไม่มีประวัติราคาย้อนหลังของ ${code} มากพอจะสรุปเป็นตาราง ระบบจะเก็บราคาใหม่ให้ทุกวัน`,
-      recentTitle: "ราคาล่าสุดรายวัน",
-      windowsTitle: "ช่วงราคา 7 / 30 / 90 วัน",
+      recentTitle: "ราคารายวัน",
+      windowsTitle: "สรุปช่วงราคา",
       emptyText: "ยังไม่มีข้อมูลราคาย้อนหลังสำหรับการ์ดใบนี้",
     };
   }
   return {
     title: `${code} price history`,
     lead: data.pointCount
-      ? `Market reference prices Meecard collected for ${code}${data.latestDate ? `, latest ${data.latestDate}` : ""}. Every window is measured back from the most recent update.`
+      ? `Market reference prices from Japan${data.latestDate ? `, updated ${data.latestDate}` : ""}. Every window is measured back from the most recent update.`
       : `Not enough price history for ${code} yet — new prices are collected daily.`,
-    recentTitle: "Recent daily prices",
-    windowsTitle: "7 / 30 / 90-day range",
+    recentTitle: "Daily prices",
+    windowsTitle: "Range summary",
     emptyText: "No price history for this card yet.",
   };
 }

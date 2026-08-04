@@ -209,16 +209,16 @@ export function RecentSales({
   return (
     <div>
       <div className="mb-3 min-w-0">
-        <div className="flex flex-wrap items-center gap-2">
-          <h2 className="text-h3">
-            {t(lang, isSample ? "saleHistorySampleTitle" : "saleHistoryTitle")}
-          </h2>
-          {isSample && <SampleBadge lang={lang} />}
-        </div>
+        <h2 className="text-h3">
+          {t(lang, isSample ? "saleHistorySampleTitle" : "saleHistoryTitle")}
+        </h2>
+        {/* The loud badge + boxed callout are gone at the owner's request — they
+            dominated the section. One quiet line stays: these rows are invented,
+            the site is public, and an unlabelled fake sale price on a price
+            tracker is the one thing this page must never show. */}
         <p className="text-meta mt-0.5">
           {t(lang, isSample ? "saleHistorySampleDesc" : "saleHistoryDesc")}
         </p>
-        {isSample && <SampleDisclosure lang={lang} kind="sales" />}
       </div>
 
       {/* filters — client-only (Radix dropdown + interactive state). SSR skips

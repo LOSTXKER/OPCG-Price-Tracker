@@ -96,7 +96,7 @@ describe("CardPriceHistory (server-rendered)", () => {
   it("puts real dated price rows in the initial HTML as tables", () => {
     expect(markup).toContain("<table")
     expect(markup).toContain("ประวัติราคา OP01-003")
-    expect(markup).toContain("ช่วงราคา 7 / 30 / 90 วัน")
+    expect(markup).toContain("สรุปช่วงราคา")
     // A real, dated observation — not a chart, not a client fetch.
     expect(markup).toContain("11 ก.ค. 2026")
     expect(markup).toContain("441 ฿")
