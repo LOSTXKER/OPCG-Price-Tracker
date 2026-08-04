@@ -29,7 +29,7 @@ export function ProfileMobileCtaBar({
 }) {
   return (
     <div
-      className="fixed inset-x-0 z-40 border-t border-border bg-background px-3 py-2 shadow-[0_-4px_16px_-8px_rgba(0,0,0,0.18)] md:hidden"
+      className="fixed inset-x-0 z-floating border-t border-border bg-background px-3 py-2 shadow-[0_-4px_16px_-8px_rgba(0,0,0,0.18)] md:hidden"
       style={{ bottom: "calc(4rem + env(safe-area-inset-bottom))" }}
     >
       <div className="flex items-center gap-2">

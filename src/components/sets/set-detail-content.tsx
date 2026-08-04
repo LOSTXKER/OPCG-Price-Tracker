@@ -551,7 +551,7 @@ export function SetDetailContent({
             as the watchlist selection bar. */}
         <div
           data-slot="set-rarity-nav-sticky"
-          className="sticky top-[var(--chrome-h)] z-30 -mx-5 border-b border-hair bg-background/95 px-5 py-2 backdrop-blur-sm md:-mx-6 md:px-6 lg:hidden"
+          className="sticky top-[var(--chrome-h)] z-sticky -mx-5 border-b border-hair bg-background/95 px-5 py-2 backdrop-blur-sm md:-mx-6 md:px-6 lg:hidden"
         >
           <nav
             ref={chipsRef}

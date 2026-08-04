@@ -32,7 +32,7 @@ export function SearchResultsDropdown({
       id={id}
       role="listbox"
       aria-label={t(lang, "searchByNameOrCode")}
-      className="absolute top-full right-0 left-0 z-50 mt-1 overflow-hidden rounded-xl border border-hair bg-popover shadow-lg"
+      className="absolute top-full right-0 left-0 z-dropdown mt-1 overflow-hidden rounded-xl border border-hair bg-popover shadow-lg"
     >
       <div className="max-h-80 overflow-y-auto">
         {loading && results.length === 0 && (

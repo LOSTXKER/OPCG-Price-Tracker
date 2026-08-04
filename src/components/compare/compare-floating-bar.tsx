@@ -45,7 +45,7 @@ export function CompareFloatingBar() {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 32, opacity: 0 }}
         transition={{ type: "spring", damping: 22, stiffness: 280 }}
-        className="pointer-events-none fixed inset-x-0 bottom-[calc(5rem+var(--floating-ad-clearance))] z-40 flex justify-center px-4 md:bottom-[calc(1.5rem+var(--floating-ad-clearance))]"
+        className="pointer-events-none fixed inset-x-0 bottom-[calc(5rem+var(--floating-ad-clearance))] z-floating flex justify-center px-4 md:bottom-[calc(1.5rem+var(--floating-ad-clearance))]"
       >
         <div
           className={cn(

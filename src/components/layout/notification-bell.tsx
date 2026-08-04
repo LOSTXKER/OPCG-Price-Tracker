@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -13,6 +13,7 @@ import {
   Settings as SettingsIcon,
 } from "lucide-react";
 
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { PriceAlertItem } from "@/components/alerts/alert-types";
 import { useUIStore } from "@/stores/ui-store";
@@ -48,8 +49,6 @@ export function NotificationBell() {
 
   const [alerts, setAlerts] = useState<PriceAlertItem[] | null>(null);
   const [alertsLoading, setAlertsLoading] = useState(false);
-
-  const ref = useRef<HTMLDivElement>(null);
 
   const fetchNotifications = useCallback(async () => {
     const data = await apiTry(
@@ -87,16 +86,6 @@ export function NotificationBell() {
     }
   }, [open, tab, alerts, alertsLoading, fetchAlerts]);
 
-  useEffect(() => {
-    function onClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    if (open) document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [open]);
-
   const markAsRead = async (id: number) => {
     await apiTry(apiPost("/api/notifications/read", { id }));
     setItems((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
@@ -117,12 +106,20 @@ export function NotificationBell() {
   const totalBadge = unreadCount + priceTabBadge;
 
   return (
-    <div className="relative" ref={ref}>
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="relative flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground lg:size-8"
-        aria-label={t(lang, "notifications")}
+    // Canonical Popover, not a hand-rolled panel: the old markup was a plain
+    // `fixed z-50` div living INSIDE the sticky header, and a sticky element with
+    // a z-index is its own stacking context — so the panel could never rise above
+    // the bottom nav (same layer, later in the DOM). Popover portals to <body> and
+    // lands on the shared `z-popup` layer, and we get Escape + focus handling free.
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        render={
+          <button
+            type="button"
+            className="relative flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground lg:size-8"
+            aria-label={t(lang, "notifications")}
+          />
+        }
       >
         <Bell className="size-4" />
         {totalBadge > 0 && (
@@ -130,10 +127,15 @@ export function NotificationBell() {
             {totalBadge > 9 ? "9+" : totalBadge}
           </span>
         )}
-      </button>
+      </PopoverTrigger>
 
-      {open && (
-        <div className="fixed inset-x-4 top-[calc(var(--chrome-h)+0.5rem)] z-50 rounded-xl border border-hair bg-popover shadow-lg md:absolute md:left-auto md:right-0 md:top-full md:mt-2 md:w-[22rem] md:max-w-[calc(100vw-2rem)]">
+        <PopoverContent
+          align="end"
+          sideOffset={8}
+          collisionPadding={16}
+          showArrow={false}
+          className="w-[calc(100vw-2rem)] max-w-[22rem] overflow-hidden p-0 md:w-[22rem]"
+        >
           {/* Header */}
           <div className="flex items-center justify-between border-b px-4 py-2.5">
             <span className="text-sm font-semibold">{t(lang, "notifications")}</span>
@@ -298,9 +300,8 @@ export function NotificationBell() {
               </div>
             </TabsContent>
           </Tabs>
-        </div>
-      )}
-    </div>
+        </PopoverContent>
+    </Popover>
   );
 }
 

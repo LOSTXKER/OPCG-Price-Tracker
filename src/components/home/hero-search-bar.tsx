@@ -146,14 +146,19 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
   const sectionLabel = "px-3 pb-1.5 pt-3 text-eyebrow"
   const rowBase = "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left motion-base"
 
+  // While the dropdown is open this wrapper becomes the inline-dropdown layer, so the bar
+  // and its results sit above the site chrome. Without it the list renders under
+  // the floating ad and the mobile bottom nav (both punched through it before).
+  // Inside that context the bar's own `z-10` just keeps it over the list's
+  // rounded top edge.
   return (
-    <div ref={wrapperRef} className="relative">
+    <div ref={wrapperRef} className={cn("relative", hasDropdown && "z-dropdown")}>
       <form onSubmit={handleSubmit}>
         <div
           className={cn(
             "ease-chrome surface-1 relative flex items-center gap-2 rounded-2xl pl-4 pr-2 ring-1 ring-hair transition-[box-shadow,border-color]",
             hasDropdown
-              ? "z-[51] rounded-b-none shadow-lg"
+              ? "z-10 rounded-b-none shadow-lg"
               : "focus-within:ring-2 focus-within:ring-primary/40",
           )}
         >
@@ -206,7 +211,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
           id={listboxId}
           role="listbox"
           aria-label={t(lang, "searchLong")}
-          className="absolute inset-x-0 top-full z-50 overflow-hidden rounded-b-2xl bg-popover shadow-xl ring-1 ring-hair"
+          className="absolute inset-x-0 top-full overflow-hidden rounded-b-2xl bg-popover shadow-xl ring-1 ring-hair"
         >
           <div className="max-h-[60vh] overflow-y-auto px-2 pb-3 pt-1">
             {/* CARDS */}

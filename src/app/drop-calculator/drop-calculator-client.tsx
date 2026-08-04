@@ -144,7 +144,7 @@ function SelectedCardsTray({
       as="aside"
       variant="outline"
       aria-label={t(lang, "selectedCards")}
-      className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] left-1/2 z-40 w-[min(48rem,calc(100%-2rem))] -translate-x-1/2 overflow-hidden bg-card/95 shadow-[var(--elev-overlay)] backdrop-blur md:bottom-5"
+      className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] left-1/2 z-floating w-[min(48rem,calc(100%-2rem))] -translate-x-1/2 overflow-hidden bg-card/95 shadow-[var(--elev-overlay)] backdrop-blur md:bottom-5"
     >
       <div className="flex items-center gap-1.5 p-2 sm:gap-2">
         <div className="flex shrink-0 items-center gap-2">

@@ -318,7 +318,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       {/* Content */}
       <div className="flex flex-1 flex-col overflow-y-auto">
         {/* Mobile Header */}
-        <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-hair bg-background px-4 py-3 md:hidden">
+        <header className="sticky top-0 z-chrome flex items-center gap-3 border-b border-hair bg-background px-4 py-3 md:hidden">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger render={<Button variant="ghost" size="icon-sm" />}>
               <Menu className="size-5" />

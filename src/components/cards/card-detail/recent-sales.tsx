@@ -198,7 +198,7 @@ export function RecentSales({
       </thead>
       <tbody>
         {visibleSales.map((sale, index) => (
-          <tr key={`${sale.source}-${index}`} className="border-b border-hair last:border-b-0">
+          <tr key={`${sale.source}-${index}`} className="hover:bg-muted/40">
             <td className={marketTdLead}>
               <SourceRef source={sale.source} interactive={!isSample} />
             </td>
@@ -309,7 +309,7 @@ export function RecentSales({
         <>
           <FeedScrollBox className="hidden sm:block">{table}</FeedScrollBox>
 
-          <FeedScrollBox variant="list" className="divide-y divide-hair px-1 sm:hidden">{mobileList}</FeedScrollBox>
+          <FeedScrollBox variant="list" className="px-1 sm:hidden">{mobileList}</FeedScrollBox>
 
           {hasMore && (
             <div className="hairline-t mt-3 flex justify-end pt-3">

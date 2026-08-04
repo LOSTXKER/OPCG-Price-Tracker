@@ -29,7 +29,7 @@ export function CardDetailSectionNav({
     <nav
       ref={navRef}
       aria-label={t(lang, "cardSectionsNav")}
-      className="ease-chrome sticky top-[var(--chrome-h)] z-30 mt-6 bg-background shadow-[inset_0_-1px_0_0_var(--p-hair)]"
+      className="ease-chrome sticky top-[var(--chrome-h)] z-sticky mt-6 bg-background shadow-[inset_0_-1px_0_0_var(--p-hair)]"
     >
       <div className="no-sb relative flex gap-5 overflow-x-auto">
         {tabs.map((tab) => (

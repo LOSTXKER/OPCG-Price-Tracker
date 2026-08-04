@@ -95,17 +95,14 @@ export function CardPriceHistory({
               </thead>
               <tbody>
                 {points.map((p) => (
-                  <tr
-                    key={p.dateIso}
-                    className="border-b border-hair last:border-b-0 hover:bg-muted/40"
-                  >
-                    <th scope="row" className="tnum py-2.5 pl-1 pr-3 text-left text-label font-medium text-foreground">
+                  <tr key={p.dateIso} className="hover:bg-muted/40">
+                    <th scope="row" className="tnum py-3 pl-1 pr-3 text-left text-body-sm font-normal text-muted-foreground">
                       {formatSeoDate(p.dateIso, lang)}
                     </th>
-                    <td className="tnum py-2.5 pl-2 pr-3 text-right text-label font-semibold text-foreground">
+                    <td className="text-price py-3 pl-2 pr-3 text-right text-foreground">
                       {formatJpyAmount(p.priceJpy, currency)}
                     </td>
-                    <td className={`tnum py-2.5 pl-2 pr-1 text-right text-label ${changeToneClass(p.changePct)}`}>
+                    <td className={`tnum py-3 pl-2 pr-1 text-right text-body-sm ${changeToneClass(p.changePct)}`}>
                       {p.changePct != null ? formatSignedPct(p.changePct) : "—"}
                     </td>
                   </tr>
@@ -114,16 +111,16 @@ export function CardPriceHistory({
             </table>
           </FeedScrollBox>
 
-          <FeedScrollBox variant="list" className="divide-y divide-hair px-1 sm:hidden">
+          <FeedScrollBox variant="list" className="px-1 sm:hidden">
             {points.map((p) => (
               <div key={p.dateIso} className="flex items-center justify-between gap-3 py-3">
                 <span className="min-w-0">
-                  <span className="tnum block text-label font-medium text-foreground">
+                  <span className="tnum block text-body-sm text-muted-foreground">
                     {formatSeoDate(p.dateIso, lang)}
                   </span>
                 </span>
                 <span className="shrink-0 text-right">
-                  <span className="tnum block text-label font-semibold text-foreground">
+                  <span className="text-price block text-foreground">
                     {formatJpyAmount(p.priceJpy, currency)}
                   </span>
                   <span className={`tnum text-meta mt-0.5 block ${changeToneClass(p.changePct)}`}>

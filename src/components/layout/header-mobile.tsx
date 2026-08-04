@@ -55,7 +55,7 @@ export function HeaderMobile({
   return (
     <div
       className={cn(
-        "ease-chrome sticky top-0 z-50 transition-colors md:hidden",
+        "ease-chrome sticky top-0 z-chrome transition-colors md:hidden",
         scrolled ? "hairline-b bg-background" : "bg-transparent",
       )}
     >

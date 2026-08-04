@@ -214,7 +214,7 @@ export function SetPicker({
 
       {open && (
         <div className={cn(
-          "absolute z-30 overflow-hidden border border-border bg-popover shadow-[var(--elev-overlay)]",
+          "absolute z-dropdown overflow-hidden border border-border bg-popover shadow-[var(--elev-overlay)]",
           isCta && "mt-2 left-0 right-0 w-full rounded-xl",
           // inline: attach directly under the trigger (overlap its border by 1px,
           // square top, MATCH the trigger width) so trigger + list read as one

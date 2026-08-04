@@ -266,10 +266,7 @@ export function MeecardAsksRail({
                   </thead>
                   <tbody>
                     {preview.map((l) => (
-                      <tr
-                        key={l.id}
-                        className="border-b border-hair last:border-b-0"
-                      >
+                      <tr key={l.id} className="hover:bg-muted/40">
                         <td className={marketTdLead}>
                           <Link
                             href={`/marketplace/${l.id}`}
@@ -293,7 +290,7 @@ export function MeecardAsksRail({
                 </table>
               </FeedScrollBox>
 
-              <FeedScrollBox variant="list" className="divide-y divide-hair px-1 sm:hidden">
+              <FeedScrollBox variant="list" className="px-1 sm:hidden">
                 {preview.map((l) => (
                   <Link key={l.id} href={`/marketplace/${l.id}`} className={linkedRowClass}>
                     <span className="min-w-0">

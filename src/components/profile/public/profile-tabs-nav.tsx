@@ -42,7 +42,7 @@ export function ProfileTabsNav({
         // padding. We deliberately omit a bottom border here — the tab
         // section panel below docks against the nav and provides its own
         // visual edge, so a border-b would just create a double divider.
-        "sticky z-30 -mx-5 mt-8 bg-background px-5",
+        "sticky z-sticky -mx-5 mt-8 bg-background px-5",
         "top-[var(--chrome-h)] md:-mx-6 md:px-6 lg:-mx-8 lg:px-8",
       )}
     >

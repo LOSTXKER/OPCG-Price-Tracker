@@ -31,14 +31,20 @@ const ROTATING: Record<Language, string[]> = {
  * Home hero — universal search as the page's focal point (VISION §5 "Universal
  * search = teleport"). A calm headline sits above a single oversized smart bar;
  * popular searches now live INSIDE the bar's focus dropdown (Fastwork-style),
- * not as chips below it. Kept `z-30` + overflow-visible so the dropdown is never
- * clipped by the dense market data that follows.
+ * not as chips below it.
+ *
+ * NO z-index here on purpose. It used to be `relative z-30`, which made this
+ * section a stacking context — and the suggestion dropdown inside it could then
+ * never rise above the floating ad (35) or the mobile bottom nav (50): both
+ * punched straight through the results list. The dropdown now lifts itself to
+ * `z-dropdown` (see hero-search-bar), which only works while this section stays
+ * a plain positioning parent. Overflow stays visible so it isn't clipped either.
  */
 export function HomeSearchHero({ sets, trending }: { sets: SetSuggestion[]; trending?: HeroTrendingCard[] }) {
   const lang = useUIStore((s) => s.language)
 
   return (
-    <section className="relative z-30">
+    <section className="relative">
       <div className="mx-auto max-w-2xl px-1 pb-6 pt-4 sm:pb-8 sm:pt-8">
         <div className="text-center">
           {/* Eyebrow teaser → visible H1 → rotating subject.

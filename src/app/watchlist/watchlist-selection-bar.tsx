@@ -46,7 +46,7 @@ export function WatchlistSelectionBar({
 
   return (
     <div
-      className="sticky top-[var(--chrome-h)] z-30 -mx-1 flex flex-wrap items-center gap-2 border-b border-hair bg-background/95 px-1 py-2 backdrop-blur-sm"
+      className="sticky top-[var(--chrome-h)] z-sticky -mx-1 flex flex-wrap items-center gap-2 border-b border-hair bg-background/95 px-1 py-2 backdrop-blur-sm"
       role="toolbar"
       aria-label={t(lang, "watchlistSelected")}
     >

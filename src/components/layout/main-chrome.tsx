@@ -138,7 +138,7 @@ export function SkipToContent() {
   return (
     <a
       href="#main-content"
-      className="fixed top-4 left-4 z-[100] -translate-y-24 rounded-lg bg-background px-4 py-2 text-sm font-medium text-foreground shadow-[var(--elev-overlay)] motion-base focus-visible:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="fixed top-4 left-4 z-skip -translate-y-24 rounded-lg bg-background px-4 py-2 text-sm font-medium text-foreground shadow-[var(--elev-overlay)] motion-base focus-visible:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       {t(lang, "skipToContent")}
     </a>
