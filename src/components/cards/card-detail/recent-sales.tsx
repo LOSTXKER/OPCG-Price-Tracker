@@ -15,7 +15,7 @@ import { t, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
 import { SourceLogo, sourceLabel, sourceUrl } from "./source-logo"
-import type { MockSale } from "./mock"
+import type { SaleRow } from "./sold-feed"
 import {
   MARKET_TABLE_CLASS,
   MarketTableColGroup,
@@ -132,7 +132,7 @@ export function RecentSales({
   currency,
   lang,
 }: {
-  sales: MockSale[]
+  sales: SaleRow[]
   isSample?: boolean
   currency: Currency
   lang: Language

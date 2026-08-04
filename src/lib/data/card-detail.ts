@@ -142,6 +142,27 @@ export const getRelatedFromSameSet = cache(async (setId: number, excludeId: numb
   return [...withPrice, ...rest]
 })
 
+/**
+ * Settled-sale rows for the "ประวัติการซื้อขายล่าสุด" feed. The scraper has been
+ * writing these all along (`type = SOLD`, one row per grade per scrape); the
+ * page just never read them back and showed generated rows instead. Ordered
+ * newest-first; `deriveSoldFeed` collapses the repeats.
+ */
+export const getSoldPricesForCard = cache(async (cardId: number) => {
+  return prisma.cardPrice.findMany({
+    where: { cardId, type: "SOLD" },
+    orderBy: { scrapedAt: "desc" },
+    take: 200,
+    select: {
+      source: true,
+      gradeCondition: true,
+      priceJpy: true,
+      priceUsd: true,
+      scrapedAt: true,
+    },
+  })
+})
+
 export const getListingsForCard = cache(async (cardId: number) => {
   return prisma.listing.findMany({
     where: { cardId, status: "ACTIVE" },

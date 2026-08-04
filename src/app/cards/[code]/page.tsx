@@ -5,6 +5,7 @@ import { getAdminConfig } from "@/lib/admin/config";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { CardDetail } from "@/components/cards/card-detail";
 import { derivePriceHistory } from "@/components/cards/card-detail/price-history";
+import { deriveSoldFeed } from "@/components/cards/card-detail/sold-feed";
 import { FaqSection } from "@/components/shared/faq-section";
 import { AdPageContentReady } from "@/components/ads/ad-audience-provider";
 import { JsonLd } from "@/lib/seo/json-ld-script";
@@ -26,6 +27,7 @@ import {
   getListingsForCard,
   getRelatedFromSameSet,
   getSiblingVariants,
+  getSoldPricesForCard,
 } from "@/lib/data/card-detail";
 import { daysSince } from "@/lib/utils/time";
 
@@ -105,12 +107,26 @@ export default async function CardDetailPage(props: {
   const card = await getCardByCode(code);
   if (!card) notFound();
 
-  const [siblings, relatedCards, listings, adminConfig] = await Promise.all([
+  const [siblings, relatedCards, listings, soldPrices, adminConfig] = await Promise.all([
     getSiblingVariants(card.baseCode, card.id),
     getRelatedFromSameSet(card.setId, card.id),
     getListingsForCard(card.id),
+    getSoldPricesForCard(card.id),
     getAdminConfig(),
   ]);
+
+  // Real settled sales — replaces the generated feed that used to fill this
+  // block. Empty for cards the sources have never reported a sale for, which is
+  // the honest state rather than invented rows.
+  const soldFeed = deriveSoldFeed(
+    soldPrices.map((row) => ({
+      source: row.source,
+      gradeCondition: row.gradeCondition,
+      priceJpy: row.priceJpy,
+      priceUsd: row.priceUsd,
+      scrapedAt: row.scrapedAt.toISOString(),
+    })),
+  );
 
   const price = deriveLatestPrice(card);
   const snkrdunkPrices = deriveSnkrdunkPrices(card.prices);
@@ -193,6 +209,7 @@ export default async function CardDetailPage(props: {
           </section>
         }
         priceHistory={priceHistory}
+        soldFeed={soldFeed}
         faqSlot={<FaqSection items={buildCardFaq("TH", seo)} />}
         card={{
         id: card.id,

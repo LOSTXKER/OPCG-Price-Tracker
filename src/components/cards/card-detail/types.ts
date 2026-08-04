@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 
 import type { PriceHistorySummary } from "./price-history"
+import type { SaleRow } from "./sold-feed"
 
 export type CardListing = {
   id: string | number
@@ -67,6 +68,8 @@ export interface CardDetailProps {
    * so the crawler sees the full set.
    */
   priceHistory?: PriceHistorySummary
+  /** Real settled sales from the DB (type = SOLD), newest first. */
+  soldFeed?: SaleRow[]
   /** Per-card FAQ (also emits FAQPage JSON-LD). */
   faqSlot?: ReactNode
   card: {

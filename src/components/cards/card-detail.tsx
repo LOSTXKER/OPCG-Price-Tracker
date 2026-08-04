@@ -31,7 +31,7 @@ export type { CardDetailProps, RelatedCard, SiblingCard } from "./card-detail/ty
 
 
 export function CardDetail(props: CardDetailProps) {
-  const { card, siblings, relatedCards, latestUpdatedAt, introSlot, priceHistory, faqSlot } = props
+  const { card, siblings, relatedCards, latestUpdatedAt, introSlot, priceHistory, soldFeed, faqSlot } = props
   const {
     hydrated,
     displayLang,
@@ -73,7 +73,6 @@ export function CardDetail(props: CardDetailProps) {
     provenance,
     tabs,
     handleShare,
-    saleHistory,
     latestSale,
     meecardListings,
   } = useCardDetailModel(props)
@@ -229,15 +228,13 @@ export function CardDetail(props: CardDetailProps) {
               range={range}
             />
           )}
-          {/* Sample multi-market feed, restored at the owner's request. It sits
-              BELOW the real price history so the page leads with actual data,
-              and carries `data-nosnippet`: the rows are deterministic mock
-              values, so Google may index the block but must never quote those
-              prices in a snippet or an AI answer as if they were ours. */}
-          <div data-nosnippet className="mt-12">
+          {/* Settled sales — REAL rows from the database now (CardPrice where
+              type = SOLD), so the generated feed and its `data-nosnippet` guard
+              are both gone. Cards no source has reported a sale for simply show
+              the empty state. */}
+          <div className="mt-12">
             <RecentSales
-              sales={saleHistory}
-              isSample
+              sales={soldFeed ?? []}
               currency={currency}
               lang={displayLang}
             />

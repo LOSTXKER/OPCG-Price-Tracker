@@ -11,7 +11,10 @@ import {
   type CardSeoData,
 } from "@/lib/seo/copy/card"
 
+import { usdToJpy } from "@/lib/utils/currency"
+
 import { derivePriceHistory } from "./price-history"
+import { deriveSoldFeed } from "./sold-feed"
 import { CardPriceHistory } from "./price-history-table"
 
 function day(offset: number) {
@@ -261,5 +264,53 @@ describe("card SEO copy", () => {
     expect(buildCardIntro("TH", priceless).join(" ")).toContain("ยังไม่มีราคากลางล่าสุด")
     expect(buildCardSeoDescription("TH", priceless)).toContain("ยังไม่มีราคากลางล่าสุด")
     expect(buildCardFaq("TH", priceless)[0]!.answer).toContain("ยังไม่มีราคากลางล่าสุด")
+  })
+})
+
+describe("deriveSoldFeed", () => {
+  const row = (
+    scrapedAt: string,
+    priceUsd: number,
+    gradeCondition: string | null = null,
+    source = "SNKRDUNK",
+  ) => ({ source, gradeCondition, priceJpy: null, priceUsd, scrapedAt })
+
+  it("collapses a price that stands across scrapes into one sale, dated when it first appeared", () => {
+    // The scraper re-records the source's "last sold price" every run, so the
+    // same sale reappears with a newer timestamp on each pass.
+    const feed = deriveSoldFeed([
+      row("2026-03-28T22:00:00.000Z", 5599),
+      row("2026-03-28T19:00:00.000Z", 5599),
+      row("2026-03-27T19:00:00.000Z", 5599),
+      row("2026-03-20T19:00:00.000Z", 4100),
+    ])
+
+    expect(feed).toHaveLength(2)
+    expect(feed[0]!.priceJpy).toBe(usdToJpy(5599))
+    // Oldest timestamp of the run — closest to when it actually sold.
+    expect(feed[0]!.soldAtIso).toBe("2026-03-27T19:00:00.000Z")
+    expect(feed[1]!.soldAtIso).toBe("2026-03-20T19:00:00.000Z")
+  })
+
+  it("keeps each grade as its own running sale and labels ungraded rows Raw", () => {
+    const feed = deriveSoldFeed([
+      row("2026-03-28T22:00:00.000Z", 13755, "PSA 10"),
+      row("2026-03-28T22:00:00.000Z", 5599),
+      row("2026-03-27T22:00:00.000Z", 13755, "PSA 10"),
+    ])
+
+    expect(feed).toHaveLength(2)
+    expect(feed.find((s) => s.condition === "PSA 10")?.family).toBe("psa")
+    expect(feed.find((s) => s.condition === "Raw")?.family).toBeNull()
+  })
+
+  it("drops rows with no usable price and caps the feed", () => {
+    const noPrice = { source: "SNKRDUNK", gradeCondition: null, priceJpy: null, priceUsd: null, scrapedAt: "2026-03-28T22:00:00.000Z" }
+    const many = Array.from({ length: 20 }, (_, i) =>
+      row(`2026-03-${String(28 - i).padStart(2, "0")}T22:00:00.000Z`, 1000 + i * 100),
+    )
+
+    expect(deriveSoldFeed([noPrice])).toHaveLength(0)
+    expect(deriveSoldFeed(many, { limit: 5 })).toHaveLength(5)
   })
 })
