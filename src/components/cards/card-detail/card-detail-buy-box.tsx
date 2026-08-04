@@ -26,50 +26,7 @@ interface CardDetailBuyBoxProps {
   onAlertOpenChange: (open: boolean) => void
 }
 
-/**
- * The three transact actions. Split out of the buy box so they can sit in the
- * identity band at the top of the page while the sale reference stays in the
- * right rail below (owner-chosen layout, เบส 2026-08-04).
- */
-export function CardDetailActions({
-  card,
-  displayName,
-  lang,
-}: Pick<CardDetailBuyBoxProps, "card" | "displayName" | "lang">) {
-  const secondaryButton =
-    "ease-chrome ring-inset flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-transparent text-sm font-semibold text-foreground ring-1 ring-hair hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
-
-  return (
-    <div className="space-y-2">
-      <a
-        href="#market"
-        className="ease-chrome flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        style={{
-          background: "var(--primary)",
-          color: "var(--primary-foreground)",
-        }}
-      >
-        <ShoppingBag className="size-4" aria-hidden /> {t(lang, "viewAsksCta")}
-      </a>
-      <div className="grid grid-cols-2 gap-2">
-        <a
-          href={`/seller/listings/new?cardCode=${encodeURIComponent(card.cardCode)}`}
-          className={secondaryButton}
-        >
-          <Tag className="size-4" aria-hidden /> {t(lang, "sellCta")}
-        </a>
-        <CardAddToPortfolio
-          card={card}
-          cardName={displayName}
-          variant="ghost"
-          className={secondaryButton}
-        />
-      </div>
-    </div>
-  )
-}
-
-/** The freshest settled-sale reference, plus the price-alert dialog host. */
+/** Primary transact actions and the freshest settled-sale reference. */
 export function CardDetailBuyBox({
   card,
   displayName,
@@ -79,9 +36,39 @@ export function CardDetailBuyBox({
   alertOpen,
   onAlertOpenChange,
 }: CardDetailBuyBoxProps) {
+  const secondaryButton =
+    "ease-chrome ring-inset flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-transparent text-sm font-semibold text-foreground ring-1 ring-hair hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
+
   return (
-    <div className="min-w-0">
-      <div>
+    <div className="order-4 min-w-0 pt-4 lg:order-none lg:col-start-3 lg:row-start-1 lg:pl-8 lg:pt-0">
+      <div className="space-y-2">
+        <a
+          href="#market"
+          className="ease-chrome flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          style={{
+            background: "var(--primary)",
+            color: "var(--primary-foreground)",
+          }}
+        >
+          <ShoppingBag className="size-4" aria-hidden /> {t(lang, "viewAsksCta")}
+        </a>
+        <div className="grid grid-cols-2 gap-2">
+          <a
+            href={`/seller/listings/new?cardCode=${encodeURIComponent(card.cardCode)}`}
+            className={secondaryButton}
+          >
+            <Tag className="size-4" aria-hidden /> {t(lang, "sellCta")}
+          </a>
+          <CardAddToPortfolio
+            card={card}
+            cardName={displayName}
+            variant="ghost"
+            className={secondaryButton}
+          />
+        </div>
+      </div>
+
+      <div className="mt-5 pt-1">
         <p className="text-eyebrow mb-1">{t(lang, "lastSold")}</p>
         {latestSale ? (
           <a

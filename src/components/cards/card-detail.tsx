@@ -11,7 +11,7 @@ import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
 import { MeecardAsksRail } from "./card-detail/asks-rail"
-import { CardDetailActions, CardDetailBuyBox } from "./card-detail/card-detail-buy-box"
+import { CardDetailBuyBox } from "./card-detail/card-detail-buy-box"
 import { CardDetailChartSection } from "./card-detail/card-detail-chart-section"
 import { CardDetailIdentity } from "./card-detail/card-detail-identity"
 import { CardDetailPrice } from "./card-detail/card-detail-price"
@@ -93,42 +93,13 @@ export function CardDetail(props: CardDetailProps) {
       </div>
 
       {/* ── 3-COL: hero card image (left) · identity+price+trade (center) · stats+actions (right) ── */}
-      {/* Owner-chosen layout (เบส 2026-08-04, mockup "แบบ ข"): a full-width
-          identity band — name, meta and the SEO line on the left, the three
-          transact actions on the right — sitting above the original three
-          columns. The actions keep column 3 so they align with the rail beneath
-          them. Mobile keeps today's reading order via `order-*`:
-          image → identity → price → actions → rail. */}
-      <div className="mt-6 flex flex-col gap-y-6 lg:grid lg:grid-cols-[220px_minmax(0,1fr)_320px] lg:items-start lg:gap-x-8 lg:gap-y-5 xl:grid-cols-[280px_minmax(0,1fr)_360px] xl:gap-x-10">
-        {/* BAND — identity + the server-rendered Thai lead */}
-        <div
-          id="overview"
-          className="order-2 min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)] lg:order-none lg:col-span-2 lg:col-start-1 lg:row-start-1"
-        >
-          <CardDetailIdentity
-            card={card}
-            displayName={displayName}
-            lang={displayLang}
-            onAlert={() => setAlertOpen(true)}
-            onShare={() => void handleShare()}
-          />
-          {introSlot}
-        </div>
-
-        {/* BAND right — the actions people came to take */}
-        <div className="order-4 min-w-0 lg:order-none lg:col-start-3 lg:row-start-1">
-          <CardDetailActions card={card} displayName={displayName} lang={displayLang} />
-        </div>
-
-        {/* Hairline closing the band. Its own row so both band items can keep
-            their natural height without the rule breaking across them. */}
-        <div
-          aria-hidden
-          className="hidden border-t border-hair lg:block lg:col-span-3 lg:col-start-1 lg:row-start-2"
-        />
-
+      {/* Card column widened (200→220 / 240→280) so the portrait ends about
+          level with the identity+price column instead of stopping a third of
+          the way up it — the card is the hero of this page. Height follows the
+          63/88 aspect: 280px wide ≈ 391px tall. */}
+      <div className="mt-6 flex flex-col gap-y-6 lg:grid lg:grid-cols-[220px_minmax(0,1fr)_320px] lg:items-start lg:gap-x-8 lg:gap-y-0 xl:grid-cols-[280px_minmax(0,1fr)_360px] xl:gap-x-10">
         {/* COL 1 — the card is the hero: a large portrait (tap to zoom) */}
-        <div className="order-1 lg:col-start-1 lg:row-start-3">
+        <div className="order-1 lg:col-start-1 lg:row-start-1">
           <button
             type="button"
             onClick={() => card.imageUrl && setLightboxOpen(true)}
@@ -147,8 +118,20 @@ export function CardDetail(props: CardDetailProps) {
           </button>
         </div>
 
-        {/* COL 2 — the price instrument */}
-        <div className="order-3 min-w-0 lg:order-none lg:col-start-2 lg:row-start-3">
+        {/* COL 2 — identity + price instrument (mobile order 2 · desktop center) */}
+        <div id="overview" className="order-2 min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)] lg:order-none lg:col-start-2 lg:row-start-1">
+          <CardDetailIdentity
+            card={card}
+            displayName={displayName}
+            lang={displayLang}
+            onAlert={() => setAlertOpen(true)}
+            onShare={() => void handleShare()}
+          />
+          {/* Server-rendered Thai context, placed as the lead under the identity
+              line (owner decision). It only works here because it is one short
+              line — the earlier multi-paragraph version pushed the price out of
+              view from this same position. */}
+          {introSlot}
           <CardDetailPrice
             hydrated={hydrated}
             lang={displayLang}
@@ -173,19 +156,15 @@ export function CardDetail(props: CardDetailProps) {
           />
         </div>
 
-        {/* COL 3 — sale reference rail (keeps the third column that the actions
-            vacated when they moved into the band above) */}
-        <div className="order-5 min-w-0 lg:order-none lg:col-start-3 lg:row-start-3 lg:pl-8">
-          <CardDetailBuyBox
-            card={card}
-            displayName={displayName}
-            lang={displayLang}
-            hydrated={hydrated}
-            latestSale={latestSale}
-            alertOpen={alertOpen}
-            onAlertOpenChange={setAlertOpen}
-          />
-        </div>
+        <CardDetailBuyBox
+          card={card}
+          displayName={displayName}
+          lang={displayLang}
+          hydrated={hydrated}
+          latestSale={latestSale}
+          alertOpen={alertOpen}
+          onAlertOpenChange={setAlertOpen}
+        />
       </div>
 
       <CardDetailSectionNav
