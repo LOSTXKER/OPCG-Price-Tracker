@@ -168,6 +168,8 @@ export const en = {
   scrollForMore: "Scroll for more",
   saleHistoryTitle: "Recent sales",
   saleHistorySampleTitle: "Sale history across markets",
+  salePeriodFilter: "Period",
+  saleWithinDays: "Last {n} days",
   saleHistoryDesc: "Last recorded sale prices across markets — used and graded copies",
   saleHistorySampleDesc: "How multi-market sales data will read across conditions and grades · not real transactions",
   sampleSalesDisclosure: "Simulated rows for layout preview only — the prices, dates, and sources are not real transactions and are not used to calculate market price.",

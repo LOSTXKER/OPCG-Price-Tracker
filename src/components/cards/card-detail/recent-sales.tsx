@@ -120,6 +120,9 @@ function SourceDropdown({
   )
 }
 
+/** Period options for the feed filter (days back from the newest recorded sale). */
+const SALE_PERIODS = ["7", "30", "90"]
+
 /**
  * "ประวัติการซื้อขายล่าสุด" — pooled recent sales across several markets (our edge
  * over a single-source competitor page). Each row: source · date · condition · price.
@@ -146,13 +149,35 @@ export function RecentSales({
   }, [sales])
   const [activeSource, setActiveSource] = useState<string>("all")
   const [activeGrade, setActiveGrade] = useState<string>("all")
+  const [activePeriod, setActivePeriod] = useState<string>("all")
   const [expanded, setExpanded] = useState(false)
 
-  const shown = sales.filter(
-    (s) =>
-      (activeSource === "all" || s.source === activeSource) &&
-      (activeGrade === "all" || (activeGrade === "raw" ? s.family == null : s.family === activeGrade)),
+  // Measured back from the NEWEST row, not from `Date.now()`: the render must
+  // stay pure (server and client agree, no clock read), and a feed whose last
+  // recorded sale is weeks old would otherwise filter down to nothing on every
+  // option.
+  const newestMs = useMemo(
+    () =>
+      sales.reduce((max, s) => {
+        const ms = new Date(s.soldAtIso).getTime()
+        return Number.isNaN(ms) ? max : Math.max(max, ms)
+      }, 0),
+    [sales],
   )
+
+  const shown = sales.filter((s) => {
+    if (activeSource !== "all" && s.source !== activeSource) return false
+    if (activeGrade !== "all") {
+      const matches = activeGrade === "raw" ? s.family == null : s.family === activeGrade
+      if (!matches) return false
+    }
+    if (activePeriod !== "all") {
+      const ms = new Date(s.soldAtIso).getTime()
+      if (Number.isNaN(ms)) return false
+      if (ms < newestMs - Number(activePeriod) * 86_400_000) return false
+    }
+    return true
+  })
   // Distinguish "no data at all" from "filters excluded everything".
   const emptyCopy = sales.length === 0 ? t(lang, "noLatestSales") : t(lang, "noMatchingFilter")
   const hasMore = !isSample && shown.length > MARKET_FEED_REAL_PREVIEW_COUNT
@@ -221,7 +246,10 @@ export function RecentSales({
 
       {/* filters — client-only (Radix dropdown + interactive state). SSR skips
           this block so server/client HTML always agree; same pattern as the chart. */}
-      {hydrated && !isSample && (grades.length > 1 || sources.length > 1) && (
+      {/* The period filter always joins the row now (owner: this is a demo site
+          and the control should be visible), so the row shows whenever there is
+          more than one sale to filter at all. */}
+      {hydrated && !isSample && sales.length > 1 && (
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
           {grades.length > 1 && (
             <div className="min-w-0 flex-1">
@@ -234,6 +262,19 @@ export function RecentSales({
               />
             </div>
           )}
+          <div className="min-w-0">
+            <ConditionFilter
+              label={t(lang, "salePeriodFilter")}
+              grades={SALE_PERIODS}
+              active={activePeriod}
+              onSelect={setActivePeriod}
+              render={(v) =>
+                v === "all"
+                  ? t(lang, "filterAll")
+                  : t(lang, "saleWithinDays").replace("{n}", v)
+              }
+            />
+          </div>
           {sources.length > 1 && (
             <SourceDropdown
               label={t(lang, "market")}

@@ -168,6 +168,8 @@ export const jp = {
   scrollForMore: "スクロールして続きを見る",
   saleHistoryTitle: "最近の取引履歴",
   saleHistorySampleTitle: "複数マーケットの取引履歴",
+  salePeriodFilter: "期間",
+  saleWithinDays: "直近{n}日",
   saleHistoryDesc: "複数マーケットで記録した直近の販売価格 — 中古・鑑定品",
   saleHistorySampleDesc: "複数マーケット・状態・グレードの表示イメージ · 実際の取引ではありません",
   sampleSalesDisclosure: "表示確認用のシミュレーションです。価格・日付・出典は実際の取引ではなく、市場価格の計算にも使用されません。",
