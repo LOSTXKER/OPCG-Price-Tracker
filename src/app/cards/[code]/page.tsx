@@ -181,9 +181,7 @@ export default async function CardDetailPage(props: {
       <CardDetail
         key={card.id}
         introSlot={
-          // No divider: this reads as the lead line under the card's identity,
-          // not as a footnote appended to the price block.
-          <section className="mt-2.5 max-w-prose space-y-2">
+          <section className="mt-5 max-w-prose space-y-2">
             {buildCardIntro("TH", seo).map((paragraph) => (
               <p key={paragraph.slice(0, 24)} className="text-body-sm leading-relaxed text-muted-foreground">
                 {paragraph}

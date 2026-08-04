@@ -25,9 +25,6 @@ export default function CardDetailLoading() {
               </div>
             </div>
             <Skeleton className="h-4 w-40" />
-            {/* the two-line intro that renders under the identity line */}
-            <Skeleton className="h-4 w-full max-w-prose" />
-            <Skeleton className="h-4 w-2/3 max-w-prose" />
           </div>
 
           {/* edition toggle + grade rail chips */}
@@ -48,6 +45,12 @@ export default function CardDetailLoading() {
 
           {/* low/high range bar */}
           <Skeleton className="h-1.5 w-full max-w-sm rounded-full" />
+
+          {/* the two-line intro that closes the price block */}
+          <div className="space-y-2 pt-1">
+            <Skeleton className="h-4 w-full max-w-prose" />
+            <Skeleton className="h-4 w-2/3 max-w-prose" />
+          </div>
         </div>
 
         {/* COL 3 — buy box */}

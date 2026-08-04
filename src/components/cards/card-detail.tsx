@@ -127,11 +127,6 @@ export function CardDetail(props: CardDetailProps) {
             onAlert={() => setAlertOpen(true)}
             onShare={() => void handleShare()}
           />
-          {/* Server-rendered Thai context, placed as the lead under the identity
-              line (owner decision). It only works here because it is one short
-              line — the earlier multi-paragraph version pushed the price out of
-              view from this same position. */}
-          {introSlot}
           <CardDetailPrice
             hydrated={hydrated}
             lang={displayLang}
@@ -154,6 +149,11 @@ export function CardDetail(props: CardDetailProps) {
             pricePos={pricePos}
             provenance={provenance}
           />
+          {/* Server-rendered Thai context, closing the price block under the
+              low–high bar (owner decision). No rule above it: a divider here
+              made it read as a detached slab rather than a caption to the
+              price it explains. */}
+          {introSlot}
         </div>
 
         <CardDetailBuyBox
