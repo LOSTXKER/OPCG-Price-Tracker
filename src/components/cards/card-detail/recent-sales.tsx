@@ -183,17 +183,14 @@ export function RecentSales({
     if (ms < newestMs - RANGE_DAYS[range] * 86_400_000) return false
     return true
   })
-  // The page-level range counts as an active filter here only when it is off
-  // its default, so the badge reflects what is actually narrowing this list.
+  // Counts the MODAL's facets only. The range sits outside in plain view, so
+  // folding it into the badge would report a filter the reader can already see.
   const activeFilterCount =
-    (range !== "1M" ? 1 : 0) +
-    (activeGrade !== "all" ? 1 : 0) +
-    (activeSource !== "all" ? 1 : 0)
+    (activeGrade !== "all" ? 1 : 0) + (activeSource !== "all" ? 1 : 0)
 
   const resetFilters = () => {
     setActiveGrade("all")
     setActiveSource("all")
-    onRangeChange?.("1M")
   }
 
   // Distinguish "no data at all" from "filters excluded everything".
@@ -262,12 +259,22 @@ export function RecentSales({
         </p>
       </div>
 
-      {/* One "ตัวกรอง" button instead of three stacked controls (owner: the
-          strip ran ~200px tall above a two-row table). This is the project's
-          canonical filter surface — FilterButton + FilterModal, same as search.
-          The controls themselves are unchanged, they just live in the modal. */}
+      {/* Range stays OUTSIDE the modal and the facets go in — the project's
+          own rule for this surface (AGENTS.md: prominent control outside, only
+          facets inside). One row now, where three stacked rails used to run
+          ~200px above a two-row table. */}
       {hydrated && !isSample && sales.length > 1 && (
-        <div className="mb-4">
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          {onRangeChange && (
+            <div className="no-sb min-w-0 max-w-full overflow-x-auto pb-0.5">
+              <PriceRangeControl
+                lang={lang}
+                range={range}
+                onRangeChange={onRangeChange}
+                className="shrink-0"
+              />
+            </div>
+          )}
           <FilterButton
             count={activeFilterCount}
             active={filtersOpen || activeFilterCount > 0}
@@ -276,6 +283,7 @@ export function RecentSales({
             aria-label={t(lang, "filter")}
             aria-haspopup="dialog"
             aria-expanded={filtersOpen}
+            className="shrink-0"
           >
             {t(lang, "filter")}
           </FilterButton>
@@ -288,20 +296,6 @@ export function RecentSales({
         onReset={resetFilters}
         resetDisabled={activeFilterCount === 0}
       >
-        {onRangeChange && (
-          <div>
-            <span className="mb-1.5 block text-eyebrow">{t(lang, "salePeriodFilter")}</span>
-            <div className="no-sb max-w-full overflow-x-auto pb-0.5">
-              <PriceRangeControl
-                lang={lang}
-                range={range}
-                onRangeChange={onRangeChange}
-                className="shrink-0"
-              />
-            </div>
-          </div>
-        )}
-
         {grades.length > 0 && (
           <ConditionFilter
             label={t(lang, "condition")}
