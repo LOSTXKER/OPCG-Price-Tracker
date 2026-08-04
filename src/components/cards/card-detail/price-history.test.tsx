@@ -153,7 +153,7 @@ describe("card SEO copy", () => {
     const parallel: CardSeoData = { ...seo, cardCode: "EB01-001_p1", isParallel: true }
     expect(buildCardSeoTitle("TH", parallel)).toContain("EB01-001 (Parallel 1)")
     expect(buildCardSeoTitle("TH", parallel).length).toBeLessThanOrEqual(60)
-    expect(buildCardIntro("TH", parallel)).toContain("EB01-001 (Parallel 1)")
+    expect(buildCardIntro("TH", parallel).join(" ")).toContain("EB01-001 (Parallel 1)")
     expect(buildCardFaq("TH", parallel)[3]!.answer).toContain("แบบ parallel")
   })
 
@@ -175,19 +175,32 @@ describe("card SEO copy", () => {
     expect(description).toContain("อัปเดตทุกวัน")
   })
 
-  it("writes a unique Thai intro with names, code, rarity, set, price and source", () => {
-    const intro = buildCardIntro("TH", seo)
+  it("writes a unique Thai intro with names, code, rarity, set and source", () => {
+    const paragraphs = buildCardIntro("TH", seo)
+    const intro = paragraphs.join(" ")
 
+    expect(paragraphs).toHaveLength(2)
     expect(intro).toContain("มังกี้ ดี. ลูฟี่")
     expect(intro).toContain("Monkey.D.Luffy")
     expect(intro).toContain("OP01-003")
     expect(intro).toContain("SR")
     expect(intro).toContain("Romance Dawn")
-    expect(intro).toContain("441 ฿")
     expect(intro).toContain("Yuyu-tei")
     expect(intro).toContain("12 ก.ค. 2026")
     // Second Thai spelling lives in the body copy.
     expect(intro).toContain("วันพีช")
+  })
+
+  it("does not restate the price the hero already shows", () => {
+    // The price and 30-day move render as the instrument directly above this
+    // copy; repeating them made the block a wall of text between the card name
+    // and the number people came for. The meta description and FAQ still carry
+    // the figures for crawlers.
+    const intro = buildCardIntro("TH", seo).join(" ")
+
+    expect(intro).not.toContain("441 ฿")
+    expect(intro).not.toContain("¥2,100")
+    expect(intro).not.toContain("+12.5%")
   })
 
   it("builds a four-question per-card FAQ from the card's own data", () => {
@@ -209,7 +222,7 @@ describe("card SEO copy", () => {
       priceChange30d: null,
     }
 
-    expect(buildCardIntro("TH", priceless)).toContain("ยังไม่มีราคากลางล่าสุด")
+    expect(buildCardIntro("TH", priceless).join(" ")).toContain("ยังไม่มีราคากลางล่าสุด")
     expect(buildCardSeoDescription("TH", priceless)).toContain("ยังไม่มีราคากลางล่าสุด")
     expect(buildCardFaq("TH", priceless)[0]!.answer).toContain("ยังไม่มีราคากลางล่าสุด")
   })

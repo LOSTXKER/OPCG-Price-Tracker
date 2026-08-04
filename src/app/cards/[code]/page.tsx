@@ -181,9 +181,13 @@ export default async function CardDetailPage(props: {
       <CardDetail
         key={card.id}
         introSlot={
-          <p className="text-body-sm mt-3 max-w-prose leading-relaxed text-muted-foreground">
-            {buildCardIntro("TH", seo)}
-          </p>
+          <section className="mt-6 max-w-prose space-y-2 border-t border-hair pt-4">
+            {buildCardIntro("TH", seo).map((paragraph) => (
+              <p key={paragraph.slice(0, 24)} className="text-body-sm leading-relaxed text-muted-foreground">
+                {paragraph}
+              </p>
+            ))}
+          </section>
         }
         historySlot={
           <CardPriceHistory cardCode={card.cardCode} history={priceHistory} lang="TH" />

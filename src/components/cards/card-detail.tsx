@@ -123,9 +123,6 @@ export function CardDetail(props: CardDetailProps) {
             onAlert={() => setAlertOpen(true)}
             onShare={() => void handleShare()}
           />
-          {/* Server-rendered Thai intro — sits high in the document so the first
-              thing after the H1 is real, unique prose instead of numbers. */}
-          {introSlot}
           <CardDetailPrice
             hydrated={hydrated}
             lang={displayLang}
@@ -148,6 +145,11 @@ export function CardDetail(props: CardDetailProps) {
             pricePos={pricePos}
             provenance={provenance}
           />
+          {/* Server-rendered Thai context. It sits AFTER the price instrument on
+              purpose: the reason people open this page is the number, and an
+              SEO paragraph wedged between the card name and the price pushed
+              that number below the fold. Still early in the document. */}
+          {introSlot}
         </div>
 
         <CardDetailBuyBox

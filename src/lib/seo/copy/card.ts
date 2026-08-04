@@ -160,55 +160,36 @@ export function buildCardSeoDescription(lang: Language, data: CardSeoData): stri
  * rarity, set, current ฿/¥ price, 30-day move, source and last-updated date.
  * Turns a numbers-only page into something Google can rank.
  */
-export function buildCardIntro(lang: Language, data: CardSeoData): string {
+export function buildCardIntro(lang: Language, data: CardSeoData): string[] {
   const code = formatCardCodeLabel(data.cardCode);
-  const thb = cardPriceThbText(data);
-  const jpy = cardPriceJpyText(data);
-  const change = data.priceChange30d != null ? formatSignedPct(data.priceChange30d) : null;
+  const hasPrice = cardPriceThbText(data) != null;
   const updated = formatSeoDate(data.priceScrapedAt, lang);
 
+  // Deliberately does NOT restate the price or the 30-day move: both are
+  // rendered as the hero instrument directly above this block, and repeating
+  // them made the paragraph a five-line wall between the card name and the
+  // price. The numbers still reach a crawler through the meta description and
+  // the FAQ. This copy carries what the UI does not say in words.
   if (lang === "TH") {
     const nameTh = data.nameTh?.trim();
-    const namePart = nameTh && nameTh !== data.nameLatin
-      ? `${nameTh} (${data.nameLatin})`
-      : data.nameLatin;
+    const namePart =
+      nameTh && nameTh !== data.nameLatin ? `${nameTh} (${data.nameLatin})` : data.nameLatin;
     const variantPart = data.isParallel ? "แบบ parallel (ลายพิเศษ) " : "";
-    const sentences: string[] = [];
-    sentences.push(
+
+    return [
       `การ์ด ${namePart} รหัส ${code} ${variantPart}เป็นการ์ดความหายาก ${data.rarity} จากชุด ${data.setName} ของเกมการ์ดวันพีซ (One Piece Card Game)`,
-    );
-    if (thb) {
-      sentences.push(
-        `ราคากลางล่าสุดอยู่ที่ ${thb}${jpy ? ` (${jpy})` : ""}${change ? ` ขยับ ${change} ในรอบ 30 วัน` : ""}`,
-      );
-    } else {
-      sentences.push("ตอนนี้ยังไม่มีราคากลางล่าสุดของใบนี้ เพราะยังไม่พบประกาศขายจากแหล่งที่เราติดตาม");
-    }
-    sentences.push(
-      `ราคาอ้างอิงจาก Yuyu-tei ร้านการ์ดในญี่ปุ่น${updated ? ` อัปเดตล่าสุด ${updated}` : ""} และเก็บราคาใหม่ทุกวัน`,
-    );
-    sentences.push(
-      "ถ้ากำลังเช็คราคาการ์ดวันพีชใบนี้ก่อนซื้อหรือขาย ให้ดูตารางประวัติราคาและช่วงสูง–ต่ำด้านล่างประกอบด้วย เพราะราคาซื้อขายจริงในไทยขึ้นกับสภาพการ์ดและผู้ขาย",
-    );
-    return `${sentences.join(" ")}`;
+      hasPrice
+        ? `ราคากลางด้านบนอ้างอิงตลาดญี่ปุ่นจาก Yuyu-tei${updated ? ` อัปเดตล่าสุด ${updated}` : ""} และเก็บใหม่ทุกวัน ส่วนราคาซื้อขายจริงของการ์ดวันพีชในไทยขึ้นกับสภาพการ์ดและผู้ขาย จึงควรดูตารางประวัติราคาและช่วงสูง–ต่ำประกอบก่อนตัดสินใจ`
+        : `ตอนนี้ยังไม่มีราคากลางล่าสุดของการ์ดวันพีชใบนี้ เพราะยังไม่พบประกาศขายจากแหล่งที่เราติดตาม (Yuyu-tei ตลาดญี่ปุ่น) เราเก็บราคาใหม่ทุกวัน ถ้ามีประกาศขายเข้ามาจะขึ้นให้เห็นที่หน้านี้`,
+    ];
   }
 
-  const sentences: string[] = [];
-  sentences.push(
+  return [
     `${data.nameLatin} (${code}) is a ${data.rarity}${data.isParallel ? " parallel" : ""} card from ${data.setName} in the One Piece Card Game.`,
-  );
-  sentences.push(
-    thb
-      ? `The current market reference price is ${thb}${jpy ? ` (${jpy})` : ""}${change ? `, ${change} over the past 30 days` : ""}.`
-      : "There is no reference price for this printing yet.",
-  );
-  sentences.push(
-    `Prices come from Yuyu-tei in Japan${updated ? `, last updated ${updated}` : ""}, and are refreshed daily.`,
-  );
-  sentences.push(
-    "Check the price-history table below for the 7/30/90-day high, low and average before you buy or sell.",
-  );
-  return sentences.join(" ");
+    hasPrice
+      ? `The reference price above comes from the Japanese market via Yuyu-tei${updated ? `, last updated ${updated}` : ""}, and is refreshed daily. What a card actually sells for in Thailand depends on its condition and the seller, so check the price-history table and the high–low range before you buy or sell.`
+      : "There is no reference price for this printing yet — we have not seen it listed by the sources we track (Yuyu-tei in Japan). Prices are collected daily and will appear here once it is listed.",
+  ];
 }
 
 export interface CardFaqItem {
