@@ -10,7 +10,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useHydrated } from "@/hooks/use-hydrated"
 
+import { FilterModal } from "@/components/shared/filter-modal"
+import { FilterButton } from "@/components/ui/toolbar"
+
+import { RANGE_DAYS, type ChartRange } from "./card-chart"
 import { FeedScrollBox } from "./feed-scroll-box"
+import { PriceRangeControl } from "./price-range-control"
 import { type Currency } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
 
@@ -43,20 +48,6 @@ export function listingMatchesGrade(condition: string | null | undefined, gradeL
   const gradeKey = compactGradeText(gradeLabel)
   if (gradeKey.startsWith("raw")) return !/(psa|bgs|cgc|ars)/.test(conditionKey)
   return conditionKey.includes(gradeKey)
-}
-
-/** "Listed within N days" options for the marketplace rail. */
-const LISTING_PERIODS = ["7", "30", "90"]
-
-function listingConditionFamily(condition: string): string | null {
-  const m = condition.match(/^(psa|bgs|cgc|ars)\b/i)
-  return m ? m[1].toLowerCase() : null
-}
-
-function listingMatchesConditionFilter(condition: string, activeGrade: string) {
-  if (activeGrade === "all") return true
-  if (activeGrade === "raw") return listingConditionFamily(condition) == null
-  return listingConditionFamily(condition) === activeGrade
 }
 
 function isGradedCondition(condition: string) {
@@ -117,6 +108,8 @@ export function MeecardAsksRail({
   currentPriceJpy,
   currency,
   lang,
+  range = "1M",
+  onRangeChange,
 }: {
   cardId: number
   cardCode: string
@@ -125,11 +118,14 @@ export function MeecardAsksRail({
   currentPriceJpy: number | null
   currency: Currency
   lang: Language
+  /** Shared page range — same selector as the chart and the price history. */
+  range?: ChartRange
+  onRangeChange?: (range: ChartRange) => void
 }) {
   const hydrated = useHydrated()
   const [alertOpen, setAlertOpen] = useState(false)
   const [activeGrade, setActiveGrade] = useState<string>("all")
-  const [activePeriod, setActivePeriod] = useState<string>("all")
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const marketHref = `/marketplace?cardCode=${encodeURIComponent(cardCode)}`
 
   const sorted = useMemo(
@@ -137,12 +133,11 @@ export function MeecardAsksRail({
     [listings],
   )
 
-  const grades = useMemo(() => {
-    const fams = Array.from(
-      new Set(sorted.map((l) => listingConditionFamily(l.condition)).filter((f): f is string => f != null)),
-    )
-    return [...(sorted.some((l) => listingConditionFamily(l.condition) == null) ? ["raw"] : []), ...fams]
-  }, [sorted])
+  // Full condition of each listing ("PSA 10", "NM"…), not the grading family.
+  const grades = useMemo(
+    () => Array.from(new Set(sorted.map((l) => l.condition))).sort(),
+    [sorted],
+  )
 
   // "Listed within N days", measured from the NEWEST listing rather than the
   // clock: the render stays pure (server and client agree) and a demo dataset
@@ -159,13 +154,12 @@ export function MeecardAsksRail({
   const shown = useMemo(
     () =>
       sorted.filter((l) => {
-        if (!listingMatchesConditionFilter(l.condition, activeGrade)) return false
-        if (activePeriod === "all") return true
+        if (activeGrade !== "all" && l.condition !== activeGrade) return false
         const ms = l.listedAtIso ? new Date(l.listedAtIso).getTime() : NaN
         if (Number.isNaN(ms)) return false
-        return ms >= newestListedMs - Number(activePeriod) * 86_400_000
+        return ms >= newestListedMs - RANGE_DAYS[range] * 86_400_000
       }),
-    [sorted, activeGrade, activePeriod, newestListedMs],
+    [sorted, activeGrade, range, newestListedMs],
   )
   const preview = getMarketFeedPreview(shown, false)
 
@@ -209,34 +203,51 @@ export function MeecardAsksRail({
         <FeedSkeleton count={preview.length} />
       ) : (
         <>
+          {/* Same shape as the sales feed: the page range stays visible outside,
+              the facets live behind one "ตัวกรอง" button (AGENTS.md canon). */}
           {sorted.length > 1 && (
-            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
-              <div className="min-w-0">
-                <ConditionFilter
-                  label={t(lang, "salePeriodFilter")}
-                  grades={LISTING_PERIODS}
-                  active={activePeriod}
-                  onSelect={setActivePeriod}
-                  render={(v) =>
-                    v === "all"
-                      ? t(lang, "filterAll")
-                      : t(lang, "saleWithinDays").replace("{n}", v)
-                  }
-                />
-              </div>
-              {grades.length > 1 && (
-                <div className="min-w-0">
-                  <ConditionFilter
-                    label={t(lang, "condition")}
-                    grades={grades}
-                    active={activeGrade}
-                    onSelect={setActiveGrade}
-                    render={(g) => (g === "all" ? t(lang, "filterAll") : gradeFilterLabel(lang, g))}
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              {onRangeChange && (
+                <div className="no-sb min-w-0 max-w-full overflow-x-auto pb-0.5">
+                  <PriceRangeControl
+                    lang={lang}
+                    range={range}
+                    onRangeChange={onRangeChange}
+                    className="shrink-0"
                   />
                 </div>
               )}
+              <FilterButton
+                count={activeGrade === "all" ? 0 : 1}
+                active={filtersOpen || activeGrade !== "all"}
+                appearance="outline"
+                onClick={() => setFiltersOpen(true)}
+                aria-label={t(lang, "filter")}
+                aria-haspopup="dialog"
+                aria-expanded={filtersOpen}
+                className="shrink-0"
+              >
+                {t(lang, "filter")}
+              </FilterButton>
             </div>
           )}
+
+          <FilterModal
+            open={filtersOpen}
+            onOpenChange={setFiltersOpen}
+            onReset={() => setActiveGrade("all")}
+            resetDisabled={activeGrade === "all"}
+          >
+            {grades.length > 0 && (
+              <ConditionFilter
+                label={t(lang, "condition")}
+                grades={grades}
+                active={activeGrade}
+                onSelect={setActiveGrade}
+                render={(g) => (g === "all" ? t(lang, "filterAll") : g)}
+              />
+            )}
+          </FilterModal>
 
           {shown.length === 0 ? (
             <p className="text-meta py-6 text-center">{t(lang, "noMatchingFilter")}</p>

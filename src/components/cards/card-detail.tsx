@@ -224,6 +224,7 @@ export function CardDetail(props: CardDetailProps) {
               cardCode={card.cardCode}
               history={priceHistory}
               lang={displayLang}
+              currency={currency}
               range={range}
               onRangeChange={selectRange}
             />
@@ -278,6 +279,8 @@ export function CardDetail(props: CardDetailProps) {
             currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
             currency={currency}
             lang={displayLang}
+            range={range}
+            onRangeChange={selectRange}
           />
         </section>
         <AdInventorySlot

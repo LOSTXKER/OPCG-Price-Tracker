@@ -6,7 +6,7 @@ import {
   formatSeoDate,
   priceHistoryLabels,
 } from "@/lib/seo/copy/card"
-import { changeToneClass, formatJpy, formatSignedPct, formatThb } from "@/lib/utils/currency"
+import { changeToneClass, formatJpyAmount, formatSignedPct, type Currency } from "@/lib/utils/currency"
 
 import { RANGE_DAYS, type ChartRange } from "./card-chart"
 import { FeedScrollBox } from "./feed-scroll-box"
@@ -25,12 +25,15 @@ export function CardPriceHistory({
   cardCode,
   history,
   lang = "TH",
+  currency = "THB",
   range = "1M",
   onRangeChange,
 }: {
   cardCode: string
   history: PriceHistorySummary
   lang?: Language
+  /** Display currency preference — the table shows ONE currency, the user's. */
+  currency?: Currency
   /** Shared with the chart — the same selector, the same state, shown twice. */
   range?: ChartRange
   onRangeChange?: (range: ChartRange) => void
@@ -78,9 +81,9 @@ export function CardPriceHistory({
               what the page already showed. `derivePriceHistory` still computes
               `history.windows` (covered by tests) in case it comes back. */}
 
-          {/* ฿ and ¥ share one cell — the yen figure is provenance, not a value
-              to compare down a column, and giving it equal weight made four
-              columns of numbers with no clear reading order. */}
+          {/* One currency only — the visitor's preference (owner decision). The
+              yen figure used to sit under every ฿ value and doubled the height
+              of the table for provenance the page states once already. */}
           <FeedScrollBox className="hidden sm:block">
             <table className="w-full table-fixed border-collapse">
               <thead className="sticky top-0 z-10 bg-background">
@@ -99,11 +102,8 @@ export function CardPriceHistory({
                     <th scope="row" className="tnum py-2.5 pl-1 pr-3 text-left text-label font-medium text-foreground">
                       {formatSeoDate(p.dateIso, lang)}
                     </th>
-                    <td className="py-2.5 pl-2 pr-3 text-right">
-                      <span className="tnum block text-label font-semibold text-foreground">
-                        {formatThb(p.priceThb)}
-                      </span>
-                      <span className="tnum text-meta block">{formatJpy(p.priceJpy)}</span>
+                    <td className="tnum py-2.5 pl-2 pr-3 text-right text-label font-semibold text-foreground">
+                      {formatJpyAmount(p.priceJpy, currency)}
                     </td>
                     <td className={`tnum py-2.5 pl-2 pr-1 text-right text-label ${changeToneClass(p.changePct)}`}>
                       {p.changePct != null ? formatSignedPct(p.changePct) : "—"}
@@ -121,11 +121,10 @@ export function CardPriceHistory({
                   <span className="tnum block text-label font-medium text-foreground">
                     {formatSeoDate(p.dateIso, lang)}
                   </span>
-                  <span className="tnum text-meta mt-0.5 block">{formatJpy(p.priceJpy)}</span>
                 </span>
                 <span className="shrink-0 text-right">
                   <span className="tnum block text-label font-semibold text-foreground">
-                    {formatThb(p.priceThb)}
+                    {formatJpyAmount(p.priceJpy, currency)}
                   </span>
                   <span className={`tnum text-meta mt-0.5 block ${changeToneClass(p.changePct)}`}>
                     {p.changePct != null ? formatSignedPct(p.changePct) : "—"}

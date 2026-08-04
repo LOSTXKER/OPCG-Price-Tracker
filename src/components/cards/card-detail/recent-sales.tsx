@@ -31,7 +31,6 @@ import {
   ConditionFilter,
   FeedPriceCell,
   formatFeedDate,
-  gradeFilterLabel,
 } from "./market-feed-shared"
 
 /**
@@ -137,11 +136,13 @@ export function RecentSales({
 }) {
   const hydrated = useHydrated()
   const sources = useMemo(() => Array.from(new Set(sales.map((s) => s.source))), [sales])
-  // Condition facet: "raw" (ungraded) + each grading family present in the feed.
-  const grades = useMemo(() => {
-    const fams = Array.from(new Set(sales.filter((s) => s.family).map((s) => s.family as string)))
-    return [...(sales.some((s) => s.family == null) ? ["raw"] : []), ...fams]
-  }, [sales])
+  // Condition facet lists the FULL condition of every row ("PSA 10", "BGS 9.5",
+  // "Raw") rather than the grading family ("psa"), so a reader can pick the
+  // exact grade they care about instead of a bucket.
+  const grades = useMemo(
+    () => Array.from(new Set(sales.map((s) => s.condition))).sort(),
+    [sales],
+  )
   const [activeSource, setActiveSource] = useState<string>("all")
   const [activeGrade, setActiveGrade] = useState<string>("all")
   const [filtersOpen, setFiltersOpen] = useState(false)
@@ -162,10 +163,7 @@ export function RecentSales({
 
   const shown = sales.filter((s) => {
     if (activeSource !== "all" && s.source !== activeSource) return false
-    if (activeGrade !== "all") {
-      const matches = activeGrade === "raw" ? s.family == null : s.family === activeGrade
-      if (!matches) return false
-    }
+    if (activeGrade !== "all" && s.condition !== activeGrade) return false
     const ms = new Date(s.soldAtIso).getTime()
     if (Number.isNaN(ms)) return false
     if (ms < newestMs - RANGE_DAYS[range] * 86_400_000) return false
@@ -290,7 +288,7 @@ export function RecentSales({
             grades={grades}
             active={activeGrade}
             onSelect={setActiveGrade}
-            render={(g) => (g === "all" ? t(lang, "filterAll") : gradeFilterLabel(lang, g))}
+            render={(g) => (g === "all" ? t(lang, "filterAll") : g)}
           />
         )}
 

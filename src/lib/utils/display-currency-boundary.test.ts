@@ -12,8 +12,6 @@ const UI_ROOTS = ["src/app", "src/components"] as const;
 const NATIVE_CURRENCY_ALLOWLIST = {
   "src/app/cards/[code]/opengraph-image.tsx":
     "OpenGraph output is cacheable and cannot read a browser-local preference.",
-  "src/components/cards/card-detail/price-history-table.tsx":
-    "The crawlable price-history table must ship in the first HTML response, so it renders on the server and cannot read the browser currency store.",
   "src/app/guide/rarities/page.tsx":
     "The guide explains Japanese source-market price ranges in JPY.",
   "src/app/market-overview/page.tsx":

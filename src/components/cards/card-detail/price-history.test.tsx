@@ -105,8 +105,11 @@ describe("CardPriceHistory (server-rendered)", () => {
     expect(markup).not.toContain("สรุปช่วงราคา")
     // A real, dated observation — not a chart, not a client fetch.
     expect(markup).toContain("11 ก.ค. 2026")
+    // ONE currency, the visitor's preference (owner decision). The default is
+    // THB, which is also what a crawler gets. The yen figure used to sit under
+    // every row and doubled the table's height for provenance stated elsewhere.
     expect(markup).toContain("441 ฿")
-    expect(markup).toContain("¥2,100")
+    expect(markup).not.toContain("¥2,100")
   })
 
   it("never renders fabricated-sample labelling", () => {
