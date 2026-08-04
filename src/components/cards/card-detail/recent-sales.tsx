@@ -9,6 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { FilterModal } from "@/components/shared/filter-modal"
+import { FilterButton } from "@/components/ui/toolbar"
 import { useHydrated } from "@/hooks/use-hydrated"
 import { type Currency } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
@@ -154,6 +156,7 @@ export function RecentSales({
   }, [sales])
   const [activeSource, setActiveSource] = useState<string>("all")
   const [activeGrade, setActiveGrade] = useState<string>("all")
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const [expanded, setExpanded] = useState(false)
 
   // Measured back from the NEWEST row, not from `Date.now()`: the render must
@@ -180,6 +183,19 @@ export function RecentSales({
     if (ms < newestMs - RANGE_DAYS[range] * 86_400_000) return false
     return true
   })
+  // The page-level range counts as an active filter here only when it is off
+  // its default, so the badge reflects what is actually narrowing this list.
+  const activeFilterCount =
+    (range !== "1M" ? 1 : 0) +
+    (activeGrade !== "all" ? 1 : 0) +
+    (activeSource !== "all" ? 1 : 0)
+
+  const resetFilters = () => {
+    setActiveGrade("all")
+    setActiveSource("all")
+    onRangeChange?.("1M")
+  }
+
   // Distinguish "no data at all" from "filters excluded everything".
   const emptyCopy = sales.length === 0 ? t(lang, "noLatestSales") : t(lang, "noMatchingFilter")
   const hasMore = !isSample && shown.length > MARKET_FEED_REAL_PREVIEW_COUNT
@@ -246,17 +262,35 @@ export function RecentSales({
         </p>
       </div>
 
-      {/* filters — client-only (Radix dropdown + interactive state). SSR skips
-          this block so server/client HTML always agree; same pattern as the chart.
-
-          Two rows on purpose: three controls crammed on one line wrapped badly
-          and read as one long undifferentiated strip. The range is the same
-          selector the chart and the price-history table use (shared state, same
-          Pro locks) so it leads on its own line; condition and market are the
-          per-feed facets and sit together beneath it. */}
+      {/* One "ตัวกรอง" button instead of three stacked controls (owner: the
+          strip ran ~200px tall above a two-row table). This is the project's
+          canonical filter surface — FilterButton + FilterModal, same as search.
+          The controls themselves are unchanged, they just live in the modal. */}
       {hydrated && !isSample && sales.length > 1 && (
-        <div className="mb-4 flex flex-col gap-3">
-          {onRangeChange && (
+        <div className="mb-4">
+          <FilterButton
+            count={activeFilterCount}
+            active={filtersOpen || activeFilterCount > 0}
+            appearance="outline"
+            onClick={() => setFiltersOpen(true)}
+            aria-label={t(lang, "filter")}
+            aria-haspopup="dialog"
+            aria-expanded={filtersOpen}
+          >
+            {t(lang, "filter")}
+          </FilterButton>
+        </div>
+      )}
+
+      <FilterModal
+        open={filtersOpen}
+        onOpenChange={setFiltersOpen}
+        onReset={resetFilters}
+        resetDisabled={activeFilterCount === 0}
+      >
+        {onRangeChange && (
+          <div>
+            <span className="mb-1.5 block text-eyebrow">{t(lang, "salePeriodFilter")}</span>
             <div className="no-sb max-w-full overflow-x-auto pb-0.5">
               <PriceRangeControl
                 lang={lang}
@@ -265,32 +299,29 @@ export function RecentSales({
                 className="shrink-0"
               />
             </div>
-          )}
-
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
-            {grades.length > 0 && (
-              <div className="min-w-0">
-                <ConditionFilter
-                  label={t(lang, "condition")}
-                  grades={grades}
-                  active={activeGrade}
-                  onSelect={setActiveGrade}
-                  render={(g) => (g === "all" ? t(lang, "filterAll") : gradeFilterLabel(lang, g))}
-                />
-              </div>
-            )}
-            {sources.length > 0 && (
-              <SourceDropdown
-                label={t(lang, "market")}
-                sources={sources}
-                active={activeSource}
-                onSelect={setActiveSource}
-                allLabel={t(lang, "filterAll")}
-              />
-            )}
           </div>
-        </div>
-      )}
+        )}
+
+        {grades.length > 0 && (
+          <ConditionFilter
+            label={t(lang, "condition")}
+            grades={grades}
+            active={activeGrade}
+            onSelect={setActiveGrade}
+            render={(g) => (g === "all" ? t(lang, "filterAll") : gradeFilterLabel(lang, g))}
+          />
+        )}
+
+        {sources.length > 0 && (
+          <SourceDropdown
+            label={t(lang, "market")}
+            sources={sources}
+            active={activeSource}
+            onSelect={setActiveSource}
+            allLabel={t(lang, "filterAll")}
+          />
+        )}
+      </FilterModal>
 
       {shown.length === 0 ? (
         <p className="text-meta py-6 text-center">{emptyCopy}</p>

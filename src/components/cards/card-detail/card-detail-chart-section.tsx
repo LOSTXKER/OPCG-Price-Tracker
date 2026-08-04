@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils"
 import { PriceRangeControl } from "./price-range-control"
 
 import {
-  RANGES,
   ScrubChart,
   type ChartRange,
   type ChartSeries,
@@ -34,13 +33,6 @@ interface CardDetailChartSectionProps {
   windowLabel: string
 }
 
-const RANGE_DAYS: Record<ChartRange, number> = {
-  "7D": 7,
-  "1M": 30,
-  "3M": 90,
-  "1Y": 365,
-  All: Infinity,
-}
 
 /** Selected-grade chart, range controls, and live announcement. */
 export function CardDetailChartSection({
