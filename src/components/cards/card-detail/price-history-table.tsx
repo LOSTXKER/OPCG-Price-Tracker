@@ -1,6 +1,6 @@
 "use client"
 
-import { t, type Language } from "@/lib/i18n"
+import type { Language } from "@/lib/i18n"
 import {
   buildPriceHistoryCopy,
   formatSeoDate,
@@ -51,13 +51,21 @@ export function CardPriceHistory({
     <div>
       <div className="mb-3 min-w-0">
         <h2 className="text-h3">{copy.title}</h2>
-        <p className="text-body-sm mt-1 text-muted-foreground">{copy.lead}</p>
+        <p className="text-body-sm mt-1 max-w-prose text-muted-foreground">{copy.lead}</p>
       </div>
 
       {onRangeChange && history.points.length > 1 && (
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <p className="text-eyebrow">{t(lang, "salePeriodFilter")}</p>
-          <PriceRangeControl lang={lang} range={range} onRangeChange={onRangeChange} />
+        // Left-aligned under the lead (owner decision). No "ช่วงเวลา" label: the
+        // pills already read as a range, and the label only pushed the control
+        // to the far side of the block. Scrolls sideways on a narrow phone, the
+        // same way the grade rail does (AGENTS.md).
+        <div className="no-sb mb-5 max-w-full overflow-x-auto pb-1">
+          <PriceRangeControl
+            lang={lang}
+            range={range}
+            onRangeChange={onRangeChange}
+            className="shrink-0"
+          />
         </div>
       )}
 

@@ -251,7 +251,7 @@ export function RecentSales({
           and the control should be visible), so the row shows whenever there is
           more than one sale to filter at all. */}
       {hydrated && !isSample && sales.length > 1 && (
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
           {grades.length > 1 && (
             <div className="min-w-0 flex-1">
               <ConditionFilter
