@@ -1,14 +1,9 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Check, ChevronDown, ExternalLink } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { SegmentedControl } from "@/components/ui/segmented-control"
 import { useHydrated } from "@/hooks/use-hydrated"
 import { type Currency } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
@@ -68,8 +63,11 @@ function SourceRef({ source, interactive = true }: { source: string; interactive
   )
 }
 
-/** Source facet — compact dropdown (logos in menu; trigger shows current pick). */
-function SourceDropdown({
+/** Source facet — a pill rail like the other two filters, with the market logo
+ *  inside each pill (SegmentedControl takes a ReactNode label). It replaced a
+ *  dropdown: one dropdown wedged between two pill rails read as a different
+ *  kind of control doing a different kind of job. */
+function SourceFilter({
   sources,
   active,
   onSelect,
@@ -82,41 +80,31 @@ function SourceDropdown({
   label: string
   allLabel: string
 }) {
-  const picked = active === "all" ? allLabel : sourceLabel(active)
-
   return (
-    <div className="shrink-0">
+    <div className="min-w-0">
       <p className="text-eyebrow mb-1.5">{label}</p>
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          aria-label={label}
-          className="ease-chrome surface-1 hairline inline-flex h-11 min-w-[9rem] items-center gap-1.5 rounded-full px-2.5 text-label font-semibold text-foreground hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-8"
-        >
-          {active !== "all" && <SourceLogo source={active} size={16} />}
-          <span className="truncate">{picked}</span>
-          <ChevronDown className="ml-auto size-4 shrink-0 text-muted-foreground" aria-hidden />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="min-w-[11rem]">
-          <DropdownMenuItem
-            onClick={() => onSelect("all")}
-            className={cn("flex items-center gap-2", active === "all" && "bg-foreground/5")}
-          >
-            <span className="flex-1 font-medium">{allLabel}</span>
-            {active === "all" && <Check className="size-3.5 shrink-0 text-foreground" aria-hidden />}
-          </DropdownMenuItem>
-          {sources.map((s) => (
-            <DropdownMenuItem
-              key={s}
-              onClick={() => onSelect(s)}
-              className={cn("flex items-center gap-2", active === s && "bg-foreground/5")}
-            >
-              <SourceLogo source={s} size={16} />
-              <span className="flex-1 font-medium">{sourceLabel(s)}</span>
-              {active === s && <Check className="size-3.5 shrink-0 text-foreground" aria-hidden />}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="no-sb max-w-full overflow-x-auto">
+        <SegmentedControl
+          value={active}
+          onChange={onSelect}
+          options={["all", ...sources].map((value) => ({
+            value,
+            label:
+              value === "all" ? (
+                allLabel
+              ) : (
+                <span className="inline-flex items-center gap-1.5">
+                  <SourceLogo source={value} size={14} />
+                  {sourceLabel(value)}
+                </span>
+              ),
+          }))}
+          size="sm"
+          variant="pill"
+          ariaLabel={label}
+          className="shrink-0"
+        />
+      </div>
     </div>
   )
 }
@@ -252,8 +240,8 @@ export function RecentSales({
           more than one sale to filter at all. */}
       {hydrated && !isSample && sales.length > 1 && (
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
-          {grades.length > 1 && (
-            <div className="min-w-0 flex-1">
+          {grades.length > 0 && (
+            <div className="min-w-0">
               <ConditionFilter
                 label={t(lang, "condition")}
                 grades={grades}
@@ -276,8 +264,8 @@ export function RecentSales({
               }
             />
           </div>
-          {sources.length > 1 && (
-            <SourceDropdown
+          {sources.length > 0 && (
+            <SourceFilter
               label={t(lang, "market")}
               sources={sources}
               active={activeSource}
