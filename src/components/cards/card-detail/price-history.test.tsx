@@ -175,32 +175,51 @@ describe("card SEO copy", () => {
     expect(description).toContain("อัปเดตทุกวัน")
   })
 
-  it("writes a unique Thai intro with names, code, rarity, set and source", () => {
+  it("writes one short Thai intro line built from this card's own data", () => {
     const paragraphs = buildCardIntro("TH", seo)
     const intro = paragraphs.join(" ")
 
-    expect(paragraphs).toHaveLength(2)
+    expect(paragraphs).toHaveLength(1)
     expect(intro).toContain("มังกี้ ดี. ลูฟี่")
     expect(intro).toContain("Monkey.D.Luffy")
     expect(intro).toContain("OP01-003")
     expect(intro).toContain("SR")
     expect(intro).toContain("Romance Dawn")
     expect(intro).toContain("Yuyu-tei")
-    expect(intro).toContain("12 ก.ค. 2026")
     // Second Thai spelling lives in the body copy.
     expect(intro).toContain("วันพีช")
+    // Owner-specified length: one line, not a paragraph block. Measured on the
+    // worst case that production actually renders — a parallel printing (its
+    // code expands to "OP13-118 (Parallel 3)") in a set with a long name. The
+    // name appears once because Card.nameTh mirrors the Latin name for every
+    // row in this database.
+    const worstCase = buildCardIntro("TH", {
+      ...seo,
+      nameTh: "Monkey.D.Luffy",
+      cardCode: "OP13-118_p3",
+      isParallel: true,
+      rarity: "P-SEC",
+      setName: "Carrying on His Will",
+    }).join(" ")
+
+    expect(worstCase.length).toBeLessThanOrEqual(185)
+    // formatCardCodeLabel already emits "(Parallel 3)" — the copy must not wrap
+    // it in another pair of brackets or repeat the word.
+    expect(worstCase).not.toContain("((")
+    expect(worstCase).not.toContain("(Parallel 3)) ")
+    expect(worstCase.match(/parallel/gi) ?? []).toHaveLength(1)
   })
 
-  it("does not restate the price the hero already shows", () => {
-    // The price and 30-day move render as the instrument directly above this
-    // copy; repeating them made the block a wall of text between the card name
-    // and the number people came for. The meta description and FAQ still carry
-    // the figures for crawlers.
+  it("does not restate figures the page already renders", () => {
+    // Price, 30-day move and the update date all appear on screen around this
+    // copy; repeating them made it a wall of text between the card name and the
+    // number people came for. The meta description and FAQ still carry them.
     const intro = buildCardIntro("TH", seo).join(" ")
 
     expect(intro).not.toContain("441 ฿")
     expect(intro).not.toContain("¥2,100")
     expect(intro).not.toContain("+12.5%")
+    expect(intro).not.toContain("12 ก.ค. 2026")
   })
 
   it("builds a four-question per-card FAQ from the card's own data", () => {

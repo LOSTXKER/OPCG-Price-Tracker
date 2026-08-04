@@ -156,39 +156,41 @@ export function buildCardSeoDescription(lang: Language, data: CardSeoData): stri
 }
 
 /**
- * 3–4 server-rendered sentences, unique per card: names (TH + Latin), code,
- * rarity, set, current ฿/¥ price, 30-day move, source and last-updated date.
- * Turns a numbers-only page into something Google can rank.
+ * One server-rendered line under the price, unique per card: name, code,
+ * rarity, set and where the price comes from. Gives a page of numbers a
+ * sentence Google can read without burying the price it sits under.
  */
 export function buildCardIntro(lang: Language, data: CardSeoData): string[] {
   const code = formatCardCodeLabel(data.cardCode);
   const hasPrice = cardPriceThbText(data) != null;
-  const updated = formatSeoDate(data.priceScrapedAt, lang);
 
-  // Deliberately does NOT restate the price or the 30-day move: both are
-  // rendered as the hero instrument directly above this block, and repeating
-  // them made the paragraph a five-line wall between the card name and the
-  // price. The numbers still reach a crawler through the meta description and
-  // the FAQ. This copy carries what the UI does not say in words.
+  // One short line, owner-specified length (เบส, 2026-08-04). Two rules behind
+  // the wording:
+  //   1. It does not restate the price, the 30-day move or the update date —
+  //      all three render on screen above/below this copy, and repeating them
+  //      made it a five-line wall between the card name and the price.
+  //   2. Every clause is per-card data (name, code, printing, rarity, set,
+  //      source). A tail listing the page's own sections ("พร้อมข้อมูลการ์ด
+  //      กราฟราคา ประวัติราคา") would be byte-identical on all 3,838 cards —
+  //      boilerplate that adds a keyword but no information.
   if (lang === "TH") {
     const nameTh = data.nameTh?.trim();
     const namePart =
       nameTh && nameTh !== data.nameLatin ? `${nameTh} (${data.nameLatin})` : data.nameLatin;
-    const variantPart = data.isParallel ? "แบบ parallel (ลายพิเศษ) " : "";
-
+    // No "(code)" wrapper and no separate parallel clause: formatCardCodeLabel
+    // already returns "OP13-118 (Parallel 3)", so both would double up into
+    // "(OP13-118 (Parallel 3)) แบบ parallel".
     return [
-      `การ์ด ${namePart} รหัส ${code} ${variantPart}เป็นการ์ดความหายาก ${data.rarity} จากชุด ${data.setName} ของเกมการ์ดวันพีซ (One Piece Card Game)`,
       hasPrice
-        ? `ราคากลางด้านบนอ้างอิงตลาดญี่ปุ่นจาก Yuyu-tei${updated ? ` อัปเดตล่าสุด ${updated}` : ""} และเก็บใหม่ทุกวัน ส่วนราคาซื้อขายจริงของการ์ดวันพีชในไทยขึ้นกับสภาพการ์ดและผู้ขาย จึงควรดูตารางประวัติราคาและช่วงสูง–ต่ำประกอบก่อนตัดสินใจ`
-        : `ตอนนี้ยังไม่มีราคากลางล่าสุดของการ์ดวันพีชใบนี้ เพราะยังไม่พบประกาศขายจากแหล่งที่เราติดตาม (Yuyu-tei ตลาดญี่ปุ่น) เราเก็บราคาใหม่ทุกวัน ถ้ามีประกาศขายเข้ามาจะขึ้นให้เห็นที่หน้านี้`,
+        ? `เช็คราคาการ์ด ${namePart} รหัส ${code} ความหายาก ${data.rarity} จากชุด ${data.setName} ในเกมการ์ดวันพีช (One Piece Card Game) ราคากลางจาก Yuyu-tei ตลาดญี่ปุ่น อัปเดตทุกวัน`
+        : `การ์ด ${namePart} รหัส ${code} ความหายาก ${data.rarity} จากชุด ${data.setName} ในเกมการ์ดวันพีช (One Piece Card Game) ตอนนี้ยังไม่มีราคากลางล่าสุด เพราะยังไม่พบประกาศขายจากแหล่งที่เราติดตาม (Yuyu-tei ตลาดญี่ปุ่น) เราเก็บราคาใหม่ทุกวัน`,
     ];
   }
 
   return [
-    `${data.nameLatin} (${code}) is a ${data.rarity}${data.isParallel ? " parallel" : ""} card from ${data.setName} in the One Piece Card Game.`,
     hasPrice
-      ? `The reference price above comes from the Japanese market via Yuyu-tei${updated ? `, last updated ${updated}` : ""}, and is refreshed daily. What a card actually sells for in Thailand depends on its condition and the seller, so check the price-history table and the high–low range before you buy or sell.`
-      : "There is no reference price for this printing yet — we have not seen it listed by the sources we track (Yuyu-tei in Japan). Prices are collected daily and will appear here once it is listed.",
+      ? `Check the price of ${data.nameLatin}, card ${code}, a ${data.rarity} card from ${data.setName} in the One Piece Card Game. The reference price tracks the Japanese market via Yuyu-tei and is refreshed daily.`
+      : `${data.nameLatin}, card ${code}, is a ${data.rarity} card from ${data.setName} in the One Piece Card Game. There is no reference price yet — we have not seen it listed by the sources we track (Yuyu-tei in Japan), and prices are collected daily.`,
   ];
 }
 
