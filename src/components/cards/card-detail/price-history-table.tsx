@@ -1,4 +1,8 @@
-import type { Language } from "@/lib/i18n"
+"use client"
+
+import { useState } from "react"
+
+import { t, type Language } from "@/lib/i18n"
 import {
   buildPriceHistoryCopy,
   formatSeoDate,
@@ -6,13 +10,11 @@ import {
 } from "@/lib/seo/copy/card"
 import { changeToneClass, formatJpy, formatSignedPct, formatThb } from "@/lib/utils/currency"
 
-import { RANGE_DAYS, type ChartRange } from "./card-chart"
+import { ConditionFilter } from "./market-feed-shared"
 import type { PriceHistorySummary } from "./price-history"
 
-/** How many daily rows a chart range shows in the table. */
-function rangeRowCount(range: ChartRange): number {
-  return RANGE_DAYS[range]
-}
+/** Local period options (days). "all" = every row that was derived. */
+const HISTORY_PERIODS = ["7", "30"]
 
 /**
  * Real, server-rendered price history — the block that replaced the fabricated
@@ -26,18 +28,20 @@ export function CardPriceHistory({
   cardCode,
   history,
   lang = "TH",
-  range = "1M",
 }: {
   cardCode: string
   history: PriceHistorySummary
   lang?: Language
-  /** Driven by the chart's range control — one selector governs both views. */
-  range?: ChartRange
 }) {
-  // Every derived row ships in the HTML; the range only decides how many of
-  // them are shown. Nothing is fetched when the selector changes, so a crawler
-  // always sees the full default (1M) set.
-  const points = history.points.slice(0, rangeRowCount(range))
+  // Own control, like every other block on this page. It used to follow the
+  // chart's range pills, but those sit a long way up the page — a control you
+  // cannot see while reading the table is not a control.
+  const [period, setPeriod] = useState<string>("all")
+
+  // Every derived row ships in the HTML and the period only hides rows, so a
+  // crawler always sees the full set (default "all"). Nothing is refetched.
+  const points =
+    period === "all" ? history.points : history.points.slice(0, Number(period))
   const latestDate = formatSeoDate(history.latestIso, lang)
   const copy = buildPriceHistoryCopy(lang, {
     cardCode,
@@ -52,6 +56,20 @@ export function CardPriceHistory({
         <h2 className="text-h3">{copy.title}</h2>
         <p className="text-body-sm mt-1 text-muted-foreground">{copy.lead}</p>
       </div>
+
+      {history.points.length > 1 && (
+        <div className="mb-4">
+          <ConditionFilter
+            label={t(lang, "salePeriodFilter")}
+            grades={HISTORY_PERIODS}
+            active={period}
+            onSelect={setPeriod}
+            render={(v) =>
+              v === "all" ? t(lang, "filterAll") : t(lang, "saleWithinDays").replace("{n}", v)
+            }
+          />
+        </div>
+      )}
 
       {points.length === 0 ? (
         <p className="text-meta py-6 text-center">{copy.emptyText}</p>

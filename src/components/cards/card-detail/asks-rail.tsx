@@ -43,6 +43,9 @@ export function listingMatchesGrade(condition: string | null | undefined, gradeL
   return conditionKey.includes(gradeKey)
 }
 
+/** "Listed within N days" options for the marketplace rail. */
+const LISTING_PERIODS = ["7", "30", "90"]
+
 function listingConditionFamily(condition: string): string | null {
   const m = condition.match(/^(psa|bgs|cgc|ars)\b/i)
   return m ? m[1].toLowerCase() : null
@@ -124,6 +127,7 @@ export function MeecardAsksRail({
   const hydrated = useHydrated()
   const [alertOpen, setAlertOpen] = useState(false)
   const [activeGrade, setActiveGrade] = useState<string>("all")
+  const [activePeriod, setActivePeriod] = useState<string>("all")
   const marketHref = `/marketplace?cardCode=${encodeURIComponent(cardCode)}`
 
   const sorted = useMemo(
@@ -138,9 +142,28 @@ export function MeecardAsksRail({
     return [...(sorted.some((l) => listingConditionFamily(l.condition) == null) ? ["raw"] : []), ...fams]
   }, [sorted])
 
+  // "Listed within N days", measured from the NEWEST listing rather than the
+  // clock: the render stays pure (server and client agree) and a demo dataset
+  // whose newest listing is weeks old still exercises the control.
+  const newestListedMs = useMemo(
+    () =>
+      sorted.reduce((max, l) => {
+        const ms = l.listedAtIso ? new Date(l.listedAtIso).getTime() : NaN
+        return Number.isNaN(ms) ? max : Math.max(max, ms)
+      }, 0),
+    [sorted],
+  )
+
   const shown = useMemo(
-    () => sorted.filter((l) => listingMatchesConditionFilter(l.condition, activeGrade)),
-    [sorted, activeGrade],
+    () =>
+      sorted.filter((l) => {
+        if (!listingMatchesConditionFilter(l.condition, activeGrade)) return false
+        if (activePeriod === "all") return true
+        const ms = l.listedAtIso ? new Date(l.listedAtIso).getTime() : NaN
+        if (Number.isNaN(ms)) return false
+        return ms >= newestListedMs - Number(activePeriod) * 86_400_000
+      }),
+    [sorted, activeGrade, activePeriod, newestListedMs],
   )
   const preview = getMarketFeedPreview(shown, false)
 
@@ -184,15 +207,32 @@ export function MeecardAsksRail({
         <FeedSkeleton count={preview.length} />
       ) : (
         <>
-          {grades.length > 1 && (
-            <div className="mb-4">
-              <ConditionFilter
-                label={t(lang, "condition")}
-                grades={grades}
-                active={activeGrade}
-                onSelect={setActiveGrade}
-                render={(g) => (g === "all" ? t(lang, "filterAll") : gradeFilterLabel(lang, g))}
-              />
+          {sorted.length > 1 && (
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
+              <div className="min-w-0">
+                <ConditionFilter
+                  label={t(lang, "salePeriodFilter")}
+                  grades={LISTING_PERIODS}
+                  active={activePeriod}
+                  onSelect={setActivePeriod}
+                  render={(v) =>
+                    v === "all"
+                      ? t(lang, "filterAll")
+                      : t(lang, "saleWithinDays").replace("{n}", v)
+                  }
+                />
+              </div>
+              {grades.length > 1 && (
+                <div className="min-w-0">
+                  <ConditionFilter
+                    label={t(lang, "condition")}
+                    grades={grades}
+                    active={activeGrade}
+                    onSelect={setActiveGrade}
+                    render={(g) => (g === "all" ? t(lang, "filterAll") : gradeFilterLabel(lang, g))}
+                  />
+                </div>
+              )}
             </div>
           )}
 

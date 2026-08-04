@@ -117,7 +117,17 @@ describe("CardPriceHistory (server-rendered)", () => {
   it("ships a list fallback under sm instead of a horizontally scrolling table", () => {
     expect(markup).toContain("sm:hidden")
     expect(markup).toContain("hidden sm:block")
-    expect(markup).not.toContain("overflow-x-auto")
+
+    // Scoped to the TABLE: the rule is that dense tables never scroll sideways
+    // on phones (AGENTS.md), they ship a list fallback. The period filter above
+    // the table is a pill rail, which is *supposed* to scroll horizontally on a
+    // narrow screen, so a whole-file ban would fail for the wrong reason.
+    const tableBlock = markup.slice(
+      markup.indexOf('class="hidden sm:block"'),
+      markup.indexOf("</table>"),
+    )
+    expect(tableBlock).toContain("<table")
+    expect(tableBlock).not.toContain("overflow-x-auto")
   })
 })
 

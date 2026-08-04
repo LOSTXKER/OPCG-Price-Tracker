@@ -216,16 +216,14 @@ export function CardDetail(props: CardDetailProps) {
       <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
         {/* ROW 1 LEFT — real price history (server-rendered table, no mock feed) */}
         <section id="sources" className="min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
-          {/* One range control: the chart's 7D/1M/… selector governs this table
-              too, so there is no second period picker on the page. The rows are
-              sliced from data already sent with the page — switching range never
-              refetches, and SSR (default 1M) puts the full set in the HTML. */}
+          {/* Each block owns its controls (owner decision) — the table has its
+              own period filter rather than following the chart's pills, which
+              sit too far up the page to read as connected. */}
           {priceHistory && (
             <CardPriceHistory
               cardCode={card.cardCode}
               history={priceHistory}
               lang={displayLang}
-              range={range}
             />
           )}
           {/* Settled sales — REAL rows from the database now (CardPrice where
