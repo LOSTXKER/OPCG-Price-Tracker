@@ -7,7 +7,9 @@ export default function CardDetailLoading() {
       <Skeleton className="h-4 w-48" />
 
       {/* 3-col hero: image · identity+price+grade rail · buy box (flat, no panels) */}
-      <div className="mt-6 flex flex-col gap-y-6 lg:grid lg:grid-cols-[200px_minmax(0,1fr)_320px] lg:items-start lg:gap-x-8 lg:gap-y-0 xl:grid-cols-[240px_minmax(0,1fr)_360px] xl:gap-x-10">
+      {/* Column widths must track card-detail.tsx or the layout jumps when the
+          skeleton is replaced. */}
+      <div className="mt-6 flex flex-col gap-y-6 lg:grid lg:grid-cols-[220px_minmax(0,1fr)_320px] lg:items-start lg:gap-x-8 lg:gap-y-0 xl:grid-cols-[280px_minmax(0,1fr)_360px] xl:gap-x-10">
         {/* COL 1 — image */}
         <Skeleton className="mx-auto aspect-[63/88] w-44 rounded-xl sm:w-52 lg:mx-0 lg:w-full" />
 
@@ -23,6 +25,9 @@ export default function CardDetailLoading() {
               </div>
             </div>
             <Skeleton className="h-4 w-40" />
+            {/* the two-line intro that renders under the identity line */}
+            <Skeleton className="h-4 w-full max-w-prose" />
+            <Skeleton className="h-4 w-2/3 max-w-prose" />
           </div>
 
           {/* edition toggle + grade rail chips */}

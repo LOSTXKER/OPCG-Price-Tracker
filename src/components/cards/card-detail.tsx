@@ -93,7 +93,11 @@ export function CardDetail(props: CardDetailProps) {
       </div>
 
       {/* ── 3-COL: hero card image (left) · identity+price+trade (center) · stats+actions (right) ── */}
-      <div className="mt-6 flex flex-col gap-y-6 lg:grid lg:grid-cols-[200px_minmax(0,1fr)_320px] lg:items-start lg:gap-x-8 lg:gap-y-0 xl:grid-cols-[240px_minmax(0,1fr)_360px] xl:gap-x-10">
+      {/* Card column widened (200→220 / 240→280) so the portrait ends about
+          level with the identity+price column instead of stopping a third of
+          the way up it — the card is the hero of this page. Height follows the
+          63/88 aspect: 280px wide ≈ 391px tall. */}
+      <div className="mt-6 flex flex-col gap-y-6 lg:grid lg:grid-cols-[220px_minmax(0,1fr)_320px] lg:items-start lg:gap-x-8 lg:gap-y-0 xl:grid-cols-[280px_minmax(0,1fr)_360px] xl:gap-x-10">
         {/* COL 1 — the card is the hero: a large portrait (tap to zoom) */}
         <div className="order-1 lg:col-start-1 lg:row-start-1">
           <button
@@ -107,7 +111,7 @@ export function CardDetail(props: CardDetailProps) {
             aria-label={displayName}
           >
             {card.imageUrl ? (
-              <Image src={card.imageUrl} alt={displayName} fill className="object-contain" sizes="(min-width:1280px) 240px, (min-width:1024px) 200px, 208px" placeholder="blur" blurDataURL={BLUR_DATA_URL} preload />
+              <Image src={card.imageUrl} alt={displayName} fill className="object-contain" sizes="(min-width:1280px) 280px, (min-width:1024px) 220px, 208px" placeholder="blur" blurDataURL={BLUR_DATA_URL} preload />
             ) : (
               <Skeleton className="absolute inset-0 size-full" />
             )}
@@ -123,6 +127,11 @@ export function CardDetail(props: CardDetailProps) {
             onAlert={() => setAlertOpen(true)}
             onShare={() => void handleShare()}
           />
+          {/* Server-rendered Thai context, placed as the lead under the identity
+              line (owner decision). It only works here because it is one short
+              line — the earlier multi-paragraph version pushed the price out of
+              view from this same position. */}
+          {introSlot}
           <CardDetailPrice
             hydrated={hydrated}
             lang={displayLang}
@@ -145,11 +154,6 @@ export function CardDetail(props: CardDetailProps) {
             pricePos={pricePos}
             provenance={provenance}
           />
-          {/* Server-rendered Thai context. It sits AFTER the price instrument on
-              purpose: the reason people open this page is the number, and an
-              SEO paragraph wedged between the card name and the price pushed
-              that number below the fold. Still early in the document. */}
-          {introSlot}
         </div>
 
         <CardDetailBuyBox
