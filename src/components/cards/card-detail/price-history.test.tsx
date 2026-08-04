@@ -96,7 +96,10 @@ describe("CardPriceHistory (server-rendered)", () => {
   it("puts real dated price rows in the initial HTML as tables", () => {
     expect(markup).toContain("<table")
     expect(markup).toContain("ประวัติราคา OP01-003")
-    expect(markup).toContain("สรุปช่วงราคา")
+    // The 7/30/90-day summary was removed by the owner — every figure in it was
+    // derived from these same rows. derivePriceHistory still computes the
+    // windows (asserted above); only the rendering is gone.
+    expect(markup).not.toContain("สรุปช่วงราคา")
     // A real, dated observation — not a chart, not a client fetch.
     expect(markup).toContain("11 ก.ค. 2026")
     expect(markup).toContain("441 ฿")

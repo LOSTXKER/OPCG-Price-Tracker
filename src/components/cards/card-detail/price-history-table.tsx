@@ -44,39 +44,10 @@ export function CardPriceHistory({
         <p className="text-meta py-6 text-center">{copy.emptyText}</p>
       ) : (
         <>
-          {/* Windows as stat tiles, not a second table: two identically-styled
-              tables stacked read as one long grey slab and the eye cannot tell
-              the summary from the daily rows. Tiles are scannable and give the
-              section a shape. */}
-          {history.windows.length > 0 && (
-            <div className="mb-7">
-              <h3 className="text-h5 mb-2.5">{copy.windowsTitle}</h3>
-              <div className="grid gap-2.5 sm:grid-cols-3">
-                {history.windows.map((w) => (
-                  <div
-                    key={w.days}
-                    className="surface-1 rounded-xl hairline px-4 py-3.5"
-                  >
-                    <div className="flex items-baseline justify-between gap-2">
-                      <p className="text-label font-medium text-foreground">
-                        {labels.days(w.days)}
-                      </p>
-                      <p className="text-meta">{labels.samples(w.count)}</p>
-                    </div>
-                    <p className="tnum mt-2 text-h4 font-semibold text-foreground">
-                      {formatThb(w.avgThb)}
-                    </p>
-                    <p className="text-meta mt-0.5">{labels.avg}</p>
-                    <p className="tnum text-meta mt-2 border-t border-hair pt-2">
-                      {formatThb(w.lowThb)} – {formatThb(w.highThb)}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <h3 className="text-h5 mb-2">{copy.recentTitle}</h3>
+          {/* The 7/30/90-day summary was removed at the owner's request: every
+              figure in it was derived from the daily rows below, so it repeated
+              what the page already showed. `derivePriceHistory` still computes
+              `history.windows` (covered by tests) in case it comes back. */}
 
           {/* ฿ and ¥ share one cell — the yen figure is provenance, not a value
               to compare down a column, and giving it equal weight made four
