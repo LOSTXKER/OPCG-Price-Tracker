@@ -31,7 +31,8 @@ import {
   type GradeKey,
   type Stat,
 } from "./grades"
-import { mockGradeSeries } from "./mock"
+import { MARKET_FEED_SAMPLE_PREVIEW_COUNT } from "./market-table-layout"
+import { mockGradeSeries, mockRecentSales, type MockSale } from "./mock"
 import type { CardDetailProps, CardListing, CardSourcePrice } from "./types"
 import { useCardDetailTabs } from "./use-card-detail-tabs"
 
@@ -91,6 +92,8 @@ export interface CardDetailModel {
   provenance: ProvenanceModel | null
   tabs: { id: string; label: string }[]
   handleShare: () => Promise<void>
+  /** Clearly-labelled sample feed — the "ตัวอย่างประวัติการซื้อขาย" preview. */
+  saleHistory: MockSale[]
   latestSale: LatestSale | null
   meecardListings: { rows: CardListing[] }
 }
@@ -380,6 +383,19 @@ export function useCardDetailModel({
         })),
     [marketRows, currency],
   )
+  // Deterministic sample rows for the "ตัวอย่างประวัติการซื้อขาย" block. Owner
+  // asked for the preview back (เบส 2026-08-04); it renders under the REAL price
+  // history table and carries its own "ตัวอย่าง" badge + disclaimer.
+  const saleHistory = useMemo(
+    () =>
+      mockRecentSales(
+        card.price?.priceJpy ?? card.latestPriceJpy,
+        latestUpdatedAt ?? null,
+        MARKET_FEED_SAMPLE_PREVIEW_COUNT,
+      ),
+    [card.price?.priceJpy, card.latestPriceJpy, latestUpdatedAt],
+  )
+
   const latestSale = recentSales.length
     ? recentSales.reduce((a, b) => (new Date(b.updatedAt ?? 0) > new Date(a.updatedAt ?? 0) ? b : a))
     : null
@@ -438,6 +454,7 @@ export function useCardDetailModel({
     provenance,
     tabs,
     handleShare,
+    saleHistory,
     latestSale,
     meecardListings,
   }

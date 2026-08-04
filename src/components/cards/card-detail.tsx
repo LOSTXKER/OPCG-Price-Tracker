@@ -17,6 +17,7 @@ import { CardDetailIdentity } from "./card-detail/card-detail-identity"
 import { CardDetailPrice } from "./card-detail/card-detail-price"
 import { CardDetailSectionNav } from "./card-detail/card-detail-section-nav"
 import { CardViewTracker } from "./card-detail/card-view-tracker"
+import { RecentSales } from "./card-detail/recent-sales"
 import { SectionHead } from "./card-detail/section-head"
 import { SiblingGrid } from "./card-detail-sibling-grid"
 import { CardDetailRelated } from "./card-detail-related"
@@ -71,6 +72,7 @@ export function CardDetail(props: CardDetailProps) {
     provenance,
     tabs,
     handleShare,
+    saleHistory,
     latestSale,
     meecardListings,
   } = useCardDetailModel(props)
@@ -215,6 +217,19 @@ export function CardDetail(props: CardDetailProps) {
         {/* ROW 1 LEFT — real price history (server-rendered table, no mock feed) */}
         <section id="sources" className="min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
           {historySlot}
+          {/* Sample multi-market feed, restored at the owner's request. It sits
+              BELOW the real price history so the page leads with actual data,
+              and carries `data-nosnippet`: the rows are deterministic mock
+              values, so Google may index the block but must never quote those
+              prices in a snippet or an AI answer as if they were ours. */}
+          <div data-nosnippet className="mt-12">
+            <RecentSales
+              sales={saleHistory}
+              isSample
+              currency={currency}
+              lang={displayLang}
+            />
+          </div>
         </section>
 
         {/* ROW 1 RIGHT — card info (specs + effect) */}
