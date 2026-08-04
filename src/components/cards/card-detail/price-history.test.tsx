@@ -123,11 +123,14 @@ describe("CardPriceHistory (server-rendered)", () => {
     // the table is a pill rail, which is *supposed* to scroll horizontally on a
     // narrow screen, so a whole-file ban would fail for the wrong reason.
     const tableBlock = markup.slice(
-      markup.indexOf('class="hidden sm:block"'),
+      markup.lastIndexOf("<div", markup.indexOf("<table")),
       markup.indexOf("</table>"),
     )
     expect(tableBlock).toContain("<table")
     expect(tableBlock).not.toContain("overflow-x-auto")
+    // It DOES scroll vertically — capped at ~5 rows by the owner's request —
+    // while every derived row stays in the markup.
+    expect(tableBlock).toContain("overflow-y-auto")
   })
 })
 

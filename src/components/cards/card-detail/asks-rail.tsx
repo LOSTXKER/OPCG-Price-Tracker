@@ -9,6 +9,8 @@ import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useHydrated } from "@/hooks/use-hydrated"
+
+import { FeedScrollBox } from "./feed-scroll-box"
 import { type Currency } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
 
@@ -240,10 +242,10 @@ export function MeecardAsksRail({
             <p className="text-meta py-6 text-center">{t(lang, "noMatchingFilter")}</p>
           ) : (
             <>
-              <div className="hidden sm:block">
+              <FeedScrollBox className="hidden sm:block">
                 <table className={MARKET_TABLE_CLASS}>
                   <MarketTableColGroup />
-                  <thead className="bg-background">
+                  <thead className="sticky top-0 z-10 bg-background">
                     <tr className="text-eyebrow border-b border-hair">
                       <th scope="col" className={marketThLead}>{t(lang, "seller")}</th>
                       <th scope="col" className={marketThLead}>{t(lang, "listedDate")}</th>
@@ -278,9 +280,9 @@ export function MeecardAsksRail({
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </FeedScrollBox>
 
-              <div className="divide-y divide-hair px-1 sm:hidden">
+              <FeedScrollBox variant="list" className="divide-y divide-hair px-1 sm:hidden">
                 {preview.map((l) => (
                   <Link key={l.id} href={`/marketplace/${l.id}`} className={linkedRowClass}>
                     <span className="min-w-0">
@@ -293,7 +295,7 @@ export function MeecardAsksRail({
                     <FeedPriceCell jpy={l.priceJpy} currency={currency} right />
                   </Link>
                 ))}
-              </div>
+              </FeedScrollBox>
 
               <div className="hairline-t mt-4 flex justify-end pt-3">
                 <Link

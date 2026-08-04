@@ -14,6 +14,7 @@ import { type Currency } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
+import { FeedScrollBox } from "./feed-scroll-box"
 import { SourceLogo, sourceLabel, sourceUrl } from "./source-logo"
 import type { SaleRow } from "./sold-feed"
 import {
@@ -187,7 +188,7 @@ export function RecentSales({
   const table = (
     <table className={MARKET_TABLE_CLASS}>
       <MarketTableColGroup />
-      <thead className="bg-background">
+      <thead className="sticky top-0 z-10 bg-background">
         <tr className="text-eyebrow border-b border-hair">
           <th scope="col" className={marketThLead}>{t(lang, "sourceCol")}</th>
           <th scope="col" className={marketThLead}>{t(lang, "saleDate")}</th>
@@ -291,9 +292,9 @@ export function RecentSales({
         <p className="text-meta py-6 text-center">{emptyCopy}</p>
       ) : (
         <>
-          <div className="hidden sm:block">{table}</div>
+          <FeedScrollBox className="hidden sm:block">{table}</FeedScrollBox>
 
-          <div className="divide-y divide-hair px-1 sm:hidden">{mobileList}</div>
+          <FeedScrollBox variant="list" className="divide-y divide-hair px-1 sm:hidden">{mobileList}</FeedScrollBox>
 
           {hasMore && (
             <div className="hairline-t mt-3 flex justify-end pt-3">

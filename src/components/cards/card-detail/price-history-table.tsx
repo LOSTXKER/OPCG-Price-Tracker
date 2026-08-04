@@ -10,6 +10,7 @@ import {
 } from "@/lib/seo/copy/card"
 import { changeToneClass, formatJpy, formatSignedPct, formatThb } from "@/lib/utils/currency"
 
+import { FeedScrollBox } from "./feed-scroll-box"
 import { ConditionFilter } from "./market-feed-shared"
 import type { PriceHistorySummary } from "./price-history"
 
@@ -83,9 +84,9 @@ export function CardPriceHistory({
           {/* ฿ and ¥ share one cell — the yen figure is provenance, not a value
               to compare down a column, and giving it equal weight made four
               columns of numbers with no clear reading order. */}
-          <div className="hidden sm:block">
+          <FeedScrollBox className="hidden sm:block">
             <table className="w-full table-fixed border-collapse">
-              <thead>
+              <thead className="sticky top-0 z-10 bg-background">
                 <tr className="text-eyebrow border-b border-hair">
                   <th scope="col" className="w-2/5 py-2.5 pl-1 pr-3 text-left">{labels.date}</th>
                   <th scope="col" className="py-2.5 pl-2 pr-3 text-right">{labels.priceThb}</th>
@@ -114,9 +115,9 @@ export function CardPriceHistory({
                 ))}
               </tbody>
             </table>
-          </div>
+          </FeedScrollBox>
 
-          <div className="divide-y divide-hair px-1 sm:hidden">
+          <FeedScrollBox variant="list" className="divide-y divide-hair px-1 sm:hidden">
             {points.map((p) => (
               <div key={p.dateIso} className="flex items-center justify-between gap-3 py-3">
                 <span className="min-w-0">
@@ -135,7 +136,7 @@ export function CardPriceHistory({
                 </span>
               </div>
             ))}
-          </div>
+          </FeedScrollBox>
         </>
       )}
     </div>
