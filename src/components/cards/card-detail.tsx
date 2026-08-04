@@ -237,6 +237,8 @@ export function CardDetail(props: CardDetailProps) {
               sales={soldFeed ?? []}
               currency={currency}
               lang={displayLang}
+              range={range}
+              onRangeChange={selectRange}
             />
           </div>
         </section>

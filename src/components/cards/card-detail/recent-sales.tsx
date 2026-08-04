@@ -1,9 +1,14 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { ExternalLink } from "lucide-react"
+import { Check, ChevronDown, ExternalLink } from "lucide-react"
 
-import { SegmentedControl } from "@/components/ui/segmented-control"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { useHydrated } from "@/hooks/use-hydrated"
 import { type Currency } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
@@ -11,6 +16,8 @@ import { cn } from "@/lib/utils"
 
 import { FeedScrollBox } from "./feed-scroll-box"
 import { SourceLogo, sourceLabel, sourceUrl } from "./source-logo"
+import { RANGE_DAYS, type ChartRange } from "./card-chart"
+import { PriceRangeControl } from "./price-range-control"
 import type { SaleRow } from "./sold-feed"
 import {
   MARKET_TABLE_CLASS,
@@ -63,11 +70,8 @@ function SourceRef({ source, interactive = true }: { source: string; interactive
   )
 }
 
-/** Source facet — a pill rail like the other two filters, with the market logo
- *  inside each pill (SegmentedControl takes a ReactNode label). It replaced a
- *  dropdown: one dropdown wedged between two pill rails read as a different
- *  kind of control doing a different kind of job. */
-function SourceFilter({
+/** Source facet — compact dropdown (logos in menu; trigger shows current pick). */
+function SourceDropdown({
   sources,
   active,
   onSelect,
@@ -80,37 +84,44 @@ function SourceFilter({
   label: string
   allLabel: string
 }) {
+  const picked = active === "all" ? allLabel : sourceLabel(active)
+
   return (
-    <div className="min-w-0">
+    <div className="shrink-0">
       <p className="text-eyebrow mb-1.5">{label}</p>
-      <div className="no-sb max-w-full overflow-x-auto">
-        <SegmentedControl
-          value={active}
-          onChange={onSelect}
-          options={["all", ...sources].map((value) => ({
-            value,
-            label:
-              value === "all" ? (
-                allLabel
-              ) : (
-                <span className="inline-flex items-center gap-1.5">
-                  <SourceLogo source={value} size={14} />
-                  {sourceLabel(value)}
-                </span>
-              ),
-          }))}
-          size="sm"
-          variant="pill"
-          ariaLabel={label}
-          className="shrink-0"
-        />
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          aria-label={label}
+          className="ease-chrome surface-1 hairline inline-flex h-11 min-w-[9rem] items-center gap-1.5 rounded-full px-2.5 text-label font-semibold text-foreground hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-8"
+        >
+          {active !== "all" && <SourceLogo source={active} size={16} />}
+          <span className="truncate">{picked}</span>
+          <ChevronDown className="ml-auto size-4 shrink-0 text-muted-foreground" aria-hidden />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="min-w-[11rem]">
+          <DropdownMenuItem
+            onClick={() => onSelect("all")}
+            className={cn("flex items-center gap-2", active === "all" && "bg-foreground/5")}
+          >
+            <span className="flex-1 font-medium">{allLabel}</span>
+            {active === "all" && <Check className="size-3.5 shrink-0 text-foreground" aria-hidden />}
+          </DropdownMenuItem>
+          {sources.map((s) => (
+            <DropdownMenuItem
+              key={s}
+              onClick={() => onSelect(s)}
+              className={cn("flex items-center gap-2", active === s && "bg-foreground/5")}
+            >
+              <SourceLogo source={s} size={16} />
+              <span className="flex-1 font-medium">{sourceLabel(s)}</span>
+              {active === s && <Check className="size-3.5 shrink-0 text-foreground" aria-hidden />}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   )
 }
-
-/** Period options for the feed filter (days back from the newest recorded sale). */
-const SALE_PERIODS = ["7", "30", "90"]
 
 /**
  * "ประวัติการซื้อขายล่าสุด" — pooled recent sales across several markets (our edge
@@ -123,11 +134,16 @@ export function RecentSales({
   isSample = false,
   currency,
   lang,
+  range = "1M",
+  onRangeChange,
 }: {
   sales: SaleRow[]
   isSample?: boolean
   currency: Currency
   lang: Language
+  /** Shared page range — the same selector the chart and price history use. */
+  range?: ChartRange
+  onRangeChange?: (range: ChartRange) => void
 }) {
   const hydrated = useHydrated()
   const sources = useMemo(() => Array.from(new Set(sales.map((s) => s.source))), [sales])
@@ -138,7 +154,6 @@ export function RecentSales({
   }, [sales])
   const [activeSource, setActiveSource] = useState<string>("all")
   const [activeGrade, setActiveGrade] = useState<string>("all")
-  const [activePeriod, setActivePeriod] = useState<string>("all")
   const [expanded, setExpanded] = useState(false)
 
   // Measured back from the NEWEST row, not from `Date.now()`: the render must
@@ -160,11 +175,9 @@ export function RecentSales({
       const matches = activeGrade === "raw" ? s.family == null : s.family === activeGrade
       if (!matches) return false
     }
-    if (activePeriod !== "all") {
-      const ms = new Date(s.soldAtIso).getTime()
-      if (Number.isNaN(ms)) return false
-      if (ms < newestMs - Number(activePeriod) * 86_400_000) return false
-    }
+    const ms = new Date(s.soldAtIso).getTime()
+    if (Number.isNaN(ms)) return false
+    if (ms < newestMs - RANGE_DAYS[range] * 86_400_000) return false
     return true
   })
   // Distinguish "no data at all" from "filters excluded everything".
@@ -234,45 +247,48 @@ export function RecentSales({
       </div>
 
       {/* filters — client-only (Radix dropdown + interactive state). SSR skips
-          this block so server/client HTML always agree; same pattern as the chart. */}
-      {/* The period filter always joins the row now (owner: this is a demo site
-          and the control should be visible), so the row shows whenever there is
-          more than one sale to filter at all. */}
+          this block so server/client HTML always agree; same pattern as the chart.
+
+          Two rows on purpose: three controls crammed on one line wrapped badly
+          and read as one long undifferentiated strip. The range is the same
+          selector the chart and the price-history table use (shared state, same
+          Pro locks) so it leads on its own line; condition and market are the
+          per-feed facets and sit together beneath it. */}
       {hydrated && !isSample && sales.length > 1 && (
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
-          {grades.length > 0 && (
-            <div className="min-w-0">
-              <ConditionFilter
-                label={t(lang, "condition")}
-                grades={grades}
-                active={activeGrade}
-                onSelect={setActiveGrade}
-                render={(g) => (g === "all" ? t(lang, "filterAll") : gradeFilterLabel(lang, g))}
+        <div className="mb-4 flex flex-col gap-3">
+          {onRangeChange && (
+            <div className="no-sb max-w-full overflow-x-auto pb-0.5">
+              <PriceRangeControl
+                lang={lang}
+                range={range}
+                onRangeChange={onRangeChange}
+                className="shrink-0"
               />
             </div>
           )}
-          <div className="min-w-0">
-            <ConditionFilter
-              label={t(lang, "salePeriodFilter")}
-              grades={SALE_PERIODS}
-              active={activePeriod}
-              onSelect={setActivePeriod}
-              render={(v) =>
-                v === "all"
-                  ? t(lang, "filterAll")
-                  : t(lang, "saleWithinDays").replace("{n}", v)
-              }
-            />
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
+            {grades.length > 0 && (
+              <div className="min-w-0">
+                <ConditionFilter
+                  label={t(lang, "condition")}
+                  grades={grades}
+                  active={activeGrade}
+                  onSelect={setActiveGrade}
+                  render={(g) => (g === "all" ? t(lang, "filterAll") : gradeFilterLabel(lang, g))}
+                />
+              </div>
+            )}
+            {sources.length > 0 && (
+              <SourceDropdown
+                label={t(lang, "market")}
+                sources={sources}
+                active={activeSource}
+                onSelect={setActiveSource}
+                allLabel={t(lang, "filterAll")}
+              />
+            )}
           </div>
-          {sources.length > 0 && (
-            <SourceFilter
-              label={t(lang, "market")}
-              sources={sources}
-              active={activeSource}
-              onSelect={setActiveSource}
-              allLabel={t(lang, "filterAll")}
-            />
-          )}
         </div>
       )}
 
