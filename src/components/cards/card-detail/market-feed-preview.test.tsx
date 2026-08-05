@@ -19,7 +19,7 @@ describe("card-detail market feed previews", () => {
     expect(getMarketFeedPreview(rows, false)).toEqual([0, 1, 2, 3, 4])
   })
 
-  it("renders simulated sales as a disclosed, non-interactive short preview", () => {
+  it("keeps simulated sales disclosed, in one quiet line, and non-interactive", () => {
     const sales = mockRecentSales(
       1_200,
       "2026-07-11T12:00:00.000Z",
@@ -29,23 +29,32 @@ describe("card-detail market feed previews", () => {
       <RecentSales sales={sales} isSample currency="THB" lang="TH" />,
     )
 
-    expect(markup).toContain("ตัวอย่างประวัติการซื้อขาย")
+    // The owner asked for the loud badge and the boxed callout to go (they
+    // dominated the section). The DISCLOSURE itself must survive that cleanup:
+    // this block prints invented prices on a public price tracker, so one plain
+    // line has to say so. Assert the fact, not the old chrome.
     expect(markup).toContain("ไม่ใช่ธุรกรรมจริง")
-    expect(markup).toContain('role="note"')
+    expect(markup).not.toContain('role="note"')
     expect(markup).not.toContain('role="region"')
-    expect(markup).not.toContain("overflow-y-auto")
     expect(markup).not.toContain("<a ")
     expect(markup.match(/<tr(?:\s|>)/g)).toHaveLength(4)
   })
 
-  it("keeps a long real-sales feed in page flow behind an expand control", () => {
+  it("caps a long feed at a scroll box without dropping rows from the HTML", () => {
     const sales = mockRecentSales(1_200, "2026-07-11T12:00:00.000Z", 6)
     const markup = renderToStaticMarkup(
       <RecentSales sales={sales} currency="THB" lang="EN" />,
     )
 
+    // The feed used to expand in page flow to avoid a nested vertical scroll on
+    // phones; the owner asked for a ~5-row box that scrolls instead. What must
+    // NOT change is that every row still ships in the HTML — the box caps the
+    // height, it never slices the data, so a crawler still reads the whole feed.
+    expect(markup).toContain("overflow-y-auto")
+    // Guards the nested-scroll trap: a flick that bottoms out must not scroll
+    // the page underneath.
+    expect(markup).toContain("overscroll-contain")
     expect(markup).not.toContain('role="region"')
-    expect(markup).not.toContain("overflow-y-auto")
     expect(markup).toContain('aria-expanded="false"')
     expect(markup).toContain("View all")
     expect(markup.match(/<tr(?:\s|>)/g)).toHaveLength(6)

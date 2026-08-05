@@ -14,6 +14,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { CHART_PERIODS } from "@/lib/constants/chart-periods";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
+import { buildCompareCopy } from "@/lib/seo/copy/tools";
 import { CardPickerModal } from "@/components/compare/card-picker-modal";
 import { useCompareStore } from "@/stores/compare-store";
 import { useUIStore } from "@/stores/ui-store";
@@ -213,7 +214,7 @@ export default function CompareClient() {
     <div className="space-y-6 sm:space-y-10" style={gridStyle}>
       <PageHeader
         icon={Scale}
-        title={t(lang, "compareCards")}
+        title={buildCompareCopy(lang).h1}
         breadcrumb={
           <Breadcrumb
             items={[

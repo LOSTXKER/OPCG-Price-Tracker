@@ -92,6 +92,8 @@ describe("floating bottom ad frame", () => {
       "bottom-[calc(4rem+env(safe-area-inset-bottom)+0.5rem)]",
     )
     expect(markup).toContain("md:bottom-4")
-    expect(markup).toContain("z-30")
+    // Ad dock sits on the shared stacking scale (globals.css `--z-index-ad`),
+    // below the floating action bars and the site chrome.
+    expect(markup).toContain("z-ad")
   })
 })

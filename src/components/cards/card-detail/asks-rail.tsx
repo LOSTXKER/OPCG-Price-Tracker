@@ -9,6 +9,13 @@ import { CardSetAlertDialog } from "@/components/cards/card-set-alert-dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useHydrated } from "@/hooks/use-hydrated"
+
+import { FilterModal } from "@/components/shared/filter-modal"
+import { FilterButton } from "@/components/ui/toolbar"
+
+import { RANGE_DAYS, type ChartRange } from "./card-chart"
+import { FeedScrollBox } from "./feed-scroll-box"
+import { PriceRangeControl } from "./price-range-control"
 import { type Currency } from "@/lib/utils/currency"
 import { t, type Language } from "@/lib/i18n"
 
@@ -26,8 +33,6 @@ import {
   ConditionChip,
   ConditionFilter,
   FeedPriceCell,
-  SampleBadge,
-  SampleDisclosure,
   formatFeedDate,
   gradeFilterLabel,
 } from "./market-feed-shared"
@@ -43,17 +48,6 @@ export function listingMatchesGrade(condition: string | null | undefined, gradeL
   const gradeKey = compactGradeText(gradeLabel)
   if (gradeKey.startsWith("raw")) return !/(psa|bgs|cgc|ars)/.test(conditionKey)
   return conditionKey.includes(gradeKey)
-}
-
-function listingConditionFamily(condition: string): string | null {
-  const m = condition.match(/^(psa|bgs|cgc|ars)\b/i)
-  return m ? m[1].toLowerCase() : null
-}
-
-function listingMatchesConditionFilter(condition: string, activeGrade: string) {
-  if (activeGrade === "all") return true
-  if (activeGrade === "raw") return listingConditionFamily(condition) == null
-  return listingConditionFamily(condition) === activeGrade
 }
 
 function isGradedCondition(condition: string) {
@@ -100,31 +94,38 @@ function FeedSkeleton({ count }: { count: number }) {
 }
 
 /**
- * "Selling on Meecard" — a capped, card-scoped preview. Filtering happens over
- * the complete row set before the cap; the Marketplace owns the full list.
+ * "Selling on Meecard" — a capped, card-scoped preview of REAL active listings.
+ * Filtering happens over the complete row set before the cap; the Marketplace
+ * owns the full list. The old fabricated "sample listings" mode was removed:
+ * mock rows must never reach indexable HTML, and with the marketplace flag off
+ * this simply renders the honest "no listings yet" state.
  */
 export function MeecardAsksRail({
   cardId,
   cardCode,
   cardName,
   listings,
-  isSample = false,
   currentPriceJpy,
   currency,
   lang,
+  range = "1M",
+  onRangeChange,
 }: {
   cardId: number
   cardCode: string
   cardName: string
   listings: CardListing[]
-  isSample?: boolean
   currentPriceJpy: number | null
   currency: Currency
   lang: Language
+  /** Shared page range — same selector as the chart and the price history. */
+  range?: ChartRange
+  onRangeChange?: (range: ChartRange) => void
 }) {
   const hydrated = useHydrated()
   const [alertOpen, setAlertOpen] = useState(false)
   const [activeGrade, setActiveGrade] = useState<string>("all")
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const marketHref = `/marketplace?cardCode=${encodeURIComponent(cardCode)}`
 
   const sorted = useMemo(
@@ -132,18 +133,35 @@ export function MeecardAsksRail({
     [listings],
   )
 
-  const grades = useMemo(() => {
-    const fams = Array.from(
-      new Set(sorted.map((l) => listingConditionFamily(l.condition)).filter((f): f is string => f != null)),
-    )
-    return [...(sorted.some((l) => listingConditionFamily(l.condition) == null) ? ["raw"] : []), ...fams]
-  }, [sorted])
+  // Full condition of each listing ("PSA 10", "NM"…), not the grading family.
+  const grades = useMemo(
+    () => Array.from(new Set(sorted.map((l) => l.condition))).sort(),
+    [sorted],
+  )
+
+  // "Listed within N days", measured from the NEWEST listing rather than the
+  // clock: the render stays pure (server and client agree) and a demo dataset
+  // whose newest listing is weeks old still exercises the control.
+  const newestListedMs = useMemo(
+    () =>
+      sorted.reduce((max, l) => {
+        const ms = l.listedAtIso ? new Date(l.listedAtIso).getTime() : NaN
+        return Number.isNaN(ms) ? max : Math.max(max, ms)
+      }, 0),
+    [sorted],
+  )
 
   const shown = useMemo(
-    () => sorted.filter((l) => listingMatchesConditionFilter(l.condition, activeGrade)),
-    [sorted, activeGrade],
+    () =>
+      sorted.filter((l) => {
+        if (activeGrade !== "all" && l.condition !== activeGrade) return false
+        const ms = l.listedAtIso ? new Date(l.listedAtIso).getTime() : NaN
+        if (Number.isNaN(ms)) return false
+        return ms >= newestListedMs - RANGE_DAYS[range] * 86_400_000
+      }),
+    [sorted, activeGrade, range, newestListedMs],
   )
-  const preview = getMarketFeedPreview(shown, isSample)
+  const preview = getMarketFeedPreview(shown, false)
 
   const rowClass = "flex items-center justify-between gap-3 py-3 pl-0.5 pr-2"
   const linkedRowClass =
@@ -155,21 +173,15 @@ export function MeecardAsksRail({
     <div>
       <div className="mb-4 min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <h2 className="text-h3">
-            {t(lang, isSample ? "sellingNowSampleTitle" : "sellingNow")}
-          </h2>
-          {isSample && <SampleBadge lang={lang} />}
-          {!isSample && hasListings && (
+          <h2 className="text-h3">{t(lang, "sellingNow")}</h2>
+          {hasListings && (
             <span className="inline-flex items-center gap-1" role="status">
               <span aria-hidden className="size-1.5 rounded-full" style={{ background: "var(--success)" }} />
               <span className="text-meta">{t(lang, "liveLabel")}</span>
             </span>
           )}
         </div>
-        <p className="text-meta mt-0.5">
-          {t(lang, isSample ? "sellingNowSampleDesc" : "sellingNowDesc")}
-        </p>
-        {isSample && <SampleDisclosure lang={lang} kind="listings" />}
+        <p className="text-body-sm mt-1 max-w-prose text-muted-foreground">{t(lang, "sellingNowDesc")}</p>
       </div>
 
       {!hasListings ? (
@@ -191,26 +203,60 @@ export function MeecardAsksRail({
         <FeedSkeleton count={preview.length} />
       ) : (
         <>
-          {!isSample && grades.length > 1 && (
-            <div className="mb-4">
+          {/* Same shape as the sales feed: the page range stays visible outside,
+              the facets live behind one "ตัวกรอง" button (AGENTS.md canon). */}
+          {sorted.length > 1 && (
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              {onRangeChange && (
+                <div className="no-sb min-w-0 max-w-full overflow-x-auto pb-0.5">
+                  <PriceRangeControl
+                    lang={lang}
+                    range={range}
+                    onRangeChange={onRangeChange}
+                    className="shrink-0"
+                  />
+                </div>
+              )}
+              <FilterButton
+                count={activeGrade === "all" ? 0 : 1}
+                active={filtersOpen || activeGrade !== "all"}
+                appearance="outline"
+                onClick={() => setFiltersOpen(true)}
+                aria-label={t(lang, "filter")}
+                aria-haspopup="dialog"
+                aria-expanded={filtersOpen}
+                className="shrink-0"
+              >
+                {t(lang, "filter")}
+              </FilterButton>
+            </div>
+          )}
+
+          <FilterModal
+            open={filtersOpen}
+            onOpenChange={setFiltersOpen}
+            onReset={() => setActiveGrade("all")}
+            resetDisabled={activeGrade === "all"}
+          >
+            {grades.length > 0 && (
               <ConditionFilter
                 label={t(lang, "condition")}
                 grades={grades}
                 active={activeGrade}
                 onSelect={setActiveGrade}
-                render={(g) => (g === "all" ? t(lang, "filterAll") : gradeFilterLabel(lang, g))}
+                render={(g) => (g === "all" ? t(lang, "filterAll") : g)}
               />
-            </div>
-          )}
+            )}
+          </FilterModal>
 
           {shown.length === 0 ? (
             <p className="text-meta py-6 text-center">{t(lang, "noMatchingFilter")}</p>
           ) : (
             <>
-              <div className="hidden sm:block">
+              <FeedScrollBox className="hidden sm:block">
                 <table className={MARKET_TABLE_CLASS}>
                   <MarketTableColGroup />
-                  <thead className="bg-background">
+                  <thead className="sticky top-0 z-10 bg-background">
                     <tr className="text-eyebrow border-b border-hair">
                       <th scope="col" className={marketThLead}>{t(lang, "seller")}</th>
                       <th scope="col" className={marketThLead}>{t(lang, "listedDate")}</th>
@@ -220,24 +266,17 @@ export function MeecardAsksRail({
                   </thead>
                   <tbody>
                     {preview.map((l) => (
-                      <tr
-                        key={l.id}
-                        className="border-b border-hair last:border-b-0"
-                      >
+                      <tr key={l.id} className="hover:bg-muted/40">
                         <td className={marketTdLead}>
-                          {isSample ? (
-                            <UserCell listing={l} lang={lang} />
-                          ) : (
-                            <Link
-                              href={`/marketplace/${l.id}`}
-                              className="ease-chrome block min-w-0 rounded-sm hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            >
-                              <UserCell listing={l} lang={lang} withArrow />
-                            </Link>
-                          )}
+                          <Link
+                            href={`/marketplace/${l.id}`}
+                            className="ease-chrome block min-w-0 rounded-sm hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          >
+                            <UserCell listing={l} lang={lang} withArrow />
+                          </Link>
                         </td>
                         <td className={marketTdLead}>
-                          <span className="text-meta tnum">{formatFeedDate(l.listedAtIso)}</span>
+                          <span className="tnum text-body-sm text-muted-foreground">{formatFeedDate(l.listedAtIso)}</span>
                         </td>
                         <td className={marketTdLead}>
                           <ConditionChip condition={l.condition} graded={isGradedCondition(l.condition)} />
@@ -249,44 +288,32 @@ export function MeecardAsksRail({
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </FeedScrollBox>
 
-              <div className="divide-y divide-hair px-1 sm:hidden">
-                {preview.map((l) => {
-                  const content = (
-                    <>
-                      <span className="min-w-0">
-                        <span className="flex items-center gap-2">
-                          <UserCell listing={l} lang={lang} withArrow={!isSample} />
-                          <ConditionChip condition={l.condition} graded={isGradedCondition(l.condition)} />
-                        </span>
-                        <span className="tnum mt-1 block text-meta">{formatFeedDate(l.listedAtIso)}</span>
+              <FeedScrollBox variant="list" className="px-1 sm:hidden">
+                {preview.map((l) => (
+                  <Link key={l.id} href={`/marketplace/${l.id}`} className={linkedRowClass}>
+                    <span className="min-w-0">
+                      <span className="flex items-center gap-2">
+                        <UserCell listing={l} lang={lang} withArrow />
+                        <ConditionChip condition={l.condition} graded={isGradedCondition(l.condition)} />
                       </span>
-                      <FeedPriceCell jpy={l.priceJpy} currency={currency} right />
-                    </>
-                  )
-
-                  return isSample ? (
-                    <div key={l.id} className={rowClass}>{content}</div>
-                  ) : (
-                    <Link key={l.id} href={`/marketplace/${l.id}`} className={linkedRowClass}>
-                      {content}
-                    </Link>
-                  )
-                })}
-              </div>
-
-              {!isSample && (
-                <div className="hairline-t mt-4 flex justify-end pt-3">
-                  <Link
-                    href={marketHref}
-                    className="ease-chrome text-label inline-flex min-h-11 items-center gap-1 text-muted-foreground hover:text-foreground sm:min-h-0"
-                  >
-                    {t(lang, "viewAllListings")}
-                    <ChevronRight className="size-3.5" aria-hidden />
+                      <span className="tnum mt-1 block text-meta">{formatFeedDate(l.listedAtIso)}</span>
+                    </span>
+                    <FeedPriceCell jpy={l.priceJpy} currency={currency} right />
                   </Link>
-                </div>
-              )}
+                ))}
+              </FeedScrollBox>
+
+              <div className="hairline-t mt-4 flex justify-end pt-3">
+                <Link
+                  href={marketHref}
+                  className="ease-chrome text-label inline-flex min-h-11 items-center gap-1 text-muted-foreground hover:text-foreground sm:min-h-0"
+                >
+                  {t(lang, "viewAllListings")}
+                  <ChevronRight className="size-3.5" aria-hidden />
+                </Link>
+              </div>
             </>
           )}
         </>

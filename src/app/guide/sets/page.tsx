@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { Box, Layers, Package, Star, Trophy } from "lucide-react";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/db";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
@@ -10,16 +11,26 @@ import { GuideSourceList } from "@/components/guide/guide-source-list";
 import { GuideCallout } from "@/components/guide/guide-callout";
 import { GuidePrevNext } from "@/components/guide/guide-prev-next";
 import { JsonLd } from "@/lib/seo/json-ld-script";
-import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
-import { t, type Language } from "@/lib/i18n";
+import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld";
+import { t, getSetName, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
+import {
+  GUIDE_META,
+  guideSetH1,
+  guideSetLatestHeading,
+  guideSetLatestIntro,
+  guideSetLead,
+  guideSetListHeading,
+  guideSetListIntro,
+  guideSetReleaseLabel,
+  guideSetSeeAll,
+} from "@/lib/seo/copy/guide";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "ชุดการ์ด (Sets) — คู่มือ OPCG",
-  description:
-    "คู่มือระบบชุดการ์ด One Piece Card Game: Booster Pack, Starter Deck, Extra Booster, Premium Booster รูปแบบ Card Code และรายชื่อชุดทั้งหมด",
+  title: GUIDE_META.sets.title,
+  description: GUIDE_META.sets.description,
   alternates: { canonical: "/guide/sets" },
 };
 
@@ -61,8 +72,6 @@ function buildSetTypeInfo(
     },
   };
 }
-
-const TYPE_ORDER = ["BOOSTER", "STARTER", "EXTRA_BOOSTER", "PROMO", "OTHER"];
 
 /* ------------------------------------------------------------------ */
 /*  Pack structure + card code config                                  */
@@ -130,37 +139,57 @@ type SetRow = {
   code: string;
   name: string;
   nameEn: string | null;
+  nameTh: string | null;
   type: string;
   cardCount: number;
   releaseDate: Date | null;
   boxImageUrl: string | null;
 };
 
-async function getSetsGrouped(): Promise<Record<string, SetRow[]>> {
-  try {
-    const sets = await prisma.cardSet.findMany({
-      select: {
-        code: true,
-        name: true,
-        nameEn: true,
-        type: true,
-        cardCount: true,
-        releaseDate: true,
-        boxImageUrl: true,
-      },
-      orderBy: { code: "asc" },
-    });
+/** How many recent sets this guide lists before deferring to /opcg/sets. */
+const RECENT_SET_LIMIT = 12;
 
-    const grouped: Record<string, SetRow[]> = {};
-    for (const s of sets) {
-      const key = s.type;
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(s);
+/**
+ * Recent sets only. The full 50+ row list used to render here, which made this
+ * guide compete with the real set index (`/opcg/sets`) for the same queries —
+ * now it highlights what people are actually searching for and links out.
+ */
+const getSetsData = unstable_cache(
+  async (): Promise<{ recent: SetRow[]; total: number }> => {
+    try {
+      const [recent, total] = await Promise.all([
+        prisma.cardSet.findMany({
+          select: {
+            code: true,
+            name: true,
+            nameEn: true,
+            nameTh: true,
+            type: true,
+            cardCount: true,
+            releaseDate: true,
+            boxImageUrl: true,
+          },
+          orderBy: [{ releaseDate: { sort: "desc", nulls: "last" } }, { code: "desc" }],
+          take: RECENT_SET_LIMIT,
+        }),
+        prisma.cardSet.count(),
+      ]);
+      return { recent, total };
+    } catch {
+      return { recent: [], total: 0 };
     }
-    return grouped;
-  } catch {
-    return {};
-  }
+  },
+  ["guide-sets-recent"],
+  { revalidate: 3600, tags: ["guide-sets"] }
+);
+
+function formatReleaseDate(date: Date | null, lang: Language): string | null {
+  if (!date) return null;
+  const locale = lang === "TH" ? "th-TH" : lang === "JP" ? "ja-JP" : "en-US";
+  return new Date(date).toLocaleDateString(locale, {
+    year: "numeric",
+    month: "short",
+  });
 }
 
 /* ------------------------------------------------------------------ */
@@ -169,11 +198,12 @@ async function getSetsGrouped(): Promise<Record<string, SetRow[]>> {
 
 export default async function GuideSetsPage() {
   const lang = await getServerLanguage();
-  const grouped = await getSetsGrouped();
+  const { recent, total } = await getSetsData();
   const setTypeInfo = buildSetTypeInfo(lang);
   const packSizes = buildPackSizes(lang);
   const cardCodes = buildCardCodes(lang);
   const sources = buildSources(lang);
+  const latest = recent.slice(0, 2);
 
   return (
     <div className="mx-auto max-w-3xl space-y-12">
@@ -184,6 +214,18 @@ export default async function GuideSetsPage() {
           { name: "Sets", href: "/guide/sets" },
         ])}
       />
+      {recent.length > 0 && (
+        <JsonLd
+          data={itemListJsonLd(
+            GUIDE_META.sets.title,
+            recent.map((set) => ({
+              name: `${set.code} ${getSetName(lang, set)}`.trim(),
+              url: `/opcg/sets/${set.code}`,
+              image: set.boxImageUrl,
+            }))
+          )}
+        />
+      )}
 
       {/* ── 1. Hero + Intro ── */}
       <PageHeader
@@ -198,9 +240,67 @@ export default async function GuideSetsPage() {
           />
         }
         back={{ href: "/guide", label: "Guide" }}
-        title={t(lang, "guideSetTitle")}
-        description={t(lang, "guideSetIntro")}
+        title={guideSetH1(lang)}
+        description={guideSetLead(lang)}
       />
+
+      {/* ── 1b. ชุดล่าสุด — the query that spikes every time a set drops ── */}
+      {latest.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="text-h2">{guideSetLatestHeading(lang)}</h2>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {guideSetLatestIntro(lang)}
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {latest.map((set) => {
+              const released = formatReleaseDate(set.releaseDate, lang);
+              return (
+                <Link
+                  key={set.code}
+                  href={`/opcg/sets/${set.code}`}
+                  className="group"
+                >
+                  <Surface
+                    variant="panel"
+                    className="flex h-full items-center gap-4 p-5 motion-base"
+                  >
+                    {set.boxImageUrl ? (
+                      <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-muted">
+                        <Image
+                          src={set.boxImageUrl}
+                          alt={set.code}
+                          fill
+                          className="object-contain"
+                          sizes="64px"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex size-16 shrink-0 items-center justify-center rounded-lg bg-muted text-sm font-bold text-muted-foreground">
+                        {set.code}
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-eyebrow">{set.code}</p>
+                      <h3 className="text-h4 motion-base group-hover:text-primary">
+                        {getSetName(lang, set)}
+                      </h3>
+                      <p className="mt-0.5 text-meta">
+                        {released
+                          ? `${guideSetReleaseLabel(lang)} ${released} · `
+                          : ""}
+                        {t(lang, "guideSetCardCount").replace(
+                          "{n}",
+                          String(set.cardCount)
+                        )}
+                      </p>
+                    </div>
+                  </Surface>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* ── 2. Set Types ── */}
       <section className="space-y-4">
@@ -284,34 +384,22 @@ export default async function GuideSetsPage() {
         </div>
       </section>
 
-      {/* ── 5. Set List from DB ── */}
-      <section className="space-y-6">
+      {/* ── 5. Recent sets (trimmed) — the full index lives at /opcg/sets ── */}
+      <section className="space-y-4">
         <div>
-          <h2 className="text-h2">{t(lang, "guideSetListHeading")}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {t(lang, "guideSetListIntroA")}
-            <Link
-              href="/opcg/sets"
-              className="font-medium text-primary hover:underline"
-            >
-              {t(lang, "guideSetListIntroLink")}
-            </Link>
-            {t(lang, "guideSetListIntroB")}
+          <h2 className="text-h2">{guideSetListHeading(lang)}</h2>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            {guideSetListIntro(lang, { shown: recent.length, total })}
           </p>
         </div>
 
-        {TYPE_ORDER.map((type) => {
-          const sets = grouped[type];
-          if (!sets || sets.length === 0) return null;
-          const info = setTypeInfo[type] ?? setTypeInfo.OTHER!;
-
-          return (
-            <div key={type} className="space-y-2">
-              <h3 className="text-sm font-semibold text-foreground">
-                {info.label} ({sets.length})
-              </h3>
-              <Surface variant="outline" className="divide-y divide-hair">
-                {sets.map((set) => (
+        {recent.length > 0 ? (
+          <>
+            <Surface variant="outline" className="divide-y divide-hair">
+              {recent.map((set) => {
+                const info = setTypeInfo[set.type] ?? setTypeInfo.OTHER!;
+                const released = formatReleaseDate(set.releaseDate, lang);
+                return (
                   <Link
                     key={set.code}
                     href={`/opcg/sets/${set.code}`}
@@ -334,19 +422,13 @@ export default async function GuideSetsPage() {
                     )}
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">
-                        {set.nameEn ?? set.name}
+                        {getSetName(lang, set)}
                       </p>
                       <p className="text-meta">
                         {set.code}
-                        {set.releaseDate && (
-                          <>
-                            {" · "}
-                            {new Date(set.releaseDate).toLocaleDateString(
-                              "th-TH",
-                              { year: "numeric", month: "short" }
-                            )}
-                          </>
-                        )}
+                        {" · "}
+                        {info?.label}
+                        {released ? ` · ${released}` : ""}
                       </p>
                     </div>
                     <span className="shrink-0 font-mono text-xs text-muted-foreground">
@@ -356,13 +438,17 @@ export default async function GuideSetsPage() {
                       )}
                     </span>
                   </Link>
-                ))}
-              </Surface>
-            </div>
-          );
-        })}
-
-        {Object.keys(grouped).length === 0 && (
+                );
+              })}
+            </Surface>
+            <Link
+              href="/opcg/sets"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-primary/5 px-4 py-2.5 text-sm font-medium text-primary motion-base hover:bg-primary/10"
+            >
+              {guideSetSeeAll(lang, { total })}
+            </Link>
+          </>
+        ) : (
           <div className="rounded-xl border border-dashed py-12 text-center">
             <p className="text-sm text-muted-foreground">
               {t(lang, "guideSetEmpty")}

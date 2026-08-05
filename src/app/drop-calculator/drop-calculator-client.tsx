@@ -17,6 +17,7 @@ import { raritySort } from "@/lib/constants/rarities"
 import { getGameConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
 import { getCardName, t, type Language } from "@/lib/i18n"
+import { buildDropCalculatorCopy } from "@/lib/seo/copy/tools"
 import { apiGet, apiTry } from "@/lib/api/client"
 import {
   pullChance,
@@ -143,7 +144,7 @@ function SelectedCardsTray({
       as="aside"
       variant="outline"
       aria-label={t(lang, "selectedCards")}
-      className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] left-1/2 z-40 w-[min(48rem,calc(100%-2rem))] -translate-x-1/2 overflow-hidden bg-card/95 shadow-[var(--elev-overlay)] backdrop-blur md:bottom-5"
+      className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] left-1/2 z-floating w-[min(48rem,calc(100%-2rem))] -translate-x-1/2 overflow-hidden bg-card/95 shadow-[var(--elev-overlay)] backdrop-blur md:bottom-5"
     >
       <div className="flex items-center gap-1.5 p-2 sm:gap-2">
         <div className="flex shrink-0 items-center gap-2">
@@ -421,7 +422,7 @@ export default function DropCalculatorClient() {
     <div className="space-y-5 pt-3 sm:space-y-6 sm:pt-5">
       <div className="border-b border-hair pb-5 sm:pb-6">
         <PageHeader
-          title={t(lang, "dropCalculator")}
+          title={buildDropCalculatorCopy(lang).h1}
           size="sm"
           className="mb-4 sm:mb-5"
         >

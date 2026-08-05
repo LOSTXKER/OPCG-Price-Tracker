@@ -1,27 +1,51 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
+import { unstable_cache } from "next/cache";
 import {
   ArrowRight,
   BookOpen,
   Calculator,
   ChevronRight,
+  Flame,
   GitCompareArrows,
+  Globe,
   Layers,
+  LineChart,
   Palette,
+  ShieldCheck,
   ShoppingCart,
   Sparkles,
   Store,
   Swords,
   Wrench,
 } from "lucide-react";
+import { prisma } from "@/lib/db";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { FaqSection } from "@/components/shared/faq-section";
 import { PageHeader } from "@/components/layout/page-header";
 import { Surface } from "@/components/ui/surface";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
-import { t, type Language } from "@/lib/i18n";
+import { isMarketplaceEnabled } from "@/lib/marketplace/feature-flag";
+import { t, getSetName, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
+import {
+  guideHubChaptersHeading,
+  guideHubExtraFaq,
+  guideHubH1,
+  guideHubIntroHeading,
+  guideHubIntroParagraphs,
+  guideHubLead,
+  guideHubMarketLinkDesc,
+  guideHubMarketLinkTitle,
+  guideHubPricesAllSets,
+  guideHubPricesHeading,
+  guideHubPricesIntro,
+  guideHubTrendingLinkDesc,
+  guideHubTrendingLinkTitle,
+} from "@/lib/seo/copy/guide";
+import { guideAuthH1, guideAuthLead } from "@/lib/seo/copy/guide-authenticity";
+import { guideVersionsH1, guideVersionsLead } from "@/lib/seo/copy/guide-versions";
 
 export const dynamic = "force-dynamic";
 
@@ -72,10 +96,27 @@ function buildGuides(lang: Language): GuideItem[] {
       title: t(lang, "guideHomeGuideBuyingTitle"),
       description: t(lang, "guideHomeGuideBuyingDesc"),
     },
+    // Copy for these two lives in their own modules rather than the shared
+    // dictionary — see src/lib/seo/copy/guide-authenticity.ts / guide-versions.ts.
+    {
+      href: "/guide/authenticity",
+      icon: ShieldCheck,
+      title: guideAuthH1(lang),
+      description: guideAuthLead(lang),
+    },
+    {
+      href: "/guide/versions",
+      icon: Globe,
+      title: guideVersionsH1(lang),
+      description: guideVersionsLead(lang),
+    },
   ];
 }
 
-function buildTools(lang: Language): Array<{
+function buildTools(
+  lang: Language,
+  marketplaceEnabled: boolean
+): Array<{
   href: string;
   icon: LucideIcon;
   title: string;
@@ -100,12 +141,22 @@ function buildTools(lang: Language): Array<{
       title: t(lang, "guideHomeToolCompareTitle"),
       description: t(lang, "guideHomeToolCompareDesc"),
     },
-    {
-      href: "/marketplace",
-      icon: Store,
-      title: t(lang, "guideHomeToolMarketplaceTitle"),
-      description: t(lang, "guideHomeToolMarketplaceDesc"),
-    },
+    // The marketplace ships behind a flag; while it is off the route 404s, so
+    // the tile links to the live trending page instead of dead-ending users
+    // and crawlers.
+    marketplaceEnabled
+      ? {
+          href: "/marketplace",
+          icon: Store,
+          title: t(lang, "guideHomeToolMarketplaceTitle"),
+          description: t(lang, "guideHomeToolMarketplaceDesc"),
+        }
+      : {
+          href: "/opcg/trending",
+          icon: Flame,
+          title: guideHubTrendingLinkTitle(lang),
+          description: guideHubTrendingLinkDesc(lang),
+        },
   ];
 }
 
@@ -138,13 +189,64 @@ function buildFaq(lang: Language): Array<{ question: string; answer: string }> {
   ];
 }
 
+/* ------------------------------------------------------------------ */
+/*  DB query — money-page links (cached: the set list changes rarely)   */
+/* ------------------------------------------------------------------ */
+
+type HubSet = {
+  code: string;
+  name: string;
+  nameEn: string | null;
+  nameTh: string | null;
+  releaseDate: Date | null;
+};
+
+const getHubSetData = unstable_cache(
+  async (): Promise<{ sets: HubSet[]; setCount: number; cardCount: number }> => {
+    try {
+      const [sets, setCount, cardCount] = await Promise.all([
+        prisma.cardSet.findMany({
+          select: {
+            code: true,
+            name: true,
+            nameEn: true,
+            nameTh: true,
+            releaseDate: true,
+          },
+          orderBy: [{ releaseDate: { sort: "desc", nulls: "last" } }, { code: "desc" }],
+          take: 8,
+        }),
+        prisma.cardSet.count(),
+        prisma.card.count(),
+      ]);
+      return { sets, setCount, cardCount };
+    } catch {
+      return { sets: [], setCount: 0, cardCount: 0 };
+    }
+  },
+  ["guide-hub-sets"],
+  { revalidate: 3600, tags: ["guide-sets"] }
+);
+
 export default async function GuideLandingPage() {
   const lang = await getServerLanguage();
+  const [{ sets, setCount, cardCount }, marketplaceEnabled] = await Promise.all([
+    getHubSetData(),
+    isMarketplaceEnabled(),
+  ]);
   const guides = buildGuides(lang);
-  const tools = buildTools(lang);
+  const tools = buildTools(lang, marketplaceEnabled);
   const featured = guides[0];
   const rest = guides.slice(1);
   const FeaturedIcon = featured.icon;
+
+  const latestSetLabel = sets[0]
+    ? `${sets[0].code} ${getSetName(lang, sets[0])}`.trim()
+    : null;
+  const faqItems = [
+    ...buildFaq(lang),
+    ...guideHubExtraFaq(lang, { latestSetLabel, setCount }),
+  ];
 
   return (
     <div className="space-y-10">
@@ -164,11 +266,22 @@ export default async function GuideLandingPage() {
             ]}
           />
         }
-        title={t(lang, "guideHomeTitle")}
-        description={t(lang, "guideHomeDescription")}
+        title={guideHubH1(lang)}
+        description={guideHubLead(lang)}
       />
 
-      <section>
+      {/* ── Intro prose — the pillar's own body copy ── */}
+      <section className="space-y-4">
+        <h2 className="text-h2">{guideHubIntroHeading(lang)}</h2>
+        <div className="space-y-3 text-body leading-relaxed text-muted-foreground">
+          {guideHubIntroParagraphs(lang).map((paragraph, i) => (
+            <p key={i}>{paragraph}</p>
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="text-h2">{guideHubChaptersHeading(lang)}</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             href={featured.href}
@@ -183,9 +296,9 @@ export default async function GuideLandingPage() {
                 <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
                   <FeaturedIcon className="size-6 text-primary" />
                 </div>
-                <h2 className="mt-4 text-h3 motion-base group-hover:text-primary">
+                <h3 className="mt-4 text-h3 motion-base group-hover:text-primary">
                   {featured.title}
-                </h2>
+                </h3>
                 <p className="mt-2 text-body-sm text-muted-foreground">
                   {featured.description}
                 </p>
@@ -210,9 +323,9 @@ export default async function GuideLandingPage() {
                     <Icon className="size-5 text-muted-foreground" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h2 className="text-h4 motion-base group-hover:text-primary">
+                    <h3 className="text-h4 motion-base group-hover:text-primary">
                       {guide.title}
-                    </h2>
+                    </h3>
                     <p className="mt-1 text-meta">{guide.description}</p>
                   </div>
                   <ChevronRight className="mt-0.5 size-4 shrink-0 text-muted-foreground/40 transition-transform group-hover:translate-x-0.5 group-hover:text-muted-foreground" />
@@ -221,6 +334,79 @@ export default async function GuideLandingPage() {
             );
           })}
         </div>
+      </section>
+
+      {/* ── Knowledge → price: send readers (and crawl equity) to the money pages ── */}
+      <section className="space-y-5">
+        <div>
+          <h2 className="text-h2">{guideHubPricesHeading(lang)}</h2>
+          <p className="mt-1 text-body-sm leading-relaxed text-muted-foreground">
+            {guideHubPricesIntro(lang, { setCount, cardCount })}
+          </p>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Surface
+            as={Link}
+            href="/"
+            variant="outline"
+            interactive
+            className="group flex items-start gap-3 p-4"
+          >
+            <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+              <LineChart className="size-[18px] text-primary" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-h5 motion-base group-hover:text-primary">
+                {guideHubMarketLinkTitle(lang)}
+              </p>
+              <p className="mt-0.5 text-meta leading-relaxed">
+                {guideHubMarketLinkDesc(lang)}
+              </p>
+            </div>
+          </Surface>
+          <Surface
+            as={Link}
+            href="/opcg/trending"
+            variant="outline"
+            interactive
+            className="group flex items-start gap-3 p-4"
+          >
+            <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+              <Flame className="size-[18px] text-primary" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-h5 motion-base group-hover:text-primary">
+                {guideHubTrendingLinkTitle(lang)}
+              </p>
+              <p className="mt-0.5 text-meta leading-relaxed">
+                {guideHubTrendingLinkDesc(lang)}
+              </p>
+            </div>
+          </Surface>
+        </div>
+
+        {sets.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {sets.map((set) => (
+              <Link
+                key={set.code}
+                href={`/opcg/sets/${set.code}`}
+                className="rounded-lg border border-hair bg-muted/40 px-3 py-2 text-body-sm motion-base hover:bg-muted"
+              >
+                <span className="font-semibold">{set.code}</span>{" "}
+                <span className="text-muted-foreground">{getSetName(lang, set)}</span>
+              </Link>
+            ))}
+            <Link
+              href="/opcg/sets"
+              className="flex items-center gap-1 rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 text-body-sm font-medium text-primary motion-base hover:bg-primary/10"
+            >
+              {guideHubPricesAllSets(lang)}
+              <ArrowRight className="size-3.5" />
+            </Link>
+          </div>
+        )}
       </section>
 
       <section className="space-y-5">
@@ -265,12 +451,12 @@ export default async function GuideLandingPage() {
 
       <section className="space-y-5">
         <div>
-          <h2 className="text-h3">{t(lang, "guideHomeFaqHeading")}</h2>
+          <h2 className="text-h2">{t(lang, "guideHomeFaqHeading")}</h2>
           <p className="mt-1 page-subtitle">
             {t(lang, "guideHomeFaqSubtitle")}
           </p>
         </div>
-        <FaqSection title="" items={buildFaq(lang)} />
+        <FaqSection title="" items={faqItems} />
       </section>
 
     </div>

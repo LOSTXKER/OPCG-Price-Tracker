@@ -16,6 +16,8 @@ import { CardDetailChartSection } from "./card-detail/card-detail-chart-section"
 import { CardDetailIdentity } from "./card-detail/card-detail-identity"
 import { CardDetailPrice } from "./card-detail/card-detail-price"
 import { CardDetailSectionNav } from "./card-detail/card-detail-section-nav"
+import { CardPriceHistory } from "./card-detail/price-history-table"
+import { CardViewTracker } from "./card-detail/card-view-tracker"
 import { RecentSales } from "./card-detail/recent-sales"
 import { SectionHead } from "./card-detail/section-head"
 import { SiblingGrid } from "./card-detail-sibling-grid"
@@ -29,7 +31,7 @@ export type { CardDetailProps, RelatedCard, SiblingCard } from "./card-detail/ty
 
 
 export function CardDetail(props: CardDetailProps) {
-  const { card, siblings, relatedCards, latestUpdatedAt } = props
+  const { card, siblings, relatedCards, latestUpdatedAt, introSlot, priceHistory, soldFeed, faqSlot } = props
   const {
     hydrated,
     displayLang,
@@ -72,7 +74,6 @@ export function CardDetail(props: CardDetailProps) {
     tabs,
     handleShare,
     latestSale,
-    saleHistory,
     meecardListings,
   } = useCardDetailModel(props)
 
@@ -94,7 +95,11 @@ export function CardDetail(props: CardDetailProps) {
       </div>
 
       {/* ── 3-COL: hero card image (left) · identity+price+trade (center) · stats+actions (right) ── */}
-      <div className="mt-6 flex flex-col gap-y-6 lg:grid lg:grid-cols-[200px_minmax(0,1fr)_320px] lg:items-start lg:gap-x-8 lg:gap-y-0 xl:grid-cols-[240px_minmax(0,1fr)_360px] xl:gap-x-10">
+      {/* Card column widened (200→220 / 240→280) so the portrait ends about
+          level with the identity+price column instead of stopping a third of
+          the way up it — the card is the hero of this page. Height follows the
+          63/88 aspect: 280px wide ≈ 391px tall. */}
+      <div className="mt-6 flex flex-col gap-y-6 lg:grid lg:grid-cols-[220px_minmax(0,1fr)_320px] lg:items-start lg:gap-x-8 lg:gap-y-0 xl:grid-cols-[280px_minmax(0,1fr)_360px] xl:gap-x-10">
         {/* COL 1 — the card is the hero: a large portrait (tap to zoom) */}
         <div className="order-1 lg:col-start-1 lg:row-start-1">
           <button
@@ -108,7 +113,7 @@ export function CardDetail(props: CardDetailProps) {
             aria-label={displayName}
           >
             {card.imageUrl ? (
-              <Image src={card.imageUrl} alt={displayName} fill className="object-contain" sizes="(min-width:1280px) 240px, (min-width:1024px) 200px, 208px" placeholder="blur" blurDataURL={BLUR_DATA_URL} preload />
+              <Image src={card.imageUrl} alt={displayName} fill className="object-contain" sizes="(min-width:1280px) 280px, (min-width:1024px) 220px, 208px" placeholder="blur" blurDataURL={BLUR_DATA_URL} preload />
             ) : (
               <Skeleton className="absolute inset-0 size-full" />
             )}
@@ -146,6 +151,11 @@ export function CardDetail(props: CardDetailProps) {
             pricePos={pricePos}
             provenance={provenance}
           />
+          {/* Server-rendered Thai context, closing the price block under the
+              low–high bar (owner decision). No rule above it: a divider here
+              made it read as a detached slab rather than a caption to the
+              price it explains. */}
+          {introSlot}
         </div>
 
         <CardDetailBuyBox
@@ -204,9 +214,34 @@ export function CardDetail(props: CardDetailProps) {
       {/* ── below the chart — recent sales + card info on lg.
           The right rail is 320–360px and scrolls with the page; <lg stacks. ── */}
       <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
-        {/* ROW 1 LEFT — recent sales */}
+        {/* ROW 1 LEFT — real price history (server-rendered table, no mock feed) */}
         <section id="sources" className="min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
-          <RecentSales sales={saleHistory} isSample currency={currency} lang={displayLang} />
+          {/* Same selector as the chart, same state, rendered in both blocks:
+              they stay in sync and each block shows the control next to the
+              data it governs — including the identical Pro locks. */}
+          {priceHistory && (
+            <CardPriceHistory
+              cardCode={card.cardCode}
+              history={priceHistory}
+              lang={displayLang}
+              currency={currency}
+              range={range}
+              onRangeChange={selectRange}
+            />
+          )}
+          {/* Settled sales — REAL rows from the database now (CardPrice where
+              type = SOLD), so the generated feed and its `data-nosnippet` guard
+              are both gone. Cards no source has reported a sale for simply show
+              the empty state. */}
+          <div className="mt-12">
+            <RecentSales
+              sales={soldFeed ?? []}
+              currency={currency}
+              lang={displayLang}
+              range={range}
+              onRangeChange={selectRange}
+            />
+          </div>
         </section>
 
         {/* ROW 1 RIGHT — card info (specs + effect) */}
@@ -241,10 +276,11 @@ export function CardDetail(props: CardDetailProps) {
             cardCode={card.cardCode}
             cardName={displayName}
             listings={meecardListings.rows}
-            isSample={meecardListings.isSample}
             currentPriceJpy={card.price?.priceJpy ?? card.latestPriceJpy}
             currency={currency}
             lang={displayLang}
+            range={range}
+            onRangeChange={selectRange}
           />
         </section>
         <AdInventorySlot
@@ -264,6 +300,11 @@ export function CardDetail(props: CardDetailProps) {
       <div className="mt-12">
         <CardDetailRelated relatedCards={relatedCards ?? []} set={set} lang={displayLang} />
       </div>
+
+      {/* Server-rendered per-card FAQ (carries FAQPage JSON-LD). */}
+      {faqSlot}
+
+      <CardViewTracker cardCode={card.cardCode} />
 
       {/* lightbox */}
       <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>

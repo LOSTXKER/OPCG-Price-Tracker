@@ -3,7 +3,9 @@ import { cache } from "react";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { RARITIES, raritySort } from "@/lib/constants/rarities";
 import { prisma } from "@/lib/db";
+import { getCardName, type Language } from "@/lib/i18n";
 import { pullChance, PACKS_PER_BOX } from "@/lib/utils/pull-rate";
+import type { SetSeoData } from "@/lib/seo/copy/sets";
 import type {
   RarityGroup,
   CardData,
@@ -43,6 +45,19 @@ export const getSet = cache(async (setCode: string) => {
   });
 
   return { ...cardSet, cards, productCardCount: cards.length };
+});
+
+/** Every set code — feeds `generateStaticParams` for the ISR set-detail route.
+ *  Returns [] when the DB is unreachable so a build never hard-fails; unlisted
+ *  codes still render on demand (`dynamicParams` defaults to true). */
+export const getAllSetCodes = cache(async (): Promise<string[]> => {
+  try {
+    const sets = await prisma.cardSet.findMany({ select: { code: true } });
+    return sets.map((s) => s.code);
+  } catch (error) {
+    console.error("Failed to list set codes for static params:", error);
+    return [];
+  }
 });
 
 export type OtherSet = {
@@ -90,6 +105,8 @@ export type SetDetailTopCard = {
   cardCode: string;
   nameJp: string;
   nameEn: string | null;
+  /** Thai card name — populated for ~all cards; drives the Thai-first copy. */
+  nameTh: string | null;
   rarity: string;
   imageUrl: string | null;
   latestPriceJpy: number | null;
@@ -107,10 +124,11 @@ export type SetDetailData = {
   setType: string;
 };
 
-/** Build everything the set-detail page renders (derivations on top of getSet). */
-export async function getSetDetailData(
+/** Build everything the set-detail page renders (derivations on top of getSet).
+ *  `cache()` so generateMetadata and the page body share one computation. */
+export const getSetDetailData = cache(async (
   setCode: string,
-): Promise<SetDetailData | null> {
+): Promise<SetDetailData | null> => {
   const set = await getSet(setCode);
   if (!set) return null;
 
@@ -133,6 +151,7 @@ export async function getSetDetailData(
         cardCode: top.cardCode,
         nameJp: top.nameJp,
         nameEn: top.nameEn,
+        nameTh: top.nameTh,
         rarity: top.rarity,
         imageUrl: top.imageUrl,
         latestPriceJpy: top.latestPriceJpy,
@@ -174,6 +193,9 @@ export async function getSetDetailData(
             cardCode: c.cardCode,
             nameJp: c.nameJp,
             nameEn: c.nameEn,
+            // Thai name is in the DB for ~all cards; without it the card wall
+            // (≈130 links per set page) renders English for Thai readers.
+            nameTh: c.nameTh,
             rarity: c.rarity,
             isParallel: c.isParallel,
             imageUrl: c.imageUrl,
@@ -204,5 +226,42 @@ export async function getSetDetailData(
     setName: set.nameEn ?? set.name,
     boxImage: set.boxImageUrl ?? topCard?.imageUrl ?? null,
     setType: set.type.replaceAll("_", " "),
+  };
+});
+
+/**
+ * Flatten the set-detail payload into the shape the SEO copy builders consume
+ * (metadata, intro prose, FAQ). Kept next to the query so the copy module never
+ * has to know about Prisma or the card-wall component types.
+ */
+export function toSetSeoData(
+  lang: Language,
+  data: SetDetailData,
+): SetSeoData {
+  return {
+    code: data.set.code,
+    // CardSet.nameTh is NULL for every set in production — the English name is
+    // the only real one, wrapped in Thai context words by the copy module.
+    name: data.setName,
+    type: data.set.type,
+    releaseDate: data.set.releaseDate,
+    cardCount: data.cardCount,
+    packsPerBox: data.set.packsPerBox,
+    cardsPerPack: data.set.cardsPerPack,
+    rarities: data.rarityGroups.map((group) => ({
+      rarity: group.rarity,
+      name: group.name,
+      count: group.cards.length,
+      avgPerBox: group.pullRate?.avgPerBox,
+      chancePerBoxPerCard: group.pullChancePerBox,
+    })),
+    topCard: data.topCard?.latestPriceJpy
+      ? {
+          name: getCardName(lang, data.topCard),
+          cardCode: data.topCard.cardCode,
+          rarity: data.topCard.rarity,
+          priceJpy: data.topCard.latestPriceJpy,
+        }
+      : null,
   };
 }

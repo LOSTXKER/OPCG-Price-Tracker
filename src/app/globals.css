@@ -87,6 +87,39 @@
   --text-xl--line-height: 1.875rem;
   --text-2xl--line-height: 2.125rem;
   --text-3xl--line-height: 2.375rem;
+
+  /* ── Stacking layers ──────────────────────────────────────────────────────
+     ONE scale for everything that floats. Before this, the header, the bottom
+     nav, every dialog, popover, menu and tooltip all sat on a bare `z-50`, so
+     "who wins" came down to DOM order — and any popup that happened to live
+     inside a lower stacking context (e.g. the home hero at `z-30`) lost to the
+     bottom nav. Anything `fixed`/`sticky` must now pick a token from here.
+     Values are spaced by 10 so a one-off can slot between without a reshuffle.
+     Plain `z-0/10/20` stays available for layering INSIDE one component. */
+  --z-index-sticky: 30;    /* in-page sticky sub-bars: section nav, filter rails */
+  --z-index-ad: 35;        /* fixed ad slots (bottom banner) */
+  --z-index-floating: 40;  /* floating action bars: compare, scroll-to-top, sticky buy */
+  --z-index-chrome: 50;    /* site chrome: header + mobile bottom nav */
+  --z-index-dropdown: 55;  /* INLINE (non-portaled) dropdowns anchored in page content —
+                              hero search, set picker, inline combobox. Above the chrome,
+                              deliberately BELOW the modal backdrop: page furniture must
+                              never punch through a dialog that opens on top of it. */
+  --z-index-modal: 70;     /* modal / sheet surface AND its backdrop — deliberately the
+                              SAME layer. A dialog opened on top of another dialog must
+                              have its scrim cover the one underneath, and that only works
+                              if ordering falls to DOM order: the later portal wins. Give
+                              the backdrop its own lower tier and every nested dialog
+                              (FilterModal over a picker, confirm over settings) loses its
+                              dim/blur. Within one portal the backdrop is rendered first,
+                              so the surface still paints over it. */
+  --z-index-popup: 80;     /* PORTALED popover · menu · select · tooltip —
+                              these can open from INSIDE a modal, so they sit above it */
+  --z-index-toast: 90;     /* in-app toasts (honey). NOTE: sonner ships its own
+                              `[data-sonner-toaster] { z-index: 999999999 }` and sits above
+                              this scale — left alone on purpose, a toast should always
+                              be visible. */
+  --z-index-skip: 100;     /* skip-to-content — top of THIS scale (sonner's own
+                              toaster still sits above it, see --z-index-toast) */
 }
 
 :root {

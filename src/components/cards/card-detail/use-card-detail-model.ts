@@ -31,8 +31,7 @@ import {
   type GradeKey,
   type Stat,
 } from "./grades"
-import { MARKET_FEED_SAMPLE_PREVIEW_COUNT } from "./market-table-layout"
-import { mockGradeSeries, mockMeecardListings, mockRecentSales, type MockSale } from "./mock"
+import { mockGradeSeries } from "./mock"
 import type { CardDetailProps, CardListing, CardSourcePrice } from "./types"
 import { useCardDetailTabs } from "./use-card-detail-tabs"
 
@@ -93,8 +92,7 @@ export interface CardDetailModel {
   tabs: { id: string; label: string }[]
   handleShare: () => Promise<void>
   latestSale: LatestSale | null
-  saleHistory: MockSale[]
-  meecardListings: { rows: CardListing[]; isSample: boolean }
+  meecardListings: { rows: CardListing[] }
 }
 
 function statToDisplayValue(stat: Stat, currency: Currency): number | null {
@@ -124,7 +122,11 @@ export function useCardDetailModel({
 }: CardDetailProps): CardDetailModel {
   const lang = useUIStore((state) => state.language)
   const hydrated = useHydrated()
-  const displayLang: Language = hydrated ? lang : "EN"
+  // Pre-hydration the page must render Thai: the site is Thai-first, <html lang>
+  // is th, and a cookieless crawler only ever sees this first pass. "TH" matches
+  // both the ui-store default and getServerLanguage's default, so the rehydrate
+  // re-render behaves exactly as before — only the default side changed.
+  const displayLang: Language = hydrated ? lang : "TH"
   // Until hydrated, keep the same SSR defaults used by the original component.
   const currencyPreference = useUIStore((state) => state.currency)
   const currency: Currency = hydrated ? currencyPreference : "THB"
@@ -334,11 +336,9 @@ export function useCardDetailModel({
 
   const tabs = [
     { id: "overview", label: t(displayLang, "overview") },
-    { id: "sources", label: t(displayLang, "saleHistorySampleTitle") },
-    {
-      id: "market",
-      label: t(displayLang, marketplaceEnabled ? "sellingNow" : "sellingNowSampleTitle"),
-    },
+    // "sources" now anchors the real, server-rendered price-history table.
+    { id: "sources", label: t(displayLang, "priceHistory") },
+    { id: "market", label: t(displayLang, "sellingNow") },
     ...(siblings.length > 0 ? [{ id: "versions", label: t(displayLang, "otherVersions") }] : []),
   ]
 
@@ -384,31 +384,14 @@ export function useCardDetailModel({
     ? recentSales.reduce((a, b) => (new Date(b.updatedAt ?? 0) > new Date(a.updatedAt ?? 0) ? b : a))
     : null
 
-  const saleHistory = useMemo(
-    () =>
-      mockRecentSales(
-        card.price?.priceJpy ?? card.latestPriceJpy,
-        latestUpdatedAt ?? null,
-        MARKET_FEED_SAMPLE_PREVIEW_COUNT,
-      ),
-    [card.price?.priceJpy, card.latestPriceJpy, latestUpdatedAt],
+  // Only real, active listings ever reach the page now. When the marketplace
+  // flag is off there simply are none, and the rail falls back to its honest
+  // "no listings yet" state — the fabricated "Sample Meecard listings" rows are
+  // gone from the indexable HTML entirely.
+  const meecardListings = useMemo(
+    () => ({ rows: marketplaceEnabled ? (listings ?? []) : ([] as CardListing[]) }),
+    [listings, marketplaceEnabled],
   )
-
-  const meecardListings = useMemo(() => {
-    const real = listings ?? []
-    if (marketplaceEnabled) {
-      if (real.length > 0) return { rows: real, isSample: false }
-      return { rows: [] as CardListing[], isSample: false }
-    }
-    return {
-      rows: mockMeecardListings(
-        card.price?.priceJpy ?? card.latestPriceJpy,
-        latestUpdatedAt ?? null,
-        MARKET_FEED_SAMPLE_PREVIEW_COUNT,
-      ),
-      isSample: true,
-    }
-  }, [listings, marketplaceEnabled, card.price?.priceJpy, card.latestPriceJpy, latestUpdatedAt])
 
   const gradeDisplayValues = Object.fromEntries(
     GRADE_TIERS.map((tier) => [tier.key, statToDisplayValue(gradeData[tier.key].value, currency)]),
@@ -456,7 +439,6 @@ export function useCardDetailModel({
     tabs,
     handleShare,
     latestSale,
-    saleHistory,
     meecardListings,
   }
 }

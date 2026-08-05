@@ -23,6 +23,8 @@ function card(
     cardCode: `OP03-00${id}`,
     nameJp: `カード ${id}`,
     nameEn: `Card ${id}`,
+    // Thai names ship in the projection now — the TH default must render them.
+    nameTh: `การ์ดทดสอบ ${id}`,
     rarity: "SR",
     isParallel: false,
     imageUrl: null,
@@ -104,12 +106,13 @@ describe("set-detail grade lens", () => {
     expect(rawMarkup).toContain(
       formatByCurrency(1_000, "THB", 250).primary,
     );
-    expect(rawMarkup).toContain('aria-label="Card 1"');
+    expect(rawMarkup).toContain('aria-label="การ์ดทดสอบ 1"');
+    expect(rawMarkup).not.toContain("Card 1");
     expect(rawMarkup).toContain("+2.0%");
     const psaPrice = formatUsdByCurrency(100, "THB").primary;
     expect(psaMarkup).toContain(psaPrice);
     expect(psaMarkup).toContain(
-      `aria-label="Card 1, PSA 10, ${psaPrice}"`,
+      `aria-label="การ์ดทดสอบ 1, PSA 10, ${psaPrice}"`,
     );
     expect(psaMarkup).not.toContain("+2.0%");
   });

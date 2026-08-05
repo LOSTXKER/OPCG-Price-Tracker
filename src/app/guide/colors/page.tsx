@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/db";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
@@ -11,13 +12,13 @@ import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { t, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
+import { GUIDE_META, colorAnchorId, guideColorH1 } from "@/lib/seo/copy/guide";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "สี (Colors) — คู่มือ OPCG",
-  description:
-    "คู่มือระบบสีของ One Piece Card Game: Red, Blue, Green, Purple, Black, Yellow รวม Multicolor และกฎสร้างเด็ค อ้างอิงจาก Bandai",
+  title: GUIDE_META.colors.title,
+  description: GUIDE_META.colors.description,
   alternates: { canonical: "/guide/colors" },
 };
 
@@ -132,41 +133,51 @@ function buildSources(lang: Language) {
   ];
 }
 
-async function getLeadersByColor(): Promise<Record<string, LeaderCard[]>> {
-  try {
-    const leaders = await prisma.card.findMany({
-      where: {
-        cardType: "LEADER",
-        isParallel: false,
-        imageUrl: { not: null },
-      },
-      select: {
-        cardCode: true,
-        nameEn: true,
-        nameJp: true,
-        imageUrl: true,
-        colorEn: true,
-      },
-      orderBy: { cardCode: "asc" },
-    });
+/**
+ * Leader examples per color. Bounded with a `take` (a Leader-only query is
+ * already small, but nothing should be unbounded on a crawler-facing page) and
+ * cached for an hour — these thumbnails are illustrative, not live data.
+ */
+const getLeadersByColor = unstable_cache(
+  async (): Promise<Record<string, LeaderCard[]>> => {
+    try {
+      const leaders = await prisma.card.findMany({
+        where: {
+          cardType: "LEADER",
+          isParallel: false,
+          imageUrl: { not: null },
+        },
+        select: {
+          cardCode: true,
+          nameEn: true,
+          nameJp: true,
+          imageUrl: true,
+          colorEn: true,
+        },
+        orderBy: { cardCode: "asc" },
+        take: 400,
+      });
 
-    const map: Record<string, LeaderCard[]> = {};
-    for (const leader of leaders) {
-      const colors = (leader.colorEn ?? "").split("/");
-      for (const c of colors) {
-        const key = c.trim();
-        if (!key) continue;
-        if (!map[key]) map[key] = [];
-        if (map[key].length < 6) {
-          map[key].push(leader);
+      const map: Record<string, LeaderCard[]> = {};
+      for (const leader of leaders) {
+        const colors = (leader.colorEn ?? "").split("/");
+        for (const c of colors) {
+          const key = c.trim();
+          if (!key) continue;
+          if (!map[key]) map[key] = [];
+          if (map[key].length < 6) {
+            map[key].push(leader);
+          }
         }
       }
+      return map;
+    } catch {
+      return {};
     }
-    return map;
-  } catch {
-    return {};
-  }
-}
+  },
+  ["guide-color-leaders"],
+  { revalidate: 3600, tags: ["guide-cards"] }
+);
 
 export default async function ColorsPage() {
   const lang = await getServerLanguage();
@@ -198,7 +209,7 @@ export default async function ColorsPage() {
           />
         }
         back={{ href: "/guide", label: "Guide" }}
-        title={t(lang, "guideColorTitle")}
+        title={guideColorH1(lang)}
         description={
           <>
             {t(lang, "guideColorIntroP1a")}
@@ -221,8 +232,9 @@ export default async function ColorsPage() {
             return (
               <Surface
                 key={color.name}
+                id={colorAnchorId(color.name)}
                 variant="outline"
-                className="overflow-hidden"
+                className="scroll-mt-24 overflow-hidden"
                 style={{ borderColor: `${color.hex}25` }}
               >
                 <div className="flex">

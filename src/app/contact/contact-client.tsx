@@ -1,20 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, BookOpen, Bug, Mail, MessageCircle } from "lucide-react";
+import { ArrowRight, BookOpen, Bug, Mail } from "lucide-react";
 
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
+import { FaqSection } from "@/components/shared/faq-section";
 import { Surface } from "@/components/ui/surface";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
+import {
+  SUPPORT_EMAIL,
+  buildContactFaq,
+  buildContactHeading,
+} from "@/lib/seo/copy/site";
 
-const SUPPORT_EMAIL = "support@meecard.app";
 const REPORT_SUBJECT = "[Meecard] Issue report";
 
 export default function ContactClient() {
   const lang = useUIStore((s) => s.language);
+  const heading = buildContactHeading(lang);
+  const faqItems = buildContactFaq(lang, SUPPORT_EMAIL);
 
   return (
     <div className="space-y-10">
@@ -27,13 +34,15 @@ export default function ContactClient() {
             ]}
           />
         }
-        title={t(lang, "contactTitle")}
+        title={heading.title}
         description={t(lang, "contactTagline")}
       />
 
       <section className="space-y-5">
         <h2 className="text-h3">{t(lang, "contactChannelsTitle")}</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
+        {/* Email is the only real channel today. The old "coming soon" social
+            card was removed rather than presented as one. */}
+        <div className="grid gap-3">
           <Surface
             variant="outline"
             padding="none"
@@ -57,24 +66,6 @@ export default function ContactClient() {
               {t(lang, "contactEmailButton")}
               <ArrowRight className="size-4" />
             </Button>
-          </Surface>
-
-          <Surface
-            variant="outline"
-            padding="none"
-            className="flex h-full flex-col gap-3 p-5"
-          >
-            <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
-              <MessageCircle className="size-5 text-muted-foreground" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-h5 text-muted-foreground">
-                {t(lang, "contactSocialSoon")}
-              </h3>
-              <p className="mt-1 text-meta">
-                {t(lang, "contactSocialSoonDesc")}
-              </p>
-            </div>
           </Surface>
         </div>
       </section>
@@ -132,6 +123,8 @@ export default function ContactClient() {
           </Button>
         </Surface>
       </section>
+
+      <FaqSection items={faqItems} />
     </div>
   );
 }

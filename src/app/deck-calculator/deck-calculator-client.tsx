@@ -27,6 +27,7 @@ import { useCardSearch, type CardSearchResult } from "@/hooks/use-card-search";
 import { useTierLimits } from "@/hooks/use-tier-limits";
 import { useUIStore } from "@/stores/ui-store";
 import { t, type Language } from "@/lib/i18n";
+import { buildDeckCalculatorCopy } from "@/lib/seo/copy/tools";
 import { cn } from "@/lib/utils";
 import { LimitCounter } from "@/components/shared/limit-counter";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
@@ -44,12 +45,10 @@ export default function DeckCalculatorClient() {
   const lang = useUIStore((s) => s.language);
 
   if (authed === null) {
-    return (
-      <div className="space-y-6">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-64 rounded-xl shadow-[var(--panel-shadow)]" />
-      </div>
-    );
+    // `null` IS the server-render state — shipping skeletons here meant the
+    // crawler received a page with no H1 and no body at all. The mock preview
+    // is static and needs no auth, so it doubles as the SSR/initial state.
+    return <DeckMockPreview lang={lang} />;
   }
 
   if (authed === false) {
@@ -226,7 +225,7 @@ function DeckCalculatorContent() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title={t(lang, "deckCalculatorNav")}
+        title={buildDeckCalculatorCopy(lang).h1}
         description={t(lang, "deckCalculatorDesc")}
       />
 
@@ -470,7 +469,7 @@ function DeckMockPreview({ lang }: { lang: Language }) {
   return (
     <div className="space-y-6">
       <PageHeader
-        title={t(lang, "deckCalculatorNav")}
+        title={buildDeckCalculatorCopy(lang).h1}
         description={t(lang, "deckCalculatorDesc")}
       />
 

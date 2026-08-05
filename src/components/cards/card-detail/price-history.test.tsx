@@ -1,0 +1,332 @@
+import { renderToStaticMarkup } from "react-dom/server"
+import { describe, expect, it } from "vitest"
+
+import {
+  buildCardFaq,
+  buildCardIntro,
+  buildCardSeoDescription,
+  buildCardSeoTitle,
+  baseCardCode,
+  formatCardCodeLabel,
+  type CardSeoData,
+} from "@/lib/seo/copy/card"
+
+import { usdToJpy } from "@/lib/utils/currency"
+
+import { derivePriceHistory } from "./price-history"
+import { deriveSoldFeed } from "./sold-feed"
+import { CardPriceHistory } from "./price-history-table"
+
+function day(offset: number) {
+  return new Date(Date.UTC(2026, 6, 1 + offset, 3, 0, 0)).toISOString()
+}
+
+const rows = Array.from({ length: 12 }, (_, i) => ({
+  scrapedAt: day(i),
+  priceJpy: 1_000 + i * 100,
+  priceThb: null,
+  source: "YUYUTEI",
+  gradeCondition: null,
+}))
+
+const seo: CardSeoData = {
+  cardCode: "OP01-003",
+  nameTh: "มังกี้ ดี. ลูฟี่",
+  nameLatin: "Monkey.D.Luffy",
+  rarity: "SR",
+  isParallel: false,
+  setCode: "OP01",
+  setName: "Romance Dawn",
+  latestPriceJpy: 2_100,
+  latestPriceThb: null,
+  priceChange30d: 12.5,
+  priceScrapedAt: day(11),
+}
+
+describe("derivePriceHistory", () => {
+  it("keeps one raw point per UTC day, newest first, and computes 7/30/90-day windows", () => {
+    const history = derivePriceHistory(rows)
+
+    expect(history.latestIso).toBe(day(11))
+    expect(history.points).toHaveLength(10)
+    expect(history.points[0]!.priceJpy).toBe(2_100)
+    expect(history.points[0]!.dateIso).toBe(day(11))
+    // 2100 vs 2000 = +5%
+    expect(history.points[0]!.changePct).toBe(5)
+    // Derived THB (no priceThb column in the DB) — 2100 * 0.21
+    expect(history.points[0]!.priceThb).toBe(441)
+
+    const window7 = history.windows.find((w) => w.days === 7)!
+    expect(window7.lowJpy).toBe(1_400)
+    expect(window7.highJpy).toBe(2_100)
+    expect(window7.avgJpy).toBe(1_750)
+
+    const window30 = history.windows.find((w) => w.days === 30)!
+    expect(window30.count).toBe(12)
+    expect(window30.lowJpy).toBe(1_000)
+  })
+
+  it("collapses several observations on the same UTC day to the newest one", () => {
+    const history = derivePriceHistory([
+      { scrapedAt: "2026-07-01T01:00:00.000Z", priceJpy: 900, priceThb: null, source: "YUYUTEI", gradeCondition: null },
+      { scrapedAt: "2026-07-01T22:00:00.000Z", priceJpy: 950, priceThb: null, source: "YUYUTEI", gradeCondition: null },
+    ])
+
+    expect(history.points).toHaveLength(1)
+    expect(history.points[0]!.priceJpy).toBe(950)
+  })
+
+  it("ignores graded rows so the raw reference series stays clean", () => {
+    const history = derivePriceHistory([
+      { scrapedAt: day(0), priceJpy: 1_000, priceThb: null, source: "YUYUTEI", gradeCondition: null },
+      { scrapedAt: day(1), priceJpy: 90_000, priceThb: null, source: "SNKRDUNK", gradeCondition: "PSA 10" },
+    ])
+
+    expect(history.points).toHaveLength(1)
+    expect(history.points[0]!.priceJpy).toBe(1_000)
+  })
+
+  it("returns an empty summary when there is nothing to show", () => {
+    expect(derivePriceHistory([])).toEqual({ points: [], windows: [], latestIso: null })
+  })
+})
+
+describe("CardPriceHistory (server-rendered)", () => {
+  const markup = renderToStaticMarkup(
+    <CardPriceHistory cardCode="OP01-003" history={derivePriceHistory(rows)} lang="TH" />,
+  )
+
+  it("puts real dated price rows in the initial HTML as tables", () => {
+    expect(markup).toContain("<table")
+    expect(markup).toContain("ประวัติราคา OP01-003")
+    // The 7/30/90-day summary was removed by the owner — every figure in it was
+    // derived from these same rows. derivePriceHistory still computes the
+    // windows (asserted above); only the rendering is gone.
+    expect(markup).not.toContain("สรุปช่วงราคา")
+    // A real, dated observation — not a chart, not a client fetch.
+    expect(markup).toContain("11 ก.ค. 2026")
+    // ONE currency, the visitor's preference (owner decision). The default is
+    // THB, which is also what a crawler gets. The yen figure used to sit under
+    // every row and doubled the table's height for provenance stated elsewhere.
+    expect(markup).toContain("441 ฿")
+    expect(markup).not.toContain("¥2,100")
+  })
+
+  it("never renders fabricated-sample labelling", () => {
+    expect(markup).not.toContain("Sample")
+    expect(markup).not.toContain("ตัวอย่าง")
+  })
+
+  it("ships a list fallback under sm instead of a horizontally scrolling table", () => {
+    expect(markup).toContain("sm:hidden")
+    expect(markup).toContain("hidden sm:block")
+
+    // Scoped to the TABLE: the rule is that dense tables never scroll sideways
+    // on phones (AGENTS.md), they ship a list fallback. The period filter above
+    // the table is a pill rail, which is *supposed* to scroll horizontally on a
+    // narrow screen, so a whole-file ban would fail for the wrong reason.
+    const tableBlock = markup.slice(
+      markup.lastIndexOf("<div", markup.indexOf("<table")),
+      markup.indexOf("</table>"),
+    )
+    expect(tableBlock).toContain("<table")
+    expect(tableBlock).not.toContain("overflow-x-auto")
+    // It DOES scroll vertically — capped at ~5 rows by the owner's request —
+    // while every derived row stays in the markup.
+    expect(tableBlock).toContain("overflow-y-auto")
+  })
+})
+
+describe("card SEO copy", () => {
+  it("puts the card code in a Thai title that fits the ~60-char budget", () => {
+    const title = buildCardSeoTitle("TH", seo)
+
+    expect(title).toContain("OP01-003")
+    expect(title.startsWith("ราคาการ์ดวันพีซ")).toBe(true)
+    expect(title.length).toBeLessThanOrEqual(60)
+    expect(title).not.toContain("| Meecard")
+  })
+
+  it("keeps a long name whole and drops the optional segments instead", () => {
+    const longName = "เอ็ดเวิร์ด นิวเกต (ไวท์เบียร์ด) พาราเรล"
+    const title = buildCardSeoTitle("TH", {
+      ...seo,
+      cardCode: "OP09-119",
+      nameTh: longName,
+      rarity: "SEC",
+      setName: "Emperors in the New World",
+    })
+
+    // Cutting the name mid-word ("…เอ็ดเวิร์ด นิวเก…") would destroy the exact
+    // term people search for. Google indexes the whole title and only truncates
+    // the SERP display, so overshooting the display budget is the cheaper loss.
+    expect(title).toContain(longName)
+    expect(title).not.toContain("…")
+    expect(title).toContain("OP09-119")
+    expect(title.startsWith("ราคาการ์ดวันพีซ")).toBe(true)
+    // Rarity and set are the segments that give way.
+    expect(title).not.toContain("(SEC)")
+    expect(title).not.toContain("Emperors in the New World")
+  })
+
+  it("humanises the parallel code suffix everywhere it is shown to a reader", () => {
+    expect(formatCardCodeLabel("OP01-003")).toBe("OP01-003")
+    expect(formatCardCodeLabel("EB01-001_p1")).toBe("EB01-001 (Parallel 1)")
+
+    const parallel: CardSeoData = { ...seo, cardCode: "EB01-001_p1", isParallel: true }
+    // The <title> keeps the printing marker: four same-name P-SEC printings of
+    // OP13-118 differ 128x in price, and the title carries no price to tell them
+    // apart otherwise.
+    expect(buildCardSeoTitle("TH", parallel)).toContain("EB01-001 (Parallel 1)")
+    expect(buildCardSeoTitle("TH", parallel).length).toBeLessThanOrEqual(60)
+    expect(buildCardFaq("TH", parallel)[3]!.answer).toContain("แบบ parallel")
+  })
+
+  it("shows readers the official card number, not our _pN printing suffix", () => {
+    expect(baseCardCode("OP13-118_p3")).toBe("OP13-118")
+    expect(baseCardCode("P-041_r1")).toBe("P-041")
+    expect(baseCardCode("OP01-003")).toBe("OP01-003")
+
+    const parallel: CardSeoData = { ...seo, cardCode: "EB01-001_p1", isParallel: true }
+    const intro = buildCardIntro("TH", parallel).join(" ")
+
+    expect(intro).toContain("EB01-001")
+    expect(intro).not.toContain("Parallel 1")
+    expect(intro).not.toContain("_p1")
+    expect(buildCardFaq("TH", parallel)[0]!.question).not.toContain("Parallel 1")
+  })
+
+  it("covers both Thai spellings across title + description", () => {
+    const title = buildCardSeoTitle("TH", seo)
+    const description = buildCardSeoDescription("TH", seo)
+
+    expect(title).toContain("วันพีซ")
+    expect(description).toContain("วันพีช")
+  })
+
+  it("templates the description from real numbers", () => {
+    const description = buildCardSeoDescription("TH", seo)
+
+    expect(description).toContain("441 ฿")
+    expect(description).toContain("¥2,100")
+    expect(description).toContain("+12.5%")
+    expect(description).toContain("Romance Dawn")
+    expect(description).toContain("อัปเดตทุกวัน")
+  })
+
+  it("writes one short Thai intro line built from this card's own data", () => {
+    const paragraphs = buildCardIntro("TH", seo)
+    const intro = paragraphs.join(" ")
+
+    expect(paragraphs).toHaveLength(1)
+    expect(intro).toContain("มังกี้ ดี. ลูฟี่")
+    expect(intro).toContain("Monkey.D.Luffy")
+    expect(intro).toContain("OP01-003")
+    expect(intro).toContain("SR")
+    expect(intro).toContain("Romance Dawn")
+    // Second Thai spelling lives in the body copy.
+    expect(intro).toContain("วันพีช")
+    // Source attribution moved out of this line (owner-specified wording) but is
+    // still on the page — see the description and FAQ assertions below.
+    // Owner-specified length: one line, not a paragraph block. Measured on the
+    // worst case that production actually renders — a parallel printing (its
+    // code expands to "OP13-118 (Parallel 3)") in a set with a long name. The
+    // name appears once because Card.nameTh mirrors the Latin name for every
+    // row in this database.
+    const worstCase = buildCardIntro("TH", {
+      ...seo,
+      nameTh: "Monkey.D.Luffy",
+      cardCode: "OP13-118_p3",
+      isParallel: true,
+      rarity: "P-SEC",
+      setName: "Carrying on His Will",
+    }).join(" ")
+
+    expect(worstCase.length).toBeLessThanOrEqual(200)
+    expect(worstCase).not.toContain("((")
+  })
+
+  it("does not restate figures the page already renders", () => {
+    // Price, 30-day move and the update date all appear on screen around this
+    // copy; repeating them made it a wall of text between the card name and the
+    // number people came for. The meta description and FAQ still carry them.
+    const intro = buildCardIntro("TH", seo).join(" ")
+
+    expect(intro).not.toContain("441 ฿")
+    expect(intro).not.toContain("¥2,100")
+    expect(intro).not.toContain("+12.5%")
+    expect(intro).not.toContain("12 ก.ค. 2026")
+  })
+
+  it("builds a four-question per-card FAQ from the card's own data", () => {
+    const faq = buildCardFaq("TH", seo)
+
+    expect(faq).toHaveLength(4)
+    expect(faq[0]!.question).toBe("การ์ด มังกี้ ดี. ลูฟี่ (OP01-003) ราคาเท่าไหร่?")
+    expect(faq[0]!.answer).toContain("441 ฿")
+    expect(faq[1]!.answer).toContain("Yuyu-tei")
+    expect(faq[2]!.question).toContain("PSA 10")
+    expect(faq[3]!.answer).toContain("ใบพิมพ์ปกติ")
+  })
+
+  it("degrades honestly when a card has no reference price", () => {
+    const priceless: CardSeoData = {
+      ...seo,
+      latestPriceJpy: null,
+      latestPriceThb: null,
+      priceChange30d: null,
+    }
+
+    expect(buildCardIntro("TH", priceless).join(" ")).toContain("ยังไม่มีราคากลางล่าสุด")
+    expect(buildCardSeoDescription("TH", priceless)).toContain("ยังไม่มีราคากลางล่าสุด")
+    expect(buildCardFaq("TH", priceless)[0]!.answer).toContain("ยังไม่มีราคากลางล่าสุด")
+  })
+})
+
+describe("deriveSoldFeed", () => {
+  const row = (
+    scrapedAt: string,
+    priceUsd: number,
+    gradeCondition: string | null = null,
+    source = "SNKRDUNK",
+  ) => ({ source, gradeCondition, priceJpy: null, priceUsd, scrapedAt })
+
+  it("collapses a price that stands across scrapes into one sale, dated when it first appeared", () => {
+    // The scraper re-records the source's "last sold price" every run, so the
+    // same sale reappears with a newer timestamp on each pass.
+    const feed = deriveSoldFeed([
+      row("2026-03-28T22:00:00.000Z", 5599),
+      row("2026-03-28T19:00:00.000Z", 5599),
+      row("2026-03-27T19:00:00.000Z", 5599),
+      row("2026-03-20T19:00:00.000Z", 4100),
+    ])
+
+    expect(feed).toHaveLength(2)
+    expect(feed[0]!.priceJpy).toBe(usdToJpy(5599))
+    // Oldest timestamp of the run — closest to when it actually sold.
+    expect(feed[0]!.soldAtIso).toBe("2026-03-27T19:00:00.000Z")
+    expect(feed[1]!.soldAtIso).toBe("2026-03-20T19:00:00.000Z")
+  })
+
+  it("keeps each grade as its own running sale and labels ungraded rows Raw", () => {
+    const feed = deriveSoldFeed([
+      row("2026-03-28T22:00:00.000Z", 13755, "PSA 10"),
+      row("2026-03-28T22:00:00.000Z", 5599),
+      row("2026-03-27T22:00:00.000Z", 13755, "PSA 10"),
+    ])
+
+    expect(feed).toHaveLength(2)
+    expect(feed.find((s) => s.condition === "PSA 10")?.family).toBe("psa")
+    expect(feed.find((s) => s.condition === "Raw")?.family).toBeNull()
+  })
+
+  it("drops rows with no usable price and caps the feed", () => {
+    const noPrice = { source: "SNKRDUNK", gradeCondition: null, priceJpy: null, priceUsd: null, scrapedAt: "2026-03-28T22:00:00.000Z" }
+    const many = Array.from({ length: 20 }, (_, i) =>
+      row(`2026-03-${String(28 - i).padStart(2, "0")}T22:00:00.000Z`, 1000 + i * 100),
+    )
+
+    expect(deriveSoldFeed([noPrice])).toHaveLength(0)
+    expect(deriveSoldFeed(many, { limit: 5 })).toHaveLength(5)
+  })
+})

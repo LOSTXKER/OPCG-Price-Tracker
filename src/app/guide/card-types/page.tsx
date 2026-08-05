@@ -11,9 +11,17 @@ import {
   Users,
   Zap,
 } from "lucide-react";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/db";
 import { t, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
+import {
+  GUIDE_META,
+  guideTypeH1,
+  guideTypeKeywordGlossary,
+  guideTypeKeywordsHeading,
+  guideTypeKeywordsIntro,
+} from "@/lib/seo/copy/guide";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
@@ -27,9 +35,8 @@ import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "ประเภทการ์ด (Card Types) — คู่มือ OPCG",
-  description:
-    "เรียนรู้การ์ด 5 ประเภทใน One Piece Card Game: Leader, Character, Event, Stage และ DON!! พร้อมค่าสถานะ คีย์เวิร์ดสำคัญ และผังการ์ด อ้างอิงจากกฎ Bandai",
+  title: GUIDE_META.cardTypes.title,
+  description: GUIDE_META.cardTypes.description,
   alternates: { canonical: "/guide/card-types" },
 };
 
@@ -152,21 +159,6 @@ function buildStats(lang: Language) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Keywords data                                                      */
-/* ------------------------------------------------------------------ */
-
-function buildKeywords(lang: Language) {
-  return [
-    { keyword: "[Blocker]", desc: t(lang, "guideTypeKwBlocker"), color: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
-    { keyword: "[Rush]", desc: t(lang, "guideTypeKwRush"), color: "bg-rose-500/10 text-rose-600 dark:text-rose-400" },
-    { keyword: "[Double Attack]", desc: t(lang, "guideTypeKwDoubleAttack"), color: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
-    { keyword: "[Banish]", desc: t(lang, "guideTypeKwBanish"), color: "bg-purple-500/10 text-purple-600 dark:text-purple-400" },
-    { keyword: "[Counter]", desc: t(lang, "guideTypeKwCounter"), color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
-    { keyword: "[On Play]", desc: t(lang, "guideTypeKwOnPlay"), color: "bg-sky-500/10 text-sky-600 dark:text-sky-400" },
-  ];
-}
-
-/* ------------------------------------------------------------------ */
 /*  DB query                                                           */
 /* ------------------------------------------------------------------ */
 
@@ -185,31 +177,43 @@ const CARD_TYPE_DB_MAP: Record<string, "LEADER" | "CHARACTER" | "EVENT" | "STAGE
   "DON!!": "DON",
 };
 
-async function getExampleCardsByType(): Promise<Record<string, ExampleCard[]>> {
-  try {
-    const cards = await prisma.card.findMany({
-      where: { imageUrl: { not: null }, isParallel: false },
-      select: {
-        cardCode: true,
-        nameEn: true,
-        nameJp: true,
-        imageUrl: true,
-        cardType: true,
-      },
-      orderBy: { cardCode: "asc" },
-    });
+/**
+ * Four example thumbnails per card type. One bounded query per type instead of
+ * scanning the whole card table, and cached for an hour — these are
+ * illustrative images, not live data.
+ */
+const getExampleCardsByType = unstable_cache(
+  async (): Promise<Record<string, ExampleCard[]>> => {
+    try {
+      const types = Object.values(CARD_TYPE_DB_MAP);
+      const results = await Promise.all(
+        types.map((cardType) =>
+          prisma.card.findMany({
+            where: { imageUrl: { not: null }, isParallel: false, cardType },
+            select: {
+              cardCode: true,
+              nameEn: true,
+              nameJp: true,
+              imageUrl: true,
+            },
+            orderBy: { cardCode: "asc" },
+            take: 4,
+          })
+        )
+      );
 
-    const byType: Record<string, ExampleCard[]> = {};
-    for (const c of cards) {
-      const key = c.cardType;
-      if (!byType[key]) byType[key] = [];
-      if (byType[key].length < 4) byType[key].push(c);
+      const byType: Record<string, ExampleCard[]> = {};
+      types.forEach((cardType, i) => {
+        byType[cardType] = results[i] ?? [];
+      });
+      return byType;
+    } catch {
+      return {};
     }
-    return byType;
-  } catch {
-    return {};
-  }
-}
+  },
+  ["guide-card-type-examples"],
+  { revalidate: 3600, tags: ["guide-cards"] }
+);
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
@@ -220,7 +224,7 @@ export default async function CardTypesPage() {
   const cardExamples = await getExampleCardsByType();
   const cardTypes = buildCardTypes(lang);
   const stats = buildStats(lang);
-  const keywords = buildKeywords(lang);
+  const keywords = guideTypeKeywordGlossary(lang);
   const featured = cardTypes[0]; // Leader
   const rest = cardTypes.slice(1);
 
@@ -247,7 +251,7 @@ export default async function CardTypesPage() {
           />
         }
         back={{ href: "/guide", label: "Guide" }}
-        title={t(lang, "guideTypeTitle")}
+        title={guideTypeH1(lang)}
         description={
           <>
             {t(lang, "guideTypeIntroP1a")}
@@ -463,21 +467,46 @@ export default async function CardTypesPage() {
         </div>
       </section>
 
-      {/* ── 5. Common Keywords ── */}
+      {/* ── 5. Keyword glossary — Thai players search these terms directly ── */}
       <section className="space-y-4">
-        <h2 className="text-h2">{t(lang, "guideTypeKeywordsHeading")}</h2>
-        <p className="text-sm text-muted-foreground">
-          {t(lang, "guideTypeKeywordsDesc")}
+        <h2 className="text-h2">{guideTypeKeywordsHeading(lang)}</h2>
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          {guideTypeKeywordsIntro(lang)}
         </p>
-        <div className="grid gap-2 sm:grid-cols-2">
+
+        {/* Jump list — each keyword has its own anchor so it can be linked directly. */}
+        <nav aria-label={guideTypeKeywordsHeading(lang)} className="flex flex-wrap gap-1.5">
           {keywords.map((kw) => (
-            <Surface key={kw.keyword} variant="outline" className="flex items-start gap-3 px-4 py-3">
-              <span className={`shrink-0 rounded-md px-2 py-1 text-xs font-bold ${kw.color}`}>
-                {kw.keyword}
-              </span>
-              <p className="text-body-sm leading-relaxed text-muted-foreground">
-                {kw.desc}
-              </p>
+            <a
+              key={kw.anchor}
+              href={`#${kw.anchor}`}
+              className={`rounded-md px-2 py-1 text-xs font-bold motion-base hover:opacity-80 ${kw.color}`}
+            >
+              {kw.keyword}
+            </a>
+          ))}
+        </nav>
+
+        <div className="space-y-3">
+          {keywords.map((kw) => (
+            <Surface
+              key={kw.anchor}
+              id={kw.anchor}
+              variant="outline"
+              className="scroll-mt-24 p-5"
+            >
+              <h3 className="flex items-center gap-2 text-h4">
+                <span className={`rounded-md px-2 py-1 text-xs font-bold ${kw.color}`}>
+                  {kw.keyword}
+                </span>
+              </h3>
+              <div className="mt-2 space-y-1.5">
+                {kw.body.map((paragraph, i) => (
+                  <p key={i} className="text-body-sm leading-relaxed text-muted-foreground">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
             </Surface>
           ))}
         </div>

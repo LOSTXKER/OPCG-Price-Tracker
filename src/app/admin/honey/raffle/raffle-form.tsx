@@ -519,8 +519,8 @@ function MonthPicker({
 
       {open && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 top-full z-50 mt-1 w-64 rounded-xl border bg-card p-3 shadow-lg">
+          <div className="fixed inset-0 z-dropdown" onClick={() => setOpen(false)} />
+          <div className="absolute left-0 top-full z-dropdown mt-1 w-64 rounded-xl border bg-card p-3 shadow-lg">
             <div className="mb-2 flex items-center justify-between">
               <button
                 type="button"

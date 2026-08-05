@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { SEO_PAGE_META } from "@/lib/seo/copy/site";
 import ContactClient from "./contact-client";
 
 export const metadata: Metadata = {
-  title: "Contact Us",
-  description:
-    "Get in touch with the Meecard team — questions, feedback, bug reports, or partnership requests.",
+  title: SEO_PAGE_META.contact.title,
+  description: SEO_PAGE_META.contact.description,
   alternates: { canonical: "/contact" },
 };
 

@@ -89,7 +89,7 @@ export function Header() {
     <>
     <div
       className={cn(
-        "ease-chrome sticky top-0 z-50 hidden transition-colors md:block",
+        "ease-chrome sticky top-0 z-chrome hidden transition-colors md:block",
         scrolled ? "bg-background" : "bg-transparent",
       )}
     >

@@ -95,7 +95,7 @@ export function FloatingAdFrame({
         data-floating-ad-spacer
         className="h-[var(--floating-ad-clearance)] shrink-0"
       />
-      <div className="pointer-events-none fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom)+0.5rem)] z-30 px-3 md:bottom-4 md:px-4">
+      <div className="pointer-events-none fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom)+0.5rem)] z-ad px-3 md:bottom-4 md:px-4">
         <div
           data-floating-ad-dock
           className="pointer-events-auto relative mx-auto w-full max-w-[320px] sm:max-w-[728px]"

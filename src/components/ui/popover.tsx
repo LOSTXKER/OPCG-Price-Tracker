@@ -20,12 +20,13 @@ function PopoverContent({
   sideOffset = 6,
   align = "center",
   alignOffset = 0,
+  collisionPadding,
   showArrow = true,
   ...props
 }: PopoverPrimitive.Popup.Props &
   Pick<
     PopoverPrimitive.Positioner.Props,
-    "align" | "alignOffset" | "side" | "sideOffset"
+    "align" | "alignOffset" | "side" | "sideOffset" | "collisionPadding"
   > & {
     showArrow?: boolean
   }) {
@@ -36,12 +37,18 @@ function PopoverContent({
         sideOffset={sideOffset}
         align={align}
         alignOffset={alignOffset}
-        className="isolate z-50"
+        collisionPadding={collisionPadding}
+        className="isolate z-popup"
       >
         <PopoverPrimitive.Popup
           data-slot="popover-content"
           className={cn(
             "w-64 rounded-xl bg-popover p-3 text-popover-foreground shadow-[var(--elev-overlay)] ring-1 ring-border/40 outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+            // Tall content must scroll inside the popup instead of running off the
+            // viewport (Select and DropdownMenu already do this). Only when there is
+            // no arrow: the arrow is a child positioned OUTSIDE the popup box, so
+            // `overflow-y-auto` would clip it.
+            !showArrow && "max-h-(--available-height) overflow-y-auto",
             className,
           )}
           {...props}

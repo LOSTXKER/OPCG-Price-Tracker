@@ -1,18 +1,49 @@
+import type { Metadata } from "next";
+
 import { EmptyState } from "@/components/shared/empty-state";
 import {
   HomeFeaturedCard,
   HomeMiniTable,
 } from "@/components/home/home-client-sections";
+import { HomeMarketIntro } from "@/components/home/home-market-intro";
 import { HomeMarketOverview } from "@/components/home/home-market-overview";
 import { HomeSearchHero } from "@/components/home/home-search-hero";
 import { HomeSeoContent } from "@/components/home/home-seo-content";
+import { HomeSetStrip } from "@/components/home/home-set-strip";
 import { AdPageContentReady } from "@/components/ads/ad-audience-provider";
 import { getHomeData, mapCardToTrending } from "@/lib/data/home";
 import { CARD_TYPES } from "@/lib/constants/card-config";
 import { getGameConfig } from "@/lib/game-config";
+import { JsonLd } from "@/lib/seo/json-ld-script";
+import { itemListJsonLd } from "@/lib/seo/json-ld";
+import {
+  HOME_META_DESCRIPTION,
+  HOME_META_TITLE,
+  homeMarketItemListName,
+} from "@/lib/seo/copy/home";
+import { getCardName } from "@/lib/i18n";
 import type { FilterDefinition } from "@/components/shared/filter-chips";
 
 export const revalidate = 300;
+
+/**
+ * Thai-first metadata for the price pillar (SEO plan §3.1). `title` is the
+ * visible part only — the root layout's template appends " | Meecard".
+ *
+ * The canonical lives HERE, not in the root layout: declaring "/" globally made
+ * every other page claim to be a duplicate of the home page (plan §3.8.2).
+ */
+export const metadata: Metadata = {
+  title: HOME_META_TITLE,
+  description: HOME_META_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: HOME_META_TITLE,
+    description: HOME_META_DESCRIPTION,
+    url: "/",
+  },
+  twitter: { title: HOME_META_TITLE, description: HOME_META_DESCRIPTION },
+};
 
 // No searchParams read here on purpose — reading them opts the page out of ISR
 // (forces per-request rendering). Search lives at /search; the home page stays
@@ -27,6 +58,7 @@ export default async function HomePage() {
     initialTableTotal,
     initialTableTotalPages,
     sets,
+    recentSets,
   } = await getHomeData();
 
   if (totalCards === 0) {
@@ -73,6 +105,15 @@ export default async function HomePage() {
     },
   ];
 
+  // Ranked list of what the market table actually shows first — makes the
+  // page's core ranking machine-readable (SEO plan §3.1). Thai card names are
+  // populated in the DB, so the list reads Thai for a Thai-first site.
+  const marketListItems = tableCards.slice(0, 20).map((c) => ({
+    name: `${c.cardCode} ${getCardName("TH", c)}`,
+    url: `/opcg/cards/${c.cardCode}`,
+    image: c.imageUrl,
+  }));
+
   const setOptions = sets.map((s) => ({
     code: s.code,
     name: s.name,
@@ -87,8 +128,19 @@ export default async function HomePage() {
     <>
       <AdPageContentReady />
 
+      <JsonLd
+        data={itemListJsonLd(
+          homeMarketItemListName(marketListItems.length),
+          marketListItems
+        )}
+      />
+
       {/* Universal search hero — the page's focal point (VISION §5 teleport) */}
       <HomeSearchHero sets={setOptions} trending={gainers} />
+
+      {/* Crawlable set links — the picker below is client-only, so without this
+          strip the pillar page linked to zero set pages. */}
+      <HomeSetStrip sets={recentSets} />
 
       {/* Highlights: มูลค่าสูงสุด · ราคาขึ้นมากสุด · ราคาลงมากสุด. Minimal — no
           dividers, no borders, no boxes; columns separated by whitespace alone so
@@ -115,7 +167,11 @@ export default async function HomePage() {
           initialTotalPages={initialTableTotalPages}
           filterDefinitions={filterDefinitions}
           sets={setOptions}
-        />
+        >
+          {/* The section's H2 + context prose — numbers alone read as a thin
+              page, and the table had no heading at all (SEO plan §3.1). */}
+          <HomeMarketIntro totalCards={totalCards} totalSets={sets.length} />
+        </HomeMarketOverview>
       </div>
 
       <HomeSeoContent />

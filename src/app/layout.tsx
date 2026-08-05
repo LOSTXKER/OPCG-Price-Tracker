@@ -35,47 +35,56 @@ const jetbrainsMono = JetBrains_Mono({
 
 import { clientEnv } from "@/lib/env";
 const BASE_URL = clientEnv().NEXT_PUBLIC_APP_URL;
+const GOOGLE_SITE_VERIFICATION = clientEnv().NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
 
 // Keep static rendering while setting the persisted document language before
 // the body is parsed. StoreHydrator keeps it in sync after hydration.
 const INITIAL_HTML_LANG_SCRIPT = `(()=>{const m=document.cookie.match(/(?:^|; )kuma-lang=([^;]*)/);const l=m?decodeURIComponent(m[1]):"TH";document.documentElement.lang=l==="EN"?"en":l==="JP"?"ja":"th"})()`;
 
+const SITE_TITLE = "Meecard — เช็คราคาการ์ดวันพีซ (One Piece Card Game) อัปเดตทุกวัน";
+const SITE_DESCRIPTION =
+  "เช็คราคาการ์ดวันพีชทุกใบ ทุกเกรด — ราคากลางจาก Yuyu-tei อัปเดตทุกวัน พร้อมกราฟราคาย้อนหลัง ราคา PSA 10 พอร์ตสะสม และแจ้งเตือนราคา";
+
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Meecard — OPCG Card Prices Updated Daily",
+    default: SITE_TITLE,
     template: "%s | Meecard",
   },
-  description:
-    "Meecard — One Piece Card Game market prices updated daily. Track Yuyu-tei prices, view price history charts, manage your portfolio and collection value.",
+  description: SITE_DESCRIPTION,
   applicationName: "Meecard",
   keywords: [
     "Meecard",
+    "ราคาการ์ดวันพีซ",
+    "ราคาการ์ดวันพีช",
+    "เช็คราคาการ์ดวันพีซ",
+    "การ์ดวันพีซ",
+    "วันพีซการ์ดเกม",
+    "OPTCG",
     "OPCG",
     "One Piece Card Game",
-    "card price",
-    "OPCG price",
-    "One Piece card price",
-    "ราคาการ์ด",
-    "วันพีชการ์ดเกม",
     "Yuyu-tei",
   ],
   openGraph: {
     type: "website",
     siteName: "Meecard",
     locale: "th_TH",
-    title: "Meecard — OPCG Card Prices Updated Daily",
-    description:
-      "One Piece Card Game market prices updated daily. Track Yuyu-tei prices, view price history charts, manage your portfolio and collection value.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Meecard — OPCG Card Prices Updated Daily",
-    description:
-      "One Piece Card Game market prices updated daily. Track prices, charts, portfolio and collection value.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
   },
   robots: { index: true, follow: true },
-  alternates: { canonical: "/" },
+  // NOTE: no `alternates.canonical` here on purpose — a canonical set on the
+  // root layout is inherited by every page that doesn't declare its own, which
+  // made pages like /guide announce themselves as duplicates of "/". Each page
+  // owns its canonical; the homepage declares "/" in src/app/page.tsx.
+  ...(GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: GOOGLE_SITE_VERIFICATION } }
+    : {}),
 };
 
 export default function RootLayout({

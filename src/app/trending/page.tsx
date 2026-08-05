@@ -1,23 +1,35 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 
 import { BarChart3, GitCompareArrows, Layers } from "lucide-react";
 import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { JsonLd } from "@/lib/seo/json-ld-script";
-import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
+import { getCardName } from "@/lib/i18n";
+import {
+  TOOL_PAGE_METADATA,
+  buildTrendingHeading,
+  buildTrendingSummary,
+} from "@/lib/seo/copy/tools";
+import { formatThb, jpyToThb } from "@/lib/utils/currency";
 import { TrendingTabs, TrendingPageHeader } from "./trending-tabs";
+import { TrendingMoversSections } from "./trending-movers-sections";
 
 // ISR — trending data changes with the daily cron, not per request. The active
-// tab reads from `?tab=` client-side (in TrendingTabs) so the page stays static.
+// tab reads from `?tab=` client-side (in the tiny URL bridge inside
+// TrendingTabs) so the page stays static AND the default table is prerendered.
 export const revalidate = 300;
 
+// Thai-first: the crawler-facing language of this site is Thai (see
+// doc/seo-content-plan.md §3.8) and reading the language cookie here would opt
+// the whole route out of ISR.
+const SEO_LANG = "TH" as const;
+
 export const metadata: Metadata = {
-  title: "Trending Cards — Biggest Price Movers",
-  description:
-    "OPCG cards with the biggest price movement in the last 24 hours, 7 days, and 30 days. See top gainers and losers updated daily.",
-  alternates: { canonical: "/opcg/trending" },
+  title: TOOL_PAGE_METADATA.trending.title,
+  description: TOOL_PAGE_METADATA.trending.description,
+  alternates: { canonical: TOOL_PAGE_METADATA.trending.canonical },
 };
 
 const TAKE = 50;
@@ -96,15 +108,57 @@ export type TrendingCardRow = Awaited<ReturnType<typeof getTrendingData>>["gaine
 export default async function TrendingPage() {
   const data = await getTrendingData();
 
+  const heading = buildTrendingHeading(SEO_LANG);
+  const leader = data.gainers24h[0] ?? null;
+  const summary = buildTrendingSummary(
+    SEO_LANG,
+    leader && leader.priceChange24h != null
+      ? {
+          name: getCardName(SEO_LANG, leader),
+          cardCode: leader.cardCode,
+          changePct: leader.priceChange24h,
+          priceThb: formatThb(Math.round(jpyToThb(leader.latestPriceJpy ?? 0))),
+        }
+      : null,
+  );
+
+  const seoSections = [
+    { period: "24h" as const, cards: data.gainers24h.slice(0, 10) },
+    { period: "7d" as const, cards: data.gainers7d.slice(0, 10) },
+    { period: "30d" as const, cards: data.gainers30d.slice(0, 10) },
+  ];
+
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Trending", href: "/opcg/trending" }])} />
+      <JsonLd
+        data={itemListJsonLd(
+          heading.h1,
+          data.gainers24h.slice(0, 10).map((card) => ({
+            name: `${card.cardCode} ${getCardName(SEO_LANG, card)}`,
+            url: `/opcg/cards/${card.cardCode}`,
+            image: card.imageUrl,
+          })),
+        )}
+      />
       <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "trendingTitle" }]} />
       <div className="space-y-6">
         <TrendingPageHeader />
-        <Suspense>
-          <TrendingTabs data={data} />
-        </Suspense>
+
+        {/* Server-rendered prose — a table of numbers alone is thin content. */}
+        <div className="space-y-2">
+          <p className="text-body">{summary}</p>
+          <p className="text-body-sm text-muted-foreground">{heading.intro}</p>
+        </div>
+
+        <TrendingTabs data={data} />
+
+        {/* The three period sections are H2s (one per window) so the page has a
+            real heading outline; the wrapper only carries the lead-in copy. */}
+        <div className="space-y-4 pt-2">
+          <p className="text-body-sm text-muted-foreground">{heading.moversIntro}</p>
+          <TrendingMoversSections lang={SEO_LANG} sections={seoSections} />
+        </div>
       </div>
       <RelatedPages
         items={[

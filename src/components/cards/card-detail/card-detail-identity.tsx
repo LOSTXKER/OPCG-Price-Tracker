@@ -6,6 +6,7 @@ import { RarityBadge } from "@/components/shared/rarity-badge"
 import { WatchlistHeart } from "@/components/shared/watchlist-heart"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { t, type Language } from "@/lib/i18n"
+import { baseCardCode } from "@/lib/seo/copy/card"
 
 import type { CardDetailProps } from "./types"
 
@@ -31,6 +32,11 @@ export function CardDetailIdentity({
   return (
     <div className="min-w-0">
       <div className="flex items-center gap-3">
+        {/* Owner decision (เบส, 2026-08-04): the heading is the card name only.
+            The code was tried inside the H1 — 82% of cards share a name, so a
+            code-less H1 repeats across printings (109 pages read "Monkey.D.Luffy")
+            — but it competed with the name visually. The code still identifies
+            the page through the <title>, the URL and the meta line below. */}
         <h1 className="text-h2 min-w-0 break-words text-foreground sm:text-h1">
           {displayName}
         </h1>
@@ -76,7 +82,9 @@ export function CardDetailIdentity({
       </div>
       <div className="text-meta mt-1 flex flex-wrap items-center gap-1.5">
         <RarityBadge rarity={card.rarity} size="sm" />
-        <span>· {card.baseCode ?? card.cardCode}</span>
+        {/* The official card number, without our internal `_p3` printing suffix
+            (owner decision) — the rarity badge beside it already says P-SEC. */}
+        <span>· {baseCardCode(card.cardCode)}</span>
         <span
           className="inline-flex items-center gap-1 tnum"
           title={t(lang, "views")}

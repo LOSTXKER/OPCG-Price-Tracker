@@ -9,8 +9,9 @@ export function websiteJsonLd() {
     "@type": "WebSite",
     name: "Meecard",
     url: BASE_URL,
+    inLanguage: "th-TH",
     description:
-      "One Piece Card Game market prices updated daily. Track Yuyu-tei prices, view price history charts, manage your portfolio.",
+      "เช็คราคาการ์ดวันพีซ (One Piece Card Game) ทุกใบ ทุกเกรด — ราคากลางอัปเดตทุกวัน พร้อมกราฟราคาย้อนหลังและเครื่องมือจัดพอร์ต",
     potentialAction: {
       "@type": "SearchAction",
       target: { "@type": "EntryPoint", urlTemplate: `${BASE_URL}/opcg/search?q={search_term_string}` },
@@ -19,31 +20,82 @@ export function websiteJsonLd() {
   };
 }
 
+/**
+ * Brand entity for the whole site. Rendered once (on /about) — it anchors
+ * E-E-A-T for a price-data site and feeds brand SERP treatment.
+ */
+export function organizationJsonLd(options?: { sameAs?: string[]; email?: string }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Meecard",
+    url: BASE_URL,
+    logo: `${BASE_URL}/icon`,
+    description:
+      "Meecard — เว็บเช็คราคาการ์ดวันพีซ (One Piece Card Game) สำหรับตลาดไทย ราคากลางอัปเดตทุกวันจากตลาดญี่ปุ่น",
+    ...(options?.sameAs?.length ? { sameAs: options.sameAs } : {}),
+    ...(options?.email
+      ? {
+          contactPoint: {
+            "@type": "ContactPoint",
+            contactType: "customer support",
+            email: options.email,
+            availableLanguage: ["th", "en"],
+          },
+        }
+      : {}),
+  };
+}
+
 export function productJsonLd(card: {
   cardCode: string;
   nameEn: string | null;
   nameJp: string;
+  nameTh?: string | null;
   rarity: string;
   imageUrl: string | null;
   latestPriceJpy: number | null;
-  set: { nameEn: string | null; name: string };
+  latestPriceThb?: number | null;
+  /** Freshest scrape timestamp — drives priceValidUntil (prices are daily). */
+  priceScrapedAt?: Date | string | null;
+  set: { nameEn: string | null; name: string; nameTh?: string | null };
 }) {
-  const name = card.nameEn ?? card.nameJp;
+  const latinName = card.nameEn ?? card.nameJp;
+  const thaiName = card.nameTh?.trim() || null;
+  const name = thaiName ?? latinName;
+  const setName = card.set.nameTh?.trim() || card.set.nameEn || card.set.name;
+
+  // The audience buys in THB; fall back to the JPY source price when the
+  // converted value is missing.
+  const price = card.latestPriceThb ?? card.latestPriceJpy;
+  const priceCurrency = card.latestPriceThb != null ? "THB" : "JPY";
+
+  const scraped = card.priceScrapedAt ? new Date(card.priceScrapedAt) : null;
+  const priceValidUntil =
+    scraped && !Number.isNaN(scraped.getTime())
+      ? new Date(scraped.getTime() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+      : undefined;
+
   return {
     "@context": "https://schema.org",
     "@type": "Product",
     name: `${card.cardCode} ${name}`,
-    description: `${name} (${card.rarity}) — ${card.set.nameEn ?? card.set.name}`,
+    ...(thaiName && thaiName !== latinName ? { alternateName: latinName } : {}),
+    description: `ราคาการ์ด ${name} (${card.cardCode}) ความหายาก ${card.rarity} จากชุด ${setName} — One Piece Card Game`,
     image: card.imageUrl ?? undefined,
     url: `${BASE_URL}/opcg/cards/${card.cardCode}`,
     brand: { "@type": "Brand", name: "One Piece Card Game" },
     category: "Trading Cards",
-    ...(card.latestPriceJpy != null && {
+    sku: card.cardCode,
+    inLanguage: "th-TH",
+    ...(price != null && {
+      // No `availability`: Meecard reports a market reference price, it is not
+      // a shop — claiming InStock would be a false merchant signal.
       offers: {
         "@type": "Offer",
-        price: card.latestPriceJpy,
-        priceCurrency: "JPY",
-        availability: "https://schema.org/InStock",
+        price,
+        priceCurrency,
+        ...(priceValidUntil ? { priceValidUntil } : {}),
         url: `${BASE_URL}/opcg/cards/${card.cardCode}`,
       },
     }),
@@ -105,7 +157,10 @@ export function blogPostingJsonLd(post: {
   };
 }
 
-export function itemListJsonLd(name: string, items: { name: string; url: string }[]) {
+export function itemListJsonLd(
+  name: string,
+  items: { name: string; url: string; image?: string | null }[]
+) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -116,6 +171,7 @@ export function itemListJsonLd(name: string, items: { name: string; url: string 
       position: i + 1,
       name: item.name,
       url: item.url.startsWith("http") ? item.url : `${BASE_URL}${item.url}`,
+      ...(item.image ? { image: item.image } : {}),
     })),
   };
 }

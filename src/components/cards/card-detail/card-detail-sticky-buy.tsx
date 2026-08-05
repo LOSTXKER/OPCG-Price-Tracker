@@ -35,7 +35,7 @@ export function CardDetailStickyBuy({
 
   return (
     <div
-      className="ease-chrome fixed inset-x-0 z-40 bg-background md:hidden"
+      className="ease-chrome fixed inset-x-0 z-floating bg-background md:hidden"
       style={{
         bottom:
           "calc(4rem + env(safe-area-inset-bottom) + var(--floating-ad-clearance))",

@@ -1,3 +1,8 @@
+import type { ReactNode } from "react"
+
+import type { PriceHistorySummary } from "./price-history"
+import type { SaleRow } from "./sold-feed"
+
 export type CardListing = {
   id: string | number
   priceJpy: number
@@ -50,6 +55,23 @@ export interface CardSourcePrice {
 }
 
 export interface CardDetailProps {
+  /**
+   * Server-rendered SEO slots. They are React nodes built in the page's SERVER
+   * component and handed to this client tree, so their markup is in the first
+   * HTML response for every user agent (no hydration or fetch required).
+   */
+  introSlot?: ReactNode
+  /**
+   * Derived price history (server-computed, serialisable). Passed as DATA, not
+   * as a prebuilt node, so the chart's range control can govern how many rows
+   * the table shows. Every row still renders during SSR at the default range,
+   * so the crawler sees the full set.
+   */
+  priceHistory?: PriceHistorySummary
+  /** Real settled sales from the DB (type = SOLD), newest first. */
+  soldFeed?: SaleRow[]
+  /** Per-card FAQ (also emits FAQPage JSON-LD). */
+  faqSlot?: ReactNode
   card: {
     id: number
     cardCode: string
