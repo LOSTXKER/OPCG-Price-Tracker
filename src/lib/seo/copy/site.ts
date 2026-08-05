@@ -232,12 +232,12 @@ export function buildAboutMethodology(lang: Language): {
         {
           term: "ราคาการ์ดสภาพปกติ (Raw)",
           detail:
-            "ดึงจาก Yuyu-tei ร้านการ์ดออนไลน์รายใหญ่ที่สุดของญี่ปุ่น เป็นราคาที่ร้านตั้งขายจริง ไม่ใช่ราคาที่คนในกลุ่มโพสต์กันเอง",
+            "ดึงจากร้านการ์ดออนไลน์รายใหญ่ของญี่ปุ่น เป็นราคาที่ร้านตั้งขายจริง ไม่ใช่ราคาที่คนในกลุ่มโพสต์กันเอง",
         },
         {
           term: "ราคาการ์ดเกรด (PSA)",
           detail:
-            "ราคา PSA 10 ดึงจาก SNKRDUNK ส่วนเกรดรองอย่าง PSA 9, PSA 8 และ BGS 9.5 คำนวณจากสัดส่วนอ้างอิงของตลาดเทียบกับราคา PSA 10 ของใบนั้น",
+            "ราคา PSA 10 ดึงจากตลาดซื้อขายการ์ดเกรด ส่วนเกรดรองอย่าง PSA 9, PSA 8 และ BGS 9.5 คำนวณจากสัดส่วนอ้างอิงของตลาดเทียบกับราคา PSA 10 ของใบนั้น",
         },
         {
           term: "อัปเดตบ่อยแค่ไหน",
@@ -272,12 +272,12 @@ export function buildAboutMethodology(lang: Language): {
         {
           term: "Raw (ungraded) prices",
           detail:
-            "Scraped from Yuyu-tei, the largest online card shop in Japan. These are real shop asking prices, not community-posted numbers.",
+            "Scraped from a major online card shop in Japan. These are real shop asking prices, not community-posted numbers.",
         },
         {
           term: "Graded (PSA) prices",
           detail:
-            "PSA 10 prices come from SNKRDUNK. Lower grades (PSA 9, PSA 8, BGS 9.5) are derived from market reference ratios applied to that card's PSA 10 price.",
+            "PSA 10 prices come from the graded-card market. Lower grades (PSA 9, PSA 8, BGS 9.5) are derived from market reference ratios applied to that card's PSA 10 price.",
         },
         {
           term: "Update frequency",
@@ -312,12 +312,12 @@ export function buildAboutMethodology(lang: Language): {
         {
           term: "Raw（未鑑定）価格",
           detail:
-            "日本最大級のオンラインカードショップ「遊々亭」から取得した実売価格です。コミュニティの投稿価格ではありません。",
+            "日本の大手オンラインカードショップから取得した実売価格です。コミュニティの投稿価格ではありません。",
         },
         {
           term: "鑑定（PSA）価格",
           detail:
-            "PSA 10 は SNKRDUNK から取得。PSA 9 / PSA 8 / BGS 9.5 は、そのカードの PSA 10 価格に市場の参照比率を適用して算出しています。",
+            "PSA 10 は鑑定カード市場から取得。PSA 9 / PSA 8 / BGS 9.5 は、そのカードの PSA 10 価格に市場の参照比率を適用して算出しています。",
         },
         {
           term: "更新頻度",

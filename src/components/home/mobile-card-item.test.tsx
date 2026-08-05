@@ -18,12 +18,7 @@ const CARD: CardRow = {
 describe("MobileCardItem price hierarchy", () => {
   it("stacks the price above its change instead of flowing them inline", () => {
     const markup = renderToStaticMarkup(
-      <MobileCardItem
-        card={CARD}
-        rank={1}
-        changePeriod="24h"
-        sparkline={[100, 104, 102, 110]}
-      />,
+      <MobileCardItem card={CARD} rank={1} changePeriod="24h" />,
     )
 
     expect(markup).toContain('data-slot="mobile-price-stack"')
@@ -36,8 +31,29 @@ describe("MobileCardItem price hierarchy", () => {
     expect(markup).not.toContain(
       'class="font-price inline-flex items-baseline justify-end gap-1 text-sm font-semibold"',
     )
-    expect(markup).toContain("<svg")
     expect(markup).toContain("+26.8%")
+  })
+
+  /**
+   * The phone row is two zones — identity on the left, money on the right. A
+   * 48px sparkline used to sit between them and left the name 75px of a 390px
+   * screen, so 16 of the 20 home rows truncated. Nothing may take that width
+   * back; the desktop `<table>` keeps its own sparkline column.
+   */
+  it("puts no third column between the card identity and the price stack", () => {
+    const markup = renderToStaticMarkup(
+      <MobileCardItem card={CARD} rank={1} changePeriod="24h" />,
+    )
+
+    expect(markup).not.toContain("<polyline")
+
+    const priceStackAt = markup.indexOf('data-slot="mobile-price-stack"')
+    const nameAt = markup.indexOf(CARD.nameJp)
+    expect(nameAt).toBeGreaterThan(-1)
+    expect(priceStackAt).toBeGreaterThan(nameAt)
+    // Only the identity block's own closing tags may sit between the card name
+    // and the price stack — no extra element claiming width.
+    expect(markup.slice(nameAt, priceStackAt)).not.toContain("<svg")
   })
 
   it("keeps the reserved history line inside the same stack for graded prices", () => {

@@ -74,7 +74,10 @@ describe("home page SEO shell", () => {
     expect(markup).toContain("ราคาตลาดการ์ดวันพีซวันนี้")
     expect(markup).toContain("3,838")
     expect(markup).toContain("51")
-    expect(markup).toContain("Yuyu-tei")
+    // Owner decision 2026-08-06: the trust claim is "ตลาดญี่ปุ่น", never a
+    // source brand name — the intro must not advertise another shop.
+    expect(markup).toContain("ตลาดญี่ปุ่น")
+    expect(markup).not.toContain("Yuyu-tei")
     // Both Thai spellings must be reachable from the page body.
     expect(markup).toContain("วันพีช")
   })
@@ -116,5 +119,29 @@ describe("home page SEO shell", () => {
     // FaqSection emits one FAQPage block covering every question on the page.
     expect(markup).toContain('type="application/ld+json"')
     expect(markup).toContain("FAQPage")
+  })
+
+  /**
+   * Owner decision 2026-08-06 (final round): source brand names appear NOWHERE
+   * in user-facing copy — not even the FAQ. The trust claim is "ตลาดญี่ปุ่น" /
+   * "the Japanese market"; naming the shop advertises someone else's store and
+   * makes Meecard read like a price mirror instead of the owner of its own
+   * reference price. (Per-row source labels in the card-detail trade history
+   * are data attribution, not copy, and are out of this rule's scope.)
+   */
+  it("never names a price-source brand anywhere on the page", () => {
+    const surfaces = [
+      renderToStaticMarkup(<HomeSeoContent />),
+      renderToStaticMarkup(<HomeSearchHero sets={[]} trending={[]} />),
+      renderToStaticMarkup(<HomeMarketIntro totalCards={3838} totalSets={51} />),
+      renderToStaticMarkup(
+        <HomeSetStrip sets={[{ code: "OP01", name: "Romance Dawn" }]} />,
+      ),
+    ]
+
+    for (const markup of surfaces) {
+      expect(markup).not.toContain("Yuyu-tei")
+      expect(markup).not.toContain("SNKRDUNK")
+    }
   })
 })

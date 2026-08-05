@@ -808,7 +808,7 @@ export function guideBuyChannels(lang: Language): BuyChannel[] {
     },
     {
       id: "japan-online",
-      name: tri("ร้านการ์ดออนไลน์ญี่ปุ่น (เช่น Yuyu-tei)", "Japanese online card shops (e.g. Yuyu-tei)"),
+      name: tri("ร้านการ์ดออนไลน์ญี่ปุ่น", "Japanese online card shops"),
       type: tri("ออนไลน์ (ญี่ปุ่น)", "Online, Japan"),
       body: tri(
         "ญี่ปุ่นเป็นตลาดหลักของเกมนี้ ราคาจึงเป็นกลางที่สุดและสต็อกลึกที่สุด Meecard ใช้ราคาจากตลาดญี่ปุ่นเป็นราคาอ้างอิงหลักด้วยเหตุผลนี้ ข้อจำกัดคือร้านส่วนใหญ่ไม่ส่งตรงมาไทย ต้องใช้บริการตัวแทนสั่งซื้อและฝากส่ง (proxy / forwarder) ซึ่งมีค่าบริการและค่าขนส่งเพิ่ม",
@@ -1008,14 +1008,6 @@ export function guideBuyFaq(lang: Language): GuideFaqItem[] {
 
 export function guideBuySources(lang: Language): Array<{ label: string; desc: string; url: string; internal?: boolean }> {
   return [
-    {
-      label: "Yuyu-tei",
-      desc: pick(
-        lang,
-        tri("ร้านการ์ดออนไลน์ญี่ปุ่นที่เราใช้เป็นราคาอ้างอิงหลัก", "The Japanese online shop we use as the primary reference price.")
-      ),
-      url: "https://yuyu-tei.jp/",
-    },
     {
       label: pick(lang, tri("กรมศุลกากร", "Thai Customs Department")),
       desc: pick(

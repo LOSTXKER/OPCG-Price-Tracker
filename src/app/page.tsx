@@ -138,8 +138,12 @@ export default async function HomePage() {
       {/* Universal search hero — the page's focal point (VISION §5 teleport) */}
       <HomeSearchHero sets={setOptions} trending={gainers} />
 
-      {/* Crawlable set links — the picker below is client-only, so without this
-          strip the pillar page linked to zero set pages. */}
+      {/* Crawlable set links — the picker in the table below is client-only, so
+          without this strip the pillar page linked to zero set pages. Owner
+          decision 2026-08-06: lives UP HERE under the hero (tried the tail,
+          reverted) — collectors browse by set first, so the strip earns its
+          row. Phones render it as a one-row swipe rail (see home-set-strip),
+          which is what keeps the market table on the first screen. */}
       <HomeSetStrip sets={recentSets} />
 
       {/* Highlights: มูลค่าสูงสุด · ราคาขึ้นมากสุด · ราคาลงมากสุด. Minimal — no

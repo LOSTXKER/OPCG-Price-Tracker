@@ -130,7 +130,6 @@ export function MarketTable({
                   rank={rankOffset + i + 1}
                   grade={grade}
                   changePeriod={changePeriod}
-                  sparkline={sparkFor(card)}
                 />
                 {insetAfter === i + 1 && mobileInset}
               </Fragment>

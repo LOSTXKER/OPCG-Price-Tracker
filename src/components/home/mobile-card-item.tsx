@@ -17,22 +17,29 @@ import {
   isRawGrade,
   type GradeKey,
 } from "@/lib/pricing/grade-tiers"
-import { MiniSparkline } from "@/components/ui/mini-sparkline"
 import { PriceTag } from "@/components/ui/price-tag"
 
+/**
+ * One row of the phone market list (<sm only — the desktop `<table>` is a
+ * separate renderer that keeps its own "กราฟ 30 วัน" sparkline column).
+ *
+ * Two zones, left identity and right money — no third column. A 48px sparkline
+ * used to sit between them, which left the name just 75px of a 390px screen:
+ * 16 of the 20 rows truncated, and four consecutive rows all read
+ * "Monkey.D…". The trend shape is not legible at that size anyway, so the
+ * width goes to the one thing that identifies the card.
+ */
 export const MobileCardItem = memo(function MobileCardItem({
   card,
   rank,
   grade = "raw",
   changePeriod = "24h",
-  sparkline,
 }: {
   card: CardRow
   rank: number
   grade?: GradeKey
   /** Which change window the % chip shows — follows the page's period pill. */
   changePeriod?: ChangePeriod
-  sparkline?: number[]
 }) {
   const lang = useUIStore((s) => s.language)
   const name = getCardName(lang, card)
@@ -83,11 +90,6 @@ export const MobileCardItem = memo(function MobileCardItem({
             <RarityBadge rarity={card.rarity} size="sm" />
           </div>
         </div>
-        {rawGrade && sparkline && sparkline.length >= 2 ? (
-          <MiniSparkline data={sparkline} width={48} height={20} className="shrink-0" />
-        ) : !rawGrade ? (
-          <span aria-hidden className="w-12 shrink-0 text-center text-meta">—</span>
-        ) : null}
         <div
           data-slot="mobile-price-stack"
           className="flex shrink-0 flex-col items-end gap-1 text-right"

@@ -158,14 +158,14 @@ export function buildCardSeoDescription(lang: Language, data: CardSeoData): stri
       ? `ราคาล่าสุด ${thb}${jpy ? ` (${jpy})` : ""}${change ? ` · 30 วัน ${change}` : ""}`
       : "ยังไม่มีราคากลางล่าสุด";
     const updatedPart = updated ? ` · อัปเดต ${updated}` : "";
-    return `${name} (${code}) ความหายาก ${data.rarity} จากชุด ${data.setName} — ${pricePart}${updatedPart} ราคากลางจาก Yuyu-tei อัปเดตทุกวัน เช็คราคาการ์ดวันพีชทุกใบที่ Meecard`;
+    return `${name} (${code}) ความหายาก ${data.rarity} จากชุด ${data.setName} — ${pricePart}${updatedPart} ราคากลางจากตลาดญี่ปุ่น อัปเดตทุกวัน เช็คราคาการ์ดวันพีชทุกใบที่ Meecard`;
   }
 
   const pricePart = thb
     ? `Latest ${thb}${jpy ? ` (${jpy})` : ""}${change ? ` · 30d ${change}` : ""}`
     : "No reference price yet";
   const updatedPart = updated ? ` · updated ${updated}` : "";
-  return `${name} (${code}), ${data.rarity} from ${data.setName} — ${pricePart}${updatedPart}. One Piece Card Game market prices from Yuyu-tei, refreshed daily on Meecard.`;
+  return `${name} (${code}), ${data.rarity} from ${data.setName} — ${pricePart}${updatedPart}. One Piece Card Game market prices from the Japanese market, refreshed daily on Meecard.`;
 }
 
 /**
@@ -194,7 +194,7 @@ export function buildCardIntro(lang: Language, data: CardSeoData): string[] {
         ? // "ความหายาก" is not repeated in the tail — it already appears above,
           // and the owner's draft carried it twice.
           `เช็คราคา${head} พร้อมข้อมูลการ์ด กราฟราคา และประวัติราคา อัปเดตทุกวัน`
-        : `${head} ตอนนี้ยังไม่มีราคากลางล่าสุด เพราะยังไม่พบประกาศขายจากแหล่งที่เราติดตาม (Yuyu-tei ตลาดญี่ปุ่น) เราเก็บราคาใหม่ทุกวัน`,
+        : `${head} ตอนนี้ยังไม่มีราคากลางล่าสุด เพราะยังไม่พบประกาศขายจากแหล่งที่เราติดตามในตลาดญี่ปุ่น เราเก็บราคาใหม่ทุกวัน`,
     ];
   }
 
@@ -202,7 +202,7 @@ export function buildCardIntro(lang: Language, data: CardSeoData): string[] {
   return [
     hasPrice
       ? `Check the price of ${head}, with card details, a price chart and full price history, updated daily.`
-      : `${head}. There is no reference price yet — we have not seen it listed by the sources we track (Yuyu-tei in Japan), and prices are collected daily.`,
+      : `${head}. There is no reference price yet — we have not seen it listed by the sources we track in Japan, and prices are collected daily.`,
   ];
 }
 
@@ -230,7 +230,7 @@ export function buildCardFaq(lang: Language, data: CardSeoData): CardFaqItem[] {
       },
       {
         question: "ราคามาจากแหล่งไหน อัปเดตบ่อยแค่ไหน?",
-        answer: `Meecard เก็บราคาการ์ดวันพีซจากตลาดญี่ปุ่นเป็นหลัก โดยราคาการ์ดแบบ Raw (ยังไม่ส่งเกรด) อ้างอิงจาก Yuyu-tei และราคาการ์ดเกรดอ้างอิงจาก SNKRDUNK ระบบดึงราคาใหม่ทุกวันแล้วแปลงเป็นเงินบาทให้อัตโนมัติ${updated ? ` การ์ด ${code} อัปเดตล่าสุดเมื่อ ${updated}` : ""}`,
+        answer: `Meecard เก็บราคาการ์ดวันพีซจากตลาดญี่ปุ่นเป็นหลัก โดยราคาการ์ดแบบ Raw (ยังไม่ส่งเกรด) อ้างอิงจากร้านการ์ดญี่ปุ่น และราคาการ์ดเกรดอ้างอิงจากตลาดการ์ดเกรด ระบบดึงราคาใหม่ทุกวันแล้วแปลงเป็นเงินบาทให้อัตโนมัติ${updated ? ` การ์ด ${code} อัปเดตล่าสุดเมื่อ ${updated}` : ""}`,
       },
       {
         question: "Raw กับ PSA 10 ต่างกันยังไง?",
@@ -253,7 +253,7 @@ export function buildCardFaq(lang: Language, data: CardSeoData): CardFaqItem[] {
     },
     {
       question: "Where do the prices come from and how often are they updated?",
-      answer: `Raw prices come from Yuyu-tei in Japan and graded prices from SNKRDUNK. Meecard rescrapes daily and converts to THB automatically${updated ? `; ${code} was last updated ${updated}` : ""}.`,
+      answer: `Raw prices come from the Japanese card market and graded prices from the graded-card market. Meecard rescrapes daily and converts to THB automatically${updated ? `; ${code} was last updated ${updated}` : ""}.`,
     },
     {
       question: "What is the difference between Raw and PSA 10?",

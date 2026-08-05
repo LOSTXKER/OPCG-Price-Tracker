@@ -215,11 +215,6 @@ function buildSources(lang: Language) {
       desc: t(lang, "guideRaritySourceRulesDesc"),
       url: "https://en.onepiece-cardgame.com/rules/",
     },
-    {
-      label: "Yuyu-tei",
-      desc: t(lang, "guideRaritySourceYuyuteiDesc"),
-      url: "https://yuyu-tei.jp/",
-    },
   ];
 }
 

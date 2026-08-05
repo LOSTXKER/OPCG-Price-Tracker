@@ -366,7 +366,7 @@ export function buildMarketMethodologyFaq(lang: Language): SeoFaqItem[] {
         {
           question: "ราคาการ์ดวันพีซบน Meecard มาจากไหน",
           answer:
-            "เราเก็บราคาขายจริงจากร้านการ์ดในญี่ปุ่น (Yuyu-tei) อัตโนมัติวันละครั้ง แล้วบันทึกเป็นราคากลางของการ์ดใบนั้นในวันนั้น จากนั้นแปลงเป็นเงินบาทให้ดูง่าย ทุกหน้าราคาบนเว็บใช้ชุดข้อมูลเดียวกันหมด",
+            "เราเก็บราคาขายจริงจากร้านการ์ดในญี่ปุ่นอัตโนมัติวันละครั้ง แล้วบันทึกเป็นราคากลางของการ์ดใบนั้นในวันนั้น จากนั้นแปลงเป็นเงินบาทให้ดูง่าย ทุกหน้าราคาบนเว็บใช้ชุดข้อมูลเดียวกันหมด",
         },
         {
           question: "มูลค่าตลาดรวมคำนวณยังไง",
@@ -393,7 +393,7 @@ export function buildMarketMethodologyFaq(lang: Language): SeoFaqItem[] {
         {
           question: "Where do Meecard's One Piece card prices come from?",
           answer:
-            "We scrape live shop prices from the Japanese market (Yuyu-tei) once a day, store them as that day's reference price for the card, and convert them to Thai baht. Every price page on the site uses the same dataset.",
+            "We scrape live shop prices from the Japanese market once a day, store them as that day's reference price for the card, and convert them to Thai baht. Every price page on the site uses the same dataset.",
         },
         {
           question: "How is total market value calculated?",

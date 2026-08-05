@@ -26,8 +26,12 @@ export type HomeSeoLink = { href: string; label: string };
 export const HOME_META_TITLE =
   "เช็คราคาการ์ดวันพีซ (One Piece Card Game) อัปเดตทุกวัน";
 
+// Owner decision (2026-08-06): no source-brand names anywhere on the home
+// surface except the one FAQ answer that directly answers "where do prices
+// come from?" (`seoFaq2A`). "ตลาดญี่ปุ่น" carries the trust signal; the brand
+// name only advertises someone else's shop on our own search snippet.
 export const HOME_META_DESCRIPTION =
-  "เช็คราคาการ์ดวันพีชทุกใบ ทุกเกรด — ราคากลางอ้างอิง Yuyu-tei อัปเดตทุกวัน พร้อมกราฟราคาย้อนหลัง ราคา PSA 10 พอร์ตสะสม และรายการโปรด ใช้ฟรี";
+  "เช็คราคาการ์ดวันพีชทุกใบ ทุกเกรด — ราคากลางอ้างอิงตลาดญี่ปุ่น อัปเดตทุกวัน พร้อมกราฟราคาย้อนหลัง ราคา PSA 10 พอร์ตสะสม และรายการโปรด ใช้ฟรี";
 
 /** The one visible H1 of the site's pillar page. Must carry "การ์ดวันพีซ". */
 export function buildHomeHeroHeading(lang: Language): string {
@@ -68,17 +72,17 @@ export function buildHomeMarketIntro(
     case "EN":
       return {
         heading: "One Piece card prices today",
-        body: `Meecard tracks ${cards} One Piece Card Game cards across ${sets} sets. Reference prices come from the Japanese market (Yuyu-tei as the main source), are re-scraped every day and converted to Thai baht automatically. The table below is sorted by highest value — tap a column header to re-sort, or pick a set to narrow it down.`,
+        body: `Meecard tracks ${cards} One Piece Card Game cards across ${sets} sets. Reference prices come from the Japanese market, updated daily and converted to Thai baht automatically. Pick a set to narrow it down, then compare Raw and PSA 10 on one row.`,
       };
     case "JP":
       return {
         heading: "ワンピースカード 本日の相場",
-        body: `Meecard は ${sets} 弾・${cards} 枚のワンピースカードの相場を追跡しています。価格は日本市場（主に Yuyu-tei）を参照し、毎日取得してタイバーツへ自動換算しています。下の表は高額順です。列見出しをタップすると並び替え、弾を選ぶと絞り込みできます。`,
+        body: `Meecard は ${sets} 弾・${cards} 枚のワンピースカードの相場を追跡しています。価格は日本市場を参照し、毎日更新してタイバーツへ自動換算。弾を選んで絞り込むと、Raw と PSA 10 を同じ行で比較できます。`,
       };
     default:
       return {
         heading: "ราคาตลาดการ์ดวันพีซวันนี้",
-        body: `Meecard ติดตามราคาการ์ดวันพีซ (One Piece Card Game) ทั้งหมด ${cards} ใบ จาก ${sets} ชุด ราคากลางอ้างอิงจากตลาดญี่ปุ่น โดยมี Yuyu-tei เป็นแหล่งหลัก ดึงข้อมูลใหม่ทุกวันแล้วแปลงเป็นเงินบาทให้อัตโนมัติ ตารางด้านล่างเรียงตามมูลค่าสูงสุด กดที่หัวคอลัมน์เพื่อเรียงใหม่ หรือเลือกชุดการ์ดวันพีชที่สนใจจากช่องเลือกชุด แล้วดูราคาแบบ Raw และ PSA 10 เทียบกันได้ในแถวเดียว`,
+        body: `Meecard ติดตามราคาการ์ดวันพีซ (One Piece Card Game) ทั้งหมด ${cards} ใบ จาก ${sets} ชุด ราคากลางอ้างอิงจากตลาดญี่ปุ่นจริง อัปเดตทุกวันและแปลงเป็นเงินบาทอัตโนมัติ เลือกชุดการ์ดวันพีชที่สนใจ แล้วเทียบราคาแบบ Raw กับ PSA 10 ได้ในแถวเดียว`,
       };
   }
 }
@@ -137,7 +141,7 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
         {
           question: "How is the reference price calculated?",
           answer:
-            "It is based on real selling prices in the Japanese market (Yuyu-tei is the main source), re-scraped daily and converted to Thai baht with a fixed rate. It is a reference for comparison, not a price Meecard sells at. Prices per set are on the sets page below.",
+            "It is based on real selling prices in the Japanese market, re-scraped daily and converted to Thai baht with a fixed rate. It is a reference for comparison, not a price Meecard sells at. Prices per set are on the sets page below.",
         },
       ];
     case "JP":
@@ -160,7 +164,7 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
         {
           question: "参考価格はどう算出している？",
           answer:
-            "日本市場の実売価格（主に Yuyu-tei）を毎日取得し、固定レートでタイバーツに換算しています。比較のための参考値であり、Meecard の販売価格ではありません。弾ごとの価格は下の弾一覧から。",
+            "日本市場の実売価格を毎日取得し、固定レートでタイバーツに換算しています。比較のための参考値であり、Meecard の販売価格ではありません。弾ごとの価格は下の弾一覧から。",
         },
       ];
     default:
@@ -183,7 +187,7 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
         {
           question: "ราคากลางบน Meecard คำนวณจากอะไร",
           answer:
-            "ราคากลางอ้างอิงจากราคาขายจริงในตลาดญี่ปุ่น โดยมี Yuyu-tei เป็นแหล่งหลัก ระบบดึงข้อมูลใหม่ทุกวันแล้วแปลงเป็นเงินบาทด้วยอัตราแลกเปลี่ยนคงที่ ตัวเลขนี้เป็นราคาอ้างอิงไว้เทียบก่อนซื้อขาย ไม่ใช่ราคาที่ Meecard ขายเอง อยากดูราคาแยกเป็นรายชุดให้ไปที่หน้ารวมชุดการ์ด ในลิงก์ด้านล่าง",
+            "ราคากลางอ้างอิงจากราคาขายจริงในตลาดญี่ปุ่น ระบบดึงข้อมูลใหม่ทุกวันแล้วแปลงเป็นเงินบาทด้วยอัตราแลกเปลี่ยนคงที่ ตัวเลขนี้เป็นราคาอ้างอิงไว้เทียบก่อนซื้อขาย ไม่ใช่ราคาที่ Meecard ขายเอง อยากดูราคาแยกเป็นรายชุดให้ไปที่หน้ารวมชุดการ์ด ในลิงก์ด้านล่าง",
         },
       ];
   }

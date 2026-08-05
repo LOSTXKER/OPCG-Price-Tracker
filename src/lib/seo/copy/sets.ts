@@ -407,7 +407,7 @@ export function buildSetFaq(lang: Language, set: SetSeoData): SeoFaqItem[] {
 
     items.push({
       question: `ราคาการ์ดในหน้า ${code} มาจากไหน`,
-      answer: `ราคากลางมาจากการเก็บราคาซื้อขายจริงในตลาดญี่ปุ่น (Yuyu-tei) อัปเดตทุกวัน แล้วแปลงเป็นเงินบาทด้วยอัตราคงที่เพื่อให้เทียบกันได้ ส่วนราคาการ์ดเกรด PSA 10 อ้างอิงจากตลาดซื้อขายการ์ดเกรด ราคาที่แสดงเป็นราคาอ้างอิง ไม่ใช่ราคาขายของ Meecard`,
+      answer: `ราคากลางมาจากการเก็บราคาซื้อขายจริงในตลาดญี่ปุ่น อัปเดตทุกวัน แล้วแปลงเป็นเงินบาทด้วยอัตราคงที่เพื่อให้เทียบกันได้ ส่วนราคาการ์ดเกรด PSA 10 อ้างอิงจากตลาดซื้อขายการ์ดเกรด ราคาที่แสดงเป็นราคาอ้างอิง ไม่ใช่ราคาขายของ Meecard`,
     });
 
     return items;
@@ -448,7 +448,7 @@ export function buildSetFaq(lang: Language, set: SetSeoData): SeoFaqItem[] {
 
   items.push({
     question: `Where do the ${code} prices come from?`,
-    answer: `Market reference prices are scraped daily from the Japanese secondary market (Yuyu-tei) and converted to THB at a fixed rate; PSA 10 prices come from graded-card marketplaces. Meecard reports prices, it does not sell cards.`,
+    answer: `Market reference prices are scraped daily from the Japanese secondary market and converted to THB at a fixed rate; PSA 10 prices come from graded-card marketplaces. Meecard reports prices, it does not sell cards.`,
   });
 
   return items;

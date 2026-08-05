@@ -523,9 +523,7 @@ export default async function GettingStartedPage() {
             <Link href="/guide/rarities" className="font-medium text-primary hover:underline">{t(lang, "guideStartPricingP1Link")}</Link>
             {t(lang, "guideStartPricingP1b")}
           </p>
-          <p>
-            {t(lang, "guideStartPricingP2a")}<strong className="text-foreground">Yuyu-tei</strong>{t(lang, "guideStartPricingP2b")}
-          </p>
+          <p>{t(lang, "guideStartPricingP2")}</p>
           <p>
             {t(lang, "guideStartPricingP3a")}<strong className="text-foreground">SEC (Secret Rare)</strong>{t(lang, "guideStartPricingP3b")}
             <strong className="text-foreground">SP (Special)</strong>{t(lang, "guideStartPricingP3c")}

@@ -264,7 +264,10 @@ describe("card SEO copy", () => {
     expect(faq).toHaveLength(4)
     expect(faq[0]!.question).toBe("การ์ด มังกี้ ดี. ลูฟี่ (OP01-003) ราคาเท่าไหร่?")
     expect(faq[0]!.answer).toContain("441 ฿")
-    expect(faq[1]!.answer).toContain("Yuyu-tei")
+    // Owner decision 2026-08-06: no source-brand names in user-facing copy —
+    // the provenance answer says "ตลาดญี่ปุ่น", never the shop's name.
+    expect(faq[1]!.answer).toContain("ตลาดญี่ปุ่น")
+    expect(faq[1]!.answer).not.toContain("Yuyu-tei")
     expect(faq[2]!.question).toContain("PSA 10")
     expect(faq[3]!.answer).toContain("ใบพิมพ์ปกติ")
   })

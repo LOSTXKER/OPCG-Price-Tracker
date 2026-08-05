@@ -117,15 +117,37 @@ export type HomeSetLink = { code: string; name: string }
 export const HOME_RECENT_SETS_LIMIT = 12
 
 /**
- * Newest sets first (undated sets last, then by code descending as a stable
- * tiebreak). Returns the latin set name — `CardSet.nameTh` is empty for every
- * set in the database, so Thai context has to come from the surrounding copy.
+ * Which product line leads the strip when release dates can't decide it.
+ * Boosters are the line collectors track prices for; starter decks are the
+ * long tail. Unlisted types sort last.
+ */
+const SET_TYPE_RANK: Record<string, number> = {
+  BOOSTER: 0,
+  EXTRA_BOOSTER: 1,
+  PROMO: 2,
+  STARTER: 3,
+  OTHER: 4,
+}
+
+/**
+ * Newest sets first. Returns the latin set name — `CardSet.nameTh` is empty for
+ * every set in the database, so Thai context has to come from the surrounding
+ * copy.
+ *
+ * `releaseDate` is NULL for all 51 rows today, so date ordering never fires and
+ * everything falls to the tiebreak. Sorting on code alone made that tiebreak
+ * reverse-alphabetical, which handed all 12 slots to st29…st18 — a section
+ * titled "ชุดการ์ดวันพีซล่าสุด" that showed twelve starter decks and could
+ * never show a booster. Product line now breaks the tie before the code does,
+ * so the strip leads with op15, op14, … Date ordering still wins outright once
+ * the column gets populated.
  */
 export function pickRecentSets(
   sets: {
     code: string
     name: string
     nameEn?: string | null
+    type?: string | null
     releaseDate?: Date | null
   }[],
   limit = HOME_RECENT_SETS_LIMIT
@@ -135,6 +157,9 @@ export function pickRecentSets(
       const at = a.releaseDate ? a.releaseDate.getTime() : -Infinity
       const bt = b.releaseDate ? b.releaseDate.getTime() : -Infinity
       if (at !== bt) return bt - at
+      const ar = SET_TYPE_RANK[a.type ?? ""] ?? 5
+      const br = SET_TYPE_RANK[b.type ?? ""] ?? 5
+      if (ar !== br) return ar - br
       return b.code.localeCompare(a.code)
     })
     .slice(0, limit)

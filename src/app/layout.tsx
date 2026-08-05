@@ -42,8 +42,10 @@ const GOOGLE_SITE_VERIFICATION = clientEnv().NEXT_PUBLIC_GOOGLE_SITE_VERIFICATIO
 const INITIAL_HTML_LANG_SCRIPT = `(()=>{const m=document.cookie.match(/(?:^|; )kuma-lang=([^;]*)/);const l=m?decodeURIComponent(m[1]):"TH";document.documentElement.lang=l==="EN"?"en":l==="JP"?"ja":"th"})()`;
 
 const SITE_TITLE = "Meecard — เช็คราคาการ์ดวันพีซ (One Piece Card Game) อัปเดตทุกวัน";
+// Owner decision (2026-08-06): no source-brand names in site metadata — the
+// trust claim is "ตลาดญี่ปุ่น"; the brand is named only in the home FAQ answer.
 const SITE_DESCRIPTION =
-  "เช็คราคาการ์ดวันพีชทุกใบ ทุกเกรด — ราคากลางจาก Yuyu-tei อัปเดตทุกวัน พร้อมกราฟราคาย้อนหลัง ราคา PSA 10 พอร์ตสะสม และแจ้งเตือนราคา";
+  "เช็คราคาการ์ดวันพีชทุกใบ ทุกเกรด — ราคากลางอ้างอิงตลาดญี่ปุ่น อัปเดตทุกวัน พร้อมกราฟราคาย้อนหลัง ราคา PSA 10 พอร์ตสะสม และแจ้งเตือนราคา";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -63,7 +65,6 @@ export const metadata: Metadata = {
     "OPTCG",
     "OPCG",
     "One Piece Card Game",
-    "Yuyu-tei",
   ],
   openGraph: {
     type: "website",

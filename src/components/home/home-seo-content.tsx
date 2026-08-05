@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   Briefcase,
   Calculator,
+  ChevronRight,
   GitCompareArrows,
   Layers,
   LineChart,
@@ -18,6 +19,7 @@ import {
   type RelatedPageItem,
 } from "@/components/shared/related-pages";
 import { SectionHead } from "@/components/shared/section-head";
+import { Surface } from "@/components/ui/surface";
 import { t, type Language } from "@/lib/i18n";
 import {
   buildHomeFaqLinks,
@@ -113,42 +115,55 @@ export function HomeSeoContent() {
   const faqLinks = buildHomeFaqLinks(lang);
 
   return (
-    <div className="space-y-16 pt-6">
+    <div className="space-y-10 pt-6 sm:space-y-14">
       {/* Features */}
       <section className="space-y-5">
         <div>
           <h2 className="text-h3">{t(lang, "seoFeaturesHeading")}</h2>
-          <p className="mt-1.5 text-sm text-muted-foreground">
-            {t(lang, "seoFeaturesSub")}
-          </p>
+          <p className="mt-1.5 text-meta">{t(lang, "seoFeaturesSub")}</p>
         </div>
-        <div className="grid gap-4 sm:grid-cols-3">
+        {/* Same grammar as the "สำรวจเพิ่มเติม" grid below (related-pages.tsx):
+            canonical Surface, icon on the left in a primary-tinted tile, title
+            over description. These used to hand-roll `surface-1 hairline
+            rounded-xl p-6` — which is `Surface variant="hero"`, reserved for one
+            hero per page — with the icon stacked above the text in its own
+            circle. Two blocks doing the same job in two visual languages, 64px
+            apart, is what made the tail read as bolted on. */}
+        <div className="grid gap-3 sm:grid-cols-3">
           {features.map((f) => (
-            <Link
+            <Surface
+              as={Link}
+              variant="outline"
+              interactive
               key={f.href}
               href={f.href}
-              className="surface-1 ease-chrome group flex flex-col gap-4 rounded-xl p-6 hairline hover:bg-muted/70"
+              className="group ease-chrome flex items-start gap-3 p-4"
             >
-              <div className="flex size-11 items-center justify-center rounded-full bg-foreground/[0.05] text-foreground">
-                <f.icon className="size-5" />
+              <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                <f.icon className="size-[18px] text-primary" />
               </div>
-              <div>
-                <p className="ease-chrome text-h5 group-hover:text-foreground">
+              <div className="min-w-0 flex-1">
+                <p className="text-h5 motion-base group-hover:text-primary">
                   {f.title}
                 </p>
-                <p className="mt-1.5 text-meta leading-relaxed">
+                <p className="mt-0.5 text-meta leading-relaxed">
                   {f.description}
                 </p>
               </div>
-            </Link>
+              <ChevronRight className="mt-1 size-4 shrink-0 text-muted-foreground/40 transition-transform group-hover:translate-x-0.5" />
+            </Surface>
           ))}
         </div>
       </section>
 
-      {/* Price explainer */}
-      <section className="surface-1 hairline space-y-4 rounded-xl p-6">
+      {/* Price explainer — plain prose, no panel. Boxing three paragraphs of
+          body copy made the only genuinely editorial block on the page read as
+          an ad unit, and it was the fourth bordered surface in a row. The
+          measure cap is the real readability fix: unbounded, these lines ran
+          the full 1400px container on desktop. */}
+      <section className="space-y-4">
         <SectionHead title={t(lang, "seoPriceExplainTitle")} />
-        <div className="space-y-3 text-body-sm leading-relaxed text-muted-foreground">
+        <div className="max-w-3xl space-y-3 text-body-sm leading-relaxed text-muted-foreground">
           <p>
             {t(lang, "seoPriceP1a")}{" "}
             <Link
@@ -159,10 +174,10 @@ export function HomeSeoContent() {
             </Link>{" "}
             {t(lang, "seoPriceP1b")}
           </p>
-          <p>
-            {t(lang, "seoPriceP2a")} <strong>Yuyu-tei</strong>
-            {t(lang, "seoPriceP2b")}
-          </p>
+          {/* One string, no embedded brand name — the source is named only in
+              the FAQ answer that directly asks where prices come from
+              (`seoFaq2A`, owner decision 2026-08-06). */}
+          <p>{t(lang, "seoPriceP2")}</p>
           <p>
             {t(lang, "seoPriceP3a")}{" "}
             <Link
