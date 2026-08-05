@@ -27,7 +27,7 @@ const CAMPAIGN = {
 } satisfies DirectCampaign
 
 describe("Google mock creative", () => {
-  it("renders a labelled layout mock without any ad-network surface", () => {
+  it("renders an empty labelled slot without any sample ad creative", () => {
     const markup = renderToStaticMarkup(
       <GoogleAdMockup
         definition={AD_INVENTORY["global-bottom-anchor"]}
@@ -37,10 +37,12 @@ describe("Google mock creative", () => {
 
     expect(markup).toContain('data-ad-kind="GOOGLE_MOCK"')
     expect(markup).toContain('data-ad-zone="global-bottom-anchor"')
-    expect(markup).toContain("อุปกรณ์การ์ดพรีเมียม ลด 20%")
-    expect(markup).toContain("Card Harbor")
-    expect(markup).toContain("google-mock-card-accessories-v1.jpg")
+    expect(markup).toContain("Google Ads · Mockup")
     expect(markup).toContain("จำลองหน้าตาเท่านั้น")
+    expect(markup).not.toContain("อุปกรณ์การ์ดพรีเมียม ลด 20%")
+    expect(markup).not.toContain("Card Harbor")
+    expect(markup).not.toContain("google-mock-card-accessories-v1.jpg")
+    expect(markup).not.toMatch(/<img\b/i)
     expect(markup).not.toMatch(/<a\b/i)
     expect(markup).not.toMatch(/<script\b/i)
     expect(markup).not.toMatch(/<iframe\b/i)
