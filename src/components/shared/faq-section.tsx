@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
+
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { faqJsonLd } from "@/lib/seo/json-ld";
 import { Surface } from "@/components/ui/surface";
@@ -5,6 +8,13 @@ import { Surface } from "@/components/ui/surface";
 export interface FaqItem {
   question: string;
   answer: string;
+  /**
+   * Optional read-more destination rendered at the end of the answer body.
+   * Kept out of the FAQPage JSON-LD on purpose — `faqJsonLd` reads only
+   * question/answer. Added so answers can link in context instead of pages
+   * hand-rolling an orphan link list under the FAQ box.
+   */
+  link?: { href: string; label: string };
 }
 
 export function FaqSection({
@@ -29,6 +39,15 @@ export function FaqSection({
             </summary>
             <div className="px-5 pb-5 pt-1.5 text-sm leading-relaxed text-muted-foreground">
               {item.answer}
+              {item.link && (
+                <Link
+                  href={item.link.href}
+                  className="mt-2 flex w-fit items-center gap-0.5 text-sm font-medium text-primary hover:underline"
+                >
+                  {item.link.label}
+                  <ChevronRight className="size-4" />
+                </Link>
+              )}
             </div>
           </details>
         ))}

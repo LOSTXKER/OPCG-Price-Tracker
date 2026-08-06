@@ -119,6 +119,16 @@ describe("home page SEO shell", () => {
     // FaqSection emits one FAQPage block covering every question on the page.
     expect(markup).toContain('type="application/ld+json"')
     expect(markup).toContain("FAQPage")
+
+    // The long-tail read-more links render INSIDE the answer bodies now
+    // (FaqItem.link), not as an orphan list under the box — so no answer may
+    // still point at a "link below" that no longer exists.
+    expect(markup).not.toContain("ในลิงก์ด้านล่าง")
+    expect(markup).not.toContain("อ่านต่อจากคำถามด้านบน")
+    const detailsEnd = markup.lastIndexOf("</details>")
+    expect(markup.lastIndexOf('href="/opcg/most-expensive"')).toBeLessThan(
+      detailsEnd,
+    )
   })
 
   /**

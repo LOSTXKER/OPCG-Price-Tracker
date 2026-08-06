@@ -21,10 +21,7 @@ import {
 import { SectionHead } from "@/components/shared/section-head";
 import { Surface } from "@/components/ui/surface";
 import { t, type Language } from "@/lib/i18n";
-import {
-  buildHomeFaqLinks,
-  buildHomeLongTailFaq,
-} from "@/lib/seo/copy/home";
+import { buildHomeLongTailFaq } from "@/lib/seo/copy/home";
 import { useUIStore } from "@/stores/ui-store";
 
 function buildFeatures(lang: Language) {
@@ -112,7 +109,6 @@ export function HomeSeoContent() {
   const features = buildFeatures(lang);
   const exploreItems = buildExploreItems(lang);
   const faqItems = buildFaqItems(lang);
-  const faqLinks = buildHomeFaqLinks(lang);
 
   return (
     <div className="space-y-10 pt-6 sm:space-y-14">
@@ -200,30 +196,10 @@ export function HomeSeoContent() {
       {/* Explore CTA grid */}
       <RelatedPages title={t(lang, "seoExploreTitle")} items={exploreItems} />
 
-      {/* FAQ */}
-      <div>
-        <FaqSection items={faqItems} />
-
-        {/* Destinations for the four long-tail answers above. They sit here as
-            a real link list because FaqSection takes `answer: string` — an
-            anchor cannot be embedded inside an answer without editing a shared
-            component this area does not own. */}
-        <nav className="mt-4" aria-label={faqLinks.heading}>
-          <p className="text-eyebrow">{faqLinks.heading}</p>
-          <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5">
-            {faqLinks.links.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="text-sm font-medium text-primary hover:underline"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+      {/* FAQ — long-tail answers carry their own read-more link inside the
+          answer body (FaqSection `link`), so there is no orphan link list
+          under the box anymore. */}
+      <FaqSection items={faqItems} />
     </div>
   );
 }
