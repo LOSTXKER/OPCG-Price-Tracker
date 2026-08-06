@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · hook โหลดไฟล์นี้ทุก session · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-08-07 — **SEO Round 1 + Round 2 เสร็จทั้งคู่ verify ครบ (ยังไม่ commit ทั้งหมด)** จาก audit SEO 12 ทีม (รายงาน: artifact "ตรวจ SEO ทั้งเว็บ Meecard" https://claude.ai/code/artifact/ca79b001-d4d4-4b2d-9294-36c210a3813b) · รายละเอียด+ติ๊กราย task: PLAN.md §SEO Round 1 + §SEO Round 2
+อัปเดตล่าสุด: 2026-08-07 — **SEO Round 1 + Round 2 เสร็จ verify ครบ และ commit+push เข้า master แล้ว (`130af6e`, เบสสั่งเอง)** จาก audit SEO 12 ทีม (รายงาน: artifact "ตรวจ SEO ทั้งเว็บ Meecard" https://claude.ai/code/artifact/ca79b001-d4d4-4b2d-9294-36c210a3813b) · รายละเอียด+ติ๊กราย task: PLAN.md §SEO Round 1 + §SEO Round 2
 
 ## 🔨 สองรอบที่เพิ่งจบ (วันเดียวกัน)
 
@@ -26,4 +26,4 @@
 6. ซ่อมรูปแตก 2 จุด · Honey จอแรกเอาคำอธิบายขึ้นก่อน skeleton · Breadcrumb JSON-LD ภาษาไทยให้ตรง UI (หลายหน้า)
 7. SEO-OPS (เบสทำบน Vercel): ตั้ง NEXT_PUBLIC_APP_URL โดเมนจริง · Google Search Console + submit sitemap — **สำคัญ: og:url/canonical ตอนนี้ชี้ตาม env นี้**
 
-> ทั้งหมดยังไม่ commit — เบสรีวิวแล้ว commit เองตามเดิม (แก้ ~45 ไฟล์รวมสองรอบ ดู `git status`)
+> commit แล้ว: `130af6e` (57 ไฟล์, push master ตามคำสั่งเบส 2026-08-07) — Vercel จะ deploy อัตโนมัติ อย่าลืมข้อ 7 (NEXT_PUBLIC_APP_URL) ไม่งั้น canonical/og:url บน prod ชี้ผิดโดเมน
