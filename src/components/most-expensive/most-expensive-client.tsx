@@ -6,11 +6,11 @@ import Link from "next/link"
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { PageHeader } from "@/components/layout/page-header"
+import { PriceTag } from "@/components/ui/price-tag"
 import { Surface } from "@/components/ui/surface"
 import { useUIStore } from "@/stores/ui-store"
 import { getCardName, t, type Currency, type Language } from "@/lib/i18n"
 import { formatJpyAmount } from "@/lib/utils/currency"
-import { cn } from "@/lib/utils"
 import type { MostExpensiveCard, MostExpensiveData } from "@/lib/data/most-expensive"
 import {
   mostExpensiveIntro,
@@ -29,24 +29,12 @@ function priceLabel(jpy: number, currency: Currency): string {
   return formatJpyAmount(jpy, currency)
 }
 
-function ChangeCell({ value }: { value: number | null }) {
-  if (value == null) return <span className="text-meta">—</span>
-  const up = value > 0
-  const down = value < 0
-  return (
-    <span
-      className={cn(
-        "text-code tabular-nums",
-        up && "text-success",
-        down && "text-danger",
-        !up && !down && "text-muted-foreground"
-      )}
-    >
-      {up ? "▲" : down ? "▼" : ""} {Math.abs(value).toFixed(1)}%
-    </span>
-  )
-}
-
+/**
+ * Identity cell — the same grammar as the home market rows: uncropped card
+ * image (aspect 63/88, object-contain — `object-cover` beheaded every
+ * portrait), name on top, PUBLIC code below (`baseCode`, never the internal
+ * `_p3` variant suffix the ranking used to leak).
+ */
 function CardCell({ card, lang }: { card: MostExpensiveCard; lang: Language }) {
   const name = getCardName(lang, card)
   return (
@@ -54,33 +42,28 @@ function CardCell({ card, lang }: { card: MostExpensiveCard; lang: Language }) {
       href={`/opcg/cards/${card.cardCode}`}
       className="flex min-w-0 items-center gap-3 hover:text-primary"
     >
-      <span className="relative block h-14 w-10 shrink-0 overflow-hidden rounded-sm bg-muted">
+      <span className="hairline relative block aspect-[63/88] w-10 shrink-0 overflow-hidden rounded-md bg-muted">
         {card.imageUrl && (
           <Image
             src={card.imageUrl}
             alt={name}
             fill
             sizes="40px"
-            className="object-cover"
+            className="object-contain"
           />
         )}
       </span>
       <span className="min-w-0">
-        <span className="block truncate text-h5">{name}</span>
-        <span className="block text-code text-meta">{card.cardCode}</span>
+        <span className="block truncate text-sm font-medium leading-tight">{name}</span>
+        <span className="mt-0.5 block font-mono text-meta">
+          {card.baseCode ?? card.cardCode}
+        </span>
       </span>
     </Link>
   )
 }
 
-export function MostExpensiveClient({
-  data,
-  introData,
-}: {
-  data: MostExpensiveData
-  /** Pre-computed on the server so the copy interpolates a stable date string. */
-  introData: { updatedLabel: string | null }
-}) {
+export function MostExpensiveClient({ data }: { data: MostExpensiveData }) {
   const lang = useUIStore((state) => state.language)
   const currency = useUIStore((state) => state.currency)
   const labels = mostExpensiveTableLabels(lang)
@@ -90,13 +73,11 @@ export function MostExpensiveClient({
   const paragraphs = top
     ? mostExpensiveIntro(lang, {
         rankedCount: data.cards.length,
-        pricedCardCount: data.pricedCardCount,
         totalCardCount: data.totalCardCount,
         setCount: data.setCount,
         topName: getCardName(lang, top),
-        topCode: top.cardCode,
+        topCode: top.baseCode ?? top.cardCode,
         topPriceJpy: top.priceJpy,
-        updatedLabel: introData.updatedLabel,
       })
     : []
 
@@ -115,14 +96,15 @@ export function MostExpensiveClient({
         />
       </div>
 
+      {/* Plain prose with a reading measure — same treatment as the home
+          page's price explainer (a bordered card around body copy reads as an
+          ad unit, and this page's job is to feel like the rest of the site). */}
       {paragraphs.length > 0 && (
-        <Surface variant="outline" className="space-y-3 p-5">
+        <div className="max-w-3xl space-y-3 text-body-sm leading-relaxed text-muted-foreground">
           {paragraphs.map((paragraph, i) => (
-            <p key={i} className="text-body leading-relaxed">
-              {paragraph}
-            </p>
+            <p key={i}>{paragraph}</p>
           ))}
-        </Surface>
+        </div>
       )}
 
       <section className="space-y-4">
@@ -154,14 +136,16 @@ export function MostExpensiveClient({
                     const price = priceLabel(card.priceJpy, currency)
                     return (
                       <tr key={card.cardCode} className="hover:bg-muted/40">
-                        <td className="px-4 py-3 text-code text-muted-foreground">{i + 1}</td>
+                        <td className="px-4 py-3 text-center font-price text-xs text-muted-foreground">
+                          {i + 1}
+                        </td>
                         <td className="min-w-0 px-4 py-3">
                           <CardCell card={card} lang={lang} />
                         </td>
                         <td className="px-4 py-3">
                           <Link
                             href={`/opcg/sets/${card.set.code}`}
-                            className="text-body-sm hover:text-primary"
+                            className="font-mono text-body-sm uppercase hover:text-primary hover:underline"
                           >
                             {card.set.code.toUpperCase()}
                           </Link>
@@ -170,10 +154,16 @@ export function MostExpensiveClient({
                           <RarityBadge rarity={card.rarity} size="sm" />
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <span className="block text-code tabular-nums">{price}</span>
+                          <span className="font-price text-sm font-semibold">{price}</span>
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <ChangeCell value={card.priceChange30d} />
+                          <PriceTag
+                            change={card.priceChange30d}
+                            changeOnly
+                            changeStyle="plain"
+                            showArrow={false}
+                            size="sm"
+                          />
                         </td>
                       </tr>
                     )
@@ -182,32 +172,61 @@ export function MostExpensiveClient({
               </table>
             </Surface>
 
-            <Surface variant="outline" className="divide-y divide-hair overflow-hidden sm:hidden">
+            {/* Mobile list — the exact row grammar of the home market list
+                (mobile-card-item.tsx): rank · uncropped thumb · identity on
+                the left, money stack on the right. No wrapping panel — the
+                home list floats on the canvas with hairline dividers only. */}
+            <div className="divide-y divide-hair sm:hidden">
               {data.cards.map((card, i) => {
                 const price = priceLabel(card.priceJpy, currency)
+                const name = getCardName(lang, card)
                 return (
-                  <div key={card.cardCode} className="flex items-center gap-3 px-4 py-3">
-                    <span className="w-5 shrink-0 text-code text-muted-foreground">{i + 1}</span>
-                    <div className="min-w-0 flex-1">
-                      <CardCell card={card} lang={lang} />
-                      <div className="mt-1 flex items-center gap-2">
-                        <RarityBadge rarity={card.rarity} size="sm" />
-                        <Link
-                          href={`/opcg/sets/${card.set.code}`}
-                          className="text-meta hover:text-primary"
-                        >
-                          {card.set.code.toUpperCase()}
-                        </Link>
+                  <div
+                    key={card.cardCode}
+                    className="ease-chrome flex min-h-[52px] items-center gap-3 px-4 py-2.5 active:bg-muted"
+                  >
+                    <span className="w-5 shrink-0 text-center font-price text-xs text-muted-foreground">
+                      {i + 1}
+                    </span>
+                    {card.imageUrl ? (
+                      <span className="hairline relative block aspect-[63/88] w-11 shrink-0 overflow-hidden rounded-md bg-muted">
+                        <Image
+                          src={card.imageUrl}
+                          alt={name}
+                          fill
+                          sizes="44px"
+                          className="object-contain"
+                        />
+                      </span>
+                    ) : (
+                      <span className="hairline relative block aspect-[63/88] w-11 shrink-0 overflow-hidden rounded-md bg-muted" />
+                    )}
+                    <Link
+                      href={`/opcg/cards/${card.cardCode}`}
+                      className="flex min-w-0 flex-1 items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium leading-tight">{name}</p>
+                        <div className="mt-0.5 flex items-center gap-1.5 text-meta">
+                          <span className="font-mono">{card.baseCode ?? card.cardCode}</span>
+                          <RarityBadge rarity={card.rarity} size="sm" />
+                        </div>
                       </div>
-                    </div>
-                    <div className="shrink-0 text-right">
-                      <span className="block text-code tabular-nums">{price}</span>
-                      <ChangeCell value={card.priceChange30d} />
-                    </div>
+                      <div className="flex shrink-0 flex-col items-end gap-1 text-right">
+                        <p className="font-price text-sm font-semibold">{price}</p>
+                        <PriceTag
+                          change={card.priceChange30d}
+                          changeOnly
+                          changeStyle="plain"
+                          showArrow={false}
+                          size="sm"
+                        />
+                      </div>
+                    </Link>
                   </div>
                 )
               })}
-            </Surface>
+            </div>
           </>
         )}
       </section>
@@ -218,6 +237,7 @@ export function MostExpensiveClient({
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {data.topByRarity.map(({ rarity, card }) => {
               const price = priceLabel(card.priceJpy, currency)
+              const name = getCardName(lang, card)
               return (
                 <Surface
                   as={Link}
@@ -225,12 +245,31 @@ export function MostExpensiveClient({
                   href={`/opcg/cards/${card.cardCode}`}
                   variant="outline"
                   interactive
-                  className="flex flex-col gap-1 p-4"
+                  className="flex items-center gap-3 p-4"
                 >
-                  <RarityBadge rarity={rarity} size="sm" className="self-start" />
-                  <span className="mt-1 truncate text-h5">{getCardName(lang, card)}</span>
-                  <span className="text-code text-meta">{card.cardCode}</span>
-                  <span className="text-code tabular-nums">{price}</span>
+                  <span className="hairline relative block aspect-[63/88] w-11 shrink-0 overflow-hidden rounded-md bg-muted">
+                    {card.imageUrl && (
+                      <Image
+                        src={card.imageUrl}
+                        alt={name}
+                        fill
+                        sizes="44px"
+                        className="object-contain"
+                      />
+                    )}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <RarityBadge rarity={rarity} size="sm" />
+                    <span className="mt-1 block truncate text-sm font-medium leading-tight">
+                      {name}
+                    </span>
+                    <span className="mt-0.5 flex items-baseline justify-between gap-2">
+                      <span className="font-mono text-meta">
+                        {card.baseCode ?? card.cardCode}
+                      </span>
+                      <span className="font-price text-sm font-semibold">{price}</span>
+                    </span>
+                  </span>
                 </Surface>
               )
             })}

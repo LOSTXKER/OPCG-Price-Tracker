@@ -1,5 +1,5 @@
 import type { Language } from "@/lib/i18n"
-import { formatJpy, formatThb, jpyToThb } from "@/lib/utils/currency"
+import { formatThb, jpyToThb } from "@/lib/utils/currency"
 
 /**
  * Copy for the live "most expensive cards" ranking.
@@ -29,46 +29,45 @@ export function mostExpensiveTitle(lang: Language): string {
 
 export function mostExpensiveSubtitle(lang: Language, count: number): string {
   return pick(lang, {
-    TH: `จัดอันดับ ${count} ใบจากราคาตลาดล่าสุด ไม่ใช่บทความเก่าที่ไม่อัปเดต`,
-    EN: `The top ${count} by latest market price — regenerated from live data, not a frozen article.`,
-    JP: `最新の市場価格による上位${count}枚のランキング。`,
+    TH: `อันดับ ${count} ใบจากราคาตลาดจริง จัดใหม่อัตโนมัติทุกวัน`,
+    EN: `The top ${count} by real market price — re-ranked automatically every day.`,
+    JP: `実際の市場価格による上位${count}枚。毎日自動で更新されます。`,
   })
 }
 
+/**
+ * One paragraph, on purpose (owner feedback 2026-08-06: three paragraphs of
+ * prose before the table was "ยาว เยอะไป"). It keeps only what earns its
+ * lines: the direct answer to the query (top card + live price), the
+ * keyword, the coverage, and the freshness claim. Everything it dropped
+ * still lives on the page — provenance and price-volatility caveats are in
+ * the FAQ below the table.
+ */
 export function mostExpensiveIntro(
   lang: Language,
   data: {
     rankedCount: number
-    pricedCardCount: number
     totalCardCount: number
     setCount: number
     topName: string
     topCode: string
     topPriceJpy: number
-    updatedLabel: string | null
   }
 ): string[] {
-  const priceText = `${formatThb(Math.round(jpyToThb(data.topPriceJpy)))} (${formatJpy(data.topPriceJpy)})`
-  const updated = data.updatedLabel
+  const priceText = formatThb(Math.round(jpyToThb(data.topPriceJpy)))
 
   if (lang === "EN") {
     return [
-      `This page ranks the ${data.rankedCount} most expensive One Piece Card Game (OPTCG) cards by their latest market price. Right now the top card is ${data.topName} (${data.topCode}) at about ${priceText}.`,
-      `The ranking is rebuilt from Meecard's own price data — ${data.pricedCardCount.toLocaleString()} priced cards out of ${data.totalCardCount.toLocaleString()} across ${data.setCount} sets${updated ? `, last updated ${updated}` : ""}. Prices track the Japanese secondary market and are converted to Thai baht for reference.`,
-      `Prices move: a card that spikes after a tournament result can drop again weeks later. Use the 30-day change column to see which cards are actually climbing, and open a card to read its full price history.`,
+      `This page ranks the ${data.rankedCount} most expensive One Piece Card Game (OPTCG) cards — out of ${data.totalCardCount.toLocaleString()} cards across ${data.setCount} sets — by their latest Japanese-market price, updated daily. Right now the top card is ${data.topName} (${data.topCode}) at about ${priceText}.`,
     ]
   }
   if (lang === "JP") {
     return [
-      `このページでは、ワンピースカードゲーム（OPTCG）の高額カード上位${data.rankedCount}枚を最新の市場価格順に掲載しています。現在の1位は${data.topName}（${data.topCode}）で、およそ${priceText}です。`,
-      `ランキングはMeecardの価格データから再生成されます（${data.setCount}セット・${data.totalCardCount.toLocaleString()}枚中${data.pricedCardCount.toLocaleString()}枚に価格あり${updated ? `、最終更新 ${updated}` : ""}）。`,
-      `価格は変動します。30日間の変化率とカード詳細の価格推移をあわせてご確認ください。`,
+      `ワンピースカードゲーム（OPTCG）全${data.totalCardCount.toLocaleString()}枚・${data.setCount}セットの中から、高額カード上位${data.rankedCount}枚を日本市場の最新価格順に毎日更新で掲載しています。現在の1位は${data.topName}（${data.topCode}）で、およそ${priceText}です。`,
     ]
   }
   return [
-    `หน้านี้จัดอันดับการ์ดวันพีซ (One Piece Card Game / OPTCG) ที่ราคาแพงที่สุด ${data.rankedCount} ใบ เรียงจากราคาตลาดล่าสุด ตอนนี้ใบที่แพงที่สุดคือ ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText}`,
-    `อันดับนี้สร้างใหม่จากฐานราคาของ Meecard เอง — มีการ์ดที่มีราคาแล้ว ${data.pricedCardCount.toLocaleString()} ใบ จากทั้งหมด ${data.totalCardCount.toLocaleString()} ใบ ใน ${data.setCount} ชุด${updated ? ` อัปเดตล่าสุด ${updated}` : ""} ราคาอ้างอิงตลาดมือสองญี่ปุ่นและแปลงเป็นเงินบาทให้ดูเทียบง่าย`,
-    `ราคาการ์ดวันพีชขึ้นลงตลอด การ์ดที่พุ่งขึ้นหลังผลการแข่งอาจย่อลงในไม่กี่สัปดาห์ ดูคอลัมน์ "เปลี่ยนแปลง 30 วัน" เพื่อแยกว่าใบไหนขึ้นจริง แล้วกดเข้าไปดูกราฟราคาย้อนหลังของแต่ละใบก่อนตัดสินใจซื้อขาย`,
+    `หน้านี้จัดอันดับการ์ดวันพีซ (One Piece Card Game / OPTCG) ที่ราคาแพงที่สุด ${data.rankedCount} ใบ จากการ์ดทั้งหมด ${data.totalCardCount.toLocaleString()} ใบ ใน ${data.setCount} ชุด เรียงจากราคาตลาดญี่ปุ่นล่าสุด อัปเดตทุกวัน — ตอนนี้ใบที่แพงที่สุดคือ ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText}`,
   ]
 }
 
@@ -112,7 +111,7 @@ export function mostExpensiveFaq(
   lang: Language,
   data: { topName: string; topCode: string; topPriceJpy: number; updatedLabel: string | null }
 ): { question: string; answer: string }[] {
-  const priceText = `${formatThb(Math.round(jpyToThb(data.topPriceJpy)))} (${formatJpy(data.topPriceJpy)})`
+  const priceText = formatThb(Math.round(jpyToThb(data.topPriceJpy)))
 
   if (lang === "EN") {
     return [

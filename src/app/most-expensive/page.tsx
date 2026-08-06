@@ -36,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const meta = top
     ? mostExpensiveMeta({
         topName: getCardName("TH", top),
-        topCode: top.cardCode,
+        topCode: top.baseCode ?? top.cardCode,
         topPriceJpy: top.priceJpy,
         count: data.cards.length,
       })
@@ -79,7 +79,7 @@ export default async function MostExpensivePage() {
   const faqItems = top
     ? mostExpensiveFaq("TH", {
         topName: getCardName("TH", top),
-        topCode: top.cardCode,
+        topCode: top.baseCode ?? top.cardCode,
         topPriceJpy: top.priceJpy,
         updatedLabel,
       })
@@ -99,7 +99,9 @@ export default async function MostExpensivePage() {
           data={itemListJsonLd(
             mostExpensiveTitle("TH"),
             data.cards.map((card) => ({
-              name: `${getCardName("TH", card)} (${card.cardCode})`,
+              // Display name carries the PUBLIC code; the URL keeps the full
+              // cardCode because that is the variant's real address.
+              name: `${getCardName("TH", card)} (${card.baseCode ?? card.cardCode})`,
               url: `/opcg/cards/${card.cardCode}`,
               image: card.imageUrl,
             }))
@@ -107,7 +109,7 @@ export default async function MostExpensivePage() {
         />
       )}
 
-      <MostExpensiveClient data={data} introData={{ updatedLabel }} />
+      <MostExpensiveClient data={data} />
 
       {faqItems.length > 0 && <FaqSection title={headings.faq} items={faqItems} />}
 

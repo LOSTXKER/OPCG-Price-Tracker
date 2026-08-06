@@ -7,6 +7,9 @@ export const MOST_EXPENSIVE_LIMIT = 50
 
 export type MostExpensiveCard = {
   cardCode: string
+  /** Public display code (no internal `_p*` variant suffix) — what every other
+   *  surface shows via `baseCode ?? cardCode`. */
+  baseCode: string | null
   nameJp: string
   nameEn: string | null
   nameTh: string | null
@@ -32,6 +35,7 @@ export type MostExpensiveData = {
 
 const cardSelect = {
   cardCode: true,
+  baseCode: true,
   nameJp: true,
   nameEn: true,
   nameTh: true,
@@ -45,6 +49,7 @@ const cardSelect = {
 
 type CardRow = {
   cardCode: string
+  baseCode: string | null
   nameJp: string
   nameEn: string | null
   nameTh: string | null
@@ -59,6 +64,7 @@ type CardRow = {
 function toCard(row: CardRow): MostExpensiveCard {
   return {
     cardCode: row.cardCode,
+    baseCode: row.baseCode,
     nameJp: row.nameJp,
     nameEn: row.nameEn,
     nameTh: row.nameTh,
