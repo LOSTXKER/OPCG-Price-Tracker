@@ -1,4 +1,3 @@
-import type { Metadata } from "next"
 import { GitCompareArrows, Layers, TrendingUp } from "lucide-react"
 import { FaqSection } from "@/components/shared/faq-section"
 import { RelatedPages } from "@/components/shared/related-pages"
@@ -11,6 +10,7 @@ import {
   buildMarketMethodologyFaq,
   buildMarketOverviewCopy,
 } from "@/lib/seo/copy/tools"
+import { buildPageMetadata } from "@/lib/seo/page-metadata"
 import { formatThb, jpyToThb } from "@/lib/utils/currency"
 import { MarketOverviewClient } from "./market-overview-client"
 
@@ -23,11 +23,11 @@ export const revalidate = 300
 // cookie here would opt this route out of ISR.
 const SEO_LANG = "TH" as const
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: TOOL_PAGE_METADATA.marketOverview.title,
   description: TOOL_PAGE_METADATA.marketOverview.description,
-  alternates: { canonical: TOOL_PAGE_METADATA.marketOverview.canonical },
-}
+  canonical: TOOL_PAGE_METADATA.marketOverview.canonical,
+})
 
 async function getMarketData() {
   const [

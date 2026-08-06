@@ -25,7 +25,12 @@ import {
 } from "@/lib/utils/currency";
 import { CARDS_PER_PACK_JP, PACKS_PER_BOX } from "@/lib/utils/pull-rate";
 
-export type SeoFaqItem = { question: string; answer: string };
+export type SeoFaqItem = {
+  question: string;
+  answer: string;
+  /** Read-more rendered inside the answer body (FaqSection `link`). */
+  link?: { href: string; label: string };
+};
 
 export type SetSeoRarity = {
   /** Rarity code, e.g. "SEC" / "P-SR". */
@@ -237,6 +242,15 @@ export function buildSetDetailMeta(
   const code = set.code.toUpperCase();
   const count = formatCount(set.cardCount);
 
+  // Google truncates descriptions around ~160 chars — the old template ran
+  // ~195-205 with a long top-card name, cutting the drop-rate benefit and the
+  // "วันพีช" spelling out of the snippet. Same clamp idea as the title: try
+  // the fullest variant first, drop segments until it fits.
+  const DESC_BUDGET = 160;
+  const clampDesc = (candidates: string[]): string =>
+    candidates.find((c) => c.length <= DESC_BUDGET) ??
+    candidates[candidates.length - 1]!;
+
   if (lang === "TH") {
     const title = clampTitle([
       `ราคาการ์ดวันพีซ ${code} ${set.name} ทุกใบ อัปเดตทุกวัน`,
@@ -244,9 +258,14 @@ export function buildSetDetailMeta(
       `ราคาการ์ดวันพีซ ${code} ทุกใบ อัปเดตทุกวัน`,
     ]);
     const top = set.topCard
-      ? ` ใบแพงสุดคือ ${set.topCard.name} (${set.topCard.cardCode}) ${priceLabel(set.topCard.priceJpy)}`
+      ? ` ใบแพงสุด ${set.topCard.name} ${priceLabel(set.topCard.priceJpy)}`
       : "";
-    const description = `เช็คราคาการ์ดวันพีซชุด ${code} ${set.name} ครบทั้ง ${count} ใบ ราคากลางอัปเดตทุกวัน.${top} พร้อมอัตราออก (drop rate) ต่อกล่อง และราคาการ์ดวันพีชแยกตามความหายากในหน้าเดียว`;
+    const tail = " พร้อมอัตราออกต่อกล่องของการ์ดวันพีชทุกระดับ";
+    const description = clampDesc([
+      `เช็คราคาการ์ดวันพีซ ${code} ${set.name} ครบ ${count} ใบ อัปเดตทุกวัน —${top}${tail}`,
+      `เช็คราคาการ์ดวันพีซ ${code} ครบ ${count} ใบ อัปเดตทุกวัน —${top}${tail}`,
+      `เช็คราคาการ์ดวันพีซ ${code} ${set.name} ครบ ${count} ใบ อัปเดตทุกวัน —${tail}`,
+    ]);
     return { title, description };
   }
 
@@ -255,11 +274,15 @@ export function buildSetDetailMeta(
     `${code} ${set.name} — Card Prices`,
   ]);
   const top = set.topCard
-    ? ` Most valuable: ${set.topCard.name} (${set.topCard.cardCode}) ${priceLabel(set.topCard.priceJpy)}.`
+    ? ` Most valuable: ${set.topCard.name} ${priceLabel(set.topCard.priceJpy)}.`
     : "";
   return {
     title,
-    description: `All ${count} cards in One Piece Card Game set ${code} ${set.name} with daily market prices.${top} Includes per-box drop rates and a rarity breakdown.`,
+    description: clampDesc([
+      `All ${count} cards in One Piece Card Game set ${code} ${set.name} with daily prices.${top} Includes per-box drop rates.`,
+      `All ${count} cards in set ${code} with daily prices.${top} Includes per-box drop rates.`,
+      `All ${count} cards in One Piece Card Game set ${code} with daily prices and per-box drop rates.`,
+    ]),
   };
 }
 
@@ -367,6 +390,10 @@ export function buildSetFaq(lang: Language, set: SetSeoData): SeoFaqItem[] {
         answer: set.topCard
           ? `ตอนนี้คือ ${set.topCard.name} (${set.topCard.cardCode}) ความหายาก ${set.topCard.rarity} ราคากลางล่าสุด ${priceLabel(set.topCard.priceJpy)} ราคาขยับได้ทุกวัน จึงควรกดเข้าไปดูกราฟราคาย้อนหลังของการ์ดใบนั้นก่อนซื้อขาย`
           : `ชุด ${code} ยังไม่มีข้อมูลราคาในระบบ เมื่อมีราคากลางเข้ามาแล้วการ์ดที่แพงที่สุดจะขึ้นอยู่บนสุดของหน้านี้อัตโนมัติ`,
+        // Methodology lives at /about#methodology only (SEO round 1) — the
+        // old per-set "where do prices come from" item repeated the same
+        // answer verbatim on all 51 set pages, straight into FAQPage JSON-LD.
+        link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
       },
       {
         question: `${code} วางขายเมื่อไหร่`,
@@ -393,11 +420,6 @@ export function buildSetFaq(lang: Language, set: SetSeoData): SeoFaqItem[] {
       });
     }
 
-    items.push({
-      question: `ราคาการ์ดในหน้า ${code} มาจากไหน`,
-      answer: `ราคากลางมาจากการเก็บราคาซื้อขายจริงในตลาดญี่ปุ่น อัปเดตทุกวัน แล้วแปลงเป็นเงินบาทด้วยอัตราคงที่เพื่อให้เทียบกันได้ ส่วนราคาการ์ดเกรด PSA 10 อ้างอิงจากตลาดซื้อขายการ์ดเกรด ราคาที่แสดงเป็นราคาอ้างอิง ไม่ใช่ราคาขายของ Meecard`,
-    });
-
     return items;
   }
 
@@ -414,6 +436,7 @@ export function buildSetFaq(lang: Language, set: SetSeoData): SeoFaqItem[] {
       answer: set.topCard
         ? `Currently ${set.topCard.name} (${set.topCard.cardCode}, ${set.topCard.rarity}) at ${priceLabel(set.topCard.priceJpy)}. Prices move daily — check the card's price history before you buy or sell.`
         : `${code} has no price data yet.`,
+      link: { href: "/about#methodology", label: "How Meecard prices work" },
     },
     {
       question: `When was ${code} released?`,
@@ -433,11 +456,6 @@ export function buildSetFaq(lang: Language, set: SetSeoData): SeoFaqItem[] {
       }. These are community estimates, not official Bandai figures.`,
     });
   }
-
-  items.push({
-    question: `Where do the ${code} prices come from?`,
-    answer: `Market reference prices are scraped daily from the Japanese secondary market and converted to THB at a fixed rate; PSA 10 prices come from graded-card marketplaces. Meecard reports prices, it does not sell cards.`,
-  });
 
   return items;
 }
@@ -459,8 +477,9 @@ export function buildSetsIndexMeta(lang: Language): {
   if (lang === "TH") {
     return {
       title: "ชุดการ์ดวันพีซ (OPCG) ทั้งหมด — ราคา จำนวนการ์ด วันวางขาย",
+      // ≤160: the old version ran 203 chars and Google cut it mid-sentence.
       description:
-        "รวมชุดการ์ดวันพีซ (One Piece Card Game) ทุกชุด ทั้งบูสเตอร์ เอ็กซ์ตร้าบูสเตอร์ สตาร์ทเตอร์เด็ค และโปรโม — บอกจำนวนการ์ดและวันวางขายของแต่ละชุด กดเข้าไปดูราคาการ์ดวันพีชทุกใบในชุดนั้นได้ทันที อัปเดตทุกวัน",
+        "รวมชุดการ์ดวันพีซ (One Piece Card Game) ทุกชุด ทั้งบูสเตอร์ สตาร์ทเตอร์เด็ค และโปรโม กดเข้าไปเช็คราคาการ์ดวันพีชทุกใบในชุดนั้นได้ทันที อัปเดตทุกวัน",
     };
   }
   return {
@@ -536,12 +555,14 @@ export function buildSetsIndexFaq(
       {
         question: "ราคาการ์ดในแต่ละชุดอัปเดตบ่อยแค่ไหน",
         answer:
-          "ราคากลางดึงจากตลาดญี่ปุ่นทุกวัน แล้วแปลงเป็นเงินบาทด้วยอัตราคงที่ ทำให้เทียบราคาการ์ดวันพีชข้ามชุดกันได้ กดเข้าไปในชุดจะเห็นทั้งราคาปัจจุบันและการเปลี่ยนแปลง 24 ชั่วโมง / 7 วัน / 30 วัน",
+          "ราคากลางอัปเดตทุกวัน กดเข้าไปในชุดจะเห็นทั้งราคาปัจจุบันและการเปลี่ยนแปลง 24 ชั่วโมง / 7 วัน / 30 วัน ของการ์ดวันพีชทุกใบ",
+        link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
       },
       {
         question: "อยากรู้โอกาสเปิดได้การ์ดที่ต้องการ ดูตรงไหน",
         answer:
           "ในหน้าของแต่ละชุดจะมีตารางอัตราออก (drop rate) บอกจำนวนเฉลี่ยต่อกล่องของแต่ละความหายาก และโอกาสได้การ์ดใบที่เจาะจง หรือใช้เครื่องมือคำนวณโอกาสเปิดกล่องเพื่อจำลองการเปิดหลายกล่อง",
+        link: { href: "/opcg/drop-calculator", label: "เปิดเครื่องคำนวณโอกาสเปิดกล่อง" },
       },
     ];
   }
@@ -561,7 +582,8 @@ export function buildSetsIndexFaq(
     {
       question: "How often are set prices updated?",
       answer:
-        "Market reference prices are scraped daily from the Japanese secondary market and converted to THB at a fixed rate, so prices are comparable across sets. Each set page shows the current price plus 24h / 7d / 30d change.",
+        "Reference prices update daily. Each set page shows the current price plus 24h / 7d / 30d change for every card.",
+      link: { href: "/about#methodology", label: "How Meecard prices work" },
     },
   ];
 }

@@ -160,16 +160,13 @@ function buildTools(
   ];
 }
 
+// SEO round 1 trimmed this list from 6 dictionary items to 3: the old Q1
+// ("what is OPCG") restated the intro paragraph right above it, Q2 ("what do
+// I need to start") answered the same thing as the extra FAQ's cost question,
+// and Q6 (price methodology) now lives once at /about#methodology — restating
+// them here only duplicated intent inside one FAQPage JSON-LD block.
 function buildFaq(lang: Language): Array<{ question: string; answer: string }> {
   return [
-    {
-      question: t(lang, "guideHomeFaqQ1"),
-      answer: t(lang, "guideHomeFaqA1"),
-    },
-    {
-      question: t(lang, "guideHomeFaqQ2"),
-      answer: t(lang, "guideHomeFaqA2"),
-    },
     {
       question: t(lang, "guideHomeFaqQ3"),
       answer: t(lang, "guideHomeFaqA3"),
@@ -181,10 +178,6 @@ function buildFaq(lang: Language): Array<{ question: string; answer: string }> {
     {
       question: t(lang, "guideHomeFaqQ5"),
       answer: t(lang, "guideHomeFaqA5"),
-    },
-    {
-      question: t(lang, "guideHomeFaqQ6"),
-      answer: t(lang, "guideHomeFaqA6"),
     },
   ];
 }

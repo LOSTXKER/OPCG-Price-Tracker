@@ -34,14 +34,16 @@ import {
   guideAuthTerms,
   guideAuthTermsHeading,
 } from "@/lib/seo/copy/guide-authenticity";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: GUIDE_AUTHENTICITY_META.title,
   description: GUIDE_AUTHENTICITY_META.description,
-  alternates: { canonical: "/guide/authenticity" },
-};
+  canonical: "/guide/authenticity",
+  ogType: "article",
+});
 
 export default async function AuthenticityGuidePage() {
   const lang = await getServerLanguage();

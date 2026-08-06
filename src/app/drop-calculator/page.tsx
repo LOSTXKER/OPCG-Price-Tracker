@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { raritySort } from "@/lib/constants/rarities";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import {
   TOOL_PAGE_METADATA,
   buildDropCalculatorFaq,
@@ -20,11 +21,11 @@ export const revalidate = 3600;
 // cookie here would opt this route out of ISR.
 const SEO_LANG = "TH" as const;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: TOOL_PAGE_METADATA.dropCalculator.title,
   description: TOOL_PAGE_METADATA.dropCalculator.description,
-  alternates: { canonical: TOOL_PAGE_METADATA.dropCalculator.canonical },
-};
+  canonical: TOOL_PAGE_METADATA.dropCalculator.canonical,
+});
 
 async function getAverageDropRates(): Promise<AverageDropRate[]> {
   const rows = await prisma.setDropRate.groupBy({

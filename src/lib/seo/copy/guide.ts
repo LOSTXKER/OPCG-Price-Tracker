@@ -19,6 +19,8 @@ import type { Language } from "@/lib/i18n";
 export interface GuideFaqItem {
   question: string;
   answer: string;
+  /** Read-more inside the answer body (FaqSection `link` — not in JSON-LD). */
+  link?: { href: string; label: string };
 }
 
 type Tri = { TH: string; EN: string; JP: string };
@@ -49,39 +51,43 @@ function pickList(lang: Language, value: { TH: string[]; EN: string[]; JP?: stri
 
 export const GUIDE_META = {
   hub: {
-    title: "คู่มือ One Piece Card Game (การ์ดวันพีซ) ฉบับมือใหม่",
+    title: "คู่มือ One Piece Card Game (การ์ดวันพีซ) มือใหม่",
     description:
-      "คู่มือการ์ดวันพีช (One Piece Card Game) ครบทุกเรื่องที่มือใหม่ต้องรู้ — วิธีเล่น ประเภทการ์ด ความหายาก สี ชุดการ์ด และวิธีเช็คราคาก่อนซื้อ อัปเดตราคากลางทุกวันบน Meecard",
+      "คู่มือการ์ดวันพีช (One Piece Card Game) ฉบับมือใหม่ เช็คราคากลางได้ทุกใบ อัปเดตทุกวัน ครบทั้งวิธีเล่น ประเภทการ์ด ความหายาก สี ชุดการ์ด และวิธีซื้อ",
   },
   gettingStarted: {
-    title: "วิธีเล่น One Piece Card Game (การ์ดวันพีซ) ฉบับมือใหม่",
+    title: "วิธีเล่น One Piece Card Game (การ์ดวันพีซ) มือใหม่",
     description:
-      "วิธีเล่นการ์ดวันพีช (One Piece Card Game) กฎครบจบในหน้าเดียว — เด็ค 50 ใบ + Leader 1 ใบ + DON!! 10 ใบ ลำดับเทิร์น การโจมตี การป้องกัน และเงื่อนไขแพ้ชนะ อ้างอิงกฎจาก Bandai",
+      "วิธีเล่นการ์ดวันพีช (One Piece Card Game) กฎครบในหน้าเดียว — เด็ค 50 ใบ + Leader 1 ใบ + DON!! 10 ใบ ลำดับเทิร์น การโจมตี การป้องกัน และเงื่อนไขแพ้ชนะ",
   },
   rarities: {
-    title: "ความหายากการ์ดวันพีซ (Rarity) — C, SR, SEC ถึง Treasure Rare",
+    title: "ความหายากการ์ดวันพีซ — C ถึง Treasure Rare",
     description:
       "ความหายากการ์ดวันพีช ครบทุกระดับ: C, UC, R, SR, SEC, SP, TR พร้อมอธิบาย SEC คืออะไร Parallel คืออะไร ช่วงราคาตลาด และสิ่งที่ได้จากการเปิด 1 กล่อง",
   },
   colors: {
-    title: "สีในวันพีซการ์ดเกม (OPCG Colors) — 6 สี และการสร้างเด็ค",
+    title: "สีในวันพีซการ์ดเกม — 6 สี และการสร้างเด็ค",
     description:
       "ระบบสีของการ์ดวันพีช (One Piece Card Game) ทั้ง 6 สี — แดง เขียว น้ำเงิน ม่วง ดำ เหลือง จุดแข็งของแต่ละสี Leader สองสี และกฎเลือกสีตอนสร้างเด็ค",
   },
   cardTypes: {
-    title: "ประเภทการ์ดวันพีซ (Card Types) — Leader, Character, DON!!",
+    title: "ประเภทการ์ดวันพีซ — Leader, Character, DON!!",
     description:
-      "ประเภทการ์ดวันพีช ทั้ง 5 แบบ: Leader, Character, Event, Stage และ DON!! พร้อมค่าสถานะบนการ์ด และคลังคีย์เวิร์ด [Blocker] [Rush] [Trigger] [Counter] [Banish] อธิบายเป็นภาษาไทย",
+      "ประเภทการ์ดวันพีช ทั้ง 5 แบบ: Leader, Character, Event, Stage และ DON!! พร้อมค่าสถานะบนการ์ด และคีย์เวิร์ดสำคัญ [Blocker] [Rush] [Trigger] [Counter]",
   },
   sets: {
-    title: "ชุดการ์ดวันพีซทั้งหมด (OPCG Sets) — Booster, Starter Deck",
+    // Repositioned (SEO round 2): the old title/H1 said "ทั้งหมด" (all sets)
+    // and duplicated the query owned by /opcg/sets — the real money page —
+    // while this guide only lists the 12 most recent. Now it owns the
+    // explainer query ("มีกี่แบบ") and defers the full index to /opcg/sets.
+    title: "ชุดการ์ดวันพีซมีกี่แบบ? Booster / Starter / EB",
     description:
-      "ชุดการ์ดวันพีช ทั้งหมด — Booster Pack, Starter Deck, Extra Booster, ชุดล่าสุด รูปแบบรหัสการ์ด (OP09-001) และลิงก์ไปดูราคาการ์ดทุกใบในแต่ละชุด",
+      "ชุดการ์ดวันพีซมีกี่แบบ? สรุป Booster Pack, Starter Deck และ Extra Booster ต่างกันยังไง พร้อมรูปแบบรหัสการ์ด (OP09-001) แล้วไปดูราคาทุกใบที่หน้าชุดการ์ด",
   },
   buying: {
-    title: "ซื้อการ์ดวันพีซที่ไหนดี? แหล่งซื้อ + วิธีเช็คราคาก่อนซื้อ",
+    title: "ซื้อการ์ดวันพีซที่ไหนดี? แหล่งซื้อและวิธีเช็คราคา",
     description:
-      "ซื้อการ์ดวันพีช (One Piece Card Game) ที่ไหนดี — เทียบช่องทางในไทย (Shopee, Lazada, กลุ่ม Facebook, ร้านหน้าร้าน) การสั่งจากญี่ปุ่นผ่าน proxy ค่าส่ง ภาษี วิธีเช็คราคากลางก่อนจ่าย และซื้อกล่องหรือซื้อใบดีกว่ากัน",
+      "ซื้อการ์ดวันพีซ/วันพีชที่ไหนดี เทียบช่องทาง Shopee กลุ่ม Facebook ร้านหน้าร้าน และการสั่งตรงจากญี่ปุ่นผ่าน proxy พร้อมวิธีเช็คราคากลางก่อนโอนเงิน",
   },
 } as const;
 
@@ -197,6 +203,9 @@ export function guideHubExtraFaq(
     : `Browse all ${data.setCount} sets with release dates and per-card prices on the sets page.`;
 
   return [
+    // SEO round 1: the full how-to-spot-fakes walkthrough is the CORE content
+    // of /guide/authenticity — answering it in full here made the hub compete
+    // with (and orphan) its own cluster page. Two sentences + the link.
     {
       question: pick(
         lang,
@@ -205,14 +214,28 @@ export function guideHubExtraFaq(
       answer: pick(
         lang,
         tri(
-          "เริ่มจากสามอย่างที่ตรวจได้เองทันที: (1) เทียบรหัสการ์ด ชื่อ ความหายาก และภาพ กับฐานข้อมูลการ์ดของชุดนั้น ถ้ารหัสไม่มีอยู่จริงหรือรายละเอียดไม่ตรง ให้สงสัยไว้ก่อน (2) เทียบราคากับราคากลาง ถ้าการ์ดหายากถูกกว่าตลาดผิดปกติมาก มักมีเหตุผลเสมอ (3) ซื้อจากผู้ขายที่ตรวจสอบประวัติได้และรับคืนได้ พร้อมขอรูปการ์ดใบจริงทั้งหน้า–หลังในแสงปกติก่อนโอนเงิน สำหรับการ์ดราคาสูง การส่งเกรดกับบริษัทรับเกรดเป็นวิธียืนยันที่แน่นอนที่สุด",
-          "Three checks you can do yourself: (1) compare the card code, name, rarity and artwork against the set's card list — if the code does not exist or details do not match, be suspicious; (2) compare the asking price with the market reference — a rare card priced far below market usually has a reason; (3) buy from sellers with a verifiable history and a return policy, and ask for front and back photos in normal light before paying. For high-value cards, professional grading is the most reliable confirmation."
+          "เช็คเร็วๆ ได้สองอย่าง: เทียบรหัสการ์ดกับฐานข้อมูลของชุดนั้นว่ามีอยู่จริงและรายละเอียดตรง แล้วเทียบราคากับราคากลาง — การ์ดหายากที่ถูกกว่าตลาดผิดปกติมักมีเหตุผลเสมอ",
+          "Two quick checks: confirm the card code exists in the set's card list with matching details, then compare the asking price with the market reference — a rare card priced far below market usually has a reason."
         )
       ),
+      link: {
+        href: "/guide/authenticity",
+        label: pick(
+          lang,
+          tri("วิธีดูการ์ดวันพีซแท้–ปลอมฉบับเต็ม", "The full genuine-or-fake checklist")
+        ),
+      },
     },
     {
       question: pick(lang, tri("ชุดล่าสุดคือชุดอะไร?", "Which set is the latest?")),
       answer: pick(lang, tri(latestTh, latestEn)),
+      link: {
+        href: "/opcg/sets",
+        label: pick(
+          lang,
+          tri("ชุดการ์ดวันพีซทั้งหมดพร้อมราคา", "All One Piece card sets with prices")
+        ),
+      },
     },
     {
       question: pick(
@@ -668,7 +691,10 @@ export function guideTypeKeywordGlossary(lang: Language): KeywordEntry[] {
 export function guideSetH1(lang: Language): string {
   return pick(
     lang,
-    tri("ชุดการ์ดวันพีซทั้งหมด (OPCG Sets)", "Every One Piece Card Game set")
+    tri(
+      "ชุดการ์ดวันพีซมีกี่แบบ? Booster, Starter, EB ต่างกันยังไง",
+      "How many One Piece Card Game set types are there?"
+    )
   );
 }
 
@@ -676,8 +702,8 @@ export function guideSetLead(lang: Language): string {
   return pick(
     lang,
     tri(
-      "ชุดการ์ดวันพีช แบ่งเป็น Booster Pack, Starter Deck และ Extra Booster แต่ละชุดมีรหัสของตัวเอง (เช่น OP09, ST01, EB01) ซึ่งเป็นรหัสเดียวกับที่ใช้ค้นหาราคาการ์ดทุกใบในชุดนั้น",
-      "One Piece Card Game sets come as Booster Packs, Starter Decks and Extra Boosters. Each set carries its own code (OP09, ST01, EB01…) — the same code you use to look up every card's price."
+      "ชุดการ์ดวันพีชแบ่งเป็น 3 แบบหลัก คือ Booster Pack, Starter Deck และ Extra Booster แต่ละชุดมีรหัสของตัวเอง (เช่น OP09, ST01, EB01) ใช้ค้นหาราคาการ์ดทุกใบในชุดนั้นได้ทันที",
+      "One Piece Card Game sets come in three main types: Booster Packs, Starter Decks and Extra Boosters. Each set carries its own code (OP09, ST01, EB01…) you can use to look up every card's price instantly."
     )
   );
 }
@@ -998,10 +1024,17 @@ export function guideBuyFaq(lang: Language): GuideFaqItem[] {
       answer: pick(
         lang,
         tri(
-          "ราคาหลักมาจากตลาดการ์ดญี่ปุ่นซึ่งเป็นตลาดหลักของเกมนี้ อัปเดตทุกวันและแปลงเป็นเงินบาทให้อัตโนมัติ พร้อมเก็บประวัติราคาย้อนหลังไว้ให้ดูเป็นกราฟ ตัวเลขนี้เป็นราคาอ้างอิงสำหรับใช้ต่อรองและเทียบข้อเสนอ ไม่ใช่ราคาขายของ Meecard เอง",
-          "Prices come from the Japanese card market — the primary market for this game — refreshed daily and converted to Thai baht automatically, with history kept as charts. Treat it as a reference for negotiating and comparing offers; Meecard is not the seller."
+          "ราคากลางอ้างอิงจากตลาดญี่ปุ่น อัปเดตทุกวัน ใช้เป็นราคาต่อรองและเทียบข้อเสนอได้ ไม่ใช่ราคาขายของ Meecard เอง",
+          "Reference prices come from the Japanese market, updated daily — for negotiating and comparing offers; Meecard is not the seller."
         )
       ),
+      link: {
+        href: "/about#methodology",
+        label: pick(
+          lang,
+          tri("วิธีคิดราคากลางของ Meecard", "How Meecard prices work")
+        ),
+      },
     },
   ];
 }

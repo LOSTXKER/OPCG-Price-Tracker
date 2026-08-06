@@ -47,7 +47,10 @@ function buildFeatures(lang: Language) {
   ];
 }
 
-function buildExploreItems(lang: Language): RelatedPageItem[] {
+function buildExploreItems(
+  lang: Language,
+  marketplaceEnabled: boolean,
+): RelatedPageItem[] {
   return [
     {
       icon: Layers,
@@ -61,12 +64,19 @@ function buildExploreItems(lang: Language): RelatedPageItem[] {
       title: t(lang, "seoExploreTrendingTitle"),
       description: t(lang, "seoExploreTrendingDesc"),
     },
-    {
-      icon: Store,
-      href: "/marketplace",
-      title: t(lang, "seoExploreMarketTitle"),
-      description: t(lang, "seoExploreMarketDesc"),
-    },
+    // While the admin flag is off, /marketplace is a 404 (assertMarketplaceEnabled)
+    // — an internal link into it from the pillar page hurts both crawlers and
+    // readers. The tile comes back on its own when the flag flips.
+    ...(marketplaceEnabled
+      ? [
+          {
+            icon: Store,
+            href: "/marketplace",
+            title: t(lang, "seoExploreMarketTitle"),
+            description: t(lang, "seoExploreMarketDesc"),
+          },
+        ]
+      : []),
     {
       icon: Sparkles,
       href: "/guide",
@@ -88,27 +98,41 @@ function buildExploreItems(lang: Language): RelatedPageItem[] {
   ];
 }
 
-function buildFaqItems(lang: Language): FaqItem[] {
+function buildFaqItems(
+  lang: Language,
+  marketplaceEnabled: boolean,
+): FaqItem[] {
   return [
     { question: t(lang, "seoFaq1Q"), answer: t(lang, "seoFaq1A") },
-    { question: t(lang, "seoFaq2Q"), answer: t(lang, "seoFaq2A") },
+    // "Where do prices come from?" is answered ONCE on this page — by the
+    // long-tail entry below that links to /about#methodology. The old seoFaq2
+    // asked the same question with a paraphrased answer (duplicate intent in
+    // the same FAQPage JSON-LD), so it was removed in SEO round 1.
     { question: t(lang, "seoFaq3Q"), answer: t(lang, "seoFaq3A") },
     { question: t(lang, "seoFaq4Q"), answer: t(lang, "seoFaq4A") },
     { question: t(lang, "seoFaq5Q"), answer: t(lang, "seoFaq5A") },
     { question: t(lang, "seoFaq6Q"), answer: t(lang, "seoFaq6A") },
-    { question: t(lang, "seoFaq7Q"), answer: t(lang, "seoFaq7A") },
+    // Marketplace FAQ only while the feature actually exists for visitors.
+    ...(marketplaceEnabled
+      ? [{ question: t(lang, "seoFaq7Q"), answer: t(lang, "seoFaq7A") }]
+      : []),
     // Long-tail questions from real Thai search behaviour (SEO plan §3.1).
     // They live in lib/seo/copy/home.ts because they are full paragraphs, not
-    // dictionary labels. Same FaqSection ⇒ one FAQPage JSON-LD covering all 11.
+    // dictionary labels. Same FaqSection ⇒ one FAQPage JSON-LD covering all.
     ...buildHomeLongTailFaq(lang),
   ];
 }
 
-export function HomeSeoContent() {
+export function HomeSeoContent({
+  marketplaceEnabled = false,
+}: {
+  /** Resolved server-side from the admin flag; defaults to hidden. */
+  marketplaceEnabled?: boolean;
+}) {
   const lang = useUIStore((s) => s.language);
   const features = buildFeatures(lang);
-  const exploreItems = buildExploreItems(lang);
-  const faqItems = buildFaqItems(lang);
+  const exploreItems = buildExploreItems(lang, marketplaceEnabled);
+  const faqItems = buildFaqItems(lang, marketplaceEnabled);
 
   return (
     <div className="space-y-10 pt-6 sm:space-y-14">
@@ -171,8 +195,8 @@ export function HomeSeoContent() {
             {t(lang, "seoPriceP1b")}
           </p>
           {/* One string, no embedded brand name — the source is named only in
-              the FAQ answer that directly asks where prices come from
-              (`seoFaq2A`, owner decision 2026-08-06). */}
+              the long-tail FAQ answer that directly asks how the reference
+              price is calculated (owner decision 2026-08-06). */}
           <p>{t(lang, "seoPriceP2")}</p>
           <p>
             {t(lang, "seoPriceP3a")}{" "}

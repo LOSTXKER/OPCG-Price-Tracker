@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd, organizationJsonLd } from "@/lib/seo/json-ld";
 import { SEO_PAGE_META, SUPPORT_EMAIL } from "@/lib/seo/copy/site";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import AboutClient from "./about-client";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: SEO_PAGE_META.about.title,
   description: SEO_PAGE_META.about.description,
-  alternates: { canonical: "/about" },
-};
+  canonical: "/about",
+});
 
 export default function AboutPage() {
   return (

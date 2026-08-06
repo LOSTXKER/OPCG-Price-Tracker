@@ -25,14 +25,16 @@ import {
   guideSetReleaseLabel,
   guideSetSeeAll,
 } from "@/lib/seo/copy/guide";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: GUIDE_META.sets.title,
   description: GUIDE_META.sets.description,
-  alternates: { canonical: "/guide/sets" },
-};
+  canonical: "/guide/sets",
+  ogType: "article",
+});
 
 /* ------------------------------------------------------------------ */
 /*  Set type config                                                    */

@@ -4,6 +4,7 @@ import { Dices, LayoutGrid, Layers } from "lucide-react";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { TOOL_PAGE_METADATA, buildCompareCopy } from "@/lib/seo/copy/tools";
 import CompareClient from "./compare-client";
 
@@ -11,11 +12,11 @@ import CompareClient from "./compare-client";
 // static route into dynamic rendering for no SEO gain.
 const SEO_LANG = "TH" as const;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: TOOL_PAGE_METADATA.compare.title,
   description: TOOL_PAGE_METADATA.compare.description,
-  alternates: { canonical: TOOL_PAGE_METADATA.compare.canonical },
-};
+  canonical: TOOL_PAGE_METADATA.compare.canonical,
+});
 
 export default function ComparePage() {
   const copy = buildCompareCopy(SEO_LANG);

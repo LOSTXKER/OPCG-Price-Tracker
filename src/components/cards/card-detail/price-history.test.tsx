@@ -179,7 +179,11 @@ describe("card SEO copy", () => {
     // apart otherwise.
     expect(buildCardSeoTitle("TH", parallel)).toContain("EB01-001 (Parallel 1)")
     expect(buildCardSeoTitle("TH", parallel).length).toBeLessThanOrEqual(60)
-    expect(buildCardFaq("TH", parallel)[3]!.answer).toContain("แบบ parallel")
+    // The static "what is a parallel" FAQ item is gone (SEO round 1 — it was
+    // identical on every page); the reader-facing code in the price FAQ still
+    // shows the official number without our _pN suffix.
+    expect(buildCardFaq("TH", parallel)[0]!.question).toContain("EB01-001")
+    expect(buildCardFaq("TH", parallel)[0]!.question).not.toContain("_p1")
   })
 
   it("shows readers the official card number, not our _pN printing suffix", () => {
@@ -202,6 +206,9 @@ describe("card SEO copy", () => {
 
     expect(title).toContain("วันพีซ")
     expect(description).toContain("วันพีช")
+    // SEO round 2: "วันพีช" leads the snippet instead of sitting in a fixed
+    // sign-off at the end, so it survives any SERP truncation.
+    expect(description.indexOf("วันพีช")).toBeLessThan(100)
   })
 
   it("templates the description from real numbers", () => {
@@ -211,7 +218,35 @@ describe("card SEO copy", () => {
     expect(description).toContain("¥2,100")
     expect(description).toContain("+12.5%")
     expect(description).toContain("Romance Dawn")
-    expect(description).toContain("อัปเดตทุกวัน")
+    // SEO round 2: the update date is the freshness signal now — the old
+    // "อัปเดตทุกวัน" sign-off (identical on all ~3,800 pages) is gone.
+    expect(description).toContain("12 ก.ค. 2026")
+    expect(description.length).toBeLessThanOrEqual(160)
+  })
+
+  it("keeps the Thai description inside Google's ~160-char SERP budget on the longest realistic card", () => {
+    // Worst case that production can actually render: a long Thai name (same
+    // fixture already used above for the title budget), a parallel printing,
+    // and the longest real English set name in the catalogue ("The Seven
+    // Warlords of the Sea", src/lib/constants/sets.ts).
+    const worstCase: CardSeoData = {
+      ...seo,
+      nameTh: "เอ็ดเวิร์ด นิวเกต (ไวท์เบียร์ด) พาราเรล",
+      cardCode: "OP13-118_p3",
+      isParallel: true,
+      rarity: "P-SEC",
+      setName: "The Seven Warlords of the Sea",
+    }
+    const description = buildCardSeoDescription("TH", worstCase)
+
+    expect(description.length).toBeLessThanOrEqual(160)
+    // The name, code (no `_p3` suffix — see baseCardCode), price and "วันพีช"
+    // are never dropped; only the trailing optional segments degrade.
+    expect(description).toContain("เอ็ดเวิร์ด นิวเกต (ไวท์เบียร์ด) พาราเรล")
+    expect(description).toContain("OP13-118")
+    expect(description).not.toContain("_p3")
+    expect(description).toContain("441 ฿")
+    expect(description).toContain("วันพีช")
   })
 
   it("writes one short Thai intro line built from this card's own data", () => {
@@ -258,18 +293,24 @@ describe("card SEO copy", () => {
     expect(intro).not.toContain("12 ก.ค. 2026")
   })
 
-  it("builds a four-question per-card FAQ from the card's own data", () => {
+  it("keeps only data-driven questions in the per-card FAQ", () => {
+    // SEO round 1: the static "Raw vs PSA 10" and "what is a parallel" items
+    // were byte-identical across every card page (scaled-content pattern in
+    // FAQPage JSON-LD). Only answers that interpolate THIS card's data stay;
+    // the shared knowledge lives at /about#methodology and /guide/rarities.
     const faq = buildCardFaq("TH", seo)
 
-    expect(faq).toHaveLength(4)
+    expect(faq).toHaveLength(2)
     expect(faq[0]!.question).toBe("การ์ด มังกี้ ดี. ลูฟี่ (OP01-003) ราคาเท่าไหร่?")
     expect(faq[0]!.answer).toContain("441 ฿")
     // Owner decision 2026-08-06: no source-brand names in user-facing copy —
     // the provenance answer says "ตลาดญี่ปุ่น", never the shop's name.
     expect(faq[1]!.answer).toContain("ตลาดญี่ปุ่น")
     expect(faq[1]!.answer).not.toContain("Yuyu-tei")
-    expect(faq[2]!.question).toContain("PSA 10")
-    expect(faq[3]!.answer).toContain("ใบพิมพ์ปกติ")
+    // The provenance answer stays per-card (update date) and links out to the
+    // single methodology home instead of restating it.
+    expect(faq[1]!.answer).toContain("12 ก.ค. 2026")
+    expect(faq[1]!.link?.href).toBe("/about#methodology")
   })
 
   it("degrades honestly when a card has no reference price", () => {

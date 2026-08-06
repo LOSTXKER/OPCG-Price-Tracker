@@ -6,6 +6,7 @@ import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { FaqSection } from "@/components/shared/faq-section";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { getCardName, t, type Language } from "@/lib/i18n";
 import {
   buildSetDetailMeta,
@@ -54,18 +55,19 @@ export async function generateMetadata(props: {
   const data = await getSetDetailData(setCode);
   if (!data) return { title: "ไม่พบชุดการ์ดนี้" };
 
-  const { title, description } = buildSetDetailMeta(
-    SEO_LANG,
-    toSetSeoData(SEO_LANG, data),
-  );
+  const seo = toSetSeoData(SEO_LANG, data);
+  const { title, description } = buildSetDetailMeta(SEO_LANG, seo);
 
-  return {
+  return buildPageMetadata({
     title,
     description,
-    alternates: { canonical: `/opcg/sets/${data.set.code}` },
-    openGraph: { title, description, type: "article", locale: "th_TH" },
-    twitter: { card: "summary_large_image", title, description },
-  };
+    canonical: `/opcg/sets/${data.set.code}`,
+    ogType: "article",
+    // Share preview shows the set's own box art (or its top card) instead of
+    // the generic site-wide OG image — every set used to look identical on
+    // LINE/Facebook (SEO round 2).
+    ogImage: data.boxImage ?? null,
+  });
 }
 
 export default async function SetDetailPage(props: {

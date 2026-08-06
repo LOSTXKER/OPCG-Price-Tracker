@@ -33,14 +33,16 @@ import {
   guideStartStarterHeading,
   guideStartStarterIntro,
 } from "@/lib/seo/copy/guide";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: GUIDE_META.gettingStarted.title,
   description: GUIDE_META.gettingStarted.description,
-  alternates: { canonical: "/guide/getting-started" },
-};
+  canonical: "/guide/getting-started",
+  ogType: "article",
+});
 
 /* ------------------------------------------------------------------ */
 /*  Turn phases data                                                   */

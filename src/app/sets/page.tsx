@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { BookOpen, Calculator, Store, TrendingUp } from "lucide-react";
 import { RelatedPages } from "@/components/shared/related-pages";
 
@@ -10,6 +9,8 @@ import { PageHeader } from "@/components/layout/page-header";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
+import { isMarketplaceEnabled } from "@/lib/marketplace/feature-flag";
 import { t, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
 import {
@@ -30,25 +31,17 @@ const SEO_LANG: Language = "TH";
 const { title: SEO_TITLE, description: SEO_DESCRIPTION } =
   buildSetsIndexMeta(SEO_LANG);
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: SEO_TITLE,
   description: SEO_DESCRIPTION,
-  alternates: { canonical: "/opcg/sets" },
-  openGraph: {
-    title: SEO_TITLE,
-    description: SEO_DESCRIPTION,
-    type: "website",
-    locale: "th_TH",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: SEO_TITLE,
-    description: SEO_DESCRIPTION,
-  },
-};
+  canonical: "/opcg/sets",
+});
 
 export default async function SetsIndexPage() {
   const lang = await getServerLanguage();
+  // While the admin flag is off, /marketplace 404s — the pillar page must not
+  // ship an internal link into it (SEO round 1). Page is force-dynamic already.
+  const marketplaceEnabled = await isMarketplaceEnabled();
   let setsRaw: SetWithCard[] = [];
   let dbError = false;
 
@@ -187,12 +180,17 @@ export default async function SetsIndexPage() {
             title: "คู่มือชุดการ์ด OPCG",
             description: "เรียนรู้รายละเอียดชุดการ์ดวันพีซแต่ละชุด",
           },
-          {
-            href: "/marketplace",
-            icon: Store,
-            title: "ตลาดซื้อขายการ์ด",
-            description: "ซื้อขายการ์ดวันพีซในตลาดของ Meecard ราคายุติธรรม",
-          },
+          ...(marketplaceEnabled
+            ? [
+                {
+                  href: "/marketplace",
+                  icon: Store,
+                  title: "ตลาดซื้อขายการ์ด",
+                  description:
+                    "ซื้อขายการ์ดวันพีซในตลาดของ Meecard ราคายุติธรรม",
+                },
+              ]
+            : []),
         ]}
       />
     </>

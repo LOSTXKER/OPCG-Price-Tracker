@@ -27,14 +27,20 @@ export type HomeFaqEntry = {
 
 export type HomeSeoLink = { href: string; label: string };
 
+// SEO round 2: the old title ("เช็คราคาการ์ดวันพีซ (One Piece Card Game)
+// อัปเดตทุกวัน") ran to 64 chars with the " | Meecard" suffix — over the
+// ~60-char SERP cutoff. "One Piece Card Game" already carries the English
+// name in HOME_META_DESCRIPTION and the H2 body (buildHomeMarketIntro), so
+// dropping it from the title costs nothing and buys back the room for the
+// higher-intent "ทุกใบ ทุกเกรด" phrase.
 /** Visible part of the <title>; the root layout appends " | Meecard". */
-export const HOME_META_TITLE =
-  "เช็คราคาการ์ดวันพีซ (One Piece Card Game) อัปเดตทุกวัน";
+export const HOME_META_TITLE = "เช็คราคาการ์ดวันพีซ ทุกใบ ทุกเกรด อัปเดตทุกวัน";
 
 // Owner decision (2026-08-06): no source-brand names anywhere on the home
-// surface except the one FAQ answer that directly answers "where do prices
-// come from?" (`seoFaq2A`). "ตลาดญี่ปุ่น" carries the trust signal; the brand
-// name only advertises someone else's shop on our own search snippet.
+// surface except the one FAQ answer that directly answers "how is the
+// reference price calculated?" (the long-tail entry below). "ตลาดญี่ปุ่น"
+// carries the trust signal; the brand name only advertises someone else's
+// shop on our own search snippet.
 export const HOME_META_DESCRIPTION =
   "เช็คราคาการ์ดวันพีชทุกใบ ทุกเกรด — ราคากลางอ้างอิงตลาดญี่ปุ่น อัปเดตทุกวัน พร้อมกราฟราคาย้อนหลัง ราคา PSA 10 พอร์ตสะสม และรายการโปรด ใช้ฟรี";
 
@@ -77,7 +83,7 @@ export function buildHomeMarketIntro(
     case "EN":
       return {
         heading: "One Piece card prices today",
-        body: `Meecard tracks ${cards} One Piece Card Game cards across ${sets} sets. Reference prices come from the Japanese market, updated daily and converted to Thai baht automatically. Pick a set to narrow it down, then compare Raw and PSA 10 on one row.`,
+        body: `Meecard tracks ${cards} One Piece Card Game (OPTCG) cards across ${sets} sets. Reference prices come from the Japanese market, updated daily and converted to Thai baht automatically. Pick a set to narrow it down, then compare Raw and PSA 10 on one row.`,
       };
     case "JP":
       return {
@@ -85,9 +91,12 @@ export function buildHomeMarketIntro(
         body: `Meecard は ${sets} 弾・${cards} 枚のワンピースカードの相場を追跡しています。価格は日本市場を参照し、毎日更新してタイバーツへ自動換算。弾を選んで絞り込むと、Raw と PSA 10 を同じ行で比較できます。`,
       };
     default:
+      // "OPTCG" added here (SEO round 2) — the English abbreviation is the
+      // exact term serious players search ("OPTCG ราคา") and it did not
+      // appear anywhere on the home page before this.
       return {
         heading: "ราคาตลาดการ์ดวันพีซวันนี้",
-        body: `Meecard ติดตามราคาการ์ดวันพีซ (One Piece Card Game) ทั้งหมด ${cards} ใบ จาก ${sets} ชุด ราคากลางอ้างอิงจากตลาดญี่ปุ่นจริง อัปเดตทุกวันและแปลงเป็นเงินบาทอัตโนมัติ เลือกชุดการ์ดวันพีชที่สนใจ แล้วเทียบราคาแบบ Raw กับ PSA 10 ได้ในแถวเดียว`,
+        body: `Meecard ติดตามราคาการ์ดวันพีซ (One Piece Card Game / OPTCG) ทั้งหมด ${cards} ใบ จาก ${sets} ชุด ราคากลางอ้างอิงจากตลาดญี่ปุ่นจริง อัปเดตทุกวันและแปลงเป็นเงินบาทอัตโนมัติ เลือกชุดการ์ดวันพีชที่สนใจ แล้วเทียบราคาแบบ Raw กับ PSA 10 ได้ในแถวเดียว`,
       };
   }
 }
@@ -150,7 +159,10 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
           question: "How is the reference price calculated?",
           answer:
             "It is based on real selling prices in the Japanese market, re-scraped daily and converted to Thai baht with a fixed rate. It is a reference for comparison, not a price Meecard sells at.",
-          link: { href: "/opcg/sets", label: "All One Piece card sets" },
+          // Site-wide rule (SEO round 1): methodology has ONE home —
+          // /about#methodology. Every other page answers in a sentence and
+          // links there instead of restating it.
+          link: { href: "/about#methodology", label: "How Meecard prices work" },
         },
       ];
     case "JP":
@@ -177,7 +189,7 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
           question: "参考価格はどう算出している？",
           answer:
             "日本市場の実売価格を毎日取得し、固定レートでタイバーツに換算しています。比較のための参考値であり、Meecard の販売価格ではありません。",
-          link: { href: "/opcg/sets", label: "ワンピースカード 全弾一覧" },
+          link: { href: "/about#methodology", label: "価格の算出方法について" },
         },
       ];
     default:
@@ -204,7 +216,7 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
           question: "ราคากลางบน Meecard คำนวณจากอะไร",
           answer:
             "ราคากลางอ้างอิงจากราคาขายจริงในตลาดญี่ปุ่น ระบบดึงข้อมูลใหม่ทุกวันแล้วแปลงเป็นเงินบาทด้วยอัตราแลกเปลี่ยนคงที่ ตัวเลขนี้เป็นราคาอ้างอิงไว้เทียบก่อนซื้อขาย ไม่ใช่ราคาที่ Meecard ขายเอง",
-          link: { href: "/opcg/sets", label: "ราคาการ์ดแยกตามชุด" },
+          link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
         },
       ];
   }

@@ -24,7 +24,7 @@ const cardSetSelect = { code: true, name: true, nameEn: true } as const
 
 export async function getHomeData() {
   try {
-    const [topGainers, topLosers, highestPriced] = await Promise.all([
+    const [topGainers, topLosers, highestPriced, latestPrice] = await Promise.all([
       prisma.card.findMany({
         where: { priceChange24h: { not: null, gt: 0 } },
         orderBy: { priceChange24h: "desc" },
@@ -42,6 +42,13 @@ export async function getHomeData() {
         orderBy: { latestPriceJpy: "desc" },
         take: 1,
         include: { set: { select: { code: true, name: true } } },
+      }),
+      // Freshest scrape overall — feeds the "อัปเดตล่าสุด" meta row above the
+      // market table (SEO round 2, E-E-A-T). Same shape as
+      // getMostExpensiveData()'s `lastUpdated`.
+      prisma.cardPrice.findFirst({
+        orderBy: { scrapedAt: "desc" },
+        select: { scrapedAt: true },
       }),
     ])
 
@@ -98,6 +105,8 @@ export async function getHomeData() {
       initialTableCards,
       initialTableTotal,
       initialTableTotalPages: Math.ceil(initialTableTotal / TABLE_PAGE_SIZE),
+      // Freshest price scrape backing the whole page — null only on an empty DB.
+      lastUpdated: latestPrice?.scrapedAt ? latestPrice.scrapedAt.toISOString() : null,
       sets,
       // Newest sets first — feeds the home page's crawlable set strip so the
       // set cluster gets internal links from the pillar page (SEO plan §3.1).

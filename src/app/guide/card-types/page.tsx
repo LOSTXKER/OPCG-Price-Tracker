@@ -22,6 +22,7 @@ import {
   guideTypeKeywordsHeading,
   guideTypeKeywordsIntro,
 } from "@/lib/seo/copy/guide";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
@@ -34,11 +35,12 @@ import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: GUIDE_META.cardTypes.title,
   description: GUIDE_META.cardTypes.description,
-  alternates: { canonical: "/guide/card-types" },
-};
+  canonical: "/guide/card-types",
+  ogType: "article",
+});
 
 /* ------------------------------------------------------------------ */
 /*  Card type data                                                     */

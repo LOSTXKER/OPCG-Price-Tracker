@@ -137,10 +137,24 @@ export function buildCardSeoTitle(lang: Language, data: CardSeoData): string {
   return `${head} ${name}`;
 }
 
+/** Google truncates a SERP snippet around this many characters. */
+const DESCRIPTION_BUDGET = 160;
+
 /**
- * Snippet copy: real numbers (฿ and ¥, 30-day move), the set, the source and
- * "อัปเดตทุกวัน". Carries the second Thai spelling ("วันพีช") so both spellings
- * are covered across title + description.
+ * Snippet copy: real numbers (฿ and ¥, 30-day move), the set, and the update
+ * date. Carries the second Thai spelling ("วันพีช") inside the first ~20
+ * chars so it survives any SERP truncation, and leads with it instead of
+ * repeating it in a fixed sign-off tail.
+ *
+ * SEO round 2: the old template always closed with a ~70-char fixed tail
+ * ("ราคากลางจากตลาดญี่ปุ่น อัปเดตทุกวัน เช็คราคาการ์ดวันพีชทุกใบที่
+ * Meecard") that pushed every one of the ~3,800 card pages to ~190–210
+ * chars — past what Google shows and identical noise on every URL. That
+ * sign-off is gone; "อัปเดต {date}" already carries the freshness signal it
+ * duplicated. What's left is templated per-card content only, trimmed to
+ * the ~160-char budget by dropping optional segments (yen figure, then the
+ * 30-day move, then the update date — in that order) the same way
+ * `buildCardSeoTitle` drops optional segments, never the name/code/price.
  */
 export function buildCardSeoDescription(lang: Language, data: CardSeoData): string {
   const name = cardDisplayName(lang, data);
@@ -153,19 +167,33 @@ export function buildCardSeoDescription(lang: Language, data: CardSeoData): stri
     data.priceChange30d != null ? formatSignedPct(data.priceChange30d) : null;
   const updated = formatSeoDate(data.priceScrapedAt, lang);
 
-  if (lang === "TH") {
-    const pricePart = thb
-      ? `ราคาล่าสุด ${thb}${jpy ? ` (${jpy})` : ""}${change ? ` · 30 วัน ${change}` : ""}`
-      : "ยังไม่มีราคากลางล่าสุด";
-    const updatedPart = updated ? ` · อัปเดต ${updated}` : "";
-    return `${name} (${code}) ความหายาก ${data.rarity} จากชุด ${data.setName} — ${pricePart}${updatedPart} ราคากลางจากตลาดญี่ปุ่น อัปเดตทุกวัน เช็คราคาการ์ดวันพีชทุกใบที่ Meecard`;
+  const head =
+    lang === "TH"
+      ? `เช็คราคาการ์ดวันพีช ${name} (${code}) ${data.rarity} ชุด ${data.setName}`
+      : `Check the OPTCG price of ${name} (${code}), ${data.rarity} from ${data.setName}`;
+  const pricePart = thb
+    ? lang === "TH"
+      ? `ล่าสุด ${thb}`
+      : `latest ${thb}`
+    : lang === "TH"
+      ? "ยังไม่มีราคากลางล่าสุด"
+      : "no reference price yet";
+
+  let out = `${head} — ${pricePart}`;
+
+  const optionalSegments = thb
+    ? [
+        jpy ? ` (${jpy})` : "",
+        change ? (lang === "TH" ? ` · 30 วัน ${change}` : ` · 30d ${change}`) : "",
+        updated ? (lang === "TH" ? ` · อัปเดต ${updated}` : ` · updated ${updated}`) : "",
+      ]
+    : [updated ? (lang === "TH" ? ` · อัปเดต ${updated}` : ` · updated ${updated}`) : ""];
+
+  for (const segment of optionalSegments) {
+    if (segment && out.length + segment.length <= DESCRIPTION_BUDGET) out += segment;
   }
 
-  const pricePart = thb
-    ? `Latest ${thb}${jpy ? ` (${jpy})` : ""}${change ? ` · 30d ${change}` : ""}`
-    : "No reference price yet";
-  const updatedPart = updated ? ` · updated ${updated}` : "";
-  return `${name} (${code}), ${data.rarity} from ${data.setName} — ${pricePart}${updatedPart}. One Piece Card Game market prices from the Japanese market, refreshed daily on Meecard.`;
+  return out;
 }
 
 /**
@@ -209,9 +237,19 @@ export function buildCardIntro(lang: Language, data: CardSeoData): string[] {
 export interface CardFaqItem {
   question: string;
   answer: string;
+  /** Read-more inside the answer body (FaqSection `link` — not in JSON-LD). */
+  link?: { href: string; label: string };
 }
 
-/** Per-card FAQ, templated from real data. Feeds FAQPage JSON-LD via FaqSection. */
+/**
+ * Per-card FAQ, templated from real data. Feeds FAQPage JSON-LD via FaqSection.
+ *
+ * SEO round 1: only questions whose answers interpolate THIS card's data may
+ * live here. The old static "Raw vs PSA 10" and "what is a parallel" items
+ * were byte-identical across all ~3,800 card pages (scaled-content pattern,
+ * pumped into FAQPage JSON-LD on every page) — that knowledge now lives once
+ * in /guide/rarities and /about#methodology, linked from the answers below.
+ */
 export function buildCardFaq(lang: Language, data: CardSeoData): CardFaqItem[] {
   const name = cardDisplayName(lang, data);
   const code = baseCardCode(data.cardCode);
@@ -230,16 +268,8 @@ export function buildCardFaq(lang: Language, data: CardSeoData): CardFaqItem[] {
       },
       {
         question: "ราคามาจากแหล่งไหน อัปเดตบ่อยแค่ไหน?",
-        answer: `Meecard เก็บราคาการ์ดวันพีซจากตลาดญี่ปุ่นเป็นหลัก โดยราคาการ์ดแบบ Raw (ยังไม่ส่งเกรด) อ้างอิงจากร้านการ์ดญี่ปุ่น และราคาการ์ดเกรดอ้างอิงจากตลาดการ์ดเกรด ระบบดึงราคาใหม่ทุกวันแล้วแปลงเป็นเงินบาทให้อัตโนมัติ${updated ? ` การ์ด ${code} อัปเดตล่าสุดเมื่อ ${updated}` : ""}`,
-      },
-      {
-        question: "Raw กับ PSA 10 ต่างกันยังไง?",
-        answer:
-          "Raw คือการ์ดที่ยังไม่ได้ส่งตรวจเกรด ซื้อขายกันตามสภาพที่เห็น ส่วน PSA 10 คือการ์ดที่ส่งให้ PSA ตรวจแล้วได้คะแนนเต็ม 10 (Gem Mint) ปิดผนึกในเคสพร้อมหมายเลขกำกับ การ์ดใบเดียวกันที่เป็น PSA 10 จึงมักแพงกว่าแบบ Raw หลายเท่า เพราะยืนยันสภาพและกันการปลอมได้ ถ้าจะซื้อเก็บสะสมระยะยาวให้เทียบราคาทั้งสองเกรดก่อนตัดสินใจ",
-      },
-      {
-        question: "การ์ด parallel ต่างจากใบปกติยังไง?",
-        answer: `Parallel หรือ Alternate Art คือการ์ดใบเดียวกัน ความสามารถเหมือนกันทุกอย่าง แต่พิมพ์ภาพ/ลายฟอยล์ต่างออกไปและออกยากกว่ามาก ราคาจึงสูงกว่าใบปกติ ${code} ใบนี้เป็น${data.isParallel ? "แบบ parallel" : "ใบพิมพ์ปกติ"} — ถ้ามีเวอร์ชันอื่นของการ์ดใบนี้ จะแสดงไว้ในหัวข้อ "เวอร์ชันอื่น" ด้านล่าง กดเทียบราคาได้เลย`,
+        answer: `ราคากลางอ้างอิงจากตลาดญี่ปุ่น อัปเดตทุกวัน แล้วแปลงเป็นเงินบาทให้อัตโนมัติ${updated ? ` การ์ด ${code} อัปเดตล่าสุดเมื่อ ${updated}` : ""}`,
+        link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
       },
     ];
   }
@@ -253,16 +283,8 @@ export function buildCardFaq(lang: Language, data: CardSeoData): CardFaqItem[] {
     },
     {
       question: "Where do the prices come from and how often are they updated?",
-      answer: `Raw prices come from the Japanese card market and graded prices from the graded-card market. Meecard rescrapes daily and converts to THB automatically${updated ? `; ${code} was last updated ${updated}` : ""}.`,
-    },
-    {
-      question: "What is the difference between Raw and PSA 10?",
-      answer:
-        "Raw means ungraded — sold as-is. PSA 10 (Gem Mint) means PSA inspected the card, scored it 10/10 and sealed it in a serialised slab. The same card in a PSA 10 slab usually sells for several times the raw price because condition is certified and counterfeiting is much harder.",
-    },
-    {
-      question: "How is a parallel different from the normal printing?",
-      answer: `A parallel (alternate art) is the same card with the same abilities but a different illustration or foil treatment and a much lower pull rate, so it trades higher. ${code} is the ${data.isParallel ? "parallel" : "standard"} printing — any other versions are listed under "Other versions" below.`,
+      answer: `Reference prices come from the Japanese market, rescraped daily and converted to THB automatically${updated ? `; ${code} was last updated ${updated}` : ""}.`,
+      link: { href: "/about#methodology", label: "How Meecard prices work" },
     },
   ];
 }

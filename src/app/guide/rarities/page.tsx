@@ -31,14 +31,16 @@ import {
   guideRarityH1,
   rarityAnchorId,
 } from "@/lib/seo/copy/guide";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: GUIDE_META.rarities.title,
   description: GUIDE_META.rarities.description,
-  alternates: { canonical: "/guide/rarities" },
-};
+  canonical: "/guide/rarities",
+  ogType: "article",
+});
 
 /* ------------------------------------------------------------------ */
 /*  Rarity data                                                        */

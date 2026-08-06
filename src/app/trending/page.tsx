@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 
 import { BarChart3, GitCompareArrows, Layers } from "lucide-react";
 import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { prisma } from "@/lib/db";
 import { getCardName } from "@/lib/i18n";
 import {
@@ -25,12 +27,6 @@ export const revalidate = 300;
 // doc/seo-content-plan.md §3.8) and reading the language cookie here would opt
 // the whole route out of ISR.
 const SEO_LANG = "TH" as const;
-
-export const metadata: Metadata = {
-  title: TOOL_PAGE_METADATA.trending.title,
-  description: TOOL_PAGE_METADATA.trending.description,
-  alternates: { canonical: TOOL_PAGE_METADATA.trending.canonical },
-};
 
 const TAKE = 50;
 
@@ -55,17 +51,28 @@ const TRENDING_QUERIES: TrendingQuery[] = [
   { key: "mostViewed",  where: { viewCount: { gt: 0 }, latestPriceJpy: { gt: 0 } },                 orderBy: { viewCount: "desc" } },
 ];
 
-async function getTrendingData() {
-  const results = await Promise.all(
-    TRENDING_QUERIES.map((q) =>
-      prisma.card.findMany({
-        where: q.where,
-        orderBy: q.orderBy,
-        take: TAKE,
-        include: TRENDING_INCLUDE,
-      })
-    )
-  );
+// cache() dedupes this across generateMetadata + the page body — same
+// pattern as getSetDetailData() (lib/data/set-detail.ts) — so adding the
+// og:image lookup below doesn't cost a second round trip to the DB.
+const getTrendingData = cache(async function getTrendingData() {
+  const [results, latestPrice] = await Promise.all([
+    Promise.all(
+      TRENDING_QUERIES.map((q) =>
+        prisma.card.findMany({
+          where: q.where,
+          orderBy: q.orderBy,
+          take: TAKE,
+          include: TRENDING_INCLUDE,
+        })
+      )
+    ),
+    // Freshest scrape overall — feeds the "อัปเดตล่าสุด" meta row under the
+    // H1 (SEO round 2, E-E-A-T). Same shape as getMostExpensiveData().
+    prisma.cardPrice.findFirst({
+      orderBy: { scrapedAt: "desc" },
+      select: { scrapedAt: true },
+    }),
+  ]);
 
   const keyed = Object.fromEntries(
     TRENDING_QUERIES.map((q, i) => [q.key, results[i]])
@@ -101,13 +108,41 @@ async function getTrendingData() {
     gainers30d: mapCards(gainers30d),
     losers30d: mapCards(losers30d),
     mostViewed: mapCards(mostViewed),
+    lastUpdated: latestPrice?.scrapedAt ? latestPrice.scrapedAt.toISOString() : null,
   };
-}
+});
 
 export type TrendingCardRow = Awaited<ReturnType<typeof getTrendingData>>["gainers24h"][number];
 
+// title/description text lives in TOOL_PAGE_METADATA.trending (lib/seo/copy/
+// tools.ts, owned by a different workstream) — this only adds the canonical
+// og:url + a real og:image (today's top gainer) via the shared helper, same
+// shape as every other converted page (SEO round 2).
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await getTrendingData();
+  const top = data.gainers24h[0] ?? null;
+
+  return buildPageMetadata({
+    title: TOOL_PAGE_METADATA.trending.title,
+    description: TOOL_PAGE_METADATA.trending.description,
+    canonical: TOOL_PAGE_METADATA.trending.canonical,
+    ogImage: top?.imageUrl ?? null,
+  });
+}
+
 export default async function TrendingPage() {
   const data = await getTrendingData();
+
+  // Formatted on the server so the header interpolates one stable date
+  // string (React 19 forbids Date work during a client render — same
+  // constraint as /opcg/most-expensive's `updatedLabel`).
+  const updatedLabel = data.lastUpdated
+    ? new Date(data.lastUpdated).toLocaleDateString("th-TH", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : null;
 
   const heading = buildTrendingHeading(SEO_LANG);
   const leader = data.gainers24h[0] ?? null;
@@ -124,10 +159,13 @@ export default async function TrendingPage() {
       : null,
   );
 
+  // Losers 24h (not gainers 24h) so this block doesn't repeat the default
+  // gainers-24h tab table rendered right above it, and "ราคาลง" actually
+  // appears in the server HTML — see trending-movers-sections.tsx docblock.
   const seoSections = [
-    { period: "24h" as const, cards: data.gainers24h.slice(0, 10) },
-    { period: "7d" as const, cards: data.gainers7d.slice(0, 10) },
-    { period: "30d" as const, cards: data.gainers30d.slice(0, 10) },
+    { period: "24h" as const, kind: "losers" as const, cards: data.losers24h.slice(0, 10) },
+    { period: "7d" as const, kind: "gainers" as const, cards: data.gainers7d.slice(0, 10) },
+    { period: "30d" as const, kind: "gainers" as const, cards: data.gainers30d.slice(0, 10) },
   ];
 
   return (
@@ -149,7 +187,7 @@ export default async function TrendingPage() {
       <div className="space-y-6">
         {/* One keyword sentence under the H1 (server-built, carries today's
             top mover) — the tabs follow immediately. */}
-        <TrendingPageHeader lead={summary} />
+        <TrendingPageHeader lead={summary} updatedLabel={updatedLabel} />
 
         <TrendingTabs data={data} />
 

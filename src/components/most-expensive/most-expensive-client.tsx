@@ -62,7 +62,14 @@ function CardCell({ card, lang }: { card: MostExpensiveCard; lang: Language }) {
   )
 }
 
-export function MostExpensiveClient({ data }: { data: MostExpensiveData }) {
+export function MostExpensiveClient({
+  data,
+  updatedLabel,
+}: {
+  data: MostExpensiveData
+  /** Freshest price scrape, pre-formatted server-side (th-TH). */
+  updatedLabel?: string | null
+}) {
   const lang = useUIStore((state) => state.language)
   const currency = useUIStore((state) => state.currency)
   const labels = mostExpensiveTableLabels(lang)
@@ -92,7 +99,9 @@ export function MostExpensiveClient({ data }: { data: MostExpensiveData }) {
         {/* The keyword sentence IS the subtitle — one text block under the
             H1, same grammar as every other landing page (owner ruling
             2026-08-06). */}
-        <PageHeader title={mostExpensiveTitle(lang)} description={lead} />
+        <PageHeader title={mostExpensiveTitle(lang)} description={lead}>
+          {updatedLabel && <p className="text-meta">อัปเดตล่าสุด: {updatedLabel}</p>}
+        </PageHeader>
       </div>
 
       <section className="space-y-4">

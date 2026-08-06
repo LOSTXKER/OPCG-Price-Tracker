@@ -12,6 +12,7 @@ import { HomeSeoContent } from "@/components/home/home-seo-content";
 import { HomeSetStrip } from "@/components/home/home-set-strip";
 import { AdPageContentReady } from "@/components/ads/ad-audience-provider";
 import { getHomeData, mapCardToTrending } from "@/lib/data/home";
+import { isMarketplaceEnabled } from "@/lib/marketplace/feature-flag";
 import { CARD_TYPES } from "@/lib/constants/card-config";
 import { getGameConfig } from "@/lib/game-config";
 import { JsonLd } from "@/lib/seo/json-ld-script";
@@ -57,9 +58,26 @@ export default async function HomePage() {
     initialTableCards,
     initialTableTotal,
     initialTableTotalPages,
+    lastUpdated,
     sets,
     recentSets,
   } = await getHomeData();
+
+  // Resolved at revalidate time like the rest of the page. While the flag is
+  // off, the SEO tail must not advertise (or link to) a route that 404s —
+  // Google was finding an internal link to /marketplace from the pillar page.
+  const marketplaceEnabled = await isMarketplaceEnabled();
+
+  // Formatted on the server so the market intro interpolates one stable date
+  // string (React 19 forbids Date work during a client render — same
+  // constraint as /opcg/most-expensive's `updatedLabel`).
+  const updatedLabel = lastUpdated
+    ? new Date(lastUpdated).toLocaleDateString("th-TH", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : null;
 
   if (totalCards === 0) {
     return (
@@ -174,11 +192,15 @@ export default async function HomePage() {
         >
           {/* The section's H2 + context prose — numbers alone read as a thin
               page, and the table had no heading at all (SEO plan §3.1). */}
-          <HomeMarketIntro totalCards={totalCards} totalSets={sets.length} />
+          <HomeMarketIntro
+            totalCards={totalCards}
+            totalSets={sets.length}
+            updatedLabel={updatedLabel}
+          />
         </HomeMarketOverview>
       </div>
 
-      <HomeSeoContent />
+      <HomeSeoContent marketplaceEnabled={marketplaceEnabled} />
     </>
   );
 }

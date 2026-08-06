@@ -1,4 +1,5 @@
 import { clientEnv } from "@/lib/env";
+import { jpyToThb } from "@/lib/utils/currency";
 const BASE_URL = clientEnv().NEXT_PUBLIC_APP_URL;
 
 export type BreadcrumbItem = { name: string; href: string };
@@ -65,10 +66,20 @@ export function productJsonLd(card: {
   const name = thaiName ?? latinName;
   const setName = card.set.nameTh?.trim() || card.set.nameEn || card.set.name;
 
-  // The audience buys in THB; fall back to the JPY source price when the
-  // converted value is missing.
-  const price = card.latestPriceThb ?? card.latestPriceJpy;
-  const priceCurrency = card.latestPriceThb != null ? "THB" : "JPY";
+  // The page always renders THB (see cardPriceThbText in copy/card.ts) — the
+  // structured data must match what a visitor actually sees, never JPY.
+  // `latestPriceThb` can be a real 0 in the DB (not "unset"), and `??` treats
+  // only `null`/`undefined` as missing, so a 0 used to leak through as a ฿0
+  // offer. Same threshold as the on-page copy: THB counts only when > 0,
+  // otherwise derive it from JPY, and emit no `offers` at all when neither
+  // source has a usable price (never a fabricated ¥/0 price).
+  const price =
+    card.latestPriceThb != null && card.latestPriceThb > 0
+      ? Math.round(card.latestPriceThb)
+      : card.latestPriceJpy != null
+        ? Math.round(jpyToThb(card.latestPriceJpy))
+        : null;
+  const priceCurrency = "THB";
 
   const scraped = card.priceScrapedAt ? new Date(card.priceScrapedAt) : null;
   const priceValidUntil =

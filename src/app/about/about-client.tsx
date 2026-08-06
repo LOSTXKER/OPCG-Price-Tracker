@@ -142,8 +142,11 @@ export default function AboutClient() {
       </section>
 
       {/* Methodology — the site's trust anchor. Kept as prose + a definition
-          list so answer engines can quote "where do the prices come from". */}
-      <section>
+          list so answer engines can quote "where do the prices come from".
+          `id` is the site-wide deep-link target: every other page's FAQ answers
+          "where do prices come from" in one sentence + a link here instead of
+          restating the methodology (SEO round 1 — dedupe boilerplate). */}
+      <section id="methodology">
         <Surface variant="outline" padding="none" className="p-6 sm:p-7">
           <div className="flex items-center gap-2">
             <Database className="size-5 text-muted-foreground" />

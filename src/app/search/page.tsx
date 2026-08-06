@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Layers, TrendingUp, GitCompareArrows } from "lucide-react";
 import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
@@ -16,6 +15,7 @@ import {
   buildSearchCopy,
   buildSearchFaq,
 } from "@/lib/seo/copy/tools";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { CARDS_PAGE_SIZE } from "@/lib/constants/ui";
 import SearchClient from "./search-client";
 import {
@@ -27,11 +27,11 @@ import { UntilHydrated } from "./until-hydrated";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: TOOL_PAGE_METADATA.search.title,
   description: TOOL_PAGE_METADATA.search.description,
-  alternates: { canonical: TOOL_PAGE_METADATA.search.canonical },
-};
+  canonical: TOOL_PAGE_METADATA.search.canonical,
+});
 
 /** Newest sets first for the crawlable browse list (NULL release dates last). */
 const BROWSE_SET_COUNT = 12;

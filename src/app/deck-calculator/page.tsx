@@ -8,6 +8,7 @@ import { RelatedPages } from "@/components/shared/related-pages";
 import { Surface } from "@/components/ui/surface";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import {
   TOOL_PAGE_METADATA,
   buildDeckCalculatorCopy,
@@ -19,11 +20,11 @@ import DeckCalculatorClient from "./deck-calculator-client";
 // static route into dynamic rendering for no SEO gain.
 const SEO_LANG = "TH" as const;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: TOOL_PAGE_METADATA.deckCalculator.title,
   description: TOOL_PAGE_METADATA.deckCalculator.description,
-  alternates: { canonical: TOOL_PAGE_METADATA.deckCalculator.canonical },
-};
+  canonical: TOOL_PAGE_METADATA.deckCalculator.canonical,
+});
 
 export default function DeckCalculatorPage() {
   const copy = buildDeckCalculatorCopy(SEO_LANG);

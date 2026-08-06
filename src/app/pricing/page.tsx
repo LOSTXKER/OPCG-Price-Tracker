@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
 import { JsonLd } from "@/lib/seo/json-ld-script";
@@ -12,13 +11,14 @@ import {
   buildPricingFaq,
   buildPricingHeading,
 } from "@/lib/seo/copy/site";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import PricingClient from "./pricing-client";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: SEO_PAGE_META.pricing.title,
   description: SEO_PAGE_META.pricing.description,
-  alternates: { canonical: "/pricing" },
-};
+  canonical: "/pricing",
+});
 
 type PricingSearchParams = Promise<{
   checkout?: string | string[];
@@ -65,17 +65,19 @@ export default async function PricingPage({
         selectedCheckoutPlan={firstParam(query.selected)}
         checkoutCancelled={firstParam(query.cancelled) === "true"}
       />
+      {/* SEO round 1: one question, one answer. The old dictionary items
+          "ยกเลิกได้ไหม" and "ใช้ฟรีได้ไหม" duplicated buildPricingFaq's
+          "ยกเลิกยังไง" and "ใช้ฟรีได้แค่ไหน" (which carry the real tier
+          numbers) — same FAQPage JSON-LD block asked each twice. */}
       <FaqSection title={t(lang, "guideHomeFaqHeading")} items={[
         {
           question: t(lang, "pricingFaqProQ"),
           answer: proAnswer,
         },
-        { question: t(lang, "pricingFaqCancelQ"), answer: t(lang, "pricingFaqCancelA") },
         {
           question: t(lang, "pricingFaqTrialQ"),
           answer: t(lang, "pricingFaqTrialA").replace("{days}", String(TRIAL_DAYS)),
         },
-        { question: t(lang, "pricingFaqFreeQ"), answer: t(lang, "pricingFaqFreeA") },
         ...extraFaq,
       ]} />
     </>

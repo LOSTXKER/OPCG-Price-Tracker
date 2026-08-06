@@ -4,6 +4,7 @@ import { Surface } from "@/components/ui/surface";
 import { getCardName, type Language } from "@/lib/i18n";
 import {
   buildTrendingPeriodTitle,
+  type TrendingMoverKind,
   type TrendingPeriodKey,
 } from "@/lib/seo/copy/tools";
 import { formatThb, jpyToThb } from "@/lib/utils/currency";
@@ -21,13 +22,13 @@ export function TrendingMoversSections({
   sections,
 }: {
   lang: Language;
-  sections: { period: TrendingPeriodKey; cards: TrendingCardRow[] }[];
+  sections: { period: TrendingPeriodKey; kind: TrendingMoverKind; cards: TrendingCardRow[] }[];
 }) {
   return (
     <>
-      {sections.map(({ period, cards }) => (
-        <section key={period} className="space-y-3" data-slot={`trending-seo-${period}`}>
-          <h2 className="text-h3">{buildTrendingPeriodTitle(lang, period)}</h2>
+      {sections.map(({ period, kind, cards }) => (
+        <section key={period} className="space-y-3" data-slot={`trending-seo-${kind}-${period}`}>
+          <h2 className="text-h3">{buildTrendingPeriodTitle(lang, period, kind)}</h2>
           <Surface variant="panel" padding="none" className="overflow-hidden">
             <ol className="divide-y divide-hair">
               {cards.map((card, index) => (

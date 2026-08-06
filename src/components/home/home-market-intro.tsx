@@ -15,9 +15,16 @@ import { useUIStore } from "@/stores/ui-store"
 export function HomeMarketIntro({
   totalCards,
   totalSets,
+  updatedLabel,
 }: {
   totalCards: number
   totalSets: number
+  /**
+   * Freshest price scrape, pre-formatted server-side (th-TH). E-E-A-T signal —
+   * a visible "last updated" date is the thing frozen listicle competitors
+   * cannot show (SEO round 2).
+   */
+  updatedLabel?: string | null
 }) {
   const lang = useUIStore((s) => s.language)
   const { heading, body } = buildHomeMarketIntro(lang, { totalCards, totalSets })
@@ -27,6 +34,7 @@ export function HomeMarketIntro({
     // heading sits exactly over the section it titles.
     <div className="px-4">
       <h2 className="text-h2">{heading}</h2>
+      {updatedLabel && <p className="mt-1 text-meta">อัปเดตล่าสุด: {updatedLabel}</p>}
       <p className="mt-2 max-w-3xl text-body-sm leading-relaxed text-muted-foreground">
         {body}
       </p>

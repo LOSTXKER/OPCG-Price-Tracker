@@ -32,13 +32,18 @@ export function CardDetailIdentity({
   return (
     <div className="min-w-0">
       <div className="flex items-center gap-3">
-        {/* Owner decision (เบส, 2026-08-04): the heading is the card name only.
-            The code was tried inside the H1 — 82% of cards share a name, so a
-            code-less H1 repeats across printings (109 pages read "Monkey.D.Luffy")
-            — but it competed with the name visually. The code still identifies
-            the page through the <title>, the URL and the meta line below. */}
+        {/* Owner decision (เบส, 2026-08-04): the heading shows the card name
+            only — the code competed with the name visually when it was tried
+            inline. SEO round 2: 82% of cards share a name, so a code-less H1
+            text also repeated across printings ("Monkey.D.Luffy" on 109 pages)
+            and never carried the "ราคา" query intent. Both are restored to the
+            H1's *accessible* text only (sr-only), so the crawlable/AT text is
+            "ราคา {name} {code}" while the rendered pixels are unchanged — the
+            code is still visible right below in the meta line. */}
         <h1 className="text-h2 min-w-0 break-words text-foreground sm:text-h1">
+          <span className="sr-only">{t(lang, "price")} </span>
           {displayName}
+          <span className="sr-only"> {baseCardCode(card.cardCode)}</span>
         </h1>
         <div className="flex shrink-0 items-center gap-1">
           <WatchlistHeart

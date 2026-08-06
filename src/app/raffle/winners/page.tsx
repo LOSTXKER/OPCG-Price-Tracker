@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { getDrawnRaffles, groupRafflesByMonth } from "@/lib/honey/raffle-winners";
@@ -8,16 +8,11 @@ import { WinnersList } from "./winners-list";
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: SEO_PAGE_META.raffleWinners.title,
   description: SEO_PAGE_META.raffleWinners.description,
-  alternates: { canonical: "/raffle/winners" },
-  openGraph: {
-    title: `${SEO_PAGE_META.raffleWinners.title} | Meecard`,
-    description: SEO_PAGE_META.raffleWinners.description,
-    type: "website",
-  },
-};
+  canonical: "/raffle/winners",
+});
 
 export default async function RaffleWinnersPage() {
   const drawn = await getDrawnRaffles({ limit: 60 });

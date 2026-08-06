@@ -96,7 +96,7 @@ export function mostExpensiveTableLabels(lang: Language) {
 export function mostExpensiveFaq(
   lang: Language,
   data: { topName: string; topCode: string; topPriceJpy: number; updatedLabel: string | null }
-): { question: string; answer: string }[] {
+): { question: string; answer: string; link?: { href: string; label: string } }[] {
   const priceText = formatThb(Math.round(jpyToThb(data.topPriceJpy)))
 
   if (lang === "EN") {
@@ -113,7 +113,8 @@ export function mostExpensiveFaq(
       {
         question: "Where do these prices come from?",
         answer:
-          "They are scraped daily from the Japanese secondary market and converted to Thai baht for reference. They are market reference prices, not offers to sell — always compare with the shop you are actually buying from.",
+          "Reference prices from the Japanese market, updated daily — not offers to sell. Always compare with the shop you are actually buying from.",
+        link: { href: "/about#methodology", label: "How Meecard prices work" },
       },
       {
         question: "Does grading make a card worth more?",
@@ -137,6 +138,7 @@ export function mostExpensiveFaq(
         question: "価格の出どころは？",
         answer:
           "日本の二次流通市場から毎日取得し、参考用にタイバーツへ換算しています。売買のオファーではありません。",
+        link: { href: "/about#methodology", label: "価格の算出方法について" },
       },
       {
         question: "鑑定に出すと価値は上がりますか？",
@@ -157,7 +159,8 @@ export function mostExpensiveFaq(
     {
       question: "ราคาที่เห็นในหน้านี้มาจากไหน?",
       answer:
-        "เก็บจากตลาดมือสองญี่ปุ่นทุกวัน แล้วแปลงเป็นเงินบาทเพื่อให้เทียบง่าย เป็น 'ราคากลางอ้างอิง' ไม่ใช่ประกาศขาย ก่อนซื้อจริงควรเทียบกับร้านที่คุณจะซื้อด้วยเสมอ",
+        "เป็นราคากลางอ้างอิงจากตลาดญี่ปุ่น อัปเดตทุกวัน ไม่ใช่ประกาศขาย ก่อนซื้อจริงควรเทียบกับร้านที่คุณจะซื้อด้วยเสมอ",
+      link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
     },
     {
       question: "ส่งเกรด (PSA) แล้วการ์ดแพงขึ้นไหม?",
@@ -176,6 +179,10 @@ export function mostExpensiveMeta(data: {
   const priceText = `${formatThb(Math.round(jpyToThb(data.topPriceJpy)))}`
   return {
     title: `การ์ดวันพีซที่แพงที่สุด ${data.count} อันดับ — อัปเดตทุกวัน`,
-    description: `อันดับการ์ดวันพีชที่ราคาแพงที่สุดตอนนี้ อันดับ 1 คือ ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText} จัดอันดับใหม่จากราคาตลาดจริงทุกวัน พร้อมเปลี่ยนแปลง 30 วันและกราฟราคาย้อนหลังรายใบ`,
+    // SEO round 2: dropped "กราฟราคาย้อนหลังรายใบ" — this ranking page has no
+    // per-card price chart (that lives on /opcg/cards/[code]), so the claim
+    // overclaimed what the snippet's landing page actually shows. Also
+    // shortened so it stays ≤160 chars with real (longer) card names.
+    description: `อันดับการ์ดวันพีชแพงสุดตอนนี้ อันดับ 1 ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText} อัปเดตจากราคาตลาดจริงทุกวัน พร้อมเปลี่ยนแปลง 30 วัน`,
   }
 }

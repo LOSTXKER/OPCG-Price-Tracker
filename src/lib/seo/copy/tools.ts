@@ -59,9 +59,13 @@ export const TOOL_PAGE_METADATA: Record<
   { title: string; description: string; canonical: string }
 > = {
   trending: {
-    title: "การ์ดวันพีซราคาขึ้นแรงสุดวันนี้ (Trending) อัปเดตทุกวัน",
+    // ≤60 with the " | Meecard" suffix — "อัปเดตทุกวัน" already lives in the
+    // description, and the old title ran 65 chars total (SEO round 2).
+    title: "การ์ดวันพีซราคาขึ้นแรงสุดวันนี้ (Trending)",
     description:
-      "จัดอันดับการ์ดวันพีช (One Piece Card Game) ที่ราคาขึ้นและลงแรงที่สุดในรอบ 24 ชั่วโมง 7 วัน และ 30 วัน พร้อมราคาบาทและเยนจากตลาดญี่ปุ่น อัปเดตทุกวัน",
+      // "ราคาบาทและเยน" was a stale claim — the page shows THB only since the
+      // owner cut the yen column (2026-08-06).
+      "จัดอันดับการ์ดวันพีช (One Piece Card Game) ที่ราคาขึ้นและลงแรงที่สุดในรอบ 24 ชั่วโมง 7 วัน และ 30 วัน พร้อมราคาบาทจากตลาดญี่ปุ่น อัปเดตทุกวัน",
     canonical: "/opcg/trending",
   },
   search: {
@@ -91,7 +95,11 @@ export const TOOL_PAGE_METADATA: Record<
     canonical: "/opcg/deck-calculator",
   },
   decks: {
-    title: "เด็คและเครื่องมือการ์ดวันพีซ — สร้างเด็ค คำนวณราคา",
+    // Title deliberately avoids "สร้างเด็ค" + "คำนวณราคา" together — that pair
+    // is /opcg/deck-calculator's title. This route is noindexed (SEO round 2,
+    // see src/app/decks/layout.tsx) but the title still shows on the browser
+    // tab and when the link is shared, so it still needs to read on its own.
+    title: "เด็คและเครื่องมือ — ทางลัดไปเครื่องมือการ์ดวันพีซ",
     description:
       "รวมเครื่องมือสำหรับคนเล่นการ์ดวันพีช (One Piece Card Game) — สร้างเด็คพร้อมราคารวม คำนวณโอกาสออกการ์ดต่อกล่อง และเปรียบเทียบราคาการ์ดหลายใบพร้อมกัน",
     canonical: "/opcg/decks",
@@ -109,12 +117,18 @@ export const TOOL_PAGE_METADATA: Record<
 /* ------------------------------------------------------------------ */
 
 export type TrendingPeriodKey = "24h" | "7d" | "30d";
+export type TrendingMoverKind = "gainers" | "losers";
 
 /**
  * H1 + section lead only. The old three-block stack under the H1 (generic
  * description + dynamic summary + methodology paragraph) collapsed into ONE
  * dynamic sentence — `buildTrendingSummary` — per the sitewide owner ruling
  * (2026-08-06): H1 → one keyword sentence → content.
+ *
+ * The three SEO sections below the H1 are (losers 24h, gainers 7d, gainers
+ * 30d) — not three gainers windows — so the first block doesn't duplicate the
+ * default gainers-24h tab that sits right above it, and "ราคาลง" actually
+ * shows up in the server HTML like the meta description promises.
  */
 export function buildTrendingHeading(lang: Language): {
   h1: string;
@@ -126,12 +140,12 @@ export function buildTrendingHeading(lang: Language): {
       {
         h1: "การ์ดวันพีซราคาขึ้นแรงสุดวันนี้",
         moversIntro:
-          "สามตารางด้านล่างคือ 10 อันดับแรกของแต่ละช่วงเวลา ใช้ดูว่าการ์ดใบไหนกำลังถูกไล่ราคาในระยะสั้น และใบไหนขึ้นต่อเนื่องมาทั้งเดือน",
+          "สามตารางด้านล่างคือ 10 อันดับแรกของแต่ละช่วงเวลา — ราคาลงแรงสุดในรอบ 24 ชั่วโมง และราคาขึ้นแรงสุดในรอบ 7 วันกับ 30 วัน ใช้ดูได้ทั้งการ์ดที่กำลังถูกเทขายระยะสั้นและใบที่ขึ้นต่อเนื่องมาทั้งเดือน",
       },
       {
         h1: "One Piece cards with the biggest price moves today",
         moversIntro:
-          "The three tables below list the top 10 gainers for each window — useful for telling a short-term spike apart from a card that has climbed all month.",
+          "The three tables below list the top 10 for each window — the biggest 24-hour drops, plus the biggest 7-day and 30-day gainers — useful for spotting a short-term sell-off alongside a card that has climbed all month.",
       },
     ),
   );
@@ -140,20 +154,35 @@ export function buildTrendingHeading(lang: Language): {
 export function buildTrendingPeriodTitle(
   lang: Language,
   period: TrendingPeriodKey,
+  kind: TrendingMoverKind = "gainers",
 ): string {
-  const titles: Localized<Record<TrendingPeriodKey, string>> = thEn(
+  const titles: Localized<Record<TrendingMoverKind, Record<TrendingPeriodKey, string>>> = thEn(
     {
-      "24h": "ราคาขึ้นแรงสุด 24 ชั่วโมง",
-      "7d": "ราคาขึ้นแรงสุด 7 วัน",
-      "30d": "ราคาขึ้นแรงสุด 30 วัน",
+      gainers: {
+        "24h": "ราคาขึ้นแรงสุด 24 ชั่วโมง",
+        "7d": "ราคาขึ้นแรงสุด 7 วัน",
+        "30d": "ราคาขึ้นแรงสุด 30 วัน",
+      },
+      losers: {
+        "24h": "ราคาลงแรงสุด 24 ชั่วโมง",
+        "7d": "ราคาลงแรงสุด 7 วัน",
+        "30d": "ราคาลงแรงสุด 30 วัน",
+      },
     },
     {
-      "24h": "Top gainers — 24 hours",
-      "7d": "Top gainers — 7 days",
-      "30d": "Top gainers — 30 days",
+      gainers: {
+        "24h": "Top gainers — 24 hours",
+        "7d": "Top gainers — 7 days",
+        "30d": "Top gainers — 30 days",
+      },
+      losers: {
+        "24h": "Top losers — 24 hours",
+        "7d": "Top losers — 7 days",
+        "30d": "Top losers — 30 days",
+      },
     },
   );
-  return pick(lang, titles)[period];
+  return pick(lang, titles)[kind][period];
 }
 
 /** One auto-generated sentence from the freshest mover — no hand-written copy. */
@@ -272,7 +301,8 @@ export function buildSearchFaq(lang: Language): SeoFaqItem[] {
         {
           question: "ราคาที่แสดงมาจากไหน",
           answer:
-            "ราคากลางมาจากการเก็บข้อมูลร้านการ์ดในญี่ปุ่นวันละครั้ง แล้วแปลงเป็นเงินบาทตามอัตราแลกเปลี่ยนที่เราตั้งไว้ ใช้เป็นราคาอ้างอิงก่อนซื้อขายในไทยได้ แต่ราคาจริงในตลาดไทยอาจสูงหรือต่ำกว่านี้ตามสภาพการ์ดและความต้องการ",
+            "ราคากลางอ้างอิงจากตลาดญี่ปุ่น อัปเดตทุกวัน ใช้เป็นราคาอ้างอิงก่อนซื้อขายในไทยได้ แต่ราคาจริงอาจสูงหรือต่ำกว่านี้ตามสภาพการ์ดและความต้องการ",
+          link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
         },
       ],
       [
@@ -294,7 +324,8 @@ export function buildSearchFaq(lang: Language): SeoFaqItem[] {
         {
           question: "Where do the prices come from?",
           answer:
-            "Reference prices are scraped once a day from Japanese card shops and converted to Thai baht at a fixed rate. Treat them as a reference before buying locally; Thai market prices vary with condition and demand.",
+            "Reference prices come from the Japanese market, updated daily. Treat them as a reference before buying locally; Thai market prices vary with condition and demand.",
+          link: { href: "/about#methodology", label: "How Meecard prices work" },
         },
       ],
     ),
@@ -368,10 +399,14 @@ export function buildMarketMethodologyFaq(lang: Language): SeoFaqItem[] {
     lang,
     thEn(
       [
+        // SEO round 1: only questions ABOUT THIS PAGE's numbers stay here.
+        // Generic source/frequency/Raw-vs-PSA knowledge lives once at
+        // /about#methodology and /guide/rarities — linked, not restated.
         {
           question: "ราคาการ์ดวันพีซบน Meecard มาจากไหน",
           answer:
-            "เราเก็บราคาขายจริงจากร้านการ์ดในญี่ปุ่นอัตโนมัติวันละครั้ง แล้วบันทึกเป็นราคากลางของการ์ดใบนั้นในวันนั้น จากนั้นแปลงเป็นเงินบาทให้ดูง่าย ทุกหน้าราคาบนเว็บใช้ชุดข้อมูลเดียวกันหมด",
+            "ราคากลางอ้างอิงจากตลาดญี่ปุ่น อัปเดตทุกวัน และทุกหน้าราคาบนเว็บใช้ชุดข้อมูลเดียวกันหมด",
+          link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
         },
         {
           question: "มูลค่าตลาดรวมคำนวณยังไง",
@@ -379,26 +414,23 @@ export function buildMarketMethodologyFaq(lang: Language): SeoFaqItem[] {
             "คือผลรวมของราคากลางล่าสุดของการ์ดทุกใบที่มีราคา (ใบละ 1 ใบ ไม่ได้คูณจำนวนที่ผลิต) จึงใช้เทียบขนาดของตลาดและดูทิศทางขึ้นลงได้ แต่ไม่ใช่มูลค่าซื้อขายจริงต่อวัน",
         },
         {
-          question: "Raw หมายถึงอะไร ต่างจาก PSA 10 ยังไง",
+          question: "ตัวเลขบนหน้านี้เป็นราคาเกรดไหน",
           answer:
-            "Raw คือการ์ดที่ยังไม่ได้ส่งเกรด (ยังไม่อยู่ในเคสของบริษัทตรวจสภาพ) เป็นราคาที่คนไทยซื้อขายกันปกติ ส่วน PSA 10 คือการ์ดที่ผ่านการตรวจและได้เกรดสูงสุด ซึ่งราคามักสูงกว่า Raw หลายเท่า ตัวเลขบนหน้านี้เป็นราคา Raw ทั้งหมด",
+            "เป็นราคา Raw (การ์ดที่ยังไม่ได้ส่งเกรด) ทั้งหมด ซึ่งเป็นราคาที่คนไทยซื้อขายกันปกติ",
+          link: { href: "/guide/rarities", label: "ความหายากและเกรดการ์ดวันพีซ" },
         },
         {
           question: "การเปลี่ยนแปลง 7 วันคิดยังไง",
           answer:
             "เราเทียบราคากลางล่าสุดกับราคาเมื่อ 7 วันก่อนของการ์ดแต่ละใบ แล้วถ่วงน้ำหนักด้วยราคาของใบนั้น การ์ดราคาแพงจึงมีผลต่อภาพรวมมากกว่าการ์ดราคาถูก",
         },
-        {
-          question: "ราคาอัปเดตบ่อยแค่ไหน",
-          answer:
-            "วันละครั้ง ทุกหน้าจะแสดงเวลาที่อัปเดตล่าสุดกำกับไว้ ถ้าตลาดญี่ปุ่นขยับกลางวัน ราคาบนเว็บจะตามในรอบเก็บข้อมูลถัดไป",
-        },
       ],
       [
         {
           question: "Where do Meecard's One Piece card prices come from?",
           answer:
-            "We scrape live shop prices from the Japanese market once a day, store them as that day's reference price for the card, and convert them to Thai baht. Every price page on the site uses the same dataset.",
+            "Reference prices come from the Japanese market, updated daily; every price page on the site uses the same dataset.",
+          link: { href: "/about#methodology", label: "How Meecard prices work" },
         },
         {
           question: "How is total market value calculated?",
@@ -406,19 +438,15 @@ export function buildMarketMethodologyFaq(lang: Language): SeoFaqItem[] {
             "It is the sum of the latest reference price of every card that has one (one copy per card, not print runs). Use it to gauge the size and direction of the market, not daily traded volume.",
         },
         {
-          question: "What does Raw mean compared to PSA 10?",
+          question: "Which grade are the figures on this page?",
           answer:
-            "Raw is an ungraded card — the way most cards trade in Thailand. PSA 10 is a card that passed grading with the top score and usually sells for several times the raw price. The figures on this page are all raw prices.",
+            "All raw (ungraded) prices — the way most cards trade in Thailand.",
+          link: { href: "/guide/rarities", label: "One Piece card rarities and grades" },
         },
         {
           question: "How is the 7-day change computed?",
           answer:
             "We compare each card's latest reference price with its price 7 days ago and weight the result by the card's price, so expensive cards move the index more than cheap ones.",
-        },
-        {
-          question: "How often do prices update?",
-          answer:
-            "Once a day. Every page shows its last-updated time; intraday moves in Japan show up in the next scrape.",
         },
       ],
     ),
@@ -681,7 +709,8 @@ export function buildDeckCalculatorFaq(lang: Language): SeoFaqItem[] {
         {
           question: "ราคาเด็คคิดมาจากไหน",
           answer:
-            "คิดจากราคากลางล่าสุดของการ์ดแต่ละใบ (ราคา Raw จากตลาดญี่ปุ่นที่อัปเดตวันละครั้ง) คูณจำนวนที่ใส่ในเด็ค แล้วบวกราคา Leader แสดงผลได้ทั้งเงินเยนและเงินบาท",
+            "คิดจากราคากลางล่าสุดของการ์ดแต่ละใบ คูณจำนวนที่ใส่ในเด็ค แล้วบวกราคา Leader แสดงผลได้ทั้งเงินเยนและเงินบาท",
+          link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
         },
         {
           question: "ต้องสมัครสมาชิกไหมถึงจะสร้างเด็คได้",
@@ -703,7 +732,8 @@ export function buildDeckCalculatorFaq(lang: Language): SeoFaqItem[] {
         {
           question: "How is the deck price calculated?",
           answer:
-            "Each card's latest raw reference price (scraped daily from the Japanese market) multiplied by its copy count, plus the Leader — shown in both yen and baht.",
+            "Each card's latest raw reference price multiplied by its copy count, plus the Leader — shown in both yen and baht.",
+          link: { href: "/about#methodology", label: "How Meecard prices work" },
         },
         {
           question: "Do I need an account?",

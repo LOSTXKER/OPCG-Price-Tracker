@@ -8,6 +8,7 @@ import { getMostExpensiveData } from "@/lib/data/most-expensive"
 import { getCardName } from "@/lib/i18n"
 import { JsonLd } from "@/lib/seo/json-ld-script"
 import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld"
+import { buildPageMetadata } from "@/lib/seo/page-metadata"
 import {
   mostExpensiveFaq,
   mostExpensiveMeta,
@@ -26,7 +27,7 @@ export const revalidate = 1800
 const FALLBACK_META = {
   title: "การ์ดวันพีซที่แพงที่สุด — อัปเดตทุกวัน",
   description:
-    "อันดับการ์ดวันพีชที่ราคาแพงที่สุดตอนนี้ จัดอันดับใหม่จากราคาตลาดจริงทุกวัน พร้อมเปลี่ยนแปลง 30 วันและกราฟราคาย้อนหลังรายใบ",
+    "อันดับการ์ดวันพีชที่ราคาแพงที่สุดตอนนี้ จัดอันดับใหม่จากราคาตลาดจริงทุกวัน พร้อมเปลี่ยนแปลง 30 วัน",
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -42,23 +43,15 @@ export async function generateMetadata(): Promise<Metadata> {
       })
     : FALLBACK_META
 
-  return {
+  return buildPageMetadata({
     title: meta.title,
     description: meta.description,
-    alternates: { canonical: "/opcg/most-expensive" },
-    openGraph: {
-      type: "website",
-      siteName: "Meecard",
-      locale: "th_TH",
-      title: meta.title,
-      description: meta.description,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: meta.title,
-      description: meta.description,
-    },
-  }
+    canonical: "/opcg/most-expensive",
+    // Share preview shows today's #1 most expensive card instead of the
+    // generic site-wide OG image (SEO round 2 — every share used to look
+    // identical on LINE/Facebook).
+    ogImage: top?.imageUrl ?? null,
+  })
 }
 
 export default async function MostExpensivePage() {
@@ -109,7 +102,7 @@ export default async function MostExpensivePage() {
         />
       )}
 
-      <MostExpensiveClient data={data} />
+      <MostExpensiveClient data={data} updatedLabel={updatedLabel} />
 
       {faqItems.length > 0 && <FaqSection title={headings.faq} items={faqItems} />}
 

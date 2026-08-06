@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { cache } from "react";
 import { BookOpen, Calendar, Eye, Layers, TrendingUp } from "lucide-react";
 
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
+import { isMissingTableError } from "@/lib/db-errors";
 import { Surface } from "@/components/ui/surface";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { getServerLanguage } from "@/lib/i18n/server";
@@ -14,16 +16,54 @@ import {
   buildBlogIntro,
   buildBlogRelated,
 } from "@/lib/seo/copy/site";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { BlogEmptyState } from "./blog-empty-state";
 import { BlogPageHeader } from "./blog-page-header";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: SEO_PAGE_META.blog.title,
-  description: SEO_PAGE_META.blog.description,
-  alternates: { canonical: "/blog" },
-};
+// thin-content guard: ตาราง BlogPost ยังไม่มีบทความจริงใน DB (ดู PLAN.md) — ปล่อยหน้านี้ให้
+// Google index ทั้งที่แทบว่าง = ฉุดคุณภาพทั้งโดเมน ต้องมีบทความจริงถึงเกณฑ์นี้ก่อนค่อย index
+const MIN_POSTS_TO_INDEX = 3;
+
+const getPosts = cache(async () => {
+  try {
+    return await prisma.blogPost.findMany({
+      where: { published: true },
+      orderBy: { publishedAt: "desc" },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        excerpt: true,
+        coverImage: true,
+        category: true,
+        publishedAt: true,
+        viewCount: true,
+      },
+    });
+  } catch (error) {
+    // table may not exist yet
+    if (isMissingTableError(error)) return [];
+    throw error;
+  }
+});
+
+export async function generateMetadata(): Promise<Metadata> {
+  const posts = await getPosts();
+
+  return {
+    ...buildPageMetadata({
+      title: SEO_PAGE_META.blog.title,
+      description: SEO_PAGE_META.blog.description,
+      canonical: "/blog",
+    }),
+    // ดึงจำนวนโพสต์ไม่ได้ (ตารางไม่มี) หรือมีน้อยกว่าเกณฑ์ = noindex ไปก่อน แต่ follow ยังเปิด
+    // ให้ crawler เดินลิงก์ผ่านหน้านี้ต่อไปยังหน้าอื่นได้ตามปกติ
+    robots:
+      posts.length >= MIN_POSTS_TO_INDEX ? undefined : { index: false, follow: true },
+  };
+}
 
 const RELATED_ICONS: Record<string, typeof TrendingUp> = {
   "/opcg/trending": TrendingUp,
@@ -39,35 +79,8 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export default async function BlogPage() {
-  let posts: {
-    id: number;
-    slug: string;
-    title: string;
-    excerpt: string;
-    coverImage: string | null;
-    category: string;
-    publishedAt: Date | null;
-    viewCount: number;
-  }[] = [];
-
-  try {
-    posts = await prisma.blogPost.findMany({
-      where: { published: true },
-      orderBy: { publishedAt: "desc" },
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        excerpt: true,
-        coverImage: true,
-        category: true,
-        publishedAt: true,
-        viewCount: true,
-      },
-    });
-  } catch {
-    // table may not exist yet
-  }
+  // dedupe กับ generateMetadata ผ่าน React cache() — request เดียวกัน ยิง query ครั้งเดียว
+  const posts = await getPosts();
 
   const lang = await getServerLanguage();
   const intro = buildBlogIntro(lang);

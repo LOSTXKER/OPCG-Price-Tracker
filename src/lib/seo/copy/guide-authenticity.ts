@@ -22,7 +22,7 @@ function pick<T>(lang: Language, copy: Copy<T>): T {
 export const GUIDE_AUTHENTICITY_META = {
   title: "วิธีดูการ์ดวันพีซแท้หรือปลอม — เช็คก่อนโอนเงิน",
   description:
-    "รวมจุดสังเกตการ์ดวันพีช (One Piece Card Game) ปลอม ทั้งหลังการ์ด ฟอยล์ ความคมของงานพิมพ์ และการส่องไฟดูแกนดำ พร้อมแยกให้ชัดว่าปลอม proxy และของแท้ที่หายากต่างกันยังไง",
+    "รวมจุดสังเกตการ์ดวันพีชปลอม ทั้งหลังการ์ด ฟอยล์ ความคมของงานพิมพ์ และการส่องไฟดูแกนดำ พร้อมแยกให้ชัดว่าปลอม proxy กับของแท้หายากต่างกันยังไง",
 } as const;
 
 export function guideAuthH1(lang: Language): string {

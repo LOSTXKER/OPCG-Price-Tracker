@@ -13,14 +13,16 @@ import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { t, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
 import { GUIDE_META, colorAnchorId, guideColorH1 } from "@/lib/seo/copy/guide";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: GUIDE_META.colors.title,
   description: GUIDE_META.colors.description,
-  alternates: { canonical: "/guide/colors" },
-};
+  canonical: "/guide/colors",
+  ogType: "article",
+});
 
 /* ------------------------------------------------------------------ */
 /*  Color data                                                         */

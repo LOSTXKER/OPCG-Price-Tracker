@@ -28,14 +28,16 @@ import {
   guideVersionsRulesBody,
   guideVersionsRulesHeading,
 } from "@/lib/seo/copy/guide-versions";
+import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: GUIDE_VERSIONS_META.title,
   description: GUIDE_VERSIONS_META.description,
-  alternates: { canonical: "/guide/versions" },
-};
+  canonical: "/guide/versions",
+  ogType: "article",
+});
 
 export default async function VersionsGuidePage() {
   const lang = await getServerLanguage();

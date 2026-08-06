@@ -26,39 +26,64 @@ function card(overrides: Partial<TrendingCardRow> = {}): TrendingCardRow {
 }
 
 describe("TrendingMoversSections", () => {
-  it("emits every period section as server HTML — no hooks, no fetch", () => {
+  it("emits every section as server HTML — no hooks, no fetch", () => {
     const markup = renderToStaticMarkup(
       <TrendingMoversSections
         lang="TH"
         sections={[
-          { period: "24h", cards: [card()] },
-          { period: "7d", cards: [card({ cardCode: "OP02-013" })] },
-          { period: "30d", cards: [card({ cardCode: "OP03-003" })] },
+          { period: "24h", kind: "losers", cards: [card({ priceChange24h: -8.25 })] },
+          { period: "7d", kind: "gainers", cards: [card({ cardCode: "OP02-013" })] },
+          { period: "30d", kind: "gainers", cards: [card({ cardCode: "OP03-003" })] },
         ]}
       />,
     );
 
-    expect(markup).toContain("ราคาขึ้นแรงสุด 24 ชั่วโมง");
+    expect(markup.match(/<h2/g)).toHaveLength(3);
+  });
+
+  // The first block is losers-24h, not gainers-24h — it must not duplicate the
+  // default gainers-24h tab table rendered above it (TrendingTabs), and
+  // "ราคาลง" needs to actually be present in the server HTML since the meta
+  // description promises both directions.
+  it("leads with losers 24h, then gainers 7d and 30d — not three gainers windows", () => {
+    const markup = renderToStaticMarkup(
+      <TrendingMoversSections
+        lang="TH"
+        sections={[
+          { period: "24h", kind: "losers", cards: [card({ priceChange24h: -8.25 })] },
+          { period: "7d", kind: "gainers", cards: [card({ cardCode: "OP02-013" })] },
+          { period: "30d", kind: "gainers", cards: [card({ cardCode: "OP03-003" })] },
+        ]}
+      />,
+    );
+
+    expect(markup).toContain("ราคาลงแรงสุด 24 ชั่วโมง");
     expect(markup).toContain("ราคาขึ้นแรงสุด 7 วัน");
     expect(markup).toContain("ราคาขึ้นแรงสุด 30 วัน");
-    expect(markup.match(/<h2/g)).toHaveLength(3);
+    expect(markup).not.toContain("ราคาขึ้นแรงสุด 24 ชั่วโมง");
   });
 
   it("renders the Thai card name, the code and a THB price per row", () => {
     const markup = renderToStaticMarkup(
-      <TrendingMoversSections lang="TH" sections={[{ period: "24h", cards: [card()] }]} />,
+      <TrendingMoversSections
+        lang="TH"
+        sections={[{ period: "24h", kind: "losers", cards: [card({ priceChange24h: -8.25 })] }]}
+      />,
     );
 
     expect(markup).toContain("มังกี้ ดี. ลูฟี่");
     expect(markup).toContain("OP01-003");
     expect(markup).toContain("/opcg/cards/OP01-003");
     expect(markup).toContain("฿");
-    expect(markup).toContain("+8.25%");
+    expect(markup).toContain("-8.25%");
   });
 
   it("uses the period's own change column", () => {
     const markup = renderToStaticMarkup(
-      <TrendingMoversSections lang="TH" sections={[{ period: "30d", cards: [card()] }]} />,
+      <TrendingMoversSections
+        lang="TH"
+        sections={[{ period: "30d", kind: "gainers", cards: [card()] }]}
+      />,
     );
 
     expect(markup).toContain("-3.75%");
