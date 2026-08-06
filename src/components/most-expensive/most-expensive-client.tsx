@@ -15,7 +15,6 @@ import type { MostExpensiveCard, MostExpensiveData } from "@/lib/data/most-expen
 import {
   mostExpensiveIntro,
   mostExpensiveSectionHeadings,
-  mostExpensiveSubtitle,
   mostExpensiveTableLabels,
   mostExpensiveTitle,
 } from "@/lib/seo/copy/most-expensive"
@@ -70,7 +69,7 @@ export function MostExpensiveClient({ data }: { data: MostExpensiveData }) {
   const headings = mostExpensiveSectionHeadings(lang)
   const top = data.cards[0]
 
-  const paragraphs = top
+  const lead = top
     ? mostExpensiveIntro(lang, {
         rankedCount: data.cards.length,
         totalCardCount: data.totalCardCount,
@@ -79,7 +78,7 @@ export function MostExpensiveClient({ data }: { data: MostExpensiveData }) {
         topCode: top.baseCode ?? top.cardCode,
         topPriceJpy: top.priceJpy,
       })
-    : []
+    : undefined
 
   return (
     <div className="space-y-10">
@@ -90,22 +89,11 @@ export function MostExpensiveClient({ data }: { data: MostExpensiveData }) {
             { label: mostExpensiveTitle(lang) },
           ]}
         />
-        <PageHeader
-          title={mostExpensiveTitle(lang)}
-          description={mostExpensiveSubtitle(lang, data.cards.length)}
-        />
+        {/* The keyword sentence IS the subtitle — one text block under the
+            H1, same grammar as every other landing page (owner ruling
+            2026-08-06). */}
+        <PageHeader title={mostExpensiveTitle(lang)} description={lead} />
       </div>
-
-      {/* Plain prose with a reading measure — same treatment as the home
-          page's price explainer (a bordered card around body copy reads as an
-          ad unit, and this page's job is to feel like the rest of the site). */}
-      {paragraphs.length > 0 && (
-        <div className="max-w-3xl space-y-3 text-body-sm leading-relaxed text-muted-foreground">
-          {paragraphs.map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
-          ))}
-        </div>
-      )}
 
       <section className="space-y-4">
         <h2 className="text-h3">{headings.ranking}</h2>

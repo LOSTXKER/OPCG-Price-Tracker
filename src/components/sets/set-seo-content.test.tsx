@@ -137,8 +137,9 @@ describe("set SEO copy", () => {
     expect(description).toContain("121");
     expect(description).toContain("มังกี้ ดี. ลูฟี่");
     // THB is derived from JPY (latestPriceThb is NULL in production).
+    // Owner ruling 2026-08-06 ("ไม่เอาเยน"): baht only, never yen, in copy.
     expect(description).toContain("฿");
-    expect(description).toContain("¥30,000");
+    expect(description).not.toContain("¥");
   });
 
   it("clamps the title when the set name is long", () => {
@@ -153,7 +154,9 @@ describe("set SEO copy", () => {
 
   it("generates intro prose from real set data", () => {
     const paragraphs = buildSetIntro("TH", seo);
-    expect(paragraphs.length).toBeGreaterThanOrEqual(3);
+    // ONE dense paragraph by owner ruling (2026-08-06) — every fact below
+    // must survive inside it.
+    expect(paragraphs).toHaveLength(1);
     const text = paragraphs.join(" ");
     expect(text).toContain("2 ธ.ค. 2022");
     expect(text).toContain("121 ใบ");

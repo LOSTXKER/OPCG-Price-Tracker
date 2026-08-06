@@ -475,7 +475,6 @@ export const jp = {
   noReviews: "レビューなし",
   noRating: "評価なし",
   trendingTitle: "トレンドカード",
-  trendingDesc: "24時間・7日・30日で最も価格変動したカード",
   calculate: "計算",
   dropCalculatorDesc: "コミュニティのドロップ率から、パック・ボックス・カートン単位で目当てのカードを引き当てる確率を計算します",
   dropCalculatorEmptyHint: "セットを選び、欲しいカードを選択すると当選確率と概算コストが表示されます",

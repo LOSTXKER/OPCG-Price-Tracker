@@ -7,6 +7,7 @@ import type { TrendingCardRow } from "./page";
 function card(overrides: Partial<TrendingCardRow> = {}): TrendingCardRow {
   return {
     cardCode: "OP01-003",
+    baseCode: "OP01-003",
     nameJp: "モンキー・D・ルフィ",
     nameEn: "Monkey D. Luffy",
     nameTh: "มังกี้ ดี. ลูฟี่",

@@ -76,6 +76,7 @@ async function getTrendingData() {
   function mapCards(cards: typeof gainers24h) {
     return cards.map((c) => ({
       cardCode: c.cardCode,
+      baseCode: c.baseCode,
       nameJp: c.nameJp,
       nameEn: c.nameEn,
       nameTh: c.nameTh,
@@ -115,7 +116,8 @@ export default async function TrendingPage() {
     leader && leader.priceChange24h != null
       ? {
           name: getCardName(SEO_LANG, leader),
-          cardCode: leader.cardCode,
+          // Public display code — never the internal `_p*` variant suffix.
+          cardCode: leader.baseCode ?? leader.cardCode,
           changePct: leader.priceChange24h,
           priceThb: formatThb(Math.round(jpyToThb(leader.latestPriceJpy ?? 0))),
         }
@@ -135,7 +137,9 @@ export default async function TrendingPage() {
         data={itemListJsonLd(
           heading.h1,
           data.gainers24h.slice(0, 10).map((card) => ({
-            name: `${card.cardCode} ${getCardName(SEO_LANG, card)}`,
+            // Display name carries the public code; the URL keeps the full
+            // cardCode (the variant's real address).
+            name: `${card.baseCode ?? card.cardCode} ${getCardName(SEO_LANG, card)}`,
             url: `/opcg/cards/${card.cardCode}`,
             image: card.imageUrl,
           })),
@@ -143,13 +147,9 @@ export default async function TrendingPage() {
       />
       <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "trendingTitle" }]} />
       <div className="space-y-6">
-        <TrendingPageHeader />
-
-        {/* Server-rendered prose — a table of numbers alone is thin content. */}
-        <div className="space-y-2">
-          <p className="text-body">{summary}</p>
-          <p className="text-body-sm text-muted-foreground">{heading.intro}</p>
-        </div>
+        {/* One keyword sentence under the H1 (server-built, carries today's
+            top mover) — the tabs follow immediately. */}
+        <TrendingPageHeader lead={summary} />
 
         <TrendingTabs data={data} />
 

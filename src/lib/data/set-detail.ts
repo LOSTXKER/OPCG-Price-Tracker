@@ -103,6 +103,8 @@ export const getOtherSets = cache(
 
 export type SetDetailTopCard = {
   cardCode: string;
+  /** Public display code — no internal `_p*` variant suffix. */
+  baseCode: string | null;
   nameJp: string;
   nameEn: string | null;
   /** Thai card name — populated for ~all cards; drives the Thai-first copy. */
@@ -149,6 +151,7 @@ export const getSetDetailData = cache(async (
   const topCard: SetDetailTopCard | null = top
     ? {
         cardCode: top.cardCode,
+        baseCode: top.baseCode,
         nameJp: top.nameJp,
         nameEn: top.nameEn,
         nameTh: top.nameTh,
@@ -258,7 +261,8 @@ export function toSetSeoData(
     topCard: data.topCard?.latestPriceJpy
       ? {
           name: getCardName(lang, data.topCard),
-          cardCode: data.topCard.cardCode,
+          // Public display code — copy/FAQ/JSON never print the `_p*` suffix.
+          cardCode: data.topCard.baseCode ?? data.topCard.cardCode,
           rarity: data.topCard.rarity,
           priceJpy: data.topCard.latestPriceJpy,
         }

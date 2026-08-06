@@ -27,21 +27,13 @@ export function mostExpensiveTitle(lang: Language): string {
   })
 }
 
-export function mostExpensiveSubtitle(lang: Language, count: number): string {
-  return pick(lang, {
-    TH: `อันดับ ${count} ใบจากราคาตลาดจริง จัดใหม่อัตโนมัติทุกวัน`,
-    EN: `The top ${count} by real market price — re-ranked automatically every day.`,
-    JP: `実際の市場価格による上位${count}枚。毎日自動で更新されます。`,
-  })
-}
-
 /**
- * One paragraph, on purpose (owner feedback 2026-08-06: three paragraphs of
- * prose before the table was "ยาว เยอะไป"). It keeps only what earns its
- * lines: the direct answer to the query (top card + live price), the
- * keyword, the coverage, and the freshness claim. Everything it dropped
- * still lives on the page — provenance and price-volatility caveats are in
- * the FAQ below the table.
+ * The ONE keyword sentence under the H1 — it sits in the PageHeader
+ * description slot (sitewide owner ruling 2026-08-06: H1 → one keyword
+ * sentence → content; the old generic subtitle + separate intro paragraph
+ * both collapsed into this). Carries the query answer (top card + live
+ * price), the keyword, the coverage and the freshness claim; provenance and
+ * volatility caveats live in the FAQ below the table.
  */
 export function mostExpensiveIntro(
   lang: Language,
@@ -53,22 +45,16 @@ export function mostExpensiveIntro(
     topCode: string
     topPriceJpy: number
   }
-): string[] {
+): string {
   const priceText = formatThb(Math.round(jpyToThb(data.topPriceJpy)))
 
   if (lang === "EN") {
-    return [
-      `This page ranks the ${data.rankedCount} most expensive One Piece Card Game (OPTCG) cards — out of ${data.totalCardCount.toLocaleString()} cards across ${data.setCount} sets — by their latest Japanese-market price, updated daily. Right now the top card is ${data.topName} (${data.topCode}) at about ${priceText}.`,
-    ]
+    return `The ${data.rankedCount} most expensive One Piece Card Game (OPTCG) cards — out of ${data.totalCardCount.toLocaleString()} across ${data.setCount} sets — by latest Japanese-market price, updated daily. Right now the top card is ${data.topName} (${data.topCode}) at about ${priceText}.`
   }
   if (lang === "JP") {
-    return [
-      `ワンピースカードゲーム（OPTCG）全${data.totalCardCount.toLocaleString()}枚・${data.setCount}セットの中から、高額カード上位${data.rankedCount}枚を日本市場の最新価格順に毎日更新で掲載しています。現在の1位は${data.topName}（${data.topCode}）で、およそ${priceText}です。`,
-    ]
+    return `ワンピースカードゲーム（OPTCG）全${data.totalCardCount.toLocaleString()}枚・${data.setCount}セットから高額上位${data.rankedCount}枚を日本市場の最新価格順に毎日更新。現在の1位は${data.topName}（${data.topCode}）、およそ${priceText}です。`
   }
-  return [
-    `หน้านี้จัดอันดับการ์ดวันพีซ (One Piece Card Game / OPTCG) ที่ราคาแพงที่สุด ${data.rankedCount} ใบ จากการ์ดทั้งหมด ${data.totalCardCount.toLocaleString()} ใบ ใน ${data.setCount} ชุด เรียงจากราคาตลาดญี่ปุ่นล่าสุด อัปเดตทุกวัน — ตอนนี้ใบที่แพงที่สุดคือ ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText}`,
-  ]
+  return `จัดอันดับการ์ดวันพีซ (One Piece Card Game / OPTCG) ที่แพงที่สุด ${data.rankedCount} ใบ จากทั้งหมด ${data.totalCardCount.toLocaleString()} ใบ ใน ${data.setCount} ชุด ตามราคาตลาดญี่ปุ่นล่าสุด อัปเดตทุกวัน — อันดับ 1 ตอนนี้คือ ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText}`
 }
 
 export function mostExpensiveSectionHeadings(lang: Language) {

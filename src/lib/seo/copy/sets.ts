@@ -20,7 +20,6 @@
 import type { Language } from "@/lib/i18n";
 import {
   formatCount,
-  formatJpy,
   formatThb,
   jpyToThb,
 } from "@/lib/utils/currency";
@@ -127,8 +126,9 @@ export function formatSetMonth(
   return `${months[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
 }
 
+// THB only — owner ruling 2026-08-06 ("ไม่เอาเยน"): no yen in user-facing copy.
 function priceLabel(jpy: number): string {
-  return `${formatThb(Math.round(jpyToThb(jpy)))} (${formatJpy(jpy)})`;
+  return formatThb(Math.round(jpyToThb(jpy)));
 }
 
 function pct(value: number, digits = 1): string {
@@ -287,6 +287,14 @@ export function buildSetIntroHeading(lang: Language, set: SetSeoData): string {
  * 3–4 server-rendered Thai sentences generated from data already on hand —
  * release date, box composition, card count, rarity split, top card + price.
  */
+/**
+ * ONE dense paragraph per set (sitewide owner ruling 2026-08-06: H1 → one
+ * keyword sentence → content; this page had four). Every fact that answers a
+ * real query stays — type, release date, card count, rarity breakdown, box
+ * configuration, current top card + price, both Thai spellings — only the
+ * how-to-use sentence went (the rarity sections and drop-rate table it
+ * pointed at are directly below).
+ */
 export function buildSetIntro(lang: Language, set: SetSeoData): string[] {
   const code = set.code.toUpperCase();
   const released = formatSetDate(lang, set.releaseDate);
@@ -294,48 +302,28 @@ export function buildSetIntro(lang: Language, set: SetSeoData): string[] {
   const perPack = set.cardsPerPack;
 
   if (lang === "TH") {
-    const first =
-      `${code} ${set.name} เป็นชุด${setTypeThai(set.type)}ของการ์ดวันพีซ (One Piece Card Game) ` +
-      (released ? `วางจำหน่ายเมื่อ ${released} ` : "") +
-      `รวมการ์ดในชุดทั้งหมด ${formatCount(set.cardCount)} ใบ`;
-
-    const second =
-      set.rarities.length > 0
-        ? `แบ่งตามความหายากได้เป็น ${rarityBreakdown(lang, set)} — ทุกใบมีราคากลางอัปเดตทุกวันจากตลาดญี่ปุ่น และกดเข้าไปดูกราฟราคาย้อนหลังรายใบได้`
-        : `ทุกใบมีราคากลางอัปเดตทุกวันจากตลาดญี่ปุ่น และกดเข้าไปดูกราฟราคาย้อนหลังรายใบได้`;
-
+    const rarityPart =
+      set.rarities.length > 0 ? ` (${rarityBreakdown(lang, set)})` : "";
     const boxPart =
-      packs && perPack
-        ? `กล่องของชุดนี้มี ${packs} ซอง ซองละ ${perPack} ใบ (รวม ${formatCount(packs * perPack)} ใบต่อกล่อง) `
-        : "";
+      packs && perPack ? ` กล่องละ ${packs} ซอง ซองละ ${perPack} ใบ` : "";
     const topPart = set.topCard
-      ? `การ์ดที่แพงที่สุดในชุดตอนนี้คือ ${set.topCard.name} (${set.topCard.cardCode}) ความหายาก ${set.topCard.rarity} ราคา ${priceLabel(set.topCard.priceJpy)}`
-      : `ชุดนี้ยังไม่มีข้อมูลราคาการ์ดที่แพงที่สุดในระบบ`;
-    const third = `${boxPart}${topPart}`;
-
-    const fourth = `ถ้ากำลังหาว่าการ์ดวันพีชใบไหนในชุด ${code} ราคาเท่าไหร่ เลื่อนดูราคาทุกใบแยกตามความหายากด้านล่าง หรือดูอัตราออกต่อกล่องได้ในตารางท้ายหน้า`;
-
-    return [first, second, third, fourth];
+      ? ` — ใบที่แพงที่สุดตอนนี้คือ ${set.topCard.name} (${set.topCard.cardCode}) ความหายาก ${set.topCard.rarity} ราคา ${priceLabel(set.topCard.priceJpy)}`
+      : "";
+    return [
+      `${code} ${set.name} — ชุด${setTypeThai(set.type)}ของการ์ดวันพีซ (One Piece Card Game)${released ? ` วางจำหน่าย ${released}` : ""} รวม ${formatCount(set.cardCount)} ใบ${rarityPart}${boxPart} เช็คราคาการ์ดวันพีชทุกใบได้ อัปเดตทุกวันจากตลาดญี่ปุ่น${topPart}`,
+    ];
   }
 
-  const first =
-    `${code} ${set.name} is a ${SET_TYPE_EN[normalizeType(set.type)] ?? "set"} for the One Piece Card Game` +
-    (released ? `, released ${released}` : "") +
-    `, with ${formatCount(set.cardCount)} cards in total.`;
-  const second =
-    set.rarities.length > 0
-      ? `By rarity: ${rarityBreakdown(lang, set)}. Every card carries a daily market reference price with full price history.`
-      : `Every card carries a daily market reference price with full price history.`;
-  const third =
-    (packs && perPack
-      ? `A box contains ${packs} packs of ${perPack} cards (${formatCount(packs * perPack)} cards per box). `
-      : "") +
-    (set.topCard
-      ? `The most valuable card right now is ${set.topCard.name} (${set.topCard.cardCode}, ${set.topCard.rarity}) at ${priceLabel(set.topCard.priceJpy)}.`
-      : `No price data for the most valuable card yet.`);
-  const fourth = `Browse every price by rarity below, or check the per-box drop rates at the end of the page.`;
-
-  return [first, second, third, fourth];
+  const rarityPart =
+    set.rarities.length > 0 ? ` (${rarityBreakdown(lang, set)})` : "";
+  const boxPart =
+    packs && perPack ? ` A box holds ${packs} packs of ${perPack} cards.` : "";
+  const topPart = set.topCard
+    ? ` The most valuable card right now is ${set.topCard.name} (${set.topCard.cardCode}, ${set.topCard.rarity}) at ${priceLabel(set.topCard.priceJpy)}.`
+    : "";
+  return [
+    `${code} ${set.name} — a ${SET_TYPE_EN[normalizeType(set.type)] ?? "set"} for the One Piece Card Game${released ? `, released ${released}` : ""}, with ${formatCount(set.cardCount)} cards${rarityPart}, all priced daily from the Japanese market.${boxPart}${topPart}`,
+  ];
 }
 
 /* ------------------------------------------------------------------ */
@@ -482,22 +470,26 @@ export function buildSetsIndexMeta(lang: Language): {
   };
 }
 
-export function buildSetsIndexHeading(lang: Language): {
-  title: string;
-  description: string;
-} {
-  if (lang === "TH") {
-    return {
-      title: "ชุดการ์ดวันพีซทั้งหมด",
-      description: "เลือกชุดเพื่อดูราคาการ์ดทุกใบในชุดนั้น อัปเดตทุกวัน",
-    };
-  }
+/**
+ * H1 only — the line under it is the keyword sentence from
+ * `buildSetsIndexIntro`, passed as the PageHeader description. The old
+ * generic helper line ("เลือกชุดเพื่อดู…") said the same thing with zero
+ * keyword value, so the page carried two grey lines doing one job.
+ */
+export function buildSetsIndexHeading(lang: Language): { title: string } {
   return {
-    title: "All One Piece Card Game sets",
-    description: "Pick a set to see the daily price of every card in it.",
+    title: lang === "TH" ? "ชุดการ์ดวันพีซทั้งหมด" : "All One Piece Card Game sets",
   };
 }
 
+/**
+ * ONE short sentence, keyword-first — owner ruling 2026-08-06 ("เน้น SEO
+ * เน้นๆ"): only what ranks earns a place here. Keyword up front, both Thai
+ * spellings, the coverage numbers, the freshness claim, and (once
+ * `releaseDate` is backfilled) the newest set. Set types, usage hints and
+ * the English-names note all went — the filter tabs and the FAQ under the
+ * grid already carry them as real text.
+ */
 export function buildSetsIndexIntro(
   lang: Language,
   data: SetsIndexSeoData,
@@ -505,19 +497,20 @@ export function buildSetsIndexIntro(
   const latestDate = formatSetDate(lang, data.latest?.releaseDate ?? null);
 
   if (lang === "TH") {
-    const first = `ตอนนี้ Meecard เก็บชุดการ์ดวันพีซ (One Piece Card Game) ไว้ ${formatCount(data.setCount)} ชุด รวมการ์ดที่มีราคากลาง ${formatCount(data.cardCount)} ใบ ครอบคลุมทั้งบูสเตอร์ เอ็กซ์ตร้าบูสเตอร์ สตาร์ทเตอร์เด็ค และการ์ดโปรโม`;
-    const second = data.latest
-      ? `ชุดล่าสุดในระบบคือ ${data.latest.code.toUpperCase()} ${data.latest.name}${latestDate ? ` วางจำหน่าย ${latestDate}` : ""} — กดที่ชุดไหนก็ได้เพื่อดูราคาการ์ดวันพีชทุกใบในชุดนั้น แยกตามความหายาก พร้อมอัตราออกต่อกล่อง`
-      : `กดที่ชุดไหนก็ได้เพื่อดูราคาการ์ดวันพีชทุกใบในชุดนั้น แยกตามความหายาก พร้อมอัตราออกต่อกล่อง`;
-    const third = `ชื่อชุดใช้ตามฉบับภาษาอังกฤษ (เช่น OP01 Romance Dawn) เพราะเป็นชื่อที่ใช้อ้างอิงกันในตลาดไทยและตรงกับโค้ดบนตัวการ์ด`;
-    return [first, second, third];
+    const latestPart = data.latest
+      ? ` ชุดล่าสุดคือ ${data.latest.code.toUpperCase()} ${data.latest.name}${latestDate ? ` วางจำหน่าย ${latestDate}` : ""}`
+      : "";
+    return [
+      `รวมชุดการ์ดวันพีซ (One Piece Card Game) ทั้ง ${formatCount(data.setCount)} ชุด — เช็คราคาการ์ดวันพีชทุกใบรวม ${formatCount(data.cardCount)} ใบ อัปเดตทุกวัน${latestPart}`,
+    ];
   }
 
-  const first = `Meecard tracks ${formatCount(data.setCount)} One Piece Card Game sets and ${formatCount(data.cardCount)} priced cards — boosters, extra boosters, starter decks and promos.`;
-  const second = data.latest
-    ? `The newest set on file is ${data.latest.code.toUpperCase()} ${data.latest.name}${latestDate ? `, released ${latestDate}` : ""}. Open any set to see every card price in it, grouped by rarity, plus per-box drop rates.`
-    : `Open any set to see every card price in it, grouped by rarity, plus per-box drop rates.`;
-  return [first, second];
+  const latestPart = data.latest
+    ? ` The newest set is ${data.latest.code.toUpperCase()} ${data.latest.name}${latestDate ? `, released ${latestDate}` : ""}.`
+    : "";
+  return [
+    `All ${formatCount(data.setCount)} One Piece Card Game sets — daily prices for every card, ${formatCount(data.cardCount)} in total.${latestPart}`,
+  ];
 }
 
 export function buildSetsIndexFaq(

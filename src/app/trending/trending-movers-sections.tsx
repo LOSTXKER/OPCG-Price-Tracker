@@ -6,7 +6,7 @@ import {
   buildTrendingPeriodTitle,
   type TrendingPeriodKey,
 } from "@/lib/seo/copy/tools";
-import { formatJpy, formatThb, jpyToThb } from "@/lib/utils/currency";
+import { formatThb, jpyToThb } from "@/lib/utils/currency";
 
 import type { TrendingCardRow } from "./page";
 
@@ -44,9 +44,11 @@ export function TrendingMoversSections({
                         {getCardName(lang, card)}
                       </span>
                       <span className="text-meta">
-                        {card.cardCode} · {card.setCode.toUpperCase()} · {card.rarity}
+                        {card.baseCode ?? card.cardCode} · {card.setCode.toUpperCase()} · {card.rarity}
                       </span>
                     </span>
+                    {/* THB only — owner ruling 2026-08-06 ("ไม่เอาเยน"):
+                        no yen line in user-facing copy. */}
                     <span className="shrink-0 text-right">
                       <span className="block text-body-sm tabular-nums">
                         {card.latestPriceJpy != null
@@ -54,8 +56,6 @@ export function TrendingMoversSections({
                           : "—"}
                       </span>
                       <span className="text-meta tabular-nums">
-                        {card.latestPriceJpy != null ? formatJpy(card.latestPriceJpy) : "—"}
-                        {" · "}
                         {formatChange(changeFor(card, period))}
                       </span>
                     </span>

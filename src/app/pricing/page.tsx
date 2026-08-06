@@ -11,7 +11,6 @@ import {
   SEO_PAGE_META,
   buildPricingFaq,
   buildPricingHeading,
-  buildPricingIntro,
 } from "@/lib/seo/copy/site";
 import PricingClient from "./pricing-client";
 
@@ -44,11 +43,10 @@ export default async function PricingPage({
     .replace("{portfolios}", String(TIER_LIMITS.PRO.portfolioCount))
     .replace("{alerts}", String(TIER_LIMITS.PRO.priceAlerts));
 
-  // H1 + intro live here (server component) rather than inside PricingClient so
-  // the keyword heading and the "what Meecard is" prose are in the first HTML
-  // response for every user agent.
+  // H1 + the one keyword sentence live here (server component) so they are in
+  // the first HTML response for every user agent. The old three-paragraph
+  // intro folded into the PageHeader description (owner ruling 2026-08-06).
   const heading = buildPricingHeading(lang);
-  const intro = buildPricingIntro(lang);
   const extraFaq = buildPricingFaq(lang, {
     freePortfolioCards: TIER_LIMITS.FREE.portfolioCards,
     freePortfolioCount: TIER_LIMITS.FREE.portfolioCount,
@@ -62,13 +60,6 @@ export default async function PricingPage({
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Pricing", href: "/pricing" }])} />
       <LocalizedBreadcrumb items={[{ labelKey: "home", href: "/" }, { labelKey: "pricing" }]} />
       <PageHeader align="center" title={heading.title} description={heading.description} />
-      <div className="mx-auto mb-10 max-w-2xl space-y-3 text-center">
-        {intro.map((paragraph) => (
-          <p key={paragraph} className="text-body-sm text-muted-foreground">
-            {paragraph}
-          </p>
-        ))}
-      </div>
       <PricingClient
         checkoutPlan={firstParam(query.checkout)}
         selectedCheckoutPlan={firstParam(query.selected)}

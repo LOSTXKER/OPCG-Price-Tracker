@@ -475,7 +475,6 @@ export const en = {
   noReviews: "No reviews yet",
   noRating: "No rating yet",
   trendingTitle: "Trending Cards",
-  trendingDesc: "Cards with the most price movement over 24h, 7d, and 30d",
   calculate: "Calculate",
   dropCalculatorDesc: "Estimate the odds of pulling specific cards from packs, boxes, or cartons using community drop rates",
   dropCalculatorEmptyHint: "Pick a set to start, then choose the cards you want to see your odds and estimated cost",

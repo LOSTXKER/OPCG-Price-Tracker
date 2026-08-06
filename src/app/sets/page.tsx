@@ -149,15 +149,10 @@ export default async function SetsIndexPage() {
         ]}
       />
       <div className="space-y-8">
-        <PageHeader title={heading.title} description={heading.description} />
-
-        <section className="max-w-3xl space-y-2">
-          {introParagraphs.map((paragraph, i) => (
-            <p key={i} className="text-body text-muted-foreground">
-              {paragraph}
-            </p>
-          ))}
-        </section>
+        {/* The keyword sentence IS the subtitle — one text block under the H1
+            instead of a generic helper line plus a floating SEO paragraph
+            saying the same thing (owner call 2026-08-06). */}
+        <PageHeader title={heading.title} description={introParagraphs[0]} />
 
         {dbError ? (
           <ErrorBanner />

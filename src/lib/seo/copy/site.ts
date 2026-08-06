@@ -69,6 +69,9 @@ export const SEO_PAGE_META = {
  * /pricing
  * ──────────────────────────────────────────────────────────────────────────── */
 
+// One keyword sentence under the H1 (sitewide owner ruling 2026-08-06) — the
+// old three-paragraph intro folded into it: free forever, what paying adds,
+// and the Honey path to Pro without paying.
 export function buildPricingHeading(lang: Language): {
   title: string;
   description: string;
@@ -77,40 +80,21 @@ export function buildPricingHeading(lang: Language): {
     TH: {
       title: "แพ็กเกจ Meecard — เช็คราคาการ์ดวันพีซฟรี อัปเกรดได้เมื่อพร้อม",
       description:
-        "ดูราคาการ์ดวันพีชทุกใบได้ฟรีตลอด อัปเกรดเมื่ออยากได้พอร์ตใหญ่ขึ้นและแจ้งเตือนราคามากขึ้น",
+        "ดูราคาการ์ดวันพีชทุกใบได้ฟรีตลอด อัปเกรดเมื่ออยากได้พอร์ตใหญ่ขึ้นและแจ้งเตือนมากขึ้น — หรือสะสมแต้ม Honey แลกบัตรผ่าน Pro ได้โดยไม่ต้องจ่ายเลย",
     },
     EN: {
       title: "Meecard plans — check One Piece card prices free, upgrade when ready",
       description:
-        "Every card price stays free. Upgrade only when you want a bigger portfolio and more price alerts.",
+        "Every card price stays free. Upgrade for a bigger portfolio and more alerts — or earn Honey points and redeem a Pro pass without paying at all.",
     },
     JP: {
       title: "Meecard プラン — ワンピースカード価格は無料、必要になったらアップグレード",
       description:
-        "カード価格の閲覧は常に無料。ポートフォリオ枠や価格アラートを増やしたいときだけアップグレード。",
+        "カード価格の閲覧は常に無料。ポートフォリオ枠やアラートを増やしたいときだけアップグレード — Honey ポイントを貯めて Pro パスと無料交換もできます。",
     },
   });
 }
 
-export function buildPricingIntro(lang: Language): string[] {
-  return pick(lang, {
-    TH: [
-      "Meecard เป็นเว็บเช็คราคาการ์ดวันพีซ (One Piece Card Game) สำหรับนักสะสมไทย — ดูราคากลางรายใบ กราฟราคาย้อนหลัง ราคาเกรด PSA 10 และมูลค่ารวมของแต่ละชุดได้ฟรี ไม่ต้องสมัครสมาชิกก็เปิดดูได้",
-      "แพ็กเกจแบบเสียเงินมีไว้สำหรับคนที่เก็บการ์ดวันพีชจริงจัง คือเพิ่มจำนวนการ์ดในพอร์ต จำนวนรายการแจ้งเตือนราคา ความยาวของประวัติราคา และการส่งออกข้อมูลเป็น CSV ส่วนการดูราคายังฟรีเหมือนเดิมทุกแพ็กเกจ",
-      "ถ้ายังไม่อยากจ่าย ก็ได้ Pro เหมือนกัน — สะสมแต้ม Honey จากการเช็คอินและทำภารกิจประจำวัน แล้วนำไปแลกบัตรผ่าน Pro ในร้าน Honey ได้โดยไม่ต้องใช้บัตรเครดิต",
-    ],
-    EN: [
-      "Meecard is a One Piece Card Game price tracker built for the Thai market — per-card market prices, historical charts, PSA 10 values and per-set totals are all free to browse without an account.",
-      "Paid plans exist for serious collectors: a larger portfolio, more price alerts, a longer price history and CSV export. Looking up prices stays free on every plan.",
-      "Prefer not to pay? Earn Honey points from daily check-ins and missions, then redeem a Pro pass in the Honey shop — no credit card needed.",
-    ],
-    JP: [
-      "Meecard はタイ市場向けのワンピースカードゲーム価格トラッカーです。カードごとの相場、価格チャート、PSA 10 価格、セット合計はアカウントなしで無料に閲覧できます。",
-      "有料プランは本格的なコレクター向けで、ポートフォリオ枠・価格アラート数・価格履歴の期間・CSV エクスポートが増えます。価格の閲覧はどのプランでも無料のままです。",
-      "支払いたくない場合は、デイリーミッションとチェックインで Honey を貯め、Honey ショップで Pro パスと交換できます。クレジットカードは不要です。",
-    ],
-  });
-}
 
 /**
  * Pricing FAQ additions. Every answer is derived from behaviour that exists in

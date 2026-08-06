@@ -382,14 +382,12 @@ export function TrendingTabs({ data }: { data: TrendingData }) {
   )
 }
 
-export function TrendingPageHeader() {
+export function TrendingPageHeader({ lead }: { lead: string }) {
   const lang = useUIStore((s) => s.language)
   // The single visible H1 carries the target keyword ("การ์ดวันพีซราคาขึ้นแรงสุด")
-  // instead of the generic nav label ("การ์ดมาแรง").
-  return (
-    <PageHeader
-      title={buildTrendingHeading(lang).h1}
-      description={t(lang, "trendingDesc")}
-    />
-  )
+  // instead of the generic nav label ("การ์ดมาแรง"). The line under it is the
+  // ONE dynamic keyword sentence built on the server (buildTrendingSummary) —
+  // the old generic description + separate summary/intro paragraphs are gone
+  // (sitewide owner ruling 2026-08-06).
+  return <PageHeader title={buildTrendingHeading(lang).h1} description={lead} />
 }

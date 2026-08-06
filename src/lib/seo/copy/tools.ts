@@ -110,9 +110,14 @@ export const TOOL_PAGE_METADATA: Record<
 
 export type TrendingPeriodKey = "24h" | "7d" | "30d";
 
+/**
+ * H1 + section lead only. The old three-block stack under the H1 (generic
+ * description + dynamic summary + methodology paragraph) collapsed into ONE
+ * dynamic sentence — `buildTrendingSummary` — per the sitewide owner ruling
+ * (2026-08-06): H1 → one keyword sentence → content.
+ */
 export function buildTrendingHeading(lang: Language): {
   h1: string;
-  intro: string;
   moversIntro: string;
 } {
   return pick(
@@ -120,15 +125,11 @@ export function buildTrendingHeading(lang: Language): {
     thEn(
       {
         h1: "การ์ดวันพีซราคาขึ้นแรงสุดวันนี้",
-        intro:
-          "หน้านี้จัดอันดับการ์ดวันพีช (One Piece Card Game) ที่ราคาขยับแรงที่สุด โดยเทียบราคากลางล่าสุดกับราคาเมื่อ 24 ชั่วโมง 7 วัน และ 30 วันก่อน ราคาทั้งหมดมาจากการเก็บข้อมูลตลาดญี่ปุ่นวันละครั้ง แล้วแปลงเป็นเงินบาทให้ดูง่าย กดที่ชื่อการ์ดเพื่อดูกราฟราคาย้อนหลังและราคาแยกตามเกรดของใบนั้น",
         moversIntro:
           "สามตารางด้านล่างคือ 10 อันดับแรกของแต่ละช่วงเวลา ใช้ดูว่าการ์ดใบไหนกำลังถูกไล่ราคาในระยะสั้น และใบไหนขึ้นต่อเนื่องมาทั้งเดือน",
       },
       {
         h1: "One Piece cards with the biggest price moves today",
-        intro:
-          "This page ranks the One Piece Card Game cards whose market price moved the most, comparing the latest reference price with the price 24 hours, 7 days and 30 days ago. Prices are scraped from the Japanese market once a day and converted to Thai baht. Open a card to see its full price history and per-grade prices.",
         moversIntro:
           "The three tables below list the top 10 gainers for each window — useful for telling a short-term spike apart from a card that has climbed all month.",
       },
@@ -156,6 +157,10 @@ export function buildTrendingPeriodTitle(
 }
 
 /** One auto-generated sentence from the freshest mover — no hand-written copy. */
+/**
+ * The ONE sentence under the H1 — keyword + methodology + (when data exists)
+ * the live answer to "which card is pumping today".
+ */
 export function buildTrendingSummary(
   lang: Language,
   data: { name: string; cardCode: string; changePct: number; priceThb: string } | null,
@@ -164,8 +169,8 @@ export function buildTrendingSummary(
     return pick(
       lang,
       thEn(
-        "ยังไม่มีการ์ดที่ราคาขยับในรอบล่าสุด กลับมาดูใหม่หลังราคาอัปเดตรอบถัดไป",
-        "No card moved in the latest update. Check back after the next daily refresh.",
+        "จัดอันดับการ์ดวันพีช (One Piece Card Game) ที่ราคาขยับแรงสุดใน 24 ชั่วโมง 7 วัน และ 30 วัน จากราคาตลาดญี่ปุ่น อัปเดตทุกวัน",
+        "The One Piece Card Game cards with the biggest price moves over 24 hours, 7 days and 30 days — from Japanese-market prices, updated daily.",
       ),
     );
   }
@@ -173,8 +178,8 @@ export function buildTrendingSummary(
   return pick(
     lang,
     thEn(
-      `วันนี้ ${data.name} (${data.cardCode}) ขึ้นแรงสุด ${pct} ในรอบ 24 ชั่วโมง ราคาล่าสุดอยู่ที่ ${data.priceThb}`,
-      `${data.name} (${data.cardCode}) is today's biggest gainer at ${pct} over 24 hours, now at ${data.priceThb}.`,
+      `จัดอันดับการ์ดวันพีช (One Piece Card Game) ที่ราคาขยับแรงสุดใน 24 ชั่วโมง 7 วัน และ 30 วัน อัปเดตทุกวัน — วันนี้ ${data.name} (${data.cardCode}) ขึ้นแรงสุด ${pct} ราคาล่าสุด ${data.priceThb}`,
+      `The One Piece Card Game cards with the biggest price moves over 24 hours, 7 days and 30 days, updated daily — today's biggest gainer is ${data.name} (${data.cardCode}) at ${pct}, now ${data.priceThb}.`,
     ),
   );
 }
