@@ -16,7 +16,10 @@ import {
 } from "@/lib/seo/copy/tools";
 import { formatThb, jpyToThb } from "@/lib/utils/currency";
 import { TrendingTabs, TrendingPageHeader } from "./trending-tabs";
-import { TrendingMoversSections } from "./trending-movers-sections";
+import {
+  TrendingMoversSections,
+  TrendingWorthCollectingSection,
+} from "./trending-movers-sections";
 
 // ISR — trending data changes with the daily cron, not per request. The active
 // tab reads from `?tab=` client-side (in the tiny URL bridge inside
@@ -197,6 +200,8 @@ export default async function TrendingPage() {
           <p className="text-body-sm text-muted-foreground">{heading.moversIntro}</p>
           <TrendingMoversSections lang={SEO_LANG} sections={seoSections} />
         </div>
+
+        <TrendingWorthCollectingSection lang={SEO_LANG} />
       </div>
       <RelatedPages
         items={[

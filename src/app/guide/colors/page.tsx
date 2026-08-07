@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/db";
@@ -192,9 +193,9 @@ export default async function ColorsPage() {
     <div className="mx-auto max-w-3xl space-y-12">
       <JsonLd
         data={breadcrumbJsonLd([
-          { name: "Home", href: "/" },
-          { name: "Guide", href: "/guide" },
-          { name: "Colors", href: "/guide/colors" },
+          { name: t(lang, "home"), href: "/" },
+          { name: t(lang, "guideBreadcrumbGuide"), href: "/guide" },
+          { name: t(lang, "guideColorTitle"), href: "/guide/colors" },
         ])}
       />
 
@@ -204,13 +205,13 @@ export default async function ColorsPage() {
           <Breadcrumb
             items={[
               { label: t(lang, "home"), href: "/" },
-              { label: "Guide", href: "/guide" },
+              { label: t(lang, "guideBreadcrumbGuide"), href: "/guide" },
               { label: t(lang, "guideColorTitle") },
             ]}
             hideMobileBack
           />
         }
-        back={{ href: "/guide", label: "Guide" }}
+        back={{ href: "/guide", label: t(lang, "guideBreadcrumbGuide") }}
         title={guideColorH1(lang)}
         description={
           <>
@@ -293,6 +294,12 @@ export default async function ColorsPage() {
             );
           })}
         </div>
+        <p className="text-sm text-muted-foreground">
+          {t(lang, "guideColorBrowseP1a")}{" "}
+          <Link href="/opcg/search" className="font-medium text-primary hover:underline">
+            {t(lang, "guideColorBrowseLink")}
+          </Link>
+        </p>
       </section>
 
       {/* ── 3. Multicolor ── */}

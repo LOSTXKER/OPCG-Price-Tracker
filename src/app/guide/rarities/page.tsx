@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/db";
+import { jpyToThb } from "@/lib/utils/currency";
+import { formatSnapshotDate, formatTierPriceLabel, type TierPriceStats } from "./rarity-price-format";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { FaqSection } from "@/components/shared/faq-section";
@@ -51,10 +53,14 @@ interface RarityTier {
   name: string;
   color: string;
   perSet: string;
-  priceJpy: string;
   description: string;
   prominent?: boolean;
 }
+
+/** Base rarity tier codes shown on this page — matches `Card.rarity` in the DB
+ *  (Parallel variants use a separate `P-*` rarity and are covered by
+ *  `buildParallelTiers` / the parallel comparison below, not here). */
+const RARITY_TIER_CODES = ["TR", "SP", "SEC", "SR", "R", "UC", "C", "L", "DON", "P"] as const;
 
 function buildRarityTiers(lang: Language): RarityTier[] {
   return [
@@ -63,7 +69,6 @@ function buildRarityTiers(lang: Language): RarityTier[] {
       name: "Treasure Rare",
       color: "#EF4444",
       perSet: t(lang, "guideRarityTrPerSet"),
-      priceJpy: "¥100,000-1,000,000+",
       description: t(lang, "guideRarityTrDesc"),
       prominent: true,
     },
@@ -72,7 +77,6 @@ function buildRarityTiers(lang: Language): RarityTier[] {
       name: "Special",
       color: "#EC4899",
       perSet: t(lang, "guideRaritySpPerSet"),
-      priceJpy: "¥3,000-600,000+",
       description: t(lang, "guideRaritySpDesc"),
       prominent: true,
     },
@@ -81,7 +85,6 @@ function buildRarityTiers(lang: Language): RarityTier[] {
       name: "Secret Rare",
       color: "#F59E0B",
       perSet: t(lang, "guideRaritySecPerSet"),
-      priceJpy: "¥500-5,000",
       description: t(lang, "guideRaritySecDesc"),
       prominent: true,
     },
@@ -90,7 +93,6 @@ function buildRarityTiers(lang: Language): RarityTier[] {
       name: "Super Rare",
       color: "#8B5CF6",
       perSet: t(lang, "guideRaritySrPerSet"),
-      priceJpy: "¥80-2,000",
       description: t(lang, "guideRaritySrDesc"),
     },
     {
@@ -98,7 +100,6 @@ function buildRarityTiers(lang: Language): RarityTier[] {
       name: "Rare",
       color: "#3B82F6",
       perSet: t(lang, "guideRarityRPerSet"),
-      priceJpy: "¥80-200",
       description: t(lang, "guideRarityRDesc"),
     },
     {
@@ -106,7 +107,6 @@ function buildRarityTiers(lang: Language): RarityTier[] {
       name: "Uncommon",
       color: "#22C55E",
       perSet: t(lang, "guideRarityUcPerSet"),
-      priceJpy: "¥80",
       description: t(lang, "guideRarityUcDesc"),
     },
     {
@@ -114,7 +114,6 @@ function buildRarityTiers(lang: Language): RarityTier[] {
       name: "Common",
       color: "#6B7280",
       perSet: t(lang, "guideRarityCPerSet"),
-      priceJpy: "¥30",
       description: t(lang, "guideRarityCDesc"),
     },
     {
@@ -122,7 +121,6 @@ function buildRarityTiers(lang: Language): RarityTier[] {
       name: "Leader",
       color: "#F97316",
       perSet: t(lang, "guideRarityLPerSet"),
-      priceJpy: "¥50",
       description: t(lang, "guideRarityLDesc"),
     },
     {
@@ -130,7 +128,6 @@ function buildRarityTiers(lang: Language): RarityTier[] {
       name: "DON!!",
       color: "#EA580C",
       perSet: t(lang, "guideRarityDonPerSet"),
-      priceJpy: "¥100-50,000+",
       description: t(lang, "guideRarityDonDesc"),
     },
     {
@@ -138,17 +135,45 @@ function buildRarityTiers(lang: Language): RarityTier[] {
       name: "Promo",
       color: "#06B6D4",
       perSet: t(lang, "guideRarityPPerSet"),
-      priceJpy: t(lang, "guideRarityPPrice"),
       description: t(lang, "guideRarityPDesc"),
     },
   ];
 }
 
-function buildParallelComparison(lang: Language) {
+/** A true same-card SEC → Parallel → Super Parallel price example, found live
+ *  in the catalogue by `getRarityPriceStats` (see below) instead of the
+ *  hand-typed ¥500 / ¥1,480 / ¥198,000 this section used to show. */
+type ParallelTriple = {
+  name: string;
+  base: { code: string; thb: number };
+  parallel: { code: string; thb: number };
+  superParallel: { code: string; thb: number };
+} | null;
+
+function buildParallelComparison(lang: Language, triple: ParallelTriple) {
+  if (!triple) return null;
   return [
-    { label: t(lang, "guideRarityCompareSecLabel"), price: "¥500", color: "#F59E0B", sub: t(lang, "guideRarityCompareSecSub") },
-    { label: t(lang, "guideRarityComparePsecLabel"), price: "¥1,480", color: "#F59E0B", sub: t(lang, "guideRarityComparePsecSub") },
-    { label: t(lang, "guideRarityCompareSuperLabel"), price: "¥198,000", color: "#EC4899", sub: t(lang, "guideRarityCompareSuperSub") },
+    {
+      label: t(lang, "guideRarityCompareSecLabel"),
+      href: `/opcg/cards/${triple.base.code}`,
+      priceThb: triple.base.thb,
+      color: "#F59E0B",
+      sub: t(lang, "guideRarityCompareSecSub"),
+    },
+    {
+      label: t(lang, "guideRarityComparePsecLabel"),
+      href: `/opcg/cards/${triple.parallel.code}`,
+      priceThb: triple.parallel.thb,
+      color: "#F59E0B",
+      sub: t(lang, "guideRarityComparePsecSub"),
+    },
+    {
+      label: t(lang, "guideRarityCompareSuperLabel"),
+      href: `/opcg/cards/${triple.superParallel.code}`,
+      priceThb: triple.superParallel.thb,
+      color: "#EC4899",
+      sub: t(lang, "guideRarityCompareSuperSub"),
+    },
   ];
 }
 
@@ -284,13 +309,124 @@ const getExampleCards = unstable_cache(
   { revalidate: 3600, tags: ["guide-cards"] }
 );
 
+type RaritySecCard = { cardCode: string; nameEn: string | null; nameJp: string; latestPriceJpy: number | null };
+type RarityParallelCard = { cardCode: string; baseCode: string | null; parallelIndex: number | null; latestPriceJpy: number | null };
+
+/**
+ * Real per-tier price ranges (min/median/max, THB) + a real same-card
+ * SEC → Parallel → Super Parallel example, computed from `Card.latestPriceJpy`
+ * (same denormalized field the rest of the site already treats as the
+ * current price — see `lib/data/most-expensive.ts`) instead of the
+ * hand-typed numbers this page used to ship. Cached for an hour, same
+ * pattern as `getExampleCards` above — this is a snapshot for an
+ * illustrative guide page, not a live price feed.
+ */
+const getRarityPriceStats = unstable_cache(
+  async (): Promise<{
+    tiers: Record<string, TierPriceStats | null>;
+    triple: ParallelTriple;
+    snapshotAt: string | null;
+  }> => {
+    const emptyTiers = Object.fromEntries(RARITY_TIER_CODES.map((code) => [code, null])) as Record<
+      string,
+      TierPriceStats | null
+    >;
+    try {
+      const [priced, secCards, pSecCards, latestPrice] = await Promise.all([
+        prisma.card.findMany({
+          where: { rarity: { in: [...RARITY_TIER_CODES] }, latestPriceJpy: { not: null, gt: 0 } },
+          select: { rarity: true, latestPriceJpy: true },
+        }),
+        prisma.card.findMany({
+          where: { rarity: "SEC", isParallel: false, latestPriceJpy: { not: null, gt: 0 } },
+          select: { cardCode: true, nameEn: true, nameJp: true, latestPriceJpy: true },
+        }),
+        prisma.card.findMany({
+          where: { rarity: "P-SEC", isParallel: true, baseCode: { not: null }, latestPriceJpy: { not: null, gt: 0 } },
+          select: { cardCode: true, baseCode: true, parallelIndex: true, latestPriceJpy: true },
+        }),
+        prisma.cardPrice.findFirst({ orderBy: { scrapedAt: "desc" }, select: { scrapedAt: true } }),
+      ]);
+
+      const grouped: Record<string, number[]> = {};
+      for (const row of priced) {
+        if (row.latestPriceJpy == null) continue;
+        (grouped[row.rarity] ??= []).push(row.latestPriceJpy);
+      }
+
+      const tiers: Record<string, TierPriceStats | null> = { ...emptyTiers };
+      for (const code of RARITY_TIER_CODES) {
+        const values = grouped[code];
+        if (!values || values.length === 0) continue;
+        values.sort((a, b) => a - b);
+        const min = values[0]!;
+        const max = values[values.length - 1]!;
+        const mid = Math.floor(values.length / 2);
+        const median = values.length % 2 === 0 ? (values[mid - 1]! + values[mid]!) / 2 : values[mid]!;
+        tiers[code] = {
+          count: values.length,
+          minThb: Math.round(jpyToThb(min)),
+          medianThb: Math.round(jpyToThb(median)),
+          maxThb: Math.round(jpyToThb(max)),
+        };
+      }
+
+      // Find the real same-card SEC -> Parallel -> Super Parallel triple with
+      // the largest gap (most illustrative of what "Parallel art" buys you) —
+      // `baseCode` links a Parallel row back to its standard printing, and
+      // `parallelIndex` orders multiple Parallel versions of the same card.
+      const secByCode = new Map<string, RaritySecCard>(secCards.map((c) => [c.cardCode, c]));
+      const parallelsByBase = new Map<string, RarityParallelCard[]>();
+      for (const p of pSecCards) {
+        if (!p.baseCode) continue;
+        const list = parallelsByBase.get(p.baseCode) ?? [];
+        list.push(p);
+        parallelsByBase.set(p.baseCode, list);
+      }
+
+      let triple: ParallelTriple = null;
+      let bestSuperJpy = -1;
+      for (const [baseCode, group] of parallelsByBase) {
+        const base = secByCode.get(baseCode);
+        if (!base || base.latestPriceJpy == null || group.length < 2) continue;
+        const sorted = [...group].sort((a, b) => (a.parallelIndex ?? 0) - (b.parallelIndex ?? 0));
+        const parallelCard = sorted[0]!;
+        const superCard = sorted[sorted.length - 1]!;
+        if (parallelCard.cardCode === superCard.cardCode) continue;
+        if (parallelCard.latestPriceJpy == null || superCard.latestPriceJpy == null) continue;
+        if (superCard.latestPriceJpy <= bestSuperJpy) continue;
+        bestSuperJpy = superCard.latestPriceJpy;
+        triple = {
+          name: base.nameEn ?? base.nameJp,
+          base: { code: base.cardCode, thb: Math.round(jpyToThb(base.latestPriceJpy)) },
+          parallel: { code: parallelCard.cardCode, thb: Math.round(jpyToThb(parallelCard.latestPriceJpy)) },
+          superParallel: { code: superCard.cardCode, thb: Math.round(jpyToThb(superCard.latestPriceJpy)) },
+        };
+      }
+
+      return {
+        tiers,
+        triple,
+        snapshotAt: latestPrice?.scrapedAt ? latestPrice.scrapedAt.toISOString() : null,
+      };
+    } catch {
+      return { tiers: emptyTiers, triple: null, snapshotAt: null };
+    }
+  },
+  ["guide-rarity-price-stats"],
+  { revalidate: 3600, tags: ["guide-cards"] }
+);
+
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
 
 export default async function RaritiesPage() {
   const lang = await getServerLanguage();
-  const { byRarity, parallels } = await getExampleCards();
+  const [{ byRarity, parallels }, { tiers: priceStats, triple, snapshotAt }] = await Promise.all([
+    getExampleCards(),
+    getRarityPriceStats(),
+  ]);
   const rarityTiers = buildRarityTiers(lang);
   const prominent = rarityTiers.filter((r) => r.prominent);
   const regular = rarityTiers.filter((r) => !r.prominent);
@@ -299,9 +435,9 @@ export default async function RaritiesPage() {
     <div className="mx-auto max-w-3xl space-y-12">
       <JsonLd
         data={breadcrumbJsonLd([
-          { name: "Home", href: "/" },
-          { name: "Guide", href: "/guide" },
-          { name: "Rarities", href: "/guide/rarities" },
+          { name: t(lang, "home"), href: "/" },
+          { name: t(lang, "guideBreadcrumbGuide"), href: "/guide" },
+          { name: t(lang, "guideRarityBreadcrumb"), href: "/guide/rarities" },
         ])}
       />
 
@@ -311,13 +447,13 @@ export default async function RaritiesPage() {
           <Breadcrumb
             items={[
               { label: t(lang, "home"), href: "/" },
-              { label: "Guide", href: "/guide" },
+              { label: t(lang, "guideBreadcrumbGuide"), href: "/guide" },
               { label: t(lang, "guideRarityBreadcrumb") },
             ]}
             hideMobileBack
           />
         }
-        back={{ href: "/guide", label: "Guide" }}
+        back={{ href: "/guide", label: t(lang, "guideBreadcrumbGuide") }}
         title={guideRarityH1(lang)}
         description={
           <>
@@ -332,15 +468,21 @@ export default async function RaritiesPage() {
 
       {/* ── 2. Rarity Tiers ── */}
       <section className="space-y-4">
-        <h2 className="text-h2">{t(lang, "guideRarityTiersHeading")}</h2>
-        <p className="text-sm text-muted-foreground">
-          {t(lang, "guideRarityTiersIntro")}
-        </p>
+        <div>
+          <h2 className="text-h2">{t(lang, "guideRarityTiersHeading")}</h2>
+          <p className="text-sm text-muted-foreground">
+            {t(lang, "guideRarityTiersIntro")}
+          </p>
+          {formatSnapshotDate(lang, snapshotAt) && (
+            <p className="mt-1 text-meta">{formatSnapshotDate(lang, snapshotAt)}</p>
+          )}
+        </div>
 
         {/* Prominent tiers: TR, SP, SEC */}
         <div className="space-y-3">
           {prominent.map((rarity) => {
             const examples = byRarity[rarity.code] ?? [];
+            const stats = priceStats[rarity.code] ?? null;
             return (
               <div
                 key={rarity.code}
@@ -366,9 +508,14 @@ export default async function RaritiesPage() {
                     <p className="mt-2 text-sm">
                       <span className="text-muted-foreground">{t(lang, "guideRarityMarketPriceLabel")}</span>
                       <span className="font-mono font-semibold" style={{ color: rarity.color }}>
-                        {rarity.priceJpy}
+                        {formatTierPriceLabel(lang, stats)}
                       </span>
                     </p>
+                    {stats && (
+                      <p className="mt-0.5 text-meta">
+                        {t(lang, "guideRarityPriceCountLabel").replace("{n}", stats.count.toLocaleString())}
+                      </p>
+                    )}
                   </div>
                 </div>
                 {examples.length > 0 && (
@@ -391,33 +538,41 @@ export default async function RaritiesPage() {
 
         {/* Regular tiers */}
         <div className="grid gap-2 sm:grid-cols-2">
-          {regular.map((rarity) => (
-            <Surface
-              key={rarity.code}
-              id={rarityAnchorId(rarity.code)}
-              variant="outline"
-              className="flex scroll-mt-24 items-start gap-3 p-4"
-            >
-              <div
-                className="flex size-10 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
-                style={{ backgroundColor: rarity.color }}
+          {regular.map((rarity) => {
+            const stats = priceStats[rarity.code] ?? null;
+            return (
+              <Surface
+                key={rarity.code}
+                id={rarityAnchorId(rarity.code)}
+                variant="outline"
+                className="flex scroll-mt-24 items-start gap-3 p-4"
               >
-                {rarity.code}
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-baseline gap-1.5">
-                  <h3 className="text-h4">{rarity.name}</h3>
-                  <span className="text-meta">{rarity.perSet}</span>
+                <div
+                  className="flex size-10 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
+                  style={{ backgroundColor: rarity.color }}
+                >
+                  {rarity.code}
                 </div>
-                <p className="mt-0.5 text-body-sm leading-relaxed text-muted-foreground">
-                  {rarity.description}
-                </p>
-                <p className="mt-1 font-mono text-xs font-medium" style={{ color: rarity.color }}>
-                  {rarity.priceJpy}
-                </p>
-              </div>
-            </Surface>
-          ))}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-baseline gap-1.5">
+                    <h3 className="text-h4">{rarity.name}</h3>
+                    <span className="text-meta">{rarity.perSet}</span>
+                  </div>
+                  <p className="mt-0.5 text-body-sm leading-relaxed text-muted-foreground">
+                    {rarity.description}
+                  </p>
+                  <p className="mt-1 font-mono text-xs font-medium" style={{ color: rarity.color }}>
+                    {formatTierPriceLabel(lang, stats)}
+                  </p>
+                  {stats && (
+                    <p className="mt-0.5 text-meta">
+                      {t(lang, "guideRarityPriceCountLabel").replace("{n}", stats.count.toLocaleString())}
+                    </p>
+                  )}
+                </div>
+              </Surface>
+            );
+          })}
         </div>
       </section>
 
@@ -432,23 +587,49 @@ export default async function RaritiesPage() {
           {t(lang, "guideRarityParallelP1c")}
         </p>
 
-        {/* Price comparison example */}
-        <Surface variant="outline" className="overflow-hidden">
-          <div className="border-b border-hair px-4 py-2 text-eyebrow">
-            {t(lang, "guideRarityCompareTitle")}
-          </div>
-          <div className="grid grid-cols-1 divide-y divide-hair sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            {buildParallelComparison(lang).map((item) => (
-              <div key={item.label} className="p-4 text-center">
-                <p className="text-eyebrow">{item.label}</p>
-                <p className="mt-1 font-mono text-lg font-bold" style={{ color: item.color }}>
-                  {item.price}
-                </p>
-                <p className="mt-0.5 text-meta">{item.sub}</p>
+        {/* Price comparison example — a real same-card SEC/Parallel/Super
+            Parallel triple (see getRarityPriceStats), not hand-typed numbers.
+            Each box links to the actual card page. */}
+        {(() => {
+          const comparison = buildParallelComparison(lang, triple);
+          if (!comparison) {
+            return (
+              <Surface variant="outline" className="p-4 text-center text-sm text-muted-foreground">
+                {t(lang, "guideRarityCompareNoData")}
+              </Surface>
+            );
+          }
+          return (
+            <Surface variant="outline" className="overflow-hidden">
+              <div className="border-b border-hair px-4 py-2 text-eyebrow">
+                {t(lang, "guideRarityCompareTitle")}
               </div>
-            ))}
-          </div>
-        </Surface>
+              <div className="grid grid-cols-1 divide-y divide-hair sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+                {comparison.map((item) => (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className="block p-4 text-center motion-base hover:bg-muted/50"
+                  >
+                    <p className="text-eyebrow">{item.label}</p>
+                    <p className="mt-1 font-mono text-lg font-bold" style={{ color: item.color }}>
+                      {item.priceThb.toLocaleString("en-US")} ฿
+                    </p>
+                    <p className="mt-0.5 text-meta">{item.sub}</p>
+                  </Link>
+                ))}
+              </div>
+              {triple && (
+                <p className="border-t border-hair px-4 py-2 text-meta">
+                  {t(lang, "guideRarityCompareRealExample")
+                    .replace("{name}", triple.name)
+                    .replace("{code}", triple.base.code)}
+                  {formatSnapshotDate(lang, snapshotAt) ? ` · ${formatSnapshotDate(lang, snapshotAt)}` : ""}
+                </p>
+              )}
+            </Surface>
+          );
+        })()}
 
         {/* Parallel tiers list */}
         <div className="flex flex-wrap gap-2">
@@ -644,6 +825,12 @@ export default async function RaritiesPage() {
             </Surface>
           ))}
         </div>
+        <p className="text-sm text-muted-foreground">
+          {t(lang, "guideRarityFactorsMostExpP1a")}{" "}
+          <Link href="/opcg/most-expensive" className="font-medium text-primary hover:underline">
+            {t(lang, "guideRarityFactorsMostExpLink")}
+          </Link>
+        </p>
       </section>
 
       {/* ── 7. FAQ — owns "SEC คือ" / "Parallel คือ" (+ FAQPage JSON-LD) ── */}

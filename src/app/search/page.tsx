@@ -146,7 +146,9 @@ export default async function SearchPage({
 
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Search", href: "/opcg/search" }])} />
+      {/* Thai labels = what LocalizedBreadcrumb renders for the crawler's
+          cookie-less TH default — structured data must match the visible UI. */}
+      <JsonLd data={breadcrumbJsonLd([{ name: "หน้าแรก", href: "/" }, { name: "ค้นหา", href: "/opcg/search" }])} />
       {results && results.cards.length > 0 && (
         <JsonLd
           data={itemListJsonLd(

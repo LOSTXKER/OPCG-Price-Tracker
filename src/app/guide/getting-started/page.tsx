@@ -209,9 +209,9 @@ export default async function GettingStartedPage() {
     <div className="mx-auto max-w-3xl space-y-12">
       <JsonLd
         data={breadcrumbJsonLd([
-          { name: "Home", href: "/" },
-          { name: "Guide", href: "/guide" },
-          { name: "Getting Started", href: "/guide/getting-started" },
+          { name: t(lang, "home"), href: "/" },
+          { name: t(lang, "guideBreadcrumbGuide"), href: "/guide" },
+          { name: t(lang, "guideStartBreadcrumb"), href: "/guide/getting-started" },
         ])}
       />
 
@@ -221,13 +221,13 @@ export default async function GettingStartedPage() {
           <Breadcrumb
             items={[
               { label: t(lang, "home"), href: "/" },
-              { label: "Guide", href: "/guide" },
+              { label: t(lang, "guideBreadcrumbGuide"), href: "/guide" },
               { label: t(lang, "guideStartBreadcrumb") },
             ]}
             hideMobileBack
           />
         }
-        back={{ href: "/guide", label: "Guide" }}
+        back={{ href: "/guide", label: t(lang, "guideBreadcrumbGuide") }}
         title={guideStartH1(lang)}
         description={
           <>

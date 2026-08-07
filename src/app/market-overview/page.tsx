@@ -196,7 +196,8 @@ export default async function MarketOverviewPage() {
 
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Market Overview", href: "/opcg/market-overview" }])} />
+      {/* Thai labels = the visible breadcrumb's TH default (crawler view). */}
+      <JsonLd data={breadcrumbJsonLd([{ name: "หน้าแรก", href: "/" }, { name: "ภาพรวมตลาด", href: "/opcg/market-overview" }])} />
       <JsonLd
         data={itemListJsonLd(
           "การ์ดวันพีซมูลค่าสูงสุด",

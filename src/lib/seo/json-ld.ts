@@ -9,15 +9,16 @@ export function websiteJsonLd() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Meecard",
+    // Helps Google display the right site name in the SERP instead of
+    // guessing from the domain — this brand is new and the deploy hostname
+    // (opcg-price-tracker) doesn't spell "Meecard" (SEO round 3).
+    alternateName: ["มีการ์ด", "Meecard เช็คราคาการ์ดวันพีซ"],
     url: BASE_URL,
     inLanguage: "th-TH",
     description:
       "เช็คราคาการ์ดวันพีซ (One Piece Card Game) ทุกใบ ทุกเกรด — ราคากลางอัปเดตทุกวัน พร้อมกราฟราคาย้อนหลังและเครื่องมือจัดพอร์ต",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: { "@type": "EntryPoint", urlTemplate: `${BASE_URL}/opcg/search?q={search_term_string}` },
-      "query-input": "required name=search_term_string",
-    },
+    // No SearchAction: Google retired the sitelinks search box (Nov 2024),
+    // so the markup was dead weight.
   };
 }
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { BookOpen, Layers, LineChart } from "lucide-react";
 
 import { Breadcrumb } from "@/components/shared/breadcrumb";
@@ -10,10 +11,13 @@ import { GuidePrevNext } from "@/components/guide/guide-prev-next";
 import { GuideSourceList } from "@/components/guide/guide-source-list";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { clientEnv } from "@/lib/env";
 import { t } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
 import {
   GUIDE_VERSIONS_META,
+  GUIDE_VERSIONS_PUBLISHED_AT,
+  GUIDE_VERSIONS_UPDATED_AT,
   guideVersionsChoose,
   guideVersionsChooseHeading,
   guideVersionsCompare,
@@ -27,6 +31,9 @@ import {
   guideVersionsPriceHeading,
   guideVersionsRulesBody,
   guideVersionsRulesHeading,
+  guideVersionsThaiBody,
+  guideVersionsThaiHeading,
+  guideVersionsUpdatedLabel,
 } from "@/lib/seo/copy/guide-versions";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
@@ -43,6 +50,7 @@ export default async function VersionsGuidePage() {
   const lang = await getServerLanguage();
   const labels = guideVersionsCompareLabels(lang);
   const rows = guideVersionsCompare(lang);
+  const baseUrl = clientEnv().NEXT_PUBLIC_APP_URL;
 
   return (
     <>
@@ -54,6 +62,23 @@ export default async function VersionsGuidePage() {
         ])}
       />
 
+      {/* Article schema — this page cites a rule that changed 2025-11-28, so
+          dateModified matters for freshness signals more than most guides. */}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: guideVersionsH1(lang),
+          description: GUIDE_VERSIONS_META.description,
+          url: `${baseUrl}/guide/versions`,
+          inLanguage: "th-TH",
+          datePublished: GUIDE_VERSIONS_PUBLISHED_AT,
+          dateModified: GUIDE_VERSIONS_UPDATED_AT,
+          author: { "@type": "Organization", name: "Meecard" },
+          publisher: { "@type": "Organization", name: "Meecard", url: baseUrl },
+        }}
+      />
+
       <Breadcrumb
         items={[
           { label: t(lang, "home"), href: "/" },
@@ -62,7 +87,9 @@ export default async function VersionsGuidePage() {
         ]}
       />
 
-      <PageHeader title={guideVersionsH1(lang)} description={guideVersionsLead(lang)} />
+      <PageHeader title={guideVersionsH1(lang)} description={guideVersionsLead(lang)}>
+        <p className="text-meta">อัปเดตล่าสุด: {guideVersionsUpdatedLabel(lang)}</p>
+      </PageHeader>
 
       <div className="mt-8 space-y-12">
         <section className="max-w-3xl space-y-3">
@@ -131,7 +158,28 @@ export default async function VersionsGuidePage() {
         <section className="space-y-3">
           <h2 className="text-h2">{guideVersionsPriceHeading(lang)}</h2>
           {guideVersionsPriceBody(lang).map((paragraph) => (
-            <p key={paragraph.slice(0, 24)} className="max-w-3xl text-body leading-relaxed">
+            <p key={paragraph.id} className="max-w-3xl text-body leading-relaxed">
+              {paragraph.before}
+              {paragraph.link && (
+                <>
+                  {" "}
+                  <Link
+                    href={paragraph.link.href}
+                    className="font-medium text-primary hover:underline"
+                  >
+                    {paragraph.link.label}
+                  </Link>
+                  {paragraph.after && ` ${paragraph.after}`}
+                </>
+              )}
+            </p>
+          ))}
+        </section>
+
+        <section className="max-w-3xl space-y-3">
+          <h2 className="text-h2">{guideVersionsThaiHeading(lang)}</h2>
+          {guideVersionsThaiBody(lang).map((paragraph) => (
+            <p key={paragraph.slice(0, 24)} className="text-body leading-relaxed">
               {paragraph}
             </p>
           ))}

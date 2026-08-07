@@ -213,6 +213,53 @@ export function buildTrendingSummary(
   );
 }
 
+/**
+ * "How to read this" explainer under the three mover tables (SEO round 3).
+ * Targets the Thai search intent "การ์ดวันพีซ น่าเก็บ / น่าลงทุน" — real search
+ * volume with zero on-page coverage before this (only YouTube ranked for it).
+ * Purely educational: it teaches how to read the three tables above, not
+ * which card to buy — closes with a link to /opcg/most-expensive and an
+ * explicit "not investment advice" line (owner ruling: factual tone, no
+ * buy/sell calls).
+ */
+export function buildTrendingWorthCollectingCopy(lang: Language): {
+  h2: string;
+  paragraphs: string[];
+  linkLabel: string;
+  linkHref: string;
+  disclaimer: string;
+} {
+  return pick(
+    lang,
+    thEn(
+      {
+        h2: "การ์ดวันพีซใบไหนน่าเก็บตอนนี้ ดูยังไงจากข้อมูล",
+        paragraphs: [
+          "ไม่มีสูตรตายตัวว่าการ์ดใบไหน “น่าเก็บ” หรือ “น่าลงทุน” แต่สามตารางด้านบนคือจุดเริ่มต้นที่อ่านได้จริง การ์ดที่ราคาขึ้นแรงในรอบ 24 ชั่วโมงมักเป็นกระแสระยะสั้น เช่น เพิ่งมีตอนอนิเมะใหม่หรือมีคนไล่ซื้อพร้อมกันเป็นช่วง ราคาลักษณะนี้ขึ้นเร็วและลงเร็วได้เหมือนกัน ควรระวังการไล่ราคาตามกระแส",
+          "ส่วนการ์ดที่ราคาขึ้นต่อเนื่องทั้งในรอบ 7 วันและ 30 วัน มักสะท้อนดีมานด์จริงมากกว่า เช่น การ์ดที่ใช้ในเด็คแข่งยอดนิยม หรือการ์ดที่หายากขึ้นเรื่อยๆ ตามเวลา สัญญาณแบบนี้น่าเชื่อถือกว่าการขึ้นวูบเดียวจากตารางรอบ 24 ชั่วโมง",
+          "ถ้าเป็นฝั่งราคาลงแรง ให้ดูสาเหตุก่อนสรุปว่าดีหรือไม่ดี บางครั้งเป็นแค่คนขายทำกำไรพร้อมกันหลังราคาขึ้นมามาก ซึ่งอาจเป็นโอกาสซื้อ แต่บางครั้งก็เป็นสัญญาณว่าความนิยมกำลังลดลงจริง ต้องเทียบกับข่าวหรือความเปลี่ยนแปลงของเมต้าเด็คประกอบด้วยเสมอ",
+        ],
+        linkLabel: "ดูการ์ดวันพีซราคาแพงที่สุดตอนนี้",
+        linkHref: "/opcg/most-expensive",
+        disclaimer:
+          "ข้อมูลทั้งหมดเป็นสถิติราคาย้อนหลัง ไม่ใช่คำแนะนำการลงทุน ราคาการ์ดขึ้นลงได้ตามความต้องการของตลาดจริง โปรดพิจารณาความเสี่ยงก่อนตัดสินใจซื้อขาย",
+      },
+      {
+        h2: "Which One Piece cards are worth collecting right now",
+        paragraphs: [
+          "There's no fixed formula for which card is “worth collecting” or “worth investing in”, but the three tables above are a real starting point. A card spiking over the last 24 hours is usually short-term hype — a new anime episode, or everyone chasing the same print at once — and prices like that can fall just as fast as they rose, so be careful chasing the price.",
+          "A card climbing steadily over both 7 and 30 days usually reflects real demand instead: a staple in a popular competitive deck, or a print that keeps getting harder to find over time. That pattern is a more reliable signal than a single-day spike in the 24-hour table.",
+          "For the losing side, check the cause before deciding whether it's good or bad. Sometimes it's just profit-taking after a big run-up — a potential buying opportunity — but sometimes it's a real sign that interest is fading. Always cross-check against news or shifts in the competitive meta before deciding either way.",
+        ],
+        linkLabel: "See the most expensive One Piece cards right now",
+        linkHref: "/opcg/most-expensive",
+        disclaimer:
+          "This is historical price data, not investment advice. Card prices move with real market demand — weigh the risk before buying or selling.",
+      },
+    ),
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /*  /opcg/search                                                       */
 /* ------------------------------------------------------------------ */

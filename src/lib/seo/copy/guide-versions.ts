@@ -15,6 +15,14 @@ import type { Language } from "@/lib/i18n";
  * one deck) is documented by Bandai and covered by no Thai site.
  * Everything price-related here is framed as an observed pattern, not data —
  * Meecard's own prices are Japanese-market prices and that is stated plainly.
+ *
+ * 2026-08-07 update: the "no Thai shop list" gap above still holds for a
+ * per-shop directory, but one fact IS now verifiable — KIDZ & KITZ is
+ * Bandai's official card-game importer/distributor in Thailand and runs the
+ * region's tournament series (Kidz and Kitz Card Game Fest, Bandai Card Fest
+ * Bangkok). That's added as its own section below to catch the "การ์ดวันพีซ
+ * ภาษาไทย" query, which currently has no real SERP answer (only stale
+ * blogspot posts).
  */
 
 type Copy<T> = Record<Language, T>;
@@ -28,6 +36,32 @@ export const GUIDE_VERSIONS_META = {
   description:
     "การ์ดวันพีช (OPCG) ไม่มีฉบับภาษาไทย — ฉบับญี่ปุ่นกับอังกฤษต่างกันตรงไหน ใช้แข่งในไทยได้ทั้งคู่ไหม ผสมในเด็คเดียวกันได้ไหม และทำไมราคาบนเว็บอ้างอิงตลาดญี่ปุ่น",
 } as const;
+
+/**
+ * Content revision dates (SEO round 3, 2026-08-07) — feed the "อัปเดตล่าสุด"
+ * label under the PageHeader and the Article JSON-LD (datePublished/
+ * dateModified). Published date is when this page's copy first shipped
+ * (commit 40e0e0c, 2026-08-04); updated date bumps whenever the copy changes.
+ * The dateModified matters here specifically because the page cites a rule
+ * that changed 2025-11-28 — a stale-looking page undermines that claim.
+ */
+export const GUIDE_VERSIONS_PUBLISHED_AT = "2026-08-04";
+export const GUIDE_VERSIONS_UPDATED_AT = "2026-08-07";
+
+export function guideVersionsUpdatedLabel(lang: Language): string {
+  const date = new Date(`${GUIDE_VERSIONS_UPDATED_AT}T00:00:00Z`);
+  const opts: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  };
+  return pick(lang, {
+    TH: date.toLocaleDateString("th-TH", opts),
+    EN: date.toLocaleDateString("en-US", opts),
+    JP: date.toLocaleDateString("ja-JP", opts),
+  });
+}
 
 export function guideVersionsH1(lang: Language): string {
   return pick(lang, {
@@ -207,25 +241,102 @@ export function guideVersionsPriceHeading(lang: Language): string {
   });
 }
 
-export function guideVersionsPriceBody(lang: Language): string[] {
+export type VersionsPriceParagraph = {
+  id: string;
+  before: string;
+  /** Optional in-content link segment rendered between `before` and `after`. */
+  link?: { href: string; label: string };
+  after?: string;
+};
+
+export function guideVersionsPriceBody(lang: Language): VersionsPriceParagraph[] {
   if (lang === "EN") {
     return [
-      "Meecard tracks the Japanese secondary market, because that is where One Piece Card Game cards trade in the largest volume and where a reference price actually stabilises. Every price on this site is therefore a Japanese-version price, converted to Thai baht so it is easier to compare with what a Thai seller is asking.",
-      "So do not read a price here as a valuation of an English copy of the same card. Use it as the reference point it is: what that card trades for in the market that leads the game.",
-      "Collectors widely observe that English boxes can sell at a premium before a set's global release, and that first-printing Japanese versions of iconic cards carry collector prestige. Both are community observations rather than measured data, so treat them as context, not as a rule to buy on.",
+      {
+        id: "source",
+        before:
+          "Meecard tracks the Japanese secondary market, because that is where One Piece Card Game cards trade in the largest volume and where a reference price actually stabilises.",
+        link: { href: "/opcg/sets", label: "Every price on this site" },
+        after:
+          "is therefore a Japanese-version price, converted to Thai baht so it is easier to compare with what a Thai seller is asking.",
+      },
+      {
+        id: "not-english",
+        before:
+          "So do not read a price here as a valuation of an English copy of the same card. Use it as the reference point it is: what that card trades for in the market that leads the game.",
+      },
+      {
+        id: "context",
+        before:
+          "Collectors widely observe that English boxes can sell at a premium before a set's global release, and that first-printing Japanese versions of iconic cards carry collector prestige. Both are community observations rather than measured data, so treat them as context, not as a rule to buy on.",
+      },
     ];
   }
   if (lang === "JP") {
     return [
-      "Meecardは日本の二次流通市場を追跡しています。取引量がもっとも多く、参照価格が安定する市場だからです。したがって本サイトの価格は日本語版の価格であり、比較しやすいようタイバーツに換算しています。",
-      "英語版の同名カードの評価額として読まないでください。",
-      "英語版のボックスが世界発売前に高くなる、象徴的なカードの日本語版初刷にコレクター需要がある、といった傾向はコミュニティの観察であり、計測データではありません。",
+      {
+        id: "source",
+        before:
+          "Meecardは日本の二次流通市場を追跡しています。取引量がもっとも多く、参照価格が安定する市場だからです。したがって",
+        link: { href: "/opcg/sets", label: "本サイトの価格" },
+        after: "は日本語版の価格であり、比較しやすいようタイバーツに換算しています。",
+      },
+      { id: "not-english", before: "英語版の同名カードの評価額として読まないでください。" },
+      {
+        id: "context",
+        before:
+          "英語版のボックスが世界発売前に高くなる、象徴的なカードの日本語版初刷にコレクター需要がある、といった傾向はコミュニティの観察であり、計測データではありません。",
+      },
     ];
   }
   return [
-    "Meecard เก็บราคาจากตลาดมือสองญี่ปุ่น เพราะเป็นตลาดที่การ์ดวันพีชซื้อขายกันมากที่สุดและราคาถึงจะนิ่งพอจะใช้เป็นราคาอ้างอิงได้จริง ราคาทุกตัวบนเว็บนี้จึงเป็น ราคาของฉบับญี่ปุ่น แล้วแปลงเป็นเงินบาทให้เทียบกับที่คนขายในไทยตั้งไว้ได้ง่ายขึ้น",
-    "เพราะฉะนั้นอย่าอ่านราคาบนเว็บนี้เป็นราคาของการ์ดใบเดียวกันฉบับอังกฤษ ให้ใช้มันตามที่มันเป็น — คือราคาที่การ์ดใบนั้นซื้อขายกันในตลาดที่นำเกมอยู่",
-    "ในวงนักสะสมมีข้อสังเกตที่พูดกันบ่อยว่ากล่องฉบับอังกฤษมักแพงขึ้นช่วงก่อนวางขายทั่วโลก และการ์ดสัญลักษณ์ของเกมฉบับญี่ปุ่นพิมพ์แรกมีมูลค่าในเชิงสะสมมากกว่า ทั้งสองข้อเป็นการสังเกตของคอมมูนิตี้ ไม่ใช่ข้อมูลที่วัดมา จึงควรใช้เป็นบริบทประกอบ ไม่ใช่เหตุผลเดียวในการตัดสินใจซื้อ",
+    {
+      id: "source",
+      before:
+        "Meecard เก็บราคาจากตลาดมือสองญี่ปุ่น เพราะเป็นตลาดที่การ์ดวันพีชซื้อขายกันมากที่สุดและราคาถึงจะนิ่งพอจะใช้เป็นราคาอ้างอิงได้จริง",
+      link: { href: "/opcg/sets", label: "ราคาทุกใบบนเว็บนี้" },
+      after: "จึงเป็นราคาของฉบับญี่ปุ่น แล้วแปลงเป็นเงินบาทให้เทียบกับที่คนขายในไทยตั้งไว้ได้ง่ายขึ้น",
+    },
+    {
+      id: "not-english",
+      before:
+        "เพราะฉะนั้นอย่าอ่านราคาบนเว็บนี้เป็นราคาของการ์ดใบเดียวกันฉบับอังกฤษ ให้ใช้มันตามที่มันเป็น — คือราคาที่การ์ดใบนั้นซื้อขายกันในตลาดที่นำเกมอยู่",
+    },
+    {
+      id: "context",
+      before:
+        "ในวงนักสะสมมีข้อสังเกตที่พูดกันบ่อยว่ากล่องฉบับอังกฤษมักแพงขึ้นช่วงก่อนวางขายทั่วโลก และการ์ดสัญลักษณ์ของเกมฉบับญี่ปุ่นพิมพ์แรกมีมูลค่าในเชิงสะสมมากกว่า ทั้งสองข้อเป็นการสังเกตของคอมมูนิตี้ ไม่ใช่ข้อมูลที่วัดมา จึงควรใช้เป็นบริบทประกอบ ไม่ใช่เหตุผลเดียวในการตัดสินใจซื้อ",
+    },
+  ];
+}
+
+export function guideVersionsThaiHeading(lang: Language): string {
+  return pick(lang, {
+    TH: "การ์ดวันพีซมีภาษาไทยไหม แล้วใครจัดจำหน่ายในไทย",
+    EN: "Is there a Thai-language version — and who distributes in Thailand?",
+    JP: "タイ語版はある？ タイの正規販売元は？",
+  });
+}
+
+export function guideVersionsThaiBody(lang: Language): string[] {
+  if (lang === "EN") {
+    return [
+      "As covered above, there is still no Thai-language printing of the One Piece Card Game — Thai players play the Japanese or English version.",
+      "The official importer and distributor of Bandai's card games in Thailand is KIDZ & KITZ, which also runs the region's tournament series — Kidz and Kitz Card Game Fest and Bandai Card Fest Bangkok.",
+      "Bandai has announced a move to worldwide simultaneous releases starting in 2026, meaning every region gets a new set on the same date. Whether that eventually leads to a Thai-language printing has not been announced, so for now treat it as a release-timing change, not a language change.",
+    ];
+  }
+  if (lang === "JP") {
+    return [
+      "前述の通り、ワンピースカードゲームのタイ語版印刷は現時点でありません。タイのプレイヤーは日本語版か英語版でプレイしています。",
+      "タイにおけるバンダイのカードゲームの正規輸入・販売元はKIDZ & KITZで、地域の大会シリーズ（Kidz and Kitz Card Game Fest、Bandai Card Fest Bangkok）も継続的に開催しています。",
+      "バンダイは2026年から全世界同時発売への移行を発表しています。これがタイ語版印刷につながるかは発表されていないため、現時点では発売時期の変更として捉えてください。",
+    ];
+  }
+  return [
+    "อย่างที่บอกไปข้างต้น การ์ดวันพีซยังไม่มีฉบับที่พิมพ์เป็นภาษาไทย คนไทยเล่นกันด้วยฉบับญี่ปุ่นหรืออังกฤษ",
+    "ผู้นำเข้าและจัดจำหน่าย Bandai card game อย่างเป็นทางการในไทยคือ KIDZ & KITZ (คิดซ์ แอนด์ คิทซ์) ซึ่งจัดงานแข่งขันในไทยต่อเนื่อง ทั้ง Kidz and Kitz Card Game Fest และ Bandai Card Fest Bangkok",
+    "Bandai ประกาศแผนเปลี่ยนไปวางขายพร้อมกันทั่วโลก (worldwide simultaneous release) เริ่มปี 2026 คือทุกภูมิภาคจะได้ชุดใหม่วันเดียวกัน ส่วนเรื่องนี้จะทำให้มีฉบับภาษาไทยตามมาไหมยังไม่มีการประกาศ ตอนนี้จึงนับเป็นแค่การเปลี่ยนเรื่องจังหวะวางขาย ไม่ใช่การเปลี่ยนเรื่องภาษา",
   ];
 }
 
@@ -277,13 +388,20 @@ export function guideVersionsChoose(lang: Language): { title: string; body: stri
   ];
 }
 
-export function guideVersionsFaq(lang: Language): { question: string; answer: string }[] {
+export function guideVersionsFaq(
+  lang: Language
+): { question: string; answer: string; link?: { href: string; label: string } }[] {
   if (lang === "EN") {
     return [
       {
         question: "Is there an official Thai-language One Piece Card Game?",
         answer:
           "No. Bandai's supported languages are Japanese, English, French, Simplified Chinese and Korean. Thai players use the Japanese or English printing, with community-made translations for Japanese card text.",
+      },
+      {
+        question: "Is there a Thai-language One Piece card?",
+        answer:
+          "Not yet — there is no Thai-language printing. Thai players use the Japanese or English version, imported by the official Thailand distributor, KIDZ & KITZ.",
       },
       {
         question: "Can I use English cards in a Thai tournament?",
@@ -299,6 +417,7 @@ export function guideVersionsFaq(lang: Language): { question: string; answer: st
         question: "Are the prices on Meecard for Japanese or English cards?",
         answer:
           "Japanese. Prices come from the Japanese secondary market and are converted to Thai baht for comparison. An English copy of the same card trades in a different market at a different price.",
+        link: { href: "/opcg/sets", label: "See every card's price" },
       },
     ];
   }
@@ -309,6 +428,11 @@ export function guideVersionsFaq(lang: Language): { question: string; answer: st
         answer: "ありません。対応言語は日本語・英語・フランス語・簡体字中国語・韓国語です。",
       },
       {
+        question: "タイ語版のワンピースカードはありますか？",
+        answer:
+          "まだありません。タイ語版の印刷はなく、タイのプレイヤーは正規販売元KIDZ & KITZが輸入する日本語版または英語版を使用しています。",
+      },
+      {
         question: "タイの大会で英語版は使えますか？",
         answer:
           "2025年11月28日より使用可能です。同地域では日本語版との混在構築も認められています。大会ごとの規定は主催者にご確認ください。",
@@ -316,6 +440,7 @@ export function guideVersionsFaq(lang: Language): { question: string; answer: st
       {
         question: "Meecardの価格はどちらの版ですか？",
         answer: "日本語版です。日本の二次流通価格をタイバーツに換算しています。",
+        link: { href: "/opcg/sets", label: "全カードの価格を見る" },
       },
     ];
   }
@@ -324,6 +449,11 @@ export function guideVersionsFaq(lang: Language): { question: string; answer: st
       question: "การ์ดวันพีซมีฉบับภาษาไทยไหม?",
       answer:
         "ไม่มี ภาษาที่ Bandai พิมพ์ออกมาคือ ญี่ปุ่น อังกฤษ ฝรั่งเศส จีนตัวย่อ และเกาหลี ผู้เล่นไทยใช้ฉบับญี่ปุ่นหรืออังกฤษ แล้วอาศัยคำแปลที่คอมมูนิตี้ทำกันเองสำหรับข้อความบนการ์ดฉบับญี่ปุ่น",
+    },
+    {
+      question: "การ์ดวันพีซมีภาษาไทยไหม?",
+      answer:
+        "ยังไม่มี การ์ดวันพีซยังไม่มีฉบับที่พิมพ์เป็นภาษาไทย ผู้เล่นไทยเล่นฉบับญี่ปุ่นหรืออังกฤษที่นำเข้าโดยผู้จัดจำหน่ายทางการในไทยอย่าง KIDZ & KITZ",
     },
     {
       question: "เอาการ์ดฉบับอังกฤษไปแข่งในไทยได้ไหม?",
@@ -339,6 +469,7 @@ export function guideVersionsFaq(lang: Language): { question: string; answer: st
       question: "ราคาบน Meecard เป็นราคาฉบับไหน?",
       answer:
         "ฉบับญี่ปุ่น ราคามาจากตลาดมือสองญี่ปุ่นแล้วแปลงเป็นเงินบาทเพื่อให้เทียบง่าย การ์ดใบเดียวกันฉบับอังกฤษซื้อขายกันคนละตลาดและคนละราคา",
+      link: { href: "/opcg/sets", label: "ดูราคาการ์ดทุกใบบนเว็บนี้" },
     },
   ];
 }

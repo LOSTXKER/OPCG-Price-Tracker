@@ -1,7 +1,10 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { TrendingMoversSections } from "./trending-movers-sections";
+import {
+  TrendingMoversSections,
+  TrendingWorthCollectingSection,
+} from "./trending-movers-sections";
 import type { TrendingCardRow } from "./page";
 
 function card(overrides: Partial<TrendingCardRow> = {}): TrendingCardRow {
@@ -88,5 +91,25 @@ describe("TrendingMoversSections", () => {
 
     expect(markup).toContain("-3.75%");
     expect(markup).not.toContain("+8.25%");
+  });
+});
+
+// "การ์ดวันพีซ น่าเก็บ / น่าลงทุน" search intent (SEO round 3) had zero
+// coverage anywhere on this page before this section — lock the keywords,
+// the H2, the link to /opcg/most-expensive and the disclaimer in server HTML.
+describe("TrendingWorthCollectingSection", () => {
+  it("renders as server HTML with an H2 carrying the target keywords", () => {
+    const markup = renderToStaticMarkup(<TrendingWorthCollectingSection lang="TH" />);
+
+    expect(markup).toContain("<h2");
+    expect(markup).toContain("น่าเก็บ");
+    expect(markup).toContain("น่าลงทุน");
+  });
+
+  it("links to the most-expensive page and states it is not investment advice", () => {
+    const markup = renderToStaticMarkup(<TrendingWorthCollectingSection lang="TH" />);
+
+    expect(markup).toContain('href="/opcg/most-expensive"');
+    expect(markup).toContain("ไม่ใช่คำแนะนำการลงทุน");
   });
 });

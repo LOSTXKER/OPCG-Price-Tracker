@@ -109,8 +109,8 @@ export function guideHubLead(lang: Language): string {
   return pick(
     lang,
     tri(
-      "รวมทุกเรื่องที่ต้องรู้ก่อนเล่นและก่อนซื้อการ์ดวันพีช — กฎ ประเภทการ์ด ความหายาก สี ชุดการ์ด และวิธีอ่านราคากลาง",
-      "Everything you need before you play or buy: rules, card types, rarities, colors, sets and how to read market prices."
+      "คู่มือการ์ดวันพีซ (One Piece Card Game) สำหรับมือใหม่ — ครบทั้งกฎการเล่น ประเภทการ์ด ความหายาก สี ชุดการ์ด และวิธีอ่านราคากลางของการ์ดวันพีช",
+      "A beginner's guide to the One Piece Card Game — rules, card types, rarities, colors, sets, and how to read reference prices."
     )
   );
 }
@@ -125,19 +125,23 @@ export function guideHubIntroHeading(lang: Language): string {
   );
 }
 
+/**
+ * SEO round 3: trimmed from 4 paragraphs to 2 (dropped the old closing
+ * "read in this order" paragraph — it described the chapter list, which now
+ * renders as a real grid directly ABOVE this section, so restating it in
+ * prose was pure duplication) and moved below the chapter grid so the guide
+ * hub leads with what visitors came for (the chapters) rather than ~1.5
+ * screens of prose on mobile before reaching them.
+ */
 export function guideHubIntroParagraphs(lang: Language): string[] {
   return pickList(lang, {
     TH: [
-      "การ์ดวันพีซ หรือ One Piece Card Game (มักเขียนย่อว่า OPCG หรือ OPTCG และบางคนสะกดว่า “การ์ดวันพีช”) คือเกมการ์ดสะสมและแข่งขันจาก Bandai ที่สร้างจากมังงะและอนิเมะ One Piece เปิดตัวในญี่ปุ่นเมื่อปี 2022 และขยายไปหลายภาษาจนกลายเป็นหนึ่งในเกมการ์ดที่โตเร็วที่สุดในเอเชีย ผู้เล่นสองคนจะใช้ Leader 1 ใบ เด็ค 50 ใบ และ DON!! 10 ใบ ผลัดกันเล่นจนกว่าอีกฝ่ายจะเสีย Life จนหมดแล้วโดนโจมตีซ้ำ",
-      "เสน่ห์ของเกมนี้อยู่ที่การ์ดใบเดียวกันอาจมีหลายเวอร์ชัน ทั้งภาพปกติ ภาพพิเศษ (Parallel) และระดับความหายากต่างกันตั้งแต่ Common ไปจนถึง Secret Rare และ Treasure Rare ทำให้ราคาซื้อขายจริงห่างกันได้หลายสิบเท่าแม้จะเป็นตัวละครเดียวกัน คนที่เพิ่งเริ่มจึงมักจ่ายแพงเกินจำเป็น เพราะไม่รู้ว่าการ์ดใบที่ถืออยู่คือเวอร์ชันไหน และราคากลางในตลาดจริงอยู่ตรงไหน",
-      "Meecard ทำหน้าที่เป็นราคาอ้างอิง — เราดึงราคาจากตลาดญี่ปุ่นซึ่งเป็นตลาดหลักของเกมนี้ อัปเดตทุกวัน แปลงเป็นเงินบาทให้อัตโนมัติ พร้อมกราฟราคาย้อนหลัง เพื่อให้คุณรู้ว่าราคาที่ผู้ขายเสนอมานั้นสมเหตุสมผลหรือไม่ ก่อนจะกดซื้อ",
-      "คู่มือชุดนี้เรียงจากง่ายไปยาก เริ่มจากวิธีเล่นและกติกาพื้นฐาน ต่อด้วยประเภทการ์ด ความหายาก ระบบสี ชุดการ์ดทั้งหมด คู่มือการซื้อ วิธีดูการ์ดแท้หรือปลอม และปิดท้ายด้วยความต่างของการ์ดฉบับญี่ปุ่นกับอังกฤษ ถ้าเพิ่งรู้จักเกมนี้วันนี้ อ่านตามลำดับได้เลย แต่ถ้ามาหาคำตอบเฉพาะเรื่อง เช่น “SEC คืออะไร” หรือ “ซื้อที่ไหนดี” ก็กระโดดเข้าบทนั้นได้ทันที",
+      "การ์ดวันพีซ หรือ One Piece Card Game (OPCG / OPTCG บางคนสะกดว่า “การ์ดวันพีช”) คือเกมการ์ดสะสมและแข่งขันจาก Bandai ที่สร้างจากมังงะและอนิเมะ One Piece เปิดตัวในญี่ปุ่นปี 2022 เสน่ห์ของเกมนี้อยู่ที่การ์ดใบเดียวกันอาจมีหลายเวอร์ชัน ทั้งภาพปกติ ภาพพิเศษ (Parallel) และระดับความหายากตั้งแต่ Common ไปจนถึง Secret Rare และ Treasure Rare ทำให้ราคาซื้อขายจริงห่างกันได้หลายสิบเท่าแม้เป็นตัวละครเดียวกัน คนที่เพิ่งเริ่มจึงมักจ่ายแพงเกินจำเป็นเพราะไม่รู้ว่าการ์ดใบที่ถืออยู่คือเวอร์ชันไหน",
+      "Meecard ทำหน้าที่เป็นราคาอ้างอิง — เราดึงราคาจากตลาดญี่ปุ่นซึ่งเป็นตลาดหลักของเกมนี้ อัปเดตทุกวัน แปลงเป็นเงินบาทให้อัตโนมัติ พร้อมกราฟราคาย้อนหลัง เพื่อให้คุณรู้ว่าราคาที่ผู้ขายเสนอมานั้นสมเหตุสมผลหรือไม่ก่อนจะกดซื้อ",
     ],
     EN: [
-      "The One Piece Card Game (OPCG / OPTCG) is Bandai's trading card game based on the One Piece manga and anime. It launched in Japan in 2022 and has since become one of the fastest-growing TCGs in Asia. Two players each bring one Leader, a 50-card deck and 10 DON!! cards, and take turns until one side runs out of Life and takes one more hit.",
-      "What makes the game interesting — and expensive — is that a single card can exist in several versions: normal art, alternate (Parallel) art, and rarities from Common all the way up to Secret Rare and Treasure Rare. Real market prices between those versions can differ by tens of times, even for the same character. New players routinely overpay simply because they cannot tell which version they are holding.",
+      "The One Piece Card Game (OPCG / OPTCG) is Bandai's trading card game based on the One Piece manga and anime, launched in Japan in 2022. What makes it interesting — and expensive — is that a single card can exist in several versions: normal art, alternate (Parallel) art, and rarities from Common up to Secret Rare and Treasure Rare. Real market prices between those versions can differ by tens of times, even for the same character, and new players routinely overpay simply because they cannot tell which version they are holding.",
       "Meecard exists to be that reference price. We pull prices from the Japanese market — the primary market for this game — refresh them daily, convert them to Thai baht automatically, and keep price history charts so you can tell whether an asking price is reasonable before you pay.",
-      "This guide runs from easy to advanced: how to play, card types, rarities, the color system, every set, and finally a buying guide. Read it in order if you are brand new, or jump straight to the chapter that answers your question.",
     ],
   });
 }

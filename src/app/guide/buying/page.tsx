@@ -76,22 +76,22 @@ export default async function BuyingGuidePage() {
   return (
     <div className="mx-auto max-w-3xl space-y-12">
       <JsonLd data={breadcrumbJsonLd([
-        { name: "Home", href: "/" },
-        { name: "Guide", href: "/guide" },
-        { name: "Buying Guide", href: "/guide/buying" },
+        { name: t(lang, "home"), href: "/" },
+        { name: t(lang, "guideBreadcrumbGuide"), href: "/guide" },
+        { name: t(lang, "guideHomeGuideBuyingTitle"), href: "/guide/buying" },
       ])} />
       <PageHeader
         breadcrumb={
           <Breadcrumb
             items={[
               { label: t(lang, "home"), href: "/" },
-              { label: "Guide", href: "/guide" },
+              { label: t(lang, "guideBreadcrumbGuide"), href: "/guide" },
               { label: t(lang, "guideHomeGuideBuyingTitle") },
             ]}
             hideMobileBack
           />
         }
-        back={{ href: "/guide", label: "Guide" }}
+        back={{ href: "/guide", label: t(lang, "guideBreadcrumbGuide") }}
         title={guideBuyH1(lang)}
         description={guideBuyLead(lang)}
       />

@@ -1,6 +1,5 @@
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
-import { HoneyPublicExplainer } from "@/components/honey/honey-public-explainer";
 import { SEO_PAGE_META } from "@/lib/seo/copy/site";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import HoneyClient from "./honey-client";
@@ -15,10 +14,11 @@ export default function HoneyPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Honey Rewards", href: "/honey" }])} />
+      {/* HoneyClient owns the indexable explainer for logged-out visitors and
+          crawlers itself now — it has to run in the exact same auth-unknown
+          branch that renders on the server, not as a sibling mounted after
+          it (see the CLS note in honey-client.tsx). */}
       <HoneyClient />
-      {/* Indexable explainer for logged-out visitors and crawlers — the honey
-          dashboard itself only resolves after client-side auth. */}
-      <HoneyPublicExplainer />
     </>
   );
 }

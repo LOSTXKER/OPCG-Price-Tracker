@@ -25,6 +25,30 @@ export const GUIDE_AUTHENTICITY_META = {
     "รวมจุดสังเกตการ์ดวันพีชปลอม ทั้งหลังการ์ด ฟอยล์ ความคมของงานพิมพ์ และการส่องไฟดูแกนดำ พร้อมแยกให้ชัดว่าปลอม proxy กับของแท้หายากต่างกันยังไง",
 } as const;
 
+/**
+ * Content revision dates (SEO round 3, 2026-08-07) — feed the "อัปเดตล่าสุด"
+ * label under the PageHeader and the Article JSON-LD (datePublished/
+ * dateModified). Published date is when this page's copy first shipped
+ * (commit 40e0e0c, 2026-08-04); updated date bumps whenever the copy changes.
+ */
+export const GUIDE_AUTHENTICITY_PUBLISHED_AT = "2026-08-04";
+export const GUIDE_AUTHENTICITY_UPDATED_AT = "2026-08-07";
+
+export function guideAuthUpdatedLabel(lang: Language): string {
+  const date = new Date(`${GUIDE_AUTHENTICITY_UPDATED_AT}T00:00:00Z`);
+  const opts: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  };
+  return pick(lang, {
+    TH: date.toLocaleDateString("th-TH", opts),
+    EN: date.toLocaleDateString("en-US", opts),
+    JP: date.toLocaleDateString("ja-JP", opts),
+  });
+}
+
 export function guideAuthH1(lang: Language): string {
   return pick(lang, {
     TH: "วิธีดูการ์ดวันพีซแท้หรือปลอม",
@@ -337,46 +361,110 @@ export function guideAuthRedFlagsHeading(lang: Language): string {
   });
 }
 
-export function guideAuthRedFlags(lang: Language): string[] {
+export type AuthRedFlag = {
+  id: string;
+  before: string;
+  /** Optional in-content link segment rendered between `before` and `after`. */
+  link?: { href: string; label: string };
+  after?: string;
+};
+
+export function guideAuthRedFlags(lang: Language): AuthRedFlag[] {
   if (lang === "EN") {
     return [
-      "A price far below the market reference — the single most reported warning sign. Check the card's page here before you decide a bargain is real.",
-      "Only stock or borrowed photos, and a seller who will not send close-ups of the actual card under normal light. Refusing is itself an answer.",
-      "Sealed packs sold loose. Packs can be weighed to find the heavy ones, the hits pulled, and the rest resold at full price — buying single loose packs from a stranger carries that risk.",
-      "A sealed box with puffy, warped or lopsided seals, or glue residue and melted-looking seams — signs a box was opened and resealed.",
-      "Pressure to decide immediately, or a request to move the conversation and the payment off the platform you found the listing on.",
+      {
+        id: "price",
+        before:
+          "A price far below the market reference — the single most reported warning sign. Before you decide a bargain is real,",
+        link: { href: "/opcg/search", label: "check the One Piece card's market price" },
+        after: "first.",
+      },
+      {
+        id: "photos",
+        before:
+          "Only stock or borrowed photos, and a seller who will not send close-ups of the actual card under normal light. Refusing is itself an answer.",
+      },
+      {
+        id: "loose-packs",
+        before:
+          "Sealed packs sold loose. Packs can be weighed to find the heavy ones, the hits pulled, and the rest resold at full price — buying single loose packs from a stranger carries that risk.",
+      },
+      {
+        id: "resealed",
+        before:
+          "A sealed box with puffy, warped or lopsided seals, or glue residue and melted-looking seams — signs a box was opened and resealed.",
+      },
+      {
+        id: "pressure",
+        before:
+          "Pressure to decide immediately, or a request to move the conversation and the payment off the platform you found the listing on.",
+      },
     ];
   }
   if (lang === "JP") {
     return [
-      "相場から大きく安い価格 — もっとも多く報告される危険信号です。",
-      "商品画像が公式画像や借り物のみで、実物の接写を送ってくれない出品者。",
-      "バラ売りの未開封パック。重量を測って当たりを抜き、残りを定価で売る手口があります。",
-      "封が膨らむ・歪む、糊の跡や溶けたような接着面がある未開封ボックス（開封後の再シール）。",
-      "即決を迫る、または取引をプラットフォーム外へ誘導する。",
+      {
+        id: "price",
+        before:
+          "相場から大きく安い価格 — もっとも多く報告される危険信号です。掘り出し物と決めつける前に",
+        link: { href: "/opcg/search", label: "市場の参考価格" },
+        after: "を確認してください。",
+      },
+      { id: "photos", before: "商品画像が公式画像や借り物のみで、実物の接写を送ってくれない出品者。" },
+      { id: "loose-packs", before: "バラ売りの未開封パック。重量を測って当たりを抜き、残りを定価で売る手口があります。" },
+      {
+        id: "resealed",
+        before: "封が膨らむ・歪む、糊の跡や溶けたような接着面がある未開封ボックス（開封後の再シール）。",
+      },
+      { id: "pressure", before: "即決を迫る、または取引をプラットフォーム外へ誘導する。" },
     ];
   }
   return [
-    "ราคาต่ำกว่าราคากลางมากผิดปกติ — เป็นสัญญาณที่มีคนรายงานบ่อยที่สุด ก่อนจะเชื่อว่าเจอของถูก ให้เปิดหน้าการ์ดใบนั้นดูราคากลางก่อน",
-    "ใช้แต่รูปทางการหรือรูปคนอื่น และคนขายไม่ยอมถ่ายรูปใกล้ๆ ของใบจริงใต้แสงปกติมาให้ดู — การปฏิเสธก็เป็นคำตอบอยู่แล้ว",
-    "ซองที่ยังไม่แกะแต่ขายแยกเป็นซอง มีวิธีชั่งน้ำหนักหาซองที่มีใบหนัก ดึงใบดีออก แล้วเอาที่เหลือมาขายราคาเต็ม การซื้อซองหลวมจากคนไม่รู้จักจึงมีความเสี่ยงนี้ติดมาด้วย",
-    "กล่องที่ยังไม่แกะแต่ซีลปูด บิดเบี้ยว ไม่สมมาตร หรือมีคราบกาว/รอยเชื่อมเหมือนโดนความร้อน — เป็นร่องรอยว่ากล่องเคยถูกเปิดแล้วซีลใหม่",
-    "เร่งให้ตัดสินใจทันที หรือชวนให้ย้ายไปคุยและโอนเงินนอกแพลตฟอร์มที่เจอประกาศ",
+    {
+      id: "price",
+      before:
+        "ราคาต่ำกว่าราคากลางมากผิดปกติ — เป็นสัญญาณที่มีคนรายงานบ่อยที่สุด ก่อนจะเชื่อว่าเจอของถูก ให้",
+      link: { href: "/opcg/search", label: "เช็คราคากลางการ์ดวันพีซ" },
+      after: "ก่อน",
+    },
+    {
+      id: "photos",
+      before:
+        "ใช้แต่รูปทางการหรือรูปคนอื่น และคนขายไม่ยอมถ่ายรูปใกล้ๆ ของใบจริงใต้แสงปกติมาให้ดู — การปฏิเสธก็เป็นคำตอบอยู่แล้ว",
+    },
+    {
+      id: "loose-packs",
+      before:
+        "ซองที่ยังไม่แกะแต่ขายแยกเป็นซอง มีวิธีชั่งน้ำหนักหาซองที่มีใบหนัก ดึงใบดีออก แล้วเอาที่เหลือมาขายราคาเต็ม การซื้อซองหลวมจากคนไม่รู้จักจึงมีความเสี่ยงนี้ติดมาด้วย",
+    },
+    {
+      id: "resealed",
+      before:
+        "กล่องที่ยังไม่แกะแต่ซีลปูด บิดเบี้ยว ไม่สมมาตร หรือมีคราบกาว/รอยเชื่อมเหมือนโดนความร้อน — เป็นร่องรอยว่ากล่องเคยถูกเปิดแล้วซีลใหม่",
+    },
+    {
+      id: "pressure",
+      before: "เร่งให้ตัดสินใจทันที หรือชวนให้ย้ายไปคุยและโอนเงินนอกแพลตฟอร์มที่เจอประกาศ",
+    },
   ];
 }
 
-export function guideAuthFaq(lang: Language): { question: string; answer: string }[] {
+export function guideAuthFaq(
+  lang: Language
+): { question: string; answer: string; link?: { href: string; label: string } }[] {
   if (lang === "EN") {
     return [
       {
         question: "Is there one test that proves a One Piece card is real?",
         answer:
           "No. Bandai does not publish consumer-facing authentication features, and every check collectors use only raises or lowers suspicion. Comparing against a card you know is genuine gets you the furthest; for expensive cards, grading is the practical answer.",
+        link: { href: "/guide/rarities", label: "See grading and rarity" },
       },
       {
         question: "Are Japanese and English cards faked equally?",
         answer:
           "Counterfeits follow value, not language. High-value alternate arts, secret rares and prize promos are the targets in any language — Bandai's own 2024 counterfeit alert concerned an English-language championship prize card.",
+        link: { href: "/guide/versions", label: "Compare Japanese vs English versions" },
       },
       {
         question: "Is a proxy card illegal?",
@@ -396,11 +484,13 @@ export function guideAuthFaq(lang: Language): { question: string; answer: string
         question: "真贋を確定できる検査はありますか？",
         answer:
           "ありません。バンダイは一般向けの真贋仕様を公開しておらず、各チェックは疑いを強める/弱めるだけです。本物との比較がもっとも有効で、高額カードは鑑定が現実的な答えです。",
+        link: { href: "/guide/rarities", label: "鑑定とレアリティのガイドを見る" },
       },
       {
         question: "日本語版と英語版で偽造の多さは違いますか？",
         answer:
           "偽造は言語ではなく価値を追います。2024年のバンダイの注意喚起は英語版のプライズカードに関するものでした。",
+        link: { href: "/guide/versions", label: "日本語版と英語版の違いを見る" },
       },
       {
         question: "プロキシは違法ですか？",
@@ -419,11 +509,13 @@ export function guideAuthFaq(lang: Language): { question: string; answer: string
       question: "มีวิธีเดียวที่พิสูจน์ได้เลยไหมว่าการ์ดวันพีซใบนี้แท้?",
       answer:
         "ไม่มี Bandai ไม่ได้ประกาศฟีเจอร์ตรวจสอบของแท้สำหรับผู้บริโภค และทุกวิธีที่นักสะสมใช้ทำได้แค่เพิ่มหรือลดความน่าสงสัย วิธีที่พาไปได้ไกลที่สุดคือเทียบกับใบที่รู้ว่าแท้ ส่วนการ์ดราคาสูงคำตอบที่ใช้ได้จริงคือส่งเกรด",
+      link: { href: "/guide/rarities", label: "ดูเรื่องเกรดและความหายากการ์ด" },
     },
     {
       question: "การ์ดฉบับญี่ปุ่นกับอังกฤษ โดนปลอมพอกันไหม?",
       answer:
         "ของปลอมวิ่งตามมูลค่า ไม่ได้วิ่งตามภาษา กลุ่มเป้าหมายคือลายพิเศษราคาสูง การ์ด SEC และการ์ดรางวัล ไม่ว่าจะภาษาไหน — ประกาศเตือนของ Bandai เมื่อปี 2024 ก็เป็นการ์ดรางวัลฉบับภาษาอังกฤษ",
+      link: { href: "/guide/versions", label: "เทียบฉบับญี่ปุ่นกับอังกฤษเต็มๆ" },
     },
     {
       question: "การ์ด proxy ผิดกฎหมายไหม?",

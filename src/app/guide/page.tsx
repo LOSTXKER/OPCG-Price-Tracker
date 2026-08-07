@@ -245,8 +245,8 @@ export default async function GuideLandingPage() {
     <div className="space-y-10">
       <JsonLd
         data={breadcrumbJsonLd([
-          { name: "Home", href: "/" },
-          { name: "Guide", href: "/guide" },
+          { name: t(lang, "home"), href: "/" },
+          { name: t(lang, "guideBreadcrumbGuide"), href: "/guide" },
         ])}
       />
 
@@ -255,7 +255,7 @@ export default async function GuideLandingPage() {
           <Breadcrumb
             items={[
               { label: t(lang, "home"), href: "/" },
-              { label: "Guide" },
+              { label: t(lang, "guideBreadcrumbGuide") },
             ]}
           />
         }
@@ -263,16 +263,9 @@ export default async function GuideLandingPage() {
         description={guideHubLead(lang)}
       />
 
-      {/* ── Intro prose — the pillar's own body copy ── */}
-      <section className="space-y-4">
-        <h2 className="text-h2">{guideHubIntroHeading(lang)}</h2>
-        <div className="space-y-3 text-body leading-relaxed text-muted-foreground">
-          {guideHubIntroParagraphs(lang).map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
-          ))}
-        </div>
-      </section>
-
+      {/* ── Chapters grid FIRST — this is what visitors come to the hub for.
+          The old order buried it under ~1.5 screens of intro prose on mobile
+          (SEO round 3 audit finding #1). ── */}
       <section className="space-y-4">
         <h2 className="text-h2">{guideHubChaptersHeading(lang)}</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -326,6 +319,23 @@ export default async function GuideLandingPage() {
               </Link>
             );
           })}
+        </div>
+      </section>
+
+      {/* ── Intro prose — the pillar's own body copy, kept but trimmed to 2
+          short paragraphs (was 4) and moved below the chapter grid. Width
+          capped for line length (matches the reading column subpages get via
+          ROUTE_WIDTH in main-chrome.tsx — the hub route isn't matched by that
+          regex, so the cap is applied locally) but LEFT-ALIGNED like every
+          other section heading on this page: centering it (`mx-auto`) made
+          the lone block float mid-page while its sibling H2s hug the left
+          margin (owner call, เบส 2026-08-07). ── */}
+      <section className="max-w-2xl space-y-4">
+        <h2 className="text-h2">{guideHubIntroHeading(lang)}</h2>
+        <div className="space-y-3 text-body leading-relaxed text-muted-foreground">
+          {guideHubIntroParagraphs(lang).map((paragraph, i) => (
+            <p key={i}>{paragraph}</p>
+          ))}
         </div>
       </section>
 

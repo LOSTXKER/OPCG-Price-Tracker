@@ -211,9 +211,9 @@ export default async function GuideSetsPage() {
     <div className="mx-auto max-w-3xl space-y-12">
       <JsonLd
         data={breadcrumbJsonLd([
-          { name: "Home", href: "/" },
-          { name: "Guide", href: "/guide" },
-          { name: "Sets", href: "/guide/sets" },
+          { name: t(lang, "guideSetBreadcrumbHome"), href: "/" },
+          { name: t(lang, "guideSetBreadcrumbGuide"), href: "/guide" },
+          { name: t(lang, "guideSetBreadcrumbSets"), href: "/guide/sets" },
         ])}
       />
       {recent.length > 0 && (
@@ -241,7 +241,7 @@ export default async function GuideSetsPage() {
             hideMobileBack
           />
         }
-        back={{ href: "/guide", label: "Guide" }}
+        back={{ href: "/guide", label: t(lang, "guideSetBreadcrumbGuide") }}
         title={guideSetH1(lang)}
         description={guideSetLead(lang)}
       />

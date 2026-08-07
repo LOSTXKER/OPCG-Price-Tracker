@@ -62,10 +62,12 @@ export function buildHomeHeroHeading(lang: Language): string {
  */
 export function buildHomeHeroSubtitle(lang: Language): string {
   switch (lang) {
+    // "Daily", not "live" — prices update once a day (same honesty rule as
+    // the seoFeat* strings, SEO round 2/3).
     case "EN":
-      return "Live prices · trending cards · PSA 10 prices · your portfolio";
+      return "Daily prices · trending cards · PSA 10 prices · your portfolio";
     case "JP":
-      return "リアル相場・急上昇カード・PSA 10 相場・ポートフォリオ";
+      return "毎日更新の相場・急上昇カード・PSA 10 相場・ポートフォリオ";
     default:
       return "ราคากลาง · การ์ดมาแรง · ราคา PSA 10 · พอร์ตการ์ด";
   }

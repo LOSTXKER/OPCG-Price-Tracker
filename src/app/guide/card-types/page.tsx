@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -234,9 +235,9 @@ export default async function CardTypesPage() {
     <div className="mx-auto max-w-3xl space-y-12">
       <JsonLd
         data={breadcrumbJsonLd([
-          { name: "Home", href: "/" },
-          { name: "Guide", href: "/guide" },
-          { name: "Card Types", href: "/guide/card-types" },
+          { name: t(lang, "home"), href: "/" },
+          { name: t(lang, "guideBreadcrumbGuide"), href: "/guide" },
+          { name: t(lang, "guideTypeBreadcrumb"), href: "/guide/card-types" },
         ])}
       />
 
@@ -246,13 +247,13 @@ export default async function CardTypesPage() {
           <Breadcrumb
             items={[
               { label: t(lang, "home"), href: "/" },
-              { label: "Guide", href: "/guide" },
+              { label: t(lang, "guideBreadcrumbGuide"), href: "/guide" },
               { label: t(lang, "guideTypeBreadcrumb") },
             ]}
             hideMobileBack
           />
         }
-        back={{ href: "/guide", label: "Guide" }}
+        back={{ href: "/guide", label: t(lang, "guideBreadcrumbGuide") }}
         title={guideTypeH1(lang)}
         description={
           <>
@@ -527,6 +528,16 @@ export default async function CardTypesPage() {
           </p>
         </div>
       </GuideCallout>
+
+      {/* ── Closing link → rarities (audit: card-types had no outbound link
+          in real prose, only in the footer nav) ── */}
+      <p className="text-sm text-muted-foreground">
+        {t(lang, "guideTypeClosingP1a")}{" "}
+        <Link href="/guide/rarities" className="font-medium text-primary hover:underline">
+          {t(lang, "guideTypeClosingLink")}
+        </Link>
+        {t(lang, "guideTypeClosingP1b")}
+      </p>
 
       {/* ── 7. Sources ── */}
       <GuideSourceList

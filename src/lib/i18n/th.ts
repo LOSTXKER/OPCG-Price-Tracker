@@ -2365,6 +2365,11 @@ export const th = {
   seoFaq7A: "ตลาดซื้อขายการ์ด One Piece ที่ผู้ใช้สามารถลงขายหรือซื้อการ์ดจากคนอื่นได้โดยตรง มีราคาตลาดจริงให้เทียบเป็นข้อมูลอ้างอิง",
 
   // --- guide (i18n migration) ---
+  // Shared "Guide" breadcrumb crumb — every /guide/** page's Home/last-crumb
+  // is already localized via t(lang,"home") + its own page key, but the
+  // middle "Guide" node used to be hardcoded English on every page except
+  // /guide/sets. One key, reused everywhere (SEO round 3).
+  guideBreadcrumbGuide: "คู่มือ",
   guideHomeTitle: "เริ่มต้นกับ OPCG",
   guideHomeDescription: "ไม่ว่าจะเป็นมือใหม่หรือเพิ่งเข้าวงการ เราจะพาคุณรู้จักทุกอย่างเกี่ยวกับ One Piece Card Game",
   guideHomeStartNow: "เริ่มเลย",
@@ -2539,6 +2544,8 @@ export const th = {
   guideRarityComparePsecSub: "ภาพ alternate art",
   guideRarityCompareSuperLabel: "Super Parallel",
   guideRarityCompareSuperSub: "manga art หายากสุด",
+  guideRarityCompareRealExample: "ตัวอย่างจริงจากการ์ด {name} ({code})",
+  guideRarityCompareNoData: "ยังไม่มีข้อมูลราคาการ์ดคู่เทียบในระบบตอนนี้",
   guideRarityParallelCommon: "Parallel Common",
   guideRarityParallelUncommon: "Parallel Uncommon",
   guideRarityParallelRare: "Parallel Rare",
@@ -2599,6 +2606,12 @@ export const th = {
   guideRarityFactorSupplyDesc: "SP, TR มีอัตราออกต่ำมาก supply น้อยทำให้ราคาพุ่ง",
   guideRarityFactorOopTitle: "เซ็ตหมดพิมพ์",
   guideRarityFactorOopDesc: "เซ็ตเก่าที่ไม่พิมพ์เพิ่มแล้ว การ์ดในเซ็ตนั้นราคาจะเพิ่มขึ้นเรื่อยๆ",
+  guideRarityFactorsMostExpP1a: "อยากรู้ว่าการ์ดวันพีซใบไหนราคาสูงที่สุดในตลาดตอนนี้จริงๆ ไปดูอันดับได้ที่",
+  guideRarityFactorsMostExpLink: "การ์ดวันพีซที่แพงที่สุดตอนนี้",
+  guideRarityMedianLabel: "มัธยฐาน",
+  guideRarityPriceCountLabel: "จากข้อมูลจริง {n} ใบ",
+  guideRaritySnapshotLabel: "ข้อมูลราคา ณ {date}",
+  guideRarityNoPriceData: "ยังไม่มีข้อมูลราคาการ์ดระดับนี้ในระบบตอนนี้",
   guideRaritySourcesHeading: "แหล่งอ้างอิง",
   guideRaritySourceRulesDesc: "กฎเกมอย่างเป็นทางการจาก Bandai",
   guideRarityNavPrev: "ประเภทการ์ด",
@@ -2665,6 +2678,9 @@ export const th = {
   guideTypeKeywordsDesc: "คีย์เวิร์ดที่พบบ่อยบนการ์ด OPCG ที่ผู้เล่นควรรู้จัก",
   guideTypeCalloutTrigger: "การ์ดประเภท Character, Event, และ Stage สามารถมี Trigger ได้ เมื่อการ์ดนั้นถูกเปิดจาก Life (โดนโจมตี Leader สำเร็จ) จะได้ใช้ Effect พิเศษทันที เช่น เพิ่ม Power, จั่วการ์ด, หรือลงการ์ดฟรี",
   guideTypeCalloutDon: "เป็นประเภทเดียวที่ไม่มี Trigger เพราะไม่ได้อยู่ในเด็ค 50 ใบ",
+  guideTypeClosingP1a: "รู้จักประเภทการ์ดครบแล้ว ไปต่อกันที่",
+  guideTypeClosingLink: "คู่มือความหายากการ์ดวันพีซ",
+  guideTypeClosingP1b: " เพื่อดูว่าอะไรทำให้การ์ดบางใบราคาสูงกว่าใบอื่นมาก",
   guideTypeSourcesHeading: "แหล่งอ้างอิง",
   guideTypeSourceRulesDesc: "กฎเกมอย่างเป็นทางการจาก Bandai",
   guideTypeSourcePlayGuideDesc: "คู่มือวิธีเล่นพร้อมภาพประกอบจาก Bandai",
@@ -2694,6 +2710,8 @@ export const th = {
   guideColorYellowTagline: "Life Manipulation + Trigger",
   guideColorYellowDesc: "สีที่ซับซ้อนที่สุด ใช้ Life เป็นทรัพยากร กระตุ้น Trigger effect จาก Life area เพิ่ม/ลด Life ได้ เล่นยากแต่ถ้าเชี่ยวชาญจะควบคุมเกมได้ดีมาก เปิดตัวครั้งแรกในชุดที่ 3",
   guideColorLeaderExampleLabel: "ตัวอย่าง Leader",
+  guideColorBrowseP1a: "อยากดูการ์ดแยกตามสีที่ชอบ ค้นหาและกรองได้ที่",
+  guideColorBrowseLink: "หน้าค้นหาการ์ด",
   guideColorMulticolorHeading: "Multicolor (การ์ด 2 สี)",
   guideColorMulticolorIntroP1a: "Leader บางตัวมี ",
   guideColorMulticolorIntro2Colors: "2 สี",

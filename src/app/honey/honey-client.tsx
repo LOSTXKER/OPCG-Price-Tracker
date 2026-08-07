@@ -4,8 +4,10 @@ import { Suspense, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { LoadingState } from "@/components/shared/loading-state";
 import { PageHeader } from "@/components/layout/page-header";
 import { AuthPreviewGate } from "@/components/shared/login-gate";
+import { HoneyPublicExplainer } from "@/components/honey/honey-public-explainer";
 import { useAuthState } from "@/hooks/use-auth-state";
 import { useUIStore } from "@/stores/ui-store";
 import { useHoneyData } from "@/hooks/use-honey-data";
@@ -53,15 +55,33 @@ export default function HoneyClient() {
   );
 
   if (authed === null) {
+    // Auth status is still unknown — and since this component renders on the
+    // server with that exact state (the effect that resolves real auth only
+    // runs client-side), this branch IS the HTML a crawler or anyone without
+    // JS receives. It used to be four gray skeleton blocks with no text at
+    // all; now it leads with the same public explainer shown to confirmed
+    // logged-out visitors, so the first screen is real, indexable content.
+    //
+    // CLS tradeoff (owner ruling: pick the lower-risk option, not "always
+    // reorder"): this only changes the `null` branch, not `false` — a
+    // confirmed logged-out visitor still sees `AuthPreviewGate` first
+    // (unchanged, since that mock preview is not the "gray box" problem the
+    // audit flagged). The one real cost is for an already-authenticated
+    // visitor: on every mount `authed` starts `null` before resolving `true`
+    // client-side, so they now briefly see the explainer + this slim status
+    // row before it swaps for their real dashboard — one shift instead of
+    // zero. That's accepted because the previous four-block skeleton was
+    // already a poor size match for the eventual dashboard (136px of
+    // placeholder vs. a multi-section panel that commonly runs 600px+), so
+    // the swap was never truly "shift-free" — it just happened to be
+    // off-screen where `HoneyPublicExplainer` used to render below the fold.
+    // A single slim status row (not a second dashboard-shaped skeleton
+    // stack) keeps that already-accepted shift from getting materially worse.
     return (
       <>
         {header}
-        <div className="space-y-6">
-          <Skeleton className="h-14 rounded-xl" />
-          <Skeleton className="h-48 rounded-xl shadow-[var(--panel-shadow)]" />
-          <Skeleton className="h-10 rounded-lg" />
-          <Skeleton className="h-64 rounded-xl shadow-[var(--panel-shadow)]" />
-        </div>
+        <HoneyPublicExplainer />
+        <LoadingState variant="spinner" size="sm" label={t(lang, "loading")} className="mt-10" />
       </>
     );
   }
@@ -71,6 +91,7 @@ export default function HoneyClient() {
       <>
         {header}
         <AuthPreviewGate preview={<HoneyMockPreview lang={lang} />} />
+        <HoneyPublicExplainer />
       </>
     );
   }

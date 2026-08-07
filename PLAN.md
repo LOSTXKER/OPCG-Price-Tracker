@@ -13,6 +13,16 @@
 - [x] **SEO-V ตรวจรับ** — tsc 0 · lint 0 error (28 warning เดิม) · test 134 files/734 · build 209 หน้า · ตรวจ HTML จริงจาก `next start` (จำลอง production ด้วย `NEXT_PUBLIC_BYPASS_AUTH=false` เพราะเครื่อง dev เปิด bypass ไว้ทำให้หน้า auth-gated ทดสอบเพี้ยน) — title/H1/canonical ถูกทุกหน้า · `/proto` = noindex,nofollow · canonical ไม่มีหน้าไหนชี้ "/" นอกจากหน้าแรก
 - [ ] **SEO-OPS (ต้องทำบน Vercel — โค้ดทำแทนไม่ได้)** — ตั้ง `NEXT_PUBLIC_APP_URL` เป็นโดเมนจริง (ไม่งั้น canonical/sitemap/OG ชี้ `https://meecard.app` ตาม default) · สมัคร Google Search Console แล้วใส่ `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` · submit sitemap
 
+## 🎨 SEO Round 3 — ความสวย + เก็บแต้ม (2026-08-07 — รอบสุดท้ายจาก audit)
+
+- [x] **R3-A ศูนย์คู่มือ /guide จัดใหม่** — การ์ดบทขึ้นจอแรกทันที (เดิม prose 1.5 จอกั้น) · บทนำ 4→2 ย่อหน้าย้ายลงใต้ลิสต์บทในคอลัมน์อ่าน · พบราก width: hub หลุด `ROUTE_WIDTH` regex ใน main-chrome (subpage ได้ max-w-2xl อัตโนมัติ) — แก้ที่ hub ให้ตรงค่าเรนเดอร์จริง (672px ไม่ใช่ max-w-3xl ที่เป็น class ตายในไฟล์) · แถมแก้ breadcrumb "Guide" อังกฤษ hardcode → คีย์ `guideBreadcrumbGuide` 3 ภาษา (ทั้งที่ตาเห็น + JSON-LD ทั้ง 7 หน้า)
+- [x] **R3-B ลิงก์ในเนื้อความ guide** — rarities→most-expensive · colors→search · card-types→rarities · authenticity: red flag→search + FAQ→rarities/versions · versions: เนื้อความ→sets + FAQ links · แก้ anchor ผิดปลายทาง (GuideSourceList "ราคากลาง" ชี้ most-expensive → search)
+- [x] **R3-C /guide/versions เก็บ "การ์ดวันพีซ ภาษาไทย"** — section ใหม่ 3 ย่อหน้า + FAQ 1 ข้อ: การ์ดพิมพ์ไทยยังไม่มี (ข้อเท็จจริง verify จากเว็บจริง) · KIDZ & KITZ = ผู้นำเข้า/จัดจำหน่ายทางการ + งานแข่ง · Bandai worldwide simultaneous release 2026 · ทั้งสองหน้า guide-deep ได้ Article JSON-LD (datePublished/dateModified) + "อัปเดตล่าสุด" ที่มองเห็น
+- [x] **R3-D trending เก็บ "น่าเก็บ/น่าลงทุน"** — H2 "การ์ดวันพีซใบไหนน่าเก็บตอนนี้ ดูยังไงจากข้อมูล" + 3 ย่อหน้าสอนอ่านตาราง + ลิงก์ most-expensive + disclaimer ไม่ใช่คำแนะนำการลงทุน
+- [x] **R3-E rarities เลิก hardcode ราคา** — ช่วงราคา min/median/max ต่อ tier คำนวณจาก DB จริง (unstable_cache 1h) + ป้าย "จากข้อมูลจริง X ใบ" + วันที่ snapshot · TR/DON ไม่มีข้อมูล = บอกตรงๆ ไม่เดา · ตารางเทียบ parallel ใช้การ์ดใบเดียวกันจริง (หาคู่ SEC↔P อัตโนมัติ) ลิงก์เข้าหน้าการ์ด
+- [x] **R3-F เก็บตก** — Honey จอแรก crawler/ไม่ล็อกอิน: explainer ขึ้นก่อน เหลือ loading เดียว (เลิกกล่องเทา 4 ก้อน + test SSR order) · รูปชุด: ราก = fallback เลือกการ์ดข้ามชุด (OP01-047_p2 โผล่บนกล่อง OP04 เพราะเรียง cardCode รวม) → เลือกการ์ดรหัสชุดตัวเองก่อน + onError fallback บน tile · EB01-001 เช็คแล้วโหลดได้ปกติ (อาการชั่วคราวตอน audit) · WebSite schema: +alternateName −SearchAction (Google เลิกใช้) · Breadcrumb JSON-LD ไทยตรง UI: หน้าการ์ด (เลิกยัดคีย์เวิร์ด) + search + market-overview · hero subtitle เลิกเคลม "Live" (EN/JP)
+- [x] **R3-V ตรวจรับ** — tsc 0 · lint 0 · vitest 140 ไฟล์/776 ผ่าน (test ใหม่: honey-client SSR order · rarity-price-format · guide-authenticity/versions links) · build 209 หน้า · เปิดดูจริง :3001 มือถือ+desktop (guide hub การ์ดบทจอแรก · trending section ใหม่ · honey · versions KIDZ & KITZ + Article schema)
+
 ## 🩸 SEO Round 1 — หยุดเลือด (2026-08-07 — จาก audit 12 ทีม · รายงาน: artifact "ตรวจ SEO ทั้งเว็บ Meecard")
 > เป้า: ตัดแพทเทิร์นที่โดนหักคะแนนระดับโดเมนก่อน แล้วค่อยทำ Round 2 (og/วันที่/cannibalization) และ Round 3 (ความสวย guide hub)
 

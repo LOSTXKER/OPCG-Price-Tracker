@@ -186,13 +186,17 @@ export default async function CardDetailPage(props: {
           set: { nameEn: card.set.nameEn, name: card.set.name, nameTh: card.set.nameTh },
         })}
       />
+      {/* Labels mirror the visible Breadcrumb in card-detail.tsx exactly —
+          structured data must match what the user sees (the old version
+          stuffed "ราคา"/keywords into names the UI never shows; the page's
+          uniqueness lives in the title/H1 already). */}
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "หน้าแรก", href: "/" },
-          { name: "ชุดการ์ดวันพีซ", href: "/opcg/sets" },
-          { name: `ชุด ${card.set.code} ${setName}`, href: `/opcg/sets/${card.set.code}` },
+          { name: "ชุดการ์ด", href: "/opcg/sets" },
+          { name: setName, href: `/opcg/sets/${card.set.code}` },
           {
-            name: `ราคา ${card.cardCode} ${displayName}`,
+            name: card.baseCode ?? card.cardCode,
             href: `/opcg/cards/${card.cardCode}`,
           },
         ])}

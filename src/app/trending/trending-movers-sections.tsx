@@ -4,6 +4,7 @@ import { Surface } from "@/components/ui/surface";
 import { getCardName, type Language } from "@/lib/i18n";
 import {
   buildTrendingPeriodTitle,
+  buildTrendingWorthCollectingCopy,
   type TrendingMoverKind,
   type TrendingPeriodKey,
 } from "@/lib/seo/copy/tools";
@@ -80,4 +81,35 @@ function changeFor(card: TrendingCardRow, period: TrendingPeriodKey): number | n
 function formatChange(value: number | null): string {
   if (value == null) return "—";
   return `${value > 0 ? "+" : ""}${value.toFixed(2)}%`;
+}
+
+/**
+ * "How to read this" explainer — SERVER component, same constraints as
+ * `TrendingMoversSections` above (no hooks, always in the first HTML
+ * response). Targets the Thai search intent "การ์ดวันพีซ น่าเก็บ / น่าลงทุน"
+ * (SEO round 3) with a short factual explainer, not a buy/sell call — see
+ * `buildTrendingWorthCollectingCopy` for the full reasoning.
+ */
+export function TrendingWorthCollectingSection({ lang }: { lang: Language }) {
+  const copy = buildTrendingWorthCollectingCopy(lang);
+
+  return (
+    <section className="space-y-3" data-slot="trending-seo-worth-collecting">
+      <h2 className="text-h2">{copy.h2}</h2>
+      <div className="max-w-3xl space-y-3 text-body-sm leading-relaxed text-muted-foreground">
+        {copy.paragraphs.map((paragraph) => (
+          <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+        ))}
+        <p>
+          <Link
+            href={copy.linkHref}
+            className="font-medium text-primary hover:underline"
+          >
+            {copy.linkLabel}
+          </Link>
+        </p>
+        <p className="text-meta">{copy.disclaimer}</p>
+      </div>
+    </section>
+  );
 }

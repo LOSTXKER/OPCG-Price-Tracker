@@ -61,17 +61,44 @@ export default async function SetsIndexPage() {
           imageUrl: { not: null },
         },
         orderBy: { cardCode: "asc" },
-        select: { setId: true, imageUrl: true },
+        select: { setId: true, cardCode: true, imageUrl: true },
       }),
     ]);
 
     const productCountMap = new Map(
       products.map((p) => [p.code, p._count.cards])
     );
-    const topCardMap = new Map<number, { imageUrl: string | null }>();
+
+    // `topCard` is a stand-in "box art" for every set with no `boxImageUrl`
+    // (all 51, today) — but ordering globally by `cardCode` breaks for any
+    // set whose box also distributes an SP/parallel reprint of an
+    // earlier-numbered card (e.g. an OP04 box containing an "OP01-047_p2"
+    // bonus reprint): "OP01-…" always sorts before "OP0N-…" for N > 1, so
+    // that unrelated reprint kept winning the pick for most sets past OP02,
+    // showing a card that visually has nothing to do with the set (root
+    // cause behind the OP04 tile audit finding — the image itself loads
+    // fine, it's just the wrong card). Prefer a card whose own code is
+    // native to the set; only fall back to "any card in the set" if it has
+    // none (shouldn't happen, but keeps a set from going imageless).
+    const setCodeById = new Map(sets.map((s) => [s.id, s.code.toUpperCase()]));
+    const nativeTopCardMap = new Map<number, { imageUrl: string | null }>();
+    const anyTopCardMap = new Map<number, { imageUrl: string | null }>();
     for (const tc of topCards) {
-      if (!topCardMap.has(tc.setId))
-        topCardMap.set(tc.setId, { imageUrl: tc.imageUrl });
+      if (!anyTopCardMap.has(tc.setId))
+        anyTopCardMap.set(tc.setId, { imageUrl: tc.imageUrl });
+      const setCode = setCodeById.get(tc.setId);
+      if (
+        setCode &&
+        !nativeTopCardMap.has(tc.setId) &&
+        tc.cardCode.toUpperCase().startsWith(setCode)
+      ) {
+        nativeTopCardMap.set(tc.setId, { imageUrl: tc.imageUrl });
+      }
+    }
+    const topCardMap = new Map<number, { imageUrl: string | null }>();
+    for (const id of setIds) {
+      const card = nativeTopCardMap.get(id) ?? anyTopCardMap.get(id);
+      if (card) topCardMap.set(id, card);
     }
     setsRaw = sets.map((s) => ({
       id: s.id,

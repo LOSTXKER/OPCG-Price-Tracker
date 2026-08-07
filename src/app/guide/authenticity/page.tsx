@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { AlertTriangle, LineChart, ShieldCheck, Store } from "lucide-react";
 
 import { Breadcrumb } from "@/components/shared/breadcrumb";
@@ -11,10 +12,13 @@ import { GuidePrevNext } from "@/components/guide/guide-prev-next";
 import { GuideSourceList } from "@/components/guide/guide-source-list";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { clientEnv } from "@/lib/env";
 import { t } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
 import {
   GUIDE_AUTHENTICITY_META,
+  GUIDE_AUTHENTICITY_PUBLISHED_AT,
+  GUIDE_AUTHENTICITY_UPDATED_AT,
   guideAuthBestMethodBody,
   guideAuthBestMethodHeading,
   guideAuthChecks,
@@ -33,6 +37,7 @@ import {
   guideAuthRipHeading,
   guideAuthTerms,
   guideAuthTermsHeading,
+  guideAuthUpdatedLabel,
 } from "@/lib/seo/copy/guide-authenticity";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
@@ -47,6 +52,7 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default async function AuthenticityGuidePage() {
   const lang = await getServerLanguage();
+  const baseUrl = clientEnv().NEXT_PUBLIC_APP_URL;
 
   return (
     <>
@@ -58,6 +64,24 @@ export default async function AuthenticityGuidePage() {
         ])}
       />
 
+      {/* Article schema — this page cites a rule that can go stale (grading
+          advice, counterfeit alerts), so dateModified matters for freshness
+          signals even though the copy isn't a dated news article. */}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: guideAuthH1(lang),
+          description: GUIDE_AUTHENTICITY_META.description,
+          url: `${baseUrl}/guide/authenticity`,
+          inLanguage: "th-TH",
+          datePublished: GUIDE_AUTHENTICITY_PUBLISHED_AT,
+          dateModified: GUIDE_AUTHENTICITY_UPDATED_AT,
+          author: { "@type": "Organization", name: "Meecard" },
+          publisher: { "@type": "Organization", name: "Meecard", url: baseUrl },
+        }}
+      />
+
       <Breadcrumb
         items={[
           { label: t(lang, "home"), href: "/" },
@@ -66,7 +90,9 @@ export default async function AuthenticityGuidePage() {
         ]}
       />
 
-      <PageHeader title={guideAuthH1(lang)} description={guideAuthLead(lang)} />
+      <PageHeader title={guideAuthH1(lang)} description={guideAuthLead(lang)}>
+        <p className="text-meta">อัปเดตล่าสุด: {guideAuthUpdatedLabel(lang)}</p>
+      </PageHeader>
 
       <div className="mt-8 space-y-12">
         <section className="max-w-3xl space-y-3">
@@ -141,8 +167,20 @@ export default async function AuthenticityGuidePage() {
           <h2 className="text-h2">{guideAuthRedFlagsHeading(lang)}</h2>
           <Surface variant="outline" className="divide-y divide-hair overflow-hidden">
             {guideAuthRedFlags(lang).map((flag) => (
-              <p key={flag.slice(0, 24)} className="px-5 py-3.5 text-body-sm leading-relaxed">
-                {flag}
+              <p key={flag.id} className="px-5 py-3.5 text-body-sm leading-relaxed">
+                {flag.before}
+                {flag.link && (
+                  <>
+                    {" "}
+                    <Link
+                      href={flag.link.href}
+                      className="font-medium text-primary hover:underline"
+                    >
+                      {flag.link.label}
+                    </Link>
+                    {flag.after && ` ${flag.after}`}
+                  </>
+                )}
               </p>
             ))}
           </Surface>
@@ -166,7 +204,7 @@ export default async function AuthenticityGuidePage() {
             {
               label: "ราคากลางการ์ดวันพีซบน Meecard",
               desc: "เทียบราคาที่คนขายเสนอกับราคาตลาด ก่อนตัดสินใจว่าของถูกผิดปกติหรือเปล่า",
-              url: "/opcg/most-expensive",
+              url: "/opcg/search",
               internal: true,
             },
           ]}
