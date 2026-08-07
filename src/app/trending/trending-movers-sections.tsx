@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ArrowLink } from "@/components/shared/arrow-link";
 import { Surface } from "@/components/ui/surface";
 import { getCardName, type Language } from "@/lib/i18n";
 import {
@@ -101,12 +102,7 @@ export function TrendingWorthCollectingSection({ lang }: { lang: Language }) {
           <p key={paragraph.slice(0, 24)}>{paragraph}</p>
         ))}
         <p>
-          <Link
-            href={copy.linkHref}
-            className="font-medium text-primary hover:underline"
-          >
-            {copy.linkLabel}
-          </Link>
+          <ArrowLink href={copy.linkHref}>{copy.linkLabel}</ArrowLink>
         </p>
         <p className="text-meta">{copy.disclaimer}</p>
       </div>

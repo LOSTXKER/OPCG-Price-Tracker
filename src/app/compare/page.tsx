@@ -23,21 +23,23 @@ export default function ComparePage() {
 
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Compare Cards", href: "/opcg/compare" }])} />
+      {/* Thai labels = what the visible Breadcrumb in CompareClient renders
+          for the crawler's TH default — schema must match the UI. */}
+      <JsonLd data={breadcrumbJsonLd([{ name: "หน้าแรก", href: "/" }, { name: "เปรียบเทียบการ์ด", href: "/opcg/compare" }])} />
       <CompareClient />
 
       {/* Server-rendered context: the tool is empty until the visitor picks
-          cards, so without this the route had no crawlable copy at all. */}
-      <section className="mt-12 space-y-3">
+          cards, so without this the route had no crawlable copy at all.
+          Paragraphs render as paragraphs — they were <li> bullets before,
+          which dressed three full sentences as a list (audit finding). */}
+      <section className="mt-12 max-w-3xl space-y-3">
         <h2 className="text-h2">{copy.howTitle}</h2>
-        <p className="text-body leading-relaxed">{copy.intro}</p>
-        <ul className="space-y-2">
-          {copy.howParagraphs.map((paragraph) => (
-            <li key={paragraph.slice(0, 24)} className="text-body-sm leading-relaxed">
-              {paragraph}
-            </li>
-          ))}
-        </ul>
+        <p className="text-body-sm leading-relaxed text-muted-foreground">{copy.intro}</p>
+        {copy.howParagraphs.map((paragraph) => (
+          <p key={paragraph.slice(0, 24)} className="text-body-sm leading-relaxed text-muted-foreground">
+            {paragraph}
+          </p>
+        ))}
       </section>
 
       <RelatedPages

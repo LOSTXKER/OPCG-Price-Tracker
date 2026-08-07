@@ -81,24 +81,26 @@ export function buildHomeMarketIntro(
   const cards = formatCount(data.totalCards);
   const sets = formatCount(data.totalSets);
 
+  // ONE sentence (owner ruling เบส 2026-08-07, same rule as the set pages):
+  // the old three-clause paragraph restated the methodology (the "อัปเดต
+  // ล่าสุด" line above + /about#methodology own that) and narrated how to use
+  // the table that sits directly below it. Counts + OPTCG (the abbreviation
+  // serious players search) + the "วันพีช" spelling stay.
   switch (lang) {
     case "EN":
       return {
         heading: "One Piece card prices today",
-        body: `Meecard tracks ${cards} One Piece Card Game (OPTCG) cards across ${sets} sets. Reference prices come from the Japanese market, updated daily and converted to Thai baht automatically. Pick a set to narrow it down, then compare Raw and PSA 10 on one row.`,
+        body: `Meecard tracks ${cards} One Piece Card Game (OPTCG) cards across ${sets} sets, priced daily from the Japanese market.`,
       };
     case "JP":
       return {
         heading: "ワンピースカード 本日の相場",
-        body: `Meecard は ${sets} 弾・${cards} 枚のワンピースカードの相場を追跡しています。価格は日本市場を参照し、毎日更新してタイバーツへ自動換算。弾を選んで絞り込むと、Raw と PSA 10 を同じ行で比較できます。`,
+        body: `Meecard は ${sets} 弾・${cards} 枚のワンピースカードの相場を毎日更新しています。`,
       };
     default:
-      // "OPTCG" added here (SEO round 2) — the English abbreviation is the
-      // exact term serious players search ("OPTCG ราคา") and it did not
-      // appear anywhere on the home page before this.
       return {
         heading: "ราคาตลาดการ์ดวันพีซวันนี้",
-        body: `Meecard ติดตามราคาการ์ดวันพีซ (One Piece Card Game / OPTCG) ทั้งหมด ${cards} ใบ จาก ${sets} ชุด ราคากลางอ้างอิงจากตลาดญี่ปุ่นจริง อัปเดตทุกวันและแปลงเป็นเงินบาทอัตโนมัติ เลือกชุดการ์ดวันพีชที่สนใจ แล้วเทียบราคาแบบ Raw กับ PSA 10 ได้ในแถวเดียว`,
+        body: `Meecard ติดตามราคาการ์ดวันพีช (One Piece Card Game / OPTCG) ทั้งหมด ${cards} ใบ จาก ${sets} ชุด อัปเดตทุกวันจากตลาดญี่ปุ่น`,
       };
   }
 }

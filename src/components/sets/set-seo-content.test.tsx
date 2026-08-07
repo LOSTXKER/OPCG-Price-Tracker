@@ -152,18 +152,21 @@ describe("set SEO copy", () => {
     expect(long.title).toContain("PRB01");
   });
 
-  it("generates intro prose from real set data", () => {
+  it("generates ONE short keyword sentence, no data dump", () => {
     const paragraphs = buildSetIntro("TH", seo);
-    // ONE dense paragraph by owner ruling (2026-08-06) — every fact below
-    // must survive inside it.
+    // Owner ruling เบส 2026-08-07: the intro restated facts already visible
+    // on the page (top card in the hero, rarity split in the wall headings,
+    // box config in the drop-rate section) and read as a dump. Only what a
+    // reader needs at this point survives.
     expect(paragraphs).toHaveLength(1);
     const text = paragraphs.join(" ");
     expect(text).toContain("2 ธ.ค. 2022");
     expect(text).toContain("121 ใบ");
-    expect(text).toContain("SEC 2 ใบ");
-    expect(text).toContain("24 ซอง");
-    expect(text).toContain("OP01-003");
     expect(text).toContain("วันพีช");
+    // Facts the page already shows must NOT be restated here.
+    expect(text).not.toContain("SEC 2 ใบ");
+    expect(text).not.toContain("24 ซอง");
+    expect(text).not.toContain("OP01-003");
   });
 
   it("answers the per-set FAQ from existing fields", () => {

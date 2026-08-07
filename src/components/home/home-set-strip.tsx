@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { ChevronRight } from "lucide-react"
 
+import { ArrowLink } from "@/components/shared/arrow-link"
 import { buildHomeSetStripCopy } from "@/lib/seo/copy/home"
 import { useUIStore } from "@/stores/ui-store"
 
@@ -42,13 +42,9 @@ export function HomeSetStrip({ sets }: { sets: HomeSetStripItem[] }) {
               the highlights row. */}
           <p className="mt-0.5 hidden text-meta sm:block">{copy.description}</p>
         </div>
-        <Link
-          href="/opcg/sets"
-          className="ease-chrome flex shrink-0 items-center gap-0.5 text-sm font-medium text-primary hover:underline"
-        >
+        <ArrowLink href="/opcg/sets" className="shrink-0">
           {copy.allLabel}
-          <ChevronRight className="size-4" />
-        </Link>
+        </ArrowLink>
       </div>
 
       {/* One swipeable row on phones, wrapping grid from `sm` up.

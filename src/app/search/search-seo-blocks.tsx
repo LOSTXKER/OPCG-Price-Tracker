@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 
+import { ArrowLink } from "@/components/shared/arrow-link";
 import { Surface } from "@/components/ui/surface";
 import { RarityBadge } from "@/components/shared/rarity-badge";
 import { getCardName, type Language } from "@/lib/i18n";
@@ -130,13 +130,7 @@ export function SearchBrowseBlocks({
             </Surface>
           ))}
         </div>
-        <Link
-          href="/opcg/sets"
-          className="inline-flex items-center gap-1 text-body-sm text-primary hover:underline"
-        >
-          {copy.viewAllSets}
-          <ArrowRight className="size-3.5" aria-hidden />
-        </Link>
+        <ArrowLink href="/opcg/sets">{copy.viewAllSets}</ArrowLink>
       </section>
 
       <section className="space-y-3" data-slot="search-popular-queries">

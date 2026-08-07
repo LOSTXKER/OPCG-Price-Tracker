@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ArrowLink } from "@/components/shared/arrow-link";
+import { SectionHead } from "@/components/shared/section-head";
 import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { FaqSection } from "@/components/shared/faq-section";
 import { JsonLd } from "@/lib/seo/json-ld-script";
@@ -141,26 +143,26 @@ export default async function SetDetailPage(props: {
             groups={data.rarityGroups}
             totalCards={data.cardCount}
             intro={
-              <section
-                aria-labelledby="set-intro-heading"
-                className="max-w-3xl space-y-2"
-              >
-                <h2 id="set-intro-heading" className="text-h3">
-                  {buildSetIntroHeading(lang, seo)}
-                </h2>
+              /* SectionHead rhythm (title left, "all sets" action right) + ONE
+                 keyword sentence (owner call เบส 2026-08-07). FULL content
+                 width on purpose: capping this block (tried max-w-3xl) left
+                 the action link stranded mid-page, aligned with nothing — the
+                 card grid below is full-width, so the header rail must be too.
+                 The sentence is short enough to hold one line on desktop. */
+              <section aria-labelledby="set-intro-heading">
+                <SectionHead
+                  title={buildSetIntroHeading(lang, seo)}
+                  action={
+                    <ArrowLink href="/opcg/sets" className="shrink-0">
+                      ดูชุดทั้งหมด
+                    </ArrowLink>
+                  }
+                />
                 {introParagraphs.map((paragraph, i) => (
-                  <p key={i} className="text-body text-muted-foreground">
+                  <p key={i} className="-mt-2 text-body-sm leading-relaxed text-muted-foreground">
                     {paragraph}
                   </p>
                 ))}
-                <p className="text-meta">
-                  <Link
-                    href="/opcg/sets"
-                    className="underline-offset-2 hover:text-foreground hover:underline"
-                  >
-                    ดูชุดการ์ดวันพีซทั้งหมด
-                  </Link>
-                </p>
               </section>
             }
           />

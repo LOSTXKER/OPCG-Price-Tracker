@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Dices, GitCompareArrows, Layers } from "lucide-react";
+import { Dices, GitCompareArrows, Layers, Sparkles } from "lucide-react";
 
 import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { FaqSection } from "@/components/shared/faq-section";
@@ -55,26 +54,18 @@ export default function DeckCalculatorPage() {
             </div>
           ))}
         </Surface>
-        <div className="space-y-1.5">
-          <p className="text-body-sm text-muted-foreground">{copy.readNextIntro}</p>
-          <ul className="space-y-1.5 text-body-sm">
-            {copy.readNext.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className="text-primary hover:underline">
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
       </section>
 
       <FaqSection items={buildDeckCalculatorFaq(SEO_LANG)} />
 
+      {/* ONE link block at the tail (SEO round: the old "อ่านต่อ" text list
+          above duplicated these destinations 200px apart — orphan-link block
+          the audit flagged). Rarities took the freed slot. */}
       <RelatedPages
         items={[
           { href: "/opcg/drop-calculator", icon: Dices, title: "คำนวณโอกาสออกการ์ด", description: "โอกาสเปิดเจอต่อซอง / กล่อง / คาตัน" },
           { href: "/opcg/sets", icon: Layers, title: "ชุดการ์ด", description: "ราคาการ์ดทุกใบแยกตามชุด" },
+          { href: "/guide/rarities", icon: Sparkles, title: "ความหายากการ์ดวันพีซ", description: "ระดับไหนแพงเพราะอะไร — C ถึง Treasure Rare" },
           { href: "/opcg/compare", icon: GitCompareArrows, title: "เปรียบเทียบ", description: "เทียบราคาการ์ดหลายใบ" },
         ]}
       />

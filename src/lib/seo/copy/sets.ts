@@ -290,14 +290,6 @@ export function buildSetDetailMeta(
 /*  Set detail — intro prose                                           */
 /* ------------------------------------------------------------------ */
 
-function rarityBreakdown(lang: Language, set: SetSeoData, take = 6): string {
-  const unit = lang === "TH" ? "ใบ" : "cards";
-  return set.rarities
-    .slice(0, take)
-    .map((r) => `${r.rarity} ${formatCount(r.count)} ${unit}`)
-    .join(" · ");
-}
-
 /** H2 above the intro — the money keyword for this page. */
 export function buildSetIntroHeading(lang: Language, set: SetSeoData): string {
   const code = set.code.toUpperCase();
@@ -307,45 +299,26 @@ export function buildSetIntroHeading(lang: Language, set: SetSeoData): string {
 }
 
 /**
- * 3–4 server-rendered Thai sentences generated from data already on hand —
- * release date, box composition, card count, rarity split, top card + price.
- */
-/**
- * ONE dense paragraph per set (sitewide owner ruling 2026-08-06: H1 → one
- * keyword sentence → content; this page had four). Every fact that answers a
- * real query stays — type, release date, card count, rarity breakdown, box
- * configuration, current top card + price, both Thai spellings — only the
- * how-to-use sentence went (the rarity sections and drop-rate table it
- * pointed at are directly below).
+ * ONE short keyword sentence (owner ruling เบส 2026-08-07, from the live
+ * page): every fact this paragraph used to carry is ALREADY VISIBLE on the
+ * page — the top card + price sit in the hero directly above it, the rarity
+ * breakdown IS the price wall's section headings below, and the box
+ * configuration lives in the drop-rate section and its FAQ item. Restating
+ * them here read as a data dump. What remains is the only sentence a reader
+ * needs at this point: what the page is, how fresh it is, both spellings.
  */
 export function buildSetIntro(lang: Language, set: SetSeoData): string[] {
   const code = set.code.toUpperCase();
   const released = formatSetDate(lang, set.releaseDate);
-  const packs = set.packsPerBox;
-  const perPack = set.cardsPerPack;
 
   if (lang === "TH") {
-    const rarityPart =
-      set.rarities.length > 0 ? ` (${rarityBreakdown(lang, set)})` : "";
-    const boxPart =
-      packs && perPack ? ` กล่องละ ${packs} ซอง ซองละ ${perPack} ใบ` : "";
-    const topPart = set.topCard
-      ? ` — ใบที่แพงที่สุดตอนนี้คือ ${set.topCard.name} (${set.topCard.cardCode}) ความหายาก ${set.topCard.rarity} ราคา ${priceLabel(set.topCard.priceJpy)}`
-      : "";
     return [
-      `${code} ${set.name} — ชุด${setTypeThai(set.type)}ของการ์ดวันพีซ (One Piece Card Game)${released ? ` วางจำหน่าย ${released}` : ""} รวม ${formatCount(set.cardCount)} ใบ${rarityPart}${boxPart} เช็คราคาการ์ดวันพีชทุกใบได้ อัปเดตทุกวันจากตลาดญี่ปุ่น${topPart}`,
+      `${code} ${set.name} — ชุด${setTypeThai(set.type)}ของการ์ดวันพีซ (One Piece Card Game)${released ? ` วางจำหน่าย ${released}` : ""} เช็คราคาการ์ดวันพีชครบทั้ง ${formatCount(set.cardCount)} ใบ อัปเดตทุกวันจากตลาดญี่ปุ่น`,
     ];
   }
 
-  const rarityPart =
-    set.rarities.length > 0 ? ` (${rarityBreakdown(lang, set)})` : "";
-  const boxPart =
-    packs && perPack ? ` A box holds ${packs} packs of ${perPack} cards.` : "";
-  const topPart = set.topCard
-    ? ` The most valuable card right now is ${set.topCard.name} (${set.topCard.cardCode}, ${set.topCard.rarity}) at ${priceLabel(set.topCard.priceJpy)}.`
-    : "";
   return [
-    `${code} ${set.name} — a ${SET_TYPE_EN[normalizeType(set.type)] ?? "set"} for the One Piece Card Game${released ? `, released ${released}` : ""}, with ${formatCount(set.cardCount)} cards${rarityPart}, all priced daily from the Japanese market.${boxPart}${topPart}`,
+    `${code} ${set.name} — a ${SET_TYPE_EN[normalizeType(set.type)] ?? "set"} for the One Piece Card Game${released ? `, released ${released}` : ""}. Every one of its ${formatCount(set.cardCount)} cards is priced daily from the Japanese market.`,
   ];
 }
 
@@ -607,6 +580,8 @@ export function setDropRateCopy(lang: Language, code: string) {
       chance: "โอกาสได้ใบที่ต้องการ/กล่อง",
       unitCards: "ใบ",
       calculatorLabel: "คำนวณโอกาสเปิดกล่องแบบละเอียด",
+      calculatorDesc:
+        "จำลองเปิดหลายซอง/หลายกล่อง ดูเป็นเปอร์เซ็นต์ว่าจะได้การ์ดใบที่ต้องการ",
       boxNote: (packs: number, perPack: number) =>
         `อ้างอิงกล่องละ ${packs} ซอง ซองละ ${perPack} ใบ`,
     };
@@ -623,6 +598,8 @@ export function setDropRateCopy(lang: Language, code: string) {
     chance: "Chance of a specific card / box",
     unitCards: "cards",
     calculatorLabel: "Open the drop-rate calculator",
+    calculatorDesc:
+      "Simulate opening packs and boxes — see your odds of the exact card as a percentage",
     boxNote: (packs: number, perPack: number) =>
       `Based on ${packs} packs per box, ${perPack} cards per pack`,
   };

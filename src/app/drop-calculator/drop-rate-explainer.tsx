@@ -1,7 +1,8 @@
-import Link from "next/link";
+import { Calculator, Layers, Sparkles, type LucideIcon } from "lucide-react";
 
 import { Surface } from "@/components/ui/surface";
 import { RarityBadge } from "@/components/shared/rarity-badge";
+import { RelatedPages } from "@/components/shared/related-pages";
 import type { Language } from "@/lib/i18n";
 import { buildDropCalculatorCopy } from "@/lib/seo/copy/tools";
 import { BOX_PATTERNS } from "@/lib/utils/pull-rate";
@@ -112,21 +113,26 @@ export function DropRateExplainer({
         <p className="text-meta">{copy.perPackNote}</p>
       </section>
 
-      <section className="space-y-2">
-        <h2 className="text-h2">{copy.linksTitle}</h2>
-        <ul className="space-y-1.5 text-body-sm">
-          {copy.readNext.map((link) => (
-            <li key={link.href}>
-              <Link href={link.href} className="text-primary hover:underline">
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {/* Same tail grammar as every sibling tool page (RelatedPages cards) —
+          the old bare "อ่านต่อ" link list was the only page still hand-rolling
+          its tail (SEO CTA sweep, เบส 2026-08-07). */}
+      <RelatedPages
+        title={copy.linksTitle}
+        items={copy.readNext.map((link) => ({
+          ...link,
+          icon: READ_NEXT_ICONS[link.href] ?? Layers,
+        }))}
+      />
     </div>
   );
 }
+
+/** Icons keyed by destination — copy stays plain data, presentation stays here. */
+const READ_NEXT_ICONS: Record<string, LucideIcon> = {
+  "/guide/rarities": Sparkles,
+  "/opcg/sets": Layers,
+  "/opcg/deck-calculator": Calculator,
+};
 
 function formatRate(value: number | null): string {
   if (value == null) return "—";

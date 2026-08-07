@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { BarChart3 } from "lucide-react";
 
 import { RarityBadge } from "@/components/shared/rarity-badge";
+import { RelatedPageCard } from "@/components/shared/related-pages";
 import { SectionHead } from "@/components/shared/section-head";
 import { Surface } from "@/components/ui/surface";
 import { rarityThaiName, setDropRateCopy } from "@/lib/seo/copy/sets";
@@ -160,15 +160,19 @@ export function SetDropRateTable({
         </div>
       </Surface>
 
-      <p className="text-meta">
-        <Link
-          href={calculatorHref}
-          className="inline-flex items-center gap-1.5 text-primary underline-offset-2 hover:underline"
-        >
-          <BarChart3 className="size-3.5" />
-          {copy.calculatorLabel}
-        </Link>
-      </p>
+      {/* Next-step CTA — full card in the RelatedPages grammar, not a buried
+          text line: this is the page's highest-value handoff (owner call,
+          เบส 2026-08-07). Width capped so a lone card doesn't stretch the
+          whole row on desktop. */}
+      <RelatedPageCard
+        item={{
+          href: calculatorHref,
+          icon: BarChart3,
+          title: copy.calculatorLabel,
+          description: copy.calculatorDesc,
+        }}
+        className="sm:max-w-md"
+      />
     </section>
   );
 }

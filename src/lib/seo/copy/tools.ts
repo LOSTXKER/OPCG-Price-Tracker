@@ -403,38 +403,27 @@ export function buildMarketOverviewCopy(
     topSetName: string | null;
   },
 ): { summary: string; methodologyTitle: string } {
-  const delta =
-    data.weightedDelta7d == null
-      ? null
-      : `${data.weightedDelta7d > 0 ? "+" : ""}${data.weightedDelta7d.toFixed(2)}%`;
-
+  // ONE sentence (owner ruling เบส 2026-08-07): the old three-clause summary
+  // restated the KPI tiles rendered directly above it (total value, average,
+  // 7-day move are all on screen — and server-rendered, so no SEO loss). Only
+  // the top set survives: it is the one fact with no tile of its own.
   return pick(
     lang,
     thEn(
       {
-        summary: [
-          `ตอนนี้เราติดตามราคาการ์ดวันพีช ${data.totalCards.toLocaleString()} ใบ จาก ${data.setCount.toLocaleString()} ชุด รวมมูลค่าตลาดประมาณ ${data.totalValueThb} เฉลี่ยใบละ ${data.avgPriceThb}`,
-          delta
-            ? `ในรอบ 7 วันที่ผ่านมา มูลค่ารวมของตลาดเปลี่ยนแปลง ${delta} เมื่อถ่วงน้ำหนักด้วยราคาของแต่ละใบ`
-            : "",
+        summary: `Meecard ติดตามราคาการ์ดวันพีช ${data.totalCards.toLocaleString()} ใบ จาก ${data.setCount.toLocaleString()} ชุด อัปเดตทุกวัน${
           data.topSetCode
-            ? `ชุดที่มูลค่ารวมสูงสุดตอนนี้คือชุด ${data.topSetCode}${data.topSetName ? ` ${data.topSetName}` : ""}`
-            : "",
-        ]
-          .filter(Boolean)
-          .join(" · "),
+            ? ` — ชุดที่มูลค่ารวมสูงสุดตอนนี้คือ ${data.topSetCode}${data.topSetName ? ` ${data.topSetName}` : ""}`
+            : ""
+        }`,
         methodologyTitle: "ราคาบนเว็บนี้มาจากไหน",
       },
       {
-        summary: [
-          `We currently track ${data.totalCards.toLocaleString()} One Piece cards across ${data.setCount.toLocaleString()} sets, worth roughly ${data.totalValueThb} in total and ${data.avgPriceThb} per card on average.`,
-          delta ? `Over the last 7 days the value-weighted market moved ${delta}.` : "",
+        summary: `Meecard tracks ${data.totalCards.toLocaleString()} One Piece cards across ${data.setCount.toLocaleString()} sets, updated daily${
           data.topSetCode
-            ? `The most valuable set right now is ${data.topSetCode}${data.topSetName ? ` ${data.topSetName}` : ""}.`
-            : "",
-        ]
-          .filter(Boolean)
-          .join(" "),
+            ? ` — the most valuable set right now is ${data.topSetCode}${data.topSetName ? ` ${data.topSetName}` : ""}`
+            : ""
+        }.`,
         methodologyTitle: "Where these prices come from",
       },
     ),
@@ -516,7 +505,8 @@ export function buildDropCalculatorCopy(lang: Language): {
   tableHeads: { rarity: string; perBox: string; perPack: string };
   perPackNote: string;
   linksTitle: string;
-  readNext: { href: string; label: string }[];
+  /** Rendered as `RelatedPages` cards — title + one-line description each. */
+  readNext: { href: string; title: string; description: string }[];
 } {
   const packs = PACKS_PER_BOX;
   const cards = CARDS_PER_PACK_JP;
@@ -549,9 +539,21 @@ export function buildDropCalculatorCopy(lang: Language): {
         perPackNote: `ค่าเฉลี่ยต่อซองคำนวณจากกล่องละ ${packs} ซอง`,
         linksTitle: "อ่านต่อ",
         readNext: [
-          { href: "/guide/rarities", label: "ความหายากการ์ดวันพีซ — C ถึง Treasure Rare" },
-          { href: "/opcg/sets", label: "ชุดการ์ดทั้งหมด พร้อมราคาการ์ดทุกใบ" },
-          { href: "/opcg/deck-calculator", label: "สร้างเด็คและคำนวณราคารวม" },
+          {
+            href: "/guide/rarities",
+            title: "ความหายากการ์ดวันพีซ",
+            description: "C ถึง Treasure Rare — ระดับไหนออกยากและแพงเพราะอะไร",
+          },
+          {
+            href: "/opcg/sets",
+            title: "ชุดการ์ดทั้งหมด",
+            description: "ราคาการ์ดวันพีชทุกใบ แยกตามชุด อัปเดตทุกวัน",
+          },
+          {
+            href: "/opcg/deck-calculator",
+            title: "สร้างเด็คและคำนวณราคารวม",
+            description: "จัดเด็ค 50 ใบ + Leader แล้วเห็นราคารวมทันที",
+          },
         ],
       },
       {
@@ -577,9 +579,21 @@ export function buildDropCalculatorCopy(lang: Language): {
         perPackNote: `Per-pack values assume ${packs} packs per box.`,
         linksTitle: "Read next",
         readNext: [
-          { href: "/guide/rarities", label: "One Piece card rarities — C to Treasure Rare" },
-          { href: "/opcg/sets", label: "All sets, with the price of every card" },
-          { href: "/opcg/deck-calculator", label: "Build a deck and price it" },
+          {
+            href: "/guide/rarities",
+            title: "One Piece card rarities",
+            description: "C to Treasure Rare — which tiers pull rare and price high",
+          },
+          {
+            href: "/opcg/sets",
+            title: "All sets",
+            description: "Every card's price, set by set, updated daily",
+          },
+          {
+            href: "/opcg/deck-calculator",
+            title: "Build and price a deck",
+            description: "50 cards + a Leader, priced instantly",
+          },
         ],
       },
     ),
@@ -662,8 +676,6 @@ export function buildDeckCalculatorCopy(lang: Language): {
   costParagraphs: string[];
   rulesTitle: string;
   rules: { term: string; detail: string }[];
-  readNextIntro: string;
-  readNext: { href: string; label: string }[];
 } {
   return pick(
     lang,
@@ -694,12 +706,8 @@ export function buildDeckCalculatorCopy(lang: Language): {
               "DON!! เป็นกองแยกของตัวเอง (10 ใบ) จึงไม่ต้องคิดรวมในราคาเด็คที่คำนวณจากการ์ด 50 ใบ",
           },
         ],
-        readNextIntro: "อ่านต่อก่อนลงมือซื้อการ์ดจริง",
-        readNext: [
-          { href: "/guide/rarities", label: "ความหายากการ์ดวันพีซ — ระดับไหนแพงเพราะอะไร" },
-          { href: "/opcg/sets", label: "ราคาการ์ดทุกใบ แยกตามชุด" },
-          { href: "/opcg/drop-calculator", label: "โอกาสเปิดได้การ์ดที่ต้องการต่อกล่อง" },
-        ],
+        // readNext list removed (SEO CTA sweep, เบส 2026-08-07): it duplicated
+        // the RelatedPages grid 200px below it on the page.
       },
       {
         h1: "Build a One Piece deck with live pricing",
@@ -726,12 +734,6 @@ export function buildDeckCalculatorCopy(lang: Language): {
             detail:
               "The 10-card DON!! deck is its own pile, so it never counts toward the 50 cards or the deck price.",
           },
-        ],
-        readNextIntro: "Read next before you buy",
-        readNext: [
-          { href: "/guide/rarities", label: "One Piece card rarities — why some cards cost more" },
-          { href: "/opcg/sets", label: "Every card's price, set by set" },
-          { href: "/opcg/drop-calculator", label: "Your odds of pulling the card you need" },
         ],
       },
     ),
