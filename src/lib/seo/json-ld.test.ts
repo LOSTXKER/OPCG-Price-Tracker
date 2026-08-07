@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 // json-ld.ts reads NEXT_PUBLIC_APP_URL via clientEnv() at module load; mock
-// it the same way src/middleware.test.ts does instead of requiring a real
+// it the same way src/proxy.test.ts does instead of requiring a real
 // .env in the test environment.
 vi.mock("@/lib/env", () => ({
   clientEnv: () => ({ NEXT_PUBLIC_APP_URL: "https://meecard.test" }),

@@ -19,7 +19,7 @@ const GAME_COOKIE_OPTS = {
   sameSite: "lax" as const,
 };
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const segments = pathname.split("/").filter(Boolean);
   const seg1 = segments[0];
@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
   // ── Game namespace ────────────────────────────────────────────────────────
   // `/opcg/portfolio` → rewrite to the flat `/portfolio` route (URL stays
   // prefixed), expose the game via the `x-game` header + persist the cookie.
-  // None of the game-scoped features are middleware-auth-gated, so this branch
+  // None of the game-scoped features are proxy-auth-gated, so this branch
   // never needs the login redirect below.
   const gameSegment = segments[1];
 
