@@ -32,6 +32,7 @@ import { cn } from "@/lib/utils";
 import { LimitCounter } from "@/components/shared/limit-counter";
 import { useUpgradeDialog } from "@/components/shared/upgrade-dialog";
 import { PageHeader } from "@/components/layout/page-header";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 type DeckRow = {
   id: number;
@@ -336,7 +337,7 @@ function DeckCalculatorContent() {
                 )}
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{activeDeck.leader.nameEn ?? activeDeck.leader.nameJp}</p>
-                  <p className="text-muted-foreground font-mono text-xs">{activeDeck.leader.cardCode}</p>
+                  <p className="text-muted-foreground font-mono text-xs">{baseCardCode(activeDeck.leader.cardCode)}</p>
                 </div>
                 <PriceTag jpy={activeDeck.leader.latestPriceJpy} showChange={false} size="sm" />
               </div>
@@ -381,7 +382,7 @@ function DeckCalculatorContent() {
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{entry.card.nameEn ?? entry.card.nameJp}</p>
                       <p className="text-muted-foreground font-mono text-xs">
-                        {entry.card.cardCode}
+                        {baseCardCode(entry.card.cardCode)}
                       </p>
                     </div>
                     <QtyStepper
@@ -448,7 +449,7 @@ function DeckCalculatorContent() {
                   onClick={() => void addCard(c)}
                 >
                   <span className="font-medium">{c.nameEn ?? c.nameJp}</span>
-                  <span className="text-muted-foreground block font-mono text-xs">{c.cardCode}</span>
+                  <span className="text-muted-foreground block font-mono text-xs">{baseCardCode(c.cardCode)}</span>
                 </button>
               ))
             )}

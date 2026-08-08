@@ -4,8 +4,8 @@ import { formatSnapshotDate, formatTierPriceLabel } from "./rarity-price-format"
 
 /**
  * SEO round 3: the rarity tier price line moved from hand-typed "¥X-Y"
- * strings to a real min/median/max computed from `Card.latestPriceJpy`
- * (see `getRarityPriceStats` in page.tsx). These two pure formatters are the
+ * strings to a real min/max computed from `Card.latestPriceJpy` (see
+ * `getRarityPriceStats` in page.tsx). These two pure formatters are the
  * only non-trivial logic in that change that doesn't require a DB — cover
  * the edge cases (no data yet, single-price tiers) directly.
  */
@@ -19,16 +19,17 @@ describe("formatTierPriceLabel", () => {
   });
 
   it("renders a single price with no range when min equals max", () => {
-    const label = formatTierPriceLabel("TH", { count: 1, minThb: 50, medianThb: 50, maxThb: 50 });
+    const label = formatTierPriceLabel("TH", { count: 1, minThb: 50, maxThb: 50 });
     expect(label).toBe("50 ฿");
   });
 
-  it("renders min–max plus the median for a real spread", () => {
-    const label = formatTierPriceLabel("TH", { count: 115, minThb: 20, medianThb: 400, maxThb: 250000 });
-    expect(label).toContain("20");
-    expect(label).toContain("250,000");
-    expect(label).toContain("400");
-    expect(label).toContain("฿");
+  it("renders a plain low–high range, no statistics vocabulary", () => {
+    // Owner call เบส 2026-08-07: the median reading ("มัธยฐาน X ฿") was
+    // statistics vocabulary collectors don't use — the range alone answers
+    // "roughly what does this tier cost?".
+    const label = formatTierPriceLabel("TH", { count: 115, minThb: 20, maxThb: 250000 });
+    expect(label).toBe("20–250,000 ฿");
+    expect(label).not.toContain("มัธยฐาน");
   });
 });
 

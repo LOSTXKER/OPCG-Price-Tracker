@@ -361,12 +361,9 @@ const getRarityPriceStats = unstable_cache(
         values.sort((a, b) => a - b);
         const min = values[0]!;
         const max = values[values.length - 1]!;
-        const mid = Math.floor(values.length / 2);
-        const median = values.length % 2 === 0 ? (values[mid - 1]! + values[mid]!) / 2 : values[mid]!;
         tiers[code] = {
           count: values.length,
           minThb: Math.round(jpyToThb(min)),
-          medianThb: Math.round(jpyToThb(median)),
           maxThb: Math.round(jpyToThb(max)),
         };
       }

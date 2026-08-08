@@ -9,6 +9,7 @@ import {
   buildSearchCopy,
 } from "@/lib/seo/copy/tools";
 import { formatJpy, formatThb, jpyToThb } from "@/lib/utils/currency";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 export type SsrSearchCard = {
   cardCode: string;
@@ -63,7 +64,7 @@ export function SearchSsrResults({
                     {getCardName(lang, card)}
                   </span>
                   <span className="flex items-center gap-1.5 text-meta">
-                    <span>{card.cardCode}</span>
+                    <span>{baseCardCode(card.cardCode)}</span>
                     <span aria-hidden>·</span>
                     <span>{card.setCode.toUpperCase()}</span>
                     <RarityBadge rarity={card.rarity} size="sm" />

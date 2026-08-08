@@ -45,49 +45,49 @@ function pickList(lang: Language, value: { TH: string[]; EN: string[]; JP?: stri
 /*                                                                      */
 /*  Titles keep the visible part short: the root layout appends          */
 /*  " | Meecard" through its own title template.                         */
-/*  Every description carries the "วันพีช" spelling so each page covers   */
-/*  both Thai spellings (titles/H1 use "วันพีซ").                        */
+/*  Every description carries the "วันพีซ" spelling so each page covers   */
+/*  both Thai spellings (titles/H1 use "วันพีช").                        */
 /* ------------------------------------------------------------------ */
 
 export const GUIDE_META = {
   hub: {
-    title: "คู่มือ One Piece Card Game (การ์ดวันพีซ) มือใหม่",
+    title: "คู่มือ One Piece Card Game (การ์ดวันพีช) มือใหม่",
     description:
-      "คู่มือการ์ดวันพีช (One Piece Card Game) ฉบับมือใหม่ เช็คราคากลางได้ทุกใบ อัปเดตทุกวัน ครบทั้งวิธีเล่น ประเภทการ์ด ความหายาก สี ชุดการ์ด และวิธีซื้อ",
+      "คู่มือการ์ดวันพีซ (One Piece Card Game) ฉบับมือใหม่ เช็คราคากลางได้ทุกใบ อัปเดตทุกวัน ครบทั้งวิธีเล่น ประเภทการ์ด ความหายาก สี ชุดการ์ด และวิธีซื้อ",
   },
   gettingStarted: {
-    title: "วิธีเล่น One Piece Card Game (การ์ดวันพีซ) มือใหม่",
+    title: "วิธีเล่น One Piece Card Game (การ์ดวันพีช) มือใหม่",
     description:
-      "วิธีเล่นการ์ดวันพีช (One Piece Card Game) กฎครบในหน้าเดียว — เด็ค 50 ใบ + Leader 1 ใบ + DON!! 10 ใบ ลำดับเทิร์น การโจมตี การป้องกัน และเงื่อนไขแพ้ชนะ",
+      "วิธีเล่นการ์ดวันพีซ (One Piece Card Game) กฎครบในหน้าเดียว — เด็ค 50 ใบ + Leader 1 ใบ + DON!! 10 ใบ ลำดับเทิร์น การโจมตี การป้องกัน และเงื่อนไขแพ้ชนะ",
   },
   rarities: {
-    title: "ความหายากการ์ดวันพีซ — C ถึง Treasure Rare",
+    title: "ความหายากการ์ดวันพีช — C ถึง Treasure Rare",
     description:
-      "ความหายากการ์ดวันพีช ครบทุกระดับ: C, UC, R, SR, SEC, SP, TR พร้อมอธิบาย SEC คืออะไร Parallel คืออะไร ช่วงราคาตลาด และสิ่งที่ได้จากการเปิด 1 กล่อง",
+      "ความหายากการ์ดวันพีซ ครบทุกระดับ: C, UC, R, SR, SEC, SP, TR พร้อมอธิบาย SEC คืออะไร Parallel คืออะไร ช่วงราคาตลาด และสิ่งที่ได้จากการเปิด 1 กล่อง",
   },
   colors: {
-    title: "สีในวันพีซการ์ดเกม — 6 สี และการสร้างเด็ค",
+    title: "สีในวันพีชการ์ดเกม — 6 สี และการสร้างเด็ค",
     description:
-      "ระบบสีของการ์ดวันพีช (One Piece Card Game) ทั้ง 6 สี — แดง เขียว น้ำเงิน ม่วง ดำ เหลือง จุดแข็งของแต่ละสี Leader สองสี และกฎเลือกสีตอนสร้างเด็ค",
+      "ระบบสีของการ์ดวันพีซ (One Piece Card Game) ทั้ง 6 สี — แดง เขียว น้ำเงิน ม่วง ดำ เหลือง จุดแข็งของแต่ละสี Leader สองสี และกฎเลือกสีตอนสร้างเด็ค",
   },
   cardTypes: {
-    title: "ประเภทการ์ดวันพีซ — Leader, Character, DON!!",
+    title: "ประเภทการ์ดวันพีช — Leader, Character, DON!!",
     description:
-      "ประเภทการ์ดวันพีช ทั้ง 5 แบบ: Leader, Character, Event, Stage และ DON!! พร้อมค่าสถานะบนการ์ด และคีย์เวิร์ดสำคัญ [Blocker] [Rush] [Trigger] [Counter]",
+      "ประเภทการ์ดวันพีซ ทั้ง 5 แบบ: Leader, Character, Event, Stage และ DON!! พร้อมค่าสถานะบนการ์ด และคีย์เวิร์ดสำคัญ [Blocker] [Rush] [Trigger] [Counter]",
   },
   sets: {
     // Repositioned (SEO round 2): the old title/H1 said "ทั้งหมด" (all sets)
     // and duplicated the query owned by /opcg/sets — the real money page —
     // while this guide only lists the 12 most recent. Now it owns the
     // explainer query ("มีกี่แบบ") and defers the full index to /opcg/sets.
-    title: "ชุดการ์ดวันพีซมีกี่แบบ? Booster / Starter / EB",
+    title: "ชุดการ์ดวันพีชมีกี่แบบ? Booster / Starter / EB",
     description:
-      "ชุดการ์ดวันพีซมีกี่แบบ? สรุป Booster Pack, Starter Deck และ Extra Booster ต่างกันยังไง พร้อมรูปแบบรหัสการ์ด (OP09-001) แล้วไปดูราคาทุกใบที่หน้าชุดการ์ด",
+      "ชุดการ์ดวันพีชมีกี่แบบ? สรุป Booster Pack, Starter Deck และ Extra Booster ต่างกันยังไง พร้อมรูปแบบรหัสการ์ด (OP09-001) แล้วไปดูราคาทุกใบที่หน้าชุดการ์ด",
   },
   buying: {
-    title: "ซื้อการ์ดวันพีซที่ไหนดี? แหล่งซื้อและวิธีเช็คราคา",
+    title: "ซื้อการ์ดวันพีชที่ไหนดี? แหล่งซื้อและวิธีเช็คราคา",
     description:
-      "ซื้อการ์ดวันพีซ/วันพีชที่ไหนดี เทียบช่องทาง Shopee กลุ่ม Facebook ร้านหน้าร้าน และการสั่งตรงจากญี่ปุ่นผ่าน proxy พร้อมวิธีเช็คราคากลางก่อนโอนเงิน",
+      "ซื้อการ์ดวันพีช/วันพีซที่ไหนดี เทียบช่องทาง Shopee กลุ่ม Facebook ร้านหน้าร้าน และการสั่งตรงจากญี่ปุ่นผ่าน proxy พร้อมวิธีเช็คราคากลางก่อนโอนเงิน",
   },
 } as const;
 
@@ -99,7 +99,7 @@ export function guideHubH1(lang: Language): string {
   return pick(
     lang,
     tri(
-      "คู่มือ One Piece Card Game (การ์ดวันพีซ) ฉบับมือใหม่",
+      "คู่มือ One Piece Card Game (การ์ดวันพีช) ฉบับมือใหม่",
       "One Piece Card Game Guide for Beginners"
     )
   );
@@ -109,7 +109,7 @@ export function guideHubLead(lang: Language): string {
   return pick(
     lang,
     tri(
-      "คู่มือการ์ดวันพีซ (One Piece Card Game) สำหรับมือใหม่ — ครบทั้งกฎการเล่น ประเภทการ์ด ความหายาก สี ชุดการ์ด และวิธีอ่านราคากลางของการ์ดวันพีช",
+      "คู่มือการ์ดวันพีช (One Piece Card Game) สำหรับมือใหม่ — ครบทั้งกฎการเล่น ประเภทการ์ด ความหายาก สี ชุดการ์ด และวิธีอ่านราคากลางของการ์ดวันพีช",
       "A beginner's guide to the One Piece Card Game — rules, card types, rarities, colors, sets, and how to read reference prices."
     )
   );
@@ -119,7 +119,7 @@ export function guideHubIntroHeading(lang: Language): string {
   return pick(
     lang,
     tri(
-      "การ์ดวันพีซ (One Piece Card Game) คืออะไร และทำไมต้องเช็คราคา",
+      "การ์ดวันพีช (One Piece Card Game) คืออะไร และทำไมต้องเช็คราคา",
       "What is the One Piece Card Game, and why check prices?"
     )
   );
@@ -136,7 +136,7 @@ export function guideHubIntroHeading(lang: Language): string {
 export function guideHubIntroParagraphs(lang: Language): string[] {
   return pickList(lang, {
     TH: [
-      "การ์ดวันพีซ หรือ One Piece Card Game (OPCG / OPTCG บางคนสะกดว่า “การ์ดวันพีช”) คือเกมการ์ดสะสมและแข่งขันจาก Bandai ที่สร้างจากมังงะและอนิเมะ One Piece เปิดตัวในญี่ปุ่นปี 2022 เสน่ห์ของเกมนี้อยู่ที่การ์ดใบเดียวกันอาจมีหลายเวอร์ชัน ทั้งภาพปกติ ภาพพิเศษ (Parallel) และระดับความหายากตั้งแต่ Common ไปจนถึง Secret Rare และ Treasure Rare ทำให้ราคาซื้อขายจริงห่างกันได้หลายสิบเท่าแม้เป็นตัวละครเดียวกัน คนที่เพิ่งเริ่มจึงมักจ่ายแพงเกินจำเป็นเพราะไม่รู้ว่าการ์ดใบที่ถืออยู่คือเวอร์ชันไหน",
+      "การ์ดวันพีช หรือ One Piece Card Game (OPCG / OPTCG บางคนสะกดว่า “การ์ดวันพีซ”) คือเกมการ์ดสะสมและแข่งขันจาก Bandai ที่สร้างจากมังงะและอนิเมะ One Piece เปิดตัวในญี่ปุ่นปี 2022 เสน่ห์ของเกมนี้อยู่ที่การ์ดใบเดียวกันอาจมีหลายเวอร์ชัน ทั้งภาพปกติ ภาพพิเศษ (Parallel) และระดับความหายากตั้งแต่ Common ไปจนถึง Secret Rare และ Treasure Rare ทำให้ราคาซื้อขายจริงห่างกันได้หลายสิบเท่าแม้เป็นตัวละครเดียวกัน คนที่เพิ่งเริ่มจึงมักจ่ายแพงเกินจำเป็นเพราะไม่รู้ว่าการ์ดใบที่ถืออยู่คือเวอร์ชันไหน",
       "Meecard ทำหน้าที่เป็นราคาอ้างอิง — เราดึงราคาจากตลาดญี่ปุ่นซึ่งเป็นตลาดหลักของเกมนี้ อัปเดตทุกวัน แปลงเป็นเงินบาทให้อัตโนมัติ พร้อมกราฟราคาย้อนหลัง เพื่อให้คุณรู้ว่าราคาที่ผู้ขายเสนอมานั้นสมเหตุสมผลหรือไม่ก่อนจะกดซื้อ",
     ],
     EN: [
@@ -154,14 +154,14 @@ export function guideHubChaptersHeading(lang: Language): string {
 }
 
 export function guideHubPricesHeading(lang: Language): string {
-  return pick(lang, tri("เช็คราคาการ์ดวันพีซจากชุดที่ต้องการ", "Check One Piece card prices by set"));
+  return pick(lang, tri("เช็คราคาการ์ดวันพีชจากชุดที่ต้องการ", "Check One Piece card prices by set"));
 }
 
 export function guideHubPricesIntro(lang: Language, data: { setCount: number; cardCount: number }): string {
   return pick(
     lang,
     tri(
-      `อ่านคู่มือจบแล้วลองใช้งานจริง — Meecard เก็บราคาการ์ดวันพีซไว้ ${data.cardCount.toLocaleString("th-TH")} ใบ จาก ${data.setCount} ชุด อัปเดตทุกวัน เลือกชุดที่ต้องการเพื่อดูราคาทุกใบในชุดนั้น`,
+      `อ่านคู่มือจบแล้วลองใช้งานจริง — Meecard เก็บราคาการ์ดวันพีชไว้ ${data.cardCount.toLocaleString("th-TH")} ใบ จาก ${data.setCount} ชุด อัปเดตทุกวัน เลือกชุดที่ต้องการเพื่อดูราคาทุกใบในชุดนั้น`,
       `Put the guide to work — Meecard tracks ${data.cardCount.toLocaleString("en-US")} cards across ${data.setCount} sets, refreshed daily. Pick a set to see every card's price.`
     )
   );
@@ -172,7 +172,7 @@ export function guideHubPricesAllSets(lang: Language): string {
 }
 
 export function guideHubMarketLinkTitle(lang: Language): string {
-  return pick(lang, tri("ราคาการ์ดวันพีซวันนี้", "One Piece card prices today"));
+  return pick(lang, tri("ราคาการ์ดวันพีชวันนี้", "One Piece card prices today"));
 }
 
 export function guideHubMarketLinkDesc(lang: Language): string {
@@ -226,7 +226,7 @@ export function guideHubExtraFaq(
         href: "/guide/authenticity",
         label: pick(
           lang,
-          tri("วิธีดูการ์ดวันพีซแท้–ปลอมฉบับเต็ม", "The full genuine-or-fake checklist")
+          tri("วิธีดูการ์ดวันพีชแท้–ปลอมฉบับเต็ม", "The full genuine-or-fake checklist")
         ),
       },
     },
@@ -237,14 +237,14 @@ export function guideHubExtraFaq(
         href: "/opcg/sets",
         label: pick(
           lang,
-          tri("ชุดการ์ดวันพีซทั้งหมดพร้อมราคา", "All One Piece card sets with prices")
+          tri("ชุดการ์ดวันพีชทั้งหมดพร้อมราคา", "All One Piece card sets with prices")
         ),
       },
     },
     {
       question: pick(
         lang,
-        tri("เริ่มเล่นการ์ดวันพีซต้องใช้เงินเท่าไหร่?", "How much does it cost to start playing?")
+        tri("เริ่มเล่นการ์ดวันพีชต้องใช้เงินเท่าไหร่?", "How much does it cost to start playing?")
       ),
       answer: pick(
         lang,
@@ -265,7 +265,7 @@ export function guideStartH1(lang: Language): string {
   return pick(
     lang,
     tri(
-      "วิธีเล่นการ์ดวันพีซ (One Piece Card Game) สำหรับมือใหม่",
+      "วิธีเล่นการ์ดวันพีช (One Piece Card Game) สำหรับมือใหม่",
       "How to play the One Piece Card Game — beginner rules"
     )
   );
@@ -290,7 +290,7 @@ export function guideStartFaq(lang: Language): GuideFaqItem[] {
     {
       question: pick(
         lang,
-        tri("เด็คการ์ดวันพีซมีกี่ใบ?", "How many cards are in a One Piece Card Game deck?")
+        tri("เด็คการ์ดวันพีชมีกี่ใบ?", "How many cards are in a One Piece Card Game deck?")
       ),
       answer: pick(
         lang,
@@ -331,7 +331,7 @@ export function guideRarityH1(lang: Language): string {
   return pick(
     lang,
     tri(
-      "ความหายากการ์ดวันพีซ (Rarity) — C ถึง Treasure Rare",
+      "ความหายากการ์ดวันพีช (Rarity) — C ถึง Treasure Rare",
       "One Piece Card Game rarities — from C to Treasure Rare"
     )
   );
@@ -344,12 +344,12 @@ export function rarityAnchorId(code: string): string {
 
 /** Statement-form replacement for the old question-shaped h2 (now an FAQ entry). */
 export function guideRarityBoxHeading(lang: Language): string {
-  return pick(lang, tri("สิ่งที่ได้จากการ์ดวันพีซ 1 กล่อง", "What one booster box contains"));
+  return pick(lang, tri("สิ่งที่ได้จากการ์ดวันพีช 1 กล่อง", "What one booster box contains"));
 }
 
 /** Statement-form replacement for the old question-shaped h2 (now an FAQ entry). */
 export function guideRarityFactorsHeading(lang: Language): string {
-  return pick(lang, tri("ปัจจัยที่ทำให้ราคาการ์ดวันพีซแพง", "What makes a card expensive"));
+  return pick(lang, tri("ปัจจัยที่ทำให้ราคาการ์ดวันพีชแพง", "What makes a card expensive"));
 }
 
 export function guideRarityFaq(lang: Language): GuideFaqItem[] {
@@ -375,7 +375,7 @@ export function guideRarityFaq(lang: Language): GuideFaqItem[] {
       ),
     },
     {
-      question: pick(lang, tri("ซื้อการ์ดวันพีซ 1 กล่อง ได้อะไรบ้าง?", "What do you get in one box?")),
+      question: pick(lang, tri("ซื้อการ์ดวันพีช 1 กล่อง ได้อะไรบ้าง?", "What do you get in one box?")),
       answer: pick(
         lang,
         tri(
@@ -418,7 +418,7 @@ export function guideColorH1(lang: Language): string {
   return pick(
     lang,
     tri(
-      "สีในวันพีซการ์ดเกม (OPCG Colors) — 6 สี และการสร้างเด็ค",
+      "สีในวันพีชการ์ดเกม (OPCG Colors) — 6 สี และการสร้างเด็ค",
       "Colors in the One Piece Card Game — all six and how to build around them"
     )
   );
@@ -437,7 +437,7 @@ export function guideTypeH1(lang: Language): string {
   return pick(
     lang,
     tri(
-      "ประเภทการ์ดวันพีซ (Card Types) — Leader, Character, Event, Stage, DON!!",
+      "ประเภทการ์ดวันพีช (Card Types) — Leader, Character, Event, Stage, DON!!",
       "One Piece Card Game card types — Leader, Character, Event, Stage, DON!!"
     )
   );
@@ -446,7 +446,7 @@ export function guideTypeH1(lang: Language): string {
 export function guideTypeKeywordsHeading(lang: Language): string {
   return pick(
     lang,
-    tri("คลังคีย์เวิร์ดการ์ดวันพีซ (Keywords)", "One Piece Card Game keyword glossary")
+    tri("คลังคีย์เวิร์ดการ์ดวันพีช (Keywords)", "One Piece Card Game keyword glossary")
   );
 }
 
@@ -696,7 +696,7 @@ export function guideSetH1(lang: Language): string {
   return pick(
     lang,
     tri(
-      "ชุดการ์ดวันพีซมีกี่แบบ? Booster, Starter, EB ต่างกันยังไง",
+      "ชุดการ์ดวันพีชมีกี่แบบ? Booster, Starter, EB ต่างกันยังไง",
       "How many One Piece Card Game set types are there?"
     )
   );
@@ -706,7 +706,7 @@ export function guideSetLead(lang: Language): string {
   return pick(
     lang,
     tri(
-      "ชุดการ์ดวันพีชแบ่งเป็น 3 แบบหลัก คือ Booster Pack, Starter Deck และ Extra Booster แต่ละชุดมีรหัสของตัวเอง (เช่น OP09, ST01, EB01) ใช้ค้นหาราคาการ์ดทุกใบในชุดนั้นได้ทันที",
+      "ชุดการ์ดวันพีซแบ่งเป็น 3 แบบหลัก คือ Booster Pack, Starter Deck และ Extra Booster แต่ละชุดมีรหัสของตัวเอง (เช่น OP09, ST01, EB01) ใช้ค้นหาราคาการ์ดทุกใบในชุดนั้นได้ทันที",
       "One Piece Card Game sets come in three main types: Booster Packs, Starter Decks and Extra Boosters. Each set carries its own code (OP09, ST01, EB01…) you can use to look up every card's price instantly."
     )
   );
@@ -759,7 +759,7 @@ export function guideBuyH1(lang: Language): string {
   return pick(
     lang,
     tri(
-      "ซื้อการ์ดวันพีซที่ไหนดี? แหล่งซื้อ + วิธีเช็คราคาก่อนซื้อ",
+      "ซื้อการ์ดวันพีชที่ไหนดี? แหล่งซื้อ + วิธีเช็คราคาก่อนซื้อ",
       "Where to buy One Piece cards — channels and how to check prices first"
     )
   );
@@ -778,7 +778,7 @@ export function guideBuyLead(lang: Language): string {
 export function guideBuyIntroParagraphs(lang: Language): string[] {
   return pickList(lang, {
     TH: [
-      "คำถามแรกของคนที่เพิ่งเริ่มเล่นการ์ดวันพีซแทบทุกคนคือ “ซื้อที่ไหนดี” คำตอบขึ้นอยู่กับว่าคุณต้องการอะไร — ถ้าต้องการเริ่มเล่นเร็วที่สุด ซื้อ Starter Deck จากร้านในไทยจบในวันเดียว แต่ถ้าต้องการการ์ดเฉพาะใบในราคาที่ดีที่สุด ช่องทางที่ถูกที่สุดมักเป็นตลาดญี่ปุ่นซึ่งต้องแลกกับเวลารอและค่าส่ง",
+      "คำถามแรกของคนที่เพิ่งเริ่มเล่นการ์ดวันพีชแทบทุกคนคือ “ซื้อที่ไหนดี” คำตอบขึ้นอยู่กับว่าคุณต้องการอะไร — ถ้าต้องการเริ่มเล่นเร็วที่สุด ซื้อ Starter Deck จากร้านในไทยจบในวันเดียว แต่ถ้าต้องการการ์ดเฉพาะใบในราคาที่ดีที่สุด ช่องทางที่ถูกที่สุดมักเป็นตลาดญี่ปุ่นซึ่งต้องแลกกับเวลารอและค่าส่ง",
       "สิ่งที่ทำให้ผู้ซื้อมือใหม่เสียเงินเกินจำเป็นไม่ใช่การเลือกช่องทางผิด แต่คือการไม่รู้ราคากลางก่อนกดซื้อ การ์ดใบเดียวกันในไทยอาจตั้งราคาต่างกันหลายเท่าในสัปดาห์เดียวกัน และเวอร์ชัน Parallel กับเวอร์ชันปกติที่หน้าตาคล้ายกันก็ราคาต่างกันมาก หน้านี้จึงเรียงลำดับจากช่องทางซื้อ ไปจนถึงวิธีตรวจราคาและสภาพการ์ดก่อนจ่ายจริง",
     ],
     EN: [
@@ -789,7 +789,7 @@ export function guideBuyIntroParagraphs(lang: Language): string[] {
 }
 
 export function guideBuyChannelsHeading(lang: Language): string {
-  return pick(lang, tri("ช่องทางซื้อการ์ดวันพีซในไทย", "Where to buy in Thailand"));
+  return pick(lang, tri("ช่องทางซื้อการ์ดวันพีชในไทย", "Where to buy in Thailand"));
 }
 
 export interface BuyChannel {
@@ -881,7 +881,7 @@ export function guideBuyJapanParagraphs(lang: Language): string[] {
 }
 
 export function guideBuyCheckHeading(lang: Language): string {
-  return pick(lang, tri("วิธีเช็คราคาการ์ดวันพีซก่อนซื้อด้วย Meecard", "How to check a price on Meecard before you buy"));
+  return pick(lang, tri("วิธีเช็คราคาการ์ดวันพีชก่อนซื้อด้วย Meecard", "How to check a price on Meecard before you buy"));
 }
 
 export function guideBuyCheckSteps(lang: Language): Array<{ title: string; body: string }> {
@@ -984,7 +984,7 @@ export function guideBuyCautionItems(lang: Language): string[] {
 export function guideBuyFaq(lang: Language): GuideFaqItem[] {
   return [
     {
-      question: pick(lang, tri("ซื้อการ์ดวันพีซที่ไหนถูกที่สุด?", "Where is the cheapest place to buy?")),
+      question: pick(lang, tri("ซื้อการ์ดวันพีชที่ไหนถูกที่สุด?", "Where is the cheapest place to buy?")),
       answer: pick(
         lang,
         tri(
@@ -1054,7 +1054,7 @@ export function guideBuySources(lang: Language): Array<{ label: string; desc: st
       url: "https://www.customs.go.th/",
     },
     {
-      label: pick(lang, tri("ราคาการ์ดวันพีซบน Meecard", "One Piece card prices on Meecard")),
+      label: pick(lang, tri("ราคาการ์ดวันพีชบน Meecard", "One Piece card prices on Meecard")),
       desc: pick(lang, tri("ราคากลางทุกใบ อัปเดตทุกวัน พร้อมกราฟย้อนหลัง", "Daily reference prices for every card, with history charts.")),
       url: "/",
       internal: true,
@@ -1068,4 +1068,60 @@ export function guideBuySources(lang: Language): Array<{ label: string; desc: st
 
 export function guideFaqHeading(lang: Language): string {
   return pick(lang, tri("คำถามที่พบบ่อย", "Frequently asked questions"));
+}
+
+/* ------------------------------------------------------------------ */
+/*  /guide/buying — captions for the real-data figures                  */
+/*                                                                      */
+/*  The buying guide told readers to "compare versions before you pay"  */
+/*  and to weigh "a box vs singles" without ever showing either. These  */
+/*  label figures built from live catalogue rows (see                   */
+/*  @/lib/guide/card-examples) — the numbers themselves are never       */
+/*  written here, so this copy cannot go stale.                         */
+/* ------------------------------------------------------------------ */
+
+export function guideBuyVersionFigure(lang: Language): {
+  eyebrow: string;
+  caption: string;
+  standardLabel: string;
+  parallelLabel: string;
+} {
+  return {
+    // Both columns share one Bandai card number, so the number is printed once
+    // on the frame instead of under each card. That also keeps the raw `_p1`
+    // suffix off the page — it is our scraper's key, never something a reader
+    // should see (see @/lib/cards/card-code).
+    standardLabel: pick(lang, tri("ใบธรรมดา", "Standard print")),
+    parallelLabel: pick(lang, tri("ลายพิเศษ (พาราเลล)", "Alternate art (parallel)")),
+    eyebrow: pick(lang, tri("การ์ดใบเดียวกัน คนละเวอร์ชัน", "Same card, different version")),
+    caption: pick(
+      lang,
+      tri(
+        "ชื่อเดียวกัน รูปคนละแบบ ราคาคนละโลก — ก่อนโอนเงินให้ดูรหัสท้ายใบให้ตรงกับที่คนขายบอก แล้วเทียบราคาของเวอร์ชันนั้นจริงๆ ไม่ใช่ราคาของชื่อการ์ด",
+        "Same name, different art, wildly different price. Before you pay, match the code on the card to the one the seller quoted, then check the price of that exact version — not of the card's name.",
+      ),
+    ),
+  };
+}
+
+export function guideBuyBoxFigure(lang: Language): {
+  eyebrow: string;
+  cardsLabel: string;
+  packsLabel: string;
+  topCardLabel: string;
+  caption: string;
+} {
+  return {
+    eyebrow: pick(lang, tri("ชุดบูสเตอร์ล่าสุดในระบบ", "Latest booster set in the catalogue")),
+    cardsLabel: pick(lang, tri("การ์ดในชุด", "Cards in the set")),
+    packsLabel: pick(lang, tri("ต่อ 1 กล่อง", "Per box")),
+    topCardLabel: pick(lang, tri("ใบแพงสุดในชุด", "Priciest card in the set")),
+    caption: pick(
+      lang,
+      tri(
+        "ซื้อยกกล่องได้การ์ดจำนวนมากในครั้งเดียว แต่ใบที่อยากได้จริงๆ อาจไม่โผล่เลย ส่วนซื้อแยกใบจ่ายแพงกว่าต่อใบแต่ได้ของที่ต้องการแน่นอน — เอาราคากล่องหารจำนวนใบที่ได้ แล้วเทียบกับราคาแยกใบของใบที่อยากได้ ก่อนตัดสินใจ",
+        "A box gets you a lot of cards at once, but the one you actually want may never appear. Singles cost more each and are certain. Divide the box price by the cards you get, compare against the single you want, then decide.",
+      ),
+    ),
+  };
 }

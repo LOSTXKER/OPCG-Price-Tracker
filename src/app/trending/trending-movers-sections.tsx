@@ -87,7 +87,7 @@ function formatChange(value: number | null): string {
 /**
  * "How to read this" explainer — SERVER component, same constraints as
  * `TrendingMoversSections` above (no hooks, always in the first HTML
- * response). Targets the Thai search intent "การ์ดวันพีซ น่าเก็บ / น่าลงทุน"
+ * response). Targets the Thai search intent "การ์ดวันพีช น่าเก็บ / น่าลงทุน"
  * (SEO round 3) with a short factual explainer, not a buy/sell call — see
  * `buildTrendingWorthCollectingCopy` for the full reasoning.
  */
@@ -95,17 +95,28 @@ export function TrendingWorthCollectingSection({ lang }: { lang: Language }) {
   const copy = buildTrendingWorthCollectingCopy(lang);
 
   return (
-    <section className="space-y-3" data-slot="trending-seo-worth-collecting">
-      <h2 className="text-h2">{copy.h2}</h2>
-      <div className="max-w-3xl space-y-3 text-body-sm leading-relaxed text-muted-foreground">
-        {copy.paragraphs.map((paragraph) => (
-          <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-        ))}
-        <p>
-          <ArrowLink href={copy.linkHref}>{copy.linkLabel}</ArrowLink>
+    <section className="space-y-4" data-slot="trending-seo-worth-collecting">
+      <div>
+        <h2 className="text-h2">{copy.h2}</h2>
+        <p className="mt-1.5 text-body-sm leading-relaxed text-muted-foreground">
+          {copy.lead}
         </p>
-        <p className="text-meta">{copy.disclaimer}</p>
       </div>
+      {/* Three reading signals as a card row — the old narrow prose column
+          left the right half of the page empty (owner call เบส 2026-08-07;
+          same treatment as the guide hub intro). */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        {copy.tips.map((tip) => (
+          <Surface key={tip.title} variant="outline" className="p-4">
+            <p className="text-h5">{tip.title}</p>
+            <p className="mt-1.5 text-body-sm leading-relaxed text-muted-foreground">
+              {tip.body}
+            </p>
+          </Surface>
+        ))}
+      </div>
+      <ArrowLink href={copy.linkHref}>{copy.linkLabel}</ArrowLink>
+      <p className="text-meta">{copy.disclaimer}</p>
     </section>
   );
 }

@@ -8,15 +8,16 @@
  * Thai is the page language that matters (the site is Thai-first, see
  * doc/seo-content-plan.md §3.8). EN is a reasonable translation; JP mirrors EN.
  *
- * Two spellings rule: Thai searchers type BOTH "วันพีซ" and "วันพีช" — every
- * page must carry both. Titles use "วันพีซ"; the description/body copy carries
- * "วันพีช" at least once.
+ * Two spellings rule: Thai searchers type BOTH "วันพีช" and "วันพีซ" — every
+ * page must carry both. Titles use "วันพีช"; the description/body copy carries
+ * "วันพีซ" at least once.
  *
  * NOTE: CardSet.nameTh is NULL for every set in production, so no Thai set name
  * is ever promised here — the English set name is wrapped in Thai context words
  * instead ("ชุด OP01 Romance Dawn").
  */
 
+import { baseCardCode } from "@/lib/cards/card-code";
 import type { Language } from "@/lib/i18n";
 import {
   formatCount,
@@ -244,7 +245,7 @@ export function buildSetDetailMeta(
 
   // Google truncates descriptions around ~160 chars — the old template ran
   // ~195-205 with a long top-card name, cutting the drop-rate benefit and the
-  // "วันพีช" spelling out of the snippet. Same clamp idea as the title: try
+  // "วันพีซ" spelling out of the snippet. Same clamp idea as the title: try
   // the fullest variant first, drop segments until it fits.
   const DESC_BUDGET = 160;
   const clampDesc = (candidates: string[]): string =>
@@ -253,18 +254,18 @@ export function buildSetDetailMeta(
 
   if (lang === "TH") {
     const title = clampTitle([
-      `ราคาการ์ดวันพีซ ${code} ${set.name} ทุกใบ อัปเดตทุกวัน`,
-      `ราคาการ์ดวันพีซ ${code} ${set.name} ทุกใบ`,
-      `ราคาการ์ดวันพีซ ${code} ทุกใบ อัปเดตทุกวัน`,
+      `ราคาการ์ดวันพีช ${code} ${set.name} ทุกใบ อัปเดตทุกวัน`,
+      `ราคาการ์ดวันพีช ${code} ${set.name} ทุกใบ`,
+      `ราคาการ์ดวันพีช ${code} ทุกใบ อัปเดตทุกวัน`,
     ]);
     const top = set.topCard
       ? ` ใบแพงสุด ${set.topCard.name} ${priceLabel(set.topCard.priceJpy)}`
       : "";
-    const tail = " พร้อมอัตราออกต่อกล่องของการ์ดวันพีชทุกระดับ";
+    const tail = " พร้อมอัตราออกต่อกล่องของการ์ดวันพีซทุกระดับ";
     const description = clampDesc([
-      `เช็คราคาการ์ดวันพีซ ${code} ${set.name} ครบ ${count} ใบ อัปเดตทุกวัน —${top}${tail}`,
-      `เช็คราคาการ์ดวันพีซ ${code} ครบ ${count} ใบ อัปเดตทุกวัน —${top}${tail}`,
-      `เช็คราคาการ์ดวันพีซ ${code} ${set.name} ครบ ${count} ใบ อัปเดตทุกวัน —${tail}`,
+      `เช็คราคาการ์ดวันพีช ${code} ${set.name} ครบ ${count} ใบ อัปเดตทุกวัน —${top}${tail}`,
+      `เช็คราคาการ์ดวันพีช ${code} ครบ ${count} ใบ อัปเดตทุกวัน —${top}${tail}`,
+      `เช็คราคาการ์ดวันพีช ${code} ${set.name} ครบ ${count} ใบ อัปเดตทุกวัน —${tail}`,
     ]);
     return { title, description };
   }
@@ -294,7 +295,7 @@ export function buildSetDetailMeta(
 export function buildSetIntroHeading(lang: Language, set: SetSeoData): string {
   const code = set.code.toUpperCase();
   return lang === "TH"
-    ? `ราคาการ์ดวันพีซ ${code} ทุกใบ`
+    ? `ราคาการ์ดวันพีช ${code} ทุกใบ`
     : `Every card price in ${code}`;
 }
 
@@ -313,7 +314,7 @@ export function buildSetIntro(lang: Language, set: SetSeoData): string[] {
 
   if (lang === "TH") {
     return [
-      `${code} ${set.name} — ชุด${setTypeThai(set.type)}ของการ์ดวันพีซ (One Piece Card Game)${released ? ` วางจำหน่าย ${released}` : ""} เช็คราคาการ์ดวันพีชครบทั้ง ${formatCount(set.cardCount)} ใบ อัปเดตทุกวันจากตลาดญี่ปุ่น`,
+      `${code} ${set.name} — ชุด${setTypeThai(set.type)}ของการ์ดวันพีช (One Piece Card Game)${released ? ` วางจำหน่าย ${released}` : ""} เช็คราคาการ์ดวันพีซครบทั้ง ${formatCount(set.cardCount)} ใบ อัปเดตทุกวันจากตลาดญี่ปุ่น`,
     ];
   }
 
@@ -356,12 +357,12 @@ export function buildSetFaq(lang: Language, set: SetSeoData): SeoFaqItem[] {
         answer:
           packs && perPack
             ? `กล่องของชุด ${code} มี ${packs} ซอง ซองละ ${perPack} ใบ รวม ${formatCount(packs * perPack)} ใบต่อกล่อง ส่วนการ์ดที่ต่างกันในชุดนี้มีทั้งหมด ${formatCount(set.cardCount)} ใบ`
-            : `ระบบยังไม่มีข้อมูลจำนวนซองต่อกล่องของชุด ${code} โดยทั่วไปบูสเตอร์การ์ดวันพีซฉบับญี่ปุ่นจะเป็นกล่องละ ${PACKS_PER_BOX} ซอง ซองละ ${CARDS_PER_PACK_JP} ใบ (รวม ${PACKS_PER_BOX * CARDS_PER_PACK_JP} ใบต่อกล่อง) ส่วนการ์ดที่ต่างกันในชุดนี้มี ${formatCount(set.cardCount)} ใบ`,
+            : `ระบบยังไม่มีข้อมูลจำนวนซองต่อกล่องของชุด ${code} โดยทั่วไปบูสเตอร์การ์ดวันพีชฉบับญี่ปุ่นจะเป็นกล่องละ ${PACKS_PER_BOX} ซอง ซองละ ${CARDS_PER_PACK_JP} ใบ (รวม ${PACKS_PER_BOX * CARDS_PER_PACK_JP} ใบต่อกล่อง) ส่วนการ์ดที่ต่างกันในชุดนี้มี ${formatCount(set.cardCount)} ใบ`,
       },
       {
         question: `การ์ดที่แพงที่สุดใน ${code} คือใบไหน`,
         answer: set.topCard
-          ? `ตอนนี้คือ ${set.topCard.name} (${set.topCard.cardCode}) ความหายาก ${set.topCard.rarity} ราคากลางล่าสุด ${priceLabel(set.topCard.priceJpy)} ราคาขยับได้ทุกวัน จึงควรกดเข้าไปดูกราฟราคาย้อนหลังของการ์ดใบนั้นก่อนซื้อขาย`
+          ? `ตอนนี้คือ ${set.topCard.name} (${baseCardCode(set.topCard.cardCode)}) ความหายาก ${set.topCard.rarity} ราคากลางล่าสุด ${priceLabel(set.topCard.priceJpy)} ราคาขยับได้ทุกวัน จึงควรกดเข้าไปดูกราฟราคาย้อนหลังของการ์ดใบนั้นก่อนซื้อขาย`
           : `ชุด ${code} ยังไม่มีข้อมูลราคาในระบบ เมื่อมีราคากลางเข้ามาแล้วการ์ดที่แพงที่สุดจะขึ้นอยู่บนสุดของหน้านี้อัตโนมัติ`,
         // Methodology lives at /about#methodology only (SEO round 1) — the
         // old per-set "where do prices come from" item repeated the same
@@ -407,7 +408,7 @@ export function buildSetFaq(lang: Language, set: SetSeoData): SeoFaqItem[] {
     {
       question: `Which card is the most expensive in ${code}?`,
       answer: set.topCard
-        ? `Currently ${set.topCard.name} (${set.topCard.cardCode}, ${set.topCard.rarity}) at ${priceLabel(set.topCard.priceJpy)}. Prices move daily — check the card's price history before you buy or sell.`
+        ? `Currently ${set.topCard.name} (${baseCardCode(set.topCard.cardCode)}, ${set.topCard.rarity}) at ${priceLabel(set.topCard.priceJpy)}. Prices move daily — check the card's price history before you buy or sell.`
         : `${code} has no price data yet.`,
       link: { href: "/about#methodology", label: "How Meecard prices work" },
     },
@@ -449,10 +450,10 @@ export function buildSetsIndexMeta(lang: Language): {
 } {
   if (lang === "TH") {
     return {
-      title: "ชุดการ์ดวันพีซ (OPCG) ทั้งหมด — ราคา จำนวนการ์ด วันวางขาย",
+      title: "ชุดการ์ดวันพีช (OPCG) ทั้งหมด — ราคา จำนวนการ์ด วันวางขาย",
       // ≤160: the old version ran 203 chars and Google cut it mid-sentence.
       description:
-        "รวมชุดการ์ดวันพีซ (One Piece Card Game) ทุกชุด ทั้งบูสเตอร์ สตาร์ทเตอร์เด็ค และโปรโม กดเข้าไปเช็คราคาการ์ดวันพีชทุกใบในชุดนั้นได้ทันที อัปเดตทุกวัน",
+        "รวมชุดการ์ดวันพีช (One Piece Card Game) ทุกชุด ทั้งบูสเตอร์ สตาร์ทเตอร์เด็ค และโปรโม กดเข้าไปเช็คราคาการ์ดวันพีซทุกใบในชุดนั้นได้ทันที อัปเดตทุกวัน",
     };
   }
   return {
@@ -470,7 +471,7 @@ export function buildSetsIndexMeta(lang: Language): {
  */
 export function buildSetsIndexHeading(lang: Language): { title: string } {
   return {
-    title: lang === "TH" ? "ชุดการ์ดวันพีซทั้งหมด" : "All One Piece Card Game sets",
+    title: lang === "TH" ? "ชุดการ์ดวันพีชทั้งหมด" : "All One Piece Card Game sets",
   };
 }
 
@@ -493,7 +494,7 @@ export function buildSetsIndexIntro(
       ? ` ชุดล่าสุดคือ ${data.latest.code.toUpperCase()} ${data.latest.name}${latestDate ? ` วางจำหน่าย ${latestDate}` : ""}`
       : "";
     return [
-      `รวมชุดการ์ดวันพีซ (One Piece Card Game) ทั้ง ${formatCount(data.setCount)} ชุด — เช็คราคาการ์ดวันพีชทุกใบรวม ${formatCount(data.cardCount)} ใบ อัปเดตทุกวัน${latestPart}`,
+      `รวมชุดการ์ดวันพีช (One Piece Card Game) ทั้ง ${formatCount(data.setCount)} ชุด — เช็คราคาการ์ดวันพีซทุกใบรวม ${formatCount(data.cardCount)} ใบ อัปเดตทุกวัน${latestPart}`,
     ];
   }
 
@@ -515,7 +516,7 @@ export function buildSetsIndexFaq(
   if (lang === "TH") {
     return [
       {
-        question: "ชุดการ์ดวันพีซล่าสุดคือชุดไหน",
+        question: "ชุดการ์ดวันพีชล่าสุดคือชุดไหน",
         answer: latest
           ? `ชุดล่าสุดที่มีในระบบคือ ${latest.code.toUpperCase()} ${latest.name}${latestDate ? ` วางจำหน่าย ${latestDate}` : ""} เมื่อมีชุดใหม่วางขาย ระบบจะเพิ่มให้อัตโนมัติพร้อมราคาการ์ดทุกใบ`
           : `ยังไม่มีข้อมูลชุดล่าสุดในระบบ`,
@@ -607,6 +608,6 @@ export function setDropRateCopy(lang: Language, code: string) {
 
 export function setRarityGuideLinkLabel(lang: Language): string {
   return lang === "TH"
-    ? "ความหายากแต่ละระดับต่างกันยังไง? อ่านคู่มือความหายากการ์ดวันพีซ"
+    ? "ความหายากแต่ละระดับต่างกันยังไง? อ่านคู่มือความหายากการ์ดวันพีช"
     : "What do these rarity codes mean? Read the rarity guide";
 }

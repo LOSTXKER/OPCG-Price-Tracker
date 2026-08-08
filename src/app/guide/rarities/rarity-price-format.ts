@@ -7,22 +7,25 @@ import { t, type Language } from "@/lib/i18n";
  * needing a live database connection.
  */
 
-export type TierPriceStats = { count: number; minThb: number; medianThb: number; maxThb: number };
+export type TierPriceStats = { count: number; minThb: number; maxThb: number };
 
 /**
  * "¥100,000-1,000,000+" style ranges used to be typed in by hand and went
- * stale silently. This formats the real min/median/max computed by
+ * stale silently. This formats the real min/max computed by
  * `getRarityPriceStats` (THB, matching the site-wide "no yen on page" rule —
  * SEO round 3) with graceful "no data yet" text for tiers nothing is priced
  * in yet (TR / DON in the current catalogue).
+ *
+ * No median (owner call เบส 2026-08-07): "มัธยฐาน" is statistics vocabulary
+ * collectors don't use, and the low–high range already answers the question
+ * the tier label exists for ("roughly what does this tier cost?").
  */
 export function formatTierPriceLabel(lang: Language, stats: TierPriceStats | null): string {
   if (!stats) return t(lang, "guideRarityNoPriceData");
   const min = stats.minThb.toLocaleString("en-US");
   const max = stats.maxThb.toLocaleString("en-US");
   if (stats.minThb === stats.maxThb) return `${min} ฿`;
-  const median = stats.medianThb.toLocaleString("en-US");
-  return `${min}–${max} ฿ (${t(lang, "guideRarityMedianLabel")} ${median} ฿)`;
+  return `${min}–${max} ฿`;
 }
 
 export function formatSnapshotDate(lang: Language, iso: string | null): string | null {

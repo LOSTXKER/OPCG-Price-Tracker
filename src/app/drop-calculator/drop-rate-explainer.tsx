@@ -15,7 +15,7 @@ export type AverageDropRate = {
 };
 
 /**
- * SERVER component — the whole explainer ("อัตราออกการ์ดวันพีซ") is plain HTML
+ * SERVER component — the whole explainer ("อัตราออกการ์ดวันพีช") is plain HTML
  * in the first response. Everything else on this route is client-fetched, so
  * without this block the biggest untapped Thai keyword had no crawlable copy.
  */

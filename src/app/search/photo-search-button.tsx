@@ -23,6 +23,7 @@ import { ApiError, apiForm } from "@/lib/api/client"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
+import { baseCardCode } from "@/lib/cards/card-code"
 
 const MAX_BYTES = 8 * 1024 * 1024
 const MAX_DIMENSION = 1600
@@ -305,7 +306,10 @@ function ResultBlock({
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           {identification.cardCode && (
             <span className="text-h5 font-semibold tabular-nums">
-              {identification.cardCode}
+              {/* Read off the photo by the vision model, so normally already
+                  the printed number — wrapped so a hallucinated `_p1` can never
+                  reach the screen either. */}
+              {baseCardCode(identification.cardCode)}
             </span>
           )}
           {identification.rarity && (
@@ -363,7 +367,7 @@ function ResultBlock({
                   {getCardName(lang, card)}
                 </p>
                 <div className="flex items-center gap-1.5 text-meta">
-                  <span className="tabular-nums">{card.cardCode}</span>
+                  <span className="tabular-nums">{baseCardCode(card.cardCode)}</span>
                   <span>·</span>
                   <RarityBadge rarity={card.rarity} />
                   {card.isParallel && (

@@ -1,4 +1,5 @@
 import { messagingApi } from "@line/bot-sdk";
+import { baseCardCode } from "@/lib/cards/card-code";
 import { serverEnv } from "@/lib/env";
 import { clientEnv } from "@/lib/env";
 import { createLog } from "@/lib/logger";
@@ -51,7 +52,9 @@ export async function sendLinePriceAlert(
   const verb = direction === "BELOW" ? "ลงมาถึง" : "ขึ้นไปถึง";
   const baseUrl = clientEnv().NEXT_PUBLIC_APP_URL;
 
-  const text = `${emoji} Kuma แจ้งข่าว!\n${cardName} (${cardCode}) ${verb} ¥${price.toLocaleString()}\n\n${baseUrl}/opcg/cards/${cardCode}`;
+  // The message shows the printed card number; the link keeps the full code
+  // because that is the real address (see @/lib/cards/card-code).
+  const text = `${emoji} Kuma แจ้งข่าว!\n${cardName} (${baseCardCode(cardCode)}) ${verb} ¥${price.toLocaleString()}\n\n${baseUrl}/opcg/cards/${cardCode}`;
 
   return sendLineMessage(lineUserId, text);
 }

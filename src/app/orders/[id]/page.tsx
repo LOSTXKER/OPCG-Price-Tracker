@@ -26,6 +26,7 @@ import { Surface } from "@/components/ui/surface";
 import { t, getLocale, type Language } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { ApiError, apiGet, apiPatch } from "@/lib/api/client";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 type OrderDetail = {
   id: number;
@@ -204,7 +205,7 @@ export default function BuyerOrderDetailPage() {
             {cardName}
           </Link>
           <p className="text-sm text-muted-foreground">
-            {order.listing.card.cardCode} • {order.listing.card.rarity} •{" "}
+            {baseCardCode(order.listing.card.cardCode)} • {order.listing.card.rarity} •{" "}
             {order.listing.condition}
           </p>
           <div className="mt-2">

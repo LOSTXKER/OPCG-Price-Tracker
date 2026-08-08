@@ -130,10 +130,10 @@ describe("set SEO copy", () => {
   it("builds a Thai title within budget and covers both Thai spellings", () => {
     const { title, description } = buildSetDetailMeta("TH", seo);
 
-    expect(title).toBe("ราคาการ์ดวันพีซ OP01 Romance Dawn ทุกใบ อัปเดตทุกวัน");
+    expect(title).toBe("ราคาการ์ดวันพีช OP01 Romance Dawn ทุกใบ อัปเดตทุกวัน");
     expect(title.length).toBeLessThanOrEqual(60);
-    expect(title).toContain("วันพีซ");
-    expect(description).toContain("วันพีช");
+    expect(title).toContain("วันพีช");
+    expect(description).toContain("วันพีซ");
     expect(description).toContain("121");
     expect(description).toContain("มังกี้ ดี. ลูฟี่");
     // THB is derived from JPY (latestPriceThb is NULL in production).
@@ -163,6 +163,7 @@ describe("set SEO copy", () => {
     expect(text).toContain("2 ธ.ค. 2022");
     expect(text).toContain("121 ใบ");
     expect(text).toContain("วันพีช");
+    expect(text).toContain("วันพีซ");
     // Facts the page already shows must NOT be restated here.
     expect(text).not.toContain("SEC 2 ใบ");
     expect(text).not.toContain("24 ซอง");
@@ -208,5 +209,6 @@ describe("set SEO copy", () => {
     expect(text).toContain("OP12 Legacy of the Master");
     expect(text).toContain("13 มิ.ย. 2025");
     expect(text).toContain("วันพีช");
+    expect(text).toContain("วันพีซ");
   });
 });

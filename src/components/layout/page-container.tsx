@@ -2,12 +2,24 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-export type PageWidth = "default" | "narrow" | "reading" | "wide" | "full";
+export type PageWidth =
+  | "default"
+  | "narrow"
+  | "reading"
+  | "article"
+  | "wide"
+  | "full";
 
 const WIDTH_CLASS: Record<PageWidth, string> = {
   default: "max-w-7xl",
   narrow: "max-w-3xl",
   reading: "max-w-2xl",
+  // Illustrated long-form (the /guide pages): comparison tables, card strips
+  // and tier grids need more room than a pure reading column, while running
+  // prose is held to a comfortable measure by `.guide-article` in globals.css
+  // (owner call เบส 2026-08-07: at `reading` the pages felt cramped and
+  // visibly narrower than the rest of the site).
+  article: "max-w-5xl",
   wide: "max-w-[1400px]",
   full: "max-w-none",
 };

@@ -119,6 +119,7 @@ Rules — the two CSS facts this scale exists to defend against:
 | ระบบค้นหาการ์ด | `useCardSearch` · `useSearchKeyboardNav` · `SearchResultRow` | `hooks/use-card-search.ts` · `hooks/use-search-keyboard-nav.ts` · `shared/search-result-row.tsx` | engine ค้นหากลาง: fetch+debounce+abort (`useCardSearch`) · ↑↓/Enter/Esc (`useSearchKeyboardNav`, `arrowUpFloor`) · เนื้อในแถวผลลัพธ์ (`SearchResultRow`, props คุมหน้าตาต่อ surface) — hero/palette/inline ใช้ชุดนี้หมด |
 | เลือกการ์ดหลายใบ | `CardBatchPickerDialog` · `ResponsiveDialogContent` | `shared/card-batch-picker-dialog.tsx` · `ui/responsive-dialog-content.tsx` | dialog เลือกหลายใบกลางสำหรับ portfolio/watchlist · เต็มจอบนมือถือ/กลางจอบน desktop · caller เป็นเจ้าของ submit และข้อความ |
 | Guide kit (หน้าคู่มือ) | `GuideSourceList` · `GuideCallout` · `GuidePrevNext` · `CardThumbStrip` | `components/guide/*.tsx` | บล็อกซ้ำใน `/guide/*` 6 หน้า: แหล่งอ้างอิง (`internal` prop) · callout (`tone`, body=children) · prev/next footer · แถบรูปการ์ด aspect-[63/88] (`size` sm/md/lg/xl) |
+| Guide kit — "ของให้ดู" | `GuideFigure` · `GuideCompareTable` · `GuidePointList` · `GuidePriceFacts` | `components/guide/*.tsx` | ยาแก้ "หน้าคู่มือเป็น text ล้วน" — `GuideFigure` = กรอบหลักฐาน (eyebrow + ของ + caption + วันที่ snapshot) · `GuideCompareTable` = ตารางเทียบ (table ตั้งแต่ `sm`, ใต้นั้น stacked list — ยกมาจากตาราง JP/EN ของ versions; คอลัมน์อ่านเป็น `reading` จึงไม่ควรเกิน ~4 คอลัมน์) · `GuidePointList` = แปลง `<p>` เรียงกันเป็นแถวมีไอคอน/เลข (`ordered` เฉพาะเมื่อลำดับมีความหมายจริง) · `GuidePriceFacts` = ราคาจริง 2–3 ช่อง. **ทุกตัวรับข้อมูลจาก caller เท่านั้น ไม่ query เอง — และถ้า query ว่างให้ caller ซ่อนทั้งบล็อก ห้ามเรนเดอร์กล่องเปล่า** |
 | Auth kit (หน้า auth) | `AuthShell` · `OAuthButtons` · `PasswordInput` · `PasswordRules` · `FormError` | `components/auth/*.tsx` · `lib/auth/password-rules.ts` | ยุบโครง login/register + rules ซ้ำ: `AuthShell` (hero slot 2-col/1-col) · `OAuthButtons` (Google/FB, owns signInOAuth) · `PasswordInput` (ตา a11y-fixed, `leftIcon`/`showToggle`/`hint`) · `PasswordRules` (+`getPasswordRules` single source) · `FormError` |
 
 ### 🚧 ยุบต่อ (Phase 2.x — เหลือจุดเดียว)
@@ -140,6 +141,37 @@ Rules — the two CSS facts this scale exists to defend against:
 | ฟอร์มชื่อพอร์ต inline ก๊อป 4 จุด | `portfolio/portfolio-name-form.tsx` (`PortfolioNameForm`) — ยุบเสร็จแล้ว, ลบ form ซ้ำทิ้ง | RESPONSIVE-04 |
 
 > รายละเอียดการยุบทั้งหมด: `doc/uxui-refactor-plan.md` §Phase 2 · หลักฐานราย ID: `doc/uxui-audit-findings-2026-07-04.md`
+
+## Card codes — what a reader may see
+
+`Card.cardCode` carries a machine suffix that separates printings of one card
+number: `_p1`..`_p8` for parallel (alternate-art) prints, `_r1`/`_r2` for
+reprints in a later set. **That suffix is our scraper's invention — Bandai
+never prints it on a card**, so a visitor reading `OP09-001_p1` is being shown
+an internal database key. Owner ruling (เบส, 2026-08-08): it must not appear
+anywhere a person can read it.
+
+Everything reader-facing goes through `@/lib/cards/card-code` (no imports of its
+own, so it is safe in client components — do **not** reach for the re-export in
+`@/lib/seo/copy/card`, which drags the Thai copy dictionary into the bundle):
+
+| Helper | Gives | Use for |
+| --- | --- | --- |
+| `baseCardCode(code)` | `OP09-001` | **the default** — any visible code, `alt`, `aria-label`, copy, JSON-LD text |
+| `printingLabel(code)` | `"Parallel 2"` / `"Reprint 1"` / `""` | a surface that must keep printings apart in words (CSV column, a11y label) |
+| `formatCardCodeLabel(code)` | `OP09-001 (Parallel 1)` | one string that has to stay unique per printing — card-page `<title>` |
+| `cardVariant(code)` | `{ kind, index }` \| `null` | branching on the printing |
+
+Keep the **full** `cardCode` in anything that is an address, not text: URLs and
+route params, `href`, canonical links, JSON-LD `sku` / `url` / `@id`, R2 image
+filenames, DB queries and React keys. Those are what keep four same-name P-SEC
+printings apart.
+
+Before assuming a code needs the suffix to be distinguishable, check what else
+is on screen: a rarity badge (`L` vs `P-L`) and the artwork usually already do
+the telling-apart, in which case the base code alone is correct and the suffix
+adds nothing. Guard tests live in `src/lib/cards/card-code.test.ts`,
+`src/lib/seo/copy/card.test.ts` and `src/lib/seo/json-ld.test.ts`.
 
 ## API Routes
 

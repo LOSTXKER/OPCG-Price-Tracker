@@ -65,7 +65,7 @@ export default function DeckCalculatorPage() {
         items={[
           { href: "/opcg/drop-calculator", icon: Dices, title: "คำนวณโอกาสออกการ์ด", description: "โอกาสเปิดเจอต่อซอง / กล่อง / คาตัน" },
           { href: "/opcg/sets", icon: Layers, title: "ชุดการ์ด", description: "ราคาการ์ดทุกใบแยกตามชุด" },
-          { href: "/guide/rarities", icon: Sparkles, title: "ความหายากการ์ดวันพีซ", description: "ระดับไหนแพงเพราะอะไร — C ถึง Treasure Rare" },
+          { href: "/guide/rarities", icon: Sparkles, title: "ความหายากการ์ดวันพีช", description: "ระดับไหนแพงเพราะอะไร — C ถึง Treasure Rare" },
           { href: "/opcg/compare", icon: GitCompareArrows, title: "เปรียบเทียบ", description: "เทียบราคาการ์ดหลายใบ" },
         ]}
       />

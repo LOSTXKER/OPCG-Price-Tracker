@@ -21,7 +21,7 @@ function pick(lang: Language, copy: Copy): string {
 
 export function mostExpensiveTitle(lang: Language): string {
   return pick(lang, {
-    TH: "การ์ดวันพีซที่แพงที่สุดตอนนี้",
+    TH: "การ์ดวันพีชที่แพงที่สุดตอนนี้",
     EN: "Most Expensive One Piece Cards Right Now",
     JP: "現在もっとも高額なワンピースカード",
   })
@@ -54,13 +54,13 @@ export function mostExpensiveIntro(
   if (lang === "JP") {
     return `ワンピースカードゲーム（OPTCG）全${data.totalCardCount.toLocaleString()}枚・${data.setCount}セットから高額上位${data.rankedCount}枚を日本市場の最新価格順に毎日更新。現在の1位は${data.topName}（${data.topCode}）、およそ${priceText}です。`
   }
-  return `จัดอันดับการ์ดวันพีซ (One Piece Card Game / OPTCG) ที่แพงที่สุด ${data.rankedCount} ใบ จากทั้งหมด ${data.totalCardCount.toLocaleString()} ใบ ใน ${data.setCount} ชุด ตามราคาตลาดญี่ปุ่นล่าสุด อัปเดตทุกวัน — อันดับ 1 ตอนนี้คือ ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText}`
+  return `จัดอันดับการ์ดวันพีช (One Piece Card Game / OPTCG) ที่แพงที่สุด ${data.rankedCount} ใบ จากทั้งหมด ${data.totalCardCount.toLocaleString()} ใบ ใน ${data.setCount} ชุด ตามราคาตลาดญี่ปุ่นล่าสุด อัปเดตทุกวัน — อันดับ 1 ตอนนี้คือ ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText}`
 }
 
 export function mostExpensiveSectionHeadings(lang: Language) {
   return {
     ranking: pick(lang, {
-      TH: "อันดับการ์ดวันพีซที่แพงที่สุด",
+      TH: "อันดับการ์ดวันพีชที่แพงที่สุด",
       EN: "Most expensive cards ranking",
       JP: "高額カードランキング",
     }),
@@ -148,7 +148,7 @@ export function mostExpensiveFaq(
   }
   return [
     {
-      question: "การ์ดวันพีซใบไหนแพงที่สุดตอนนี้?",
+      question: "การ์ดวันพีชใบไหนแพงที่สุดตอนนี้?",
       answer: `ตอนนี้อันดับ 1 คือ ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText}${data.updatedLabel ? ` อัปเดตล่าสุด ${data.updatedLabel}` : ""} อันดับนี้สร้างใหม่จากราคาตลาดจริง ไม่ได้พิมพ์ตายตัว เลยเปลี่ยนตามราคาที่ขยับ`,
     },
     {
@@ -178,11 +178,13 @@ export function mostExpensiveMeta(data: {
 }) {
   const priceText = `${formatThb(Math.round(jpyToThb(data.topPriceJpy)))}`
   return {
-    title: `การ์ดวันพีซที่แพงที่สุด ${data.count} อันดับ — อัปเดตทุกวัน`,
+    title: `การ์ดวันพีชที่แพงที่สุด ${data.count} อันดับ — อัปเดตทุกวัน`,
     // SEO round 2: dropped "กราฟราคาย้อนหลังรายใบ" — this ranking page has no
     // per-card price chart (that lives on /opcg/cards/[code]), so the claim
     // overclaimed what the snippet's landing page actually shows. Also
     // shortened so it stays ≤160 chars with real (longer) card names.
-    description: `อันดับการ์ดวันพีชแพงสุดตอนนี้ อันดับ 1 ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText} อัปเดตจากราคาตลาดจริงทุกวัน พร้อมเปลี่ยนแปลง 30 วัน`,
+    // "วันพีซ" here is the deliberate second-spelling carrier (dual coverage —
+    // the title and every visible heading use the primary "วันพีช").
+    description: `อันดับการ์ดวันพีซแพงสุดตอนนี้ อันดับ 1 ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText} อัปเดตจากราคาตลาดจริงทุกวัน พร้อมเปลี่ยนแปลง 30 วัน`,
   }
 }

@@ -21,16 +21,6 @@ interface SiblingGridProps {
   mainCardCode?: string
 }
 
-/**
- * Extract the variant suffix from a card code, e.g. ST26-005_p2 → "_p2".
- * Returns an empty string for the base print so the UI doesn't render a
- * useless extra chip on every regular card.
- */
-function variantSuffix(code: string): string {
-  const idx = code.indexOf("_")
-  return idx === -1 ? "" : code.slice(idx)
-}
-
 export function SiblingGrid({
   siblings,
   lang,
@@ -55,7 +45,6 @@ export function SiblingGrid({
     >
       {siblings.map((s) => {
         const isCurrent = mainCardCode != null && s.cardCode === mainCardCode
-        const suffix = variantSuffix(s.cardCode)
 
         return (
           <Link
@@ -87,13 +76,15 @@ export function SiblingGrid({
             </div>
             <div>
               <div className="flex items-center justify-center gap-1">
+                {/* Set code only. This used to append the raw `_p2` printing
+                    suffix, which is an internal database key Bandai never
+                    prints on the card (owner ruling — see
+                    @/lib/cards/card-code). Nothing is lost: every tile in this
+                    grid is the same card number, the rarity badge beside it
+                    already separates P-L from L, and the printings differ by
+                    artwork — which is exactly what the thumbnails show. */}
                 <span className="surface-2 inline-block rounded-sm px-1 py-px font-price text-xs uppercase text-muted-foreground">
                   {s.set.code}
-                  {suffix && (
-                    <span className="ml-0.5 text-muted-foreground/70">
-                      {suffix}
-                    </span>
-                  )}
                 </span>
                 <RarityBadge rarity={s.rarity} size="sm" />
               </div>

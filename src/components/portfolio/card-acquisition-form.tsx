@@ -26,6 +26,7 @@ import {
   type CardAcquisitionDraft,
   type CardAcquisitionDrafts,
 } from "./card-acquisition"
+import { baseCardCode } from "@/lib/cards/card-code"
 
 const NOTES_MAX = 2000
 
@@ -106,6 +107,8 @@ export function CardAcquisitionForm({
             const existingQuantity =
               existingHoldingQuantities[card.id] ?? 0
             const cardName = card.nameEn ?? card.nameJp
+            // Printed card number — never the internal `_p2` printing suffix.
+            const publicCode = baseCardCode(card.cardCode)
             const cardHeadingId = `add-card-heading-${card.id}`
             const maxQuantity =
               getRemainingHoldingCapacity(existingQuantity)
@@ -142,7 +145,7 @@ export function CardAcquisitionForm({
                       {cardName}
                     </p>
                     <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-                      <span className="text-code">{card.cardCode}</span>
+                      <span className="text-code">{publicCode}</span>
                       {card.rarity && (
                         <RarityBadge rarity={card.rarity} size="sm" />
                       )}
@@ -172,9 +175,9 @@ export function CardAcquisitionForm({
                       max={maxQuantity}
                       size="md"
                       disabled={submitting || maxQuantity === 0}
-                      decreaseLabel={`${t(lang, "decrease")} · ${cardName} ${card.cardCode}`}
-                      inputLabel={`${t(lang, "quantity")} · ${cardName} ${card.cardCode}`}
-                      increaseLabel={`${t(lang, "increase")} · ${cardName} ${card.cardCode}`}
+                      decreaseLabel={`${t(lang, "decrease")} · ${cardName} ${publicCode}`}
+                      inputLabel={`${t(lang, "quantity")} · ${cardName} ${publicCode}`}
+                      increaseLabel={`${t(lang, "increase")} · ${cardName} ${publicCode}`}
                     />
                     <p className="mt-1.5 max-w-48 text-meta">
                       {t(lang, "sameCostQuantityHint")}
@@ -211,7 +214,7 @@ export function CardAcquisitionForm({
                           })
                         }
                         className="pl-8 font-price tabular-nums"
-                        aria-label={`${t(lang, "unitCost")} · ${cardName} ${card.cardCode}`}
+                        aria-label={`${t(lang, "unitCost")} · ${cardName} ${publicCode}`}
                         aria-invalid={
                           parsedCost === undefined ||
                           (parsedCost != null && parsedCost < 0)
@@ -253,7 +256,7 @@ export function CardAcquisitionForm({
                         acquiredAt: event.target.value,
                       })
                     }
-                    aria-label={`${t(lang, "acquiredDate")} · ${cardName} ${card.cardCode}`}
+                    aria-label={`${t(lang, "acquiredDate")} · ${cardName} ${publicCode}`}
                   />
                 </div>
 
@@ -279,7 +282,7 @@ export function CardAcquisitionForm({
                     </span>
                     <span className="sr-only">
                       {" "}
-                      · {cardName} {card.cardCode}
+                      · {cardName} {publicCode}
                     </span>
                   </summary>
 

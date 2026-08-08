@@ -18,16 +18,18 @@ import {
 import { Layers, LineChart, Sparkles } from "lucide-react"
 
 /**
- * "การ์ดวันพีซที่แพงที่สุด" — the Thai SERP for this query is held by frozen news
+ * "การ์ดวันพีชที่แพงที่สุด" — the Thai SERP for this query is held by frozen news
  * listicles, so the whole point of this page is that it is regenerated from live
  * price data. ISR (not dynamic) so crawlers get cached HTML with a fast TTFB.
  */
 export const revalidate = 1800
 
 const FALLBACK_META = {
-  title: "การ์ดวันพีซที่แพงที่สุด — อัปเดตทุกวัน",
+  title: "การ์ดวันพีชที่แพงที่สุด — อัปเดตทุกวัน",
+  // Description carries the second spelling "วันพีซ" (dual coverage), same as
+  // mostExpensiveMeta.
   description:
-    "อันดับการ์ดวันพีชที่ราคาแพงที่สุดตอนนี้ จัดอันดับใหม่จากราคาตลาดจริงทุกวัน พร้อมเปลี่ยนแปลง 30 วัน",
+    "อันดับการ์ดวันพีซที่ราคาแพงที่สุดตอนนี้ จัดอันดับใหม่จากราคาตลาดจริงทุกวัน พร้อมเปลี่ยนแปลง 30 วัน",
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -117,13 +119,13 @@ export default async function MostExpensivePage() {
           {
             href: "/opcg/sets",
             icon: Layers,
-            title: "ชุดการ์ดวันพีซทั้งหมด",
+            title: "ชุดการ์ดวันพีชทั้งหมด",
             description: "เลือกชุดแล้วดูราคาการ์ดทุกใบในชุดนั้น",
           },
           {
             href: "/guide/rarities",
             icon: Sparkles,
-            title: "ความหายากการ์ดวันพีซ",
+            title: "ความหายากการ์ดวันพีช",
             description: "SEC · Treasure Rare · Parallel ต่างกันยังไง แล้วทำไมราคาต่างกัน",
           },
         ]}

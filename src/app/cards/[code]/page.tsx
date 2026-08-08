@@ -8,6 +8,7 @@ import { derivePriceHistory } from "@/components/cards/card-detail/price-history
 import { deriveSoldFeed } from "@/components/cards/card-detail/sold-feed";
 import { FaqSection } from "@/components/shared/faq-section";
 import { AdPageContentReady } from "@/components/ads/ad-audience-provider";
+import { baseCardCode } from "@/lib/cards/card-code";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { productJsonLd, breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import {
@@ -73,7 +74,8 @@ export async function generateMetadata(props: {
   const seo = toSeoData(card);
   const title = buildCardSeoTitle("TH", seo);
   const description = buildCardSeoDescription("TH", seo);
-  const imageAlt = `${seo.cardCode} ${cardDisplayName("TH", seo)}`;
+  // og:image alt is reader-facing text — printed card number only.
+  const imageAlt = `${baseCardCode(seo.cardCode)} ${cardDisplayName("TH", seo)}`;
 
   return {
     title,

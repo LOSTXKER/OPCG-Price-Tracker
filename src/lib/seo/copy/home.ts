@@ -12,9 +12,10 @@ import { formatCount } from "@/lib/utils/currency";
  * Thai is the language that matters (the site is Thai-first — plan §3.8.8);
  * EN is a reasonable translation and JP mirrors EN so nothing renders blank.
  *
- * Spelling rule (plan §1): Thai searchers type BOTH "วันพีซ" and "วันพีช".
- * The title uses "วันพีซ"; the description and the market intro paragraph carry
- * "วันพีช" at least once so a single page covers both queries.
+ * Spelling rule (plan §1, flipped 2026-08-08): Thai searchers type BOTH
+ * "วันพีช" and "วันพีซ" — and "วันพีช" wins Google suggest. The title uses
+ * "วันพีช"; the description carries "วันพีซ" at least once so a single page
+ * covers both queries.
  */
 
 /** Structural mirror of `FaqItem` — kept local so `lib/` doesn't import `components/`. */
@@ -34,7 +35,7 @@ export type HomeSeoLink = { href: string; label: string };
 // dropping it from the title costs nothing and buys back the room for the
 // higher-intent "ทุกใบ ทุกเกรด" phrase.
 /** Visible part of the <title>; the root layout appends " | Meecard". */
-export const HOME_META_TITLE = "เช็คราคาการ์ดวันพีซ ทุกใบ ทุกเกรด อัปเดตทุกวัน";
+export const HOME_META_TITLE = "เช็คราคาการ์ดวันพีช ทุกใบ ทุกเกรด อัปเดตทุกวัน";
 
 // Owner decision (2026-08-06): no source-brand names anywhere on the home
 // surface except the one FAQ answer that directly answers "how is the
@@ -42,9 +43,9 @@ export const HOME_META_TITLE = "เช็คราคาการ์ดวัน
 // carries the trust signal; the brand name only advertises someone else's
 // shop on our own search snippet.
 export const HOME_META_DESCRIPTION =
-  "เช็คราคาการ์ดวันพีชทุกใบ ทุกเกรด — ราคากลางอ้างอิงตลาดญี่ปุ่น อัปเดตทุกวัน พร้อมกราฟราคาย้อนหลัง ราคา PSA 10 พอร์ตสะสม และรายการโปรด ใช้ฟรี";
+  "เช็คราคาการ์ดวันพีซทุกใบ ทุกเกรด — ราคากลางอ้างอิงตลาดญี่ปุ่น อัปเดตทุกวัน พร้อมกราฟราคาย้อนหลัง ราคา PSA 10 พอร์ตสะสม และรายการโปรด ใช้ฟรี";
 
-/** The one visible H1 of the site's pillar page. Must carry "การ์ดวันพีซ". */
+/** The one visible H1 of the site's pillar page. Must carry "การ์ดวันพีช". */
 export function buildHomeHeroHeading(lang: Language): string {
   switch (lang) {
     case "EN":
@@ -52,7 +53,7 @@ export function buildHomeHeroHeading(lang: Language): string {
     case "JP":
       return "ワンピースカード相場 — 全カード・全グレード";
     default:
-      return "เช็คราคาการ์ดวันพีซ ทุกใบ ทุกเกรด";
+      return "เช็คราคาการ์ดวันพีช ทุกใบ ทุกเกรด";
   }
 }
 
@@ -85,7 +86,8 @@ export function buildHomeMarketIntro(
   // the old three-clause paragraph restated the methodology (the "อัปเดต
   // ล่าสุด" line above + /about#methodology own that) and narrated how to use
   // the table that sits directly below it. Counts + OPTCG (the abbreviation
-  // serious players search) + the "วันพีช" spelling stay.
+  // serious players search) stay; the body spells it "วันพีช" like every
+  // visible surface — the "วันพีซ" carrier is HOME_META_DESCRIPTION.
   switch (lang) {
     case "EN":
       return {
@@ -99,7 +101,7 @@ export function buildHomeMarketIntro(
       };
     default:
       return {
-        heading: "ราคาตลาดการ์ดวันพีซวันนี้",
+        heading: "ราคาตลาดการ์ดวันพีชวันนี้",
         body: `Meecard ติดตามราคาการ์ดวันพีช (One Piece Card Game / OPTCG) ทั้งหมด ${cards} ใบ จาก ${sets} ชุด อัปเดตทุกวันจากตลาดญี่ปุ่น`,
       };
   }
@@ -126,7 +128,7 @@ export function buildHomeSetStripCopy(lang: Language): {
       };
     default:
       return {
-        heading: "ชุดการ์ดวันพีซล่าสุด",
+        heading: "ชุดการ์ดวันพีชล่าสุด",
         description: "เลือกดูราคาการ์ดทุกใบ แยกตามชุด",
         allLabel: "ดูชุดทั้งหมด",
       };
@@ -199,22 +201,22 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
     default:
       return [
         {
-          question: "การ์ดวันพีซใบไหนแพงที่สุด",
+          question: "การ์ดวันพีชใบไหนแพงที่สุด",
           answer:
             "อันดับการ์ดที่แพงที่สุดขยับทุกวันตามราคาตลาด ใบที่ยืนอยู่หัวตารางเกือบทั้งหมดเป็นการ์ดระดับ SEC, Manga Rare และ Parallel จากชุดเก่าที่เลิกพิมพ์ไปแล้ว Meecard จัดอันดับใหม่ให้อัตโนมัติจากราคาล่าสุด",
-          link: { href: "/opcg/most-expensive", label: "การ์ดวันพีซที่แพงที่สุด" },
+          link: { href: "/opcg/most-expensive", label: "การ์ดวันพีชที่แพงที่สุด" },
         },
         {
-          question: "PSA คืออะไร ส่งเกรดการ์ดวันพีซที่ไหน",
+          question: "PSA คืออะไร ส่งเกรดการ์ดวันพีชที่ไหน",
           answer:
             "PSA คือบริษัทรับตรวจสภาพการ์ดแล้วให้คะแนน 1–10 ก่อนซีลลงเคสแข็ง การ์ดที่ได้ PSA 10 มักซื้อขายแพงกว่าการ์ดแบบ Raw หลายเท่า คนไทยส่วนใหญ่ส่งผ่านตัวแทนรับส่งเกรดในไทย หรือส่งตรงไปญี่ปุ่น/สหรัฐฯ Meecard แสดงราคาแบบ Raw และ PSA 10 ให้เทียบกันในแถวเดียว",
-          link: { href: "/guide/rarities", label: "ความหายากการ์ดวันพีซ (C ถึง SEC)" },
+          link: { href: "/guide/rarities", label: "ความหายากการ์ดวันพีช (C ถึง SEC)" },
         },
         {
-          question: "ซื้อการ์ดวันพีซที่ไหนดี",
+          question: "ซื้อการ์ดวันพีชที่ไหนดี",
           answer:
             "แหล่งซื้อหลักของคนไทยคือร้านการ์ดหน้าร้าน กลุ่มซื้อขายในเฟซบุ๊ก Shopee/Lazada และการสั่งตรงจากญี่ปุ่น แต่ละทางต่างกันที่ราคา ค่าส่ง และความเสี่ยงเจอของปลอม วิธีที่ปลอดภัยที่สุดคือเช็คราคากลางที่นี่ก่อนแล้วค่อยต่อรอง",
-          link: { href: "/guide/buying", label: "คู่มือซื้อการ์ดวันพีซ" },
+          link: { href: "/guide/buying", label: "คู่มือซื้อการ์ดวันพีช" },
         },
         {
           question: "ราคากลางบน Meecard คำนวณจากอะไร",
@@ -228,5 +230,5 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
 
 /** Name for the ItemList schema wrapping the top rows of the market table. */
 export function homeMarketItemListName(count: number): string {
-  return `ราคาการ์ดวันพีซ ${count} อันดับมูลค่าสูงสุดวันนี้ — One Piece Card Game`;
+  return `ราคาการ์ดวันพีช ${count} อันดับมูลค่าสูงสุดวันนี้ — One Piece Card Game`;
 }

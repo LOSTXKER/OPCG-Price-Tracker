@@ -13,6 +13,7 @@ import { CARD_BG } from "@/lib/constants/ui";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { ChevronRight } from "lucide-react";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 export type SelectedCard = {
   id?: number;
@@ -94,7 +95,7 @@ export function StepCardSelect({
                 {selected.nameEn ?? selected.nameJp}
               </p>
               <p className="font-mono text-sm text-muted-foreground">
-                {selected.cardCode}
+                {baseCardCode(selected.cardCode)}
               </p>
               <div className="flex gap-1.5">
                 {selected.rarity && (

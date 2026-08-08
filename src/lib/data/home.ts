@@ -146,7 +146,7 @@ const SET_TYPE_RANK: Record<string, number> = {
  * `releaseDate` is NULL for all 51 rows today, so date ordering never fires and
  * everything falls to the tiebreak. Sorting on code alone made that tiebreak
  * reverse-alphabetical, which handed all 12 slots to st29…st18 — a section
- * titled "ชุดการ์ดวันพีซล่าสุด" that showed twelve starter decks and could
+ * titled "ชุดการ์ดวันพีชล่าสุด" that showed twelve starter decks and could
  * never show a booster. Product line now breaks the tie before the code does,
  * so the strip leads with op15, op14, … Date ordering still wins outright once
  * the column gets populated.

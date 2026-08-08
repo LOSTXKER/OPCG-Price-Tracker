@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, Layers, LineChart } from "lucide-react";
+import { BookOpen, Info, Layers, LineChart } from "lucide-react";
 
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { FaqSection } from "@/components/shared/faq-section";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { PageHeader } from "@/components/layout/page-header";
 import { Surface } from "@/components/ui/surface";
+import { GuideCallout } from "@/components/guide/guide-callout";
+import { GuideCompareTable } from "@/components/guide/guide-compare-table";
 import { GuidePrevNext } from "@/components/guide/guide-prev-next";
 import { GuideSourceList } from "@/components/guide/guide-source-list";
 import { JsonLd } from "@/lib/seo/json-ld-script";
@@ -100,59 +102,41 @@ export default async function VersionsGuidePage() {
           ))}
         </section>
 
+        {/* The first paragraph carries the one hard, dated rule on this page
+            (English cards legal in Thailand from 28 Nov 2025, mixed decks
+            allowed). It reads as ordinary prose; as a callout it is findable. */}
         <section className="space-y-3">
           <h2 className="text-h2">{guideVersionsRulesHeading(lang)}</h2>
-          {guideVersionsRulesBody(lang).map((paragraph) => (
-            <p key={paragraph.slice(0, 24)} className="max-w-3xl text-body leading-relaxed">
-              {paragraph}
-            </p>
-          ))}
+          {guideVersionsRulesBody(lang).map((paragraph, i) =>
+            i === 0 ? (
+              <GuideCallout key={paragraph.slice(0, 24)} tone="info" icon={Info}>
+                <p className="text-body-sm leading-relaxed">{paragraph}</p>
+              </GuideCallout>
+            ) : (
+              <p key={paragraph.slice(0, 24)} className="text-body leading-relaxed">
+                {paragraph}
+              </p>
+            ),
+          )}
         </section>
 
         <section className="space-y-4">
           <h2 className="text-h2">{guideVersionsCompareHeading(lang)}</h2>
 
-          {/* Dense table from sm up; stacked list below it (AGENTS.md breakpoints). */}
-          <Surface variant="outline" className="hidden overflow-hidden sm:block">
-            <table className="w-full table-fixed">
-              <thead>
-                <tr className="border-b border-hair">
-                  <th className="w-44 px-4 py-3 text-left text-eyebrow">{labels.topic}</th>
-                  <th className="px-4 py-3 text-left text-eyebrow">{labels.jp}</th>
-                  <th className="px-4 py-3 text-left text-eyebrow">{labels.en}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-hair">
-                {rows.map((row) => (
-                  <tr key={row.id}>
-                    <th scope="row" className="px-4 py-3 text-left text-h5 font-medium">
-                      {row.title}
-                    </th>
-                    <td className="px-4 py-3 text-body-sm leading-relaxed text-muted-foreground">
-                      {row.jp}
-                    </td>
-                    <td className="px-4 py-3 text-body-sm leading-relaxed text-muted-foreground">
-                      {row.en}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Surface>
-
-          <Surface variant="outline" className="divide-y divide-hair overflow-hidden sm:hidden">
-            {rows.map((row) => (
-              <div key={row.id} className="space-y-2 px-5 py-4">
-                <h3 className="text-h5">{row.title}</h3>
-                <p className="text-body-sm leading-relaxed text-muted-foreground">
-                  <span className="text-foreground">{labels.jp}</span> — {row.jp}
-                </p>
-                <p className="text-body-sm leading-relaxed text-muted-foreground">
-                  <span className="text-foreground">{labels.en}</span> — {row.en}
-                </p>
-              </div>
-            ))}
-          </Surface>
+          {/* This hand-rolled table is what GuideCompareTable was extracted from —
+              same markup, now shared with every other guide page. */}
+          <GuideCompareTable
+            rowHeaderLabel={labels.topic}
+            columns={[
+              { key: "jp", label: labels.jp },
+              { key: "en", label: labels.en },
+            ]}
+            rows={rows.map((row) => ({
+              id: row.id,
+              header: row.title,
+              cells: { jp: row.jp, en: row.en },
+            }))}
+          />
         </section>
 
         <section className="space-y-3">
@@ -213,7 +197,7 @@ export default async function VersionsGuidePage() {
               url: "https://asia-th.onepiece-cardgame.com/",
             },
             {
-              label: "ชุดการ์ดวันพีซทั้งหมดบน Meecard",
+              label: "ชุดการ์ดวันพีชทั้งหมดบน Meecard",
               desc: "ดูว่าแต่ละชุดมีการ์ดกี่ใบ วางขายเมื่อไหร่ และราคาตลาดตอนนี้เท่าไหร่",
               url: "/opcg/sets",
               internal: true,
@@ -232,20 +216,20 @@ export default async function VersionsGuidePage() {
           {
             href: "/guide/getting-started",
             icon: BookOpen,
-            title: "วิธีเล่นการ์ดวันพีซ",
+            title: "วิธีเล่นการ์ดวันพีช",
             description: "กฎพื้นฐาน ระบบ DON!! และเงื่อนไขชนะ",
           },
           {
             href: "/opcg/sets",
             icon: Layers,
-            title: "ชุดการ์ดวันพีซทั้งหมด",
+            title: "ชุดการ์ดวันพีชทั้งหมด",
             description: "ราคาการ์ดทุกใบแยกตามชุด อัปเดตทุกวัน",
           },
           {
             href: "/opcg/market-overview",
             icon: LineChart,
             title: "ภาพรวมตลาด",
-            description: "มูลค่าตลาดและราคาเฉลี่ยของการ์ดวันพีซ",
+            description: "มูลค่าตลาดและราคาเฉลี่ยของการ์ดวันพีช",
           },
         ]}
       />

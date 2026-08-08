@@ -940,3 +940,19 @@
 .prose h4 + * {
   margin-top: 0;
 }
+
+/* ── /guide chapters ─────────────────────────────────────────────────────
+   The page container for `/guide/**` is the wider `article` width (see
+   ROUTE_WIDTH in main-chrome.tsx) so comparison tables, card strips and tier
+   grids stop looking cramped. Running prose must NOT follow it that wide —
+   Thai at this size already sits near ~82 characters per line at 42rem, which
+   is the top of the comfortable range. So: only paragraphs and lists that are
+   DIRECT children of a section stay capped (prose). Anything nested inside a
+   Surface card, callout or grid is untouched — those blocks size themselves.
+   Owner call เบส 2026-08-07. */
+.guide-article section > p,
+.guide-article section > ul,
+.guide-article section > ol,
+.guide-article section > div > p {
+  max-width: 42rem;
+}

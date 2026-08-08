@@ -1,6 +1,6 @@
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd, organizationJsonLd } from "@/lib/seo/json-ld";
-import { SEO_PAGE_META, SUPPORT_EMAIL } from "@/lib/seo/copy/site";
+import { CONTACT_FACEBOOK_URL, SEO_PAGE_META } from "@/lib/seo/copy/site";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import AboutClient from "./about-client";
 
@@ -19,10 +19,15 @@ export default function AboutPage() {
           { name: "About", href: "/about" },
         ])}
       />
-      {/* Brand entity, rendered once site-wide. `sameAs` is omitted on purpose:
-          no verified social profile is linked from this page yet, and inventing
-          one would be a false trust signal. */}
-      <JsonLd data={organizationJsonLd({ email: SUPPORT_EMAIL })} />
+      {/* Brand entity, rendered once site-wide. `sameAs` carries the Facebook
+          page because it is the team's real, owner-confirmed profile — and the
+          same URL is the ContactPoint, since no mailbox is monitored. */}
+      <JsonLd
+        data={organizationJsonLd({
+          sameAs: [CONTACT_FACEBOOK_URL],
+          contactUrl: CONTACT_FACEBOOK_URL,
+        })}
+      />
       <AboutClient />
     </>
   );

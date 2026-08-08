@@ -7,6 +7,7 @@ import { SectionHead } from "@/components/shared/section-head";
 import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { FaqSection } from "@/components/shared/faq-section";
 import { JsonLd } from "@/lib/seo/json-ld-script";
+import { baseCardCode } from "@/lib/cards/card-code";
 import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { getCardName, t, type Language } from "@/lib/i18n";
@@ -109,9 +110,11 @@ export default async function SetDetailPage(props: {
       {listedCards.length > 0 && (
         <JsonLd
           data={itemListJsonLd(
-            `ราคาการ์ดวันพีซในชุด ${code} ${data.setName}`,
+            `ราคาการ์ดวันพีชในชุด ${code} ${data.setName}`,
             listedCards.map((card) => ({
-              name: `${card.cardCode} ${getCardName(lang, card)}`,
+              // Printed card number in the reader-facing `name`; the full
+              // code stays in `url` below (see @/lib/cards/card-code).
+              name: `${baseCardCode(card.cardCode)} ${getCardName(lang, card)}`,
               url: `/opcg/cards/${card.cardCode}`,
               image: card.imageUrl,
             })),

@@ -11,6 +11,7 @@ import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { ListingBrief } from "@/components/profile/profile-types";
 import { SettingsSectionHeader } from "./settings-section-header";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 type Props = {
   listings: ListingBrief[];
@@ -108,7 +109,7 @@ export function SectionMarketplace({ listings, userId, sellerRating, sellerRevie
                     <span className="font-medium">
                       {lang === "EN" ? l.card.nameEn ?? l.card.nameJp : l.card.nameJp}
                     </span>
-                    <span className="ml-2 text-meta">{l.card.cardCode}</span>
+                    <span className="ml-2 text-meta">{baseCardCode(l.card.cardCode)}</span>
                   </div>
                   <PriceTag
                     jpy={l.priceJpy}

@@ -15,6 +15,7 @@ import { getHomeData, mapCardToTrending } from "@/lib/data/home";
 import { isMarketplaceEnabled } from "@/lib/marketplace/feature-flag";
 import { CARD_TYPES } from "@/lib/constants/card-config";
 import { getGameConfig } from "@/lib/game-config";
+import { baseCardCode } from "@/lib/cards/card-code";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { itemListJsonLd } from "@/lib/seo/json-ld";
 import {
@@ -127,7 +128,7 @@ export default async function HomePage() {
   // page's core ranking machine-readable (SEO plan §3.1). Thai card names are
   // populated in the DB, so the list reads Thai for a Thai-first site.
   const marketListItems = tableCards.slice(0, 20).map((c) => ({
-    name: `${c.cardCode} ${getCardName("TH", c)}`,
+    name: `${baseCardCode(c.cardCode)} ${getCardName("TH", c)}`,
     url: `/opcg/cards/${c.cardCode}`,
     image: c.imageUrl,
   }));

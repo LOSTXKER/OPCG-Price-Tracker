@@ -8,6 +8,7 @@ import { getCardName } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 
 import type { MarketplaceBrowseListing } from "./types"
+import { baseCardCode } from "@/lib/cards/card-code"
 
 function ListingRow({ listing: l }: { listing: MarketplaceBrowseListing }) {
   const lang = useUIStore((s) => s.language)
@@ -42,7 +43,7 @@ function ListingRow({ listing: l }: { listing: MarketplaceBrowseListing }) {
           )}
         </div>
         <p className="text-meta">
-          {l.card.cardCode} · {l.card.rarity} · {l.condition}
+          {baseCardCode(l.card.cardCode)} · {l.card.rarity} · {l.condition}
         </p>
         <p className="text-meta">
           {l.user.displayName ?? "Seller"}

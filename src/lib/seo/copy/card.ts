@@ -1,5 +1,12 @@
+import { baseCardCode, formatCardCodeLabel } from "@/lib/cards/card-code";
 import type { Language } from "@/lib/i18n";
 import { formatJpy, formatSignedPct, formatThb, jpyToThb } from "@/lib/utils/currency";
+
+// Both helpers moved to `@/lib/cards/card-code` (no imports, so client
+// components can pull them in without dragging this copy dictionary along).
+// Re-exported here because callers across the app already import them by this
+// path — new code should import from `@/lib/cards/card-code` directly.
+export { baseCardCode, formatCardCodeLabel };
 
 /**
  * Templated SEO copy for the card-detail surface (~3,800 URLs).
@@ -9,8 +16,9 @@ import { formatJpy, formatSignedPct, formatThb, jpyToThb } from "@/lib/utils/cur
  * key/value dictionary cannot express. TH is the copy that matters — the site
  * is Thai-first — EN is a faithful translation and JP mirrors EN.
  *
- * Thai searchers spell the franchise two ways ("วันพีซ" and "วันพีช"); every
- * card page therefore carries both spellings across title/description/body.
+ * Thai searchers spell the franchise two ways — "วันพีช" wins Google suggest,
+ * so title/description lead with it — and every card page still carries
+ * "วันพีซ" once in the body copy for dual coverage.
  */
 
 export interface CardSeoData {
@@ -79,28 +87,6 @@ export function cardPriceJpyText(data: CardSeoData): string | null {
   return data.latestPriceJpy != null ? formatJpy(data.latestPriceJpy) : null;
 }
 
-/**
- * Human-readable form of a card code. Parallel printings are stored with a
- * machine suffix (`EB01-001_p1`); readers — and Thai searchers, who type the
- * base code — get `EB01-001 (Parallel 1)`. URLs, `sku` and canonical links keep
- * the raw `cardCode`.
- */
-export function formatCardCodeLabel(cardCode: string): string {
-  const match = cardCode.match(/^(.*)_p(\d+)$/i);
-  return match ? `${match[1]} (Parallel ${match[2]})` : cardCode;
-}
-
-/**
- * The official Bandai card number — `OP13-118_p3` → `OP13-118`. The `_p3`/`_r1`
- * suffix is our own scraper's way of separating printings, not something Bandai
- * prints on the card, so this is the code to show a reader (owner decision,
- * เบส 2026-08-04). The suffixed form stays in URLs, `sku` and the <title>, where
- * it is what keeps four same-name P-SEC printings apart.
- */
-export function baseCardCode(cardCode: string): string {
-  return cardCode.replace(/_[a-z]\d+$/i, "");
-}
-
 /** Name shown to Thai readers (falls back to the Latin name when nameTh is null). */
 export function cardDisplayName(lang: Language, data: CardSeoData): string {
   if (lang === "TH" && data.nameTh?.trim()) return data.nameTh.trim();
@@ -110,7 +96,7 @@ export function cardDisplayName(lang: Language, data: CardSeoData): string {
 const TITLE_BUDGET = 60;
 
 /**
- * "ราคาการ์ดวันพีซ OP01-003 Monkey.D.Luffy (SR)" — the card code is mandatory
+ * "ราคาการ์ดวันพีช OP01-003 Monkey.D.Luffy (SR)" — the card code is mandatory
  * (highest-intent Thai query shape is "OP05-119 ราคา"). Optional segments are
  * appended only while the visible title stays inside the ~60-char budget; the
  * root layout appends " | Meecard" via its title template.
@@ -118,7 +104,7 @@ const TITLE_BUDGET = 60;
 export function buildCardSeoTitle(lang: Language, data: CardSeoData): string {
   const name = cardDisplayName(lang, data);
   const prefix =
-    lang === "TH" ? "ราคาการ์ดวันพีซ" : lang === "JP" ? "ワンピースカード 価格" : "One Piece Card Price";
+    lang === "TH" ? "ราคาการ์ดวันพีช" : lang === "JP" ? "ワンピースカード 価格" : "One Piece Card Price";
 
   const head = `${prefix} ${formatCardCodeLabel(data.cardCode)}`;
   const rarityPart = ` (${data.rarity})`;
@@ -142,9 +128,9 @@ const DESCRIPTION_BUDGET = 160;
 
 /**
  * Snippet copy: real numbers (฿ and ¥, 30-day move), the set, and the update
- * date. Carries the second Thai spelling ("วันพีช") inside the first ~20
- * chars so it survives any SERP truncation, and leads with it instead of
- * repeating it in a fixed sign-off tail.
+ * date. Leads with the primary Thai spelling ("วันพีช") inside the first ~20
+ * chars so the keyword survives any SERP truncation; the second spelling
+ * ("วันพีซ") lives in the intro body copy instead.
  *
  * SEO round 2: the old template always closed with a ~70-char fixed tail
  * ("ราคากลางจากตลาดญี่ปุ่น อัปเดตทุกวัน เช็คราคาการ์ดวันพีชทุกใบที่
@@ -215,7 +201,9 @@ export function buildCardIntro(lang: Language, data: CardSeoData): string[] {
     const nameTh = data.nameTh?.trim();
     const namePart =
       nameTh && nameTh !== data.nameLatin ? `${nameTh} (${data.nameLatin})` : data.nameLatin;
-    const head = `การ์ด ${namePart} รหัส ${code} ความหายาก ${data.rarity} จากชุด ${data.setName} ในเกมการ์ดวันพีช (One Piece Card Game)`;
+    // "วันพีซ" here is deliberate — the one second-spelling slot on the page
+    // (title and description already lead with the primary "วันพีช").
+    const head = `การ์ด ${namePart} รหัส ${code} ความหายาก ${data.rarity} จากชุด ${data.setName} ในเกมการ์ดวันพีซ (One Piece Card Game)`;
 
     return [
       hasPrice

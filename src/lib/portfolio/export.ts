@@ -1,3 +1,5 @@
+import { baseCardCode, printingLabel } from "@/lib/cards/card-code"
+
 type PortfolioExportLot = {
   id: number | null
   quantity: number
@@ -25,6 +27,11 @@ export type PortfolioExportItem = {
 
 const HEADER = [
   "Card Code",
+  // The printing as a word. The `Card Code` column above is the number Bandai
+  // prints; our internal `_p2`/`_r1` suffix must not appear in a file a person
+  // opens (owner ruling — see @/lib/cards/card-code), but two printings of one
+  // number still have to stay tellable apart in a spreadsheet.
+  "Printing",
   "Name",
   "Set",
   "Rarity",
@@ -70,7 +77,8 @@ export function buildPortfolioLotsCsv(
 
     return lots.map((lot) =>
       [
-        card.cardCode,
+        baseCardCode(card.cardCode),
+        printingLabel(card.cardCode),
         card.nameEn ?? card.nameJp,
         card.set.code,
         card.rarity,

@@ -54,7 +54,7 @@ describe("guideVersionsThaiBody / guideVersionsThaiHeading", () => {
 describe("guideVersionsFaq", () => {
   it("includes a short Thai-language FAQ answer that does not claim a Thai printing exists", () => {
     const items = guideVersionsFaq("TH");
-    const thaiLangFaq = items.find((i) => i.question === "การ์ดวันพีซมีภาษาไทยไหม?");
+    const thaiLangFaq = items.find((i) => i.question === "การ์ดวันพีชมีภาษาไทยไหม?");
     expect(thaiLangFaq).toBeDefined();
     expect(thaiLangFaq!.answer).toContain("ยังไม่มี");
     expect(thaiLangFaq!.answer).toContain("KIDZ & KITZ");

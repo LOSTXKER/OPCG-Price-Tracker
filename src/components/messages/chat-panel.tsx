@@ -13,6 +13,7 @@ import { t, type TranslationKey } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { EmptyState } from "@/components/shared/empty-state";
 import { LoadingState } from "@/components/shared/loading-state";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 interface ChatPanelProps {
   messages: ChatMessage[];
@@ -105,7 +106,7 @@ export function ChatPanel({
             {otherUser.displayName ?? "User"}
           </p>
           <p className="truncate text-meta">
-            {listing.card.nameEn ?? listing.card.nameJp} · {listing.card.cardCode}
+            {listing.card.nameEn ?? listing.card.nameJp} · {baseCardCode(listing.card.cardCode)}
           </p>
         </div>
         <Badge variant="outline" className="shrink-0 text-xs">

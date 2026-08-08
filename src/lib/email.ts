@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { baseCardCode } from "@/lib/cards/card-code";
 import { serverEnv } from "@/lib/env";
 import { clientEnv } from "@/lib/env";
 import { createLog } from "@/lib/logger";
@@ -66,7 +67,7 @@ export function priceAlertEmail(
     html: `
       <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
         <h2 style="color: #73533E;">🐻 Kuma Price Alert</h2>
-        <p><strong>${cardName}</strong> (${cardCode}) has ${verb} <strong>¥${price.toLocaleString()}</strong>.</p>
+        <p><strong>${cardName}</strong> (${baseCardCode(cardCode)}) has ${verb} <strong>¥${price.toLocaleString()}</strong>.</p>
         <p>Your target was ¥${targetPrice.toLocaleString()}.</p>
         <a href="${clientEnv().NEXT_PUBLIC_APP_URL}/opcg/cards/${cardCode}"
            style="display: inline-block; padding: 10px 20px; background: #73533E; color: white; text-decoration: none; border-radius: 8px;">

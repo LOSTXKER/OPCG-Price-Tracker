@@ -25,5 +25,8 @@ export default function GuideLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  // `.guide-article` (globals.css) caps running prose at reading measure while
+  // the page container itself is the wider `article` width — so tables, card
+  // strips and tier grids fill the column but paragraphs never run long.
+  return <div className="guide-article">{children}</div>;
 }

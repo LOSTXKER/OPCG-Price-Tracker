@@ -22,6 +22,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 type Stats = {
   totalListings: number;
@@ -259,7 +260,7 @@ export default function SellerDashboard() {
                     {order.listing.card.nameEn ?? order.listing.card.nameJp}
                   </p>
                   <p className="text-meta">
-                    {order.listing.card.cardCode} • {t(lang, "buyer")}: {order.buyer.displayName ?? t(lang, "user")}
+                    {baseCardCode(order.listing.card.cardCode)} • {t(lang, "buyer")}: {order.buyer.displayName ?? t(lang, "user")}
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-1">

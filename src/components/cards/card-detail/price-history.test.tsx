@@ -142,7 +142,7 @@ describe("card SEO copy", () => {
     const title = buildCardSeoTitle("TH", seo)
 
     expect(title).toContain("OP01-003")
-    expect(title.startsWith("ราคาการ์ดวันพีซ")).toBe(true)
+    expect(title.startsWith("ราคาการ์ดวันพีช")).toBe(true)
     expect(title.length).toBeLessThanOrEqual(60)
     expect(title).not.toContain("| Meecard")
   })
@@ -163,7 +163,7 @@ describe("card SEO copy", () => {
     expect(title).toContain(longName)
     expect(title).not.toContain("…")
     expect(title).toContain("OP09-119")
-    expect(title.startsWith("ราคาการ์ดวันพีซ")).toBe(true)
+    expect(title.startsWith("ราคาการ์ดวันพีช")).toBe(true)
     // Rarity and set are the segments that give way.
     expect(title).not.toContain("(SEC)")
     expect(title).not.toContain("Emperors in the New World")
@@ -200,13 +200,15 @@ describe("card SEO copy", () => {
     expect(buildCardFaq("TH", parallel)[0]!.question).not.toContain("Parallel 1")
   })
 
-  it("covers both Thai spellings across title + description", () => {
+  it("covers both Thai spellings across title/description + body", () => {
     const title = buildCardSeoTitle("TH", seo)
     const description = buildCardSeoDescription("TH", seo)
+    const intro = buildCardIntro("TH", seo).join(" ")
 
-    expect(title).toContain("วันพีซ")
+    expect(title).toContain("วันพีช")
     expect(description).toContain("วันพีช")
-    // SEO round 2: "วันพีช" leads the snippet instead of sitting in a fixed
+    expect(intro).toContain("วันพีซ")
+    // The primary "วันพีช" leads the snippet instead of sitting in a fixed
     // sign-off at the end, so it survives any SERP truncation.
     expect(description.indexOf("วันพีช")).toBeLessThan(100)
   })
@@ -260,7 +262,7 @@ describe("card SEO copy", () => {
     expect(intro).toContain("SR")
     expect(intro).toContain("Romance Dawn")
     // Second Thai spelling lives in the body copy.
-    expect(intro).toContain("วันพีช")
+    expect(intro).toContain("วันพีซ")
     // Source attribution moved out of this line (owner-specified wording) but is
     // still on the page — see the description and FAQ assertions below.
     // Owner-specified length: one line, not a paragraph block. Measured on the

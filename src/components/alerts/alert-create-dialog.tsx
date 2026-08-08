@@ -25,6 +25,7 @@ import { formatJpyAmount, jpyToDisplayValue } from "@/lib/utils/currency";
 import { apiPost } from "@/lib/api/client";
 import { BLUR_DATA_URL } from "@/lib/constants/ui";
 import type { PriceAlertItem } from "./alert-types";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 type Step = "pick" | "form";
 
@@ -157,7 +158,7 @@ export function AlertCreateDialog({
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold">{cardName}</p>
                   <p className="truncate text-meta text-muted-foreground/70">
-                    {card.cardCode}
+                    {baseCardCode(card.cardCode)}
                     {card.latestPriceJpy != null && (
                       <>
                         {" · "}

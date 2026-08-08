@@ -64,3 +64,34 @@ describe("productJsonLd offers.price", () => {
     expect(data.offers).toBeUndefined();
   });
 });
+
+describe("productJsonLd never publishes the internal printing suffix", () => {
+  // Owner ruling: `_p3`/`_r1` is our scraper's key for separating printings,
+  // not a number Bandai prints. It belongs in `url`/`sku` (identifiers) and
+  // nowhere a human or a rich result reads. See @/lib/cards/card-code.
+  const parallel = { ...baseCard, cardCode: "OP09-001_p1" };
+
+  it("keeps the suffix out of `name` and `description`", () => {
+    const data = productJsonLd(parallel);
+
+    expect(data.name).not.toMatch(/_p\d/i);
+    expect(data.description).not.toMatch(/_p\d/i);
+    expect(data.name).toContain("OP09-001");
+    expect(data.description).toContain("(OP09-001)");
+  });
+
+  it("still keeps the full code in `sku` and `url` — those are addresses", () => {
+    const data = productJsonLd(parallel);
+
+    expect(data.sku).toBe("OP09-001_p1");
+    expect(data.url).toBe("https://meecard.test/opcg/cards/OP09-001_p1");
+    expect(data.offers!.url).toBe("https://meecard.test/opcg/cards/OP09-001_p1");
+  });
+
+  it("strips a reprint suffix too", () => {
+    const data = productJsonLd({ ...baseCard, cardCode: "EB01-006_r1" });
+
+    expect(data.name).not.toMatch(/_r\d/i);
+    expect(data.description).not.toMatch(/_r\d/i);
+  });
+});

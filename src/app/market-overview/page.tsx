@@ -1,6 +1,7 @@
 import { GitCompareArrows, Layers, TrendingUp } from "lucide-react"
 import { FaqSection } from "@/components/shared/faq-section"
 import { RelatedPages } from "@/components/shared/related-pages"
+import { baseCardCode } from "@/lib/cards/card-code"
 import { JsonLd } from "@/lib/seo/json-ld-script"
 import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld"
 import { prisma } from "@/lib/db"
@@ -200,9 +201,9 @@ export default async function MarketOverviewPage() {
       <JsonLd data={breadcrumbJsonLd([{ name: "หน้าแรก", href: "/" }, { name: "ภาพรวมตลาด", href: "/opcg/market-overview" }])} />
       <JsonLd
         data={itemListJsonLd(
-          "การ์ดวันพีซมูลค่าสูงสุด",
+          "การ์ดวันพีชมูลค่าสูงสุด",
           data.topCards.map((card) => ({
-            name: `${card.cardCode} ${getCardName(SEO_LANG, card)}`,
+            name: `${baseCardCode(card.cardCode)} ${getCardName(SEO_LANG, card)}`,
             url: `/opcg/cards/${card.cardCode}`,
             image: card.imageUrl,
           })),
@@ -210,7 +211,7 @@ export default async function MarketOverviewPage() {
       />
       <JsonLd
         data={itemListJsonLd(
-          "ชุดการ์ดวันพีซที่มูลค่ารวมสูงสุด",
+          "ชุดการ์ดวันพีชที่มูลค่ารวมสูงสุด",
           data.topSetsByValue.map((set) => ({
             name: `${set.code.toUpperCase()} ${set.name}`,
             url: `/opcg/sets/${set.code.toLowerCase()}`,

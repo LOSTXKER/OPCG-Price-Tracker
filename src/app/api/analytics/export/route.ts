@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
+import { baseCardCode, printingLabel } from "@/lib/cards/card-code";
 import { prisma } from "@/lib/db";
 import { effectiveTier, getLimits } from "@/lib/tier";
 import { buildPortfolioLotsCsv } from "@/lib/portfolio/export";
@@ -74,12 +75,13 @@ export const GET = apiHandler(async (request: NextRequest) => {
       },
     });
 
-    const header = "Card Code,Name,Set,Rarity,Price (JPY),7d Change %\n";
+    const header = "Card Code,Printing,Name,Set,Rarity,Price (JPY),7d Change %\n";
     const rows = items
       .map((item) => {
         const c = item.card;
         return [
-          c.cardCode,
+          baseCardCode(c.cardCode),
+          printingLabel(c.cardCode),
           `"${(c.nameEn ?? c.nameJp).replace(/"/g, '""')}"`,
           c.set.code,
           c.rarity,
@@ -115,12 +117,13 @@ export const GET = apiHandler(async (request: NextRequest) => {
       orderBy: { createdAt: "desc" },
     });
 
-    const header = "Card Code,Name,Set,Rarity,Price (JPY),Price (THB),Condition,Quantity,Status,Created\n";
+    const header = "Card Code,Printing,Name,Set,Rarity,Price (JPY),Price (THB),Condition,Quantity,Status,Created\n";
     const rows = listings
       .map((l) => {
         const c = l.card;
         return [
-          c.cardCode,
+          baseCardCode(c.cardCode),
+          printingLabel(c.cardCode),
           `"${(c.nameEn ?? c.nameJp).replace(/"/g, '""')}"`,
           c.set.code,
           c.rarity,
@@ -165,7 +168,7 @@ export const GET = apiHandler(async (request: NextRequest) => {
       orderBy: { createdAt: "desc" },
     });
 
-    const header = "Deck Name,Leader,Card Code,Card Name,Rarity,Quantity\n";
+    const header = "Deck Name,Leader,Card Code,Printing,Card Name,Rarity,Quantity\n";
     const rows = decks
       .flatMap((d) =>
         d.cards.map((dc) => {
@@ -173,7 +176,8 @@ export const GET = apiHandler(async (request: NextRequest) => {
           return [
             `"${d.name.replace(/"/g, '""')}"`,
             d.leader ? `"${(d.leader.nameEn ?? d.leader.nameJp).replace(/"/g, '""')}"` : "",
-            c.cardCode,
+            baseCardCode(c.cardCode),
+            printingLabel(c.cardCode),
             `"${(c.nameEn ?? c.nameJp).replace(/"/g, '""')}"`,
             c.rarity,
             dc.quantity,

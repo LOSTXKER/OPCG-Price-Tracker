@@ -1,4 +1,5 @@
 import { cronHandler } from "@/lib/api/cron-auth";
+import { baseCardCode } from "@/lib/cards/card-code";
 import { prisma } from "@/lib/db";
 import { priceAlertEmail } from "@/lib/email";
 import { notify } from "@/lib/notify/dispatch";
@@ -63,8 +64,10 @@ export const GET = cronHandler(async () => {
       },
       channels: requestedChannels,
       email: { subject, html },
+      // Printed card number in the message text; `data.cardCode` above keeps
+      // the full code because it is the deep-link key, not copy.
       lineText:
-        `${emoji} ${cardName} (${alert.card.cardCode}) ${verb} ¥${price.toLocaleString()}\n` +
+        `${emoji} ${cardName} (${baseCardCode(alert.card.cardCode)}) ${verb} ¥${price.toLocaleString()}\n` +
         `Target was ¥${alert.targetPrice.toLocaleString()}.`,
       dedupKey: `price-alert:${alert.id}`,
     });

@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { CARD_BG } from "@/lib/constants/ui"
 import { cn } from "@/lib/utils"
 import { Price } from "@/components/shared/price-inline"
+import { baseCardCode } from "@/lib/cards/card-code"
 
 export interface ListingCardProps {
   id: number
@@ -84,7 +85,7 @@ function ListingCardBase({
         <div className="flex flex-wrap items-center gap-1.5">
           <RarityBadge rarity={card.rarity} size="sm" />
           <span className="font-mono text-xs text-muted-foreground">
-            {card.cardCode}
+            {baseCardCode(card.cardCode)}
           </span>
           <ConditionBadge condition={condition} />
         </div>

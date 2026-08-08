@@ -3,6 +3,7 @@ import { Layers, TrendingUp, GitCompareArrows } from "lucide-react";
 import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { FaqSection } from "@/components/shared/faq-section";
+import { baseCardCode } from "@/lib/cards/card-code";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
@@ -154,7 +155,7 @@ export default async function SearchPage({
           data={itemListJsonLd(
             copy.resultsTitle(query, results.total),
             results.cards.map((card) => ({
-              name: `${card.cardCode} ${getCardName(lang, card)}`,
+              name: `${baseCardCode(card.cardCode)} ${getCardName(lang, card)}`,
               url: `/opcg/cards/${card.cardCode}`,
               image: card.imageUrl,
             })),

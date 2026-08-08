@@ -391,7 +391,7 @@ export function TrendingPageHeader({
   updatedLabel?: string | null
 }) {
   const lang = useUIStore((s) => s.language)
-  // The single visible H1 carries the target keyword ("การ์ดวันพีซราคาขึ้นแรงสุด")
+  // The single visible H1 carries the target keyword ("การ์ดวันพีชราคาขึ้นแรงสุด")
   // instead of the generic nav label ("การ์ดมาแรง"). The line under it is the
   // ONE dynamic keyword sentence built on the server (buildTrendingSummary) —
   // the old generic description + separate summary/intro paragraphs are gone

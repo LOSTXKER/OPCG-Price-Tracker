@@ -2,6 +2,7 @@
 
 import { useCardPreviewStore, type CardPreviewData } from "@/stores/card-preview-store"
 import { cn } from "@/lib/utils"
+import { baseCardCode } from "@/lib/cards/card-code"
 
 /**
  * Click-anywhere wrapper for a card image. Clicking the image opens the global
@@ -34,7 +35,7 @@ export function CardImageButton({
         e.stopPropagation()
         show(card)
       }}
-      aria-label={card.nameEn ?? card.nameJp ?? card.cardCode}
+      aria-label={card.nameEn ?? card.nameJp ?? baseCardCode(card.cardCode)}
       className={cn(
         "group/cardimg relative cursor-zoom-in rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         className,

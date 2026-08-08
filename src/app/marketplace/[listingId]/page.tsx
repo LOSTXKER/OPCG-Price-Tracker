@@ -28,6 +28,7 @@ import { ImageGallery, type GalleryImage } from "./image-gallery";
 import { ListingActionButtons } from "./listing-actions";
 import { SaveButton } from "./save-button";
 import { ViewTracker } from "./view-tracker";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 export const dynamic = "force-dynamic";
 
@@ -50,11 +51,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!listing) return { title: "Listing not found" };
 
   const name = listing.card.nameEn ?? listing.card.nameJp;
-  const title = `${listing.card.cardCode} ${name} — ฿${(listing.priceThb ?? 0).toLocaleString()}`;
+  const title = `${baseCardCode(listing.card.cardCode)} ${name} — ฿${(listing.priceThb ?? 0).toLocaleString()}`;
 
   return {
     title,
-    description: `Buy ${name} (${listing.card.cardCode}) for ฿${(listing.priceThb ?? 0).toLocaleString()} on the Meecard marketplace.`,
+    description: `Buy ${name} (${baseCardCode(listing.card.cardCode)}) for ฿${(listing.priceThb ?? 0).toLocaleString()} on the Meecard marketplace.`,
     openGraph: {
       title,
       images: listing.card.imageUrl ? [listing.card.imageUrl] : undefined,
@@ -242,7 +243,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
             </div>
 
             <p className="text-muted-foreground font-mono text-sm tracking-wide">
-              {listing.card.cardCode}
+              {baseCardCode(listing.card.cardCode)}
             </p>
 
             <div className="flex flex-wrap gap-2">

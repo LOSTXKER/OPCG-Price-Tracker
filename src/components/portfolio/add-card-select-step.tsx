@@ -38,6 +38,7 @@ import { getActiveGameConfigs, getGameConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
 import { t, type Language } from "@/lib/i18n"
 import { type CardWithSet, type SetInfo } from "./add-card-types"
+import { baseCardCode } from "@/lib/cards/card-code"
 
 type RarityOpt = { code: string; label: string }
 type ColorOpt = { code: string; label: string; bg: string }
@@ -393,12 +394,14 @@ export function SelectStep({
           {displayCards.map((card) => {
             const selectedState = Boolean(isSelected?.(card))
             const cardName = card.nameEn ?? card.nameJp
+            // Printed card number — never the internal `_p2` printing suffix.
+            const publicCode = baseCardCode(card.cardCode)
 
             return (
               <ListRow
                 key={card.id}
                 onClick={() => onSelectCard(card)}
-                ariaLabel={`${cardName} ${card.cardCode}`}
+                ariaLabel={`${cardName} ${publicCode}`}
                 ariaPressed={isSelected ? selectedState : undefined}
                 className={cn(
                   "min-h-0 px-5 py-2",
@@ -425,7 +428,7 @@ export function SelectStep({
                 subtitle={
                   <>
                     <span className="text-code text-muted-foreground">
-                      {card.cardCode}
+                      {publicCode}
                     </span>
                     {card.rarity && (
                       <RarityBadge rarity={card.rarity} size="sm" />

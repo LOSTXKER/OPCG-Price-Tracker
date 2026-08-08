@@ -16,6 +16,7 @@ import { ApiError, apiGet, apiPost } from "@/lib/api/client";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 type SavedItem = {
   id: number;
@@ -206,7 +207,7 @@ export default function SavedListingsPage() {
                         {cardName}
                       </p>
                       <p className="text-meta">
-                        {listing.card.cardCode} • {listing.card.rarity}
+                        {baseCardCode(listing.card.cardCode)} • {listing.card.rarity}
                       </p>
                       <div className="mt-2">
                         <Price

@@ -14,6 +14,7 @@ import {
 import type { AssetRow } from "@/lib/types/portfolio"
 
 import { holdingValue, pnlCalc, sortAssets } from "./assets-table/utils"
+import { baseCardCode } from "@/lib/cards/card-code"
 
 export const PORTFOLIO_SHARE_SIZE = {
   width: 1080,
@@ -1046,10 +1047,16 @@ function getGalleryGap(count: number, emphasized: boolean): number {
   return 28
 }
 
+/**
+ * Printed card number for the share image.
+ *
+ * Parallels used to get a "· P2" tail derived from our internal `_p2` suffix.
+ * This image gets posted to LINE and X, so it is the last place to publish an
+ * ordinal Bandai never prints — and the card artwork is right above the code,
+ * which is what actually tells two printings apart.
+ */
 function getShareCardCode(row: AssetRow): string {
-  const baseCode = row.baseCode ?? row.cardCode
-  const parallel = row.cardCode.match(/_p(\d+)$/iu)?.[1]
-  return parallel ? `${baseCode} · P${parallel}` : baseCode
+  return row.baseCode ?? baseCardCode(row.cardCode)
 }
 
 function getCardRotation(index: number, count: number): number {

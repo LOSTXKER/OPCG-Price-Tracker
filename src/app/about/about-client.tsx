@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   ArrowRight,
   BarChart3,
+  Building2,
   Database,
   Sparkles,
   Star,
@@ -19,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import {
-  SUPPORT_EMAIL,
+  CONTACT_FACEBOOK_URL,
   buildAboutHeading,
   buildAboutMethodology,
 } from "@/lib/seo/copy/site";
@@ -172,13 +173,29 @@ export default function AboutClient() {
           <p className="mt-5 text-meta">
             {methodology.correctionsPrefix}{" "}
             <a
-              href={`mailto:${SUPPORT_EMAIL}`}
+              href={CONTACT_FACEBOOK_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="font-medium text-primary hover:underline"
             >
-              {SUPPORT_EMAIL}
+              {methodology.correctionsLinkLabel}
             </a>
           </p>
         </Surface>
+      </section>
+
+      {/* Legal entity behind the site — a real registered company is an
+          E-E-A-T signal the audit called out ("who is behind the site").
+          Facts limited to what the owner's registry source confirms
+          (name TH/EN + province); mirrored in organizationJsonLd. */}
+      <section>
+        <div className="flex items-center gap-2">
+          <Building2 className="size-5 text-muted-foreground" />
+          <h2 className="text-h3">{t(lang, "aboutCompanyTitle")}</h2>
+        </div>
+        <p className="mt-3 max-w-3xl text-body-sm leading-relaxed text-muted-foreground">
+          {t(lang, "aboutCompanyBody")}
+        </p>
       </section>
 
       <section>

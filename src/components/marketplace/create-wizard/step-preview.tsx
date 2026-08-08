@@ -12,6 +12,7 @@ import { useUIStore } from "@/stores/ui-store";
 import type { SelectedCard } from "./step-card-select";
 import type { PricingData } from "./step-pricing";
 import type { ShippingData } from "./step-shipping";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 interface StepPreviewProps {
   card: SelectedCard;
@@ -63,7 +64,7 @@ export function StepPreview({
           <div className="min-w-0 flex-1 space-y-1">
             <p className="font-semibold">{card.nameEn ?? card.nameJp}</p>
             <p className="font-mono text-sm text-muted-foreground">
-              {card.cardCode}
+              {baseCardCode(card.cardCode)}
             </p>
             <div className="flex gap-1.5">
               {card.rarity && <Badge variant="outline">{card.rarity}</Badge>}

@@ -21,6 +21,7 @@ import {
   Star,
   ExternalLink,
 } from "lucide-react";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 interface OrderSidebarProps {
   listing: ChatListing;
@@ -90,7 +91,7 @@ export function OrderSidebar({
           <p className="text-sm font-medium group-hover:text-primary transition-colors">
             {card.nameEn ?? card.nameJp}
           </p>
-          <p className="text-meta">{card.cardCode}</p>
+          <p className="text-meta">{baseCardCode(card.cardCode)}</p>
         </Link>
       </div>
 

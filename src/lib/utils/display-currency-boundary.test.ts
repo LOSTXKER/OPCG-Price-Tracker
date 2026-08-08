@@ -12,6 +12,10 @@ const UI_ROOTS = ["src/app", "src/components"] as const;
 const NATIVE_CURRENCY_ALLOWLIST = {
   "src/app/cards/[code]/opengraph-image.tsx":
     "OpenGraph output is cacheable and cannot read a browser-local preference.",
+  "src/app/guide/buying/page.tsx":
+    "The guide prices a real normal-vs-parallel pair and the latest booster's top card so 'check which version you are buying' has evidence; guide pages are crawlable THB-only copy.",
+  "src/app/guide/authenticity/page.tsx":
+    "The guide shows real catalogue prices to make the 'counterfeits follow value' argument concrete; guide pages are crawlable THB-only copy and cannot read a browser-local currency preference.",
   "src/app/guide/rarities/page.tsx":
     "The guide explains Japanese source-market price ranges in JPY.",
   "src/app/market-overview/page.tsx":

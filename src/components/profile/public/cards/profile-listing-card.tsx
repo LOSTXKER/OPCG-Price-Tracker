@@ -12,6 +12,7 @@ import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 import type { SerializedListing } from "../types";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 /**
  * Card tile rendered inside the profile's "Listings" tab. Mirrors the
@@ -78,7 +79,7 @@ export function ProfileListingCard({
           <div className="mt-1 flex flex-wrap items-center gap-1.5">
             <RarityBadge rarity={listing.card.rarity} size="sm" />
             <span className="truncate font-mono text-xs text-muted-foreground">
-              {listing.card.cardCode}
+              {baseCardCode(listing.card.cardCode)}
             </span>
             <ConditionBadge condition={listing.condition} size="sm" />
           </div>

@@ -109,3 +109,40 @@ describe("mutation timeouts", () => {
     await expect(request).rejects.toMatchObject({ name: "AbortError" });
   });
 });
+
+describe("error identification", () => {
+  function stubJsonError(status: number, body: unknown) {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () =>
+        new Response(JSON.stringify(body), {
+          status,
+          headers: { "Content-Type": "application/json" },
+        }),
+      ),
+    );
+  }
+
+  it("names the failing call inside a 5xx message", async () => {
+    // The generic 500 envelope is identical for every route — an overlay
+    // showing bare "Internal server error" was untraceable (chased twice,
+    // 2026-08-07). The route now rides along in the message.
+    stubJsonError(500, { error: "Internal server error" });
+
+    await expect(apiGet("/api/mystery")).rejects.toMatchObject({
+      status: 500,
+      request: "GET /api/mystery",
+      message: "Internal server error (GET /api/mystery)",
+    });
+  });
+
+  it("keeps 4xx messages verbatim — surfaces show them to users", async () => {
+    stubJsonError(404, { error: "ไม่พบการ์ดใบนี้" });
+
+    await expect(apiPost("/api/cards/nope", {})).rejects.toMatchObject({
+      status: 404,
+      request: "POST /api/cards/nope",
+      message: "ไม่พบการ์ดใบนี้",
+    });
+  });
+});

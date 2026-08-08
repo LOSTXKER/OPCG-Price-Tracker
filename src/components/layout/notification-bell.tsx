@@ -23,6 +23,7 @@ import { BLUR_DATA_URL } from "@/lib/constants/ui";
 import { formatNotificationDisplayCopy } from "@/lib/notifications/display-copy";
 import { cn } from "@/lib/utils";
 import { formatByCurrency } from "@/lib/utils/currency";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 type NotificationItem = {
   id: number;
@@ -378,7 +379,7 @@ function PriceAlertRow({
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
           <p className="truncate text-sm font-medium">{cardName}</p>
-          <span className="text-meta text-muted-foreground/60">{alert.card.cardCode}</span>
+          <span className="text-meta text-muted-foreground/60">{baseCardCode(alert.card.cardCode)}</span>
         </div>
 
         <div className="mt-0.5 flex items-center gap-1.5 text-xs">

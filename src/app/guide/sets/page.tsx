@@ -103,8 +103,13 @@ function buildCardCodes(lang: Language) {
       desc: t(lang, "guideSetCodeBoosterDesc"),
     },
     {
-      code: "OP09-001_p1",
-      desc: t(lang, "guideSetCodeParallelDesc"),
+      // Was "OP09-001_p1" — but `_p1` is Meecard's internal way of separating
+      // parallel printings, not a format Bandai prints on any card, so this
+      // row was teaching readers a code that does not exist (owner ruling,
+      // เบส 2026-08-08). Parallels reuse the base card's number; the promo
+      // prefix is a real fourth code family, so it takes the slot.
+      code: "P-014",
+      desc: t(lang, "guideSetCodePromoDesc"),
     },
     {
       code: "ST01-001",

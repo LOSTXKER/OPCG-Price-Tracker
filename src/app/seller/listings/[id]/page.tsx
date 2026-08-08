@@ -22,6 +22,7 @@ import { Surface } from "@/components/ui/surface";
 import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { ApiError, apiForm, apiGet, apiPatch } from "@/lib/api/client";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 type ListingData = {
   id: number;
@@ -229,7 +230,7 @@ export default function SellerEditListingPage() {
     <div className="space-y-6">
       <PageHeader
         title={t(lang, "sellerEditTitle")}
-        description={`#${listing.id} • ${listing.card.cardCode}`}
+        description={`#${listing.id} • ${baseCardCode(listing.card.cardCode)}`}
         breadcrumb={
           <Button variant="ghost" size="sm" render={<Link href="/seller/listings" />}>
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -273,7 +274,7 @@ export default function SellerEditListingPage() {
             {listing.card.nameEn ?? listing.card.nameJp}
           </p>
           <p className="text-sm text-muted-foreground">
-            {listing.card.cardCode}
+            {baseCardCode(listing.card.cardCode)}
           </p>
           <div className="mt-1 flex gap-1.5">
             <Badge variant="secondary">{listing.card.rarity}</Badge>

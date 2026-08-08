@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, BookOpen, Bug, Mail } from "lucide-react";
+import { ArrowRight, BookOpen, Bug, MessageCircle } from "lucide-react";
 
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { PageHeader } from "@/components/layout/page-header";
@@ -11,17 +11,15 @@ import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 import {
-  SUPPORT_EMAIL,
+  CONTACT_FACEBOOK_URL,
   buildContactFaq,
   buildContactHeading,
 } from "@/lib/seo/copy/site";
 
-const REPORT_SUBJECT = "[Meecard] Issue report";
-
 export default function ContactClient() {
   const lang = useUIStore((s) => s.language);
   const heading = buildContactHeading(lang);
-  const faqItems = buildContactFaq(lang, SUPPORT_EMAIL);
+  const faqItems = buildContactFaq(lang);
 
   return (
     <div className="space-y-10">
@@ -40,8 +38,8 @@ export default function ContactClient() {
 
       <section className="space-y-5">
         <h2 className="text-h3">{t(lang, "contactChannelsTitle")}</h2>
-        {/* Email is the only real channel today. The old "coming soon" social
-            card was removed rather than presented as one. */}
+        {/* Facebook is the only channel the team actually monitors — there is
+            no support mailbox, so no other card is offered here. */}
         <div className="grid gap-3">
           <Surface
             variant="outline"
@@ -49,21 +47,24 @@ export default function ContactClient() {
             className="flex h-full flex-col gap-3 p-5"
           >
             <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
-              <Mail className="size-5 text-primary" />
+              <MessageCircle className="size-5 text-primary" />
             </div>
             <div className="min-w-0 flex-1">
-              <h3 className="text-h5">Email</h3>
-              <p className="mt-1 text-meta">{t(lang, "contactEmailDesc")}</p>
-              <p className="mt-2 break-all font-mono text-sm text-foreground">
-                {SUPPORT_EMAIL}
-              </p>
+              <h3 className="text-h5">Facebook</h3>
+              <p className="mt-1 text-meta">{t(lang, "contactFacebookDesc")}</p>
             </div>
             <Button
               size="sm"
               variant="outline"
-              render={<a href={`mailto:${SUPPORT_EMAIL}`} />}
+              render={
+                <a
+                  href={CONTACT_FACEBOOK_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
+              }
             >
-              {t(lang, "contactEmailButton")}
+              {t(lang, "contactFacebookButton")}
               <ArrowRight className="size-4" />
             </Button>
           </Surface>
@@ -87,7 +88,9 @@ export default function ContactClient() {
                   variant="outline"
                   render={
                     <a
-                      href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(REPORT_SUBJECT)}`}
+                      href={CONTACT_FACEBOOK_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     />
                   }
                 >

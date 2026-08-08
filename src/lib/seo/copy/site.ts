@@ -12,11 +12,21 @@ import type { Language } from "@/lib/i18n";
  *
  * Thai is the market language and the one that matters — EN is a reasonable
  * translation, JP mirrors EN. Every page carries BOTH Thai spellings of the
- * franchise ("วันพีซ" and "วันพีช") because Thai searchers type both.
+ * franchise — visible copy spells it "วันพีช", the meta description carries
+ * "วันพีซ" — because Thai searchers type both.
  */
 
-/** Single support address for the contact surfaces and Organization schema. */
-export const SUPPORT_EMAIL = "support@meecard.app";
+/**
+ * The one channel that actually reaches the team, used by every contact
+ * surface and by the Organization schema.
+ *
+ * There is no monitored mailbox, so no page may advertise one — an address
+ * nobody reads is worse than no address at all. The URL is a numeric profile
+ * id, not a vanity handle: always render it as a labelled link, never as
+ * "@meecard".
+ */
+export const CONTACT_FACEBOOK_URL =
+  "https://www.facebook.com/profile.php?id=61575382823788";
 
 export type SeoFaqItem = { question: string; answer: string };
 export type SeoPageMeta = { title: string; description: string };
@@ -33,7 +43,7 @@ function pick<T>(lang: Language, values: ByLang<T>): T {
  * ──────────────────────────────────────────────────────────────────────────── */
 
 // SEO round 2 keyword map: supporting pages own THEIR OWN intent — the head
-// keyword "เช็คราคาการ์ดวันพีซ" belongs to the home page alone. These pages
+// keyword "เช็คราคาการ์ดวันพีช" belongs to the home page alone. These pages
 // used to lead their title/description with it, so 5+ URLs competed with the
 // page that should win that query (and someone searching "เช็คราคา" could land
 // on the pricing page). Brand identity phrasing lives on /about only. Titles
@@ -43,22 +53,22 @@ export const SEO_PAGE_META = {
   pricing: {
     title: "แพ็กเกจสมาชิก — ดูราคาฟรี อัปเกรด Pro เมื่อพร้อม",
     description:
-      "สมัคร Pro เมื่ออยากได้พอร์ตใหญ่ขึ้น แจ้งเตือนราคามากขึ้น และ Export CSV — การดูราคาการ์ดวันพีชทุกใบยังฟรีตลอด หรือสะสมแต้ม Honey แลกบัตรผ่าน Pro ได้",
+      "สมัคร Pro เมื่ออยากได้พอร์ตใหญ่ขึ้น แจ้งเตือนราคามากขึ้น และ Export CSV — การดูราคาการ์ดวันพีซทุกใบยังฟรีตลอด หรือสะสมแต้ม Honey แลกบัตรผ่าน Pro ได้",
   },
   about: {
-    title: "เกี่ยวกับเรา — เว็บเช็คราคาการ์ดวันพีซของคนไทย",
+    title: "เกี่ยวกับเรา — เว็บเช็คราคาการ์ดวันพีชของคนไทย",
     description:
-      "Meecard คือเว็บอิสระที่รวมราคากลางการ์ดวันพีช (OPTCG) จากตลาดญี่ปุ่น อัปเดตทุกวันและแปลงเป็นเงินบาท — อ่านว่าเราเก็บราคาจากแหล่งไหนและคิดราคาบาทอย่างไร",
+      "Meecard คือเว็บอิสระที่รวมราคากลางการ์ดวันพีซ (OPTCG) จากตลาดญี่ปุ่น อัปเดตทุกวันและแปลงเป็นเงินบาท — อ่านว่าเราเก็บราคาจากแหล่งไหนและคิดราคาบาทอย่างไร",
   },
   contact: {
     title: "ติดต่อทีมงาน — แจ้งราคาผิด เสนอฟีเจอร์ รายงานบั๊ก",
     description:
-      "แจ้งราคาที่ไม่ตรง เสนอฟีเจอร์ รายงานบั๊ก หรือคุยเรื่องความร่วมมือเกี่ยวกับการ์ดวันพีช — ทีมงานตอบกลับทางอีเมลทุกฉบับ",
+      "แจ้งราคาที่ไม่ตรง เสนอฟีเจอร์ รายงานบั๊ก หรือคุยเรื่องความร่วมมือเกี่ยวกับการ์ดวันพีซ — ทักหาทีมงานได้ที่เพจเฟซบุ๊ก Meecard ช่องทางเดียว",
   },
   honey: {
     title: "Honey — สะสมแต้มฟรี แลกบัตรผ่าน Pro และของรางวัล",
     description:
-      "เช็คอินและทำภารกิจประจำวันรับแต้ม Honey ฟรี แล้วนำไปแลกบัตรผ่าน Pro หรือตั๋วลุ้นรางวัลการ์ดวันพีชประจำเดือน",
+      "เช็คอินและทำภารกิจประจำวันรับแต้ม Honey ฟรี แล้วนำไปแลกบัตรผ่าน Pro หรือตั๋วลุ้นรางวัลการ์ดวันพีซประจำเดือน",
   },
   raffleWinners: {
     title: "ประกาศผู้ชนะรางวัลประจำเดือน",
@@ -66,9 +76,9 @@ export const SEO_PAGE_META = {
       "คลังประกาศผู้ชนะรางวัลประจำเดือน ดูย้อนหลังได้ทุกเดือนว่าใครได้รางวัลอะไร เปิดเผยผลจับรางวัลทั้งหมดเพื่อความโปร่งใส",
   },
   blog: {
-    title: "บล็อกการ์ดวันพีซ — วิเคราะห์ตลาด รีวิวชุด และเทคนิค",
+    title: "บล็อกการ์ดวันพีช — วิเคราะห์ตลาด รีวิวชุด และเทคนิค",
     description:
-      "บทความเรื่องการ์ดวันพีช (One Piece Card Game) จาก Meecard — วิเคราะห์ตลาดราคา รีวิวชุดการ์ดใหม่ เทคนิคสะสม และข่าวสารที่มีผลกับราคา",
+      "บทความเรื่องการ์ดวันพีซ (One Piece Card Game) จาก Meecard — วิเคราะห์ตลาดราคา รีวิวชุดการ์ดใหม่ เทคนิคสะสม และข่าวสารที่มีผลกับราคา",
   },
 } as const satisfies Record<string, SeoPageMeta>;
 
@@ -132,7 +142,7 @@ export function buildPricingFaq(
     TH: [
       {
         question: "ใช้ฟรีได้แค่ไหน มีลิมิตอะไรบ้าง?",
-        answer: `การดูราคาการ์ดวันพีซทุกใบ ทุกชุด ทุกเกรด และเครื่องมือคำนวณอัตราออก ใช้ได้ฟรีไม่จำกัด ส่วนลิมิตของแพ็กเกจฟรีคือ พอร์ตสะสม ${freePortfolioCount} พอร์ต เก็บได้ ${freePortfolioCards} ใบ · รายการโปรด ${freeWatchlistCards} ใบ · แจ้งเตือนราคา ${freePriceAlerts} รายการ · ดูประวัติราคาย้อนหลัง ${freePriceHistoryDays} วัน`,
+        answer: `การดูราคาการ์ดวันพีชทุกใบ ทุกชุด ทุกเกรด และเครื่องมือคำนวณอัตราออก ใช้ได้ฟรีไม่จำกัด ส่วนลิมิตของแพ็กเกจฟรีคือ พอร์ตสะสม ${freePortfolioCount} พอร์ต เก็บได้ ${freePortfolioCards} ใบ · รายการโปรด ${freeWatchlistCards} ใบ · แจ้งเตือนราคา ${freePriceAlerts} รายการ · ดูประวัติราคาย้อนหลัง ${freePriceHistoryDays} วัน`,
       },
       {
         question: "แลก Honey เป็น Pro ได้ไหม?",
@@ -201,7 +211,7 @@ export function buildPricingFaq(
 
 export function buildAboutHeading(lang: Language): { title: string } {
   return pick(lang, {
-    TH: { title: "เกี่ยวกับ Meecard — เว็บเช็คราคาการ์ดวันพีซของคนไทย" },
+    TH: { title: "เกี่ยวกับ Meecard — เว็บเช็คราคาการ์ดวันพีชของคนไทย" },
     EN: { title: "About Meecard — a One Piece card price tracker for Thailand" },
     JP: { title: "Meecard について — タイ向けワンピースカード価格サイト" },
   });
@@ -212,12 +222,14 @@ export function buildAboutMethodology(lang: Language): {
   intro: string[];
   items: { term: string; detail: string }[];
   correctionsPrefix: string;
+  /** Link text for the Facebook page — the only channel corrections reach. */
+  correctionsLinkLabel: string;
 } {
   return pick(lang, {
     TH: {
       title: "ราคามาจากไหน อัปเดตยังไง",
       intro: [
-        "ราคาการ์ดวันพีซบน Meecard ไม่ได้มาจากการที่ผู้ใช้กรอกกันเอง แต่ดึงจากร้านค้าจริงในตลาดญี่ปุ่นซึ่งเป็นตลาดต้นทางของ One Piece Card Game แล้วบันทึกทุกวันเป็นประวัติราคา",
+        "ราคาการ์ดวันพีชบน Meecard ไม่ได้มาจากการที่ผู้ใช้กรอกกันเอง แต่ดึงจากร้านค้าจริงในตลาดญี่ปุ่นซึ่งเป็นตลาดต้นทางของ One Piece Card Game แล้วบันทึกทุกวันเป็นประวัติราคา",
         "ด้านล่างคือวิธีที่เราได้ตัวเลขมาและข้อจำกัดที่ควรรู้ก่อนใช้ราคาการ์ดวันพีชเหล่านี้ตัดสินใจซื้อขาย",
       ],
       items: [
@@ -253,6 +265,7 @@ export function buildAboutMethodology(lang: Language): {
         },
       ],
       correctionsPrefix: "เจอราคาที่ไม่ตรงกับตลาด แจ้งเราได้ที่",
+      correctionsLinkLabel: "เพจเฟซบุ๊ก Meecard",
     },
     EN: {
       title: "Where the prices come from",
@@ -292,7 +305,8 @@ export function buildAboutMethodology(lang: Language): {
             "Meecard is not a shop and takes no cut of the prices shown. We do not accept payment to move a card's price. All card images are © BANDAI and used for reference only.",
         },
       ],
-      correctionsPrefix: "Spotted a price that doesn't match the market? Tell us at",
+      correctionsPrefix: "Spotted a price that doesn't match the market? Tell us on",
+      correctionsLinkLabel: "the Meecard page on Facebook",
     },
     JP: {
       title: "価格の出どころと更新方法",
@@ -333,6 +347,7 @@ export function buildAboutMethodology(lang: Language): {
         },
       ],
       correctionsPrefix: "相場と合わない価格を見つけたらこちらまで:",
+      correctionsLinkLabel: "Facebook ページ「Meecard」",
     },
   });
 }
@@ -343,59 +358,65 @@ export function buildAboutMethodology(lang: Language): {
 
 export function buildContactHeading(lang: Language): { title: string } {
   return pick(lang, {
-    TH: { title: "ติดต่อทีม Meecard — เว็บเช็คราคาการ์ดวันพีซ" },
+    TH: { title: "ติดต่อทีม Meecard — เว็บเช็คราคาการ์ดวันพีช" },
     EN: { title: "Contact Meecard — the One Piece card price tracker" },
     JP: { title: "Meecard へのお問い合わせ — ワンピースカード価格サイト" },
   });
 }
 
-export function buildContactFaq(lang: Language, supportEmail: string): SeoFaqItem[] {
+export function buildContactFaq(lang: Language): SeoFaqItem[] {
   return pick(lang, {
     TH: [
       {
         // No response-time promise: nothing in the product enforces an SLA, so
         // quoting one would be a service claim the site cannot keep.
-        question: "ส่งอีเมลไปแล้วได้รับการตอบกลับไหม?",
-        answer: `เราเป็นทีมเล็กและอ่านอีเมลทุกฉบับด้วยตัวเอง ถ้าเป็นเรื่องบัญชีหรือการชำระเงินที่ทำให้ใช้งานไม่ได้ ให้ระบุคำว่า "ด่วน" ในหัวข้ออีเมลที่ส่งมาที่ ${supportEmail} เราจะจัดลำดับให้ก่อน`,
+        question: "ทักไปทางเฟซบุ๊กแล้วได้รับการตอบกลับไหม?",
+        answer:
+          'เราเป็นทีมเล็กและอ่านข้อความทุกข้อความด้วยตัวเอง เพจเฟซบุ๊ก Meecard เป็นช่องทางเดียวที่ติดต่อเราได้ ไม่มีอีเมลฝ่ายบริการ ถ้าเป็นเรื่องบัญชีหรือการชำระเงินที่ทำให้ใช้งานไม่ได้ ให้ขึ้นต้นข้อความว่า "ด่วน" เราจะจัดลำดับให้ก่อน',
       },
       {
         question: "เจอราคาการ์ดผิด แจ้งได้ที่ไหน?",
-        answer: `ส่งอีเมลมาที่ ${supportEmail} พร้อมโค้ดการ์ด (เช่น OP01-003) ราคาที่เห็นบนเว็บ และราคาที่คิดว่าถูกต้องพร้อมลิงก์อ้างอิง เราจะตรวจกับข้อมูลต้นทางและแก้ในรอบเก็บราคาถัดไป การแจ้งแบบมีลิงก์อ้างอิงช่วยให้แก้ได้เร็วที่สุด`,
+        answer:
+          "ทักมาที่เพจเฟซบุ๊ก Meecard พร้อมโค้ดการ์ด (เช่น OP01-003) ราคาที่เห็นบนเว็บ และราคาที่คิดว่าถูกต้องพร้อมลิงก์อ้างอิง เราจะตรวจกับข้อมูลต้นทางและแก้ในรอบเก็บราคาถัดไป การแจ้งแบบมีลิงก์อ้างอิงช่วยให้แก้ได้เร็วที่สุด",
       },
       {
         question: "อยากให้เพิ่มการ์ดหรือชุดที่ยังไม่มีในเว็บ?",
         answer:
-          "แจ้งมาได้เลย ระบุชื่อชุดหรือโค้ดชุดของการ์ดวันพีชที่ต้องการ เราจะเพิ่มเข้าคิวเก็บข้อมูล ชุดใหม่มักขึ้นเว็บหลังวางขายจริงและมีราคาซื้อขายในตลาดญี่ปุ่นแล้ว",
+          "ทักมาบอกที่เพจเฟซบุ๊กได้เลย ระบุชื่อชุดหรือโค้ดชุดของการ์ดวันพีชที่ต้องการ เราจะเพิ่มเข้าคิวเก็บข้อมูล ชุดใหม่มักขึ้นเว็บหลังวางขายจริงและมีราคาซื้อขายในตลาดญี่ปุ่นแล้ว",
       },
     ],
     EN: [
       {
         question: "Will I get a reply?",
-        answer: `We're a small team and read every email ourselves. For account or payment issues that block you, put "urgent" in the subject line to ${supportEmail} and we'll prioritise it.`,
+        answer:
+          'We\'re a small team and read every message ourselves. The Meecard page on Facebook is the only channel that reaches us — there is no support mailbox. For account or payment issues that block you, start your message with "urgent" and we\'ll prioritise it.',
       },
       {
         question: "Where do I report a wrong price?",
-        answer: `Email ${supportEmail} with the card code (e.g. OP01-003), the price shown on the site, and the price you believe is correct with a source link. We check it against the source data and fix it on the next collection run.`,
+        answer:
+          "Message the Meecard page on Facebook with the card code (e.g. OP01-003), the price shown on the site, and the price you believe is correct with a source link. We check it against the source data and fix it on the next collection run.",
       },
       {
         question: "Can you add a card or set that's missing?",
         answer:
-          "Yes — send the set name or set code and we'll queue it for collection. New sets normally appear once they are on sale and actually trading in the Japanese market.",
+          "Yes — message the page with the set name or set code and we'll queue it for collection. New sets normally appear once they are on sale and actually trading in the Japanese market.",
       },
     ],
     JP: [
       {
         question: "返信はもらえますか？",
-        answer: `少人数のチームですべてのメールに目を通しています。アカウントや決済で利用できない場合は、${supportEmail} 宛の件名に「urgent」と入れてください。優先的に対応します。`,
+        answer:
+          "少人数のチームですべてのメッセージに目を通しています。連絡先は Facebook ページ「Meecard」のみで、サポート用のメールアドレスはありません。アカウントや決済で利用できない場合は、メッセージの冒頭に「urgent」と入れてください。優先的に対応します。",
       },
       {
         question: "価格の誤りはどこに報告すればいいですか？",
-        answer: `${supportEmail} にカードコード（例：OP01-003）、サイト上の価格、正しいと思われる価格と参照リンクを添えてお送りください。元データと照合し、次回の取得で修正します。`,
+        answer:
+          "Facebook ページ「Meecard」に、カードコード（例：OP01-003）、サイト上の価格、正しいと思われる価格と参照リンクを添えてお送りください。元データと照合し、次回の取得で修正します。",
       },
       {
         question: "掲載されていないカードやセットを追加できますか？",
         answer:
-          "可能です。セット名またはセットコードをお知らせいただければ取得キューに追加します。新セットは発売され日本市場で実際に取引され始めてから掲載されます。",
+          "可能です。Facebook ページからセット名またはセットコードをお知らせいただければ取得キューに追加します。新セットは発売され日本市場で実際に取引され始めてから掲載されます。",
       },
     ],
   });
@@ -416,7 +437,7 @@ export function buildHoneyExplainer(lang: Language): {
     TH: {
       title: "Honey คืออะไร และได้มายังไง",
       intro: [
-        "Honey คือแต้มสะสมของ Meecard เว็บเช็คราคาการ์ดวันพีซ ได้มาจากการใช้งานเว็บตามปกติ ไม่ต้องเสียเงินซื้อและไม่ต้องผูกบัตรเครดิต",
+        "Honey คือแต้มสะสมของ Meecard เว็บเช็คราคาการ์ดวันพีช ได้มาจากการใช้งานเว็บตามปกติ ไม่ต้องเสียเงินซื้อและไม่ต้องผูกบัตรเครดิต",
         "สะสมแล้วนำไปแลกบัตรผ่าน Pro หรือแลกตั๋วลุ้นรางวัลประจำเดือน ทำให้คนที่เข้ามาเช็คราคาการ์ดวันพีชทุกวันได้อะไรกลับไปด้วย",
       ],
       sections: [
@@ -499,7 +520,7 @@ export function buildHoneyExplainer(lang: Language): {
 
 export function buildHoneyHeading(lang: Language): { title: string } {
   return pick(lang, {
-    TH: { title: "Honey Rewards — สะสมแต้มฟรีจากการเช็คราคาการ์ดวันพีซ" },
+    TH: { title: "Honey Rewards — สะสมแต้มฟรีจากการเช็คราคาการ์ดวันพีช" },
     EN: { title: "Honey Rewards — free points for checking One Piece card prices" },
     JP: { title: "Honey Rewards — ワンピースカード価格チェックで貯まる無料ポイント" },
   });
@@ -515,7 +536,7 @@ export function buildBlogHeading(lang: Language): {
 } {
   return pick(lang, {
     TH: {
-      title: "บล็อกการ์ดวันพีซ — วิเคราะห์ตลาด รีวิวชุด และเทคนิค",
+      title: "บล็อกการ์ดวันพีช — วิเคราะห์ตลาด รีวิวชุด และเทคนิค",
       description: "บทความเรื่องราคาและการสะสมการ์ดวันพีช จากข้อมูลจริงบน Meecard",
     },
     EN: {
@@ -538,7 +559,7 @@ export function buildBlogRelated(
       {
         href: "/opcg/trending",
         title: "การ์ดที่ราคาขยับ",
-        description: "ดูว่าวันนี้การ์ดวันพีซใบไหนขึ้น–ลงแรงสุด",
+        description: "ดูว่าวันนี้การ์ดวันพีชใบไหนขึ้น–ลงแรงสุด",
       },
       {
         href: "/opcg/sets",
@@ -591,7 +612,7 @@ export function buildBlogRelated(
 export function buildBlogIntro(lang: Language): string[] {
   return pick(lang, {
     TH: [
-      "ที่นี่คือบล็อกของ Meecard เว็บเช็คราคาการ์ดวันพีซ (One Piece Card Game) สำหรับตลาดไทย เราเขียนจากข้อมูลราคาจริงที่เก็บทุกวัน ไม่ใช่ความรู้สึกว่าใบไหนน่าจะแพง",
+      "ที่นี่คือบล็อกของ Meecard เว็บเช็คราคาการ์ดวันพีช (One Piece Card Game) สำหรับตลาดไทย เราเขียนจากข้อมูลราคาจริงที่เก็บทุกวัน ไม่ใช่ความรู้สึกว่าใบไหนน่าจะแพง",
       "เนื้อหาแบ่งเป็น 4 หมวด คือ วิเคราะห์ตลาด รีวิวชุดการ์ด เทคนิคสำหรับนักสะสม และข่าวที่มีผลกับราคาการ์ดวันพีช",
       "ระหว่างรอบทความใหม่ ดูราคาปัจจุบันได้จากหน้าการ์ดที่ราคาขยับ หน้ารวมชุดการ์ด หรืออ่านพื้นฐานจากคู่มือมือใหม่",
     ],

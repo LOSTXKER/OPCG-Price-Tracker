@@ -8,6 +8,7 @@ import { useCardPreviewStore } from "@/stores/card-preview-store"
 import { useUIStore } from "@/stores/ui-store"
 import { getCardName } from "@/lib/i18n"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
+import { baseCardCode } from "@/lib/cards/card-code"
 
 /**
  * Lightweight image lightbox shown when a card image is clicked anywhere in
@@ -56,7 +57,7 @@ function LightboxBody({ onClose }: { onClose: () => void }) {
           />
         ) : (
           <div className="flex size-full items-center justify-center text-meta">
-            {card.cardCode}
+            {baseCardCode(card.cardCode)}
           </div>
         )}
       </div>

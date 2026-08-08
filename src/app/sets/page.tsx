@@ -153,7 +153,7 @@ export default async function SetsIndexPage() {
       {setsRaw.length > 0 && (
         <JsonLd
           data={itemListJsonLd(
-            "ชุดการ์ดวันพีซทั้งหมด (One Piece Card Game)",
+            "ชุดการ์ดวันพีชทั้งหมด (One Piece Card Game)",
             setsRaw.map((s) => ({
               name: `${s.code.toUpperCase()} ${s.nameEn ?? s.name}`,
               url: `/opcg/sets/${s.code}`,
@@ -183,7 +183,7 @@ export default async function SetsIndexPage() {
         )}
 
         <FaqSection
-          title="คำถามที่พบบ่อยเรื่องชุดการ์ดวันพีซ"
+          title="คำถามที่พบบ่อยเรื่องชุดการ์ดวันพีช"
           items={faqItems}
         />
       </div>
@@ -192,7 +192,7 @@ export default async function SetsIndexPage() {
           {
             href: "/opcg/trending",
             icon: TrendingUp,
-            title: "การ์ดวันพีซมาแรงวันนี้",
+            title: "การ์ดวันพีชมาแรงวันนี้",
             description: "การ์ด OPCG ที่ราคาขยับมากที่สุดในวันนี้",
           },
           {
@@ -205,7 +205,7 @@ export default async function SetsIndexPage() {
             href: "/guide/sets",
             icon: BookOpen,
             title: "คู่มือชุดการ์ด OPCG",
-            description: "เรียนรู้รายละเอียดชุดการ์ดวันพีซแต่ละชุด",
+            description: "เรียนรู้รายละเอียดชุดการ์ดวันพีชแต่ละชุด",
           },
           ...(marketplaceEnabled
             ? [
@@ -214,7 +214,7 @@ export default async function SetsIndexPage() {
                   icon: Store,
                   title: "ตลาดซื้อขายการ์ด",
                   description:
-                    "ซื้อขายการ์ดวันพีซในตลาดของ Meecard ราคายุติธรรม",
+                    "ซื้อขายการ์ดวันพีชในตลาดของ Meecard ราคายุติธรรม",
                 },
               ]
             : []),

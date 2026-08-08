@@ -11,11 +11,14 @@
 
 export class ApiError extends Error {
   readonly status: number;
+  /** `"GET /api/..."` — which call failed. Set for every ensureOk throw. */
+  readonly request?: string;
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: string, request?: string) {
     super(message);
     this.name = "ApiError";
     this.status = status;
+    this.request = request;
   }
 }
 
@@ -68,7 +71,7 @@ async function fetchWithTimeout(
 }
 
 /** Throw ApiError (carrying the `{ error }` envelope) when a response is non-2xx. */
-async function ensureOk(res: Response): Promise<void> {
+async function ensureOk(res: Response, request: string): Promise<void> {
   if (res.ok) return;
   let message = `Request failed: ${res.status}`;
   try {
@@ -77,7 +80,13 @@ async function ensureOk(res: Response): Promise<void> {
   } catch {
     /* ignore parse errors */
   }
-  throw new ApiError(res.status, message);
+  // 5xx messages are always the generic apiHandler envelope ("Internal server
+  // error") — useless in an error overlay that doesn't say WHICH call died
+  // (we chased exactly that twice, 2026-08-07). Append the route so the
+  // overlay/log self-identifies. 4xx messages stay clean: they are
+  // user-meaningful strings that surfaces show verbatim.
+  if (res.status >= 500) message = `${message} (${request})`;
+  throw new ApiError(res.status, message, request);
 }
 
 export async function apiFetch<T = unknown>(
@@ -95,7 +104,7 @@ export async function apiFetch<T = unknown>(
     signal,
     timeoutMs,
   );
-  await ensureOk(res);
+  await ensureOk(res, `${method} ${url}`);
   return res.json() as Promise<T>;
 }
 
@@ -120,7 +129,7 @@ export async function apiForm<T = unknown>(
     signal,
     timeoutMs,
   );
-  await ensureOk(res);
+  await ensureOk(res, `${method} ${url}`);
   return res.json() as Promise<T>;
 }
 

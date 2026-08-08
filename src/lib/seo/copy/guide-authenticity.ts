@@ -1,7 +1,7 @@
 import type { Language } from "@/lib/i18n";
 
 /**
- * Copy for /guide/authenticity — "วิธีดูการ์ดวันพีซแท้หรือปลอม".
+ * Copy for /guide/authenticity — "วิธีดูการ์ดวันพีชแท้หรือปลอม".
  *
  * FACTUAL DISCIPLINE (matters more here than anywhere else on the site):
  * Bandai publishes NO consumer-facing anti-counterfeit specification for the
@@ -20,9 +20,9 @@ function pick<T>(lang: Language, copy: Copy<T>): T {
 }
 
 export const GUIDE_AUTHENTICITY_META = {
-  title: "วิธีดูการ์ดวันพีซแท้หรือปลอม — เช็คก่อนโอนเงิน",
+  title: "วิธีดูการ์ดวันพีชแท้หรือปลอม — เช็คก่อนโอนเงิน",
   description:
-    "รวมจุดสังเกตการ์ดวันพีชปลอม ทั้งหลังการ์ด ฟอยล์ ความคมของงานพิมพ์ และการส่องไฟดูแกนดำ พร้อมแยกให้ชัดว่าปลอม proxy กับของแท้หายากต่างกันยังไง",
+    "รวมจุดสังเกตการ์ดวันพีซปลอม ทั้งหลังการ์ด ฟอยล์ ความคมของงานพิมพ์ และการส่องไฟดูแกนดำ พร้อมแยกให้ชัดว่าปลอม proxy กับของแท้หายากต่างกันยังไง",
 } as const;
 
 /**
@@ -51,7 +51,7 @@ export function guideAuthUpdatedLabel(lang: Language): string {
 
 export function guideAuthH1(lang: Language): string {
   return pick(lang, {
-    TH: "วิธีดูการ์ดวันพีซแท้หรือปลอม",
+    TH: "วิธีดูการ์ดวันพีชแท้หรือปลอม",
     EN: "How to spot a fake One Piece card",
     JP: "ワンピースカードの真贋の見分け方",
   });
@@ -81,7 +81,7 @@ export function guideAuthIntro(lang: Language): string[] {
     ];
   }
   return [
-    "ยิ่งราคาการ์ดวันพีซขึ้น ของปลอมของใบแพงๆ ก็ยิ่งทำได้เนียนขึ้น จนดูผ่านๆ ไม่พออีกต่อไป",
+    "ยิ่งราคาการ์ดวันพีชขึ้น ของปลอมของใบแพงๆ ก็ยิ่งทำได้เนียนขึ้น จนดูผ่านๆ ไม่พออีกต่อไป",
     "ต้องพูดให้ชัดก่อนข้อหนึ่ง: Bandai ไม่ได้ประกาศรายการ \"ฟีเจอร์กันปลอม\" ของการ์ดต่อสาธารณะ คำแนะนำทางการของเขามีแค่ให้ซื้อจากร้านตัวแทนจำหน่ายและตรวจสอบสินค้าจากเว็บทางการ ดังนั้นทุกข้อด้านล่างคือสิ่งที่นักสะสมและร้านรับซื้อ-ขายรายงานตรงกัน แต่ละข้อทำได้แค่ \"เพิ่มหรือลดความน่าสงสัย\" ไม่มีข้อไหนพิสูจน์ได้ว่าการ์ดแท้ 100%",
     "ถ้ามูลค่าสูงจนพลาดแล้วเจ็บ ให้ใช้ข้อพวกนี้เป็นตัวกรองเบื้องต้น แล้วจ่ายค่าเกรดหรือซื้อจากคนขายที่รับคืนของได้",
   ];
@@ -424,7 +424,7 @@ export function guideAuthRedFlags(lang: Language): AuthRedFlag[] {
       id: "price",
       before:
         "ราคาต่ำกว่าราคากลางมากผิดปกติ — เป็นสัญญาณที่มีคนรายงานบ่อยที่สุด ก่อนจะเชื่อว่าเจอของถูก ให้",
-      link: { href: "/opcg/search", label: "เช็คราคากลางการ์ดวันพีซ" },
+      link: { href: "/opcg/search", label: "เช็คราคากลางการ์ดวันพีช" },
       after: "ก่อน",
     },
     {
@@ -506,7 +506,7 @@ export function guideAuthFaq(
   }
   return [
     {
-      question: "มีวิธีเดียวที่พิสูจน์ได้เลยไหมว่าการ์ดวันพีซใบนี้แท้?",
+      question: "มีวิธีเดียวที่พิสูจน์ได้เลยไหมว่าการ์ดวันพีชใบนี้แท้?",
       answer:
         "ไม่มี Bandai ไม่ได้ประกาศฟีเจอร์ตรวจสอบของแท้สำหรับผู้บริโภค และทุกวิธีที่นักสะสมใช้ทำได้แค่เพิ่มหรือลดความน่าสงสัย วิธีที่พาไปได้ไกลที่สุดคือเทียบกับใบที่รู้ว่าแท้ ส่วนการ์ดราคาสูงคำตอบที่ใช้ได้จริงคือส่งเกรด",
       link: { href: "/guide/rarities", label: "ดูเรื่องเกรดและความหายากการ์ด" },
@@ -533,4 +533,53 @@ export function guideAuthFaq(
         "Bandai ไม่รับเปลี่ยนการ์ดปลอม ทางที่เหลือคือใช้ช่องทางของแพลตฟอร์มหรือคนกลางที่ซื้อผ่าน จึงควรเก็บหลักฐานทุกอย่างไว้ตั้งแต่ต้น — โปรไฟล์คนขาย โพสต์ประกาศ แชท เลขบัญชีที่โอน สลิป และคลิปตอนแกะพัสดุ",
     },
   ];
+}
+
+/**
+ * Labels for the two page-local diagrams (see `card-schematics.tsx`). Kept in
+ * the copy module with everything else on this page so all three languages stay
+ * in one file — a diagram with a hard-coded Thai label silently breaks EN/JP.
+ */
+export function guideAuthCompareLabels(lang: Language): {
+  light: string;
+  known: string;
+  suspect: string;
+} {
+  return pick(lang, {
+    TH: { light: "ใต้แสงเดียวกัน", known: "ใบที่รู้ว่าแท้", suspect: "ใบที่สงสัย" },
+    EN: { light: "Under the same light", known: "Card you trust", suspect: "Card in question" },
+    JP: { light: "同じ照明の下で", known: "本物と分かるカード", suspect: "確認したいカード" },
+  });
+}
+
+export function guideAuthLightLabels(lang: Language): {
+  opaque: string;
+  translucent: string;
+} {
+  return pick(lang, {
+    TH: { opaque: "แสงแทบไม่ทะลุ", translucent: "เห็นแสงทะลุชัด — ตรวจต่อ" },
+    EN: { opaque: "Almost no light through", translucent: "Clearly translucent — keep checking" },
+    JP: { opaque: "ほとんど透けない", translucent: "はっきり透ける＝要確認" },
+  });
+}
+
+/** Eyebrow + caption for the real "most expensive cards" figure in the grading section. */
+export function guideAuthValueFigure(lang: Language): { eyebrow: string; caption: string } {
+  return pick(lang, {
+    TH: {
+      eyebrow: "การ์ดที่ราคาสูงสุดในระบบตอนนี้",
+      caption:
+        "ของปลอมวิ่งตามมูลค่า ไม่ได้วิ่งตามภาษาหรือชุด ใบกลุ่มนี้คือกลุ่มที่คุ้มค่าที่สุดสำหรับคนทำปลอม จึงเป็นกลุ่มที่ควรตรวจละเอียดที่สุดก่อนโอนเงิน",
+    },
+    EN: {
+      eyebrow: "The priciest cards in the catalogue right now",
+      caption:
+        "Counterfeits follow value, not language or set. These are the cards worth faking — and so the ones worth checking hardest before you pay.",
+    },
+    JP: {
+      eyebrow: "現在カタログで最も高額なカード",
+      caption:
+        "偽造品は言語や弾ではなく金額を追います。この価格帯こそ、支払い前にもっとも入念に確認すべきカードです。",
+    },
+  });
 }

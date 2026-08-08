@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { BRAND_GOLD, BRAND_SURFACE } from "@/lib/constants/brand";
 import { prisma } from "@/lib/db";
 import { formatJpy } from "@/lib/utils/currency";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 export const alt = "Card Detail";
 export const size = { width: 1200, height: 630 };
@@ -131,7 +132,7 @@ export default async function CardOG(props: {
 
           {/* Card code */}
           <span style={{ fontSize: 24, color: BRAND_GOLD, fontWeight: 600 }}>
-            {card.cardCode}
+            {baseCardCode(card.cardCode)}
           </span>
 
           {/* Card name */}

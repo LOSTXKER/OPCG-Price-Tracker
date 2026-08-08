@@ -9,6 +9,7 @@ import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { Surface } from "@/components/ui/surface";
 import { OrderStatusBadge } from "./order-status-badge";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 export type OrderListItem = {
   id: number;
@@ -89,7 +90,7 @@ export function OrderCard({
         <div className="min-w-0 flex-1">
           <p className="truncate text-h4">{cardName}</p>
           <p className="text-sm text-muted-foreground">
-            {order.listing.card.cardCode} • {order.listing.card.rarity}
+            {baseCardCode(order.listing.card.cardCode)} • {order.listing.card.rarity}
           </p>
           {order.trackingNumber && (
             <p className="mt-1 text-meta">

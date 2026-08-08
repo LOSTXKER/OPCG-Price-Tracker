@@ -18,6 +18,7 @@ import {
   formatDisplayValue,
   type Currency,
 } from "@/lib/utils/currency";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 export interface CompareChartCard {
   cardCode: string;
@@ -90,7 +91,7 @@ function CompareTooltip({
             />
             <span className="min-w-0 flex-1 truncate text-meta">
               <span className="font-mono text-muted-foreground">
-                {card.cardCode}
+                {baseCardCode(card.cardCode)}
               </span>{" "}
               <span>{getCardName(lang, card)}</span>
             </span>
@@ -149,7 +150,7 @@ export function CompareChart({
                 style={{ backgroundColor: colors[i % colors.length] }}
               />
               <span className="font-mono text-meta text-muted-foreground">
-                {card.cardCode}
+                {baseCardCode(card.cardCode)}
               </span>
               <span className="text-meta">{getCardName(lang, card)}</span>
             </div>

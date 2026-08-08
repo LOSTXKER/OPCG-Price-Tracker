@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { unstable_cache } from "next/cache";
@@ -5,6 +6,7 @@ import {
   ArrowRight,
   BookOpen,
   Calculator,
+  Dices,
   ChevronRight,
   Flame,
   GitCompareArrows,
@@ -20,9 +22,11 @@ import {
   Wrench,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { ArrowLink } from "@/components/shared/arrow-link";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { FaqSection } from "@/components/shared/faq-section";
 import { PageHeader } from "@/components/layout/page-header";
+import { RelatedPageCard } from "@/components/shared/related-pages";
 import { Surface } from "@/components/ui/surface";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
@@ -125,7 +129,9 @@ function buildTools(
   return [
     {
       href: "/opcg/drop-calculator",
-      icon: Calculator,
+      // Odds of pulling a card, not arithmetic — keep Calculator for the deck
+      // cost tool so one icon keeps one meaning across the site.
+      icon: Dices,
       title: t(lang, "guideHomeToolDropTitle"),
       description: t(lang, "guideHomeToolDropDesc"),
     },
@@ -192,6 +198,9 @@ type HubSet = {
   nameEn: string | null;
   nameTh: string | null;
   releaseDate: Date | null;
+  cardCount?: number;
+  /** Stand-in cover art — see the note in `getHubSetData`. */
+  coverUrl?: string | null;
 };
 
 const getHubSetData = unstable_cache(
@@ -200,11 +209,13 @@ const getHubSetData = unstable_cache(
       const [sets, setCount, cardCount] = await Promise.all([
         prisma.cardSet.findMany({
           select: {
+            id: true,
             code: true,
             name: true,
             nameEn: true,
             nameTh: true,
             releaseDate: true,
+            cardCount: true,
           },
           orderBy: [{ releaseDate: { sort: "desc", nulls: "last" } }, { code: "desc" }],
           take: 8,
@@ -212,12 +223,33 @@ const getHubSetData = unstable_cache(
         prisma.cardSet.count(),
         prisma.card.count(),
       ]);
-      return { sets, setCount, cardCount };
+
+      // A cover picture per set. `CardSet.boxImageUrl` is null for all 51 sets
+      // (verified 2026-08-08), so the box art everyone reaches for does not
+      // exist yet — the set's own priciest card with artwork stands in, which is
+      // what /guide/sets already does. Scoped to these 8 sets only.
+      const covers = await prisma.card.findMany({
+        where: { setId: { in: sets.map((s) => s.id) }, imageUrl: { not: null } },
+        select: { setId: true, imageUrl: true },
+        orderBy: { latestPriceJpy: { sort: "desc", nulls: "last" } },
+      });
+      const coverBySet = new Map<number, string>();
+      for (const card of covers) {
+        if (card.setId != null && card.imageUrl && !coverBySet.has(card.setId)) {
+          coverBySet.set(card.setId, card.imageUrl);
+        }
+      }
+
+      return {
+        sets: sets.map((s) => ({ ...s, coverUrl: coverBySet.get(s.id) ?? null })),
+        setCount,
+        cardCount,
+      };
     } catch {
       return { sets: [], setCount: 0, cardCount: 0 };
     }
   },
-  ["guide-hub-sets"],
+  ["guide-hub-sets-v2"],
   { revalidate: 3600, tags: ["guide-sets"] }
 );
 
@@ -330,12 +362,31 @@ export default async function GuideLandingPage() {
           other section heading on this page: centering it (`mx-auto`) made
           the lone block float mid-page while its sibling H2s hug the left
           margin (owner call, เบส 2026-08-07). ── */}
-      <section className="max-w-2xl space-y-4">
+      {/* Full-width two-column intro (owner call เบส 2026-08-07: the single
+          narrow prose column left half the page empty). Paragraph 1 (what the
+          game is) reads as prose; paragraph 2 (Meecard's role) becomes a
+          Surface card with the methodology deep-link — fills the row AND adds
+          the guide→about internal link. Stacks on phones. */}
+      <section className="space-y-4">
         <h2 className="text-h2">{guideHubIntroHeading(lang)}</h2>
-        <div className="space-y-3 text-body leading-relaxed text-muted-foreground">
-          {guideHubIntroParagraphs(lang).map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
-          ))}
+        <div className="grid gap-4 lg:grid-cols-2 lg:gap-8">
+          <p className="text-body leading-relaxed text-muted-foreground">
+            {guideHubIntroParagraphs(lang)[0]}
+          </p>
+          <Surface
+            variant="outline"
+            className="flex flex-col items-start gap-3 self-start p-5"
+          >
+            <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10">
+              <LineChart className="size-[18px] text-primary" />
+            </div>
+            <p className="text-body-sm leading-relaxed text-muted-foreground">
+              {guideHubIntroParagraphs(lang)[1]}
+            </p>
+            <ArrowLink href="/about#methodology">
+              {lang === "TH" ? "วิธีคิดราคากลางของ Meecard" : "How Meecard prices work"}
+            </ArrowLink>
+          </Surface>
         </div>
       </section>
 
@@ -348,66 +399,56 @@ export default async function GuideLandingPage() {
           </p>
         </div>
 
+        {/* Component Kit: these were hand-rolled copies of RelatedPageCard,
+            differing only by a missing chevron. */}
         <div className="grid gap-3 sm:grid-cols-2">
-          <Surface
-            as={Link}
-            href="/"
-            variant="outline"
-            interactive
-            className="group flex items-start gap-3 p-4"
-          >
-            <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-              <LineChart className="size-[18px] text-primary" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-h5 motion-base group-hover:text-primary">
-                {guideHubMarketLinkTitle(lang)}
-              </p>
-              <p className="mt-0.5 text-meta leading-relaxed">
-                {guideHubMarketLinkDesc(lang)}
-              </p>
-            </div>
-          </Surface>
-          <Surface
-            as={Link}
-            href="/opcg/trending"
-            variant="outline"
-            interactive
-            className="group flex items-start gap-3 p-4"
-          >
-            <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-              <Flame className="size-[18px] text-primary" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-h5 motion-base group-hover:text-primary">
-                {guideHubTrendingLinkTitle(lang)}
-              </p>
-              <p className="mt-0.5 text-meta leading-relaxed">
-                {guideHubTrendingLinkDesc(lang)}
-              </p>
-            </div>
-          </Surface>
+          <RelatedPageCard
+            item={{
+              href: "/",
+              icon: LineChart,
+              title: guideHubMarketLinkTitle(lang),
+              description: guideHubMarketLinkDesc(lang),
+            }}
+          />
+          <RelatedPageCard
+            item={{
+              href: "/opcg/trending",
+              icon: Flame,
+              title: guideHubTrendingLinkTitle(lang),
+              description: guideHubTrendingLinkDesc(lang),
+            }}
+          />
         </div>
 
         {sets.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {sets.map((set) => (
-              <Link
-                key={set.code}
-                href={`/opcg/sets/${set.code}`}
-                className="rounded-lg border border-hair bg-muted/40 px-3 py-2 text-body-sm motion-base hover:bg-muted"
-              >
-                <span className="font-semibold">{set.code}</span>{" "}
-                <span className="text-muted-foreground">{getSetName(lang, set)}</span>
-              </Link>
-            ))}
-            <Link
-              href="/opcg/sets"
-              className="flex items-center gap-1 rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 text-body-sm font-medium text-primary motion-base hover:bg-primary/10"
-            >
-              {guideHubPricesAllSets(lang)}
-              <ArrowRight className="size-3.5" />
-            </Link>
+          <div className="space-y-3">
+            {/* Was a row of text-only chips on the one guide page with no imagery
+                at all. Each tile now carries the set's cover art, so a reader who
+                does not yet know a set by its code can recognise it by sight. */}
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {sets.map((set) => (
+                <Link
+                  key={set.code}
+                  href={`/opcg/sets/${set.code}`}
+                  className="group rounded-lg border border-hair bg-muted/40 p-2.5 motion-base hover:bg-muted"
+                >
+                  <div className="relative mx-auto aspect-[63/88] w-14 overflow-hidden rounded bg-muted">
+                    {set.coverUrl && (
+                      <Image
+                        src={set.coverUrl}
+                        alt=""
+                        fill
+                        className="object-contain"
+                        sizes="56px"
+                      />
+                    )}
+                  </div>
+                  <p className="mt-2 text-center text-h5 uppercase">{set.code}</p>
+                  <p className="line-clamp-2 text-center text-meta">{getSetName(lang, set)}</p>
+                </Link>
+              ))}
+            </div>
+            <ArrowLink href="/opcg/sets">{guideHubPricesAllSets(lang)}</ArrowLink>
           </div>
         )}
       </section>

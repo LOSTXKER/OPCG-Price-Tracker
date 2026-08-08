@@ -9,8 +9,8 @@
  *
  * Language rules baked in (doc/seo-content-plan.md §2):
  * - Thai is the primary audience; EN is a reasonable translation, JP mirrors EN.
- * - Both Thai spellings must appear per page: "วันพีซ" in the title/H1,
- *   "วันพีช" at least once in the description or body copy.
+ * - Both Thai spellings must appear per page: "วันพีช" in the title/H1,
+ *   "วันพีซ" at least once in the description or body copy.
  * - Set names are rendered in English wrapped in Thai context words
  *   ("ชุด OP01 Romance Dawn") — `CardSet.nameTh` is NULL for every set.
  */
@@ -22,9 +22,19 @@ import {
   EXPECTED_PARALLEL_SLOTS_PER_BOX,
   PACKS_PER_BOX,
 } from "@/lib/utils/pull-rate";
+import { baseCardCode } from "@/lib/cards/card-code";
 import type { Language } from "@/lib/i18n";
 
-export type SeoFaqItem = { question: string; answer: string };
+export type SeoFaqItem = {
+  question: string;
+  answer: string;
+  /**
+   * Optional read-more rendered inside the answer body by `FaqSection` (and
+   * deliberately kept out of the FAQPage JSON-LD). Several answers here have
+   * always passed one; the type just never said so.
+   */
+  link?: { href: string; label: string };
+};
 
 type Localized<T> = { TH: T; EN: T; JP: T };
 
@@ -61,37 +71,37 @@ export const TOOL_PAGE_METADATA: Record<
   trending: {
     // ≤60 with the " | Meecard" suffix — "อัปเดตทุกวัน" already lives in the
     // description, and the old title ran 65 chars total (SEO round 2).
-    title: "การ์ดวันพีซราคาขึ้นแรงสุดวันนี้ (Trending)",
+    title: "การ์ดวันพีชราคาขึ้นแรงสุดวันนี้ (Trending)",
     description:
       // "ราคาบาทและเยน" was a stale claim — the page shows THB only since the
       // owner cut the yen column (2026-08-06).
-      "จัดอันดับการ์ดวันพีช (One Piece Card Game) ที่ราคาขึ้นและลงแรงที่สุดในรอบ 24 ชั่วโมง 7 วัน และ 30 วัน พร้อมราคาบาทจากตลาดญี่ปุ่น อัปเดตทุกวัน",
+      "จัดอันดับการ์ดวันพีซ (One Piece Card Game) ที่ราคาขึ้นและลงแรงที่สุดในรอบ 24 ชั่วโมง 7 วัน และ 30 วัน พร้อมราคาบาทจากตลาดญี่ปุ่น อัปเดตทุกวัน",
     canonical: "/opcg/trending",
   },
   search: {
-    title: "ค้นหาการ์ดวันพีซ ทุกใบ ทุกชุด พร้อมราคาล่าสุด",
+    title: "ค้นหาการ์ดวันพีช ทุกใบ ทุกชุด พร้อมราคาล่าสุด",
     description:
       // Not "ชื่อไทย": Card.nameTh mirrors the Latin name for every row in
       // production, so promising Thai-name search would be an overclaim.
-      "ค้นหาการ์ดวันพีช (One Piece Card Game) จากชื่อการ์ดหรือรหัสการ์ด เช่น OP13-118 ดูราคากลางเป็นเงินบาท ความหายาก และชุดที่การ์ดอยู่ อัปเดตทุกวัน",
+      "ค้นหาการ์ดวันพีซ (One Piece Card Game) จากชื่อการ์ดหรือรหัสการ์ด เช่น OP13-118 ดูราคากลางเป็นเงินบาท ความหายาก และชุดที่การ์ดอยู่ อัปเดตทุกวัน",
     canonical: "/opcg/search",
   },
   marketOverview: {
-    title: "ภาพรวมตลาดการ์ดวันพีซ — มูลค่าตลาด ราคาเฉลี่ย รายวัน",
+    title: "ภาพรวมตลาดการ์ดวันพีช — มูลค่าตลาด ราคาเฉลี่ย รายวัน",
     description:
-      "สรุปภาพรวมตลาดการ์ดวันพีช (One Piece Card Game) มูลค่ารวมทั้งตลาด ราคาเฉลี่ยต่อใบ สัดส่วนมูลค่าตามความหายาก และชุดที่มูลค่าสูงสุด อัปเดตทุกวันจากตลาดญี่ปุ่น",
+      "สรุปภาพรวมตลาดการ์ดวันพีซ (One Piece Card Game) มูลค่ารวมทั้งตลาด ราคาเฉลี่ยต่อใบ สัดส่วนมูลค่าตามความหายาก และชุดที่มูลค่าสูงสุด อัปเดตทุกวันจากตลาดญี่ปุ่น",
     canonical: "/opcg/market-overview",
   },
   dropCalculator: {
-    title: "คำนวณโอกาสออกการ์ดวันพีซ (Drop Rate) ต่อซอง/กล่อง",
+    title: "คำนวณโอกาสออกการ์ดวันพีช (Drop Rate) ต่อซอง/กล่อง",
     description:
-      "อัตราออกการ์ดวันพีช ต่อซอง ต่อกล่อง และต่อคาตัน — เลือกการ์ดที่อยากได้แล้วดูโอกาสเปิดเจอเป็นเปอร์เซ็นต์ พร้อมต้นทุนโดยประมาณและอัตราออกแยกตามความหายาก",
+      "อัตราออกการ์ดวันพีซ ต่อซอง ต่อกล่อง และต่อคาตัน — เลือกการ์ดที่อยากได้แล้วดูโอกาสเปิดเจอเป็นเปอร์เซ็นต์ พร้อมต้นทุนโดยประมาณและอัตราออกแยกตามความหายาก",
     canonical: "/opcg/drop-calculator",
   },
   deckCalculator: {
-    title: "สร้างเด็ควันพีซ พร้อมคำนวณราคาเด็ครวมเป็นเงินบาท",
+    title: "สร้างเด็ควันพีช พร้อมคำนวณราคาเด็ครวมเป็นเงินบาท",
     description:
-      "สร้างเด็คการ์ดวันพีช (One Piece Card Game) 50 ใบ + Leader แล้วดูราคารวมของทั้งเด็คเป็นเงินบาทและเยนทันที อิงราคากลางจากตลาดญี่ปุ่นที่อัปเดตทุกวัน",
+      "สร้างเด็คการ์ดวันพีซ (One Piece Card Game) 50 ใบ + Leader แล้วดูราคารวมของทั้งเด็คเป็นเงินบาทและเยนทันที อิงราคากลางจากตลาดญี่ปุ่นที่อัปเดตทุกวัน",
     canonical: "/opcg/deck-calculator",
   },
   decks: {
@@ -99,15 +109,15 @@ export const TOOL_PAGE_METADATA: Record<
     // is /opcg/deck-calculator's title. This route is noindexed (SEO round 2,
     // see src/app/decks/layout.tsx) but the title still shows on the browser
     // tab and when the link is shared, so it still needs to read on its own.
-    title: "เด็คและเครื่องมือ — ทางลัดไปเครื่องมือการ์ดวันพีซ",
+    title: "เด็คและเครื่องมือ — ทางลัดไปเครื่องมือการ์ดวันพีช",
     description:
-      "รวมเครื่องมือสำหรับคนเล่นการ์ดวันพีช (One Piece Card Game) — สร้างเด็คพร้อมราคารวม คำนวณโอกาสออกการ์ดต่อกล่อง และเปรียบเทียบราคาการ์ดหลายใบพร้อมกัน",
+      "รวมเครื่องมือสำหรับคนเล่นการ์ดวันพีซ (One Piece Card Game) — สร้างเด็คพร้อมราคารวม คำนวณโอกาสออกการ์ดต่อกล่อง และเปรียบเทียบราคาการ์ดหลายใบพร้อมกัน",
     canonical: "/opcg/decks",
   },
   compare: {
-    title: "เปรียบเทียบราคาการ์ดวันพีซ ทีละหลายใบ",
+    title: "เปรียบเทียบราคาการ์ดวันพีช ทีละหลายใบ",
     description:
-      "เทียบการ์ดวันพีช (One Piece Card Game) หลายใบพร้อมกัน — ราคากลางเป็นเงินบาท ความหายาก ชุดที่อยู่ และกราฟราคาย้อนหลัง เพื่อดูว่าใบไหนคุ้มกว่ากันก่อนซื้อ",
+      "เทียบการ์ดวันพีซ (One Piece Card Game) หลายใบพร้อมกัน — ราคากลางเป็นเงินบาท ความหายาก ชุดที่อยู่ และกราฟราคาย้อนหลัง เพื่อดูว่าใบไหนคุ้มกว่ากันก่อนซื้อ",
     canonical: "/opcg/compare",
   },
 };
@@ -138,7 +148,7 @@ export function buildTrendingHeading(lang: Language): {
     lang,
     thEn(
       {
-        h1: "การ์ดวันพีซราคาขึ้นแรงสุดวันนี้",
+        h1: "การ์ดวันพีชราคาขึ้นแรงสุดวันนี้",
         moversIntro:
           "สามตารางด้านล่างคือ 10 อันดับแรกของแต่ละช่วงเวลา — ราคาลงแรงสุดในรอบ 24 ชั่วโมง และราคาขึ้นแรงสุดในรอบ 7 วันกับ 30 วัน ใช้ดูได้ทั้งการ์ดที่กำลังถูกเทขายระยะสั้นและใบที่ขึ้นต่อเนื่องมาทั้งเดือน",
       },
@@ -204,18 +214,20 @@ export function buildTrendingSummary(
     );
   }
   const pct = `${data.changePct > 0 ? "+" : ""}${data.changePct.toFixed(2)}%`;
+  // Printed card number only — the `_p2` printing suffix is internal.
+  const code = baseCardCode(data.cardCode);
   return pick(
     lang,
     thEn(
-      `จัดอันดับการ์ดวันพีช (One Piece Card Game) ที่ราคาขยับแรงสุดใน 24 ชั่วโมง 7 วัน และ 30 วัน อัปเดตทุกวัน — วันนี้ ${data.name} (${data.cardCode}) ขึ้นแรงสุด ${pct} ราคาล่าสุด ${data.priceThb}`,
-      `The One Piece Card Game cards with the biggest price moves over 24 hours, 7 days and 30 days, updated daily — today's biggest gainer is ${data.name} (${data.cardCode}) at ${pct}, now ${data.priceThb}.`,
+      `จัดอันดับการ์ดวันพีช (One Piece Card Game) ที่ราคาขยับแรงสุดใน 24 ชั่วโมง 7 วัน และ 30 วัน อัปเดตทุกวัน — วันนี้ ${data.name} (${code}) ขึ้นแรงสุด ${pct} ราคาล่าสุด ${data.priceThb}`,
+      `The One Piece Card Game cards with the biggest price moves over 24 hours, 7 days and 30 days, updated daily — today's biggest gainer is ${data.name} (${code}) at ${pct}, now ${data.priceThb}.`,
     ),
   );
 }
 
 /**
  * "How to read this" explainer under the three mover tables (SEO round 3).
- * Targets the Thai search intent "การ์ดวันพีซ น่าเก็บ / น่าลงทุน" — real search
+ * Targets the Thai search intent "การ์ดวันพีช น่าเก็บ / น่าลงทุน" — real search
  * volume with zero on-page coverage before this (only YouTube ranked for it).
  * Purely educational: it teaches how to read the three tables above, not
  * which card to buy — closes with a link to /opcg/most-expensive and an
@@ -224,7 +236,9 @@ export function buildTrendingSummary(
  */
 export function buildTrendingWorthCollectingCopy(lang: Language): {
   h2: string;
-  paragraphs: string[];
+  lead: string;
+  /** Three signals rendered as a card row (Surface grid) — not prose. */
+  tips: { title: string; body: string }[];
   linkLabel: string;
   linkHref: string;
   disclaimer: string;
@@ -233,23 +247,43 @@ export function buildTrendingWorthCollectingCopy(lang: Language): {
     lang,
     thEn(
       {
-        h2: "การ์ดวันพีซใบไหนน่าเก็บตอนนี้ ดูยังไงจากข้อมูล",
-        paragraphs: [
-          "ไม่มีสูตรตายตัวว่าการ์ดใบไหน “น่าเก็บ” หรือ “น่าลงทุน” แต่สามตารางด้านบนคือจุดเริ่มต้นที่อ่านได้จริง การ์ดที่ราคาขึ้นแรงในรอบ 24 ชั่วโมงมักเป็นกระแสระยะสั้น เช่น เพิ่งมีตอนอนิเมะใหม่หรือมีคนไล่ซื้อพร้อมกันเป็นช่วง ราคาลักษณะนี้ขึ้นเร็วและลงเร็วได้เหมือนกัน ควรระวังการไล่ราคาตามกระแส",
-          "ส่วนการ์ดที่ราคาขึ้นต่อเนื่องทั้งในรอบ 7 วันและ 30 วัน มักสะท้อนดีมานด์จริงมากกว่า เช่น การ์ดที่ใช้ในเด็คแข่งยอดนิยม หรือการ์ดที่หายากขึ้นเรื่อยๆ ตามเวลา สัญญาณแบบนี้น่าเชื่อถือกว่าการขึ้นวูบเดียวจากตารางรอบ 24 ชั่วโมง",
-          "ถ้าเป็นฝั่งราคาลงแรง ให้ดูสาเหตุก่อนสรุปว่าดีหรือไม่ดี บางครั้งเป็นแค่คนขายทำกำไรพร้อมกันหลังราคาขึ้นมามาก ซึ่งอาจเป็นโอกาสซื้อ แต่บางครั้งก็เป็นสัญญาณว่าความนิยมกำลังลดลงจริง ต้องเทียบกับข่าวหรือความเปลี่ยนแปลงของเมต้าเด็คประกอบด้วยเสมอ",
+        h2: "การ์ดวันพีชใบไหนน่าเก็บตอนนี้ ดูยังไงจากข้อมูล",
+        lead: "ไม่มีสูตรตายตัวว่าการ์ดใบไหน “น่าเก็บ” หรือ “น่าลงทุน” แต่สามตารางด้านบนคือจุดเริ่มต้นที่อ่านได้จริง",
+        tips: [
+          {
+            title: "ขึ้นแรงใน 24 ชั่วโมง = กระแสระยะสั้น",
+            body: "มักมาจากตอนอนิเมะใหม่หรือคนไล่ซื้อพร้อมกันเป็นช่วง ราคาแบบนี้ขึ้นเร็วและลงเร็วได้เหมือนกัน ระวังการไล่ราคาตามกระแส",
+          },
+          {
+            title: "ขึ้นต่อเนื่อง 7–30 วัน = ดีมานด์จริง",
+            body: "เช่นการ์ดในเด็คแข่งยอดนิยม หรือใบที่หายากขึ้นตามเวลา สัญญาณแบบนี้น่าเชื่อถือกว่าการขึ้นวูบเดียวจากตาราง 24 ชั่วโมง",
+          },
+          {
+            title: "ลงแรง = ต้องหาสาเหตุก่อน",
+            body: "บางครั้งแค่คนขายทำกำไรพร้อมกันหลังราคาขึ้นมามาก (อาจเป็นโอกาสซื้อ) แต่บางครั้งคือความนิยมลดลงจริง เทียบกับข่าวและเมต้าเด็คประกอบเสมอ",
+          },
         ],
-        linkLabel: "ดูการ์ดวันพีซราคาแพงที่สุดตอนนี้",
+        linkLabel: "ดูการ์ดวันพีชราคาแพงที่สุดตอนนี้",
         linkHref: "/opcg/most-expensive",
         disclaimer:
           "ข้อมูลทั้งหมดเป็นสถิติราคาย้อนหลัง ไม่ใช่คำแนะนำการลงทุน ราคาการ์ดขึ้นลงได้ตามความต้องการของตลาดจริง โปรดพิจารณาความเสี่ยงก่อนตัดสินใจซื้อขาย",
       },
       {
         h2: "Which One Piece cards are worth collecting right now",
-        paragraphs: [
-          "There's no fixed formula for which card is “worth collecting” or “worth investing in”, but the three tables above are a real starting point. A card spiking over the last 24 hours is usually short-term hype — a new anime episode, or everyone chasing the same print at once — and prices like that can fall just as fast as they rose, so be careful chasing the price.",
-          "A card climbing steadily over both 7 and 30 days usually reflects real demand instead: a staple in a popular competitive deck, or a print that keeps getting harder to find over time. That pattern is a more reliable signal than a single-day spike in the 24-hour table.",
-          "For the losing side, check the cause before deciding whether it's good or bad. Sometimes it's just profit-taking after a big run-up — a potential buying opportunity — but sometimes it's a real sign that interest is fading. Always cross-check against news or shifts in the competitive meta before deciding either way.",
+        lead: "There's no fixed formula for which card is “worth collecting” or “worth investing in”, but the three tables above are a real starting point.",
+        tips: [
+          {
+            title: "A 24-hour spike = short-term hype",
+            body: "Usually a new anime episode or a rush on one print. Prices like that can fall as fast as they rose — be careful chasing them.",
+          },
+          {
+            title: "Climbing over 7–30 days = real demand",
+            body: "A staple in a popular competitive deck, or a print getting harder to find. A far more reliable signal than a single-day spike.",
+          },
+          {
+            title: "A hard drop = find the cause first",
+            body: "Sometimes just profit-taking after a run-up (a potential buy), sometimes fading interest. Cross-check news and the deck meta.",
+          },
         ],
         linkLabel: "See the most expensive One Piece cards right now",
         linkHref: "/opcg/most-expensive",
@@ -294,7 +328,7 @@ export function buildSearchCopy(lang: Language): {
     lang,
     thEn(
       {
-        h1: "ค้นหาการ์ดวันพีซ",
+        h1: "ค้นหาการ์ดวันพีช",
         intro:
           "พิมพ์ชื่อการ์ดภาษาไทย ภาษาอังกฤษ หรือรหัสการ์ดเพื่อค้นหาการ์ดวันพีช (One Piece Card Game) ทุกใบในฐานข้อมูล ผลการค้นหาจะแสดงราคากลางล่าสุดเป็นเงินบาท ความหายาก และชุดที่การ์ดใบนั้นอยู่ ถ้ายังไม่รู้จะเริ่มตรงไหน เลือกจากชุดการ์ดล่าสุดหรือคำค้นยอดนิยมด้านล่างได้เลย",
         resultsTitle: (query: string, total: number) =>
@@ -331,14 +365,15 @@ export function buildSearchFaq(lang: Language): SeoFaqItem[] {
     thEn(
       [
         {
-          question: "รหัสการ์ดวันพีซอ่านยังไง เช่น OP13-118",
+          question: "รหัสการ์ดวันพีชอ่านยังไง เช่น OP13-118",
           answer:
             "รหัสการ์ดแบ่งเป็นสองส่วน ส่วนหน้าคือรหัสชุด (OP13 = ชุด Booster ลำดับที่ 13, ST = Starter Deck, EB = Extra Booster) ส่วนหลังคือลำดับการ์ดในชุดนั้น เช่น OP13-118 คือการ์ดใบที่ 118 ของชุด OP13 พิมพ์รหัสนี้ในช่องค้นหาได้ตรงๆ",
         },
         {
-          question: "ต่อท้ายด้วย _p1 หรือ _p2 คืออะไร",
+          question: "ทำไมรหัสเดียวกันมีหลายราคา",
           answer:
-            "คือการ์ดลายพิเศษ (parallel / alternate art) ของการ์ดใบเดียวกัน เช่น OP13-118_p1 คือเวอร์ชันลายพิเศษใบที่ 1 ของ OP13-118 ราคาของลายพิเศษมักสูงกว่าลายปกติหลายเท่า เราแยกราคาให้คนละหน้า",
+            "เพราะการ์ดหมายเลขเดียวกันถูกพิมพ์หลายแบบ มีทั้งลายปกติและลายพิเศษ (parallel / alternate art) ที่ภาพวาดคนละภาพ ทุกแบบใช้รหัสเดียวกันบนตัวการ์ด แยกกันที่ความหายาก เช่น OP13-118 ลายปกติเป็น L ส่วนลายพิเศษเป็น P-L ลายพิเศษมักแพงกว่าหลายเท่า เราจึงเก็บราคาแยกคนละหน้า",
+          link: { href: "/guide/rarities", label: "ลายพิเศษ (Parallel) คืออะไร" },
         },
         {
           question: "ค้นหาเป็นภาษาไทยได้ไหม",
@@ -359,9 +394,10 @@ export function buildSearchFaq(lang: Language): SeoFaqItem[] {
             "The first part is the set code (OP13 = the 13th booster set, ST = starter deck, EB = extra booster); the second part is the card number inside that set. OP13-118 is card 118 of set OP13. You can paste the code straight into the search box.",
         },
         {
-          question: "What does the _p1 / _p2 suffix mean?",
+          question: "Why does one card code have several prices?",
           answer:
-            "It marks a parallel (alternate art) print of the same card. OP13-118_p1 is the first parallel version of OP13-118. Parallels usually sell for several times the regular print, so we track them as separate cards.",
+            "Because the same card number is printed more than once — a regular print plus parallel (alternate art) prints with completely different artwork. Every print carries the same number on the card and is told apart by rarity: OP13-118 is L as a regular print and P-L as a parallel. Parallels usually sell for several times the regular print, so each one gets its own price page.",
+          link: { href: "/guide/rarities", label: "What a parallel print is" },
         },
         {
           question: "Can I search in Thai?",
@@ -387,7 +423,7 @@ export function buildSearchFaq(lang: Language): SeoFaqItem[] {
 export function buildMarketOverviewHeading(lang: Language): string {
   return pick(
     lang,
-    thEn("ภาพรวมตลาดการ์ดวันพีซ", "One Piece card market overview"),
+    thEn("ภาพรวมตลาดการ์ดวันพีช", "One Piece card market overview"),
   );
 }
 
@@ -439,7 +475,7 @@ export function buildMarketMethodologyFaq(lang: Language): SeoFaqItem[] {
         // Generic source/frequency/Raw-vs-PSA knowledge lives once at
         // /about#methodology and /guide/rarities — linked, not restated.
         {
-          question: "ราคาการ์ดวันพีซบน Meecard มาจากไหน",
+          question: "ราคาการ์ดวันพีชบน Meecard มาจากไหน",
           answer:
             "ราคากลางอ้างอิงจากตลาดญี่ปุ่น อัปเดตทุกวัน และทุกหน้าราคาบนเว็บใช้ชุดข้อมูลเดียวกันหมด",
           link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
@@ -453,7 +489,7 @@ export function buildMarketMethodologyFaq(lang: Language): SeoFaqItem[] {
           question: "ตัวเลขบนหน้านี้เป็นราคาเกรดไหน",
           answer:
             "เป็นราคา Raw (การ์ดที่ยังไม่ได้ส่งเกรด) ทั้งหมด ซึ่งเป็นราคาที่คนไทยซื้อขายกันปกติ",
-          link: { href: "/guide/rarities", label: "ความหายากและเกรดการ์ดวันพีซ" },
+          link: { href: "/guide/rarities", label: "ความหายากและเกรดการ์ดวันพีช" },
         },
         {
           question: "การเปลี่ยนแปลง 7 วันคิดยังไง",
@@ -517,8 +553,8 @@ export function buildDropCalculatorCopy(lang: Language): {
     lang,
     thEn(
       {
-        h1: "คำนวณโอกาสออกการ์ดวันพีซต่อซองและต่อกล่อง",
-        howTitle: "อัตราออกการ์ดวันพีซคิดยังไง",
+        h1: "คำนวณโอกาสออกการ์ดวันพีชต่อซองและต่อกล่อง",
+        howTitle: "อัตราออกการ์ดวันพีชคิดยังไง",
         howParagraphs: [
           `กล่อง (box) ของการ์ดวันพีช ฉบับญี่ปุ่น 1 กล่องมี ${packs} ซอง ซองละ ${cards} ใบ รวม ${packs * cards} ใบต่อกล่อง และ 1 คาตัน (carton) มี ${boxes} กล่อง ตัวเลขพวกนี้คือฐานของการคำนวณทุกอย่างในหน้านี้`,
           `ในหนึ่งกล่องจะการันตีการ์ดระดับ SR ประมาณ 3 ใบเสมอ ส่วนการ์ดลายพิเศษ (parallel) ออกเฉลี่ยประมาณ ${parallels} ใบต่อกล่อง และการ์ดระดับ SEC จะออกเฉพาะกล่องที่เป็นแพตเทิร์น SEC เท่านั้น ซึ่งมีโอกาสราว ${Math.round(BOX_PATTERNS[0].prob * 100)}% ของกล่องทั้งหมด หรือพูดง่ายๆ คือประมาณ 1 ใบทุก 3 กล่อง`,
@@ -541,7 +577,7 @@ export function buildDropCalculatorCopy(lang: Language): {
         readNext: [
           {
             href: "/guide/rarities",
-            title: "ความหายากการ์ดวันพีซ",
+            title: "ความหายากการ์ดวันพีช",
             description: "C ถึง Treasure Rare — ระดับไหนออกยากและแพงเพราะอะไร",
           },
           {
@@ -606,7 +642,7 @@ export function buildDropCalculatorFaq(lang: Language): SeoFaqItem[] {
     thEn(
       [
         {
-          question: `กล่องการ์ดวันพีซ 1 กล่องมีกี่ซอง กี่ใบ`,
+          question: `กล่องการ์ดวันพีช 1 กล่องมีกี่ซอง กี่ใบ`,
           answer: `กล่องฉบับญี่ปุ่น 1 กล่องมี ${PACKS_PER_BOX} ซอง ซองละ ${CARDS_PER_PACK_JP} ใบ รวม ${PACKS_PER_BOX * CARDS_PER_PACK_JP} ใบต่อกล่อง และ 1 คาตันมี ${BOXES_PER_CARTON} กล่อง`,
         },
         {
@@ -681,8 +717,8 @@ export function buildDeckCalculatorCopy(lang: Language): {
     lang,
     thEn(
       {
-        h1: "สร้างเด็ควันพีซ พร้อมราคารวม",
-        costTitle: "เด็ควันพีซราคาเท่าไหร่",
+        h1: "สร้างเด็ควันพีช พร้อมราคารวม",
+        costTitle: "เด็ควันพีชราคาเท่าไหร่",
         costParagraphs: [
           "เด็คการ์ดวันพีช หนึ่งชุดประกอบด้วยการ์ด Leader 1 ใบ และการ์ดในเด็คอีก 50 ใบ ราคารวมของเด็คจึงขึ้นอยู่กับว่าใช้การ์ดระดับไหนเป็นแกน เด็คที่ใช้การ์ดระดับ C/UC/R เป็นหลักมักจบที่หลักร้อยถึงหลักพันบาท ส่วนเด็คที่ต้องใส่การ์ดระดับ SR หรือ Leader ยอดนิยมใบละหลายพันบาท อย่างละ 4 ใบ ราคารวมขยับขึ้นไปหลักหมื่นได้ไม่ยาก",
           "เครื่องมือนี้คิดราคารวมให้อัตโนมัติจากราคากลางล่าสุดของการ์ดแต่ละใบ คูณด้วยจำนวนที่ใส่ในเด็ค แล้วรวมกับราคา Leader ทำให้เห็นทันทีว่าถ้าจะเล่นเด็คนี้จริงต้องใช้งบเท่าไหร่ และการ์ดใบไหนกินงบมากที่สุด",
@@ -746,7 +782,7 @@ export function buildDeckCalculatorFaq(lang: Language): SeoFaqItem[] {
     thEn(
       [
         {
-          question: "เด็ควันพีซใช้การ์ดกี่ใบ",
+          question: "เด็ควันพีชใช้การ์ดกี่ใบ",
           answer:
             "การ์ด Leader 1 ใบ บวกการ์ดในเด็คอีก 50 ใบพอดี ไม่มากไม่น้อยกว่านี้ ส่วนการ์ด DON!! อีก 10 ใบเป็นกองแยกที่ไม่นับรวมใน 50 ใบ",
         },
@@ -808,7 +844,7 @@ export function buildDecksHubCopy(lang: Language): {
     lang,
     thEn(
       {
-        h1: "เด็คและเครื่องมือการ์ดวันพีซ",
+        h1: "เด็คและเครื่องมือการ์ดวันพีช",
         intro:
           "รวมเครื่องมือที่ใช้บ่อยสำหรับคนเล่นและคนสะสมการ์ดวันพีช (One Piece Card Game) ทุกตัวใช้ราคากลางชุดเดียวกันกับหน้าเช็คราคา จึงเทียบตัวเลขข้ามเครื่องมือได้โดยไม่ต้องแปลงเอง",
         toolsTitle: "เครื่องมือทั้งหมด",
@@ -866,20 +902,30 @@ export function buildCompareCopy(lang: Language): {
   h1: string;
   intro: string;
   howTitle: string;
-  howParagraphs: string[];
+  /** Three use-cases rendered as a card row (Surface grid) — not prose. */
+  howTips: { title: string; body: string }[];
 } {
   return pick(
     lang,
     thEn(
       {
-        h1: "เปรียบเทียบราคาการ์ดวันพีซ",
+        h1: "เปรียบเทียบราคาการ์ดวันพีช",
         intro:
           "เลือกการ์ดวันพีช (One Piece Card Game) ได้หลายใบพร้อมกัน แล้วดูราคากลาง ความหายาก ชุดที่อยู่ และกราฟราคาย้อนหลังเรียงข้างกันในหน้าเดียว เหมาะกับตอนตัดสินใจว่าจะซื้อใบไหนก่อน หรือจะขายใบไหนตอนราคาขึ้น",
         howTitle: "ใช้หน้าเปรียบเทียบยังไงให้คุ้ม",
-        howParagraphs: [
-          "เทียบลายปกติกับลายพิเศษของการ์ดใบเดียวกัน เพื่อดูว่าส่วนต่างราคาคุ้มกับความสวยหรือไม่ รหัสการ์ดที่ลงท้ายด้วย _p1 คือลายพิเศษของใบนั้น",
-          "เทียบการ์ดที่ทำหน้าที่คล้ายกันในเด็คเดียวกัน เพื่อเลือกตัวที่ราคาถูกกว่าเมื่อผลในเกมใกล้เคียงกัน",
-          "ดูกราฟย้อนหลังพร้อมกันหลายใบ จะเห็นว่าใบไหนราคานิ่ง ใบไหนขึ้นลงตามกระแสสั้นๆ ก่อนตัดสินใจซื้อจริง",
+        howTips: [
+          {
+            title: "ลายปกติ vs ลายพิเศษ",
+            body: "เทียบการ์ดหมายเลขเดียวกันคนละแบบพิมพ์ — ลายปกติกับลายพิเศษที่ขึ้นต้นความหายากด้วย P- ดูว่าส่วนต่างราคาคุ้มกับความสวยหรือไม่",
+          },
+          {
+            title: "ตำแหน่งเดียวกันในเด็ค",
+            body: "การ์ดที่ทำหน้าที่คล้ายกัน เลือกใบที่ราคาถูกกว่าเมื่อผลในเกมใกล้เคียงกัน",
+          },
+          {
+            title: "อ่านกราฟหลายใบพร้อมกัน",
+            body: "เห็นชัดว่าใบไหนราคานิ่ง ใบไหนขึ้นลงตามกระแสสั้นๆ ก่อนตัดสินใจซื้อจริง",
+          },
         ],
       },
       {
@@ -887,10 +933,19 @@ export function buildCompareCopy(lang: Language): {
         intro:
           "Line several One Piece Card Game cards up side by side — reference price, rarity, set and price history in one view. Handy when deciding which card to buy first, or which to sell into a spike.",
         howTitle: "Getting the most out of the comparison",
-        howParagraphs: [
-          "Compare a regular print with its parallel (the _p1 suffix) to see whether the premium is worth the art.",
-          "Compare cards that fill the same slot in a deck and take the cheaper one when the in-game effect is close.",
-          "Reading several price histories together shows which cards hold value and which spike on hype.",
+        howTips: [
+          {
+            title: "Regular vs parallel art",
+            body: "Compare one card number across its printings — the regular print against the parallel, whose rarity starts with P- — to see whether the premium is worth the art.",
+          },
+          {
+            title: "Same slot in a deck",
+            body: "Cards that do a similar job — take the cheaper one when the in-game effect is close.",
+          },
+          {
+            title: "Read several charts at once",
+            body: "See which cards hold value and which spike on hype before you buy.",
+          },
         ],
       },
     ),

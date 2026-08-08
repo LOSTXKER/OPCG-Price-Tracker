@@ -1,7 +1,7 @@
 import type { Language } from "@/lib/i18n";
 
 /**
- * Copy for /guide/versions — "การ์ดวันพีซ ฉบับญี่ปุ่น อังกฤษ ไทย ต่างกันยังไง".
+ * Copy for /guide/versions — "การ์ดวันพีช ฉบับญี่ปุ่น อังกฤษ ไทย ต่างกันยังไง".
  *
  * Chosen over a Thai shop directory (the original plan) for two reasons: the
  * buying channels are already covered in depth by /guide/buying, and no Thai
@@ -20,7 +20,7 @@ import type { Language } from "@/lib/i18n";
  * per-shop directory, but one fact IS now verifiable — KIDZ & KITZ is
  * Bandai's official card-game importer/distributor in Thailand and runs the
  * region's tournament series (Kidz and Kitz Card Game Fest, Bandai Card Fest
- * Bangkok). That's added as its own section below to catch the "การ์ดวันพีซ
+ * Bangkok). That's added as its own section below to catch the "การ์ดวันพีช
  * ภาษาไทย" query, which currently has no real SERP answer (only stale
  * blogspot posts).
  */
@@ -32,9 +32,9 @@ function pick<T>(lang: Language, copy: Copy<T>): T {
 }
 
 export const GUIDE_VERSIONS_META = {
-  title: "การ์ดวันพีซ ฉบับญี่ปุ่นกับอังกฤษ ต่างกันยังไง",
+  title: "การ์ดวันพีช ฉบับญี่ปุ่นกับอังกฤษ ต่างกันยังไง",
   description:
-    "การ์ดวันพีช (OPCG) ไม่มีฉบับภาษาไทย — ฉบับญี่ปุ่นกับอังกฤษต่างกันตรงไหน ใช้แข่งในไทยได้ทั้งคู่ไหม ผสมในเด็คเดียวกันได้ไหม และทำไมราคาบนเว็บอ้างอิงตลาดญี่ปุ่น",
+    "การ์ดวันพีซ (OPCG) ไม่มีฉบับภาษาไทย — ฉบับญี่ปุ่นกับอังกฤษต่างกันตรงไหน ใช้แข่งในไทยได้ทั้งคู่ไหม ผสมในเด็คเดียวกันได้ไหม และทำไมราคาบนเว็บอ้างอิงตลาดญี่ปุ่น",
 } as const;
 
 /**
@@ -65,7 +65,7 @@ export function guideVersionsUpdatedLabel(lang: Language): string {
 
 export function guideVersionsH1(lang: Language): string {
   return pick(lang, {
-    TH: "การ์ดวันพีซ ฉบับญี่ปุ่นกับอังกฤษ ต่างกันยังไง",
+    TH: "การ์ดวันพีช ฉบับญี่ปุ่นกับอังกฤษ ต่างกันยังไง",
     EN: "Japanese vs English One Piece cards — what actually differs",
     JP: "ワンピースカード 日本語版と英語版の違い",
   });
@@ -93,7 +93,7 @@ export function guideVersionsIntro(lang: Language): string[] {
     ];
   }
   return [
-    "การ์ดวันพีซ (One Piece Card Game) พิมพ์ออกมา 5 ภาษา คือ ญี่ปุ่น อังกฤษ ฝรั่งเศส จีนตัวย่อ และเกาหลี — ไม่มีฉบับภาษาไทย คนไทยทุกคนจึงต้องเลือกระหว่างฉบับญี่ปุ่นกับฉบับอังกฤษอยู่ดี",
+    "การ์ดวันพีช (One Piece Card Game) พิมพ์ออกมา 5 ภาษา คือ ญี่ปุ่น อังกฤษ ฝรั่งเศส จีนตัวย่อ และเกาหลี — ไม่มีฉบับภาษาไทย คนไทยทุกคนจึงต้องเลือกระหว่างฉบับญี่ปุ่นกับฉบับอังกฤษอยู่ดี",
     "เมื่อก่อนการเลือกไม่ยาก เพราะในโซนนี้ใช้แข่งได้เฉพาะฉบับญี่ปุ่นมานาน แต่เรื่องนี้เปลี่ยนไปแล้วตั้งแต่ 28 พฤศจิกายน 2025",
   ];
 }
@@ -312,7 +312,7 @@ export function guideVersionsPriceBody(lang: Language): VersionsPriceParagraph[]
 
 export function guideVersionsThaiHeading(lang: Language): string {
   return pick(lang, {
-    TH: "การ์ดวันพีซมีภาษาไทยไหม แล้วใครจัดจำหน่ายในไทย",
+    TH: "การ์ดวันพีชมีภาษาไทยไหม แล้วใครจัดจำหน่ายในไทย",
     EN: "Is there a Thai-language version — and who distributes in Thailand?",
     JP: "タイ語版はある？ タイの正規販売元は？",
   });
@@ -334,7 +334,7 @@ export function guideVersionsThaiBody(lang: Language): string[] {
     ];
   }
   return [
-    "อย่างที่บอกไปข้างต้น การ์ดวันพีซยังไม่มีฉบับที่พิมพ์เป็นภาษาไทย คนไทยเล่นกันด้วยฉบับญี่ปุ่นหรืออังกฤษ",
+    "อย่างที่บอกไปข้างต้น การ์ดวันพีชยังไม่มีฉบับที่พิมพ์เป็นภาษาไทย คนไทยเล่นกันด้วยฉบับญี่ปุ่นหรืออังกฤษ",
     "ผู้นำเข้าและจัดจำหน่าย Bandai card game อย่างเป็นทางการในไทยคือ KIDZ & KITZ (คิดซ์ แอนด์ คิทซ์) ซึ่งจัดงานแข่งขันในไทยต่อเนื่อง ทั้ง Kidz and Kitz Card Game Fest และ Bandai Card Fest Bangkok",
     "Bandai ประกาศแผนเปลี่ยนไปวางขายพร้อมกันทั่วโลก (worldwide simultaneous release) เริ่มปี 2026 คือทุกภูมิภาคจะได้ชุดใหม่วันเดียวกัน ส่วนเรื่องนี้จะทำให้มีฉบับภาษาไทยตามมาไหมยังไม่มีการประกาศ ตอนนี้จึงนับเป็นแค่การเปลี่ยนเรื่องจังหวะวางขาย ไม่ใช่การเปลี่ยนเรื่องภาษา",
   ];
@@ -446,14 +446,14 @@ export function guideVersionsFaq(
   }
   return [
     {
-      question: "การ์ดวันพีซมีฉบับภาษาไทยไหม?",
+      question: "การ์ดวันพีชมีฉบับภาษาไทยไหม?",
       answer:
         "ไม่มี ภาษาที่ Bandai พิมพ์ออกมาคือ ญี่ปุ่น อังกฤษ ฝรั่งเศส จีนตัวย่อ และเกาหลี ผู้เล่นไทยใช้ฉบับญี่ปุ่นหรืออังกฤษ แล้วอาศัยคำแปลที่คอมมูนิตี้ทำกันเองสำหรับข้อความบนการ์ดฉบับญี่ปุ่น",
     },
     {
-      question: "การ์ดวันพีซมีภาษาไทยไหม?",
+      question: "การ์ดวันพีชมีภาษาไทยไหม?",
       answer:
-        "ยังไม่มี การ์ดวันพีซยังไม่มีฉบับที่พิมพ์เป็นภาษาไทย ผู้เล่นไทยเล่นฉบับญี่ปุ่นหรืออังกฤษที่นำเข้าโดยผู้จัดจำหน่ายทางการในไทยอย่าง KIDZ & KITZ",
+        "ยังไม่มี การ์ดวันพีชยังไม่มีฉบับที่พิมพ์เป็นภาษาไทย ผู้เล่นไทยเล่นฉบับญี่ปุ่นหรืออังกฤษที่นำเข้าโดยผู้จัดจำหน่ายทางการในไทยอย่าง KIDZ & KITZ",
     },
     {
       question: "เอาการ์ดฉบับอังกฤษไปแข่งในไทยได้ไหม?",

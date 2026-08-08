@@ -13,6 +13,7 @@ import { MarketplaceErrorState } from "./marketplace-error-state";
 import { t } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
 import { parseCondition } from "@/lib/api/parse-condition";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 export const dynamic = "force-dynamic";
 
@@ -214,7 +215,10 @@ export default async function MarketplacePage({
             initialTotal={total}
             initialPage={resolvedPage}
             pageSize={PAGE_SIZE}
-            initialSearch={cardCodeKey || searchKey}
+            // Visible search box shows the printed number; the exact filter
+            // below still carries the full code (`initialCardCode`), so the
+            // deep link from a card page keeps matching that one printing.
+            initialSearch={cardCodeKey ? baseCardCode(cardCodeKey) : searchKey}
             initialCardCode={cardCodeKey}
             initialCondition={conditionKey}
             initialRarities={rarityKeys}

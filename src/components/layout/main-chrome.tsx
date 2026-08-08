@@ -77,7 +77,10 @@ const FULL_WIDTH_ROUTES: ReadonlyArray<RegExp> = [
 const ROUTE_WIDTH: ReadonlyArray<readonly [RegExp | string, PageWidth]> = [
   // Reading-optimised pages (long-form text, single column)
   [/^\/blog\/.+/, "reading"],
-  [/^\/guide\/.+/, "reading"],
+  // Guide chapters carry tables, card strips and tier grids alongside the
+  // prose — they get the wider `article` column; `.guide-article` in
+  // globals.css keeps the running text itself at reading measure.
+  [/^\/guide\/.+/, "article"],
   // Narrow product pages (single-record forms / detail)
   [/^\/orders\/[^/]+$/, "narrow"],
 ];

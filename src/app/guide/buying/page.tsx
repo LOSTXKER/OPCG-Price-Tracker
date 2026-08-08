@@ -1,23 +1,39 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import {
+  AlertTriangle,
   Check,
+  Dices,
+  Eye,
   Flame,
   Info,
   Layers,
   LineChart,
+  Receipt,
+  ShieldAlert,
   Sparkles,
   Store,
+  Truck,
   X,
 } from "lucide-react";
 import { Surface } from "@/components/ui/surface";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { FaqSection } from "@/components/shared/faq-section";
 import { PageHeader } from "@/components/layout/page-header";
+import { CardThumbStrip } from "@/components/guide/card-thumb-strip";
 import { GuideCallout } from "@/components/guide/guide-callout";
+import { GuideFigure } from "@/components/guide/guide-figure";
+import { GuidePointList, type GuidePoint } from "@/components/guide/guide-point-list";
+import { GuidePriceFacts } from "@/components/guide/guide-price-facts";
 import { GuidePrevNext } from "@/components/guide/guide-prev-next";
 import { GuideSourceList } from "@/components/guide/guide-source-list";
-import { RelatedPages } from "@/components/shared/related-pages";
+import { RelatedPageCard, RelatedPages } from "@/components/shared/related-pages";
+import { baseCardCode } from "@/lib/cards/card-code";
+import {
+  getGuideLatestBooster,
+  getGuideParallelPair,
+  getGuidePriceSnapshot,
+} from "@/lib/guide/card-examples";
+import { formatPriceSnapshot, formatThb } from "@/lib/guide/price-format";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { isMarketplaceEnabled } from "@/lib/marketplace/feature-flag";
@@ -25,8 +41,10 @@ import { t, type Language } from "@/lib/i18n";
 import { getServerLanguage } from "@/lib/i18n/server";
 import {
   GUIDE_META,
+  guideBuyBoxFigure,
   guideBuyBoxHeading,
   guideBuyBoxParagraphs,
+  guideBuyVersionFigure,
   guideBuyCautionHeading,
   guideBuyCautionItems,
   guideBuyChannels,
@@ -72,6 +90,60 @@ export default async function BuyingGuidePage() {
   const marketplaceEnabled = await isMarketplaceEnabled();
   const channels = guideBuyChannels(lang);
   const tips = buildTips(lang);
+
+  // Live catalogue rows for the two figures below. All three helpers are cached
+  // for an hour and degrade to null, so the prose still renders without a DB.
+  const [parallelPair, latestBooster, snapshotAt] = await Promise.all([
+    getGuideParallelPair(),
+    getGuideLatestBooster(),
+    getGuidePriceSnapshot(),
+  ]);
+  const versionFigure = guideBuyVersionFigure(lang);
+  const boxFigure = guideBuyBoxFigure(lang);
+
+  // The import-tax paragraph is the one with real money consequences, and it was
+  // buried as the third of four consecutive paragraphs. Lifting it into a warning
+  // callout breaks the run and gives it the weight it earns.
+  const japanParagraphs = guideBuyJapanParagraphs(lang);
+  const japanTaxIndex = 2;
+
+  const cautionPoints: GuidePoint[] = guideBuyCautionItems(lang).map((item, i) => ({
+    id: `caution-${i}`,
+    body: item,
+    icon: [Eye, Receipt, Truck, ShieldAlert, AlertTriangle][i] ?? ShieldAlert,
+  }));
+
+  const boxFacts = latestBooster
+    ? [
+        {
+          id: "cards",
+          label: boxFigure.cardsLabel,
+          value: latestBooster.cardCount.toLocaleString("en-US"),
+          sub: latestBooster.code.toUpperCase(),
+        },
+        latestBooster.packsPerBox && latestBooster.cardsPerPack
+          ? {
+              id: "packs",
+              label: boxFigure.packsLabel,
+              value: `${latestBooster.packsPerBox} × ${latestBooster.cardsPerPack}`,
+              sub: `= ${latestBooster.packsPerBox * latestBooster.cardsPerPack}`,
+            }
+          : null,
+        // The newest set's priciest card is often the very parallel the version
+        // figure above already shows (both pick "dearest parallel"), which reads
+        // as a rendering bug. Drop the fact rather than print the card twice.
+        latestBooster.topCard?.priceThb != null &&
+        latestBooster.topCard.cardCode !== parallelPair?.parallel.cardCode
+          ? {
+              id: "top",
+              label: boxFigure.topCardLabel,
+              value: formatThb(latestBooster.topCard.priceThb),
+              sub: baseCardCode(latestBooster.topCard.cardCode),
+              href: `/opcg/cards/${latestBooster.topCard.cardCode}`,
+            }
+          : null,
+      ].filter((fact): fact is NonNullable<typeof fact> => fact !== null)
+    : [];
 
   return (
     <div className="mx-auto max-w-3xl space-y-12">
@@ -148,9 +220,15 @@ export default async function BuyingGuidePage() {
       <section className="space-y-4">
         <h2 className="font-sans text-h2">{guideBuyJapanHeading(lang)}</h2>
         <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
-          {guideBuyJapanParagraphs(lang).map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
-          ))}
+          {japanParagraphs.map((paragraph, i) =>
+            i === japanTaxIndex ? (
+              <GuideCallout key={i} tone="warning" icon={AlertTriangle}>
+                <p className="text-body-sm leading-relaxed">{paragraph}</p>
+              </GuideCallout>
+            ) : (
+              <p key={i}>{paragraph}</p>
+            ),
+          )}
         </div>
       </section>
 
@@ -167,6 +245,39 @@ export default async function BuyingGuidePage() {
             </Surface>
           ))}
         </div>
+
+        {/* This section tells the reader to check which *version* they are being
+            quoted, then never showed one. Two real prints of the same card, with
+            their real prices, make the point in a glance. */}
+        {parallelPair &&
+          parallelPair.base.priceThb != null &&
+          parallelPair.parallel.priceThb != null && (
+            <GuideFigure
+              eyebrow={`${versionFigure.eyebrow} — ${baseCardCode(parallelPair.base.cardCode)}`}
+              caption={versionFigure.caption}
+              snapshot={formatPriceSnapshot(lang, snapshotAt)}
+            >
+              <CardThumbStrip
+                size="xl"
+                showCaption
+                className="justify-center gap-6"
+                cards={[
+                  {
+                    cardCode: parallelPair.base.cardCode,
+                    name: formatThb(parallelPair.base.priceThb),
+                    imageUrl: parallelPair.base.imageUrl,
+                    label: versionFigure.standardLabel,
+                  },
+                  {
+                    cardCode: parallelPair.parallel.cardCode,
+                    name: formatThb(parallelPair.parallel.priceThb),
+                    imageUrl: parallelPair.parallel.imageUrl,
+                    label: versionFigure.parallelLabel,
+                  },
+                ]}
+              />
+            </GuideFigure>
+          )}
 
         <GuideCallout tone="info" icon={Info}>
           <div>
@@ -213,24 +324,33 @@ export default async function BuyingGuidePage() {
             <p key={i}>{paragraph}</p>
           ))}
         </div>
-        <Link
-          href="/opcg/drop-calculator"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-primary/5 px-4 py-2.5 text-sm font-medium text-primary motion-base hover:bg-primary/10"
-        >
-          {t(lang, "guideHomeToolDropTitle")}
-        </Link>
+        {/* "Box or singles?" is an arithmetic question, so give the reader the
+            actual arithmetic for a set they can go and buy today. */}
+        {boxFacts.length > 0 && (
+          <GuidePriceFacts
+            eyebrow={`${boxFigure.eyebrow} — ${latestBooster!.name}`}
+            facts={boxFacts}
+            snapshot={formatPriceSnapshot(lang, snapshotAt)}
+          />
+        )}
+        {boxFacts.length > 0 && (
+          <p className="text-body-sm leading-relaxed text-muted-foreground">{boxFigure.caption}</p>
+        )}
+
+        <RelatedPageCard
+          item={{
+            href: "/opcg/drop-calculator",
+            icon: Dices,
+            title: t(lang, "guideHomeToolDropTitle"),
+            description: t(lang, "guideHomeToolDropDesc"),
+          }}
+        />
       </section>
 
       {/* ── 7. Before you pay ── */}
       <section className="space-y-4">
         <h2 className="font-sans text-h2">{guideBuyCautionHeading(lang)}</h2>
-        <Surface variant="outline" className="divide-y divide-hair">
-          {guideBuyCautionItems(lang).map((item, i) => (
-            <p key={i} className="px-4 py-3 text-sm leading-relaxed text-muted-foreground">
-              {item}
-            </p>
-          ))}
-        </Surface>
+        <GuidePointList points={cautionPoints} tone="warning" />
       </section>
 
       {/* ── 8. Existing buying tips ── */}

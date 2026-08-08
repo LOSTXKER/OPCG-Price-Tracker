@@ -1,15 +1,36 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AlertTriangle, LineChart, ShieldCheck, Store } from "lucide-react";
+import {
+  AlertTriangle,
+  AlarmClock,
+  Crop,
+  ImageOff,
+  Info,
+  Layers,
+  LineChart,
+  PackageOpen,
+  PackageX,
+  ShieldCheck,
+  Sparkles,
+  Store,
+  TrendingDown,
+  Type,
+} from "lucide-react";
 
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { FaqSection } from "@/components/shared/faq-section";
 import { RelatedPages } from "@/components/shared/related-pages";
 import { PageHeader } from "@/components/layout/page-header";
 import { Surface } from "@/components/ui/surface";
+import { CardThumbStrip } from "@/components/guide/card-thumb-strip";
 import { GuideCallout } from "@/components/guide/guide-callout";
+import { GuideFigure } from "@/components/guide/guide-figure";
+import { GuidePointList, type GuidePoint } from "@/components/guide/guide-point-list";
 import { GuidePrevNext } from "@/components/guide/guide-prev-next";
 import { GuideSourceList } from "@/components/guide/guide-source-list";
+import { getGuidePriceSnapshot, getGuideTopCards } from "@/lib/guide/card-examples";
+import { formatPriceSnapshot, formatThb } from "@/lib/guide/price-format";
+import { CompareSchematic, LightTestSchematic } from "./card-schematics";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { clientEnv } from "@/lib/env";
@@ -38,8 +59,33 @@ import {
   guideAuthTerms,
   guideAuthTermsHeading,
   guideAuthUpdatedLabel,
+  guideAuthCompareLabels,
+  guideAuthLightLabels,
+  guideAuthValueFigure,
 } from "@/lib/seo/copy/guide-authenticity";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
+
+/**
+ * Icons for the on-card checks and the listing red flags. Kept next to the page
+ * rather than in the copy module so the copy stays plain data (and translatable)
+ * while the visual treatment lives with the markup. Keyed by the stable `id`
+ * each copy entry already carries, so a copy reorder can't desync them.
+ */
+const CHECK_ICONS: Record<string, typeof Layers> = {
+  back: Layers,
+  print: Type,
+  foil: Sparkles,
+  cut: Crop,
+  stock: Layers,
+};
+
+const RED_FLAG_ICONS: Record<string, typeof Layers> = {
+  price: TrendingDown,
+  photos: ImageOff,
+  "loose-packs": PackageOpen,
+  resealed: PackageX,
+  pressure: AlarmClock,
+};
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +99,46 @@ export const metadata: Metadata = buildPageMetadata({
 export default async function AuthenticityGuidePage() {
   const lang = await getServerLanguage();
   const baseUrl = clientEnv().NEXT_PUBLIC_APP_URL;
+
+  // Real catalogue data for the "counterfeits follow value" figure. Both are
+  // cached for an hour and degrade to empty/null, so the page still renders its
+  // prose if the database is unreachable — see @/lib/guide/card-examples.
+  const [topCards, snapshotAt] = await Promise.all([
+    getGuideTopCards(6),
+    getGuidePriceSnapshot(),
+  ]);
+  const pricedTopCards = topCards.filter((card) => card.priceThb != null);
+  const valueFigure = guideAuthValueFigure(lang);
+  const compareLabels = guideAuthCompareLabels(lang);
+  const lightLabels = guideAuthLightLabels(lang);
+
+  const [introOpening, introCaveat, ...introRest] = guideAuthIntro(lang);
+
+  const checkPoints: GuidePoint[] = guideAuthChecks(lang).map((check) => ({
+    id: `check-${check.id}`,
+    title: check.title,
+    body: check.body,
+    icon: CHECK_ICONS[check.id],
+  }));
+
+  const redFlagPoints: GuidePoint[] = guideAuthRedFlags(lang).map((flag) => ({
+    id: `flag-${flag.id}`,
+    icon: RED_FLAG_ICONS[flag.id],
+    body: (
+      <>
+        {flag.before}
+        {flag.link && (
+          <>
+            {" "}
+            <Link href={flag.link.href} className="font-medium text-primary hover:underline">
+              {flag.link.label}
+            </Link>
+            {flag.after && ` ${flag.after}`}
+          </>
+        )}
+      </>
+    ),
+  }));
 
   return (
     <>
@@ -95,44 +181,57 @@ export default async function AuthenticityGuidePage() {
       </PageHeader>
 
       <div className="mt-8 space-y-12">
-        <section className="max-w-3xl space-y-3">
-          {guideAuthIntro(lang).map((paragraph) => (
+        {/* The single most important caveat on this page used to sit as the
+            middle of three consecutive paragraphs. Pulling it into a callout
+            both breaks the wall of text and gives it the weight it deserves. */}
+        <section className="space-y-4">
+          {introOpening && <p className="text-body leading-relaxed">{introOpening}</p>}
+          {introCaveat && (
+            <GuideCallout tone="info" icon={Info}>
+              <p className="text-body-sm leading-relaxed">{introCaveat}</p>
+            </GuideCallout>
+          )}
+          {introRest.map((paragraph) => (
             <p key={paragraph.slice(0, 24)} className="text-body leading-relaxed">
               {paragraph}
             </p>
           ))}
         </section>
 
-        <section className="space-y-3">
+        <section className="space-y-4">
           <h2 className="text-h2">{guideAuthBestMethodHeading(lang)}</h2>
           {guideAuthBestMethodBody(lang).map((paragraph) => (
-            <p key={paragraph.slice(0, 24)} className="max-w-3xl text-body leading-relaxed">
+            <p key={paragraph.slice(0, 24)} className="text-body leading-relaxed">
               {paragraph}
             </p>
           ))}
+          <GuideFigure>
+            <CompareSchematic
+              lightLabel={compareLabels.light}
+              knownLabel={compareLabels.known}
+              suspectLabel={compareLabels.suspect}
+            />
+          </GuideFigure>
         </section>
 
         <section className="space-y-4">
           <h2 className="text-h2">{guideAuthChecksHeading(lang)}</h2>
-          <Surface variant="outline" className="divide-y divide-hair overflow-hidden">
-            {guideAuthChecks(lang).map((check) => (
-              <div key={check.id} id={`check-${check.id}`} className="scroll-mt-24 px-5 py-4">
-                <h3 className="text-h5">{check.title}</h3>
-                <p className="mt-1.5 text-body-sm leading-relaxed text-muted-foreground">
-                  {check.body}
-                </p>
-              </div>
-            ))}
-          </Surface>
+          <GuidePointList points={checkPoints} />
         </section>
 
-        <section className="space-y-3">
+        <section className="space-y-4">
           <h2 className="text-h2">{guideAuthLightTestHeading(lang)}</h2>
           {guideAuthLightTestBody(lang).map((paragraph) => (
-            <p key={paragraph.slice(0, 24)} className="max-w-3xl text-body leading-relaxed">
+            <p key={paragraph.slice(0, 24)} className="text-body leading-relaxed">
               {paragraph}
             </p>
           ))}
+          <GuideFigure>
+            <LightTestSchematic
+              opaqueLabel={lightLabels.opaque}
+              translucentLabel={lightLabels.translucent}
+            />
+          </GuideFigure>
         </section>
 
         <section className="space-y-3">
@@ -142,13 +241,37 @@ export default async function AuthenticityGuidePage() {
           </GuideCallout>
         </section>
 
-        <section className="space-y-3">
+        <section className="space-y-4">
           <h2 className="text-h2">{guideAuthGradingHeading(lang)}</h2>
           {guideAuthGradingBody(lang).map((paragraph) => (
-            <p key={paragraph.slice(0, 24)} className="max-w-3xl text-body leading-relaxed">
+            <p key={paragraph.slice(0, 24)} className="text-body leading-relaxed">
               {paragraph}
             </p>
           ))}
+
+          {/* "Counterfeits follow value" is the argument for paying to grade an
+              expensive card — so show what the top of the market actually costs
+              instead of asserting it. Hidden entirely when the query is empty
+              rather than rendered as a blank frame. */}
+          {pricedTopCards.length > 0 && (
+            <GuideFigure
+              eyebrow={valueFigure.eyebrow}
+              caption={valueFigure.caption}
+              snapshot={formatPriceSnapshot(lang, snapshotAt)}
+            >
+              <CardThumbStrip
+                size="lg"
+                scroll
+                showCaption
+                cards={pricedTopCards.map((card) => ({
+                  cardCode: card.cardCode,
+                  name: card.name,
+                  imageUrl: card.imageUrl,
+                  label: formatThb(card.priceThb!),
+                }))}
+              />
+            </GuideFigure>
+          )}
         </section>
 
         <section className="space-y-4">
@@ -165,25 +288,7 @@ export default async function AuthenticityGuidePage() {
 
         <section className="space-y-4">
           <h2 className="text-h2">{guideAuthRedFlagsHeading(lang)}</h2>
-          <Surface variant="outline" className="divide-y divide-hair overflow-hidden">
-            {guideAuthRedFlags(lang).map((flag) => (
-              <p key={flag.id} className="px-5 py-3.5 text-body-sm leading-relaxed">
-                {flag.before}
-                {flag.link && (
-                  <>
-                    {" "}
-                    <Link
-                      href={flag.link.href}
-                      className="font-medium text-primary hover:underline"
-                    >
-                      {flag.link.label}
-                    </Link>
-                    {flag.after && ` ${flag.after}`}
-                  </>
-                )}
-              </p>
-            ))}
-          </Surface>
+          <GuidePointList points={redFlagPoints} tone="danger" />
         </section>
 
         <FaqSection items={guideAuthFaq(lang)} />
@@ -202,7 +307,7 @@ export default async function AuthenticityGuidePage() {
               url: "https://asia-th.onepiece-cardgame.com/",
             },
             {
-              label: "ราคากลางการ์ดวันพีซบน Meecard",
+              label: "ราคากลางการ์ดวันพีชบน Meecard",
               desc: "เทียบราคาที่คนขายเสนอกับราคาตลาด ก่อนตัดสินใจว่าของถูกผิดปกติหรือเปล่า",
               url: "/opcg/search",
               internal: true,
@@ -221,19 +326,19 @@ export default async function AuthenticityGuidePage() {
           {
             href: "/guide/buying",
             icon: Store,
-            title: "ซื้อการ์ดวันพีซที่ไหนดี",
+            title: "ซื้อการ์ดวันพีชที่ไหนดี",
             description: "ช่องทางซื้อในไทย สั่งจากญี่ปุ่น และวิธีเช็คราคาก่อนโอน",
           },
           {
             href: "/opcg/most-expensive",
             icon: LineChart,
-            title: "การ์ดวันพีซที่แพงที่สุด",
+            title: "การ์ดวันพีชที่แพงที่สุด",
             description: "ใบไหนแพงพอที่จะคุ้มค่าให้คนทำปลอม",
           },
           {
             href: "/guide/rarities",
             icon: ShieldCheck,
-            title: "ความหายากการ์ดวันพีซ",
+            title: "ความหายากการ์ดวันพีช",
             description: "SEC · Parallel · Treasure Rare ต่างกันยังไง",
           },
         ]}

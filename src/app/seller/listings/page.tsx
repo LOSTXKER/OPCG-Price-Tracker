@@ -36,6 +36,7 @@ import { t, type TranslationKey } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 import { ApiError, apiDelete, apiGet, apiPatch } from "@/lib/api/client";
 import { toast } from "sonner";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 type ListingItem = {
   id: number;
@@ -334,7 +335,7 @@ export default function SellerListingsPage() {
                       </span>
                     </div>
                     <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-meta">
-                      <span>{listing.card.cardCode}</span>
+                      <span>{baseCardCode(listing.card.cardCode)}</span>
                       <span>{listing.card.rarity}</span>
                       <span>{CONDITION_LABEL[listing.condition] ?? listing.condition}</span>
                       <span>x{listing.quantity}</span>

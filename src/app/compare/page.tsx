@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Dices, LayoutGrid, Layers } from "lucide-react";
 
 import { RelatedPages } from "@/components/shared/related-pages";
+import { Surface } from "@/components/ui/surface";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
@@ -30,16 +31,25 @@ export default function ComparePage() {
 
       {/* Server-rendered context: the tool is empty until the visitor picks
           cards, so without this the route had no crawlable copy at all.
-          Paragraphs render as paragraphs — they were <li> bullets before,
-          which dressed three full sentences as a list (audit finding). */}
-      <section className="mt-12 max-w-3xl space-y-3">
-        <h2 className="text-h2">{copy.howTitle}</h2>
-        <p className="text-body-sm leading-relaxed text-muted-foreground">{copy.intro}</p>
-        {copy.howParagraphs.map((paragraph) => (
-          <p key={paragraph.slice(0, 24)} className="text-body-sm leading-relaxed text-muted-foreground">
-            {paragraph}
+          Full-width card row — the narrow prose column left half the page
+          empty (owner call เบส 2026-08-07; same treatment as trending). */}
+      <section className="mt-12 space-y-4">
+        <div>
+          <h2 className="text-h2">{copy.howTitle}</h2>
+          <p className="mt-1.5 text-body-sm leading-relaxed text-muted-foreground">
+            {copy.intro}
           </p>
-        ))}
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {copy.howTips.map((tip) => (
+            <Surface key={tip.title} variant="outline" className="p-4">
+              <p className="text-h5">{tip.title}</p>
+              <p className="mt-1.5 text-body-sm leading-relaxed text-muted-foreground">
+                {tip.body}
+              </p>
+            </Surface>
+          ))}
+        </div>
       </section>
 
       <RelatedPages

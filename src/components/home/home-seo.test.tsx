@@ -23,6 +23,7 @@ const { HomeSearchHero } = await import("./home-search-hero")
 const { HomeMarketIntro } = await import("./home-market-intro")
 const { HomeSetStrip } = await import("./home-set-strip")
 const { HomeSeoContent } = await import("./home-seo-content")
+const { HOME_META_DESCRIPTION } = await import("@/lib/seo/copy/home")
 
 function countTag(markup: string, tag: string): number {
   return markup.split(`<${tag}`).length - 1
@@ -43,7 +44,7 @@ describe("home page SEO shell", () => {
     const h1 = markup.slice(markup.indexOf("<h1"), markup.indexOf("</h1>"))
 
     expect(countTag(markup, "h1")).toBe(1)
-    expect(h1).toContain("การ์ดวันพีซ")
+    expect(h1).toContain("การ์ดวันพีช")
     // The keyword must not be hidden from sighted users, and the rotating
     // typewriter must not be the H1's only visible content.
     expect(h1).not.toContain("sr-only")
@@ -71,15 +72,19 @@ describe("home page SEO shell", () => {
     )
 
     expect(markup).toContain("<h2")
-    expect(markup).toContain("ราคาตลาดการ์ดวันพีซวันนี้")
+    expect(markup).toContain("ราคาตลาดการ์ดวันพีชวันนี้")
     expect(markup).toContain("3,838")
     expect(markup).toContain("51")
     // Owner decision 2026-08-06: the trust claim is "ตลาดญี่ปุ่น", never a
     // source brand name — the intro must not advertise another shop.
     expect(markup).toContain("ตลาดญี่ปุ่น")
     expect(markup).not.toContain("Yuyu-tei")
-    // Both Thai spellings must be reachable from the page body.
+    // Dual spelling coverage, roles swapped (owner decision 2026-08-08): the
+    // visible body spells it "วันพีช" only; the second spelling "วันพีซ" lives
+    // in the meta description, not the body.
     expect(markup).toContain("วันพีช")
+    expect(markup).not.toContain("วันพีซ")
+    expect(HOME_META_DESCRIPTION).toContain("วันพีซ")
   })
 
   it("renders real set links, not a client-only picker", () => {
@@ -95,16 +100,16 @@ describe("home page SEO shell", () => {
     expect(markup).toContain('href="/opcg/sets/OP12"')
     expect(markup).toContain('href="/opcg/sets/OP01"')
     expect(markup).toContain('href="/opcg/sets"')
-    expect(markup).toContain("ชุดการ์ดวันพีซล่าสุด")
+    expect(markup).toContain("ชุดการ์ดวันพีชล่าสุด")
     expect(markup).toContain("Romance Dawn")
   })
 
   it("renders the long-tail FAQ and its destination links on the server", () => {
     const markup = renderToStaticMarkup(<HomeSeoContent />)
 
-    expect(markup).toContain("การ์ดวันพีซใบไหนแพงที่สุด")
-    expect(markup).toContain("PSA คืออะไร ส่งเกรดการ์ดวันพีซที่ไหน")
-    expect(markup).toContain("ซื้อการ์ดวันพีซที่ไหนดี")
+    expect(markup).toContain("การ์ดวันพีชใบไหนแพงที่สุด")
+    expect(markup).toContain("PSA คืออะไร ส่งเกรดการ์ดวันพีชที่ไหน")
+    expect(markup).toContain("ซื้อการ์ดวันพีชที่ไหนดี")
     expect(markup).toContain("ราคากลางบน Meecard คำนวณจากอะไร")
 
     for (const href of [

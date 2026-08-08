@@ -33,6 +33,7 @@ import { DEFAULT_GAME } from "@/lib/game/constants";
 import { getCardName, getLocale, t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { formatByCurrency } from "@/lib/utils/currency";
+import { baseCardCode } from "@/lib/cards/card-code";
 
 export type FeedbackKind = "saved" | "reactivated" | "error";
 
@@ -128,7 +129,7 @@ export function AlertRow({
                 <span className="truncate">{cardName}</span>
               </Link>
               <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-muted-foreground/70">
-                <span>{alert.card.cardCode}</span>
+                <span>{baseCardCode(alert.card.cardCode)}</span>
                 {showGameBadge && <GameBadge game={alert.card.set?.game ?? null} />}
                 {!alert.isActive && (
                   <Badge variant="secondary" className="h-4 px-1.5 text-micro">

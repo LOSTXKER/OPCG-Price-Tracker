@@ -94,7 +94,7 @@ describe("TrendingMoversSections", () => {
   });
 });
 
-// "การ์ดวันพีซ น่าเก็บ / น่าลงทุน" search intent (SEO round 3) had zero
+// "การ์ดวันพีช น่าเก็บ / น่าลงทุน" search intent (SEO round 3) had zero
 // coverage anywhere on this page before this section — lock the keywords,
 // the H2, the link to /opcg/most-expensive and the disclaimer in server HTML.
 describe("TrendingWorthCollectingSection", () => {
