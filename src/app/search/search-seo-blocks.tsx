@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { Package } from "lucide-react";
 
 import { ArrowLink } from "@/components/shared/arrow-link";
 import { Surface } from "@/components/ui/surface";
@@ -27,6 +29,7 @@ export type SsrSearchSet = {
   name: string;
   nameEn: string | null;
   releaseDate: string | null;
+  boxImageUrl: string | null;
 };
 
 /**
@@ -120,8 +123,27 @@ export function SearchBrowseBlocks({
               variant="outline"
               interactive
               href={`/opcg/sets/${set.code.toLowerCase()}`}
-              className="flex items-center gap-2 px-3 py-2.5"
+              className="flex items-center gap-2.5 px-3 py-2.5"
             >
+              {/* Set art is a square asset with the pack drawn portrait inside
+                  transparent margins — a square slot shows all of it. `don` has
+                  no packaging, hence the icon fallback. */}
+              <span className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted/50">
+                {set.boxImageUrl ? (
+                  <Image
+                    src={set.boxImageUrl}
+                    alt=""
+                    fill
+                    className="object-contain"
+                    sizes="40px"
+                  />
+                ) : (
+                  <Package
+                    aria-hidden
+                    className="absolute inset-0 m-auto size-4 text-muted-foreground/40"
+                  />
+                )}
+              </span>
               <span className="text-code shrink-0 text-muted-foreground">
                 {set.code.toUpperCase()}
               </span>

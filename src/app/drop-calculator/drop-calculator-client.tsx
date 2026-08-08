@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Surface } from "@/components/ui/surface"
 import { PageHeader } from "@/components/layout/page-header"
+import { FormattedDate } from "@/components/shared/formatted-date"
+import { Price } from "@/components/shared/price-inline"
 import { SectionHead } from "@/components/shared/section-head"
 import { PurchaseConfig } from "@/components/drop-calculator/purchase-config"
 import { WantList } from "@/components/drop-calculator/want-list"
@@ -16,7 +18,7 @@ import type { SetListItem, SetDetail, DropRate, CardItem, Unit } from "@/compone
 import { raritySort } from "@/lib/constants/rarities"
 import { getGameConfig } from "@/lib/game-config"
 import { useUIStore } from "@/stores/ui-store"
-import { getCardName, t, type Language } from "@/lib/i18n"
+import { getCardName, getSetName, t, type Language } from "@/lib/i18n"
 import { buildDropCalculatorCopy } from "@/lib/seo/copy/tools"
 import { apiGet, apiTry } from "@/lib/api/client"
 import {
@@ -124,6 +126,64 @@ function focusCalculatorSection(id: string) {
       block: "start",
     })
   })
+}
+
+/**
+ * The product the odds are about — a booster-box calculator should show the box.
+ * Set art is a square asset with the pack drawn portrait inside transparent
+ * margins, so the slot stays square + `object-contain`: a card-shaped crop would
+ * clip the wide "Starter Deck EX" display boxes. Sets with no packaging (`don`)
+ * carry no art at all, hence the icon fallback.
+ */
+function SelectedSetPanel({ lang, set }: { lang: Language; set: SetDetail["set"] }) {
+  return (
+    <Surface variant="panel" className="flex items-center gap-4 p-3 sm:gap-6 sm:p-4">
+      <div className="relative aspect-square w-24 shrink-0 sm:w-32 lg:w-40">
+        {set.boxImageUrl ? (
+          <Image
+            src={set.boxImageUrl}
+            alt=""
+            fill
+            className="object-contain"
+            sizes="(min-width: 1024px) 160px, (min-width: 640px) 128px, 96px"
+          />
+        ) : (
+          <span className="surface-1 flex size-full items-center justify-center rounded-xl">
+            <Package className="size-7 text-muted-foreground/30" />
+          </span>
+        )}
+      </div>
+
+      <div className="min-w-0 flex-1">
+        <h2 className="text-h3">{set.code.toUpperCase()}</h2>
+        <p className="mt-0.5 text-body-sm text-muted-foreground">
+          {getSetName(lang, set)}
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-meta">
+          <span>
+            {set.cardCount.toLocaleString()} {t(lang, "cardsCount")}
+          </span>
+          {set.packsPerBox != null && (
+            <span>
+              {set.packsPerBox} {t(lang, "packUnit")} / {t(lang, "boxUnit")}
+            </span>
+          )}
+          {set.msrpJpy != null && (
+            <span className="text-foreground">
+              <Price jpy={set.msrpJpy} />
+              <span className="text-muted-foreground"> / {t(lang, "packUnit")}</span>
+            </span>
+          )}
+          {set.releaseDate && (
+            <FormattedDate
+              date={set.releaseDate}
+              options={{ year: "numeric", month: "short" }}
+            />
+          )}
+        </div>
+      </div>
+    </Surface>
+  )
 }
 
 function SelectedCardsTray({
@@ -434,33 +494,38 @@ export default function DropCalculatorClient() {
       </div>
 
       {showLoading && !noSets && (
-        <div className="lg:flex lg:gap-8">
-          <aside className="hidden w-52 shrink-0 space-y-5 lg:block">
-            <Skeleton className="h-5 w-32" />
-            <Skeleton className="h-10 w-full rounded-lg" />
-            <Skeleton className="h-5 w-24" />
-            <div className="space-y-2">
-              {Array.from({ length: 5 }, (_, index) => (
-                <Skeleton key={index} className="h-9 w-full rounded-md" />
-              ))}
-            </div>
-          </aside>
-          <div className="min-w-0 flex-1">
-            <div className="mb-5 space-y-3 lg:hidden">
+        <>
+          {/* matches SelectedSetPanel's height so the box art doesn't shove the
+              card grid down when the set detail lands */}
+          <Skeleton className="h-30 w-full rounded-xl sm:h-40" />
+          <div className="lg:flex lg:gap-8">
+            <aside className="hidden w-52 shrink-0 space-y-5 lg:block">
+              <Skeleton className="h-5 w-32" />
               <Skeleton className="h-10 w-full rounded-lg" />
-              <Skeleton className="h-10 w-full rounded-lg" />
-            </div>
-            <div className="grid grid-cols-3 gap-x-2.5 gap-y-4 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-              {Array.from({ length: 12 }, (_, index) => (
-                <div key={index} className="min-w-0 space-y-2">
-                  <Skeleton className="aspect-[63/88] w-full rounded-lg" />
-                  <Skeleton className="h-4 w-4/5" />
-                  <Skeleton className="h-3.5 w-2/5" />
-                </div>
-              ))}
+              <Skeleton className="h-5 w-24" />
+              <div className="space-y-2">
+                {Array.from({ length: 5 }, (_, index) => (
+                  <Skeleton key={index} className="h-9 w-full rounded-md" />
+                ))}
+              </div>
+            </aside>
+            <div className="min-w-0 flex-1">
+              <div className="mb-5 space-y-3 lg:hidden">
+                <Skeleton className="h-10 w-full rounded-lg" />
+                <Skeleton className="h-10 w-full rounded-lg" />
+              </div>
+              <div className="grid grid-cols-3 gap-x-2.5 gap-y-4 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+                {Array.from({ length: 12 }, (_, index) => (
+                  <div key={index} className="min-w-0 space-y-2">
+                    <Skeleton className="aspect-[63/88] w-full rounded-lg" />
+                    <Skeleton className="h-4 w-4/5" />
+                    <Skeleton className="h-3.5 w-2/5" />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
 
       {noSets && (
@@ -471,6 +536,8 @@ export default function DropCalculatorClient() {
 
       {!showLoading && !noSets && detail && (
         <>
+          <SelectedSetPanel lang={lang} set={detail.set} />
+
           {activeView === "selection" ? (
             <div
               id="drop-calculator-selection"

@@ -80,6 +80,7 @@ export async function getHomeData() {
       prisma.card.count(),
       prisma.cardSet.findMany({
         select: {
+          id: true,
           code: true,
           name: true,
           nameEn: true,
@@ -97,6 +98,8 @@ export async function getHomeData() {
       }),
     ])
 
+    const recentSets = pickRecentSets(sets)
+
     return {
       topGainers,
       topLosers,
@@ -111,7 +114,7 @@ export async function getHomeData() {
       // Newest sets first — feeds the home page's crawlable set strip so the
       // set cluster gets internal links from the pillar page (SEO plan §3.1).
       // Derived from `sets` (already fetched) instead of a second query.
-      recentSets: pickRecentSets(sets),
+      recentSets: await withSetCovers(recentSets, sets),
       rarityRows,
     }
   } catch (error) {
@@ -120,7 +123,55 @@ export async function getHomeData() {
   }
 }
 
-export type HomeSetLink = { code: string; name: string }
+export type HomeSetLink = { code: string; name: string; coverUrl?: string | null }
+
+/**
+ * Gives each strip entry a cover picture — the set's real packaging art.
+ *
+ * `don` (DON!! Card Collection) is not a boxed retail product, so Bandai
+ * publishes no packaging for it; that one falls back to the set's priciest card
+ * with artwork, the same substitute the set pages make. Only the sets that
+ * actually need it pay for the card query.
+ *
+ * A failure here costs the thumbnails only: the strip's job is the crawlable
+ * links, so it still renders without them rather than taking the home page down.
+ */
+async function withSetCovers(
+  links: HomeSetLink[],
+  sets: { id: number; code: string; boxImageUrl: string | null }[]
+): Promise<HomeSetLink[]> {
+  const setByCode = new Map(sets.map((s) => [s.code, s]))
+  const needCard = links
+    .map((l) => setByCode.get(l.code))
+    .filter((s) => s != null && !s.boxImageUrl)
+    .map((s) => s!.id)
+
+  const cardBySet = new Map<number, string>()
+
+  if (needCard.length > 0) {
+    try {
+      const covers = await prisma.card.findMany({
+        where: { setId: { in: needCard }, imageUrl: { not: null }, latestPriceJpy: { not: null } },
+        select: { setId: true, imageUrl: true },
+        orderBy: { latestPriceJpy: "desc" },
+      })
+
+      for (const card of covers) {
+        if (card.setId != null && card.imageUrl && !cardBySet.has(card.setId)) {
+          cardBySet.set(card.setId, card.imageUrl)
+        }
+      }
+    } catch (error) {
+      log.error("Failed to fetch stand-in set covers for the home strip", error)
+    }
+  }
+
+  return links.map((l) => {
+    const set = setByCode.get(l.code)
+    if (!set) return { ...l, coverUrl: null }
+    return { ...l, coverUrl: set.boxImageUrl ?? cardBySet.get(set.id) ?? null }
+  })
+}
 
 /** How many sets the home page links to directly. */
 export const HOME_RECENT_SETS_LIMIT = 12

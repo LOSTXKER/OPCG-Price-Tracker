@@ -5,6 +5,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { Package } from "lucide-react"
 
+import { hasWideBoxArt } from "@/lib/constants/sets"
+
 /**
  * The set poster tile (art-forward, floats on canvas) shared by the /sets index
  * grid and the "browse other sets" rail — both grids are identical
@@ -66,7 +68,11 @@ export function SetPosterTile({
             alt={displayName}
             fill
             sizes="(max-width: 640px) 31vw, (max-width: 1024px) 23vw, (max-width: 1280px) 15vw, 13vw"
-            className="object-cover object-top"
+            className={
+              hasWideBoxArt(code)
+                ? "object-contain"
+                : "object-cover object-top"
+            }
             preload={preload}
             onError={() => setImgFailed(true)}
           />

@@ -22,7 +22,13 @@ const cards: SsrSearchCard[] = [
 ];
 
 const sets: SsrSearchSet[] = [
-  { code: "OP13", name: "ロマンスドーン", nameEn: "Royal Blood", releaseDate: "2026-05-01" },
+  {
+    code: "OP13",
+    name: "ロマンスドーン",
+    nameEn: "Royal Blood",
+    releaseDate: "2026-05-01",
+    boxImageUrl: "https://pub-test.r2.dev/sets/op13.webp",
+  },
 ];
 
 describe("search SEO blocks", () => {
@@ -49,6 +55,7 @@ describe("search SEO blocks", () => {
     // Thai context copy.
     expect(markup).toContain("Royal Blood");
     expect(markup).toContain("/opcg/sets/op13");
+    expect(markup).toContain("op13.webp");
     expect(markup).toContain("/opcg/search?q=Luffy");
     expect(markup).toContain("/opcg/sets");
   });

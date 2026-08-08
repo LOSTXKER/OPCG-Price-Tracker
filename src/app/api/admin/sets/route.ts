@@ -18,6 +18,7 @@ export const GET = adminApiHandler(async (_request: NextRequest, _admin) => {
       cardCount: true,
       packsPerBox: true,
       cardsPerPack: true,
+      boxImageUrl: true,
       _count: { select: { cards: true } },
     },
   });

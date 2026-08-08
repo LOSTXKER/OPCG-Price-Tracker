@@ -64,3 +64,12 @@ export const OPCG_SETS: SetInfo[] = [
 ];
 
 export const SET_CODES = OPCG_SETS.map((s) => s.code);
+
+/** "Starter Deck EX" display boxes — their packaging is landscape, so the
+ *  portrait crop that only eats transparent margin on the other 47 sets would
+ *  clip real product here. Renderers switch these to `object-contain`. */
+const WIDE_BOX_ART_CODES = new Set(["st10", "st13", "st21"]);
+
+export function hasWideBoxArt(code: string): boolean {
+  return WIDE_BOX_ART_CODES.has(code.toLowerCase());
+}

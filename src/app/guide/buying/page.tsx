@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import {
   AlertTriangle,
@@ -324,11 +325,32 @@ export default async function BuyingGuidePage() {
             <p key={i}>{paragraph}</p>
           ))}
         </div>
+        {/* The section argues about a physical object the reader has to decide
+            whether to buy, so show the object. The eyebrow lives here rather
+            than on the numbers below so the set is named once, not twice. */}
+        {latestBooster?.boxImageUrl && (
+          <GuideFigure eyebrow={`${boxFigure.eyebrow} — ${latestBooster.name}`}>
+            <div className="relative mx-auto aspect-square w-40 sm:w-48">
+              <Image
+                src={latestBooster.boxImageUrl}
+                alt=""
+                fill
+                className="object-contain"
+                sizes="(min-width: 640px) 192px, 160px"
+              />
+            </div>
+          </GuideFigure>
+        )}
+
         {/* "Box or singles?" is an arithmetic question, so give the reader the
             actual arithmetic for a set they can go and buy today. */}
         {boxFacts.length > 0 && (
           <GuidePriceFacts
-            eyebrow={`${boxFigure.eyebrow} — ${latestBooster!.name}`}
+            eyebrow={
+              latestBooster?.boxImageUrl
+                ? undefined
+                : `${boxFigure.eyebrow} — ${latestBooster!.name}`
+            }
             facts={boxFacts}
             snapshot={formatPriceSnapshot(lang, snapshotAt)}
           />

@@ -279,7 +279,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                     >
                       <div className="relative size-9 shrink-0 overflow-hidden rounded-md bg-muted">
                         {s.imageUrl ? (
-                          <Image src={s.imageUrl} alt={getSetName(lang, s)} fill className="object-cover" sizes="36px" placeholder="blur" blurDataURL={BLUR_DATA_URL} />
+                          <Image src={s.imageUrl} alt={getSetName(lang, s)} fill className="object-contain" sizes="36px" placeholder="blur" blurDataURL={BLUR_DATA_URL} />
                         ) : (
                           <Boxes className="absolute inset-0 m-auto size-4 text-muted-foreground/50" />
                         )}

@@ -13,5 +13,10 @@ export const GET = apiHandler(async (request: NextRequest) => {
     orderBy: { code: "asc" },
     include: { _count: { select: { cards: true } } },
   });
-  return NextResponse.json({ sets });
+  // Consumers (SetInfo / SetPickerItem) read `imageUrl` — expose the packaging
+  // art under that name here so every caller gets it without renaming locally.
+  // Stays null for sets with no boxed product (e.g. `don`); callers fall back.
+  return NextResponse.json({
+    sets: sets.map((s) => ({ ...s, imageUrl: s.boxImageUrl })),
+  });
 });

@@ -1,16 +1,43 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 
 import { ArrowLink } from "@/components/shared/arrow-link"
 import { buildHomeSetStripCopy } from "@/lib/seo/copy/home"
+import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
+
+/**
+ * Keeps the wrapping grid at exactly two rows (owner ruling เบส 2026-08-08).
+ *
+ * Pill widths are set by the set names, so a fixed count wraps to a different
+ * number of rows at every width — measured against the twelve live names, two
+ * rows hold 4 pills at `sm`, 6 at `md`, 8 at `lg` and 10 from `xl`. The content
+ * column stops growing at 1216px, so ten is the ceiling on any monitor and the
+ * remainder would always have made a third row.
+ *
+ * The hidden pills stay in the HTML: the strip exists to pass link equity to
+ * the set cluster (SEO plan §3.1), the phone rail still scrolls through all of
+ * them, and "ดูชุดทั้งหมด" is right there.
+ */
+function twoRowVisibility(index: number): string {
+  if (index < 4) return ""
+  if (index < 6) return "sm:hidden md:block"
+  if (index < 8) return "sm:hidden lg:block"
+  if (index < 10) return "sm:hidden xl:block"
+  return "sm:hidden"
+}
 
 export type HomeSetStripItem = {
   code: string
   /** English/latin set name. CardSet.nameTh is empty for every set, so the
    *  Thai context comes from the heading around it, never from the name. */
   name: string
+  /** The set's packaging art, or its priciest card for the one set that has no
+   *  boxed product. Optional on purpose — the links are the point, the picture
+   *  is the polish. */
+  coverUrl?: string | null
 }
 
 /**
@@ -55,12 +82,35 @@ export function HomeSetStrip({ sets }: { sets: HomeSetStripItem[] }) {
           it only changes how many are on screen at once. `no-sb` +
           `overflow-x-auto` is the same rail the grade/scope controls use. */}
       <ul className="no-sb -mx-5 mt-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
-        {sets.map((s) => (
-          <li key={s.code} className="shrink-0 snap-start sm:shrink">
+        {sets.map((s, i) => (
+          <li
+            key={s.code}
+            className={cn("shrink-0 snap-start sm:shrink", twoRowVisibility(i))}
+          >
             <Link
               href={`/opcg/sets/${s.code}`}
-              className="ease-chrome flex items-center gap-1.5 rounded-lg border border-hair bg-background px-2.5 py-1.5 text-xs hover:border-primary/35 hover:bg-primary/5"
+              className="ease-chrome flex items-center gap-2 rounded-lg border border-hair bg-background py-1 pe-2.5 ps-1 text-xs hover:border-primary/35 hover:bg-primary/5"
             >
+              {/* Collectors recognise a set by its packaging long before they
+                  recognise "op14". The slot stays narrow and pack-shaped so the
+                  whole strip grows by single-digit pixels — the rail has to stay
+                  one row on a phone or the market table leaves the first screen,
+                  which is why these are pills and not tiles. `object-cover`
+                  earns its place here: the art is a portrait pack centred on a
+                  square transparent canvas, so cropping to this ratio trims the
+                  empty margin and renders the pack larger than `contain` would.
+                  No background tint — the alpha channel is the point. */}
+              <span className="relative block h-8 w-[1.43rem] shrink-0 overflow-hidden rounded-sm">
+                {s.coverUrl && (
+                  <Image
+                    src={s.coverUrl}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="24px"
+                  />
+                )}
+              </span>
               <span className="font-semibold text-foreground">{s.code}</span>
               <span className="max-w-[11rem] truncate text-muted-foreground">
                 {s.name}

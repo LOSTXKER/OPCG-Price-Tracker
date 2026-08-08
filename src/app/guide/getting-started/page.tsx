@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
@@ -161,6 +162,7 @@ type StarterSet = {
   nameEn: string | null;
   nameTh: string | null;
   cardCount: number;
+  boxImageUrl: string | null;
 };
 
 /**
@@ -173,7 +175,14 @@ const getStarterSets = unstable_cache(
     try {
       return await prisma.cardSet.findMany({
         where: { type: "STARTER" },
-        select: { code: true, name: true, nameEn: true, nameTh: true, cardCount: true },
+        select: {
+          code: true,
+          name: true,
+          nameEn: true,
+          nameTh: true,
+          cardCount: true,
+          boxImageUrl: true,
+        },
         orderBy: [{ releaseDate: { sort: "desc", nulls: "last" } }, { code: "desc" }],
         take: 6,
       });
@@ -181,7 +190,7 @@ const getStarterSets = unstable_cache(
       return [];
     }
   },
-  ["guide-starter-sets"],
+  ["guide-starter-sets-v2"],
   { revalidate: 3600, tags: ["guide-sets"] }
 );
 
@@ -289,6 +298,20 @@ export default async function GettingStartedPage() {
                   href={`/opcg/sets/${set.code}`}
                   className="flex items-center gap-3 px-4 py-3 motion-base hover:bg-muted/70"
                 >
+                  {/* A beginner picking a starter deck is picking a product, so
+                      show the product. Contained, not cropped: a few of these
+                      boxes are wide display packaging that object-cover clips. */}
+                  {set.boxImageUrl && (
+                    <div className="relative size-12 shrink-0 overflow-hidden rounded bg-muted">
+                      <Image
+                        src={set.boxImageUrl}
+                        alt=""
+                        fill
+                        className="object-contain"
+                        sizes="48px"
+                      />
+                    </div>
+                  )}
                   <span className="shrink-0 rounded-md bg-muted px-2 py-1 font-mono text-xs font-bold">
                     {set.code}
                   </span>

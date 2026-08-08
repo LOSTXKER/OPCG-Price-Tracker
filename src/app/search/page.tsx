@@ -143,7 +143,9 @@ export default async function SearchPage({
   const copy = buildSearchCopy(lang);
   const browseSets = [...sets]
     .sort((a, b) => (b.releaseDate ?? "").localeCompare(a.releaseDate ?? ""))
-    .slice(0, BROWSE_SET_COUNT);
+    .slice(0, BROWSE_SET_COUNT)
+    // `imageUrl` is what the client picker's shape calls the box art.
+    .map((s) => ({ ...s, boxImageUrl: s.imageUrl }));
 
   return (
     <>

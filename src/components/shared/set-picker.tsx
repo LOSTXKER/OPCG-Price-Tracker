@@ -155,7 +155,9 @@ export function SetPicker({
             {selectedSet.imageUrl ? (
               <span className={cn(
                 "relative shrink-0 overflow-hidden bg-muted",
-                isCta ? "size-9 rounded-full" : isInline ? "size-6 rounded-sm" : "size-7 rounded-full",
+                // rounded-md, not a circle: the packaging art is a portrait pack,
+                // and a circular mask cuts off its printed corners.
+                isCta ? "size-9 rounded-md" : isInline ? "size-6 rounded-sm" : "size-7 rounded-md",
               )}>
                 <Image
                   src={selectedSet.imageUrl}
@@ -168,7 +170,9 @@ export function SetPicker({
             ) : (
               <span className={cn(
                 "flex shrink-0 items-center justify-center bg-muted",
-                isCta ? "size-9 rounded-full" : isInline ? "size-6 rounded-sm" : "size-7 rounded-full",
+                // matches the image slot above so a set with no packaging art
+                // (e.g. `don`) keeps the same silhouette in the trigger.
+                isCta ? "size-9 rounded-md" : isInline ? "size-6 rounded-sm" : "size-7 rounded-md",
               )}>
                 <Package className={cn(
                   isCta ? "size-4" : "size-3.5",

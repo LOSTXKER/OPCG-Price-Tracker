@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Image from "next/image";
 import {
   RefreshCw,
   ChevronDown,
@@ -50,6 +51,7 @@ interface SetRow {
   cardCount: number;
   packsPerBox: number | null;
   cardsPerPack: number | null;
+  boxImageUrl: string | null;
   actualCardCount: number;
   productCardCount: number;
   missingEn: number;
@@ -99,18 +101,25 @@ export function SetsManager({ initialSets }: { initialSets: SetRow[] }) {
       nameTh: set.nameTh,
       packsPerBox: set.packsPerBox,
       cardsPerPack: set.cardsPerPack,
+      boxImageUrl: set.boxImageUrl,
     });
   }
 
   async function saveEdit(id: number) {
     setLoading((p) => ({ ...p, [`edit-${id}`]: true }));
+    // A field that is null in the DB (e.g. `don` has no packaging art) would be
+    // sent as null and rejected by UpdateAdminSetSchema, which only takes
+    // strings/numbers — drop untouched-null fields instead of failing the save.
+    const payload = Object.fromEntries(
+      Object.entries(editData).filter(([, value]) => value !== null),
+    ) as Partial<SetRow>;
     try {
       await adminFetch("/api/admin/sets", {
         method: "PATCH",
-        body: { id, ...editData },
+        body: { id, ...payload },
       });
       setSets((prev) =>
-        prev.map((s) => (s.id === id ? { ...s, ...editData } : s)),
+        prev.map((s) => (s.id === id ? { ...s, ...payload } : s)),
       );
       setEditingId(null);
       toast.success("บันทึกสำเร็จ");
@@ -266,6 +275,23 @@ function SetCard({
         }}
         className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left motion-base hover:bg-muted/70"
       >
+        {/* Box art — the only way to eyeball which sets actually got packaging
+            art. Square asset with a transparent margin, so contain, not cover. */}
+        <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted/40">
+          {set.boxImageUrl ? (
+            <Image
+              src={set.boxImageUrl}
+              alt=""
+              width={40}
+              height={40}
+              className="size-full object-contain"
+              unoptimized
+            />
+          ) : (
+            <Package className="size-4 text-muted-foreground/30" />
+          )}
+        </span>
+
         {/* Code badge */}
         <span className="inline-flex min-w-[4rem] items-center justify-center rounded-md bg-primary/8 px-2 py-0.5 font-mono text-eyebrow text-primary">
           {set.code}
@@ -380,6 +406,13 @@ function SetCard({
                     onEditChange("cardsPerPack", v ? parseInt(v) : null)
                   }
                 />
+                <EditField
+                  label="รูปกล่อง/ซอง (URL)"
+                  span={2}
+                  hint="เว้นว่าง = ไม่เปลี่ยนของเดิม (บางชุดไม่มีสินค้าเป็นกล่อง จึงไม่มีรูป)"
+                  value={(editData.boxImageUrl as string) ?? ""}
+                  onChange={(v) => onEditChange("boxImageUrl", v.trim() || null)}
+                />
               </div>
               <div className="flex gap-2">
                 <Button size="sm" onClick={onSaveEdit} disabled={editLoading}>
@@ -466,14 +499,18 @@ function EditField({
   value,
   onChange,
   type = "text",
+  span,
+  hint,
 }: {
   label: string;
   value: string | number;
   onChange: (v: string) => void;
   type?: string;
+  span?: 1 | 2;
+  hint?: string;
 }) {
   return (
-    <AdminFormField label={label}>
+    <AdminFormField label={label} span={span} hint={hint}>
       <Input
         type={type}
         value={value}

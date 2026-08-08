@@ -199,7 +199,8 @@ type HubSet = {
   nameTh: string | null;
   releaseDate: Date | null;
   cardCount?: number;
-  /** Stand-in cover art — see the note in `getHubSetData`. */
+  boxImageUrl?: string | null;
+  /** Stand-in cover art when a set has no box art — see `getHubSetData`. */
   coverUrl?: string | null;
 };
 
@@ -216,6 +217,7 @@ const getHubSetData = unstable_cache(
             nameTh: true,
             releaseDate: true,
             cardCount: true,
+            boxImageUrl: true,
           },
           orderBy: [{ releaseDate: { sort: "desc", nulls: "last" } }, { code: "desc" }],
           take: 8,
@@ -224,12 +226,12 @@ const getHubSetData = unstable_cache(
         prisma.card.count(),
       ]);
 
-      // A cover picture per set. `CardSet.boxImageUrl` is null for all 51 sets
-      // (verified 2026-08-08), so the box art everyone reaches for does not
-      // exist yet — the set's own priciest card with artwork stands in, which is
-      // what /guide/sets already does. Scoped to these 8 sets only.
+      // A cover picture per set. Real box art covers every set except the DON!!
+      // collection, which was never sold as a boxed product — for that one the
+      // set's own priciest card with artwork stands in. Scoped to these 8 sets.
+      const needCover = sets.filter((s) => !s.boxImageUrl).map((s) => s.id);
       const covers = await prisma.card.findMany({
-        where: { setId: { in: sets.map((s) => s.id) }, imageUrl: { not: null } },
+        where: { setId: { in: needCover }, imageUrl: { not: null } },
         select: { setId: true, imageUrl: true },
         orderBy: { latestPriceJpy: { sort: "desc", nulls: "last" } },
       });
@@ -249,7 +251,7 @@ const getHubSetData = unstable_cache(
       return { sets: [], setCount: 0, cardCount: 0 };
     }
   },
-  ["guide-hub-sets-v2"],
+  ["guide-hub-sets-v3"],
   { revalidate: 3600, tags: ["guide-sets"] }
 );
 
@@ -423,30 +425,35 @@ export default async function GuideLandingPage() {
         {sets.length > 0 && (
           <div className="space-y-3">
             {/* Was a row of text-only chips on the one guide page with no imagery
-                at all. Each tile now carries the set's cover art, so a reader who
-                does not yet know a set by its code can recognise it by sight. */}
+                at all. Each tile now carries the set's packaging art, so a reader
+                who does not yet know a set by its code can recognise it by sight.
+                The slot is square because the art is a square canvas with the
+                pack sitting inside it — a card-shaped slot would letterbox it. */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {sets.map((set) => (
-                <Link
-                  key={set.code}
-                  href={`/opcg/sets/${set.code}`}
-                  className="group rounded-lg border border-hair bg-muted/40 p-2.5 motion-base hover:bg-muted"
-                >
-                  <div className="relative mx-auto aspect-[63/88] w-14 overflow-hidden rounded bg-muted">
-                    {set.coverUrl && (
-                      <Image
-                        src={set.coverUrl}
-                        alt=""
-                        fill
-                        className="object-contain"
-                        sizes="56px"
-                      />
-                    )}
-                  </div>
-                  <p className="mt-2 text-center text-h5 uppercase">{set.code}</p>
-                  <p className="line-clamp-2 text-center text-meta">{getSetName(lang, set)}</p>
-                </Link>
-              ))}
+              {sets.map((set) => {
+                const art = set.boxImageUrl ?? set.coverUrl;
+                return (
+                  <Link
+                    key={set.code}
+                    href={`/opcg/sets/${set.code}`}
+                    className="group rounded-lg border border-hair bg-muted/40 p-2.5 motion-base hover:bg-muted"
+                  >
+                    <div className="relative mx-auto aspect-square w-16 overflow-hidden rounded bg-muted">
+                      {art && (
+                        <Image
+                          src={art}
+                          alt=""
+                          fill
+                          className="object-contain"
+                          sizes="64px"
+                        />
+                      )}
+                    </div>
+                    <p className="mt-2 text-center text-h5 uppercase">{set.code}</p>
+                    <p className="line-clamp-2 text-center text-meta">{getSetName(lang, set)}</p>
+                  </Link>
+                );
+              })}
             </div>
             <ArrowLink href="/opcg/sets">{guideHubPricesAllSets(lang)}</ArrowLink>
           </div>

@@ -7,6 +7,7 @@ import { PriceUsd } from "@/components/shared/price-usd";
 import { FormattedDate } from "@/components/shared/formatted-date";
 import { DropRateDialog } from "@/app/sets/[setCode]/set-page-client";
 import { getCardName, t, type Language } from "@/lib/i18n";
+import { hasWideBoxArt } from "@/lib/constants/sets";
 import type {
   CardData,
   RarityGroup,
@@ -100,7 +101,9 @@ export function SetHero({
             src={boxImage}
             alt={name}
             fill
-            className="object-cover object-top"
+            className={
+              hasWideBoxArt(code) ? "object-contain" : "object-cover object-top"
+            }
             sizes="(min-width: 1024px) 240px, (min-width: 640px) 208px, 160px"
             preload
           />

@@ -17,6 +17,7 @@ async function getSets() {
       cardCount: true,
       packsPerBox: true,
       cardsPerPack: true,
+      boxImageUrl: true,
       _count: { select: { cards: true } },
     },
   });
@@ -55,6 +56,7 @@ async function getSets() {
         cardCount: s.cardCount,
         packsPerBox: s.packsPerBox,
         cardsPerPack: s.cardsPerPack,
+        boxImageUrl: s.boxImageUrl,
         actualCardCount: actual,
         productCardCount: productCards,
         missingEn,
