@@ -110,7 +110,7 @@ const TrendingRow = memo(function TrendingRow({ card, rank, activeTab, period }:
   return (
     <tr
       key={card.cardCode}
-      className="border-b border-hair ease-chrome transition-colors hover:bg-muted/70"
+      className="ease-chrome transition-colors hover:bg-muted/70"
     >
       <td className="px-4 py-2.5 text-center tabular-nums text-muted-foreground">
         {rank}
