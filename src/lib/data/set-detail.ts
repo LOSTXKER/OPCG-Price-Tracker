@@ -2,6 +2,7 @@ import { cache } from "react";
 
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { RARITIES, raritySort } from "@/lib/constants/rarities";
+import { getJapaneseSetReleaseDate } from "@/lib/constants/sets";
 import { prisma } from "@/lib/db";
 import { getCardName, type Language } from "@/lib/i18n";
 import { pullChance, PACKS_PER_BOX } from "@/lib/utils/pull-rate";
@@ -44,7 +45,19 @@ export const getSet = cache(async (setCode: string) => {
     },
   });
 
-  return { ...cardSet, cards, productCardCount: cards.length };
+  const catalogReleaseDate = getJapaneseSetReleaseDate(code);
+  const releaseDate =
+    cardSet.releaseDate ??
+    (catalogReleaseDate
+      ? new Date(`${catalogReleaseDate}T00:00:00.000Z`)
+      : null);
+
+  return {
+    ...cardSet,
+    releaseDate,
+    cards,
+    productCardCount: cards.length,
+  };
 });
 
 /** Every set code — feeds `generateStaticParams` for the ISR set-detail route.

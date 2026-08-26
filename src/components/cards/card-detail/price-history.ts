@@ -1,5 +1,79 @@
 import { PRICE_SOURCE } from "@/lib/constants/prices"
-import { jpyToThb } from "@/lib/utils/currency"
+import type { Currency } from "@/lib/i18n"
+import { jpyToDisplayValue, jpyToThb } from "@/lib/utils/currency"
+
+const DAY_MS = 86_400_000
+
+export type RawPriceChart = {
+  /** Oldest first, aligned one-to-one with `dateIsos`. */
+  points: number[]
+  dateIsos: string[]
+  latestIso: string | null
+}
+
+type RawPriceChartRow = {
+  scrapedAt: string
+  priceJpy: number | null
+  priceThb: number | null
+  priceUsd?: number | null
+  source?: string
+  gradeCondition?: string | null
+  type?: string | null
+}
+
+/**
+ * Build the chart's one canonical Raw series from actual Yuyutei SELL rows.
+ * The newest scrape wins within each UTC day, and range windows end at the
+ * newest observation so stale-but-real cards still have deterministic charts.
+ */
+export function deriveRawPriceChart(
+  rows: RawPriceChartRow[],
+  options: { days: number; currency: Currency },
+): RawPriceChart {
+  const byDay = new Map<string, RawPriceChartRow>()
+
+  for (const row of rows) {
+    const timestamp = new Date(row.scrapedAt).getTime()
+    if (
+      row.source?.toUpperCase() !== PRICE_SOURCE.YUYUTEI ||
+      row.type?.toUpperCase() !== "SELL" ||
+      row.gradeCondition != null ||
+      row.priceJpy == null ||
+      !Number.isFinite(row.priceJpy) ||
+      row.priceJpy <= 0 ||
+      Number.isNaN(timestamp)
+    ) {
+      continue
+    }
+
+    const day = row.scrapedAt.slice(0, 10)
+    const existing = byDay.get(day)
+    // Queries order exact timestamp ties by id ascending, so `>=` makes the
+    // newest inserted observation (highest id) win deterministically.
+    if (!existing || timestamp >= new Date(existing.scrapedAt).getTime()) byDay.set(day, row)
+  }
+
+  const ascending = [...byDay.values()].sort(
+    (a, b) => new Date(a.scrapedAt).getTime() - new Date(b.scrapedAt).getTime(),
+  )
+  const latest = ascending.at(-1)
+  if (!latest) return { points: [], dateIsos: [], latestIso: null }
+
+  const latestMs = new Date(latest.scrapedAt).getTime()
+  const cutoff = latestMs - Math.max(0, options.days) * DAY_MS
+  const inWindow = ascending.filter((row) => new Date(row.scrapedAt).getTime() >= cutoff)
+
+  return {
+    // Use one conversion contract for the whole line. Mixing stored THB rows
+    // from different FX snapshots makes the chart jump even when JPY is flat,
+    // and disagrees with the Raw grade price shown directly above it.
+    points: inWindow.map((row) =>
+      jpyToDisplayValue(row.priceJpy as number, options.currency),
+    ),
+    dateIsos: inWindow.map((row) => row.scrapedAt),
+    latestIso: latest.scrapedAt,
+  }
+}
 
 export type PriceHistoryPoint = {
   /** ISO timestamp of the observation kept for that UTC day. */
@@ -101,7 +175,7 @@ export function derivePriceHistory(
 
   const windows: PriceHistoryWindow[] = []
   for (const days of PRICE_HISTORY_WINDOWS) {
-    const cutoff = latestMs - days * 86_400_000
+    const cutoff = latestMs - days * DAY_MS
     const inWindow = ascending.filter((e) => new Date(e.scrapedAt).getTime() >= cutoff)
     if (inWindow.length < 2) continue
     const values = inWindow.map((e) => e.priceJpy)

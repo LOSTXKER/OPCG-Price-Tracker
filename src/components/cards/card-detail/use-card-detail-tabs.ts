@@ -5,6 +5,11 @@ import { useEffect, useRef, useState } from "react"
 import type { Language } from "@/lib/i18n"
 
 const SECTION_IDS = ["overview", "sources", "market", "versions"]
+const ACTIVATION_SLOP_PX = 4
+
+export function getSectionActivationLine(navBottom: number, scrollMarginTop: number) {
+  return Math.max(navBottom, scrollMarginTop) + ACTIVATION_SLOP_PX
+}
 
 /**
  * Owns the sticky section-nav: scrollspy (which in-page section sits under the
@@ -24,8 +29,9 @@ export function useCardDetailTabs(lang: Language) {
   }
 
   // Scrollspy — the tabs are in-page anchors, so the active underline must
-  // follow the section currently under the sticky chrome. The threshold is the
-  // tab bar's own bottom edge, so it stays exact across breakpoints.
+  // follow the section currently under the sticky chrome. Targets intentionally
+  // stop a little below the sticky nav via scroll-margin; include that landing
+  // line so a completed tab click is not immediately reset to the prior tab.
   useEffect(() => {
     const sections = SECTION_IDS.map((id) => document.getElementById(id)).filter(
       (el): el is HTMLElement => el != null,
@@ -34,12 +40,14 @@ export function useCardDetailTabs(lang: Language) {
     let raf = 0
     const sync = () => {
       raf = 0
-      const offset = (navRef.current?.getBoundingClientRect().bottom ?? 100) + 4
+      const navBottom = navRef.current?.getBoundingClientRect().bottom ?? 100
       // Active = section most recently crossed under the tab bar (greatest top
       // still ≤ offset). Ties break to the FIRST id → main column wins.
       let current = sections[0].id
       let bestTop = -Infinity
       for (const el of sections) {
+        const scrollMarginTop = Number.parseFloat(getComputedStyle(el).scrollMarginTop) || 0
+        const offset = getSectionActivationLine(navBottom, scrollMarginTop)
         const top = el.getBoundingClientRect().top - offset
         if (top <= 0 && top > bestTop) {
           bestTop = top

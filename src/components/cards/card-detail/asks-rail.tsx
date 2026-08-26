@@ -118,7 +118,7 @@ export function MeecardAsksRail({
   currentPriceJpy: number | null
   currency: Currency
   lang: Language
-  /** Shared page range — same selector as the chart and the price history. */
+  /** Shared page range — same selector as the chart and recent sales. */
   range?: ChartRange
   onRangeChange?: (range: ChartRange) => void
 }) {

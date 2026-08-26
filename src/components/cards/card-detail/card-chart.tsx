@@ -13,8 +13,8 @@ import { useUIStore } from "@/stores/ui-store"
 export const INTRADAY_ENABLED = false
 export const RANGES = ["7D", "1M", "3M", "1Y", "All"] as const
 export type ChartRange = (typeof RANGES)[number]
-/** Days each range covers — shared with the price-history table so one range
- *  control governs both the chart and the dated rows. */
+/** Days each range covers — shared by the chart and market feeds so one range
+ *  state governs every time-based surface on the page. */
 export const RANGE_DAYS: Record<ChartRange, number> = { "7D": 7, "1M": 30, "3M": 90, "1Y": 365, All: 730 }
 const SPAN_DAYS = RANGE_DAYS
 const DAY_MS = 86_400_000
@@ -27,20 +27,30 @@ export function dateAtIndex({
   len,
   range,
   latestUpdatedAt,
+  dateIsos,
   lang,
 }: {
   i: number
   len: number
   range: (typeof RANGES)[number]
   latestUpdatedAt?: string | null
+  dateIsos?: string[]
   lang: Language
 }) {
+  const exactTime = dateIsos?.[i] ? new Date(dateIsos[i]).getTime() : null
   const refTime = latestUpdatedAt ? new Date(latestUpdatedAt).getTime() : null
-  if (refTime == null || Number.isNaN(refTime) || len < 2) return ""
-  const days = (SPAN_DAYS[range] * (len - 1 - i)) / (len - 1)
-  return new Date(refTime - days * DAY_MS).toLocaleDateString(
+  const time =
+    exactTime != null && !Number.isNaN(exactTime)
+      ? exactTime
+      : refTime != null && !Number.isNaN(refTime) && len >= 2
+        ? refTime - ((SPAN_DAYS[range] * (len - 1 - i)) / (len - 1)) * DAY_MS
+        : null
+  if (time == null) return ""
+  return new Date(time).toLocaleDateString(
     getLocale(lang),
-    isLongRange(range) ? { day: "numeric", month: "short", year: "2-digit" } : { day: "numeric", month: "short" },
+    isLongRange(range)
+      ? { day: "numeric", month: "short", year: "2-digit", timeZone: "UTC" }
+      : { day: "numeric", month: "short", timeZone: "UTC" },
   )
 }
 
@@ -48,9 +58,31 @@ export type ChartSeries = {
   key: string
   label: string
   points: number[]
+  /** Actual observation timestamps, aligned one-to-one with `points`. */
+  dateIsos?: string[]
   color: string
   /** modeled estimate → rendered as a dashed line (honesty signal). */
   isEst: boolean
+}
+
+/**
+ * Position observations by their real timestamps inside the selected window.
+ * Legacy/model series without aligned dates retain the old even spacing.
+ */
+export function chartPointFractions(
+  dateIsos: string[] | undefined,
+  len: number,
+  range: ChartRange,
+): number[] {
+  const fallback = Array.from({ length: len }, (_, i) => (len < 2 ? 1 : i / (len - 1)))
+  if (!dateIsos || dateIsos.length !== len || len < 2) return fallback
+
+  const times = dateIsos.map((iso) => new Date(iso).getTime())
+  if (times.some(Number.isNaN)) return fallback
+  const endMs = times[len - 1]!
+  const startMs = range === "All" ? times[0]! : endMs - SPAN_DAYS[range] * DAY_MS
+  const spanMs = Math.max(1, endMs - startMs)
+  return times.map((time) => Math.min(1, Math.max(0, (time - startMs) / spanMs)))
 }
 
 /** Multi-series price chart. series[0] is the primary (area + bold line); the
@@ -85,7 +117,9 @@ export function niceTicks(lo: number, hi: number, count = 5): number[] {
 function fmtAxisDate(ms: number, range: ChartRange, lang: Language): string {
   return new Date(ms).toLocaleDateString(
     getLocale(lang),
-    isLongRange(range) ? { month: "short", year: "2-digit" } : { day: "numeric", month: "short" },
+    isLongRange(range)
+      ? { month: "short", year: "2-digit", timeZone: "UTC" }
+      : { day: "numeric", month: "short", timeZone: "UTC" },
   )
 }
 
@@ -99,20 +133,28 @@ export function xAxisTicks(
   range: ChartRange,
   lang: Language,
   plotW: number,
+  actualStartMs?: number,
 ): { frac: number; label: string }[] {
-  const spanMs = SPAN_DAYS[range] * DAY_MS
+  const spanMs =
+    range === "All" && actualStartMs != null && actualStartMs < refMs
+      ? refMs - actualStartMs
+      : SPAN_DAYS[range] * DAY_MS
   const startMs = refMs - spanMs
   const anchors: number[] = []
   const pushMonthly = (stepMonths: number, quarter = false) => {
     const d = new Date(startMs)
-    d.setHours(0, 0, 0, 0)
-    d.setDate(1)
-    while (d.getTime() < startMs || (quarter && d.getMonth() % 3 !== 0)) d.setMonth(d.getMonth() + 1)
-    for (; d.getTime() <= refMs; d.setMonth(d.getMonth() + stepMonths)) anchors.push(d.getTime())
+    d.setUTCHours(0, 0, 0, 0)
+    d.setUTCDate(1)
+    while (d.getTime() < startMs || (quarter && d.getUTCMonth() % 3 !== 0)) {
+      d.setUTCMonth(d.getUTCMonth() + 1)
+    }
+    for (; d.getTime() <= refMs; d.setUTCMonth(d.getUTCMonth() + stepMonths)) {
+      anchors.push(d.getTime())
+    }
   }
   if (range === "7D") {
     const d = new Date(startMs)
-    d.setHours(0, 0, 0, 0)
+    d.setUTCHours(0, 0, 0, 0)
     for (let tms = d.getTime(); tms <= refMs; tms += DAY_MS) anchors.push(tms)
   } else if (range === "1M") {
     for (let tms = refMs; tms >= startMs; tms -= 7 * DAY_MS) anchors.push(tms)
@@ -223,6 +265,7 @@ export function ScrubChart({
   const TOOLTIP_FONT = 13
   const TOOLTIP_LABEL_FONT = 12
   const len = primary.points.length
+  const pointFractions = chartPointFractions(primary.dateIsos, len, range)
   const allPoints = drawn.flatMap((s) => s.points)
   const min = Math.min(...allPoints)
   const max = Math.max(...allPoints)
@@ -244,7 +287,7 @@ export function ScrubChart({
   const padLeft = 14
   const plotW = width - padLeft - padRight
 
-  const x = (i: number) => padLeft + (plotW * i) / (len - 1)
+  const x = (i: number) => padLeft + plotW * pointFractions[i]!
   const y = (v: number) => padTop + ((yMax - v) / Math.max(1, yMax - yMin)) * plotH
   const active = activeIndex != null ? Math.min(len - 1, Math.max(0, activeIndex)) : len - 1
   const latestIndex = len - 1
@@ -266,9 +309,20 @@ export function ScrubChart({
   const tagY = Math.min(height - padBottom - 10, Math.max(padTop + 10, y(lastVal)))
 
   // Calendar-snapped date ticks — evenly spaced, sized to the real plot width, with
-  // "today" pinned at the right edge (see xAxisTicks). Replaces the old measure→thin split.
-  const refMs = latestUpdatedAt ? new Date(latestUpdatedAt).getTime() : null
-  const xTicks = refMs != null && !Number.isNaN(refMs) ? xAxisTicks(refMs, range, lang, plotW) : []
+  // the newest observation pinned at the right edge. Replaces the old measure→thin split.
+  const chartLatestIso = primary.dateIsos?.at(-1) ?? latestUpdatedAt
+  const refMs = chartLatestIso ? new Date(chartLatestIso).getTime() : null
+  const chartStartMs = primary.dateIsos?.[0] ? new Date(primary.dateIsos[0]).getTime() : undefined
+  const xTicks =
+    refMs != null && !Number.isNaN(refMs)
+      ? xAxisTicks(
+          refMs,
+          range,
+          lang,
+          plotW,
+          chartStartMs != null && !Number.isNaN(chartStartMs) ? chartStartMs : undefined,
+        )
+      : []
 
   const scrubAt = (event: PointerEvent<SVGSVGElement>) => {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -278,7 +332,16 @@ export function ScrubChart({
     // the right axis gutter offsets every hit (worst on 7D, few points).
     const vx = ((event.clientX - rect.left) / rect.width) * width
     const frac = Math.min(1, Math.max(0, (vx - padLeft) / plotW))
-    onScrub(Math.round(frac * (len - 1)))
+    let nearest = 0
+    let nearestDistance = Number.POSITIVE_INFINITY
+    for (let i = 0; i < pointFractions.length; i += 1) {
+      const distance = Math.abs(pointFractions[i]! - frac)
+      if (distance < nearestDistance) {
+        nearest = i
+        nearestDistance = distance
+      }
+    }
+    onScrub(nearest)
   }
 
   const ttW = 188
@@ -290,7 +353,10 @@ export function ScrubChart({
 
   // Crosshair date-pill on the time axis (Google/CoinGecko): WHEN on the axis, WHAT on the
   // line. Clamped to the plot so it never escapes the gutters.
-  const dpLabel = activeIndex != null ? dateAtIndex({ i: active, len, range, latestUpdatedAt, lang }) : ""
+  const dpLabel =
+    activeIndex != null
+      ? dateAtIndex({ i: active, len, range, latestUpdatedAt, dateIsos: primary.dateIsos, lang })
+      : ""
   const dpW = Math.ceil(Math.max(6, dpLabel.length) * X_AXIS_FONT * 0.62) + 14
   const dpX = Math.min(width - padRight - dpW / 2, Math.max(padLeft + dpW / 2, x(active)))
 
@@ -462,7 +528,7 @@ export function ScrubChart({
           <g transform={`translate(${ttX} ${ttY})`}>
             <rect width={ttW} height={ttH} rx="10" fill="var(--popover)" stroke="var(--p-hair)" />
             <text x="12" y="17" fill="var(--muted-foreground)" fontSize={TOOLTIP_FONT}>
-              {dateAtIndex({ i: active, len, range, latestUpdatedAt, lang })}
+              {dateAtIndex({ i: active, len, range, latestUpdatedAt, dateIsos: primary.dateIsos, lang })}
             </text>
             {drawn.map((s, idx) => (
               <g key={s.key} transform={`translate(12 ${32 + idx * 19})`}>

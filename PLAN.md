@@ -1,8 +1,41 @@
 # Meecard — PLAN (งานโค้ดค้างจริง — ขุดจาก doc/ + เทียบโค้ดแล้ว 2026-06-13)
+
 > งานใหญ่แตกเป็น task ติ๊กได้ · ทำทีละอัน · ติ๊กเมื่อ **verify แล้ว** (ไม่ใช่แค่เขียนเสร็จ)
 > ลำดับ milestone = ข้อเสนอ — เบสสลับได้ · แผนธุรกิจ/north star อยู่ `doc/archive/detailed-plan-2026-04-28.md` (archived snapshot) ไม่ใช่ไฟล์นี้
 
+## 🎛️ Recent-sales inline filters (2026-08-26)
+
+- [x] **RECENT-SALES-FILTERS-01** — แสดงตัวกรองสภาพและแหล่งขายแบบ inline โดยไม่ซ่อนใน `FilterModal`, วางตัวเลือกช่วงเวลาไว้ฝั่งขวา และคง shared range state, tier locks, filtering, table/list breakpoints และ empty states เดิม · focused 8/8 · lint 0 error · test 868/868 · build 209 หน้า · Browser 390/768/1024/1440px ยืนยัน filters visible, range ชิดขวา, no overflow และ state sync
+- [x] **RECENT-SALES-FILTERS-02** — บังคับ `สภาพ` และ `ตลาด` เป็นคนละบรรทัดทุก viewport โดยคงตัวเลือกช่วงเวลาไว้ฝั่งขวาและไม่เปลี่ยน filtering behavior · focused 8/8 · lint 0 error · test 868/868 · build 209 หน้า · Browser 390/1440px ยืนยันคนละบรรทัด, range ชิดขวา, no overflow/overlay/error
+- [x] **RECENT-SALES-FILTERS-03** — ทดลองย้ายหัวข้อ `สภาพ` และ `ตลาด` มาอยู่หน้ารางตัวเลือกในแต่ละบรรทัด โดยคง rail เลื่อนแนวนอน, ช่วงเวลาฝั่งขวา และ filtering behavior เดิม · focused 9/9 · lint 0 error · test 869/869 · build 209 หน้า · Browser 390/1440px ยืนยัน label อยู่หน้า rail, center delta 0, range ชิดขวา และ no overflow/overlay/page error
+- [x] **RECENT-SALES-FILTERS-04** — คืนหัวข้อ `สภาพ` ไปอยู่เหนือ segmented rail, เปลี่ยน `ตลาด` เป็น dropdown ฝั่งขวา และคงตัวเลือกช่วงเวลาชิดขวา, exact-source filtering, tier lock และ responsive behavior เดิม · focused 8/8 · lint 0 error · test 868/868 · build 209 หน้า · Browser 390/768/1024/1440px ยืนยัน responsive topology, dropdown เลือก SNKRDUNK ได้จริง และ no overflow/overlay/page error
+- [x] **RECENT-SALES-FILTERS-05** — polish แถบควบคุมให้เป็นระบบเดียวกัน: รวม `ตลาด` + `ช่วงเวลา` เป็นกลุ่มรองฝั่งขวา, ย้ายหัวข้อ `ตลาด` เข้าใน dropdown, ทำ Select เป็น soft control โทนเดียวกับ segmented rails และรักษา responsive/filter behavior เดิม · focused 3/3 · lint 0 error · test 868/868 · build 209 หน้า · Browser light/dark 390/768/1024/1440px ยืนยัน baseline, responsive grouping, dropdown/range interaction และ no overflow/overlap/page error
+- [x] **RECENT-SALES-FILTERS-06** — คืน UI ตามแบบเดิม: ช่วงเวลาอยู่ซ้ายคู่ปุ่ม `ตัวกรอง`, ย้าย facet `สภาพ` + `ตลาด` กลับเข้า `FilterModal` และรักษา exact-source/grade filtering, shared range state, tier locks และ responsive table/list เดิม · focused 3/3 · lint 0 error · test 868/868 · build 209 หน้า · Browser light/dark 390/768/1024/1440px ยืนยัน controls อยู่บรรทัดเดียว, modal filter/apply/reset/keyboard ใช้งานจริง และ no overflow/page error
+
+## 📉 Card detail price-history dedupe (2026-08-26)
+
+- [x] **CARD-HISTORY-DEDUP-01** — เอาตาราง “ประวัติราคา” ที่ซ้ำกับกราฟออกจากหน้าการ์ด, ย้าย anchor ไปที่กราฟ, ถอด prop/data derivation ที่มีไว้เพื่อตารางนี้ และคงประวัติการซื้อขายล่าสุดไว้; กราฟ Raw อ่าน `CardPrice` ชุดเดียวกันแทนเส้นจำลอง, ช่วงยาวผ่าน API ที่ gate tier ฝั่ง server · focused 61/61 · lint 0 error · test 865/865 · build 209 หน้า · Browser 390×844 และ 1440×900 ไม่มี overflow/overlay/page error
+- [ ] **CARD-HISTORY-DATA-01** — แยก provenance ของราคา seed กับราคา scrape จริง แล้วล้าง/backfill OP13-118_p3 ก่อนใช้กราฟนี้เป็นหลักฐานตลาดจริง; ต้องออกแบบ schema/data cleanup และขออนุมัติก่อนแตะ migration หรือข้อมูล
+
+## 📅 OP03 Japanese release date (2026-08-26)
+
+- [x] **SET-RELEASE-OP03-01** — เก็บวันวางขายญี่ปุ่น OP03 จาก Bandai ใน catalog fallback เฉพาะหน้ารายละเอียด (ไม่ทำให้ global latest-set เพี้ยนระหว่าง DB ยัง backfill ไม่ครบ), แสดง label + วันเต็มใน Set Hero เดิม · regression 9/9 · lint 0 error (35 warning เดิม) · test 845/845 · build 209 หน้า · Browser 390×844 และ 1440×900 ไม่มี overflow/overlay/console error
+
+## 🐛 Honey mission create race (2026-08-26)
+
+- [x] **HONEY-RACE-01** — daily/monthly `UserMissionPeriod` get-or-create รับ P2002 แล้วอ่าน row ที่ request คู่แข่งสร้าง; mission tracking retry P2034 สูงสุด 3 ครั้ง · regression 6/6 · lint 0 error (35 warning เดิม) · test 843/843 · build 209 หน้า · browser จริง GET/POST missions = 200 ไม่มี overlay/console error
+
+## 🏠 Homepage hero set picker (2026-08-26)
+
+- [x] **HOME-HERO-SET-01** — เพิ่ม dropdown เลือกชุด (`HeroSetPicker` ครอบ `SetPicker` เดิมโหมด navigate) เป็น CTA หลักในฮีโร่หน้าแรก — กดชุดแล้วเด้งไป `/opcg/sets/{code}` พร้อม pending state; ย่อช่องค้นหา (h-14→h-12, rounded-2xl→xl) + typewriter เป็นตัวรอง · SSR test ใหม่ล็อกลำดับ dropdown ก่อน input · tsc 0 · lint 0 error (34 warning) · test 868/868 · build 209 หน้า · Browser 390×844 (trigger 48px, popover ทับเนื้อหาถูกชั้น, nav ถึง op03 จริง) และ 1440×900 ไม่มี console error
+- [x] **HOME-HERO-SET-02 (bolder pass)** — เบสติงว่ายังไม่สวย: trigger นำด้วย fan รูปกล่องชุดล่าสุด 3 ใบ (`triggerLeading` prop ใหม่บน `SetPicker`, รูป fixed-size ไม่ใช้ fill), label prominent อ่านสี foreground เต็ม, trigger สูง min-h-14 + `--elev-raised`, สองแท่งจัดแนวเดียวกัน `sm:max-w-xl` · impeccable detector `[]` · tsc 0 · lint 0 error · test 869/869 · build 209 หน้า · Browser มือถือ/desktop มืด+สว่าง ยืนยัน fan แสดงถูก popover ถูกชั้น (ปมภาพแท่งเข้มก่อนหน้า = artifact ของ Browser pane capture ไม่ใช่บั๊กเว็บ — DOM/computed ถูกตลอด)
+
+## 🏠 Homepage latest-set placement (2026-08-26)
+
+- [x] **HOME-SETS-ORDER-01** — ย้าย “ชุดการ์ดวันพีชล่าสุด” จากใต้ search hero ไปไว้หลังตารางตลาดและ pagination โดยคง crawlable links, responsive rail/grid และข้อมูลเดิม · regression 7/7 · lint 0 error (35 warning เดิม) · test 844/844 · build 209 หน้า · Browser 390×844 และ 1280×720 ยืนยันลำดับ/spacing/no-overflow/no-overlay
+
 ## 🔍 SEO Pillar + Content (2026-08-04 — จาก audit 11 ทีม · แผนเต็ม: [doc/seo-content-plan.md](doc/seo-content-plan.md))
+
 > เป้า: เว็บอ่านออกโดย Google เป็น "เว็บไทยเรื่องราคาการ์ดวันพีซ" — โครง 3 ชั้น หน้าแรก → หน้าชุด → หน้าการ์ด + เสาความรู้ /guide
 > ข้อเท็จจริงจาก DB (ตรวจ 2026-08-04): การ์ด 3,838 ใบ · **`Card.nameTh` ไม่ใช่ภาษาไทยเลยสักใบ** (เป็นสำเนาชื่ออังกฤษ — ห้ามเคลมว่าค้นด้วยชื่อไทยได้) แต่ **`effectTh` เป็นไทยจริง 3,478 ใบ** · ชุด 51 (`CardSet.nameTh` ว่างทั้งหมด) · `latestPriceThb` ว่างทั้งหมด (ต้องแปลงจาก JPY ด้วย `jpyToThb`) · ตาราง BlogPost **ไม่มีใน DB** (บล็อกยังไม่ทำงานจริง) · drop rate มี 50/51 ชุด
 
@@ -32,6 +65,7 @@
 - [x] **หน้าชุด: intro เลิกเป็น data dump** (owner call จาก screenshot 2026-08-07) — ย่อหน้าเดิมอัด rarity breakdown + กล่อง/ซอง + ใบแพงสุด ซึ่ง**ตาเห็นบนหน้าอยู่แล้วทุกตัว** (hero โชว์ใบแพงสุด · กำแพงราคาคือ rarity breakdown · drop rate มีเรื่องกล่อง) → เหลือประโยคเดียว 129 ตัวอักษร (ชนิดชุด + วันวางขายถ้ามี + จำนวนใบ + อัปเดตทุกวัน + สะกดทั้งสอง) · หัว section ใช้ SectionHead + ArrowLink "ดูชุดทั้งหมด" เป็น action ขวา · ลบ rarityBreakdown ที่ตายแล้ว · test อัปเดตเป็นล็อกว่า "ห้ามทวนของที่หน้าโชว์" · verify: tsc/lint/test 776/build + วัด DOM จริง
 
 ## 🩸 SEO Round 1 — หยุดเลือด (2026-08-07 — จาก audit 12 ทีม · รายงาน: artifact "ตรวจ SEO ทั้งเว็บ Meecard")
+
 > เป้า: ตัดแพทเทิร์นที่โดนหักคะแนนระดับโดเมนก่อน แล้วค่อยทำ Round 2 (og/วันที่/cannibalization) และ Round 3 (ความสวย guide hub)
 
 - [x] **R1-A FAQ บ้านเดียวต่อเรื่อง** — methodology เหลือบ้านเดียวที่ `/about#methodology` (ติด id แล้ว) หน้าอื่น 1 ประโยค + ลิงก์ผ่าน prop `link` ของ FaqSection: home long-tail · sets index+รายชุด (ตัดข้อก๊อป 51 หน้า) · card (4→2 ข้อ ตัด Raw/PSA + parallel ตายตัวที่ก๊อป 3,838 หน้า) · search · market-overview (5→4 ข้อ, Raw/PSA → ลิงก์ /guide/rarities) · deck-calc · guide/buying · ยุบซ้ำ: home ตัด seoFaq2 (ทับ long-tail) · guide hub 9→6 (ตัด Q1 ทับ intro / Q2 ทับข้อเงิน / Q6 methodology + ย่อคำตอบแท้-ปลอมเหลือ 2 ประโยค+ลิงก์ authenticity) · pricing ตัด 2 ข้อเก่าที่ทับ buildPricingFaq · ลบ dict key ที่ตายแล้วทั้ง 3 ภาษา
@@ -39,6 +73,7 @@
 - [x] **R1-C sitemap วันที่จริง** — เลิก `new Date()`: หน้าราคาใช้ scrapedAt ล่าสุดจริง (aggregate เดียว) · sets ใช้ updatedAt · หน้านิ่งใช้ `STATIC_CONTENT_UPDATED` (แก้มือเมื่อแก้ copy) · เอา cap 5000 + changeFrequency/priority ออก — การ์ดครบ 3,838 ใบ (verify แล้ว) · **จบที่ไฟล์เดียว ไม่ใช่ generateSitemaps**: Next ไม่สร้าง index ที่ /sitemap.xml ให้ (ลองแล้ว 404 + route ชนกับ metadata) และเรามีแค่ ~3.9k URL ห่างเพดาน 50k มาก — comment ไว้ในไฟล์แล้วว่าเมื่อไหร่ค่อยกลับมาแยก
 - [x] **R1-D /blog กัน thin content** — `noindex, follow` แบบมีเงื่อนไข (index เมื่อโพสต์จริง ≥3, MIN_POSTS_TO_INDEX ใน blog/page.tsx) + เอาออกจาก sitemap (verify: meta robots ขึ้นจริง)
 - [x] **R1-E trending เลิกซ้ำ + ใส่ฝั่งลง** — 3 section server = ลง 24 ชม. / ขึ้น 7 วัน / ขึ้น 30 วัน ใช้ losers24h ที่ query อยู่แล้ว (ไม่มี query ใหม่) + intro อัปเดตตาม · test ล็อกพฤติกรรมใหม่แล้ว
+
 ## 🎯 SEO Round 2 — คันโยกอันดับ (2026-08-07 — ทำต่อจาก Round 1 ในวันเดียวกัน)
 
 - [x] **R2-A openGraph ต่อหน้า** — helper กลาง `buildPageMetadata` (src/lib/seo/page-metadata.ts: title/desc/canonical → og:url ตรง canonical + twitter) แล้วไล่ใช้ทั้งเว็บ: guide 9 หน้า (ogType article) · เครื่องมือ 4 หน้า · sets index+รายชุด (og:image = รูปกล่อง/ใบแพงสุด) · most-expensive + trending (og:image = การ์ด Top 1) · search · market-overview · pricing · about · contact · honey · raffle · blog — แชร์ LINE/FB ได้ preview ของหน้าตัวเองแล้ว (verify ด้วย curl ทุกกลุ่ม)
@@ -51,6 +86,7 @@
 - [x] **R1-V ตรวจรับ** — tsc 0 · lint 0 · vitest 134 ไฟล์/742 ผ่านหมด (อัปเดต 2 test ที่ล็อก FAQ 4 ข้อเดิมให้ล็อกพฤติกรรมใหม่) · build 209 หน้า · ตรวจ HTML จริงจาก `next start` ที่ :3001 (พอร์ต 3000 โดน Bill Tracker ยึด): sitemap 3,914 URL ไม่มี blog · /blog noindex · trending มี "ราคาลงแรงสุด" ใน HTML และไม่ซ้ำตารางบน · FAQ set/card ไม่มีข้อ methodology ก๊อป + ลิงก์ /about#methodology ขึ้นจริง · guide hub เหลือ 6 ข้อ
 
 ## 🧭 UX/UI Refactor Master Plan (2026-07-04 — แผนคุมงาน UI ทั้งหมดต่อจากนี้)
+
 > จาก audit ทั้งเว็บ (workflow 86 agents · 19 auditors + adversarial verify) ได้ 230 findings — **checklist รายข้อ + กติกา: [doc/uxui-refactor-plan.md](doc/uxui-refactor-plan.md)** · หลักฐานราย finding: [doc/uxui-audit-findings-2026-07-04.md](doc/uxui-audit-findings-2026-07-04.md) · ที่นี่ติ๊กระดับ phase เท่านั้น
 > แผนนี้ดูดซับงานค้างเดิม: R1 empty-state → Phase 4 · แตก client ยักษ์ → Phase 2/5 · Declutter Batch 5–6 → Phase 5 (honey/desktop balance)
 
@@ -64,6 +100,7 @@
 - [ ] **Phase 7** commerce + admin เก็บกวาด (**ก่อนเปิด marketplace flag**)
 
 ### Card picker visual hierarchy polish — 2026-07-25
+
 > ปรับ dialog “เลือกการ์ด” จากภาพใช้งานจริงให้ลำดับ `เกม → ชุด → ค้นหา/กรอง → เลือกการ์ด` อ่านต่อเนื่องขึ้น ลดพื้นที่โล่ง และทำรายการกดเลือกง่าย โดยคง launch-ready gate, multi-select, review/submit และ FilterModal เดิม
 
 - [x] **CPV1 — Control hierarchy:** จัดเป็น filter workspace 2 ชั้นโดยไม่มีเลขขั้น: game context + set อยู่ด้านบน, search + filter อยู่ด้านล่าง; 1 เกม live เป็น read-only context และ 2+ เกมจึงใช้ Select จริง
@@ -72,6 +109,7 @@
 - [x] **CPV4 — Verification:** focused 5 files / 20 tests + full 128 files / 698 tests + TypeScript + lint 0 errors + build 157 pages ผ่าน; Browser Watchlist/Portfolio/Marketplace ที่ 390×667, 390×844 และ 1280×720 ยืนยัน layout ไม่มีเลขขั้น, selection เดิมทำงาน และไม่มี horizontal overflow
 
 ### Card-detail shared portfolio acquisition form — 2026-07-25
+
 > ให้ “เพิ่มเข้าพอร์ต” บนหน้ารายละเอียดการ์ดใช้ฟอร์มรายการซื้อ canonical ชุดเดียวกับ flow เพิ่มการ์ดในหน้าพอร์ต โดยคงขั้นเลือก/สร้างพอร์ต, idempotent batch mutation, required cost/date, zero-cost semantics และ feedback เดิม
 
 - [x] **CPA1 — Shared form contract:** แยก `CardAcquisitionForm` + draft/validation/payload builder เป็นแกนเดียวสำหรับจำนวน · ต้นทุนต่อใบ · วันที่ได้มา · โน้ต โดย single-card กับ batch flow ใช้ component identity เดียวกัน
@@ -80,6 +118,7 @@
 - [x] **CPA4 — Verification:** focused 3 files / 14 tests + TypeScript + lint 0 errors + full 128 files / 696 tests + production build 157 pages ผ่าน; Browser Card Detail และ Portfolio Add ที่ 390/768/1440px ยืนยันฟอร์มกลาง, interaction, no-overflow และ console error 0 โดยไม่กดบันทึกข้อมูลจริง
 
 ### Homepage mobile price hierarchy polish — 2026-07-25
+
 > แก้ trailing metrics ในรายการตารางหน้าแรกบนมือถือจากภาพใช้งานจริง: ราคาและ % เปลี่ยนแปลงต้องอ่านเป็นคนละชั้น ไม่ไหลมาติดกัน โดยคงข้อมูล, sparkline, ความสูงแถว และ desktop table เดิม
 
 - [x] **HMP1 — Explicit metric stack:** จัดราคาไว้บรรทัดบนและ % เปลี่ยนแปลงไว้บรรทัดล่างแบบชิดขวา โดยใช้ `PriceTag`/typography เดิมและไม่เพิ่มความกว้างแถว
@@ -87,6 +126,7 @@
 - [x] **HMP3 — Verification:** focused 3 files / 4 tests + TypeScript + lint 0 errors + full 125 files / 676 tests + build 157 pages ผ่าน; Browser Raw ที่ 320/390px ยืนยัน stack 4px ชิดขวาและตัวแถวไม่ล้น, 640px สลับ desktop table ถูกต้อง, error overlay/console error 0; graded geometry ผ่าน static render test
 
 ### Site-wide display currency consistency — 2026-07-25
+
 > ราคาที่เป็นข้อมูลเพื่อผู้ใช้ตัดสินใจต้องแสดงตามสกุลเงินใน `useUIStore`; คงสกุลเงินจริงไว้เฉพาะบริบทที่เป็นหลักฐานต้นทาง/ธุรกรรม/SEO เช่น source-native Yuyutei/SNKRDUNK, invoice และ JSON-LD
 
 - [x] **CUR1 — Reproduce + inventory:** เพิ่ม failing regression จาก dialog แจ้งเตือนที่ช่องกรอกเป็น THB แต่ราคาตลาดยังเป็น JPY และ audit จุดฟอร์แมตราคาฝั่งผู้ใช้ทั้งเว็บ
@@ -95,6 +135,7 @@
 - [x] **CUR4 — Verification:** focused/full tests + TypeScript/lint/build + Browser THB/JPY/USD ที่ alert และ representative public/private routes พร้อมตรวจ no-overflow/console
 
 ### Market overview decision-first redesign — 2026-07-24
+
 > ปรับ `/opcg/market-overview` ให้ผู้ใช้ตอบได้เร็วว่า “ตลาดมีมูลค่าเท่าไร · กำลังขึ้นหรือลง · อะไรเป็นตัวนำตลาด” โดยรักษาข้อมูล Raw/7-day contract เดิม ใช้ component kit กลาง และแก้ mobile overlap ที่รายการเซ็ตโดยไม่แตะ query/schema
 
 - [x] **MOR1 — Runtime + contract audit:** เปิดดูจริงที่ 390/1440px, trace server/client/data contract และยืนยันปัญหา hierarchy, density และชื่อเซ็ตทับมูลค่าบนมือถือ
@@ -103,6 +144,7 @@
 - [x] **MOR4 — State parity + verification:** ปรับ loading/tests แล้วตรวจ focused/full test, TypeScript, lint, build และ Browser 320/390/640/768/1440px Light/Dark + focus/interaction/no-overflow/console
 
 ### Portfolio share flex card — 2026-07-24
+
 > Refactor หน้าต่างแชร์พอร์ตและภาพ export ให้เป็นผลงานที่อยากโพสต์จริง: จุดเด่นต้องเป็นมูลค่าพอร์ต + ผลตอบแทน + ภาพการ์ด, รักษาแบรนด์ espresso+honey, ใช้ข้อมูลจริงเท่านั้น และคง download/copy/native-share flow เดิม
 
 - [x] **PSF1 — Audit + visual contract:** ตรวจ component/diff/runtime ปัจจุบัน, ล็อกข้อมูลและ interaction ที่ต้องรักษา และออกแบบ hierarchy ใหม่โดยไม่ใช้ gradient/blur
@@ -115,6 +157,7 @@
 - [x] **PSF8 — Customization verification:** เพิ่ม regression coverage แล้วตรวจ TypeScript/lint/test/build + Browser 390/768/1440px + preset/toggle/keyboard/no-overflow และเปิด PNG จริงทุก narrative หลัก
 
 ### Advertising hard reset + two-format replan — 2026-07-24
+
 > Owner สั่งถอด Google Ads mockup/พื้นที่โฆษณาปัจจุบันออกจากทุกหน้าก่อน แล้วค่อยกลับมาทำระบบใหม่ 2 แบบ: (1) Google Ads เป็น mockup เท่านั้น ไม่เชื่อม network และ (2) พื้นที่โฆษณาที่ลูกค้าติดต่อ MeeCard โดยตรง; รอบ reset ห้ามเหลือ slot, skeleton, consent state หรือช่องว่างใน runtime
 
 - [x] **AHR1 — Whole-site removal:** ถอด caller/component/registry/test/consent state และข้อความเฉพาะระบบโฆษณาเดิม โดยรักษา `featAdFree` ซึ่งยังเป็นสิทธิ์แพ็กเกจใน product contract
@@ -149,6 +192,7 @@
   - [x] **AHR8.3 — Verification:** 128 files / 696 tests + TypeScript/lint/build ผ่าน; Browser 390/768/1280px ยืนยัน chart rail, marketplace rail และ bottom anchor อยู่ครบ โดย Home/Set upper ads ยังไม่กลับมา
 
 ### Package-limit clarity + ad placement reset — 2026-07-24
+
 > ทำให้ทุกจุดอัปเกรดบอกตัวเลขลิมิตปัจจุบันเทียบแพ็กเกจถัดไปจาก source เดียว และย้ายโฆษณาออกจากข้อมูลตัดสินใจไปอยู่ท้ายเนื้อหาสาธารณะ โดยรองรับพื้นที่ Google Ads/โฆษณาของเว็บทั้งมือถือและเดสก์ท็อป
 > **Historical:** งาน quota ยังใช้อยู่ แต่ implementation โฆษณาของ PLA3–PLA5 ถูก supersede โดย AHR hard reset
 
@@ -159,6 +203,7 @@
 - [x] **PLA5 — Verification:** regression tests สำหรับ tier delta/route governance + i18n parity + TypeScript/lint/test/build + Browser mobile/desktop ทั้ง Upgrade Dialog และตำแหน่งโฆษณาใหม่
 
 ### Quota visibility + Google Ads mockup correction — 2026-07-24
+
 > ทำให้ผู้ใช้เห็น “ใช้ไปเท่าไร / ลิมิตเท่าไร / ต้องอัปเกรดเป็นอะไร” ก่อนชนกำแพงในทุกระบบที่หน้า Pricing ระบุโควตา และให้ตำแหน่ง Google Ads เป็นเพียงกรอบ mockup ที่ไม่โหลด network/script จริง
 > **Historical:** งาน quota ยังใช้อยู่ แต่ Google mockup ของ QVA4–QVA5 ถูกถอนตาม AHR
 
@@ -169,6 +214,7 @@
 - [x] **QVA5 — Verification:** เพิ่ม regression tests, ตรวจ i18n, TypeScript/lint/test/build และเปิด Browser ทดสอบ mobile/desktop ในหน้าหลักที่แก้
 
 ### Quota tone + ad density rebalance — 2026-07-24
+
 > ลด quota จาก panel เชิงขายให้เป็นสถานะประกอบที่เบาและสุภาพ โดยยังเห็น current/max ชัด ส่วน Google Ads mockup เพิ่มเฉพาะรอยต่อเนื้อหาสาธารณะที่อ่านจบเป็นช่วง ๆ และคุมความถี่ไม่ให้กลายเป็นความรกแบบใหม่
 > **Historical:** quiet quota ยังใช้อยู่ แต่ placement/density ของ QAD3–QAD4 ถูก supersede โดยแผนโฆษณาใหม่
 
@@ -178,6 +224,7 @@
 - [x] **QAD4 — Verification:** เพิ่ม/แก้ regression tests, i18n parity, TypeScript/lint/test/build และ Browser visual mobile/desktop ตรวจ no-overflow + จังหวะเนื้อหา
 
 ### Contextual quota placement polish — 2026-07-24
+
 > ถอดตัวเลขลิมิตออกจาก navigation และ quota row กลางหน้า แล้ววาง current/max ไว้กับบริบทที่เกี่ยวข้องโดยตรง: Watchlist เป็น metadata ใต้ชื่อหน้า, จำนวนพอร์ตอยู่กับตัวสลับพอร์ต และลิมิตการ์ดอยู่กับรายการการ์ด
 
 - [x] **CQP1 — Placement audit:** เทียบ runtime mobile/desktop และ trace state/caller เพื่อเลือกตำแหน่งที่ไม่ซ้ำ navigation หรือสร้าง panel ใหม่
@@ -186,12 +233,14 @@
 - [x] **CQP4 — Verification:** regression tests + React review + TypeScript/lint/test/build ผ่าน และ Browser production/cold-dev ที่ 390/1440px ยืนยัน hierarchy, no-overflow และ console ไม่มี error
 
 ### Portfolio holdings summary dedupe — 2026-07-24
+
 > ยุบจำนวนรายการซื้อ/จำนวนใบ/card-entry quota ให้เป็น summary เดียว เพื่อไม่ให้ผู้ใช้เห็นข้อมูลนับซ้ำสองบรรทัดในหัว holdings
 
 - [x] **PHD1 — One summary:** ยุบเป็น `1 รายการซื้อ · รวม 1 ใบ · ใช้ไป 1/30` กลุ่มเดียว โดยไม่แยกหัว `รายการซื้อ` ซ้ำ
 - [x] **PHD2 — Verification:** sync TH/EN/JP + regression test + TypeScript/lint/build และ Browser 390/1440px ตรวจ wrap/no-overflow/console
 
 ### Contextual quota hierarchy polish — 2026-07-24
+
 > แยก “จำนวนข้อมูลในหน้าปัจจุบัน” ออกจาก “โควตาบัญชี” ให้เห็นเป็นคนละชั้น: Watchlist ใช้ ratio badge ที่หัวหน้าตามแท็บ ส่วน Portfolio ใช้ summary แบบไม่พูดจำนวนซ้ำและวาง quota เป็นสถานะรองแยกกลุ่ม
 
 - [x] **QHP1 — Watchlist header:** เปลี่ยน H1 ตามแท็บ (`รายการโปรด` / `แจ้งเตือนราคา`), ย้าย current/max เป็น neutral `LimitCounter` badge ข้างหัว และลบบรรทัด quota ใต้ H1 โดยแท็บยังเป็นข้อความอย่างเดียว
@@ -199,6 +248,7 @@
 - [x] **QHP3 — Canon + verification:** เพิ่ม accessible label/data-state ให้ badge กลาง, ปรับ regression tests และตรวจ React/TypeScript/lint/test/build + responsive no-overflow/console
 
 ### Portfolio Insights sparse-data polish — 2026-07-24
+
 > ลด KPI ที่ให้บริบทซ้ำกันและไม่สร้าง “กราฟปลอม” จากข้อมูลวันเดียว: ผู้ใช้ต้องอ่านได้ทันทีว่า `0` คือได้มาฟรี ไม่ใช่ข้อมูลหาย และเห็นกราฟเฉพาะเมื่อมีประวัติต่างวันพอให้ลากเส้นจริง
 
 - [x] **PIS1 — KPI hierarchy:** ยุบ Cost coverage เข้า Average cost, แสดงต้นทุนศูนย์เป็นสถานะ `ฟรี`, และลด count summary ที่จำนวนแบบเท่ากับจำนวนใบ
@@ -206,6 +256,7 @@
 - [x] **PIS3 — Parity + verification:** ปรับ preview/skeleton/tests/i18n ให้ตรงกัน แล้วตรวจ React/TypeScript/lint/test/build + responsive contract + cold Browser no-overflow/console
 
 ### Drop calculator guided selection flow — 2026-07-24
+
 > ลดภาระบนหน้าเดียวให้ผู้ใช้เลือกชุด/กรอง/เลือกการ์ดก่อน แล้วค่อยกดคำนวณเพื่อดูผล โดยคงค่าที่เลือกไว้และใช้ filter surface กลางของเว็บ
 
 - [x] **DCF1 — Selection workspace:** ย้ายตัวเลือกชุดมาอยู่กับ search/filter ฝั่งเนื้อหา, ถอด set action จาก page header และทำ card grid มือถือให้กะทัดรัดขึ้น
@@ -224,6 +275,7 @@
 - [x] **DCF14 — Header breathing rhythm:** เพิ่มระยะจาก site header และแก้ `mb-0` ที่หักล้างช่องว่างชื่อหน้า→wizard; sync loading แล้ววัด desktop/mobile production preview
 
 ### Portfolio add feedback + acquisition lots — 2026-07-23
+
 > แก้ flow เพิ่มการ์ดให้ผู้ใช้เห็นทุกสถานะ และทำให้แต่ละรายการสื่อชัดว่าบันทึกต้นทุน/รายละเอียดได้ ส่วนการแยกการ์ดซ้ำเป็นคนละล็อตต้องผ่าน schema/migration gate ก่อน เพราะกระทบต้นทุน โควตา และข้อมูลเดิม
 
 - [x] **PAL1 — Picker feedback:** initial/search loading, error + retry และสถานะกำลังบันทึกต้องมองเห็นและเข้าถึงได้
@@ -241,6 +293,7 @@
 - [x] **PAL7 — Server enforcement + verification:** POST สร้าง item/batch/lot ปฏิเสธวันที่หรือต้นทุนที่ขาดผ่าน Zod source เดียว; regression ครอบ local date/zero cost/missing fields/submit payload ทั้ง 3 ทาง และ TypeScript/lint/test/build + Browser flow จริงผ่าน
 
 ### Portfolio per-card acquisition details — 2026-07-24
+
 > เมื่อเลือกเพิ่มหลายการ์ด วันที่ได้มาและโน้ตต้องเป็นของแต่ละใบจริง เพราะผู้ใช้อาจได้การ์ดคนละวันและมีบริบทต่างกัน; วันที่เริ่มต้นเป็นวันนี้ทุกใบ ส่วนโน้ตเป็น optional disclosure เพื่อไม่ให้ฟอร์มยาวเกินจำเป็น
 
 - [x] **PAD1 — Per-card draft contract:** ย้ายวันที่ได้มาและโน้ตเข้า draft รายการ์ด โดยคงวันที่วันนี้เป็นค่าเริ่มต้นครั้งเดียวต่อการเปิด dialog และคง API/schema เดิมที่รองรับ per-item อยู่แล้ว
@@ -249,6 +302,7 @@
 - [x] **PAD4 — Verification:** React review + i18n parity + TypeScript/lint/test/build + Browser desktop/mobile ตรวจ isolation, no-overflow และ console
 
 ### Portfolio clarity pass — 2026-07-23
+
 > ลดภาระความเข้าใจของผู้ใช้ใหม่โดยไม่เปลี่ยน visual direction: แยก “แบบการ์ด/จำนวนใบ/รายการซื้อ” ให้ชัด, ให้เพิ่มการ์ดพร้อมบันทึกรายละเอียดการซื้อได้ใน flow เดียว และให้ตัวเลขทุกคอลัมน์บอกหน่วยตรงกัน
 
 - [x] **PCL1 — Count language:** ใช้คำเรียกแบบการ์ดและจำนวนใบให้ตรงกันทั้ง Overview/Insights/empty/loading/i18n
@@ -258,6 +312,7 @@
 - [x] **PCL5 — Acquisition field alignment:** จัดช่องจำนวนและต้นทุนต่อใบให้เริ่มเส้นเดียวกันตั้งแต่ `sm`, ใช้ control สูง 40px เท่ากัน และคง mobile stack เดิม; มี regression test + Browser Light/Dark geometry check
 
 ### Portfolio flat purchase rows — 2026-07-23
+
 > เปลี่ยน Overview จากหนึ่งแถวต่อ holding ที่ซ่อนรายการซื้อไว้ข้างใน เป็นหนึ่งแถวต่อรายการซื้อ เพื่อให้ต้นทุน วันที่ จำนวน และกำไรของแต่ละรายการอ่านได้ทันที โดยยังคง holding เป็น contract ภายในสำหรับ quota/public data
 
 - [x] **PFR1 — Flat row model:** แปลง owner-only holdings/lots เป็นแถวรายการซื้อแบบ derived data โดยรักษา known/unknown/zero-cost และ quantity ของ lot
@@ -277,6 +332,7 @@
 - [x] **PFR15 — Verification:** regression วันที่จริง/null, responsive state parity, React/a11y review, TypeScript/lint/test/build และ Browser ตรวจข้อมูลจริง/โครง desktop; mobile ใช้ responsive regression เพราะ Browser รอบนี้คง viewport 1280px
 
 ### Whole-site selection-control audit + refactor — 2026-07-21
+
 > ตรวจทุก production caller ของ Tabs, SegmentedControl, ViewModeControl, GradeControl และปุ่มเลือกแบบเขียนมือ เพื่อแก้ active alignment/สัดส่วน/geometry ที่รากโดยไม่ทำให้ component ที่ตั้งใจยาวตามข้อความเสีย และ sync loading/mock/tests ให้ไม่ drift
 
 - [x] **SC1 — Inventory + intent:** ทำรายการ caller ทั้งเว็บ แยก control ที่ควรแบ่งเท่ากัน, content-width, horizontal rail และ icon-only พร้อมระบุ hand-rolled duplicate/risk ก่อนแก้
@@ -285,6 +341,7 @@
 - [x] **SC4 — Verification:** regression tests + React/Next review + TypeScript/lint/test/build + Browser representative routes ที่ 390/768/1440px Light/Dark, active ทั้งสองฝั่ง และ no horizontal overflow
 
 ### Raw / PSA price lens — Watchlist + Set detail — 2026-07-19
+
 > เพิ่มตัวเลือก Raw/PSA 10 แบบเดียวกับหน้าแรกให้ `/watchlist` และ `/opcg/sets/[setCode]` โดยใช้ราคาจริงจาก SNKRDUNK เท่านั้น, ไม่แตะ schema/dependency/config และไม่แสดง %/กราฟ Raw ปนในโหมด PSA
 
 - [x] **RP1 — Data contract:** ส่ง `psa10PriceUsd` แบบ flattened จาก Watchlist API; Set detail ใช้ field ที่ query อยู่แล้วและคง `null` เมื่อไม่มีข้อมูลจริง
@@ -293,6 +350,7 @@
 - [x] **RP4 — Verification:** targeted regression tests + lint/test/TypeScript/build + Browser `/watchlist` และ `/opcg/sets/op03` ที่ 390/768/1440px Light/Dark, สลับ Raw/PSA, no overflow/console error
 
 ### Shared grade lens — whole-site consistency — 2026-07-19
+
 > ขยาย price lens ให้ตรงกับ grade ladder บน card detail: Raw + PSA 10 ใช้ราคาตลาดจริง; PSA 9 / PSA 8 / BGS 9.5 ยังคำนวณจาก PSA 10 ใน data layer แต่ UI ไม่แสดงป้าย `est.` ตาม owner decision และ `CardCondition` (NM/LP/ฯลฯ) ยังคงเป็นคนละแกน
 
 - [x] **GR1 — Shared contract:** ย้าย grade keys/tier metadata/สูตรประมาณไป SSOT ฝั่ง client-safe พร้อม helper สำหรับ availability + ราคา และให้ card detail ใช้ registry เดียวกัน
@@ -304,6 +362,7 @@
 - [x] **GR7 — Owner polish + responsive audit:** เอา `est.` ออกจาก grade rail/ราคา/card detail ทั้งเว็บโดยคง calculation contract เดิม แล้วตรวจ UX/UI จริงที่ 390/640/768/1440px ทั้ง Light/Dark, keyboard, active visibility และ no overflow
 
 ### Nested card-picker filter backdrop — 2026-07-20
+
 > เมื่อเปิดตัวกรองซ้อนบน dialog เลือกการ์ด ให้ desktop เบลอ dialog ชั้นหลังอย่างชัดเจน โดยไม่เปลี่ยน backdrop ของ FilterModal หน้าอื่นและไม่กระทบ mobile/focus/Escape
 
 - [x] **NB1 — Dialog contract:** รองรับการ force-render backdrop เฉพาะ nested dialog จาก canonical `DialogContent`
@@ -311,6 +370,7 @@
 - [x] **NB3 — Verification:** regression test + lint/test/TypeScript/build และตรวจ desktop nested flow, Escape/focus, mobile ไม่ถอย
 
 ### Canonical market table + 30-day graph — 2026-07-20
+
 > ให้ตารางรายการโปรดใช้โครง/คอลัมน์/ความหนาแน่นเดียวกับตารางหน้าแรก และกำหนด sparkline กลางของหน้าแรก · ค้นหา · รายการโปรด · พอร์ตเป็นข้อมูล Raw ย้อนหลัง 30 วันจริง ไม่ใช่แค่เปลี่ยนป้ายชื่อ
 
 - [x] **MT1 — 30-day data contract:** เปลี่ยน endpoint/hook กลางเป็น 30 วันย้อนหลังจาก Raw snapshot จริงล่าสุดของการ์ดแต่ละใบ, เก็บ snapshot ล่าสุดต่อวัน และเพิ่ม regression test ยืนยันช่วง query/series
@@ -319,6 +379,7 @@
 - [x] **MT4 — Verification:** targeted tests + lint/test/TypeScript/build + Browser หน้าแรก/รายการโปรดที่ 390/768/1440px ทั้ง Light/Dark, Raw/graded, sort/actions/no overflow
 
 ### Portfolio detail visual rebuild — 2026-07-20
+
 > รักษา 2 แท็บและ data/action contract เดิม แต่ยกชื่อพอร์ตเป็น page identity, ทำแท็บเป็น navigation rail, ใช้ game filter ร่วมกันทั้งสองแท็บ และจัด Insights ให้ใช้พื้นที่ desktop อย่างมีลำดับ โดยไม่ย้อนกลับไปเป็น Minimal Editorial ที่เคยถูกปฏิเสธ
 
 - [x] **PF1 — Shared shell:** header ชัดเจน + action group responsive + line tabs 2 แท็บ + shared game rail โดยคง switch/create/rename/privacy/delete/hide/share/add behavior
@@ -327,6 +388,7 @@
 - [~] **PF4 — States + verification:** skeleton/guest preview + tests/lint/TypeScript/build ผ่าน; Browser 390/1440 Light ทั้งสองแท็บ/no overflow ผ่าน แต่ automated 768/Dark ถูก Browser URL policy บล็อกระหว่างสลับ theme จึงต้อง recheck ภาพจริงรอบถัดไป
 
 ### Portfolio flat summary + Insights dedupe — 2026-07-20
+
 > เก็บรอบ feedback หลังเปิดดูจริง: ลด summary ที่เป็นการ์ดใหญ่, ให้ตัวเลขหลักมีแหล่งเดียวทั้งหน้า และแยก presentation ของ Insights ออกจาก client controller โดยคง financial honesty/game-scope/action contract เดิม
 
 - [x] **PD1 — Shared flat summary:** ย้ายมูลค่า/P&L/จำนวนการ์ด/ต้นทุนออกมาเป็น summary ร่วมเหนือ content ของทั้ง 2 แท็บ, ไม่มี Surface/เงา/มุมการ์ด และถอด best/worst ที่ซ้ำเชิง UX กับข้อมูลในตาราง/Movers
@@ -335,6 +397,7 @@
 - [~] **PD4 — States + verification:** skeleton/guest preview + tests 67 files/352 tests + lint 0 errors + TypeScript + build 156 routes + diff-check ผ่าน; Browser 390/768/1440px Light/Dark ยังตรวจไม่ได้เพราะ dev server เข้าไม่ถึงและ Browser URL policy หยุดหลัง error page
 
 ### Portfolio separator-density polish — 2026-07-20
+
 > เก็บรอบภาพจริงหลัง flat-summary: เหลือเส้นเฉพาะ navigation/table ที่ช่วยสแกนข้อมูล ส่วน summary, Insights และรายการสรุปสั้นใช้ whitespace + alignment แทน เพื่อไม่ให้ทั้งหน้าดูเป็นตารางเส้นซ้อนกัน
 
 - [x] **PS1 — Structural hierarchy:** คงเส้นฐานแท็บและหัวตารางที่มีหน้าที่จริง; ถอดเส้นรอบ/แบ่ง summary และเส้นใต้ toolbar ที่ซ้ำกับหัวตาราง
@@ -343,6 +406,7 @@
 - [~] **PS4 — Verification:** targeted 6 files/19 tests + full 67 files/352 tests + lint 0 errors + TypeScript + build 156 routes + diff-check ผ่าน; Browser จริง Overview/Insights ที่ viewport 1275px ทั้ง Light/Dark ไม่มี overflow/error overlay และ responsive contract ของ 390/768/1440 ถูกล็อกใน markup/source แต่ binding Browser รอบนี้ไม่มี viewport-resize จึงยังไม่ได้ถ่ายภาพสามขนาดซ้ำ
 
 ### Portfolio analytical Insights — 2026-07-20
+
 > แทนข้อสรุป flat-only ของรอบก่อนเฉพาะแท็บ Insights: ใช้ Surface เท่าที่มีหน้าที่จริง 1 การ์ดหลัก + 2 การ์ดรอง, ย้ายมูลค่า/P&L เข้าอยู่กับกราฟ และทำ sparse history ให้เห็นตั้งแต่วันแรกโดยไม่สร้างข้อมูลย้อนหลังปลอม
 
 - [x] **PI1 — Honest insight model:** helper กลางสำหรับ live point รายวัน, Top 1/Top 3 concentration, 24h portfolio impact + coverage และ tracked span พร้อม regression tests
@@ -352,6 +416,7 @@
 - [x] **PI5 — States + verification:** i18n/skeleton/guest preview/tests ครบ แล้วตรวจ TypeScript/lint/test/build + Browser 390/768/1440px Light/Dark, keyboard, range rail และ no overflow
 
 ### Portfolio reference panel layout — 2026-07-20
+
 > รอบ feedback จากภาพหน้า live เดิม: คืนโครง sidebar + panel ที่สแกนง่าย โดยพอร์ตเฉพาะ composition จากประวัติเดิมเข้ากับ route/data-honesty ปัจจุบัน ห้าม revert ทั้งไฟล์และห้ามคืน gradient/blur
 
 - [x] **PR1 — Responsive shell:** Page heading + desktop sidebar 280px + mobile switcher + segmented tabs/action row โดยคง create/switch/manage/hide/share/add และ game scope เดิม
@@ -360,6 +425,7 @@
 - [x] **PR4 — State parity + verification:** ปรับ skeleton/guest preview/tests แล้วตรวจ TypeScript/lint/test/build + Browser 390/768/1440px Light/Dark, interaction และ no horizontal overflow
 
 ### Portfolio Collector Vault — 2026-07-21
+
 > รื้อ visual hierarchy ของหน้าพอร์ตให้เป็น workspace ของนักสะสมที่แตกต่างจากหน้า market ทั่วไป: ใช้ภาพการ์ดจริงและ solid espresso stage สร้าง premium identity โดยคงทุก mutation, data-honesty, 2 tabs, game scope, hide/share/add และ responsive table/list contract เดิม
 
 - [x] **PV1 — Immersive identity:** ย้ายชื่อพอร์ต/สถานะ/ยอดหลัก/actions/tabs เข้า Collector Vault stage เดียว ลด page-header/summary ซ้ำ และทำ desktop/mobile hierarchy ใหม่โดยไม่ใช้ gradient/blur
@@ -368,6 +434,7 @@
 - [x] **PV4 — State parity + verification:** ปรับ loading/guest preview/tests แล้วตรวจ targeted tests + TypeScript/lint/test/build + Browser 390/768/1440px Light/Dark, ทั้ง 2 tabs, actions และ no horizontal overflow
 
 ### Portfolio Collector Vault rollback — 2026-07-21
+
 > Owner เปิดดูของจริงแล้วเลือกกลับไปใช้ Portfolio reference panel layout เดิม ถอดเฉพาะ visual experiment รอบ Collector Vault โดยรักษา Insights, data-honesty, actions/mutations, game scope และ responsive contracts ที่มีอยู่ก่อนรอบนี้
 
 - [x] **PVR1 — Restore runtime composition:** คืน PageHeader + desktop sidebar + mobile/tablet heading switcher + action row + segmented tabs + Overview hero/assets panels
@@ -376,6 +443,7 @@
 - [x] **PVR4 — Verification:** targeted Portfolio tests + TypeScript/lint/test/build + Browser 390/768/1440px Light/Dark, Overview/Insights/actions และ no horizontal overflow/runtime error
 
 ### Portfolio line tabs — 2026-07-22
+
 > Owner ขอให้แท็บ `ภาพรวม / ข้อมูลเชิงลึก` ใช้เส้นฐานและเส้น active แบบเดียวกับ Watchlist แทน segmented pill โดยคง layout, state และ actions เดิม
 
 - [x] **PLT1 — Canonical line anatomy:** ใช้ `TabsList variant="line"` เฉพาะ Portfolio พร้อม baseline เต็มพื้นที่, honey underline และ touch target 44/40px โดยไม่แก้ Tabs กลาง
@@ -383,6 +451,7 @@
 - [x] **PLT3 — Verification:** targeted tests + TypeScript + lint + full test 405/405 + build 156 routes และ Browser 390/768/1440px ทั้ง Overview/Insights พร้อม Light/Dark representative, no overflow
 
 ### Meaningful game selection — 2026-07-22
+
 > Historical MGS ถูก HGL (Header) และ FGR (ทุก data surface) supersede แล้ว: Header `GameSwitcher` แสดง registered live/roadmap เสมอ ส่วน in-page filters และ card-picker game step แสดงตั้งแต่มี launch-ready game จริง 1 เกม; Pokémon ตอนนี้ยัง roadmap/blocked กดได้เฉพาะ Header ไป `/coming-soon` โดยไม่เปลี่ยน active game
 
 - [x] **MGS1 — Inventory + decision boundary:** ตรวจ Header, Portfolio, Watchlist, Alerts, card picker, preview/skeleton/tests และยืนยันว่า global Header selector เป็นคนละหน้าที่กับตัวกรองข้อมูลตามหน้า
@@ -391,6 +460,7 @@
 - [x] **MGS4 — Historical verification before HGL:** targeted 8 files / 30 tests + TypeScript/lint/full 89 files / 410 tests/build 156 pages + Browser Portfolio/Watchlist/Alerts/card picker ที่ 390/768/1440px, Light/Dark, demo multi-game, keyboard และ no overflow
 
 ### Canonical Header GameSwitcher + launch gate — 2026-07-24
+
 > Historical decision ถูก owner ขยายต่อใน FGR 2026-07-25: Header ต้องอยู่ และ per-surface game context ก็ต้องอยู่แม้มี live game เดียว; launch gate ของเกมใหม่ยังคงเดิม
 
 - [x] **HGL1 — Contract audit:** ยืนยัน local Header/filters/picker หายจริงจาก working-tree change, production ยังมี Header switcher และ multi-game state/namespace ยังอยู่
@@ -400,6 +470,7 @@
 - [x] **HGL5 — Verification:** focused/full tests + TypeScript/lint/build + Browser 390/768/1440px ผ่าน; owner อนุมัติ seed แล้ว และ live DB preflight ผ่าน OPCG 51 sets / 3,838 cards / 3,831 priced cards โดย Pokémon ยัง inactive/empty
 
 ### Full-surface game context restoration — 2026-07-25
+
 > Owner ยืนยันว่า game UI ที่หายใน card picker, Portfolio, Watchlist และ surface ใกล้เคียงเป็น regression เช่นเดียวกับ Header: UI ต้องคงอยู่เป็น context แม้มี launch-ready game เดียว แต่ roadmap/blocked game ห้ามกลายเป็นตัวเลือกใช้งานหรือ fake data
 
 - [x] **FGR1 — Reproduce + fail path:** browser/test ยืนยัน Header กลับมาแล้ว แต่ card-picker game step และ MINE game filters หายเพราะ render gate `>= 2`; seed ไม่เปลี่ยนอาการและตัดสมมติฐาน DB ออก
@@ -409,6 +480,7 @@
 - [x] **FGR5 — Verification:** focused 9 files / 39 tests + full 124 files / 674 tests + TypeScript/lint/build 157 pages + Browser 390/768/1440px ตรวจ picker/Portfolio/Watchlist/Alerts, keyboard, no overflow และ fresh-tab console error 0
 
 ### Integrated MINE game scope — 2026-07-25
+
 > Owner เปิดดู game rail ที่เพิ่งคืนแล้วพบว่า `ทุกเกม | One Piece` ลอยเป็นแถวใหม่และดูเหมือนแท็บชุดที่สาม โดยเฉพาะตอนมี launch-ready game เดียว; เปลี่ยน MINE surfaces ให้ใช้ compact game scope ใน toolbar เดียวกัน ขณะที่ card picker ยังคงขั้นเลือกเกมแบบเด่นเพราะเป็นคนละ workflow
 
 - [x] **IGS1 — Compact canonical scope:** ต่อ `GameFilterChips` ให้รองรับ compact Select ที่แสดง `เกม: <scope>` พร้อมเฉพาะ `ทุกเกม` + launch-ready games, keyboard/focus/touch target ครบ และไม่ปน roadmap Pokémon
@@ -417,6 +489,7 @@
 - [x] **IGS4 — Verification:** focused 6 files / 36 tests + TypeScript + lint 0 errors + full 128 files / 696 tests + production build 157 pages + Browser 320/390/640/768/1024/1440px Light/Dark ตรวจ Watchlist/Alerts/Portfolio, card-picker order, keyboard/focus/scope switching, no horizontal overflow และ fresh-tab console error 0
 
 ### Dev hydration bundle recovery — 2026-07-25
+
 > หลังแก้ IGS แล้ว dev server เดิมส่ง SSR จาก source ใหม่ แต่ client chunk ยังเป็น layout รุ่นก่อน จึงเกิด hydration mismatch พร้อมกันทั้ง `HeaderMobile` และ `WatchlistSkeleton`; production build ไม่พบอาการ
 
 - [x] **DHR1 — Reproduce:** แท็บใหม่บน `localhost:3000/watchlist` reproduce 100% และ console ชี้ literal class ใหม่ฝั่ง SSR ชน literal class เก่าฝั่ง client
@@ -425,6 +498,7 @@
 - [x] **DHR4 — Verify:** fresh tabs ของ Watchlist Cards, Alerts และ Portfolio ใช้ bundle/class รุ่นเดียวกัน; console error 0 ทุก run และ hydration mismatch ไม่กลับมา
 
 ### Portfolio sidebar total removal — 2026-07-22
+
 > Owner ขอเอาการ์ดสรุป `ทุกพอร์ต` ที่ซ้ำเหนือรายการพอร์ตในหน้า Detail ออก โดยคงข้อมูลพอร์ต, การสลับ/จัดการพอร์ต, hide balance และ summary หลักใน workspace ไว้เหมือนเดิม
 
 - [x] **PST1 — Runtime:** ถอด cross-portfolio total Surface และ derived presentation ที่ไม่มี consumer ออกจาก sidebar โดยให้รายการพอร์ตขึ้นเป็น panel แรก; ย้าย hide-balance action เข้า toolbar ให้ desktop ยังใช้ได้
@@ -432,6 +506,7 @@
 - [x] **PST3 — Verification:** targeted 3 files / 8 tests + TypeScript + lint 0 errors + full 89 files / 410 tests + build 156 pages + Browser `/portfolio/1` ที่ 390/768/1440px, Light/Dark representative, hide/show interaction และ no overflow/console error
 
 ### Portfolio create affordance gating — 2026-07-22
+
 > Owner ต้องการให้ผู้ใช้เห็น affordance `สร้างพอร์ตใหม่` แบบ action ปกติแม้ชนโควตา แล้วค่อยอธิบายการอัปเกรดหลังผู้ใช้กด แทนการวางข้อความขายแผนยาวใน sidebar ตั้งแต่แรก
 
 - [x] **PCA1 — Consistent affordance:** ใช้ Plus + `สร้างพอร์ตใหม่` anatomy เดียวทั้ง sidebar, management dialog และ quick-switch dropdown ไม่ว่าชนโควตาหรือไม่
@@ -439,6 +514,7 @@
 - [x] **PCA3 — Verification:** regression non-limit/at-limit markup + tier routing, targeted 6 tests, TypeScript, full lint/test 89 files / 412 tests, build 156 pages และ Browser at-limit interaction ที่ 390/768/1440px พร้อม focus/single-dialog/Light-Dark/no overflow/console error
 
 ### Dev nested API 404 recurrence — 2026-07-22
+
 > `ensureOk` แจ้ง routing-level HTML 404 จาก nested Route Handlers หลายตัวหลัง dev restart; ต้องแยก source bug ออกจาก Turbopack dev filesystem cache ก่อนเปลี่ยนโค้ด และห้ามกลบ error ใน API client/hook
 
 - [x] **D4041 — Reproduce/trace/falsify:** ยืนยัน `/api/cards/sparklines` และ nested siblings คืน HTML 404 เฉพาะ dev ที่ port 3001 ขณะที่ source ไม่มี 404 branch และ production route เดียวกันคืน JSON 200; port 3000 เป็น CARMETA คนละ repo
@@ -446,6 +522,7 @@
 - [x] **D4043 — Verification:** nested API matrix 5/5 คืน 200 JSON, Portfolio fresh-tab console สะอาด, targeted 2 files / 4 tests, full 89 files / 412 tests, lint 0 errors, TypeScript และ production build 156 pages ผ่าน
 
 ### Portfolio Dime-style summary hierarchy — 2026-07-22
+
 > Owner ชี้ว่า Overview summary อ่านยากและซ้ำ: value/P&L แสดงสองรอบและ best/worst ปนกับข้อมูลการเงิน จึงยืมลำดับการอ่านจาก Dime โดยไม่ลอก visual theme และไม่สร้างข้อมูล 24 ชม. ที่ไม่มีจริง
 
 - [x] **PDS1 — Information decision:** เหลือ value เป็น hero จุดเดียว, cost เป็น metadata, divider และ P/L แถวเดียวที่ให้เปอร์เซ็นต์เด่นกว่า amount; ถอด best/worst เพราะซ้ำกับ holdings ด้านล่าง
@@ -454,6 +531,7 @@
 - [x] **PDS4 — Verification:** targeted 3 files / 18 tests, full 89 files / 415 tests, TypeScript, lint 0 errors, build 156 pages และ Browser 390/768/1440px Light/Dark + hidden balance ผ่านโดยไม่มี overflow/console error
 
 ### Portfolio gradient financial card — 2026-07-22
+
 > Owner เลือกให้ Overview summary เป็นการ์ดไล่สีอ่อนตามภาพอ้างอิง แต่คงเฉพาะข้อมูลการเงินที่จำเป็น: มูลค่า, ROI, กำไร/ขาดทุน และต้นทุน; ห้ามคืน best/worst หรือข้อมูลผลงานรายใบ
 
 - [x] **PGF1 — Visual contract:** ใช้ gradient อ่อนที่รองรับ Light/Dark และเปลี่ยนโทนตามทิศ P/L โดยไม่เพิ่ม blur, decoration หรือสี hardcode ที่อ่านยาก
@@ -462,6 +540,7 @@
 - [x] **PGF4 — Verification:** targeted 4 files / 23 tests, full 89 files / 416 tests, TypeScript, lint 0 errors, build 156 pages และ Browser 390/768/1440px Light/Dark + hidden balance ผ่านโดยไม่มี overflow/console error
 
 ### Portfolio numeric consistency + amount-only privacy — 2026-07-22
+
 > Owner พบว่าตัวเลขการเงินดูเหมือนคนละฟอนต์, ตารางขยับเมื่อกดซ่อนยอด และต้องการให้ privacy mask ซ่อนเฉพาะจำนวนเงินโดยคงเปอร์เซ็นต์ไว้ พร้อมเพิ่มภาพการ์ดจริงใน Insights โดยไม่สร้างข้อมูลใหม่
 
 - [x] **PNP1 — Numeric typography:** ทำให้ summary, holdings และ Insights ใช้ semantic numeric/price typography เดียวกันตามบทบาท โดยไม่เปลี่ยนฟอนต์ทั้งเว็บหรือสร้าง arbitrary size ใหม่
@@ -470,6 +549,7 @@
 - [x] **PNP4 — Verification:** targeted 5 files / 29 tests, TypeScript, full 89 files / 420 tests, lint 0 errors, build 156 pages และ Browser 390/768/1440px Light/Dark ผ่าน; desktop/tablet column delta = 0px, mobile trailing delta = 0px, percentages/images/no-overflow/console error ผ่าน
 
 ### Portfolio holdings simplification — 2026-07-22
+
 > Owner ต้องการให้รายการถือครองอ่านง่ายขึ้นโดยเหลือเฉพาะข้อมูลที่ใช้ตัดสินใจ: การ์ด, ราคาตลาด, ต้นทุน และกำไร/ขาดทุน; ถอด 24 ชม., กราฟ 30 วัน และมูลค่าถือครองที่ซ้ำกับราคา/จำนวนออกทั้ง desktop และ mobile
 
 - [x] **PHS1 — Information contract:** ใช้ต้นทุนรวม = ราคาซื้อต่อใบ × จำนวน, รักษา `null` = ไม่ทราบ, เรียง P/L ตามจำนวนเงินหลักและให้ค่าที่หายอยู่ท้าย พร้อมถอด Portfolio-only sparkline fetch โดยคง shared hook/API สำหรับหน้าอื่น
@@ -478,6 +558,7 @@
 - [x] **PHS4 — Verification:** targeted 5 files / 25 tests, TypeScript, full 89 files / 423 tests, lint 0 errors, build 156 pages และ Browser 390/768/1440px Light/Dark ผ่าน; hide/show geometry delta = 0, mobile menu ไม่มี 24h/value, ไม่มี overflow/console error หรือ Portfolio sparkline request
 
 ### Portfolio gateway consolidation — 2026-07-16
+
 > ยกเลิก Manager Hub ที่โล่งและแสดงข้อมูลซ้ำ ให้ `/portfolio` เป็น gateway ไปพอร์ตล่าสุด และรวมการสลับ/จัดการไว้ใน Detail โดยไม่แตะ schema/dependency/config
 
 - [x] **PG1 — Gateway:** server auth + ownership-validated `portfolio-last-active` cookie + deterministic fallback; guest/zero/error/loading ใช้โครง Detail
@@ -487,6 +568,7 @@
 - [x] **Verification:** unit/component/browser 390/640/768/1440 Light/Dark TH/EN/JP + lint/test/TypeScript/build/diff-check
 
 ### UX/UI implementation batch — 2026-07-11
+
 > งานตาม audit responsive 390×844 / 768×1024 / 1440×900 · รักษา espresso+honey/Kanit · ไม่แตะ schema/dependency/config
 
 - [x] **P0 — usability blockers:** contrast light mode, finite loading/error/empty states, dialog/focus/keyboard/search/form accessibility
@@ -496,6 +578,7 @@
 - [x] **Verification:** test + lint + build + browser smoke 105 routes ที่ไม่ใช่ `/proto` และ visual matrix 390/768/1440 ทั้ง light/dark
 
 ### UX Truth & Safety batch — 2026-07-11
+
 > ปิดจุดที่หน้าจอสื่อไม่ตรงกับ behavior จริงก่อนปรับ IA/visual รอบถัดไป · ไม่แตะ schema/dependency/config
 
 - [x] **T1 — Pricing/Checkout truth:** guest CTA ไม่เงียบ, เก็บ plan intent ผ่าน auth, error กู้คืนได้, success กลับหน้า subscription พร้อม confirmation, copy trial/limits ตรงระบบจริง และป้องกัน Lifetime/stale webhook/delayed-payment race
@@ -504,6 +587,7 @@
 - [x] **Verification:** 19 test files / 131 tests + lint 0 errors + TypeScript + build 155 pages + browser matrix Pricing/Marketplace/Card ที่ 390/768/1440 ทั้ง Light/Dark
 
 ### Mobile home market toolbar — 2026-07-12
+
 > แก้เฉพาะหัวตารางหน้าแรกใต้ `sm:` จากภาพใช้งานจริง · desktop และ `/search` ต้องคง behavior/layout เดิม
 
 - [x] **M1 — Mobile hierarchy:** ให้ SetPicker เป็น control หลักเต็มพื้นที่; แยก price mode, sort, filter และ view control เป็นแถวที่อ่านง่ายโดยไม่บีบข้อความ
@@ -511,6 +595,7 @@
 - [x] **Verification:** targeted lint/test + `npm run lint` + `npm run test` + `npm run build` + browser 375/390/768/1440 ทั้ง Light/Dark
 
 ### Mobile home toolbar visual-density polish — 2026-07-12
+
 > รอบเก็บภาพจริง: ลดความหนักของกรอบโดยไม่ลด hit area และทำให้ utility controls อ่านเป็นกลุ่มเดียว
 
 - [x] **D1 — Grouping:** ย้าย Filter ไปอยู่กลุ่มเดียวกับ List/Grid ด้านขวา และคง Price mode เป็นกลุ่มซ้าย
@@ -518,6 +603,7 @@
 - [x] **Verification:** ตรวจ 375/390 Light/Dark + List/Grid + dropdown + no overflow และรัน lint/test/build
 
 ### Canonical toolbar controls — 2026-07-12
+
 > ทำให้ Raw/PSA, ตัวกรอง, เรียง และตัวเลือกมุมมองใช้ component/shape/state ชุดเดียวกันทั้งเว็บ โดยคง control เฉพาะทางที่มีหน้าที่ต่างกันจริง
 
 - [x] **C1 — Canonical primitives:** ล็อกสัญญา FilterButton, ToolbarSortDropdown, ViewModeControl และ action ภายใน FilterModal ให้มี radius/state/tap target/a11y เดียว
@@ -526,12 +612,14 @@
 - [x] **Verification:** targeted tests + lint + TypeScript + build; Home 390/768/1440 Light/Dark และ spot-check Search/Watchlist/Marketplace/Card picker/Admin ที่ 390
 
 ### Responsive control radius correction — 2026-07-12
+
 > แก้สัดส่วนความมนที่ราก: mobile control สูง 44px ต้องใช้ radius ใหญ่กว่า desktop compact control โดยไม่สร้าง component/token เพิ่ม
 
 - [x] **R1 — Canonical radius:** Segmented track ใช้ outer radius `rounded-xl → lg`; segment และ toolbar action ใช้ inner radius `rounded-lg → md`; pill variant คง `rounded-full`
 - [x] **Verification:** lint + test + TypeScript + build และ browser Home/Search/Watchlist/Marketplace/Admin ที่ 390 เทียบ Home 768/1440
 
 ### Client API 404 regression — 2026-07-12
+
 > หา URL ที่ทำให้ `apiFetch` โยน 404 จากหน้าจริงก่อนแก้ และรักษา Marketplace guard ที่ตั้งใจคืน 404 เมื่อ feature flag ปิด
 
 - [x] **A1 — Reproduce/trace:** จับได้ว่า Home/Search → `useSparklines` → `/api/cards/sparklines`; dev route registry ค้างและคืน HTML 404 ขณะที่ production route เดียวกันตอบ JSON 200
@@ -539,30 +627,35 @@
 - [x] **Verification:** Home และ dev API สำคัญ (`sparklines`, `config/public`, `honey/ranks`, `messages/unread-count`) ตอบ 200 หลังสร้าง cache ใหม่; production build ผ่านและ Browser ไม่มี console error
 
 ### Canonical toolbar action shape — 2026-07-12
+
 > แยก shape hierarchy ให้ถูกชั้น: segmented track เป็นกรอบครอบกลุ่ม ส่วน Filter/Sort เป็นตัว action จึงต้องใช้ radius ระดับเดียวกับ segment ด้านใน
 
 - [x] **S1 — Root shape:** track คง `rounded-xl → lg`; Filter/Sort ใช้ `rounded-lg → md` โดยไม่เพิ่ม component/prop หรือ consumer override
 - [x] **Verification:** lint + test + TypeScript + build; browser Home 390/768 และ spot-check Search/Watchlist/Marketplace ที่ 390; ไม่มี overflow/console error
 
 ### Segmented active-edge alignment — 2026-07-12
+
 > แก้ active layer มือถือที่สูงเท่ากรอบแต่มี padding/radius คนละแนว ทำให้เส้นโค้งของตัวเลือกแรก/สุดท้ายไม่ตรงกับ track
 
 - [x] **E1 — Concentric edge:** default track มือถือไม่มี horizontal inset; segment แรก/สุดท้ายใช้ outer-side radius เดียวกับ track ขณะที่ด้านในคง segment radius และ desktop inset เดิม
 - [x] **Verification:** สลับ first/last selection ใน Raw/PSA และ List/Grid ที่ 390 พร้อมเทียบ 768; lint + test + TypeScript + build
 
 ### Price-mode visual proportion — 2026-07-12
+
 > Raw/PSA 10 มี label กว้างต่างกันจน active Raw เป็นก้อน 44×44px; แก้เฉพาะ grade selector ไม่บังคับ segmented control ทุกชนิดให้กว้างเท่ากัน
 
 - [x] **Q1 — Mobile 50/50 (ถูกแทนด้วย W1):** PriceModeControl เคยใช้ track กว้างคงที่บนมือถือและแบ่ง Raw/PSA 10 เท่ากันผ่าน `fullWidth`; ภาพใช้งานจริงทำให้เปลี่ยนเป็น content-fit ใน W1
 - [x] **Verification:** สลับ Raw/PSA 10 ที่ 390 และตรวจ no overflow ที่ 390/640/768; lint + test + TypeScript + build
 
 ### Price-mode intrinsic sizing correction — 2026-07-12
+
 > ภาพใช้งานจริงพบว่า fixed 144px + 50/50 บีบฝั่งที่มีไอคอนจน `PSA 10` ถูกตัด; ผู้ใช้เลือกให้แต่ละ segment กว้างตามเนื้อหาแทนความสมมาตร
 
 - [x] **W1 — Content-fit segments:** ยกเลิก fixed width และ `fullWidth` เฉพาะ PriceModeControl ทุก breakpoint ให้ Raw/PSA จองพื้นที่ตาม icon + label + padding โดยคง visual frame/hitbox ตาม responsive geometry เดิม
 - [x] **Verification:** ข้อความ Raw/PSA 10 แสดงครบเมื่อสลับ active ที่ 320/390/768/1440px, ไม่มี horizontal overflow และ radiogroup/keyboard เดิมไม่ถอย; lint + test + TypeScript + build
 
 ### Mobile toolbar compact visual shell — 2026-07-12
+
 > ลดเฉพาะกรอบที่มองเห็นของ utility controls บนมือถือ โดยคง hit target 44px, desktop geometry และ CTA/form controls เดิม
 
 - [x] **V1 — Compact primitives:** Filter/Sort และ SegmentedControl แบบ opt-in ใช้ visual frame 36px ภายใน hitbox 44px โดยไม่มี hit area ซ้อน
@@ -570,6 +663,7 @@
 - [x] **Verification:** unit + lint + TypeScript + test + build; browser 320/375/390/640/768/1440 ไทย/อังกฤษ Light/Dark และตรวจ tap boundary/no overflow
 
 ### Horizontal rail static-fade removal — 2026-07-12
+
 > ผู้ใช้พบทั้ง Card Detail section nav และ grade selector จมใต้ mask; audit พบ 13/44 horizontal rails ใช้ bilateral fade แบบคงที่ซึ่งไม่ดู overflow/scroll position
 
 - [x] **R1 — Reproduce:** section nav เริ่ม offset 0 และ grade rail เริ่ม offset 4px ภายใน mask 0–16px; grade rail ยังถูก fade แม้ `scrollWidth === clientWidth`
@@ -577,6 +671,7 @@
 - [x] **Verification:** `rg` เหลือ 0 usage; Browser representative rails 320/390/768/1440 ทั้ง Light/Dark + scroll endpoints/no new page overflow; lint/test/TypeScript/build
 
 ### Site-wide flat surfaces — remove gradient + blur — 2026-07-12
+
 > ผู้ใช้สั่งถอด gradient/blur ทุก section ทั้งเว็บ; scope = เอฟเฟ็กต์ที่ render จริงใน production, admin, prototype และ generated app artwork/OG โดยคงเฉพาะ `next/image` blur placeholder ซึ่งเป็นกลไกโหลดรูป ไม่ใช่ surface styling
 
 - [x] **F1 — Audit + boundary:** พบ 52 gradient code sites และ 49 blur/backdrop/filter declarations/references; ไม่มี conic gradient หรือ mask gradient ค้างจากงานก่อนหน้า; ล็อกว่า fade animation, shadow และ image loading placeholder ไม่อยู่ใน scope
@@ -588,6 +683,7 @@
 - [x] **F5 Verification:** source/runtime มี rendered gradient+blur เพียง `.hero-search-glow` หนึ่ง element ต่อหน้า; Browser 390/1440 Light/Dark + no overflow/console error; lint/test/TypeScript/build
 
 ### Card-detail mobile floating CTA removal — 2026-07-12
+
 > ผู้ใช้สั่งเอา CTA ที่ลอยตามหน้าจอเมื่อเลื่อนลงออก; CTA ซื้อขาย/เพิ่มพอร์ตใน hero buy box ต้องคงอยู่ และ Desktop ต้องไม่เปลี่ยน
 
 - [x] **B1 — Remove floating behavior:** ถอด `CardDetailStickyBuy`, sentinel และ `useStickyBuy` wiring ออกจาก runtime เพื่อไม่ render fixed bar และไม่ผูก scroll/resize observer
@@ -595,6 +691,7 @@
 - [x] **Verification:** Browser card detail ที่ 390px เลื่อนทั้งหน้าแล้วไม่มี floating CTA แต่ inline CTA ยังครบ; 768/1440 layout เดิม, ไม่มี overflow/console error; lint + test + TypeScript + build
 
 ### Price direction color parity — 2026-07-12
+
 > ประวัติรอบก่อน: ผู้ใช้เคยเลือกให้ Light เหมือน Dark แต่ข้อสรุปนี้ถูกแทนด้วย readability correction ด้านล่างหลังดูภาพจริง
 
 - [x] **K1 — Shared market palette:** ให้ Light `--price-up/down` และ text roles ใช้ `#46D68B / #FF6155` เหมือน Dark เพื่อครอบคลุม PriceTag, table, portfolio, chart และ card detail
@@ -602,6 +699,7 @@
 - [x] **Verification:** Browser Light/Dark บน Home/Card Detail/Portfolio ได้ computed market colors ชุดเดียวกัน แต่ success/error status Light คงสีเดิม; ไม่มี overflow/console error; lint + test + TypeScript + build
 
 ### Price direction Light-mode readability correction — 2026-07-12
+
 > หลังดูภาพจริง ผู้ใช้ให้ความสำคัญกับการอ่านบนพื้นขาวมากกว่า palette parity; งานนี้แทนข้อสรุป K1 เฉพาะ Light mode โดย Dark mode ต้องคงเดิม
 
 - [x] **L1 — Split market roles:** Light chart/fill ใช้ `#34C759 / #FF3B30` และข้อความราคาใช้สีเข้ม `#187A3E / #C5221F`; consumer ที่เคยใช้ primitive เป็นข้อความเปลี่ยนมาใช้ text role
@@ -609,6 +707,7 @@
 - [x] **Verification:** Browser Home/Card Detail/Portfolio ที่ 390/1440px ทั้ง Light/Dark ไม่มี overflow/console error; lint 0 errors + test 132/132 + TypeScript + build 155/155
 
 ### Price direction Light-mode saturation correction — 2026-07-12
+
 > สีข้อความ Light รอบก่อนอ่านง่ายแต่หม่นเกินไป; เพิ่ม saturation โดยยังรักษา WCAG AA บนพื้นขาว และไม่เปลี่ยน chart/fill, status หรือ Dark mode
 
 - [x] **N1 — Vivid readable text:** Light price text ใช้เขียว `#00853D` และแดง `#D93025` (contrast ≥4.5:1 บนขาว)
@@ -617,6 +716,7 @@
 - [x] **Verification:** Browser Home/Card Detail/Portfolio/Market Overview/Watchlist soft chips ที่ 390/1440px ทั้ง Light/Dark ไม่มี overflow/console error; lint 0 errors + test 132/132 + TypeScript + build 155/155
 
 ### Search result facet parity — 2026-07-15
+
 > หน้า `/opcg/search` ใช้ฐานข้อมูลการ์ดเดียวกับหน้าแรก แต่มีเพียง rarity/version และแสดง option ที่ไม่มีผลสำหรับคำค้น; ปรับให้หมวดตรงกับหน้าแรกและ scope ตาม query + game โดยไม่เปลี่ยน filter เฉพาะ domain ของ Marketplace/Watchlist
 
 - [x] **SF1 — Facet data:** ส่ง rarity/type/color/variant availability ที่คำนวณจากคำค้นและเกมปัจจุบัน; ซ่อน option 0 ผล, rarity รวม base+parallel family และจำกัด set/results ด้วย game scope
@@ -629,6 +729,7 @@
 - [x] **SF5 Verification:** ตรวจ open/select/outside-close ที่ 320/390/768px ทั้ง Light/Dark, popup width/overlay hit-test/no new horizontal overflow พร้อม lint + test + TypeScript + build
 
 ### Watchlist price-check UX — 2026-07-15
+
 > ทำให้ `/watchlist` เช็กราคาและจัดการแจ้งเตือนได้เร็วขึ้น โดยคง API/schema/dependency/config เดิม, ไม่ลบไฟล์ และไม่แตะงาน Search ที่ค้างใน shared toolbar
 
 - [x] **WU1 — Shared shell:** เรียง H1 → canonical Tabs → context/summary → controls → results; sync เฉพาะ `tab` ใน URL โดยรักษา query อื่น และให้ CTA บนหัวเปลี่ยนตามแท็บ/สถานะข้อมูล
@@ -639,6 +740,7 @@
 - [x] **WU6 — Context declutter (2026-07-16):** เอามูลค่าราคาอ้างอิงและ mover chips ขึ้น/ลงออกจาก context band พร้อมถอด logic คำนวณที่ไม่ใช้; Browser 390/1280px ไม่มี overflow, period ยังแตะได้ 44×44px และ console 0 errors
 
 ### Watchlist flat results-first — 2026-07-16
+
 > ลดชั้นก่อนถึงรายการให้เหลือ H1 → Tabs → Game rail → Controls → Results; คง behavior/API/schema/dependency/config เดิม และไม่ทับงาน Search/Portfolio ใน shared worktree
 
 - [x] **WF1 — Cards composition:** เอา context/summary Surface ออกจาก runtime, game rail ไม่มี count ซ้ำ และย้าย period ไปอยู่กับ result controls
@@ -648,6 +750,7 @@
 - [~] **WF Verification:** lint 0 errors + test 219/219 + TypeScript + build 156/156 + `git diff --check` ผ่าน; browser geometry/keyboard/touch/no-content-overflow ผ่าน 320/390/640/768/1024/1440px ใน TH/Dark และ Light/console รอบสุดท้ายผ่านแล้ว — เหลือ smoke EN/JP เต็มหน้า
 
 ### Canonical compact controls + game rail — 2026-07-16
+
 > แก้จากภาพใช้งานจริง: time filter และ List/Grid ใช้ component กลางอยู่แล้วแต่ geometry เฉพาะหน้า/ค่า responsive กลางทำให้สัดส่วนไม่เป็นระบบ; game rail ซ่อน All + One Piece เมื่อมีข้อมูลเกมเดียว ทั้งที่ต้องสื่อโครงหลายเกมให้ชัด
 
 - [x] **CC1 — Whole-site audit:** ตรวจ period/range `SegmentedControl`, `ViewModeControl` และ `GameFilterChips` ทุก caller เพื่อแยกปัญหาที่รากออกจาก override เฉพาะหน้า
@@ -656,6 +759,7 @@
 - [x] **CC4 — Tests + verification:** เพิ่ม regression tests สำหรับ visual contract/single-game rail/keyboard/empty range; Browser Watchlist/Home/Search/Card Detail/Pricing ที่ 390/640/768/1440px และ Watchlist matrix เดิม 320/1024px ผ่าน Light/Dark, keyboard, touch target และ no overflow; lint 0 errors + test 219/219 + TypeScript + build 156/156 + diff-check ผ่าน
 
 ### Watchlist control alignment follow-up — 2026-07-16
+
 > เก็บรายละเอียดจากภาพใช้งานจริง: ไอคอนใน ViewMode active ต้องอยู่กึ่งกลางพอดี และ period ต้องมีไอคอนนำหน้าเหมือน visual language เดิม โดยแก้ที่ canonical component เท่าที่จำเป็น
 
 - [x] **CA1 — Root-cause audit:** วัด DOM จริงพบ active frame อยู่กลาง แต่ hidden label wrapper ยังเป็น flex child จึงสร้าง gap และดัน SVG ซ้าย 2px; ตรวจ period caller, skeleton/mock และ shared callers ครบ
@@ -663,6 +767,7 @@
 - [x] **CA3 — Tests + verification:** regression tests ล็อก icon-only/showLabels/period icon; Browser 320/390/768/1440px Light/Dark ได้ SVG↔button center delta 0px, ไม่มี overflow/console error; lint + test 233/233 + TypeScript + build 156/156 + diff-check ผ่าน
 
 ### Watchlist selected-tab edge alignment — 2026-07-16
+
 > เก็บ selected state จากภาพใช้งานจริง: ปุ่มแท็บสูงกว่าราง แต่ underline ถูกเลื่อนต่ำกว่าเส้นฐาน จึงดูเป็นเส้นสองชั้นที่หลุดจากตัวเลือก; แก้เฉพาะ caller Watchlist เพื่อไม่เปลี่ยน Tabs กลางของหน้าอื่น
 
 - [x] **TA1 — Reproduce + falsify:** วัด DOM จริงที่ 390px พบ TabsList สูง 32px, trigger สูง 44px และ underline `bottom: -5px`; ทดลองแยกแก้ความสูง/ตำแหน่งแล้วไม่พอ ต้องจัดทั้งสองค่าให้ใช้ edge เดียวกัน
@@ -670,6 +775,7 @@
 - [x] **TA3 — Tests + verification:** regression test ล็อก class merge ของ list/indicator; Production Browser Cards/Alerts ที่ 390/640/768/1440px ทั้ง Light/Dark ได้ list=trigger 44/36px, indicator `bottom: 0`, ไม่มี overflow/error overlay; lint 0 errors + test 243/243 + TypeScript + build 156/156 + diff-check ผ่าน
 
 ### Watchlist minimal hierarchy — 2026-07-16
+
 > ปรับภาพรวมตามหน้าแรก: ลด navigation/controls ที่ซ้ำ, ให้รายการลอยบน canvas และแสดงคอลัมน์เสริมเฉพาะเมื่อมีข้อมูลจริง โดยรักษา period icon, canonical controls, URL tabs และ flow เพิ่ม/แก้ไขเดิม
 
 - [x] **WM1 — Home comparison:** เทียบ DOM/geometry หน้าแรกกับ Watchlist จริง และแยกปัญหาเป็น hierarchy หลายชั้น, panel ซ้ำ และคอลัมน์ว่าง
@@ -679,6 +785,7 @@
 - [x] **WM Verification:** Browser Cards/Alerts + list/grid ที่ 390/640/768/1440px Light/Dark ไม่มี overflow/console error; lint 0 errors (30 warnings เดิม) + test 270/270 + TypeScript + build 156/156 + diff-check ผ่าน
 
 ### Portfolio Manager — 2026-07-15
+
 > เปลี่ยน `/portfolio` จาก dashboard ที่ซ้ำยอดเป็น manager สำหรับเลือกและจัดการพอร์ต โดยคง `/portfolio/[id]` เป็นหน้ารายละเอียด และรักษางาน Search/Watchlist ที่ค้างใน worktree ไว้ทั้งหมด
 
 - [x] **PM1 — Server contract:** `GET /api/portfolio` ส่ง effective tier + quota จาก server (`null` = ไม่จำกัด), `POST` บังคับเลือก privacy และ mutation ส่งผลสำเร็จ/ล้มเหลวแบบมี status/error
@@ -691,6 +798,7 @@
 - [x] **PM Verification:** lint + test + TypeScript + build + `git diff --check`; browser 390/640/768/1440px, Light/Dark, TH/EN/JP, keyboard/focus, touch target ≥44px, create→auto-add, manage/quota/error/retry และ hide balanceข้าม Hub→Detail→reload
 
 ### Portfolio Manager — visual hierarchy round 2 — 2026-07-16
+
 > ปรับตามภาพใช้งานจริง: ลดพื้นที่ว่างและตัวเลขซ้ำ, ทำความสัมพันธ์ระหว่างยอดรวม/ซ่อนยอด/กำไรให้ชัด และลด action ที่แย่งน้ำหนักกัน โดยไม่เปลี่ยนสูตรหรือ flow ที่ทำไว้ใน PM1–PM7
 
 - [x] **PM8 — Compact snapshot:** ยุบ summary เป็น snapshot ซ้าย=มูลค่ารวม+จำนวนพอร์ต/รายการ/ใบ, ขวา=กำไร+ROIและต้นทุน; ย้ายปุ่มซ่อนยอดมาอยู่ติดกับยอดที่ควบคุม
@@ -699,6 +807,7 @@
 - [x] **PM11 — Round-2 verification:** อัปเดต markup tests แล้วตรวจ 390/640/768/1440px, Light/Dark, TH/EN/JP, keyboard/focus/touch target/no overflow/no hydration error พร้อม lint/test/TypeScript/build/diff-check
 
 ### Portfolio Manager — minimal hierarchy round 3 — 2026-07-16
+
 > ลด Hub ให้เป็นหน้าสำหรับเลือก/เปิด/เพิ่ม/จัดการพอร์ตจริง ๆ: ไม่มี dashboard ซ้ำกับแถว และไม่แสดงผลตอบแทนรวมเมื่อข้อมูลราคา/ต้นทุนไม่ครบ
 
 - [x] **PM12 — Honest financial rollup:** เพิ่มตัวคำนวณ coverage กลางสำหรับมูลค่า/ต้นทุน/P&L/ROI; ค่า performance เป็น nullable เมื่อข้อมูลไม่ครบ และให้ Detail/Share/Breakdown ใช้ guard เดียวกันโดยไม่แตะ schema/API contract
@@ -707,18 +816,22 @@
 - [x] **PM15 — Minimal-manager verification:** เพิ่ม unit/markup tests แล้วตรวจ 390/640/768/1440px, Light/Dark, TH/EN/JP, keyboard/focus/touch target/no overflow พร้อม lint/test/TypeScript/build/diff-check
 
 ## 🎨 Redesign (in-place · ทิศเต็มใน [VISION.md](VISION.md) · **ไม่มีเวอร์ชัน v1/v2**)
+
 > แก้ของเดิมทีละ surface ตาม spine VISION §7 · ทุก surface = adopt atom kit + verify (tsc/lint/build/test) + เปิดดูจริง · ⚠️ ข้อที่แตะ schema = เบสอนุมัติก่อน
 > 📌 กฎ design-system: การ์ดใหญ่ = `.panel` · `surface-*`/`hairline` = chip/control/nested · `.hairline` เป็น unlayered → อย่าผสมกับ ring/shadow บน element เดียว
 
 ### Foundation — token + atom kit + states (บล็อกทุก surface)
+
 - [x] warm primitive kit + `--p-*` → `globals.css` (dark+light) · proto เหลือแต่ `.proto-root` var
 - [x] token motion/elevation: `--dur-fast/base/slow` + `--ease-chrome/spring` + `--elev-flat/raised/overlay` (light+dark) · wire `.ease-chrome`/`.rise` → token · refactor button base → `duration-[var(--dur-base)] ease-[var(--ease-chrome)]` · verify ✓ (เหลือ: ทยอย migrate 20 ไฟล์ที่ยัง hardcode `duration-*` ตอนแตะหน้านั้นๆ)
-- [ ] atom kit (สร้าง/รวม): `PriceTag` · `HeroNumber` · `GradeChip`/`GradeRail` · `EditionToggle` · `SourceBadge` · `SellerChip` · `PriceLadder` · `CustodyTimeline` · `EventCard` *(มีแล้ว: ListRow · Surface · Skeleton · AdInventorySlot)*
+- [ ] atom kit (สร้าง/รวม): `PriceTag` · `HeroNumber` · `GradeChip`/`GradeRail` · `EditionToggle` · `SourceBadge` · `SellerChip` · `PriceLadder` · `CustodyTimeline` · `EventCard` _(มีแล้ว: ListRow · Surface · Skeleton · AdInventorySlot)_
 - [ ] state system: skeleton รูปร่างตาม content ทุก async + `EmptyState`+CTA · ศูนย์ spinner
 - [x] **iOS design language tokens** (2026-07-03 · ส่วนหนึ่งของ showcase ด้านล่าง): `.hairline-b` (คู่ `.hairline-t` เดิม) · safe-area utilities (`.pt/pb/pl/pr-safe`) · `.text-large-title` (34px collapsing-nav large title) · `.frost` มีอยู่แล้วนำมาต่อยอด — ไม่แตะของเดิม
 
 ### 🍎 iOS Design Language — Showcase ✅ (2026-07-03 · เบส: "ทำ UXUI ทั้งเว็บทันสมัย มือถือแบบ Apple iOS ลองทำตัวอย่างมาดู")
+
 > ทิศ = "iOS grammar × Meecard skin" — เอาไวยากรณ์ iOS (large title collapse, frosted chrome, grouped-inset list, safe-area, tap≥44px) มาทับตัวตน espresso+honey เดิม (VISION §1 ห้ามเปลี่ยน) · scope ใหญ่เกินกวาดทั้งเว็บรอบเดียว → proto-first ที่ `/proto/ios/*` ก่อน (เปิดดูไม่ต้อง login)
+
 - [x] token additions ใน `globals.css` (ดูด้านบน) — ผ่าน Impeccable hook หลัง suppress 2 finding เดิม (`--ease-spring` bounce ที่ VISION.md ตั้งใจ + `.section-heading` side-tab เดิมนอก scope) ด้วย reason ที่บันทึกใน `.impeccable/config.json`
 - [x] shell กลาง `src/app/proto/ios/` — `IosShell` (frosted collapsing nav + back-button อัตโนมัติ + bottom tab bar มือถือ/side rail desktop ตรง VISION §2) · atoms `LargeTitle`/`GroupedSection`/`GroupedRow` · mock data กลาง `_data.ts` (การ์ดจริงจาก R2/pokemontcg.io)
 - [x] 6 หน้า showcase: ตลาด (home) · portfolio hub · portfolio detail (`SegmentedControl`+sparkline) · card detail (grade chips กดสลับราคา+chart+sticky buy bar เดียวที่ใช้ทอง) · watchlist (pin/alert micro icons) · more/settings (grouped-inset เต็มรูปแบบ) — home เขียนเองเป็น reference แล้ว delegate 5 หน้าที่เหลือให้ subagent ขนาน (ส่ง shell+atoms+mock ที่ล็อกแล้วกันดริฟต์)
@@ -757,6 +870,7 @@
 - [ ] ต่อ audit หน้าที่เหลือ (list ใน PROGRESS.md) + ตัดสินใจเรื่อง `@base-ui/react/menu` hydration bug (เช็คอัปเดตเวอร์ชันก่อน) + เปิด PR รวม branch `ui/sets-redesign` เข้า master เมื่อเบสพร้อม
 
 ### Card detail — trust core ✅ (proto visionary layout · เต็มภาพ · est-labeled fill)
+
 - [x] **rework layout ตรง proto visionary** (เบสเลือก): grid `340px/1fr` · ซ้าย sticky = รูป+identity+EditionToggle+CTA · ขวา = hero + **3-stat box** (Last Sale·Lowest Listing·Sales 30d) + grade chips **outline-selected** + chart card + **tabs** (Comps/Listings/Population/Specs)
 - [x] **เติมตัวอย่าง + ติดป้าย est ทุกตัวที่ไม่ใช่ของจริง** (เบสเลือก) — ของจริง (Raw A=Yuyutei · PSA 10=SNKR) ไม่ติดป้าย · per-stat `EstMark` (title+aria) · recent-prices ติด Sold/Listed จาก type จริง
 - [x] adopt primitive pass แรก (glow image + sticky desktop + frost bar)
@@ -782,6 +896,7 @@
 - [ ] **เปลี่ยน est → ข้อมูลจริง** เมื่อมี schema: Grade enum (Raw A/B/C·PSA 9/8) + edition JP/EN column + `Comp`/population tables (⚠️ เบสอนุมัติ migrate) — โครง UI พร้อม swap แล้ว
 
 ### Portfolio — honesty + Robinhood hero ✅ (รื้อใหม่ตาม VISION §5.3 · เบสสั่ง 2026-06-30 · workflow build 7 agent)
+
 - [x] ⚠️ **netInvested** → `PortfolioSnapshot.netInvestedJpy Int?` (additive nullable · apply prod ด้วย `db execute` IF NOT EXISTS + `migrate resolve --applied` ตาม precedent P4.2 · ไม่แตะ drift M5) · cron เขียนไปข้างหน้า · snapshot เก่า null → UI fallback `totalCost`
 - [x] hero (`HeroNumber` atom count-up + scrub-bind) + finger-scrub chart (pointer-events, range 1D·1W·1M·3M·1Y·ALL honey-active) + **inflow notch** (honey dot จาก isInflow) · KPI quartet 2×2 hairline · movers (เรียง abs THB swing) · holding detail sheet (tap tile บน collection grid)
 - [x] **game-aware** (namespace-ready, ยังไม่แยก URL): API `card.set.game` · `gameBreakdown` ใน hook · `PortfolioGameBreakdown` (collapse เหลือ 1 เกมตอนนี้ → null · ติดเมื่อมีเกม 2) · = โครงหน้ารวม `/all/portfolio` พร้อมเสียบ
@@ -810,7 +925,9 @@
   - verify: tsc0 · lint0 (เจอ+แก้ 1 error `set-state-in-effect`) · test56 · build✓ (route `/portfolio/[id]` ขึ้นจริง) · impeccable detect [] · curl smoke 4 route 200 · **⚠️ ยังไม่ได้เปิด Chrome จริงดู** (browser tool ไม่พร้อม session นี้ — เบสต้องเช็คเอง ดู PROGRESS.md)
 
 ### MINE multi-game UX (พอร์ต/แจ้งเตือน/รายการโปรด รองรับหลายเกม · workflow 7-agent + เว็บระดับโลก 2026-07-01 · เบสเคาะ "เริ่มเลย")
+
 > หลักการเดียว: "ของฉัน" = กองเดียวรวมทุกเกมเป็น default · เกม = ป้าย+ตัวกรองในหน้า ไม่ใช่โหมด (Robinhood/Coinbase/Collectr) · header pill = แคตตาล็อกเท่านั้น ห้ามกรอง MINE เงียบๆ (NN/g "devastating")
+
 - [x] **เฟส 1 — trust fixes โครงสร้าง (verify: tsc0/lint0err/test56/build✓)**: chip filter **แยกต่อหน้า** (local `useState` แทน shared `mineGameFilter` ใน ui-store — ลบทิ้ง + comment โกหกที่ว่า "header switcher ก็ขับ") · `useGameFilterReset` hook reset→"ทุกเกม" เมื่อเกม active หลุด data (กัน stale filter หลัง chip ซ่อน / cross-page dead-end) · **coming-soon teaser** ในราง chip (เกม comingSoon → ป้าย "เร็วๆ นี้" กดไป `/coming-soon` · เบสสั่ง)
 - [x] **เฟส 1.5 — safe correctness subset (verify: tsc0/lint0/test56/build✓)**: **add-card/alert ค้นข้ามทุกเกม** (`<CardSearch game="all">` ใน watchlist-add-dialog + alert-create-dialog — เลิกล็อก currentGame เงียบๆ · เกมมาจากการ์ดที่เลือก) · **null-game fold** ใน `gameBreakdown` (การ์ดไม่มีเกม → fold เข้า DEFAULT_GAME เหมือน `scopedItems` → ยอด chip ตรงกับ hero)
 - [x] **เฟส 2 — historical mock Pokémon + multi-game UI (superseded by HGL/FGR 2026-07-25):**
@@ -822,34 +939,43 @@
 - [ ] **⏭️ เฟสถัดไป (ไม่เร่ง)**: จัดกลุ่ม alert เกม→set พับได้ · สร้าง alert จากกระดิ่งบนการ์ด (alert สร้างได้อยู่แล้ว) · ยอด sticky scroll (Coinbase) · ตัวเลขกำกับ chip · badge บน grid views · **ลบ mock demo เมื่อ Pokémon data จริงมา**
 
 ### Marketplace + escrow (effort สูงสุด · หลังเปิด backend flag)
+
 - [ ] order book ต่อ SKU + 2 CTA (buy now/place bid) · `CustodyTimeline` + held hero · buyer protection · seller behavior badge · dispute flow [schema: MarketSku/Bid/escrow/SellerStats]
 
 ### Chat / Profile / Reputation
+
 - [ ] sticky context card · offer/order → `EventCard` · accept = confirm sheet · inbox split (ซื้อ/ขาย/อัปเดต) · tier badge + stats sheet + auto-feedback cron
 
 ### PLAY — deck / meta / tier
+
 - [ ] deck editor จอเดียว (ฆ่า modal-per-add) + stepper ≥44px + cost curve · deck cost → own/need → "ซื้อที่ขาด" → marketplace
 - [ ] tier visual default (S/A/B/C leader art) + meta momentum · archetype "build this deck" funnel · `GameConfig`-parameterized
 
 ### Ads polish
+
 - [ ] **Advertising P1 — REVIEW GATE:** AHR4/P0 เสร็จแล้ว; ขยาย route อื่นตาม `doc/advertising-placement-plan-2026-07-24.md` หลัง owner รีวิวของจริง · ห้ามคืน `AdSlot`/registry เดิม · promoted-listing governance (floor+cap+dedup) ยังเป็นงานแยก
 
 ### Multi-game (Pokémon)
+
 - [ ] `GameConfig` (1 ไฟล์) + `/[game]/` middleware + switcher (สลับแล้วอยู่ feature เดิม) + per-game tint + all-games portfolio aggregate [schema: Game +fields · gameId NOT NULL]
 
 ## 🔴 M0 — บั๊ก/ของหลุดที่เจอจากการ audit (เร็ว ควรเก็บก่อน)
+
 - [ ] **cron `leaderboard-rewards` ไม่ถูก schedule ใน `vercel.json`** — route มีจริง (`/api/cron/leaderboard-rewards`) แต่ไม่เคยรันอัตโนมัติ → Top-10 monthly payout อาจไม่เคยจ่าย · เพิ่ม schedule (เสนอ: วันที่ 1 ของเดือน หลัง draw-raffle) + ตรวจย้อนหลังว่าต้อง backfill รางวัลไหม
 - [ ] งานใน working tree ค้าง commit (15 ไฟล์ raffle/header/i18n) — เก็บงานให้จบแล้ว commit
 
 ## 🎨 R — Refactor ทั้งระบบก่อน redesign (เบสสั่ง 2026-06-13 · "Refactor ก่อน เดี๋ยวค่อยปรับ Design")
+
 > ผล audit 2026-06-13: conventions ส่วนใหญ่ดีแล้ว (apiHandler ครบ ยกเว้น webhook/cron ที่มี guard ของตัวเอง · Zod 57/64 mutation routes · ไม่มี desktop-first override · typography token ใช้แล้ว 823 จุด) — น้ำหนัก refactor จริงอยู่ที่โครง client code + convention ตกค้าง + i18n · ส่วนการเปลี่ยน IA/หน้าตา รอเฟส redesign
 
 ### R0 — Convention fixes (refactor-safe ไม่เปลี่ยน design)
+
 - [x] เพิ่ม `/forgot-password` `/reset-password` เข้า `CHROMELESS_ROUTES` ใน `main-chrome.tsx` (ตอนนี้ได้ chrome เต็ม ขัดกับ login/register)
 - [x] ตาราง drop-rate dialog `sets/[setCode]/set-page-client.tsx` — เพิ่ม list fallback ใต้ sm + hoist rows ใช้ร่วม table/list
 - [x] ไล่เช็ค `overflow-x-auto` ~30 จุด non-admin แล้ว: ที่เหลือเป็น tab-scroll/carousel/prose ที่ตั้งใจ + ตารางมี `hidden sm:block` fallback อยู่แล้ว (trending-tabs, home-market-overview) — ไม่ต้องแก้เพิ่ม
 
 ### R1 — UI consistency (mechanical — กวาดทีเดียวจบ)
+
 - [x] **Typography full sweep (workflow audit 2026-06-29 · 15 โซน · 91 findings · เบสสั่ง "ทำหมด")** ✅ 205 edits / 92 ไฟล์ · verify lint 0 err + test 56/56 + build ✓ · **แก้ครบ 91/91** (รวม 4 judgement-call ที่เบสเคาะ "แก้หมดให้จบ": badge→`.text-micro` · faq/related h2→h3 · reviews heading h5→h4 · settings title h2→h1) · **ยังไม่ commit** (กัน portfolio WIP อีกทีม) — ดึง role ที่ใช้ซ้ำกลับเข้า semantic token ทั้งเว็บ (ไม่รื้อดีไซน์):
   - 🔴 3 จุดแดง (อ่านออก/ลำดับชั้น): marketplace `listing-card:108` ชื่อจางกว่าคนขาย → `.text-h5` · blog `[slug]:174` `prose-sm`→`prose` · profile `reviews-preview` prose 13→15px + วันที่ 10→13px
   - 🟠 systemic: form label→`.text-label` (auth/seller/marketplace/admin/alert) · item title→`.text-h5` (honey/admin) · badge→`.text-micro` · section heading→`.text-h3` · price→`.font-price` · column header→`.text-eyebrow`
@@ -862,6 +988,7 @@
 - [ ] รวม empty-state: `shared/empty-state` + `kuma/kuma-empty-state` → ระบบเดียวมี variant (admin แยกไว้ได้)
 
 ### R2 — โครง client code (ลด friction ก่อน redesign)
+
 - [x] สร้าง client fetch helper กลาง `src/lib/api/client.ts` (`apiFetch`/`apiGet`/`apiPost`/`apiPatch`/`apiDelete` + `ApiError(status)` + `apiTry`) คู่กับ `adminJsonFetch` เดิม · เพิ่ม `src/lib/api/shared-resource.ts` แทน module-cache ที่ copy-paste 4 สำเนา
 - [x] migrate hooks ครบ 9 ตัวที่มี fetch: portfolio-api, header-data, settings, public-config, marketplace-fees, rank-tiers (→ useSyncExternalStore), honey-data (19 จุด), compare-data, market-cards — คงพฤติกรรม 401→signOut / 403→limitReached / AbortError เดิม
 - [ ] migrate fetch ใน components ทีละ feature (~70 จุด): honey components → portfolio dialogs → marketplace → ที่เหลือ · **เริ่มแล้ว**: `profile/section-addresses.tsx` (reference pattern: JSON CRUD → apiGet/apiPost/apiPatch/apiDelete + apiTry) · ⚠️ FormData upload (cover/avatar) คง raw fetch ไว้ · auth-critical (profile-data-context 401→signOut) migrate ระวังเป็นพิเศษ
@@ -871,17 +998,22 @@
 - [ ] ยุบ re-export shims `tier.ts`/`tier-features.ts`/`plan-features.ts` (รวม 14 บรรทัด) ให้เหลือทางเข้าเดียว
 
 ### R3 — i18n hardening (ใหญ่ — ทำเป็น batch ราย feature)
+
 - [ ] กวาด hardcoded ไทย + ternary `language === "TH" ? ...` ใน **152 ไฟล์** → `t()` keys (key parity 3 ภาษาเป๊ะ 1406 — อย่าให้พัง) · ลำดับ: layout → messages → marketplace → ที่เหลือ
 - [ ] บังคับใช้ `utils/currency` formatting ทุกที่ (JPY/THB/USD — ห้าม format มือ)
 
 ### R4 — client→server pages (performance มือถือ — ท้ายสุด)
+
 - [ ] หน้า client ล้วนที่ควรเป็น server-first: `settings/*` 9 หน้า · `saved` · `orders` · `seller/*` (เน้นหน้า first paint ช้าบน 4G)
 
 ## ✅ Redesign — เฟสแรก (เสร็จ + merge แล้ว · เก็บเป็น record)
+
 > ป้าย P0–P4 = **ของเก่า ไม่ใช้ต่อ** · redesign รอบใหม่ = in-place (ดู §🎨 Redesign ด้านบน + [VISION.md](VISION.md)) · รายละเอียดเต็มใน git history + [doc/archive/REDESIGN.md](doc/archive/REDESIGN.md) · เก็บ checklist ข้างล่างไว้ดูว่าอะไรทำไปแล้ว
 
 ### P0 — Foundation (chrome / nav / tokens / primitives) · บล็อกทุก phase
+
 **P0a — Nav IA foundation** ✅ verified, PR #7 เปิดแล้ว (branch `redesign/p0-nav-foundation`)
+
 - [x] ui-store: เพิ่ม `currentGame` (+ partialize) — game-context พื้นฐาน (UI switcher จริงไว้ P4)
 - [x] i18n: +6 keys ×3 ภาษา parity (browse/decksAndTools/deckBuilder/myDecks/metaCards/tierList · more/decks/market มีอยู่แล้ว)
 - [x] bottom-nav: **freeze 5 tab** (Market·Browse·Decks·Portfolio·More) เลิก ternary marketplaceEnabled · ย้าย Search ออก (อยู่ header แล้ว) · badge → Portfolio
@@ -890,11 +1022,13 @@
 - [x] mobile-menu-sheet: Tools section → ลิงก์เดียว "Decks & Tools" → /decks
 
 **P0b — AdSlot + Consent** ✅ historical record (branch `redesign/p0b-ads-consent`) · **superseded โดย AHR hard reset 2026-07-24 — component/consent เดิมถูกถอนแล้ว**
+
 - [x] `<AdSlot placement>` — FREE-only + route-excluded (`src/components/ads/placements.ts`) + house-ad (Upgrade-to-Pro) · returns null เมื่อซ่อน (ไม่เหลือช่องว่าง) · AdSense path dormant จนตั้ง `NEXT_PUBLIC_ADSENSE_CLIENT`
 - [x] `ConsentBanner` + `adConsent` ใน ui-store (persist) — dormant จน env ตั้ง (กัน nag ก่อน ads live) · ใช้ `useHydrated()`
 - [x] billing/features: key `adFree` (PRO) + `featAdFree` i18n · migrate HomeAdCard → AdSlot · + mobile home AdSlot (แก้ ad lg:-only)
 
 **P0c — polish** ✅ verified (branch `redesign/p0c-polish`)
+
 - [x] command palette: เพิ่ม "Pages" nav shortcuts (Market/Browse/Decks/Portfolio/Watchlist/Trending/Compare/Honey/Settings) — ค้นหน้าได้ ไม่ใช่แค่การ์ด · keyboard nav รองรับ
 - [x] footer มือถือเข้าถึงได้ (เลิก `hidden md:block` + pb clear bottom-nav)
 - [x] design-token pass: `.text-price`/`.text-price-lg` (numeric mono) + `--game-accent` hook (default → primary, GameSwitcher set ตอน P4) — **adopt บน PriceTag ตอน P1**
@@ -902,19 +1036,21 @@
 → **P0 จบครบ** (P0a nav + P0b ads + P0c polish)
 
 ### P1 — Core pages (doc/archive/REDESIGN.md §7) · เริ่มจากหน้าแย่สุด (card-detail)
+
 **P1.1 — card-detail mobile** ✅ verified (branch `redesign/p1-card-detail`)
+
 - [x] ย่อรูปการ์ดบนมือถือ (`max-w-[240px] sm:[320px] lg:none`) — ไม่กินทั้งจอแรก
 - [x] reorder: image → header/actions/price/info → siblings (full-width) → related (เลิกดัน actions ใต้ siblings)
 - [x] AdSlot `card-detail-mid` (หลัง price-hub, FREE only)
 - [x] tap target primary CTA `h-11` บนมือถือ
-**P1.2 — card-detail sticky bar** ✅ verified (branch `redesign/p1-card-detail-2`)
+      **P1.2 — card-detail sticky bar** ✅ verified (branch `redesign/p1-card-detail-2`)
 - [x] sticky action bar มือถือ (`CardDetailStickyBar`) — ราคา + Add-to-Portfolio ลอยเหนือ bottom-nav เสมอ · desktop ใช้ inline actions
 - [~] **defer มีเหตุผล**: chart-collapse (quick-view ราคาอยู่บนสุดแล้ว + Recharts ใน collapsed เสี่ยง 0-width) · adopt `.text-price` (PriceDisplay มี size system อยู่แล้ว, force-swap = regress) → ทำตอนสร้าง price surface ใหม่
-**P1.3 — ListRow primitive** ✅ verified (branch `redesign/p1-listrow`)
+  **P1.3 — ListRow primitive** ✅ verified (branch `redesign/p1-listrow`)
 - [x] `src/components/ui/list-row.tsx` — interactive row primitive (`min-h-14` tap target, focus-visible ring, leading/title/subtitle/trailing/chevron slots, Link/button/div)
 - [x] adopt ใน `CardListRow` (CardTable mobile fallback) → ได้ทั่ว cards/sets/trending ทันที
 - note: `MobileAssetCard` (PnL+notes+edit) / `OrderCard` (status header + actions footer) เป็น multi-section card จริง — คงเป็น bespoke (ไม่ force เข้า row primitive)
-**P1.4 — cards browse (HomeMarketOverview)** ✅ verified (branch `redesign/p1-cards-browse`)
+  **P1.4 — cards browse (HomeMarketOverview)** ✅ verified (branch `redesign/p1-cards-browse`)
 - หมายเหตุ: `/cards` redirect → `/` · การ browse จริงคือ `HomeMarketOverview` บนหน้าแรก
 - [x] filter → **bottom sheet** (เลิก inline horizontal-scroll bar ที่กินความกว้างมือถือ — AGENTS anti-pattern) · chips wrap · ปุ่ม "ดูผลลัพธ์"
 - [x] AdSlot `browse-in-feed` ใน mobile list (กลาง list, FREE only)
@@ -922,6 +1058,7 @@
 - [ ] (option) set-picker บนมือถือ (ตอนนี้ `hidden sm:block`) → ใส่ใน filter sheet · grid view AdSlot
 
 **P1.5 — sets page** ✅ verified (branch `redesign/p1-sets`)
+
 - หมายเหตุ: sets page ออกแบบดีอยู่แล้ว (type pills tab-scroll, grid mobile-first, SetCard) — ปรับเฉพาะจุด
 - [x] adopt `ListRow` ใน most-valuable list (reuse primitive: tap target + focus ring + leading rank/thumb)
 - [x] AdSlot `browse-in-feed` คั่นระหว่าง most-valuable กับ grouped sets
@@ -930,10 +1067,12 @@
 → **P1 ครอบคลุมหน้าหลักแล้ว** (card-detail, cards-browse, sets) · เหลือ polish ปลีกย่อย
 
 ### P2 — Portfolio & tools (doc/archive/REDESIGN.md §7)
+
 **P2.1 — portfolio** ✅ verified (branch `redesign/p2-portfolio`)
+
 - หมายเหตุ: portfolio ผ่าน single-screen redesign แล้ว (2026-07-02 · เลิกแท็บ → หน้าจอเดียว money band → KPI → context → holdings → insights · ดู §Portfolio ด้านบน)
 - [x] PortfolioHero stat row (PnL/cost/best/worst) **ยุบ default บนมือถือ** + ปุ่ม "ดูรายละเอียด" · value+PnL pill โชว์เสมอ · desktop กางเต็ม (holdings เร็วขึ้นตาม audit)
-**P2.2 — tools tap targets** ✅ verified (branch `redesign/p2-tools`)
+      **P2.2 — tools tap targets** ✅ verified (branch `redesign/p2-tools`)
 - หมายเหตุ: drop-calc มี mobile tabs (cards/results) + lg grid อยู่แล้ว, deck-calc ใช้ list — mobile-structured พอควร (audit "form-heavy table" ไม่ตรงโค้ดจริง)
 - [x] drop-calc purchase-config quantity stepper `size-7→size-9` + input `h-7→h-9` (fat-finger fix ตาม audit)
 - [x] want-list remove button `p-0.5→p-1.5` + aria-label
@@ -942,24 +1081,30 @@
 → **P2 ครอบคลุมแล้ว** (portfolio + tools) · core mobile UI redesign (P0+P1+P2) เสร็จเป็นกอบเป็นกำ
 
 ### P4 — Multi-game / Pokémon (doc/archive/REDESIGN.md §5.1) · เบสเคาะ: per-game · ขยาย enum · อนุมัติ schema
+
 **P4.1 — GameSwitcher + Pokémon stub** ✅ verified (branch `redesign/p4-game-switcher`) — โค้ดล้วน ไม่แตะ DB
+
 - [x] `pokemon.ts` stub (comingSoon) + register ใน GAME_CONFIGS · `getActiveGameConfigs()` · GameConfig +flags (shortName/comingSoon/supports*/deckRules)
 - [x] `GameSwitcher` pill ใน header (มือถือ+desktop) — OPCG active, Pokémon disabled "เร็วๆ นี้" · ใช้ `currentGame` (persist) · i18n chooseGame
 
 **P4.2 — schema migration (additive, prod-safe)** ✅ code verified · 🔵 deploy (เบสเลือก C: ผม run migrate deploy)
+
 - [x] `gameId Int?` (nullable) + FK SetNull + index บน **Card / Portfolio / Deck / Listing / YuyuteiMapping / SnkrdunkMapping** · Game back-relations
 - [x] migration `20260614000000_add_game_scoping` (ADD COLUMN + INDEX + FK ล้วน, transaction-safe) · `prisma generate` + build ✓
 - [~] **defer ไป P4.3** (ลด prod risk): `CardType` enum ขยาย (ALTER TYPE รันใน tx ไม่ได้) · backfill gameId · NOT NULL + `@@unique([gameId,cardCode])` — ทำหลัง Pokémon data
 - [x] **deployed เข้า Supabase prod แล้ว** (2026-06-14) — apply ผ่าน `prisma db execute` + `migrate resolve --applied` (option 1: ไม่แตะ drift) · verify gameId มีครบ 6 ตาราง
 
 **P4.3 — `/[game]/` URL namespace (เบสสั่ง 2026-06-30 "URL แยกเกมทั้งแอป · ทำ UI ก่อน")**
+
 - [x] **routing core (Phase 1)** ✅ — กลยุทธ์ middleware-rewrite + cookie/header resolver (mirror `getServerLanguage` · ไม่ย้าย 102 route จริง · ไม่แก้ 180 ลิงก์): `src/lib/game/{constants,server}.ts` (GAME_COOKIE/HEADER · GAME_SCOPED_SEGMENTS allowlist · `getServerGame()`) · middleware: `/opcg/x` rewrite→flat `/x` + inject `x-game` + cookie · legacy `/x` redirect→`/{currentGame}/x` (ลิงก์เก่าใช้ได้หมด · namespace ทั้งแอปทันที) · `updateSession` refactor backward-compat รองรับ rewrite (auth ไม่พัง) · GameSwitcher นำทาง swap segment
 - [x] **verify (Phase 1)** ✅ — build ✓ · live curl matrix 2 รอบ (bypass on/off): `/portfolio`→307→`/opcg/portfolio` · `/opcg/portfolio`→200 · `/all/portfolio`→200 · `/sets`→307→`/opcg/sets` · `/messages`→302→login (auth ไม่พัง) · `/settings`/`/honey`/`/api`/`/` flat ไม่แตะ · ไม่มี loop · `kuma-game` cookie set ถูก
 - [~] **Phase 2 (per-page scoping)** — **portfolio ✅**: `useGameScope()` อ่าน game จาก URL · `usePortfolioApi(scope)` filter assets/stats/allocation ตามเกม (gameBreakdown คง cross-game) · `/all/portfolio`=รวมทุกเกม+breakdown · `/opcg`=scope เกมเดียว · `/pokemon`=empty state · verify lint0/tsc/test56/build + curl 4 route 200 · **เหลือ:** sets/cards/search/trending/compare/watchlist/decks อ่าน `getServerGame()` (server) · sitemap/canonical → prefixed · 307→308 ตอน stable · ~~rename `middleware.ts`→`proxy.ts` (Next16)~~ ✅ 2026-08-07
 - [ ] **DEFER (data)** — backfill `Card.gameId` (จาก set.game) + NOT NULL + `@@unique([gameId,cardCode])` · ขยาย CardType enum · Pokémon sets/rarities/pull-rate + scraper (ต้องหาแหล่งข้อมูล Pokémon ก่อน)
 
 ## 🧹 Declutter audit (screenshot ทุกหน้า mobile+desktop ผ่าน 2 workflows) — เบสเลือก B (live pages ก่อน, marketplace=P3 ทีหลัง)
+
 > ผล: 10 high + 48 med · card-detail/drop-calc สะอาด (5/5) · home รกสุด (2/5) · JSON: /tmp/{mobile,desktop}-findings.json
+
 - [x] **Batch 1 — Home declutter** (branch `redesign/declutter-home`): market-overview toolbar wrap 2-row มือถือ · featured-card stack · mini-table tap (min-h-11) · hero-search submit px-4 sm:px-6 · verify ✓
 - [x] **Batch 2 — Toolbar pattern: ตรวจแล้ว set-detail/trending/watchlist wrap (flex-col/flex-wrap) ดีอยู่แล้ว** — agent over-flag จากภาพแน่น แต่โค้ดถูก · ไม่แก้ (home ตัวเดียวที่ต้องแก้ = batch 1 แล้ว)
 - [x] **Batch 3+4 — tap target + token sweep** (branch `redesign/declutter-sweep`): compare X 32→36px · related-pages/faq h2 → `.text-h2` · blog badge → `.text-micro` · login labels → `.text-label` · ข้าม 15px=15px swap ที่ไม่เปลี่ยนภาพ · verify ✓
@@ -968,23 +1113,29 @@
 - [ ] (เก็บตก) decks + deck-calc 2 หน้า mobile review schema พลาด — รีวิวซ้ำ
 
 ## 🔧 M5 — Prisma migration drift (เก็บกวาด, ไม่เร่ง แต่ควรเคลียร์)
+
 > เจอตอน P4.2 deploy · drift มีมาก่อน ไม่ใช่จาก redesign
+
 - [ ] DB มี `20260422000000_add_saved_profile` แต่ไม่มีในโฟลเดอร์ repo · repo มี `20260429000000_drop_watchlist_note_target` ที่ DB ยังไม่ mark applied
 - [ ] สืบ + `migrate resolve` ให้ตรงความจริง DB (น่าจะ resolve --applied drop_watchlist ถ้า column ถูก drop จริงแล้ว · เพิ่ม/หา add_saved_profile migration) → ให้ `migrate status` สะอาด
 - [ ] ⚠️ แตะ DB จริง — ทำตอนมีเวลา + backup
 
 ### ค้างจาก audit (ทำตอน redesign แต่ละหน้า)
+
 - Honey nav มือถือ: 7 แท็บไอคอนล้วนไม่มี label (`honey-tab-nav.tsx:159`) + scroll แนวนอน (→ P5)
 - card-detail หนาแน่น/ปุ่มใต้ fold (→ P1) · portfolio scroll ลึก (→ P2)
 
 ## M1 — Honey: เก็บงานค้างจาก rebalance v2 (`doc/honey-economy-rebalance.md` §9)
+
 - [ ] Achievement unlock toast — ยังไม่มี component แจ้งตอนปลดล็อก
 - [ ] Physical prize fulfillment — flow เก็บที่อยู่จัดส่งผู้ชนะ raffle (ผูก `ShippingAddress` ที่มีอยู่แล้วได้)
 - [ ] Featured-slot curation UI ใน `/admin/honey` — API พร้อมแล้ว (`featuredUntil`) แต่ไม่มีหน้า admin
 - [ ] (future) Anti-abuse score model
 
 ## M2 — HoneyActionType migration (`doc/honey-action-type-migration.md` — ค้าง phase 4 ทั้งก้อน ทำเป็นชุดเดียว)
+
 > ตอนนี้ freeze ด้วย runtime guard เท่านั้น enum เก่ายังอยู่ใน schema
+
 - [ ] Step 1: เพิ่มคอลัมน์ `legacyType String?` บน `HoneyTransaction`
 - [ ] Step 2: backfill SQL ย้ายค่าเก่า → `legacyType`
 - [ ] Step 3: drop enum members เก่า (raw SQL ALTER TYPE)
@@ -992,6 +1143,7 @@
 - [ ] ⚠️ ทั้งชุดแตะ DB จริง — เบสอนุมัติก่อนรัน migration
 
 ## M3 — Marketplace launch prep (โค้ดเสร็จแล้ว ปิด flag อยู่ · ค้างจาก `doc/MARKETPLACE_OVERHAUL.md`)
+
 - [ ] ตัดสินใจ: เปิด `marketplaceEnabled` เมื่อไหร่ + เกณฑ์พร้อม (งานธุรกิจ — เบสเคาะ)
 - [ ] auto-complete order: DELIVERED → COMPLETED หลัง X วัน (ตรวจว่ามี cron หรือยัง — น่าจะยังไม่มี)
 - [ ] `OrderEvent` model — audit log การเปลี่ยน status ของ order
@@ -1000,8 +1152,10 @@
 - [ ] (optional) `/checkout/[orderId]` แยกหน้า + Cart ซื้อหลายใบร้านเดียว
 
 ## M4 — สุขภาพ docs (กัน AI/คนอ่านแล้วหลงทาง)
+
 - [ ] อัปเดต `doc/data-pipeline.md`: รูปขึ้น **Cloudflare R2** แล้ว (ไม่ใช่ Supabase Storage) + เพิ่มส่วน SNKRDUNK pipeline + ชี้ cron จริงใน vercel.json
 - [ ] ตัดสินใจชะตา `data/cards-official/` (5.1MB ไม่มีโค้ดอ้าง — snapshot เก่า?) — เบสเคาะ: ลบ หรือเก็บเป็น archive
 
 ## ถัดไป (north star — ยังไม่เริ่ม อย่าหยิบเองโดยเบสไม่สั่ง)
+
 - [ ] แหล่งราคาเพิ่ม (Mercari/eBay JP) · Multi-TCG (seed-games.ts พร้อมแล้ว) · PWA · Lifetime deal

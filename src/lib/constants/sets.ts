@@ -3,13 +3,22 @@ export type SetInfo = {
   name: string;
   nameEn?: string;
   type: "BOOSTER" | "EXTRA_BOOSTER" | "STARTER" | "PROMO" | "OTHER";
+  /** Official Japanese release date (YYYY-MM-DD). */
+  releaseDate?: string;
 };
 
 export const OPCG_SETS: SetInfo[] = [
   // Boosters (OP-01 to OP-15) — names from Bandai official
   { code: "op01", name: "ROMANCE DAWN", nameEn: "Romance Dawn", type: "BOOSTER" },
   { code: "op02", name: "頂上決戦", nameEn: "Paramount War", type: "BOOSTER" },
-  { code: "op03", name: "強大な敵", nameEn: "Pillars of Strength", type: "BOOSTER" },
+  {
+    code: "op03",
+    name: "強大な敵",
+    nameEn: "Pillars of Strength",
+    type: "BOOSTER",
+    // Bandai Japan: https://www.onepiece-cardgame.com/products/boosters/op03.php
+    releaseDate: "2023-02-11",
+  },
   { code: "op04", name: "謀略の王国", nameEn: "Kingdoms of Intrigue", type: "BOOSTER" },
   { code: "op05", name: "新時代の主役", nameEn: "Awakening of the New Era", type: "BOOSTER" },
   { code: "op06", name: "双璧の覇者", nameEn: "Wings of Captain", type: "BOOSTER" },
@@ -64,6 +73,17 @@ export const OPCG_SETS: SetInfo[] = [
 ];
 
 export const SET_CODES = OPCG_SETS.map((s) => s.code);
+
+/**
+ * Verified Japanese dates used only when a set-detail row has not been
+ * backfilled yet. Keeping this fallback out of global sorting prevents one
+ * partially dated row from being mistaken for the newest set site-wide.
+ */
+export function getJapaneseSetReleaseDate(code: string): string | null {
+  return (
+    OPCG_SETS.find((set) => set.code === code.toLowerCase())?.releaseDate ?? null
+  );
+}
 
 /** "Starter Deck EX" display boxes — their packaging is landscape, so the
  *  portrait crop that only eats transparent margin on the other 47 sets would

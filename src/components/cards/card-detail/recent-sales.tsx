@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { useMemo, useState } from "react"
-import { ExternalLink } from "lucide-react"
+import { useMemo, useState } from "react";
+import { ExternalLink } from "lucide-react";
 
-import { FilterModal } from "@/components/shared/filter-modal"
-import { SegmentedControl } from "@/components/ui/segmented-control"
-import { FilterButton } from "@/components/ui/toolbar"
-import { useHydrated } from "@/hooks/use-hydrated"
-import { type Currency } from "@/lib/utils/currency"
-import { t, type Language } from "@/lib/i18n"
-import { cn } from "@/lib/utils"
+import { FilterModal } from "@/components/shared/filter-modal";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import { FilterButton } from "@/components/ui/toolbar";
+import { useHydrated } from "@/hooks/use-hydrated";
+import { type Currency } from "@/lib/utils/currency";
+import { t, type Language } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
-import { FeedScrollBox } from "./feed-scroll-box"
-import { SourceLogo, sourceLabel, sourceUrl } from "./source-logo"
-import { RANGE_DAYS, type ChartRange } from "./card-chart"
-import { PriceRangeControl } from "./price-range-control"
-import type { SaleRow } from "./sold-feed"
+import { FeedScrollBox } from "./feed-scroll-box";
+import { SourceLogo, sourceLabel, sourceUrl } from "./source-logo";
+import { RANGE_DAYS, type ChartRange } from "./card-chart";
+import { PriceRangeControl } from "./price-range-control";
+import type { SaleRow } from "./sold-feed";
 import {
   MARKET_TABLE_CLASS,
   MarketTableColGroup,
@@ -25,13 +25,47 @@ import {
   marketTdPrice,
   marketThLead,
   marketThPrice,
-} from "./market-table-layout"
+} from "./market-table-layout";
 import {
   ConditionChip,
   ConditionFilter,
   FeedPriceCell,
   formatFeedDate,
-} from "./market-feed-shared"
+} from "./market-feed-shared";
+
+const DAY_MS = 86_400_000;
+const RECENT_SALES_RANGE_LABELS = {
+  "1M": "30D",
+  "3M": "90D",
+} satisfies Partial<Record<ChartRange, string>>;
+
+export function filterRecentSales(
+  sales: SaleRow[],
+  {
+    source,
+    grade,
+    range,
+  }: {
+    source: string;
+    grade: string;
+    range: ChartRange;
+  },
+): SaleRow[] {
+  // Anchor the window to the newest stored observation so stale but valid
+  // feeds remain browsable without reading the wall clock during render.
+  const newestMs = sales.reduce((max, sale) => {
+    const ms = new Date(sale.soldAtIso).getTime();
+    return Number.isNaN(ms) ? max : Math.max(max, ms);
+  }, 0);
+
+  return sales.filter((sale) => {
+    if (source !== "all" && sale.source !== source) return false;
+    if (grade !== "all" && sale.condition !== grade) return false;
+    const ms = new Date(sale.soldAtIso).getTime();
+    if (Number.isNaN(ms)) return false;
+    return ms >= newestMs - RANGE_DAYS[range] * DAY_MS;
+  });
+}
 
 /**
  * Source identity cell — logo + label, with a trailing external-link icon and an
@@ -39,17 +73,30 @@ import {
  * sales have no stable deep-link, so we point at the source homepage so shoppers
  * can verify/browse comparable listings. Unmapped sources render a plain cell.
  */
-function SourceRef({ source, interactive = true }: { source: string; interactive?: boolean }) {
-  const href = interactive ? sourceUrl(source) : null
-  const label = sourceLabel(source)
+function SourceRef({
+  source,
+  interactive = true,
+}: {
+  source: string;
+  interactive?: boolean;
+}) {
+  const href = interactive ? sourceUrl(source) : null;
+  const label = sourceLabel(source);
   const inner = (
     <>
       <SourceLogo source={source} size={18} />
-      <span className="truncate text-label font-medium text-foreground">{label}</span>
-      {href && <ExternalLink className="size-3 shrink-0 text-muted-foreground/50" aria-hidden />}
+      <span className="truncate text-label font-medium text-foreground">
+        {label}
+      </span>
+      {href && (
+        <ExternalLink
+          className="size-3 shrink-0 text-muted-foreground/50"
+          aria-hidden
+        />
+      )}
     </>
-  )
-  if (!href) return <span className={marketPrimaryCell}>{inner}</span>
+  );
+  if (!href) return <span className={marketPrimaryCell}>{inner}</span>;
   return (
     <a
       href={href}
@@ -63,13 +110,10 @@ function SourceRef({ source, interactive = true }: { source: string; interactive
     >
       {inner}
     </a>
-  )
+  );
 }
 
-/** Source facet — a pill rail like the other two filters, with the market logo
- *  inside each pill (SegmentedControl takes a ReactNode label). It replaced a
- *  dropdown: one dropdown wedged between two pill rails read as a different
- *  kind of control doing a different kind of job. */
+/** Source facet — a visible choice rail inside the canonical filter modal. */
 function SourceFilter({
   sources,
   active,
@@ -77,14 +121,18 @@ function SourceFilter({
   label,
   allLabel,
 }: {
-  sources: string[]
-  active: string
-  onSelect: (v: string) => void
-  label: string
-  allLabel: string
+  sources: string[];
+  active: string;
+  onSelect: (v: string) => void;
+  label: string;
+  allLabel: string;
 }) {
   return (
-    <div className="min-w-0">
+    <div
+      data-slot="recent-sales-source-filter"
+      data-control-type="segmented"
+      className="min-w-0"
+    >
       <p className="text-eyebrow mb-1.5">{label}</p>
       <div className="no-sb max-w-full overflow-x-auto">
         <SegmentedControl
@@ -109,7 +157,7 @@ function SourceFilter({
         />
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -126,74 +174,76 @@ export function RecentSales({
   range = "1M",
   onRangeChange,
 }: {
-  sales: SaleRow[]
-  isSample?: boolean
-  currency: Currency
-  lang: Language
-  /** Shared page range — the same selector the chart and price history use. */
-  range?: ChartRange
-  onRangeChange?: (range: ChartRange) => void
+  sales: SaleRow[];
+  isSample?: boolean;
+  currency: Currency;
+  lang: Language;
+  /** Shared page range — the same selector the chart and listings use. */
+  range?: ChartRange;
+  onRangeChange?: (range: ChartRange) => void;
 }) {
-  const hydrated = useHydrated()
-  const sources = useMemo(() => Array.from(new Set(sales.map((s) => s.source))), [sales])
+  const hydrated = useHydrated();
+  const sources = useMemo(
+    () => Array.from(new Set(sales.map((s) => s.source))),
+    [sales],
+  );
   // Condition facet lists the FULL condition of every row ("PSA 10", "BGS 9.5",
   // "Raw") rather than the grading family ("psa"), so a reader can pick the
   // exact grade they care about instead of a bucket.
   const grades = useMemo(
     () => Array.from(new Set(sales.map((s) => s.condition))).sort(),
     [sales],
-  )
-  const [activeSource, setActiveSource] = useState<string>("all")
-  const [activeGrade, setActiveGrade] = useState<string>("all")
-  const [filtersOpen, setFiltersOpen] = useState(false)
-  const [expanded, setExpanded] = useState(false)
+  );
+  const [activeSource, setActiveSource] = useState<string>("all");
+  const [activeGrade, setActiveGrade] = useState<string>("all");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
-  // Measured back from the NEWEST row, not from `Date.now()`: the render must
-  // stay pure (server and client agree, no clock read), and a feed whose last
-  // recorded sale is weeks old would otherwise filter down to nothing on every
-  // option.
-  const newestMs = useMemo(
+  const shown = useMemo(
     () =>
-      sales.reduce((max, s) => {
-        const ms = new Date(s.soldAtIso).getTime()
-        return Number.isNaN(ms) ? max : Math.max(max, ms)
-      }, 0),
-    [sales],
-  )
-
-  const shown = sales.filter((s) => {
-    if (activeSource !== "all" && s.source !== activeSource) return false
-    if (activeGrade !== "all" && s.condition !== activeGrade) return false
-    const ms = new Date(s.soldAtIso).getTime()
-    if (Number.isNaN(ms)) return false
-    if (ms < newestMs - RANGE_DAYS[range] * 86_400_000) return false
-    return true
-  })
-  // Counts the MODAL's facets only. The range sits outside in plain view, so
-  // folding it into the badge would report a filter the reader can already see.
+      filterRecentSales(sales, {
+        source: activeSource,
+        grade: activeGrade,
+        range,
+      }),
+    [activeGrade, activeSource, range, sales],
+  );
+  // The badge counts modal facets only. Range is already visible beside the
+  // trigger, so including it would report a hidden filter that is not hidden.
   const activeFilterCount =
-    (activeGrade !== "all" ? 1 : 0) + (activeSource !== "all" ? 1 : 0)
+    (activeGrade !== "all" ? 1 : 0) + (activeSource !== "all" ? 1 : 0);
 
   const resetFilters = () => {
-    setActiveGrade("all")
-    setActiveSource("all")
-  }
+    setActiveGrade("all");
+    setActiveSource("all");
+  };
 
   // Distinguish "no data at all" from "filters excluded everything".
-  const emptyCopy = sales.length === 0 ? t(lang, "noLatestSales") : t(lang, "noMatchingFilter")
-  const hasMore = !isSample && shown.length > MARKET_FEED_REAL_PREVIEW_COUNT
+  const emptyCopy =
+    sales.length === 0 ? t(lang, "noLatestSales") : t(lang, "noMatchingFilter");
+  const hasMore = !isSample && shown.length > MARKET_FEED_REAL_PREVIEW_COUNT;
   const visibleSales =
-    hasMore && !expanded ? shown.slice(0, MARKET_FEED_REAL_PREVIEW_COUNT) : shown
+    hasMore && !expanded
+      ? shown.slice(0, MARKET_FEED_REAL_PREVIEW_COUNT)
+      : shown;
 
   const table = (
     <table className={MARKET_TABLE_CLASS}>
       <MarketTableColGroup />
       <thead className="sticky top-0 z-10 bg-background">
         <tr className="text-eyebrow border-b border-hair">
-          <th scope="col" className={marketThLead}>{t(lang, "sourceCol")}</th>
-          <th scope="col" className={marketThLead}>{t(lang, "saleDate")}</th>
-          <th scope="col" className={marketThLead}>{t(lang, "condition")}</th>
-          <th scope="col" className={marketThPrice}>{t(lang, "priceCol")}</th>
+          <th scope="col" className={marketThLead}>
+            {t(lang, "sourceCol")}
+          </th>
+          <th scope="col" className={marketThLead}>
+            {t(lang, "saleDate")}
+          </th>
+          <th scope="col" className={marketThLead}>
+            {t(lang, "condition")}
+          </th>
+          <th scope="col" className={marketThPrice}>
+            {t(lang, "priceCol")}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -203,10 +253,15 @@ export function RecentSales({
               <SourceRef source={sale.source} interactive={!isSample} />
             </td>
             <td className={marketTdLead}>
-              <span className="tnum text-body-sm text-muted-foreground">{formatFeedDate(sale.soldAtIso)}</span>
+              <span className="tnum text-body-sm text-muted-foreground">
+                {formatFeedDate(sale.soldAtIso)}
+              </span>
             </td>
             <td className={marketTdLead}>
-              <ConditionChip condition={sale.condition} graded={sale.family != null} />
+              <ConditionChip
+                condition={sale.condition}
+                graded={sale.family != null}
+              />
             </td>
             <td className={marketTdPrice}>
               <FeedPriceCell jpy={sale.priceJpy} currency={currency} right />
@@ -215,23 +270,31 @@ export function RecentSales({
         ))}
       </tbody>
     </table>
-  )
+  );
 
   const mobileList = visibleSales.map((sale, index) => (
-    <div key={`${sale.source}-${index}`} className="flex items-center justify-between gap-3 py-3 pl-0.5 pr-2">
+    <div
+      key={`${sale.source}-${index}`}
+      className="flex items-center justify-between gap-3 py-3 pl-0.5 pr-2"
+    >
       <span className="min-w-0">
         <span className="flex items-center gap-2">
           <SourceRef source={sale.source} interactive={!isSample} />
-          <ConditionChip condition={sale.condition} graded={sale.family != null} />
+          <ConditionChip
+            condition={sale.condition}
+            graded={sale.family != null}
+          />
         </span>
-        <span className="tnum mt-1 block text-meta">{formatFeedDate(sale.soldAtIso)}</span>
+        <span className="tnum mt-1 block text-meta">
+          {formatFeedDate(sale.soldAtIso)}
+        </span>
       </span>
       <FeedPriceCell jpy={sale.priceJpy} currency={currency} right />
     </div>
-  ))
+  ));
 
   return (
-    <div>
+    <div data-slot="recent-sales">
       <div className="mb-3 min-w-0">
         <h2 className="text-h3">
           {t(lang, isSample ? "saleHistorySampleTitle" : "saleHistoryTitle")}
@@ -245,26 +308,32 @@ export function RecentSales({
         </p>
       </div>
 
-      {/* Range stays OUTSIDE the modal and the facets go in — the project's
-          own rule for this surface (AGENTS.md: prominent control outside, only
-          facets inside). One row now, where three stacked rails used to run
-          ~200px above a two-row table. */}
+      {/* Owner decision 2026-08-26: restore the compact original treatment —
+          range stays visible and the secondary facets live in FilterModal. */}
       {hydrated && !isSample && sales.length > 1 && (
-        <div className="mb-4 flex flex-wrap items-center gap-3">
+        <div
+          data-slot="recent-sales-controls"
+          className="mb-4 flex min-w-0 flex-wrap items-center gap-2"
+        >
           {onRangeChange && (
-            <div className="no-sb min-w-0 max-w-full overflow-x-auto pb-0.5">
+            <div
+              data-slot="recent-sales-range"
+              className="no-sb min-w-0 max-w-full overflow-x-auto pb-0.5"
+            >
               <PriceRangeControl
                 lang={lang}
                 range={range}
                 onRangeChange={onRangeChange}
+                ariaLabel={t(lang, "salePeriodFilter")}
+                labels={RECENT_SALES_RANGE_LABELS}
                 className="shrink-0"
               />
             </div>
           )}
           <FilterButton
+            data-slot="recent-sales-filter-trigger"
             count={activeFilterCount}
             active={filtersOpen || activeFilterCount > 0}
-            appearance="outline"
             onClick={() => setFiltersOpen(true)}
             aria-label={t(lang, "filter")}
             aria-haspopup="dialog"
@@ -288,7 +357,7 @@ export function RecentSales({
             grades={grades}
             active={activeGrade}
             onSelect={setActiveGrade}
-            render={(g) => (g === "all" ? t(lang, "filterAll") : g)}
+            render={(grade) => (grade === "all" ? t(lang, "filterAll") : grade)}
           />
         )}
 
@@ -309,7 +378,9 @@ export function RecentSales({
         <>
           <FeedScrollBox className="hidden sm:block">{table}</FeedScrollBox>
 
-          <FeedScrollBox variant="list" className="px-1 sm:hidden">{mobileList}</FeedScrollBox>
+          <FeedScrollBox variant="list" className="px-1 sm:hidden">
+            {mobileList}
+          </FeedScrollBox>
 
           {hasMore && (
             <div className="hairline-t mt-3 flex justify-end pt-3">
@@ -326,5 +397,5 @@ export function RecentSales({
         </>
       )}
     </div>
-  )
+  );
 }

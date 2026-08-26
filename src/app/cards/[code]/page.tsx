@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { getAdminConfig } from "@/lib/admin/config";
-import { PRICE_SOURCE } from "@/lib/constants/prices";
+import { getLimits } from "@/lib/billing";
 import { CardDetail } from "@/components/cards/card-detail";
-import { derivePriceHistory } from "@/components/cards/card-detail/price-history";
 import { deriveSoldFeed } from "@/components/cards/card-detail/sold-feed";
 import { FaqSection } from "@/components/shared/faq-section";
 import { AdPageContentReady } from "@/components/ads/ad-audience-provider";
@@ -26,6 +25,7 @@ import {
   deriveSourcePrices,
   getCardByCode,
   getListingsForCard,
+  getRawPriceHistoryForCard,
   getRelatedFromSameSet,
   getSiblingVariants,
   getSoldPricesForCard,
@@ -108,12 +108,14 @@ export default async function CardDetailPage(props: {
   const { code } = await props.params;
   const card = await getCardByCode(code);
   if (!card) notFound();
+  const freeHistoryDays = getLimits("FREE").priceHistoryDays;
 
-  const [siblings, relatedCards, listings, soldPrices, adminConfig] = await Promise.all([
+  const [siblings, relatedCards, listings, soldPrices, rawPriceHistory, adminConfig] = await Promise.all([
     getSiblingVariants(card.baseCode, card.id),
     getRelatedFromSameSet(card.setId, card.id),
     getListingsForCard(card.id),
     getSoldPricesForCard(card.id),
+    getRawPriceHistoryForCard(card.id, freeHistoryDays),
     getAdminConfig(),
   ]);
 
@@ -134,16 +136,7 @@ export default async function CardDetailPage(props: {
   const snkrdunkPrices = deriveSnkrdunkPrices(card.prices);
   const sourcePricesRaw = deriveSourcePrices(card.prices, "raw");
   const sourcePricesPsa10 = deriveSourcePrices(card.prices, "psa10");
-  let chartData = buildChartData(card.prices);
-  // Real price history, derived from the CardPrice rows already fetched — taken
-  // BEFORE the synthetic single-point fallback below so the table never shows a
-  // "today" row that was never actually scraped. The chart above is client-only;
-  // this table is the crawlable version.
-  // 30 daily rows = the free tier's own price-history quota (TIER_LIMITS.FREE
-  // .priceHistoryDays), so an anonymous visitor and Googlebot see exactly what
-  // the pricing page promises for free. The chart's range control decides how
-  // many of those rows are on screen.
-  const priceHistory = derivePriceHistory(chartData, { maxPoints: 30 });
+  const chartData = buildChartData(rawPriceHistory);
 
   // Latest update timestamp from the freshest known price for this card.
   // Compute "days since" on the server so the client component renders purely
@@ -152,23 +145,7 @@ export default async function CardDetailPage(props: {
     ? new Date(card.prices[0].scrapedAt).toISOString()
     : null;
   const daysSinceUpdate = latestUpdatedAt ? daysSince(latestUpdatedAt) : null;
-
-
-  // Fallback: if no price history but card has a current price, show it as a single data point
-  if (chartData.length === 0 && card.latestPriceJpy != null) {
-    chartData = [{
-      scrapedAt: new Date().toISOString(),
-      priceJpy: card.latestPriceJpy,
-      priceThb: card.latestPriceThb,
-      priceUsd: null,
-      source: PRICE_SOURCE.YUYUTEI,
-      gradeCondition: null,
-      type: null,
-    }];
-  }
-
   const seo = toSeoData(card);
-  const displayName = cardDisplayName("TH", seo);
   const setName = seo.setName;
 
   return (
@@ -214,7 +191,6 @@ export default async function CardDetailPage(props: {
             ))}
           </section>
         }
-        priceHistory={priceHistory}
         soldFeed={soldFeed}
         faqSlot={<FaqSection items={buildCardFaq("TH", seo)} />}
         card={{

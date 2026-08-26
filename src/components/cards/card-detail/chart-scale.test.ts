@@ -1,6 +1,64 @@
 import { describe, it, expect } from "vitest"
 
-import { niceTicks, rebaseToIndex, xAxisTicks } from "./card-chart"
+import { chartPointFractions, dateAtIndex, niceTicks, rebaseToIndex, xAxisTicks } from "./card-chart"
+
+describe("real observation dates", () => {
+  it("positions irregular observations by timestamp instead of array index", () => {
+    const fractions = chartPointFractions(
+      ["2026-04-01T00:00:00.000Z", "2026-04-06T00:00:00.000Z", "2026-04-08T00:00:00.000Z"],
+      3,
+      "7D",
+    )
+
+    expect(fractions[0]).toBe(0)
+    expect(fractions[1]).toBeCloseTo(5 / 7)
+    expect(fractions[2]).toBe(1)
+  })
+
+  it("falls back to even spacing when legacy series has no aligned dates", () => {
+    expect(chartPointFractions(undefined, 3, "1M")).toEqual([0, 0.5, 1])
+    expect(chartPointFractions(["invalid"], 1, "1M")).toEqual([1])
+  })
+
+  it("uses the full plot width for All regardless of the observed history span", () => {
+    expect(
+      chartPointFractions(
+        ["2025-03-28T00:00:00.000Z", "2026-04-05T00:00:00.000Z"],
+        2,
+        "All",
+      ),
+    ).toEqual([0, 1])
+  })
+
+  it("shows the exact observation date in the scrub label", () => {
+    const label = dateAtIndex({
+      i: 0,
+      len: 2,
+      range: "1M",
+      latestUpdatedAt: "2026-04-30T00:00:00.000Z",
+      dateIsos: ["2026-04-05T23:30:00.000Z", "2026-04-30T00:00:00.000Z"],
+      lang: "EN",
+    })
+
+    expect(label).toContain("Apr")
+    expect(label).toContain("5")
+  })
+
+  it("keeps the right axis tick on the same UTC day as the scrub label", () => {
+    const latestIso = "2026-04-05T23:30:00.000Z"
+    const scrubLabel = dateAtIndex({
+      i: 1,
+      len: 2,
+      range: "7D",
+      latestUpdatedAt: latestIso,
+      dateIsos: ["2026-04-01T00:00:00.000Z", latestIso],
+      lang: "EN",
+    })
+    const ticks = xAxisTicks(new Date(latestIso).getTime(), "7D", "EN", 400)
+
+    expect(ticks.at(-1)?.label).toBe(scrubLabel)
+  })
+})
 
 describe("rebaseToIndex", () => {
   it("rebases the first point to 100", () => {

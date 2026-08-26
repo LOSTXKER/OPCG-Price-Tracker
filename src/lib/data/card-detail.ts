@@ -163,6 +163,44 @@ export const getSoldPricesForCard = cache(async (cardId: number) => {
   })
 })
 
+/**
+ * Canonical raw market history for the card-detail chart. Keep this query
+ * separate from the mixed 120-row price snapshot on `getCardByCode`: graded,
+ * sold, and multi-source rows would otherwise crowd out Raw observations.
+ * The initial page carries only the free 30-day window; longer ranges use the
+ * tier-gated price API instead of leaking paid history in the RSC payload.
+ */
+export const getRawPriceHistoryForCard = cache(async (cardId: number, days: number) => {
+  const where = {
+    cardId,
+    source: PRICE_SOURCE.YUYUTEI,
+    type: "SELL" as const,
+    gradeCondition: null,
+    priceJpy: { gt: 0 },
+  }
+  const latest = await prisma.cardPrice.findFirst({
+    where,
+    orderBy: { scrapedAt: "desc" },
+    select: { scrapedAt: true },
+  })
+  if (!latest) return []
+
+  const since = new Date(latest.scrapedAt.getTime() - Math.max(0, days) * 86_400_000)
+  return prisma.cardPrice.findMany({
+    where: { ...where, scrapedAt: { gte: since, lte: latest.scrapedAt } },
+    orderBy: [{ scrapedAt: "asc" }, { id: "asc" }],
+    select: {
+      source: true,
+      type: true,
+      priceJpy: true,
+      priceThb: true,
+      priceUsd: true,
+      gradeCondition: true,
+      scrapedAt: true,
+    },
+  })
+})
+
 export const getListingsForCard = cache(async (cardId: number) => {
   return prisma.listing.findMany({
     where: { cardId, status: "ACTIVE" },

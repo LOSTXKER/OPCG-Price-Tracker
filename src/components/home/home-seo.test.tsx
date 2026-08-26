@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs"
+import { resolve } from "node:path"
 import { renderToStaticMarkup } from "react-dom/server"
 import { describe, expect, it, vi } from "vitest"
 
@@ -54,6 +56,25 @@ describe("home page SEO shell", () => {
     expect(markup).toContain("tw-caret")
   })
 
+  it("renders the set picker as the primary action, above the search bar", () => {
+    const markup = renderToStaticMarkup(
+      <HomeSearchHero
+        sets={[
+          { code: "op15", name: "皇帝の帰還", nameEn: "The Emperor Returns", type: "BOOSTER" },
+          { code: "eb02", name: "二つの伝説", nameEn: "Two Legends", type: "EXTRA_BOOSTER" },
+        ]}
+        trending={[]}
+      />,
+    )
+
+    // The navigator dropdown ships in the first HTML response with its trigger
+    // copy, closed — and sits BEFORE the search input (owner decision
+    // 2026-08-26: set selection is the hero's primary action).
+    expect(markup).toContain("เลือกชุดการ์ด")
+    expect(markup).toContain('aria-expanded="false"')
+    expect(markup.indexOf("เลือกชุดการ์ด")).toBeLessThan(markup.indexOf("<input"))
+  })
+
   it("keeps the supporting blocks at h2 or lower (one H1 per page)", () => {
     const blocks = [
       renderToStaticMarkup(<HomeMarketIntro totalCards={3838} totalSets={51} />),
@@ -102,6 +123,17 @@ describe("home page SEO shell", () => {
     expect(markup).toContain('href="/opcg/sets"')
     expect(markup).toContain("ชุดการ์ดวันพีชล่าสุด")
     expect(markup).toContain("Romance Dawn")
+  })
+
+  it("places latest sets after the complete market table", () => {
+    const source = readFileSync(resolve(process.cwd(), "src/app/page.tsx"), "utf8")
+    const marketEnd = source.indexOf("</HomeMarketOverview>")
+    const latestSets = source.indexOf("<HomeSetStrip")
+    const seoTail = source.indexOf("<HomeSeoContent")
+
+    expect(marketEnd).toBeGreaterThan(-1)
+    expect(latestSets).toBeGreaterThan(marketEnd)
+    expect(latestSets).toBeLessThan(seoTail)
   })
 
   it("renders the long-tail FAQ and its destination links on the server", () => {

@@ -17,6 +17,7 @@ import {
   getActiveBonusRules,
   type ResolvedMission,
 } from "./mission-resolver";
+import type { Prisma } from "@/generated/prisma/client";
 
 /* ── Types ── */
 
@@ -280,6 +281,56 @@ function withDateAlias<T extends { periodKey: string }>(row: T): T & { date: str
   return { ...row, date: row.periodKey };
 }
 
+function hasPrismaErrorCode(error: unknown, code: "P2002" | "P2034"): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    error.code === code
+  );
+}
+
+/**
+ * A GET and an automatic path-track can both initialize the same period on
+ * first load. The unique key correctly lets only one create win; the loser
+ * should reuse that row instead of turning the expected race into a 500.
+ */
+async function readMissionPeriodCreatedByConcurrentRequest(
+  error: unknown,
+  userId: string,
+  cadence: "DAILY" | "MONTHLY",
+  periodKey: string,
+) {
+  if (!hasPrismaErrorCode(error, "P2002")) throw error;
+  const concurrent = await prisma.userMissionPeriod.findUnique({
+    where: {
+      userId_cadence_periodKey: { userId, cadence, periodKey },
+    },
+  });
+  if (!concurrent) throw error;
+  return concurrent;
+}
+
+const MAX_SERIALIZABLE_ATTEMPTS = 3;
+
+async function runSerializableMissionTransaction<T>(
+  operation: (tx: Prisma.TransactionClient) => Promise<T>,
+): Promise<T> {
+  for (let attempt = 0; attempt < MAX_SERIALIZABLE_ATTEMPTS; attempt += 1) {
+    try {
+      return await prisma.$transaction(operation, { isolationLevel: "Serializable" });
+    } catch (error) {
+      if (
+        !hasPrismaErrorCode(error, "P2034") ||
+        attempt === MAX_SERIALIZABLE_ATTEMPTS - 1
+      ) {
+        throw error;
+      }
+    }
+  }
+  throw new Error("Unreachable serializable mission transaction state");
+}
+
 export async function getOrCreateMission(userId: string): Promise<DailyMissionRow & { date: string }> {
   const date = todayStr();
   const existing = await prisma.userMissionPeriod.findUnique({
@@ -318,10 +369,20 @@ export async function getOrCreateMission(userId: string): Promise<DailyMissionRo
     return withDateAlias(existing);
   }
 
-  const created = await prisma.userMissionPeriod.create({
-    data: { userId, cadence: "DAILY", periodKey: date, tasks: await buildTasks() },
-  });
-  return withDateAlias(created);
+  try {
+    const created = await prisma.userMissionPeriod.create({
+      data: { userId, cadence: "DAILY", periodKey: date, tasks: await buildTasks() },
+    });
+    return withDateAlias(created);
+  } catch (error) {
+    const concurrent = await readMissionPeriodCreatedByConcurrentRequest(
+      error,
+      userId,
+      "DAILY",
+      date,
+    );
+    return withDateAlias(concurrent);
+  }
 }
 
 /**
@@ -354,7 +415,7 @@ export async function trackMission(
   await getOrCreateMission(userId);
   const todayDate = todayStr();
 
-  return prisma.$transaction(
+  return runSerializableMissionTransaction(
     async (tx) => {
       const mission = await tx.userMissionPeriod.findUnique({
         where: {
@@ -381,7 +442,6 @@ export async function trackMission(
         data: { tasks, progress, completed, perfectDay },
       });
     },
-    { isolationLevel: "Serializable" },
   );
 }
 
@@ -406,7 +466,7 @@ export async function trackMissionByPath(
   const todayDate = todayStr();
   const dwellOk = opts?.dwellMs == null || opts.dwellMs >= MIN_AUTO_DWELL_MS;
 
-  return prisma.$transaction(
+  return runSerializableMissionTransaction(
     async (tx) => {
       const mission = await tx.userMissionPeriod.findUnique({
         where: {
@@ -441,7 +501,6 @@ export async function trackMissionByPath(
         data: { tasks, progress, completed, perfectDay },
       });
     },
-    { isolationLevel: "Serializable" },
   );
 }
 
@@ -968,15 +1027,25 @@ export async function getOrCreateMonthlyMissions(
     return withMonthAlias(existing);
   }
 
-  const created = await prisma.userMissionPeriod.create({
-    data: {
+  try {
+    const created = await prisma.userMissionPeriod.create({
+      data: {
+        userId,
+        cadence: "MONTHLY",
+        periodKey: key,
+        tasks: buildRaffleTasks(),
+      },
+    });
+    return withMonthAlias(created);
+  } catch (error) {
+    const concurrent = await readMissionPeriodCreatedByConcurrentRequest(
+      error,
       userId,
-      cadence: "MONTHLY",
-      periodKey: key,
-      tasks: buildRaffleTasks(),
-    },
-  });
-  return withMonthAlias(created);
+      "MONTHLY",
+      key,
+    );
+    return withMonthAlias(concurrent);
+  }
 }
 
 /**
@@ -997,7 +1066,7 @@ export async function trackRaffleMission(
 
   await getOrCreateMonthlyMissions(userId);
 
-  return prisma.$transaction(
+  return runSerializableMissionTransaction(
     async (tx) => {
       const mission = await tx.userMissionPeriod.findUnique({
         where: {
@@ -1029,7 +1098,6 @@ export async function trackRaffleMission(
       });
       return withMonthAlias(updated);
     },
-    { isolationLevel: "Serializable" },
   );
 }
 

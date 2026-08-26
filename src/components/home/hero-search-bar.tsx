@@ -156,7 +156,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
       <form onSubmit={handleSubmit}>
         <div
           className={cn(
-            "ease-chrome surface-1 relative flex items-center gap-2 rounded-2xl pl-4 pr-2 ring-1 ring-hair transition-[box-shadow,border-color]",
+            "ease-chrome surface-1 relative flex items-center gap-2 rounded-xl pl-3.5 pr-2 ring-1 ring-hair transition-[box-shadow,border-color]",
             hasDropdown
               ? "z-10 rounded-b-none shadow-lg"
               : "focus-within:ring-2 focus-within:ring-primary/40",
@@ -167,7 +167,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
             ref={inputRef}
             type="text"
             placeholder={t(lang, "searchLong")}
-            className="h-14 min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
+            className="h-12 min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
             value={query}
             onChange={(e) => { setQuery(e.target.value); setActiveIdx(-1); setOpen(true) }}
             onFocus={() => setOpen(true)}
@@ -211,7 +211,7 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
           id={listboxId}
           role="listbox"
           aria-label={t(lang, "searchLong")}
-          className="absolute inset-x-0 top-full overflow-hidden rounded-b-2xl bg-popover shadow-xl ring-1 ring-hair"
+          className="absolute inset-x-0 top-full overflow-hidden rounded-b-xl bg-popover shadow-xl ring-1 ring-hair"
         >
           <div className="max-h-[60vh] overflow-y-auto px-2 pb-3 pt-1">
             {/* CARDS */}

@@ -134,6 +134,7 @@ export const jp = {
   latestSet: "最新セット",
   more: "もっと見る",
   highestValue: "最高額",
+  japanRelease: "日本発売",
   marketPrice: "市場価格",
   priceHistory: "価格推移",
   noPriceHistory: "価格履歴なし",

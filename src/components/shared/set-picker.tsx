@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import Image from "next/image"
 import { Check, ChevronDown, LayoutGrid, Package } from "lucide-react"
 
@@ -50,6 +50,13 @@ interface SetPickerProps {
   prominent?: boolean
   /** Optional inline-trigger styling for a specific surface without changing the popover. */
   triggerClassName?: string
+  /**
+   * Replaces the default icon slot while nothing is selected (inline variant) —
+   * lets a surface lead with real art (e.g. the home hero's stack of latest box
+   * covers) instead of the generic grid glyph. Once a set is picked the trigger
+   * shows that set's own art as usual.
+   */
+  triggerLeading?: ReactNode
 }
 
 export function SetPicker({
@@ -62,6 +69,7 @@ export function SetPicker({
   align,
   prominent = false,
   triggerClassName,
+  triggerLeading,
 }: SetPickerProps) {
   const lang = useUIStore((s) => s.language)
   const [open, setOpen] = useState(false)
@@ -189,21 +197,26 @@ export function SetPicker({
           </>
         ) : (
           <>
-            <span className={cn(
-              "flex shrink-0 items-center justify-center",
-              isCta ? "size-9 rounded-full bg-primary/10" : isInline ? "size-6 rounded-sm bg-muted" : "size-7 rounded-full bg-primary/10",
-            )}>
-              {isInline ? (
-                <LayoutGrid className="size-3.5 text-muted-foreground/60" />
-              ) : (
-                <Package className={cn(
-                  isCta ? "size-4 text-primary" : "size-3.5 text-muted-foreground/60",
-                )} />
-              )}
-            </span>
+            {triggerLeading ?? (
+              <span className={cn(
+                "flex shrink-0 items-center justify-center",
+                isCta ? "size-9 rounded-full bg-primary/10" : isInline ? "size-6 rounded-sm bg-muted" : "size-7 rounded-full bg-primary/10",
+              )}>
+                {isInline ? (
+                  <LayoutGrid className="size-3.5 text-muted-foreground/60" />
+                ) : (
+                  <Package className={cn(
+                    isCta ? "size-4 text-primary" : "size-3.5 text-muted-foreground/60",
+                  )} />
+                )}
+              </span>
+            )}
             <span className={cn(
               isCta && "font-medium text-foreground",
-              !isCta && "text-muted-foreground",
+              // prominent promises a trigger that "stands out even before a set
+              // is picked" — a muted label undercuts that, so it reads at full
+              // foreground strength there.
+              !isCta && (prominent ? "text-foreground" : "text-muted-foreground"),
             )}>
               {nullable ? t(lang, "allSets") : t(lang, "selectSet")}
             </span>

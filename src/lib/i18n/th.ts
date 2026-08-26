@@ -134,6 +134,7 @@ export const th = {
   latestSet: "ชุดล่าสุด",
   more: "ดูเพิ่มเติม",
   highestValue: "มูลค่าสูงสุด",
+  japanRelease: "วางจำหน่ายในญี่ปุ่น",
   marketPrice: "ราคาตลาด",
   priceHistory: "ประวัติราคา",
   noPriceHistory: "ยังไม่มีประวัติราคา",

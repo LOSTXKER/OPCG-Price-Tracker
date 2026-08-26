@@ -121,9 +121,17 @@ export function SetHero({
           {releaseDate && (
             <>
               {" · "}
+              {t(lang, "japanRelease")} {" "}
               <FormattedDate
                 date={releaseDate}
-                options={{ year: "numeric", month: "short" }}
+                language={lang}
+                options={{
+                  calendar: "gregory",
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                  timeZone: "UTC",
+                }}
               />
             </>
           )}

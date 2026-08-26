@@ -63,7 +63,7 @@ export function ConditionFilter({
 }) {
   const options = ["all", ...grades]
   return (
-    <div>
+    <div className="min-w-0">
       <p className="text-eyebrow mb-1.5">{label}</p>
       <div className="no-sb max-w-full overflow-x-auto">
         <SegmentedControl

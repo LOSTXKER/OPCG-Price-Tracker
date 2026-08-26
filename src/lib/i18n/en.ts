@@ -134,6 +134,7 @@ export const en = {
   latestSet: "Latest Set",
   more: "More",
   highestValue: "Highest Value",
+  japanRelease: "Japan release",
   marketPrice: "Market Price",
   priceHistory: "Price History",
   noPriceHistory: "No price history yet",
