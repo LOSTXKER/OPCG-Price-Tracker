@@ -1,37 +1,40 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-08-26 — **Recent Sales: คืน UI ตัวกรองแบบเดิม**
+อัปเดตล่าสุด: 2026-08-27 — **Global Game → Set navigation release candidate**
 
 ## ผลลัพธ์
 
-- คืนหน้าปิดตามภาพอ้างอิง: segmented range `7D / 30D / 90D / 1Y / All` อยู่ซ้าย และปุ่ม soft `ตัวกรอง` อยู่ถัดกัน
-- ย้าย `สภาพ` และ `ตลาด` กลับเข้า canonical `FilterModal`; หน้าปกติไม่แสดง facet สองชุดนี้
-- `30D/90D` เป็น display alias ของค่า shared `1M/3M` เท่านั้น จึงไม่เปลี่ยนช่วงข้อมูล, state ที่แชร์กับกราฟ หรือ tier locks
-- modal นับ badge เฉพาะสภาพ+ตลาด, Apply ปิด modal, Reset คืนสอง facet เป็น `ทั้งหมด`; exact condition/source และ inclusive range cutoff เดิมยังทำงาน
+- เปลี่ยน label ย่อของปุ่มชุดบน mobile จาก `ชุด` เป็นคำสั่งที่ชัดเจน `เลือกชุด`; desktop และข้อความเต็มใน dialog ยังใช้ `เลือกชุดการ์ด` ตามเดิม
+- เพิ่มคำแปลเฉพาะจุดครบ TH `เลือกชุด` / EN `Select set` / JP `セット選択` และล็อกค่าด้วย regression test
+- เพื่อให้คำเต็มอ่านได้บนจอแคบ ซ่อน Package icon ที่เป็นของตกแต่งบน mobile และเลื่อน connector Game→Set ไปแสดงตั้งแต่ 430px; dropdown chevron ยังอยู่ตั้งแต่ 360px
+- โครง `Logo · Game · เลือกชุด · Search · Bell/Login · Theme` ยังเป็นแถวเดียวสูง 56px และทุก target อย่างน้อย 44×44px
 
 ## หลักฐานตรวจรับ
 
-- focused tests **2 files / 3 tests ผ่าน** · scoped ESLint ผ่าน · `npx tsc --noEmit` ผ่าน
-- `npm run lint` 0 errors (34 warnings เดิม) · `npm run test` **147 files / 868 tests ผ่าน** · `npm run build` ผ่าน 209 หน้า
-- Browser จริง light/dark **390 / 768 / 1024 / 1440px**: ช่วงเวลา+ปุ่มตัวกรองอยู่บรรทัดเดียวทุกขนาด, ไม่มี horizontal overflow หรือ page error
-- เปิด modal จริงพบสภาพ `ทั้งหมด / PSA 10 / Raw` และตลาด `ทั้งหมด / SNKRDUNK`; เลือกสอง facet แล้ว badge เป็น `2`, Reset ล้าง badge และ Enter/Escape เปิด–ปิดได้
-- Chrome dev มี request `/icon?...` ตอบ `ERR_EMPTY_RESPONSE` เป็นบางรอบ แต่หน้าและ controls โหลดครบ; ไม่เกี่ยวกับ diff ตัวกรองนี้
-- Impeccable layout detector = `[]`
+- Browser หน้าแรก 320×667: Set trigger 71px, label box `clientWidth === scrollWidth === 55px`, เห็น `เลือกชุด` ครบ; Logo/Game/Search/Bell/Theme ยัง 44px และ horizontal overflow = 0
+- Browser หน้าแรก 390×667: Set trigger ~88px, label box `clientWidth === scrollWidth === 52px`, เห็น `เลือกชุด` ครบพร้อม dropdown chevron; horizontal overflow = 0
+- กด `เลือกชุด` เปิด dialog และช่อง `ค้นหารหัสหรือชื่อชุด...`; Escape ปิดและคืน focus ที่ trigger; console/hydration ไม่มี warning/error
+- React best-practices review ไม่พบ state/effect/render regression · Impeccable layout detector `[]`
+- `npx tsc --noEmit` ผ่าน · `npm run lint` 0 errors (34 warnings เดิม) · `npm run test` **149 files / 882 tests ผ่าน** · `npm run build` ผ่าน **210 หน้า**
 
-## ไฟล์ที่เปลี่ยนในงานนี้
+## ไฟล์หลักที่เปลี่ยนในรอบล่าสุด
 
-- `src/components/cards/card-detail/recent-sales.tsx`
-- `src/components/cards/card-detail/price-range-control.tsx`
-- `src/components/cards/card-detail/recent-sales-controls.test.tsx`
-- `PLAN.md` · `PROGRESS.md`
+- `src/components/layout/header-catalog-control.tsx`
+- `src/components/layout/header-catalog-control.test.tsx`
+- `src/lib/i18n/{th,en,jp}.ts`
+- `src/lib/i18n.test.ts`
 
 ## Worktree / ขอบเขต
 
-- Worktree ยังมีงานค้างไม่ commit จากชุดก่อน รวม Honey race, card-detail history dedupe, OP03 date, latest-set placement และ homepage hero set picker รอบสอง — งานนี้ไม่ย้อนแก้ชุดเหล่านั้น
-- ไม่มีการเขียนฐานข้อมูล และยังไม่ commit, push หรือ deploy
+- checkpoint ก่อนเริ่ม navbar อยู่ที่ `aa0c8a2`
+- production navbar + owner revisions commit `037ccad`; prototype แยก commit `072276a`
+- push branch `chore/next-16.3` แล้ว และเปิด PR #119 เข้า default branch `master` (repository ไม่มี branch `main` และห้าม direct push เข้า `master`)
+- ไม่มี schema, migration, dependency, config change, data mutation หรือ deploy
+- dev server เปิดกลับที่ `http://localhost:3000` หลัง production build ผ่าน
 
 ## NEXT
 
-1. เบสรีเฟรชหน้า OP13-118 แล้วดู UI แบบเดิม: ช่วงเวลา + ปุ่ม `ตัวกรอง`
-2. ถ้าทิศทางผ่าน ค่อยรวมตรวจ diff และ commit/push บน branch `chore/next-16.3` เมื่อเบสสั่ง (ห้าม push เข้า master ตรงๆ)
+1. รอ remote checks ของ PR #119 แล้ว merge เข้า `master`
+2. fetch และยืนยัน `origin/master` ชี้ release commit จริง
+3. ตรวจ Vercel Production และหน้าแรกจริงแยกจากสถานะ GitHub
