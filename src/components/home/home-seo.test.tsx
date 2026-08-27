@@ -56,7 +56,7 @@ describe("home page SEO shell", () => {
     expect(markup).toContain("tw-caret")
   })
 
-  it("renders the set picker as the primary action, above the search bar", () => {
+  it("keeps search in the hero without duplicating the global set navigator", () => {
     const markup = renderToStaticMarkup(
       <HomeSearchHero
         sets={[
@@ -67,12 +67,8 @@ describe("home page SEO shell", () => {
       />,
     )
 
-    // The navigator dropdown ships in the first HTML response with its trigger
-    // copy, closed — and sits BEFORE the search input (owner decision
-    // 2026-08-26: set selection is the hero's primary action).
-    expect(markup).toContain("เลือกชุดการ์ด")
-    expect(markup).toContain('aria-expanded="false"')
-    expect(markup.indexOf("เลือกชุดการ์ด")).toBeLessThan(markup.indexOf("<input"))
+    expect(markup).toContain("<input")
+    expect(markup).not.toContain("เลือกชุดการ์ด")
   })
 
   it("keeps the supporting blocks at h2 or lower (one H1 per page)", () => {

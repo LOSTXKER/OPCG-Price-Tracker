@@ -29,6 +29,8 @@ describe("game launch gate", () => {
     ]);
     expect(getLaunchReadyGameConfigs()).toEqual([opcgConfig]);
     expect(getActiveGameConfigs()).toEqual([opcgConfig]);
+    expect(opcgConfig.logoUrl).toBe("/games/one-piece-logo.png");
+    expect(pokemonConfig.logoUrl).toBe("/games/pokemon-logo.png");
     expect(hasMultipleActiveGames()).toBe(false);
     expect(isGameLaunchReady(pokemonConfig)).toBe(false);
     expect(isGameSlugLaunchReady("opcg")).toBe(true);

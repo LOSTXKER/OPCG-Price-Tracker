@@ -7,6 +7,7 @@ export const opcgConfig: GameConfig = {
   slug: "opcg",
   name: "ONE PIECE CARD GAME",
   nameEn: "One Piece Card Game",
+  logoUrl: "/games/one-piece-logo.png",
   shortName: "OPCG",
   filterName: "One Piece",
   release: {

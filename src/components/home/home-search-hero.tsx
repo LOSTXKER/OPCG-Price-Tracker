@@ -8,8 +8,6 @@ import {
   buildHomeHeroSubtitle,
 } from "@/lib/seo/copy/home"
 import { HeroSearchBar, type SetSuggestion } from "./hero-search-bar"
-import { HeroSetPicker } from "./hero-set-picker"
-import type { SetPickerItem } from "@/components/shared/set-picker"
 
 export type HeroTrendingCard = {
   cardCode: string
@@ -30,22 +28,24 @@ const ROTATING: Record<Language, string[]> = {
 }
 
 /**
- * Home hero — set selection first, search second (owner decision 2026-08-26:
- * users browse by set, search was barely used as the entry point). A calm
- * headline sits above a prominent set dropdown that jumps straight to a set's
- * price wall, with the smart search bar demoted to a smaller secondary control
- * below it; popular searches still live INSIDE the bar's focus dropdown.
+ * Home hero keeps the familiar search-first entry point. Set browsing is now a
+ * global catalog control in the header, so duplicating it here would compete
+ * with search and push the market table farther below the first viewport.
  *
  * NO z-index here on purpose. It used to be `relative z-30`, which made this
  * section a stacking context — and the suggestion dropdown inside it could then
  * never rise above the floating ad (35) or the mobile bottom nav (50): both
  * punched straight through the results list. The dropdown now lifts itself to
  * `z-dropdown` (see hero-search-bar), which only works while this section stays
- * a plain positioning parent. The set picker's popover (also non-portaled
- * `z-dropdown`) relies on the exact same rule. Overflow stays visible so
- * neither is clipped either.
+ * a plain positioning parent. Overflow stays visible so it is not clipped.
  */
-export function HomeSearchHero({ sets, trending }: { sets: (SetSuggestion & SetPickerItem)[]; trending?: HeroTrendingCard[] }) {
+export function HomeSearchHero({
+  sets,
+  trending,
+}: {
+  sets: SetSuggestion[]
+  trending?: HeroTrendingCard[]
+}) {
   const lang = useUIStore((s) => s.language)
 
   return (
@@ -70,17 +70,8 @@ export function HomeSearchHero({ sets, trending }: { sets: (SetSuggestion & SetP
           </p>
         </div>
 
-        {/* Primary action (set) and secondary (search) share one aligned column
-            width — mismatched widths read as two unrelated form fields. The
-            picker is taller + raised + honey-washed; the search bar sits a step
-            below it in every dimension, so the hierarchy needs no explaining. */}
-        <div className="mx-auto w-full sm:max-w-xl">
-          <div className="mt-5 sm:mt-6">
-            <HeroSetPicker sets={sets} />
-          </div>
-          <div className="mt-3">
-            <HeroSearchBar sets={sets} trending={trending} />
-          </div>
+        <div className="mx-auto mt-5 w-full sm:mt-6 sm:max-w-xl">
+          <HeroSearchBar sets={sets} trending={trending} />
         </div>
       </div>
     </section>

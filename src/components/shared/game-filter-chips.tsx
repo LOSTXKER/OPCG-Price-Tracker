@@ -1,14 +1,13 @@
 "use client"
 
 import type { KeyboardEvent } from "react"
-import Image from "next/image"
 import { Layers3 } from "lucide-react"
 
 import {
-  getGameAccentTint,
   getGameConfig,
   getLaunchReadyGameConfigs,
 } from "@/lib/game-config"
+import { GameCrest } from "@/components/shared/game-crest"
 import { ALL_GAMES } from "@/lib/game/constants"
 import { t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
@@ -186,7 +185,9 @@ export function GameFilterChips({
             {launchReadyGames.map((game) => (
               <SelectItem key={game.slug} value={game.slug}>
                 <ScopeMark game={game} />
-                <span>{getGameConfig(game.slug)?.filterName ?? game.label}</span>
+                <span>
+                  {getGameConfig(game.slug)?.filterName ?? game.label}
+                </span>
                 {game.value ? (
                   <span className="ml-auto text-code text-muted-foreground">
                     {game.value}
@@ -228,7 +229,7 @@ export function GameFilterChips({
             onClick={() => onSelect(g.slug)}
             label={getGameConfig(g.slug)?.filterName ?? g.label}
             value={g.value}
-            logoUrl={g.logoUrl}
+            game={g}
           />
         ))}
       </div>
@@ -251,27 +252,22 @@ function ScopeMark({
     )
   }
 
-  if (game?.logoUrl) {
+  if (game) {
     return (
-      <span className="relative size-5 shrink-0 overflow-hidden rounded-full bg-muted">
-        <Image
-          src={game.logoUrl}
-          alt=""
-          fill
-          className="object-contain"
-          sizes="20px"
-        />
-      </span>
+      <GameCrest
+        game={{
+          slug: game.slug,
+          nameEn: game.label,
+          logoUrl: game.logoUrl,
+        }}
+        size={20}
+        variant="selector"
+        decorative
+      />
     )
   }
 
-  return (
-    <span
-      aria-hidden
-      className="size-2.5 shrink-0 rounded-full"
-      style={{ background: getGameAccentTint(game?.slug ?? "") }}
-    />
-  )
+  return null
 }
 
 function Seg({
@@ -280,19 +276,20 @@ function Seg({
   onClick,
   label,
   value,
-  logoUrl,
+  game,
 }: {
   active: boolean
   tabIndex: 0 | -1
   onClick: () => void
   label: string
   value?: string
-  logoUrl?: string | null
+  game?: GameChip
 }) {
   return (
     <button
       type="button"
       role="radio"
+      aria-label={value ? `${label}, ${value}` : label}
       aria-checked={active}
       tabIndex={tabIndex}
       onClick={onClick}
@@ -303,11 +300,7 @@ function Seg({
           : "text-muted-foreground hover:text-foreground",
       )}
     >
-      {logoUrl ? (
-        <span className="relative size-5 shrink-0 overflow-hidden rounded-full bg-muted">
-          <Image src={logoUrl} alt="" fill className="object-contain" sizes="20px" />
-        </span>
-      ) : null}
+      {game ? <ScopeMark game={game} /> : null}
       <span className="whitespace-nowrap text-body-sm font-medium">{label}</span>
       {value && <span className="whitespace-nowrap text-price">{value}</span>}
     </button>

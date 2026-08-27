@@ -19,6 +19,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Price } from "@/components/shared/price-inline";
+import { HeaderCatalogControl } from "@/components/layout/header-catalog-control";
+import type { SetPickerItem } from "@/components/shared/set-picker";
 import { useUIStore, type Language, type Currency } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
@@ -32,6 +34,11 @@ import {
 
 interface MarketTickerProps {
   stats: MarketStats;
+  game: string;
+  sets: readonly SetPickerItem[];
+  setsLoading: boolean;
+  setsError: boolean;
+  onSetsRetry: () => void;
   authLoaded: boolean;
   authUser: object | null;
   canUpgrade: boolean;
@@ -43,6 +50,11 @@ interface MarketTickerProps {
 
 export function HeaderMarketTicker({
   stats,
+  game,
+  sets,
+  setsLoading,
+  setsError,
+  onSetsRetry,
   authLoaded,
   authUser,
   canUpgrade,
@@ -64,7 +76,21 @@ export function HeaderMarketTicker({
       )}
     >
       <div className="flex h-11 items-center gap-3 px-6 lg:px-8">
-        {/* Left — market ticker chips (scrolls on narrow widths) */}
+        {/* Global catalog scope: Game → Set. It stays available on every route
+            without adding a third chrome row. */}
+        <HeaderCatalogControl
+          game={game}
+          sets={sets}
+          loading={setsLoading}
+          error={setsError}
+          onRetry={onSetsRetry}
+          presentation="desktop"
+        />
+
+        <div className="h-5 w-px shrink-0 bg-border/60" aria-hidden />
+
+        {/* Market context remains available and scrolls before it can squeeze
+            either global navigation or the right-side actions. */}
         <div className="flex min-h-0 min-w-0 flex-1 items-center gap-2 overflow-x-auto overflow-y-hidden text-muted-foreground [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {stats.totalCards > 0 && (
             <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-muted/50 px-3 py-1.5 text-sm">
@@ -77,7 +103,7 @@ export function HeaderMarketTicker({
 
           {stats.totalValue > 0 && (
             <Link
-              href="/opcg/market-overview"
+              href={`/${game}/market-overview`}
               className="group ease-chrome flex shrink-0 items-center gap-1.5 rounded-full bg-muted/50 px-3 py-1.5 text-sm transition-colors hover:bg-muted"
             >
               <span className="font-medium">{t(language, "totalValue")}</span>
@@ -101,11 +127,11 @@ export function HeaderMarketTicker({
           <button
             type="button"
             onClick={onSearchOpen}
-            className="surface-2 hairline ease-chrome flex h-11 w-44 items-center gap-1.5 rounded-full px-3 text-sm text-muted-foreground hover:text-foreground lg:h-8 lg:w-52"
+            className="surface-2 hairline ease-chrome flex size-11 items-center justify-center rounded-full text-sm text-muted-foreground hover:text-foreground lg:h-8 lg:w-52 lg:justify-start lg:gap-1.5 lg:px-3"
           >
             <Search className="size-3.5 shrink-0 text-muted-foreground/60" />
-            <span className="min-w-0 flex-1 truncate text-left text-muted-foreground/70">{t(language, "searchPlaceholder")}</span>
-            <kbd className="shrink-0 rounded-sm bg-muted px-1 py-px font-mono text-micro leading-none text-muted-foreground/60">/</kbd>
+            <span className="hidden min-w-0 flex-1 truncate text-left text-muted-foreground/70 lg:inline">{t(language, "searchPlaceholder")}</span>
+            <kbd className="hidden shrink-0 rounded-sm bg-muted px-1 py-px font-mono text-micro leading-none text-muted-foreground/60 lg:inline">/</kbd>
           </button>
 
           <div className="mx-1 hidden h-5 w-px bg-border/60 sm:block" />

@@ -12,6 +12,16 @@ describe("getHtmlLang", () => {
   });
 });
 
+describe("mobile header copy", () => {
+  it.each([
+    ["TH", "เลือกชุด"],
+    ["EN", "Select set"],
+    ["JP", "セット選択"],
+  ] as const)("keeps the compact set action explicit in %s", (language, expected) => {
+    expect(t(language, "selectSetShort")).toBe(expected);
+  });
+});
+
 describe("marketplace truth copy", () => {
   it.each([
     {
