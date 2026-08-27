@@ -11,7 +11,11 @@ export type PageWidth =
   | "full";
 
 const WIDTH_CLASS: Record<PageWidth, string> = {
-  default: "max-w-7xl",
+  // Market-style data canvas: wider than Tailwind's 7xl (1280px) without
+  // going near-fluid like the reference exchanges. At 1400px the current
+  // tables and card grids gain useful breathing room while their column count
+  // and scan path stay unchanged.
+  default: "max-w-[1400px]",
   narrow: "max-w-3xl",
   reading: "max-w-2xl",
   // Illustrated long-form (the /guide pages): comparison tables, card strips
@@ -20,7 +24,8 @@ const WIDTH_CLASS: Record<PageWidth, string> = {
   // (owner call เบส 2026-08-07: at `reading` the pages felt cramped and
   // visibly narrower than the rest of the site).
   article: "max-w-5xl",
-  wide: "max-w-[1400px]",
+  // Reserved for genuinely dense canvases that opt in explicitly.
+  wide: "max-w-[1600px]",
   full: "max-w-none",
 };
 
@@ -37,7 +42,7 @@ export interface PageContainerProps {
 /**
  * Single source of truth for page-content max width + horizontal padding.
  *
- * Use this instead of repeating `mx-auto max-w-7xl px-4 md:px-6 lg:px-8`. It
+ * Use this instead of repeating `mx-auto max-w-* px-5 md:px-6 lg:px-8`. It
  * pairs with `PageContent` from [src/components/layout/main-chrome.tsx]; this
  * primitive is what shells (admin/seller/settings) and special routes
  * (pricing, marketplace listing, profile public) compose on top of.

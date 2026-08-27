@@ -152,6 +152,10 @@ describe("header catalog topology", () => {
       ),
       "utf8",
     )
+    const more = readFileSync(
+      resolve(process.cwd(), "src/app/more/more-client.tsx"),
+      "utf8",
+    )
     const globals = readFileSync(
       resolve(process.cwd(), "src/app/globals.css"),
       "utf8",
@@ -182,15 +186,14 @@ describe("header catalog topology", () => {
     expect(mobile).not.toContain("const isHome")
     expect(mobile).toContain("setSearchOpen(true)")
     expect(mobile).toContain('<Search className="size-[18px]" />')
-    expect(mobile).toContain("const { resolvedTheme, setTheme } = useTheme()")
-    expect(mobile).toContain("const hydrated = useHydrated()")
     expect(mobile).toContain("{isAuthenticated && <NotificationBell />}")
-    expect(mobile).toContain(
-      'aria-label={t(language, isDark ? "lightMode" : "darkMode")}',
-    )
-    expect(mobile).toContain(
-      'onClick={() => setTheme(isDark ? "light" : "dark")}',
-    )
+    // Owner decision 2026-08-27: the phone row's theme toggle moved to
+    // "ดูเพิ่มเติม" so the set control could keep the width its name needs.
+    // The desktop navbar revert (2026-08-28) does NOT undo that — the phone
+    // header is not part of the restored desktop chrome — so assert the
+    // control stayed reachable on /more instead of in this row.
+    expect(mobile).not.toContain("useTheme()")
+    expect(more).toContain("setTheme(")
     expect(mobile).toContain('<LogIn className="size-[18px]" />')
     expect(notificationBell).toContain(
       '<Bell className="size-[18px] md:size-4" />',

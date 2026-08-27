@@ -26,8 +26,8 @@ export function useSearchKeyboardNav({
   onSelect: (index: number) => void
   /** Enter with nothing highlighted → commit (e.g. full-text search). Optional. */
   onCommit?: () => void
-  /** Escape pressed. */
-  onEscape: () => void
+  /** Escape pressed. Omit when an enclosing primitive (for example Dialog) owns Escape. */
+  onEscape?: () => void
   arrowUpFloor?: number
 }) {
   const [activeIdx, setActiveIdx] = useState(-1)
@@ -53,7 +53,7 @@ export function useSearchKeyboardNav({
           onCommit()
         }
       } else if (e.key === "Escape") {
-        onEscape()
+        onEscape?.()
       }
     },
     [length, activeIdx, onSelect, onCommit, onEscape, arrowUpFloor],

@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { baseCardCode, cardVariant, formatCardCodeLabel } from "./card-code";
+import {
+  baseCardCode,
+  cardVariant,
+  formatCardCodeLabel,
+  summarizeCardCodes,
+} from "./card-code";
 
 /**
  * Owner ruling (เบส): the internal `_pN` / `_rN` printing suffix is a database
@@ -47,6 +52,23 @@ describe("cardVariant", () => {
 
   it("returns null for a standard print", () => {
     expect(cardVariant("OP09-001")).toBeNull();
+  });
+});
+
+describe("summarizeCardCodes", () => {
+  it("separates Bandai card numbers, special printings and catalogue versions", () => {
+    expect(
+      summarizeCardCodes([
+        "OP02-001",
+        "OP02-001_p1",
+        "OP02-002",
+        "OP02-002_r1",
+      ]),
+    ).toEqual({
+      baseCardCount: 2,
+      variantCount: 2,
+      recordCount: 4,
+    });
   });
 });
 

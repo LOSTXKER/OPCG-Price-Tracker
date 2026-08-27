@@ -28,7 +28,14 @@ export const OPCG_SETS: SetInfo[] = [
   { code: "op10", name: "ロイヤルブラッドライン", nameEn: "Royal Blood", type: "BOOSTER" },
   { code: "op11", name: "激闘の支配者", nameEn: "A Fist of Divine Speed", type: "BOOSTER" },
   { code: "op12", name: "烈風の支配者", nameEn: "Legacy of the Master", type: "BOOSTER" },
-  { code: "op13", name: "紡がれし絆", nameEn: "Carrying on His Will", type: "BOOSTER" },
+  {
+    code: "op13",
+    name: "紡がれし絆",
+    nameEn: "Carrying on His Will",
+    type: "BOOSTER",
+    // Bandai Japan: https://cp.onepiece-cardgame.com/3rd_anniversary
+    releaseDate: "2025-08-23",
+  },
   { code: "op14", name: "蒼海の七傑", nameEn: "The Azure Sea's Seven", type: "BOOSTER" },
   { code: "op15", name: "神の島の冒険", nameEn: "Adventure on KAMI's Island", type: "BOOSTER" },
   // Extra Boosters
@@ -83,6 +90,20 @@ export function getJapaneseSetReleaseDate(code: string): string | null {
   return (
     OPCG_SETS.find((set) => set.code === code.toLowerCase())?.releaseDate ?? null
   );
+}
+
+/** Prefer a complete database backfill; otherwise use the verified detail-page
+ * catalog without letting one fallback date affect global set ordering. */
+export function resolveSetReleaseDate(
+  code: string,
+  databaseReleaseDate: Date | null,
+): Date | null {
+  if (databaseReleaseDate) return databaseReleaseDate;
+
+  const catalogReleaseDate = getJapaneseSetReleaseDate(code);
+  return catalogReleaseDate
+    ? new Date(`${catalogReleaseDate}T00:00:00.000Z`)
+    : null;
 }
 
 /** "Starter Deck EX" display boxes — their packaging is landscape, so the

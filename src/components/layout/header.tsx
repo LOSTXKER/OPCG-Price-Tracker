@@ -277,7 +277,14 @@ export function Header() {
       onSetsRetry={headerSets.retry}
     />
 
-    <CommandSearchModal open={searchOpen} onClose={closeSearch} />
+    {/* The palette answers set queries too, so it needs the catalog the header
+        already fetched — invisible in the bar, but dropping it would silently
+        kill set results in search. */}
+    <CommandSearchModal
+      open={searchOpen}
+      onClose={closeSearch}
+      sets={headerSets.sets}
+    />
     </>
   );
 }

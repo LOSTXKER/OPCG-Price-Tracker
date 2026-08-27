@@ -1,41 +1,50 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-08-27 — **Global Game → Set navigation shipped to Production**
+อัปเดตล่าสุด: 2026-08-28 (รอบดึก) — **Navbar desktop ย้อนกลับเป็นตัวเดิมที่ shipped แล้ว (เบสเคาะ)**
 
 ## ผลลัพธ์
 
-- เปลี่ยน label ย่อของปุ่มชุดบน mobile จาก `ชุด` เป็นคำสั่งที่ชัดเจน `เลือกชุด`; desktop และข้อความเต็มใน dialog ยังใช้ `เลือกชุดการ์ด` ตามเดิม
-- เพิ่มคำแปลเฉพาะจุดครบ TH `เลือกชุด` / EN `Select set` / JP `セット選択` และล็อกค่าด้วย regression test
-- เพื่อให้คำเต็มอ่านได้บนจอแคบ ซ่อน Package icon ที่เป็นของตกแต่งบน mobile และเลื่อน connector Game→Set ไปแสดงตั้งแต่ 430px; dropdown chevron ยังอยู่ตั้งแต่ 360px
-- โครง `Logo · Game · เลือกชุด · Search · Bell/Login · Theme` ยังเป็นแถวเดียวสูง 56px และทุก target อย่างน้อย 44×44px
+### Navbar desktop — ทดลอง 3 รอบ แล้วเบสเลือกกลับของเดิม
+
+คืนนี้ลองรื้อ Navbar desktop 3 รอบ (Command Deck 2 แถว → ปรับหน้าตาแบบ proto → 3 ชั้นมีชีพจรตลาด) เบสดูแล้วเทียบกับของเดิมบนเว็บจริง **แล้วเคาะว่า "กลับไปแบบเก่าดีกว่า" เอาแบบเหมือนภาพเป๊ะ** → ย้อนกลับเป็นโครงที่ commit ไว้แล้ว:
+
+- **แถว 1 (ticker, 44px):** OPCG → เลือกชุดการ์ด · การ์ดทั้งหมด · มูลค่ารวม (เขียว, ลิงก์ไปภาพรวมตลาด) · JPY/THB · ช่องค้นหา · อัปเกรด · ไทย · THB · โหมดสว่าง/มืด
+- **แถว 2 (header, 56px):** Meecard + เมนู 4 อัน · พอร์ต/รายการโปรด/Honey · แชท/กระดิ่ง · เมนูโปรไฟล์ (ชื่อ + Free · บรอนซ์)
+
+**วิธีย้อน:** `git checkout HEAD --` ที่ `header.tsx`, `header-market-ticker.tsx`, `header-user-menu.tsx`, `header-catalog-control.tsx` (+ test), `use-header-data.ts` → 5 ไฟล์นี้ตรงกับของเดิม **byte-identical**
+
+**ของที่ตั้งใจไม่ย้อน (เพราะไม่เกี่ยวกับภาพที่เบสส่ง / เป็น owner decision คนละเรื่อง):**
+- `header-constants.ts` — ผสม: คืน `MarketStats` + `CURRENCY_SYMBOL` (ticker ต้องใช้) แต่ **เก็บ** `THEME_OPTIONS` ไว้ เพราะหน้า `/more` (ดูเพิ่มเติม บนมือถือ) ใช้อยู่
+- `header-mobile.tsx` — header มือถือคงงานเดิมไว้ (owner decision 2026-08-27: ย้ายปุ่มสลับธีมไปหน้า "ดูเพิ่มเติม" เพื่อให้ชื่อชุดมีที่พอ) — มือถือไม่ได้อยู่ในภาพที่เบสส่ง
+- `command-search.tsx` — ถอดแค่ prop `variant` ที่เพิ่มคืนนี้ ส่วนค้นหาด้วยรูป + ผลลัพธ์ชุดการ์ด ยังอยู่ครบ
+- **เพิ่ม 1 บรรทัดต่างจากของเดิมโดยตั้งใจ:** `header.tsx` ส่ง `sets={headerSets.sets}` เข้า `CommandSearchModal` — มองไม่เห็นในแถบ แต่ถ้าไม่ส่ง ผลค้นหา "ชุดการ์ด" ใน palette จะเงียบหายไป
+
+**Test:** `header-search-preferences.test.tsx` เขียนใหม่ให้ล็อกโครงที่กลับมา (เดิมบรรยายดีไซน์ที่ถูกย้อนออกไปแล้ว) · `header-catalog-control.test.tsx` ย้อนเป็นของเดิม แล้วแก้ 2 บรรทัดที่พูดถึง header มือถือให้ตรงกับมือถือที่เก็บไว้ · จำนวน test 909 → 903 เพราะ 6 เคสนั้นทดสอบฟีเจอร์ที่ถูกย้อนออกไปจริง (ไม่ได้ลบเพื่อให้ผ่าน)
+
+**สำรองไว้แล้ว** ถ้าอยากย้อนกลับมาดูดีไซน์ที่ทดลองคืนนี้: `<scratchpad>/navbar-backup-2026-08-28/` (12 ไฟล์) · หน้า mockup `/proto/navbar` (A/B/C) ยังอยู่ ไม่ได้ลบ
 
 ## หลักฐานตรวจรับ
 
-- Browser หน้าแรก 320×667: Set trigger 71px, label box `clientWidth === scrollWidth === 55px`, เห็น `เลือกชุด` ครบ; Logo/Game/Search/Bell/Theme ยัง 44px และ horizontal overflow = 0
-- Browser หน้าแรก 390×667: Set trigger ~88px, label box `clientWidth === scrollWidth === 52px`, เห็น `เลือกชุด` ครบพร้อม dropdown chevron; horizontal overflow = 0
-- กด `เลือกชุด` เปิด dialog และช่อง `ค้นหารหัสหรือชื่อชุด...`; Escape ปิดและคืน focus ที่ trigger; console/hydration ไม่มี warning/error
-- React best-practices review ไม่พบ state/effect/render regression · Impeccable layout detector `[]`
-- `npx tsc --noEmit` ผ่าน · `npm run lint` 0 errors (34 warnings เดิม) · `npm run test` **149 files / 882 tests ผ่าน** · `npm run build` ผ่าน **210 หน้า**
-- PR #119 ผ่าน Vercel Preview และ merge เข้า `master` ที่ `0b2461f`; fetch ยืนยัน `origin/master` ตรงกับ merge commit
-- Vercel Production `dpl_AeAvooHEKRjr1k7goNkEKJhBEWjQ` สถานะ Ready และ `https://opcg-price-tracker.vercel.app` ตอบ 200
-- Browser Production หน้าแรก 390×844 + 1280×720 และ `/opcg/sets/op03` ที่ 390×844 ผ่าน: `เลือกชุด`/Search ครบ, ทุก mobile target 44px, ไม่มี horizontal overflow, dialog ไม่มีหมวด “ชุดล่าสุด”, Escape คืน focus และ console สะอาด
+- ESLint 0 errors · TypeScript ผ่านทั้งโปรเจค · full test **152 files / 903 tests ผ่าน** · `npm run build` ผ่าน **211 หน้า**
+- Browser จริง 1440px และ 1920px, ทั้ง Dark และ Light: แถบตรงกับภาพที่เบสส่งมา · วัดจริง ticker 44px + header 56px, `--chrome-h` ยัง 6.25rem, ไม่มี horizontal overflow, console error 0
+- ทีมตรวจอิสระ 4 มุม (ความตรงกับของเดิม · dependency/dead code · ความซื่อสัตย์ของ test · ผลกระทบนอก navbar) + ด่านหักล้างรายข้อ: ยื่น 24 ข้อ **หักล้างไป 22 เหลือของจริง 1 เรื่อง (ซ้ำ 2 มุม) — แก้แล้ว**
+  - **จุดที่เจอ:** test ที่เขียนไว้กันบรรทัด `sets={headerSets.sets}` ของ `CommandSearchModal` **กันไม่ได้จริง** เพราะสตริงเดียวกันโผล่ 3 จุดใน `header.tsx` และอีก 2 จุดเป็น prop บังคับที่ลบไม่ได้อยู่แล้ว → ลบบรรทัดที่ควรกันออก แล้ว tsc/lint/test ยังเขียวหมด (prop นี้ optional มี default `[]`) ผลคือผลค้นหา "ชุดการ์ด" ใน palette จะหายเงียบ
+  - **แก้แล้ว:** เปลี่ยนเป็นตรวจเฉพาะภายใน element `<CommandSearchModal>` และ **พิสูจน์ด้วยการลองลบบรรทัดจริง** → test ตกตามที่ควร แล้วคืนไฟล์กลับ (ยืนยัน 3 จุดครบ)
 
-## ไฟล์หลักที่เปลี่ยนในรอบล่าสุด
+## ⚠️ เรื่องที่เบสต้องเคาะ
 
-- `src/components/layout/header-catalog-control.tsx`
-- `src/components/layout/header-catalog-control.test.tsx`
-- `src/lib/i18n/{th,en,jp}.ts`
-- `src/lib/i18n.test.ts`
+1. **ตัวเลขซ้ำกันบนหน้าแรก:** ตอนนี้ การ์ดทั้งหมด / มูลค่ารวม / JPY-THB โผล่ **2 ที่** — บนแถบ ticker (ที่เพิ่งกลับมา) และในพาเนล `HomeMarketStatus` กลางหน้าแรก (งานที่อนุมัติไว้คนละรอบ) ห่างกันไม่ถึงหนึ่งจอ ต้องเลือกว่าจะเก็บอันไหน
+2. **ไฟล์ที่ไม่มีใครใช้แล้ว:** `src/components/layout/header-preferences-menu.tsx` (เมนูตั้งค่ารวมในโปรไฟล์ ของรอบที่ย้อนออกไป) — ยังไม่ลบ เพราะการลบไฟล์ต้องให้เบสอนุมัติ
 
-## Worktree / ขอบเขต
+## สถานะเดิมที่ยังค้าง
 
-- checkpoint ก่อนเริ่ม navbar อยู่ที่ `aa0c8a2`
-- production navbar + owner revisions commit `037ccad`; prototype แยก commit `072276a`
-- PR #119 merge เข้า default branch `master` แล้ว (repository ไม่มี branch `main` และห้าม direct push เข้า `master`)
-- ไม่มี schema, migration, dependency, config change หรือ data mutation; deploy ผ่าน Vercel Git integration
-- dev server เปิดกลับที่ `http://localhost:3000` หลัง production build ผ่าน
+- branch `chore/next-16.3` · worktree มี diff งาน Set Detail / market canvas / HomeMarketStatus / mobile header / SEO copy **ยังไม่ commit / push**
+- follow-up เดิม: `อัปเดตล่าสุด` ควรกำหนด `Asia/Bangkok` · เทียบ market canvas 1400 vs 1600–1680px
+- ไม่มี schema / migration / dependency / config / scrape / seed change
 
 ## NEXT
 
-1. รอ owner review หน้า Production และเก็บ feedback รอบถัดไปจากของจริง
+1. เบสรีเฟรช `http://localhost:3001` ยืนยันว่า Navbar กลับมาเหมือนเดิมแล้วจริง
+2. เคาะข้อ ⚠️ ข้างบน (ตัวเลขซ้ำบนหน้าแรก · จะลบไฟล์ที่ไม่ใช้แล้วไหม)
+3. ถ้าโอเค → commit + push branch (ห้าม master) ปิดรอบ — worktree สะสมงานหลายชุดแล้ว

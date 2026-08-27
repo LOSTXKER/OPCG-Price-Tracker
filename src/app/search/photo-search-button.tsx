@@ -63,12 +63,22 @@ interface IdentifyResponse {
 
 interface PhotoSearchButtonProps {
   className?: string
-  trigger?: React.ReactElement
+  trigger?: React.ReactElement | null
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  finalFocus?: React.RefObject<HTMLElement | null>
 }
 
-export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps) {
+export function PhotoSearchButton({
+  className,
+  trigger,
+  open: controlledOpen,
+  onOpenChange,
+  finalFocus,
+}: PhotoSearchButtonProps) {
   const lang = useUIStore((s) => s.language)
-  const [open, setOpen] = useState(false)
+  const [internalOpen, setInternalOpen] = useState(false)
+  const open = controlledOpen ?? internalOpen
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
@@ -76,6 +86,7 @@ export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps
   const [result, setResult] = useState<IdentifyResponse["data"] | null>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const takePhotoButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     return () => {
@@ -93,7 +104,8 @@ export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps
   }
 
   function handleOpenChange(next: boolean) {
-    setOpen(next)
+    if (controlledOpen === undefined) setInternalOpen(next)
+    onOpenChange?.(next)
     if (!next) reset()
   }
 
@@ -150,7 +162,7 @@ export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      {trigger ? (
+      {trigger === null ? null : trigger ? (
         <DialogTrigger render={trigger} />
       ) : (
         <DialogTrigger
@@ -168,7 +180,11 @@ export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps
         </DialogTrigger>
       )}
 
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent
+        initialFocus={takePhotoButtonRef}
+        finalFocus={finalFocus}
+        className="sm:max-w-lg"
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-base">
             <Sparkles className="size-4 text-primary" />
@@ -197,6 +213,7 @@ export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps
           {!previewUrl ? (
             <div className="grid grid-cols-2 gap-2">
               <Button
+                ref={takePhotoButtonRef}
                 type="button"
                 variant="outline"
                 size="lg"
@@ -268,7 +285,7 @@ export function PhotoSearchButton({ className, trigger }: PhotoSearchButtonProps
             <ResultBlock
               result={result}
               lang={lang}
-              onClose={() => setOpen(false)}
+              onClose={() => handleOpenChange(false)}
             />
           )}
         </div>

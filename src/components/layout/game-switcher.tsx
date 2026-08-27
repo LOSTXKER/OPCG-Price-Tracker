@@ -69,6 +69,13 @@ type GameSwitcherProps = {
   appearance?: "standalone" | "context";
   /** Keeps the 44px pill but shows only its crest below 360px. */
   compactOnNarrow?: boolean;
+  /**
+   * Desktop ladder: crest only until `lg`. The header's primary row carries the
+   * game pill AND the set control now, and at `md` the two labels together push
+   * the row past the viewport — the crest still says which game, so the word is
+   * what yields first.
+   */
+  compactBelowLg?: boolean;
 };
 
 export function GameSwitcher({
@@ -76,6 +83,7 @@ export function GameSwitcher({
   game,
   appearance = "standalone",
   compactOnNarrow = false,
+  compactBelowLg = false,
 }: GameSwitcherProps) {
   if (GAMES.length === 0) return null;
   return (
@@ -84,6 +92,7 @@ export function GameSwitcher({
       game={game}
       appearance={appearance}
       compactOnNarrow={compactOnNarrow}
+      compactBelowLg={compactBelowLg}
     />
   );
 }
@@ -93,7 +102,8 @@ function ActiveGameSwitcher({
   game,
   appearance,
   compactOnNarrow,
-}: Required<Pick<GameSwitcherProps, "appearance" | "compactOnNarrow">> &
+  compactBelowLg,
+}: Required<Pick<GameSwitcherProps, "appearance" | "compactOnNarrow" | "compactBelowLg">> &
   Pick<GameSwitcherProps, "className" | "game">) {
   const lang = useUIStore((s) => s.language);
   const storedGame = useUIStore((s) => s.currentGame);
@@ -144,14 +154,21 @@ function ActiveGameSwitcher({
           "inline-flex min-h-11 shrink-0 items-center text-xs font-semibold text-foreground",
           compactOnNarrow
             ? "size-11 justify-center gap-0 px-0 min-[360px]:w-auto min-[360px]:gap-1.5 min-[360px]:px-3 min-[360px]:py-1.5"
-            : "gap-1.5 px-3 py-1.5",
+            : compactBelowLg
+              ? "gap-0 px-2 py-1.5 lg:gap-1.5 lg:px-3"
+              : "gap-1.5 px-3 py-1.5",
           appearance === "standalone" &&
             "surface-2 hairline rounded-full lg:min-h-0",
           className,
         )}
       >
         <GameCrest game={active!} size={20} variant="selector" decorative />
-        <span className={cn(compactOnNarrow && "hidden min-[360px]:inline")}>
+        <span
+          className={cn(
+            compactOnNarrow && "hidden min-[360px]:inline",
+            compactBelowLg && "hidden lg:inline",
+          )}
+        >
           {activeShortLabel}
         </span>
       </span>
@@ -166,7 +183,9 @@ function ActiveGameSwitcher({
           "ease-chrome ring-inset inline-flex min-h-11 shrink-0 items-center text-xs font-semibold text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
           compactOnNarrow
             ? "size-11 justify-center gap-0 px-0 min-[360px]:w-auto min-[360px]:gap-1.5 min-[360px]:px-3 min-[360px]:py-1.5"
-            : "gap-1.5 px-3 py-1.5",
+            : compactBelowLg
+              ? "gap-0 px-2 py-1.5 lg:gap-1.5 lg:px-3"
+              : "gap-1.5 px-3 py-1.5",
           appearance === "standalone"
             ? "surface-2 rounded-full ring-1 ring-hair lg:min-h-0"
             : "rounded-lg transition-colors hover:bg-muted/70",
@@ -174,13 +193,19 @@ function ActiveGameSwitcher({
         )}
       >
         <GameCrest game={active!} size={20} variant="selector" decorative />
-        <span className={cn(compactOnNarrow && "hidden min-[360px]:inline")}>
+        <span
+          className={cn(
+            compactOnNarrow && "hidden min-[360px]:inline",
+            compactBelowLg && "hidden lg:inline",
+          )}
+        >
           {activeShortLabel}
         </span>
         <ChevronDown
           className={cn(
             "size-3 text-muted-foreground",
             compactOnNarrow && "hidden min-[360px]:block",
+            compactBelowLg && "hidden lg:block",
           )}
           aria-hidden
         />

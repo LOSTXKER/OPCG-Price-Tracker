@@ -28,7 +28,7 @@ export default function PortfolioClient({ mode }: { mode: PortfolioGatewayMode }
 
   if (mode === "guest") {
     return (
-      <div className="mx-auto max-w-6xl">
+      <div>
         <h1 className="sr-only">{t(lang, "portfolioManagerSection")}</h1>
         <AuthPreviewGate preview={<PortfolioMockPreview lang={lang} />} />
       </div>
@@ -117,7 +117,7 @@ function EmptyPortfolioGateway() {
 
   return (
     <>
-      <div className="mx-auto max-w-6xl">
+      <div>
         <h1 className="sr-only">{t(lang, "portfolioManagerSection")}</h1>
         {content}
       </div>

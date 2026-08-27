@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { EmptyState } from "@/components/shared/empty-state";
 import {
-  HomeFeaturedCard,
+  HomeMarketStatus,
   HomeMiniTable,
 } from "@/components/home/home-client-sections";
 import { HomeMarketIntro } from "@/components/home/home-market-intro";
@@ -56,6 +56,8 @@ export default async function HomePage() {
     topLosers,
     highestPriced,
     totalCards,
+    totalValue,
+    exchangeRate,
     initialTableCards,
     initialTableTotal,
     initialTableTotalPages,
@@ -154,24 +156,28 @@ export default async function HomePage() {
         )}
       />
 
-      {/* Universal search hero — the page's focal point (VISION §5 teleport) */}
-      <HomeSearchHero sets={setOptions} trending={gainers} />
+      {/* Search now lives in the global navbar; keep one compact, visible H1. */}
+      <HomeSearchHero />
 
-      {/* Highlights: มูลค่าสูงสุด · ราคาขึ้นมากสุด · ราคาลงมากสุด. Minimal — no
-          dividers, no borders, no boxes; columns separated by whitespace alone so
-          the page reads calm and editorial rather than gridded.
+      {/* Market status: each highlight owns one desktop track. At xl the fourth
+          track stays available for the planned ad inventory after losers.
           HIDDEN ON PHONES (เบส): stacked, the three blocks pushed the market list
           a full screen down. From `sm` up they sit side by side and cost nothing,
           so they stay. Kept in the DOM (display:none) — no SEO loss. */}
-      <section className="mt-3 hidden gap-x-8 gap-y-6 sm:mt-4 sm:grid sm:grid-cols-2 lg:grid-cols-3">
-        {featured && (
-          <div className="sm:col-span-2 lg:col-span-1">
-            <HomeFeaturedCard card={featured} />
-          </div>
-        )}
+      <div
+        className="mt-3 hidden gap-x-6 gap-y-6 sm:mt-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        data-slot="home-highlight-grid"
+      >
+        <HomeMarketStatus
+          card={featured}
+          totalCards={totalCards}
+          totalValue={totalValue}
+          exchangeRate={exchangeRate}
+          className="sm:col-span-2 lg:col-span-1"
+        />
         <HomeMiniTable cards={gainers} type="gainers" />
         <HomeMiniTable cards={losers} type="losers" />
-      </section>
+      </div>
 
       {/* The market — core browse tool. Generous air above so it reads as its
           own document section, the way card-detail separates its blocks. */}

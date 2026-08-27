@@ -42,7 +42,7 @@ We pin two breakpoints to specific responsibilities so layouts stay predictable 
 | `sm:`  | ≥ 640px  | **Data layout boundary** — table → list fallback, grid columns scaling up. Anything dense (`<table>`, multi-column grids) hides on `<sm` and renders a list/card layout.      |
 | `md:`  | ≥ 768px  | **Chrome boundary** — desktop header vs mobile header, sidebar vs sheet/drawer, bottom-nav vs full-width footer. Anything related to navigation chrome flips at `md:`.        |
 | `lg:`  | ≥ 1024px | **Optional polish** — nice-to-have extra columns (e.g. 4-column preview row, sibling grid). Don't put critical UI at `lg:` only.                                              |
-| `xl:`  | ≥ 1280px | **Marketing density** — only used for marketplace grid going from 3 → 4 columns. Avoid otherwise.                                                                             |
+| `xl:`  | ≥ 1280px | **Marketing density** — the marketplace grid going from 3 → 4 columns, and the header's set-control label expanding from set CODE to `CODE · Name` (measured: at `lg` the game word, the full set name and the right-hand actions together overflow the row). Avoid otherwise. |
 
 
 Concrete consequences:

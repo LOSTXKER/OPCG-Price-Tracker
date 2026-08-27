@@ -3,6 +3,60 @@
 > งานใหญ่แตกเป็น task ติ๊กได้ · ทำทีละอัน · ติ๊กเมื่อ **verify แล้ว** (ไม่ใช่แค่เขียนเสร็จ)
 > ลำดับ milestone = ข้อเสนอ — เบสสลับได้ · แผนธุรกิจ/north star อยู่ `doc/archive/detailed-plan-2026-04-28.md` (archived snapshot) ไม่ใช่ไฟล์นี้
 
+## 📐 Site-wide market canvas (owner direction · 2026-08-28)
+
+> ขยายพื้นที่ข้อมูลของหน้าปกติให้ใกล้เว็บตลาดอย่าง CoinMarketCap/CoinGecko โดยคง mobile เดิมและคง reading/form/dialog widths ที่ตั้งใจแคบ ไม่เปลี่ยน spacing, typography, query, state หรือ workflow
+
+- [x] **CANVAS-01 — Live reference + layout audit:** วัด DOM live ที่ 1280/1440/1920px, แยก CMC แบบเกือบ fluid ออกจาก CoinGecko แบบ cap 1680px และเลือก Meecard cap 1400px เป็นก้าวที่พอดีกับจำนวนคอลัมน์ปัจจุบัน; independent layout assessment + detector ก่อนแก้ไม่มี finding
+- [x] **CANVAS-02 — Canonical width:** เปลี่ยน `PageContainer` default จาก 1280px เป็น 1400px และให้ `wide` คงความหมายเป็น canvas 1600px โดย route แบบ reading/article/narrow/full ไม่เปลี่ยน
+- [x] **CANVAS-03 — Duplicate-cap cleanup:** ให้ Footer ใช้ `PageContainer`; ถอด cap 1280px ซ้ำจาก Card Detail/runtime loading และ cap 1152px ซ้ำจาก Portfolio gateway เพื่อรับความกว้างจาก shell กลาง
+- [x] **CANVAS-04 — Regression + rendered verification:** width contract 3/3 · detector `[]` · independent React/Next/a11y review ไม่มี finding · TypeScript ผ่าน · full test 152 files / 907 tests · lint 0 errors (33 warnings เดิม/นอก scope) · build 210 หน้า · Browser จริง Home 390/768/1280/1440/1920 และ Set/Card/Portfolio 390/1440/1920 ยืนยัน shell 1400px, usable data 1336px, Footer alignment, loading parity, no-overflow และ console/hydration error 0
+- [x] **CANVAS-05 — Full-screen comparison trial:** ทดลอง near-fluid cap 1920px + gutter 16px ตามขนาดจริงของ CMC ที่ 1280/1440/1920/2560px และเปิดดู Home/Set/Card/Portfolio จริง; layout ไม่ล้น แต่หน้าการ์ดกับพื้นที่ข้อมูลรู้สึกกว้างติดขอบและความสัมพันธ์หลวมเกินไป
+- [x] **CANVAS-06 — Owner visual decision:** คืนเวอร์ชัน 1400px / `wide` 1600px / desktop gutter 32px ที่ owner เลือกหลังเทียบ render จริง โดยคง mobile, reading/form/dialog widths และ duplicate-cap cleanup เดิม
+
+## 📊 Homepage market status composition (owner direction · 2026-08-28)
+
+> ย้าย “การ์ดทั้งหมด / มูลค่ารวม / JPY/THB” ออกจาก desktop header มาอยู่กับการ์ดมูลค่าสูงสุดตามภาพอ้างอิง โดยซ้ายเป็นข้อมูลหลัก ขวาเป็นสถิติรอง และคงราคาขึ้น/ลงกับตารางตลาดเดิม
+>
+> ⚠️ **แก้ตามจริง 2026-08-28:** พาเนล `HomeMarketStatus` บนหน้าแรกยังอยู่ครบ **แต่ HOME-STATUS-02 และ -03 ไม่จริงแล้ว** — การย้อน Navbar กลับเป็นตัวเดิม (ดูหัวข้อถัดไป) พาชิป การ์ดทั้งหมด/มูลค่ารวม/JPY-THB กลับเข้า desktop ticker และพา client fetch `/api/cards?limit=1` + `/api/exchange-rate` กลับมาด้วย · ผลคือ **ตัวเลข 3 ตัวนี้โผล่ 2 ที่บนหน้าแรก** (แถบบน + กล่องกลางหน้า) — รอเบสเคาะว่าจะเก็บอันไหน
+
+- [x] **HOME-STATUS-01 — Data + composition:** ส่ง total value และ exchange rate จาก server data ของหน้าแรก แล้วประกอบ canonical `Surface` เดียวแบบซ้ายมูลค่าสูงสุด / ขวา 3 metric rows โดยมูลค่ารวมยังลิงก์ไป Market Overview; ถ้าไม่มี priced card ฝั่ง metric ยังอยู่ครบด้วย neutral fallback
+- [x] **HOME-STATUS-02 — Header cleanup:** ถอด market-stat pills ออกจาก desktop utility row โดยคง auth/profile/preferences/upgrade behavior และความสูง chrome เดิม
+- [x] **HOME-STATUS-03 — Regression:** ล็อก data contract, link, metric order, neutral money color, exact owner values, partial-data fallback และไม่ให้ client header ยิง `/api/cards?limit=1` กับ `/api/exchange-rate` ที่ไม่มีผู้ใช้แล้ว
+- [x] **HOME-STATUS-04 — Verification:** detector `[]` · focused 25/25 · TypeScript ผ่าน · full test 152 files / 908 tests · lint 0 errors (33 warnings เดิม/นอก scope) · build 210 หน้า · Browser จริง 390/768/1024/1280px Light/Dark ยืนยัน layout 6+3+3, ราคาไม่แตกที่ 1024px, link ไป Market Overview, no-overflow/overlay/console/hydration และไม่มี market-stat client requests
+- [x] **HOME-STATUS-05 — One-column desktop density:** ลด `HomeMarketStatus` จาก 2 เหลือ 1 grid column ตั้งแต่ `lg`; 1024px ใช้ 3 tracks และ `xl` ใช้ 4 tracks เพื่อสงวนคอลัมน์หลังราคาลงสำหรับ ad inventory · compact featured card ฝั่งซ้ายโดย metrics ยังอยู่ขวา · เพิ่ม inset focus ring + regression topology · detector `[]` · independent review ไม่เหลือ P0/P1 · targeted lint 0 errors · TypeScript ผ่าน · full test 152 files / 909 tests · build 211 หน้า · Browser 390/768/1024/1280px ยืนยัน 0→2→3→4 tracks, status span 2→1, ค่า/ราคาไม่ตัด, ความสูง 3 กลุ่มเท่ากัน, no-overflow/overlay/console; full lint ถูกบล็อกเฉพาะ concurrent `src/app/proto/navbar/page.tsx:583` นอก scope
+- [x] **HOME-COPY-RESTORE-01 — Restore original section composition:** คืน subtitle `เครื่องมือครบชุด…` ใต้หัวฟีเจอร์ และคืนประโยคจำนวนการ์ด/ชุดไว้ใต้หัว `ราคาตลาดการ์ดวันพีชวันนี้` ตามภาพ owner โดยคง Hero/Search/Navbar และ HomeMarketStatus ใหม่ทั้งหมด · detector `[]` · focused 17/17 · full 152 files / 907 tests · lint 0 errors (33 warnings เดิม) · build 210 หน้า · Browser 390/639/640/1280px Light/Dark ยืนยันตำแหน่ง copy, 1→3 columns, tabs breakpoint, no overflow/error overlay/hydration
+
+## 🔎 Navbar search-first + profile preferences (owner direction · 2026-08-27) — ⛔ ถูกย้อนออกแล้ว 2026-08-28
+
+> **สถานะจริง: ทิศทางนี้ถูกยกเลิก.** วันที่ 2026-08-28 ลองต่ออีก 3 รอบ (Command Deck 2 แถว → หน้าตาแบบ proto → 3 ชั้นมีชีพจรตลาด) เบสดูแล้วเทียบกับของเดิมบนเว็บจริง แล้วเคาะว่า **"กลับไปแบบเก่าดีกว่า"** → desktop chrome ย้อนกลับเป็นโครง 2 แถวที่ commit ไว้ (ticker: Game→Set · การ์ดทั้งหมด/มูลค่ารวม/JPY-THB · ค้นหา · อัปเกรด · ภาษา/สกุลเงิน/ธีม | แถวล่าง: Meecard · เมนู · พอร์ต/รายการโปรด/Honey · โปรไฟล์)
+>
+> ข้อ HEADER-SEARCH-01..05 ด้านล่างเก็บไว้เป็นบันทึกว่าเคยทำอะไรและทำไมถึงไม่เอา **ไม่ใช่สถานะปัจจุบันของโค้ด** · ของที่รอดมา: `/more` ยังคุมภาษา/สกุลเงิน/ธีมบนมือถือ, Hero หน้าแรกยังไม่มี input ซ้ำ, ค้นหาด้วยรูป + ผลลัพธ์ชุดการ์ดใน palette ยังอยู่
+>
+> เดิมตั้งใจ: ทำให้ Search เป็นจุดเริ่มค้นหาหลักแบบ CoinGecko/CMC, ลด utility ที่แย่งสายตาบน desktop chrome และรวมภาษา/สกุลเงิน/ธีมไว้กับเมนูบัญชี
+
+- [x] **HEADER-SEARCH-01 — Desktop hierarchy:** ย้าย Search มาเป็น control หลักท้าย primary navbar, คง `/` และ `⌘/Ctrl+K`, รองรับค้นหาการ์ด/ชุด/รูปภาพ และใช้ responsive width 80/112/176px หลัง owner คืน Set hub + utility labels โดย Browser 768/1024/1280/1440/1536px ไม่ล้น
+- [x] **HEADER-SEARCH-02 — Profile preferences:** รวมภาษา/สกุลเงิน/ธีมไว้ใน dropdown บัญชีพร้อม `Test · ตั้งค่าทั่วไป`, chevron, current value และ keyboard submenu; guest ใช้ settings dropdown เดียว ส่วน `/more` มือถือรองรับ System/Light/Dark ด้วย persistence เดียวกัน
+- [x] **HEADER-SEARCH-03 — Home dedupe:** ถอด input ซ้ำออกจาก Hero แต่คง H1/SEO subtitle ให้มองเห็น และให้ตารางตลาดขึ้นเร็วขึ้นโดยมี Search ใน chrome เป็นทางเข้าหลักเพียงจุดเดียวต่อ viewport
+- [x] **HEADER-SEARCH-04 — Regression + verification:** Impeccable detector `[]` · independent layout review ไม่เหลือ finding · focused 32/32 · full test 150 files / 901 tests · TypeScript ผ่านใน build · lint 0 errors (33 warnings เดิม) · build 210 หน้า · Browser จริง 320/390/768/1024/1280/1440/1536px Light/Dark ยืนยัน click/`/`/`⌘K`, card/set/photo search, preference persistence, Escape/focus restoration, ไม่มี overflow และ console ไม่มี warning/error; guest branch ล็อกด้วย source/regression โดยไม่ได้ logout บัญชีทดสอบจริง
+- [x] **HEADER-SEARCH-05 — Owner hierarchy correction:** คง Game → Set ใน primary row ข้าง Meecard, คืน hub `ชุดการ์ด`, แสดงชื่อ พอร์ต/รายการโปรด/Honey ทุก desktop breakpoint และจัดความกว้าง catalog/nav/search ใหม่โดยไม่ลด capability เดิม · Impeccable layout detector `[]` · focused 32/32 · full 150 files / 901 tests · lint 0 errors (33 warnings เดิม) · build 210 หน้า · Browser จริง 768/1024/1280/1366/1440/1536px ยืนยัน requested labels + Set hub + Search อยู่ใน viewport, Game/Set picker และ Escape/focus ผ่าน, `/opcg/sets` นำทางจริง, TH/JP ไม่ทำให้หน้า overflow และ fresh-tab console ไม่มี warning/error
+
+## 🃏 Set detail “First-card-first” (owner selected A · 2026-08-27)
+
+> ขอบเขตรอบนี้คือหน้ารายละเอียดชุดการ์ดเท่านั้น: ยกภาพ/รหัส/ความน่าเชื่อถือให้อ่านเร็ว และให้เห็นการ์ดใบแรกเร็วขึ้น โดยคง query/URL/grade/filter เดิม · ไม่รวม global header, bottom ad, schema/data cleanup
+
+- [x] **SET-FIRST-A-01 — Hero + semantics:** ย่อ hero แบบ mobile-first, ย้ายปุ่มย้อนเข้า context, แยกจำนวนหมายเลขการ์ด/เวอร์ชันพิเศษ/เวอร์ชันทั้งหมด และทำ top-card trust strip ที่บอกชื่อ+รหัส+แหล่งราคาอย่างซื่อสัตย์
+- [x] **SET-FIRST-A-02 — Mobile controls:** รวบตัวเลือก grade และแถว period/rarity/filter เป็น 2 แถว, target ≥44px, ไม่ clip ที่ 390/768px และคง desktop sidebar เดิม
+- [x] **SET-FIRST-A-03 — Regression:** ล็อก visible card-code ไม่หลุด machine suffix, count semantics, heading/accessibility, control labels และ filter/grade behavior
+- [x] **SET-FIRST-A-04 — Verification:** Impeccable detector `[]` · TypeScript ผ่าน · focused 46/46 · full test 149 files / 892 tests · lint 0 errors (33 warnings เดิม) · build 210 หน้า · Browser 390×630/844, 768×900, 1280×720 Light/Dark ยืนยัน first card เข้า fold มือถือ, Set Detail ไม่ล้นที่ 390/768, controls ≥44px, FilterModal/Escape/focus/console ผ่าน และ user-like grade switch ไม่กระโดด; global header overflow ที่ 1280 กับ fixed bottom ad เป็นของเดิมนอก scope
+- [x] **SET-FIRST-A-05 — Owner hierarchy correction:** คืนปุ่มย้อนเป็นแถวเหนือ Hero บนมือถือ, ลดสถิติ Hero เหลือ “การ์ดทั้งหมด” เพียงค่าเดียว, คืนปุ่มอัตราดรอปแบบมีข้อความ และคงการ์ดมูลค่าสูงสุดเป็นหลักฐานราคา
+- [x] **SET-FIRST-A-06 — Context + reverify:** คืนคำอธิบายสั้นใต้ H2 ราคา, ถอด paragraph ที่ผิดกลุ่มออกจาก FAQ; Impeccable detector `[]` · independent React/Next/a11y review ไม่พบ finding · focused 47/47 · TypeScript ผ่าน · full test 149 files / 893 tests · lint 0 errors (33 warnings เดิม) · build 210 หน้า · Browser จริง 390×844, 768×900, 1280×800 Light/Dark ยืนยันปุ่มย้อนเหนือ Hero, `การ์ดทั้งหมด 174 ใบ`, ปุ่มอัตราดรอปมีข้อความ/เปิด dialog/Escape คืน focus, intro อยู่ใต้ H2, ไม่มี paragraph ซ้ำก่อน FAQ, ไม่มี overflow ที่ 390/768 และ console ไม่มี warning/error; global header overflow ที่ 1280 เป็นของเดิมนอก scope
+- [x] **SET-FIRST-A-07 — Restore approved Hero composition:** คืนโครง Hero แบบเดิมตามภาพ owner: flex row ทุกขนาด, box art ใหญ่ด้านซ้าย, identity + `การ์ด` + การ์ดมูลค่าสูงสุด + ปุ่มอัตราดรอปอยู่คอลัมน์ขวา โดยคงปุ่มย้อนเหนือ Hero และ logic grade/SEO/card URL เดิม
+- [x] **SET-FIRST-A-08 — OP13 release date + reverify:** เติมวันวางจำหน่าย OP13 `2025-08-23` จาก Bandai Japan เป็น catalog fallback ใต้ชื่อชุดโดยไม่เขียน DB บางแถว; เพิ่ม DB-precedence + a11y identity/tap target regression · Impeccable detector `[]` · independent React/Next/a11y review ถูกแก้ครบ · focused 47/47 · TypeScript ผ่าน · full test 149 files / 893 tests · lint 0 errors (33 warnings เดิม) · build 210 หน้า · Browser จริง 320×800, 390×844, 768×900, 1280×800 Light/Dark ยืนยัน geometry ตรงภาพ, วันที่/DOM order ถูก, top-card link 47px + accessible name, Drop dialog/Escape/focus และ console ผ่าน; ไม่มี overflow ที่ 320/390/768 ส่วน global header overflow ที่ 1280 เป็นของเดิมนอก scope
+
+- [x] **SET-FIRST-A-09 — Sticky mobile grade controls:** รวมแถวเกรดกับแถว period/rarity/filter เป็น sticky control group เดียวใต้ global chrome บนมือถือ/แท็บเล็ต; outer เดียวใช้ `top-[var(--chrome-h)] z-sticky` และ `getStickyChromeHeight()` วัดความสูงรวม จึงคง desktop sidebar, touch target และ rarity offset เดิม
+- [x] **SET-FIRST-A-10 — Sticky regression + browser verify:** ล็อก DOM order `sticky → grade → compact controls` · focused 9/9 · TypeScript ผ่าน · Impeccable detector `[]` · full test 149 files / 893 tests · lint 0 errors (33 warnings เดิม) · build 210 หน้า · Browser จริง 320/390/768/1023/1024/1280px Light/Dark ยืนยัน sticky top 56px มือถือ/100px แท็บเล็ต, สูงรวม 114px, rarity jump เว้น 16px ใต้ toolbar, FilterModal z70 เหนือ z30 + Escape คืน focus, breakpoint 1024 สลับเป็น sidebar และไม่มี overflow ที่ 320/390/768/1023/1024; global header overflow ที่ 1280 เป็นของเดิมนอก scope
+
 ## 🧪 Mobile navbar direction prototypes (2026-08-27)
 
 - [x] **HEADER-NAV-PROTO-01** — ทำ route แยก `/proto/header-nav` ให้เทียบ 3 ทิศทางที่อยู่กึ่งกลางระหว่าง capsule ใหญ่กับ breadcrumb ที่เงียบเกินไป: A Pack Spotlight / B Latest Pack Shelf / C Set Stamp ใช้ภาพแพ็กจริง OP13–OP15 ใน home-fold context, กดสลับแบบ/ธีม/ชุดได้ และมี popover ตัวอย่างสำหรับเกม/ทุกชุด/แจ้งเตือน โดยไม่แตะ production header
@@ -46,6 +100,10 @@
 ## 🐛 Honey mission create race (2026-08-26)
 
 - [x] **HONEY-RACE-01** — daily/monthly `UserMissionPeriod` get-or-create รับ P2002 แล้วอ่าน row ที่ request คู่แข่งสร้าง; mission tracking retry P2034 สูงสุด 3 ครั้ง · regression 6/6 · lint 0 error (35 warning เดิม) · test 843/843 · build 209 หน้า · browser จริง GET/POST missions = 200 ไม่มี overlay/console error
+
+## 🧭 เลือกชุดได้ทุกหน้า — N1 (2026-08-27)
+
+- [x] **NAV-SET-N1-01** — ย้ายตัวเลือกชุดจากแถบ ticker ขึ้นแถวเมนูหลัก (ข้างโลโก้), ตัดเมนู "ชุดการ์ด" ที่ซ้ำออก, ให้ปุ่มบอกชุดปัจจุบัน และรู้จักชุดจากหน้าการ์ดด้วย (`getHeaderCardSetCode` อ่านจากคำนำหน้ารหัสการ์ด แล้วจะโชว์ก็ต่อเมื่อ match ชุดจริง) · รหัสชุดเป็นตัวใหญ่ทั้งปุ่มและรายการให้ตรงกับ `SetPosterTile` · มือถือถอดปุ่มสลับธีมออกจาก header (มีอยู่แล้วใน "ดูเพิ่มเติม") คืนความกว้างให้ชื่อชุด · เพิ่ม prop `compactBelowLg` ให้ `GameSwitcher` (ตราสัญลักษณ์อย่างเดียวต่ำกว่า lg) เพราะเกม+ชุดสองป้ายพร้อมกันดันแถวล้นที่ md · ป้ายไล่ระดับ: รหัสเสมอ → ชื่อเต็มที่ xl (desktop) / 430px (มือถือ) · tsc 0 · lint 0 error (34 warning เดิม) · test **888/888** · build 210 หน้า · Browser 320 / 375 / 768 / 1024 / 1280 / 1440 ไม่มี horizontal overflow และ tap target ≥44px ครบทุกจุด
 
 ## 🏠 Homepage hero set picker (2026-08-26)
 

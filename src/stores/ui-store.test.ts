@@ -30,3 +30,23 @@ describe("current game preference", () => {
     consoleError.mockRestore()
   })
 })
+
+describe("header display preferences", () => {
+  it("persists the language and currency selected from shared controls", () => {
+    const previousLanguage = useUIStore.getState().language
+    const previousCurrency = useUIStore.getState().currency
+
+    try {
+      useUIStore.getState().setLanguage("EN")
+      useUIStore.getState().setCurrency("USD")
+
+      const persisted = selectPersistedUIState(useUIStore.getState())
+
+      expect(persisted.language).toBe("EN")
+      expect(persisted.currency).toBe("USD")
+    } finally {
+      useUIStore.getState().setLanguage(previousLanguage)
+      useUIStore.getState().setCurrency(previousCurrency)
+    }
+  })
+})

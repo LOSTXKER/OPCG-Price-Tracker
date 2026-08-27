@@ -80,7 +80,7 @@ export function CardDetail(props: CardDetailProps) {
   } = useCardDetailModel(props)
 
   return (
-    <div className="relative mx-auto max-w-7xl scroll-smooth pb-8">
+    <div className="relative scroll-smooth pb-8">
       {/* breadcrumb row — Breadcrumb self-adapts: full trail on md+, an
           iOS-style "< [set name]" back pill on mobile. The old mobile-only
           compact meta line (set · code · rarity) was dropped — it duplicated
