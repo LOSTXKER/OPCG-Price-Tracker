@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-08-27 — **Global Game → Set navigation release candidate**
+อัปเดตล่าสุด: 2026-08-27 — **Global Game → Set navigation shipped to Production**
 
 ## ผลลัพธ์
 
@@ -17,6 +17,9 @@
 - กด `เลือกชุด` เปิด dialog และช่อง `ค้นหารหัสหรือชื่อชุด...`; Escape ปิดและคืน focus ที่ trigger; console/hydration ไม่มี warning/error
 - React best-practices review ไม่พบ state/effect/render regression · Impeccable layout detector `[]`
 - `npx tsc --noEmit` ผ่าน · `npm run lint` 0 errors (34 warnings เดิม) · `npm run test` **149 files / 882 tests ผ่าน** · `npm run build` ผ่าน **210 หน้า**
+- PR #119 ผ่าน Vercel Preview และ merge เข้า `master` ที่ `0b2461f`; fetch ยืนยัน `origin/master` ตรงกับ merge commit
+- Vercel Production `dpl_AeAvooHEKRjr1k7goNkEKJhBEWjQ` สถานะ Ready และ `https://opcg-price-tracker.vercel.app` ตอบ 200
+- Browser Production หน้าแรก 390×844 + 1280×720 และ `/opcg/sets/op03` ที่ 390×844 ผ่าน: `เลือกชุด`/Search ครบ, ทุก mobile target 44px, ไม่มี horizontal overflow, dialog ไม่มีหมวด “ชุดล่าสุด”, Escape คืน focus และ console สะอาด
 
 ## ไฟล์หลักที่เปลี่ยนในรอบล่าสุด
 
@@ -29,12 +32,10 @@
 
 - checkpoint ก่อนเริ่ม navbar อยู่ที่ `aa0c8a2`
 - production navbar + owner revisions commit `037ccad`; prototype แยก commit `072276a`
-- push branch `chore/next-16.3` แล้ว และเปิด PR #119 เข้า default branch `master` (repository ไม่มี branch `main` และห้าม direct push เข้า `master`)
-- ไม่มี schema, migration, dependency, config change, data mutation หรือ deploy
+- PR #119 merge เข้า default branch `master` แล้ว (repository ไม่มี branch `main` และห้าม direct push เข้า `master`)
+- ไม่มี schema, migration, dependency, config change หรือ data mutation; deploy ผ่าน Vercel Git integration
 - dev server เปิดกลับที่ `http://localhost:3000` หลัง production build ผ่าน
 
 ## NEXT
 
-1. รอ remote checks ของ PR #119 แล้ว merge เข้า `master`
-2. fetch และยืนยัน `origin/master` ชี้ release commit จริง
-3. ตรวจ Vercel Production และหน้าแรกจริงแยกจากสถานะ GitHub
+1. รอ owner review หน้า Production และเก็บ feedback รอบถัดไปจากของจริง
