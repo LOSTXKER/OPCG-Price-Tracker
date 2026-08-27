@@ -12,6 +12,7 @@ export const pokemonConfig: GameConfig = {
   slug: "pokemon",
   name: "Pokémon Trading Card Game",
   nameEn: "Pokémon TCG",
+  logoUrl: "/games/pokemon-logo.png",
   shortName: "Pokémon",
   filterName: "Pokémon",
   release: {

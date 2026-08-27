@@ -11,6 +11,7 @@ import {
 } from "react"
 
 import { useHydrated } from "@/hooks/use-hydrated"
+import { apiGet } from "@/lib/api/client"
 import { getCardEffect, getCardName, getSetName, t, type Currency, type Language } from "@/lib/i18n"
 import {
   formatByCurrency,
@@ -20,7 +21,7 @@ import {
 } from "@/lib/utils/currency"
 import { useUIStore } from "@/stores/ui-store"
 
-import { dateAtIndex, type ChartRange, type ChartSeries } from "./card-chart"
+import { dateAtIndex, RANGE_DAYS, type ChartRange, type ChartSeries } from "./card-chart"
 import type { Edition } from "./edition-toggle"
 import {
   buildGradeData,
@@ -31,7 +32,7 @@ import {
   type GradeKey,
   type Stat,
 } from "./grades"
-import { mockGradeSeries } from "./mock"
+import { deriveRawPriceChart } from "./price-history"
 import type { CardDetailProps, CardListing, CardSourcePrice } from "./types"
 import { useCardDetailTabs } from "./use-card-detail-tabs"
 
@@ -41,6 +42,18 @@ interface LatestSale {
   source: string
   primary: string
   updatedAt: string | null
+}
+
+type ChartDataRow = CardDetailProps["card"]["chartData"][number]
+
+type PriceHistoryApiResponse = {
+  prices: ChartDataRow[]
+}
+
+const RANGE_API_PERIOD: Partial<Record<ChartRange, string>> = {
+  "3M": "90d",
+  "1Y": "1y",
+  All: "all",
 }
 
 export interface ProvenanceModel {
@@ -81,6 +94,9 @@ export interface CardDetailModel {
   datum: GradeDatum
   gradeLabel: string
   seriesList: ChartSeries[]
+  chartLoading: boolean
+  chartError: boolean
+  retryChart: () => void
   activeValue: number | null
   shownDelta: number | null
   shownDate: string | null
@@ -131,9 +147,15 @@ export function useCardDetailModel({
   const currencyPreference = useUIStore((state) => state.currency)
   const currency: Currency = hydrated ? currencyPreference : "THB"
 
-  const [edition, setEdition] = useState<Edition>("JP")
+  const [edition, setEditionState] = useState<Edition>("JP")
   const [range, setRange] = useState<ChartRange>("1M")
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const [remoteHistory, setRemoteHistory] = useState<
+    Partial<Record<ChartRange, ChartDataRow[]>>
+  >({})
+  const [remoteHistoryErrors, setRemoteHistoryErrors] = useState<
+    Partial<Record<ChartRange, true>>
+  >({})
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
   const gradeActiveRef = useRef<HTMLButtonElement | null>(null)
@@ -184,63 +206,166 @@ export function useCardDetailModel({
   ])
 
   // Open on the real raw reference when available, matching the original page.
-  const [selectedGrade, setSelectedGrade] = useState<GradeKey>(() =>
+  const [selectedGrade, setSelectedGradeState] = useState<GradeKey>(() =>
     gradeData.raw.hasData ? "raw" : defaultGradeKey(gradeData),
   )
+
+  const setEdition: Dispatch<SetStateAction<Edition>> = (nextEdition) => {
+    setActiveIndex(null)
+    setEditionState(nextEdition)
+  }
+
+  const setSelectedGrade: Dispatch<SetStateAction<GradeKey>> = (nextGrade) => {
+    setActiveIndex(null)
+    setSelectedGradeState(nextGrade)
+  }
 
   const datum = gradeData[selectedGrade]
   const gradeLabel = datum.tier.label
   const chartMode = gradeToChartMode(selectedGrade)
   const latest = statToDisplayValue(datum.value, currency)
-  const up = (datum.delta30d?.pct ?? 0) >= 0
-  const rangeFactor = Math.sqrt(
-    (range === "7D" ? 7 : range === "1M" ? 30 : range === "3M" ? 90 : range === "1Y" ? 365 : 730) / 30,
+
+  const needsRemoteHistory = range in RANGE_API_PERIOD
+  const hasRemoteHistory = Object.prototype.hasOwnProperty.call(remoteHistory, range)
+  const hasRemoteHistoryError = remoteHistoryErrors[range] === true
+  const chartLoading =
+    hydrated &&
+    edition === "JP" &&
+    selectedGrade === "raw" &&
+    needsRemoteHistory &&
+    !hasRemoteHistory &&
+    !hasRemoteHistoryError
+  const chartError =
+    hydrated &&
+    edition === "JP" &&
+    selectedGrade === "raw" &&
+    needsRemoteHistory &&
+    hasRemoteHistoryError
+  const chartRows = useMemo(
+    () => (needsRemoteHistory ? remoteHistory[range] ?? [] : card.chartData),
+    [card.chartData, needsRemoteHistory, range, remoteHistory],
   )
-  const rangeDeltaPct = datum.delta30d?.pct != null ? datum.delta30d.pct * rangeFactor : null
-  const chartUp = (rangeDeltaPct ?? 0) >= 0
+
+  useEffect(() => {
+    const period = RANGE_API_PERIOD[range]
+    if (
+      !hydrated ||
+      edition !== "JP" ||
+      selectedGrade !== "raw" ||
+      !period ||
+      hasRemoteHistory ||
+      hasRemoteHistoryError
+    ) {
+      return
+    }
+
+    const controller = new AbortController()
+    const url = `/api/cards/${encodeURIComponent(card.cardCode)}/prices?period=${period}&source=YUYUTEI&grade=raw`
+    void apiGet<PriceHistoryApiResponse>(url, controller.signal)
+      .then((response) => {
+        setRemoteHistory((current) => ({ ...current, [range]: response.prices }))
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          setRemoteHistoryErrors((current) => ({ ...current, [range]: true }))
+        }
+      })
+
+    return () => controller.abort()
+  }, [
+    card.cardCode,
+    edition,
+    hasRemoteHistory,
+    hasRemoteHistoryError,
+    hydrated,
+    range,
+    selectedGrade,
+  ])
+
+  const retryChart = () => {
+    setRemoteHistoryErrors((current) => {
+      const next = { ...current }
+      delete next[range]
+      return next
+    })
+  }
+
+  const rawChart = useMemo(
+    () =>
+      deriveRawPriceChart(chartRows, {
+        days: range === "All" ? Number.POSITIVE_INFINITY : RANGE_DAYS[range],
+        currency,
+      }),
+    [chartRows, currency, range],
+  )
 
   const seriesList = useMemo<ChartSeries[]>(() => {
-    if (!hydrated || !datum.hasData) return []
-    const base = statToDisplayValue(datum.value, currency)
-    if (base == null || base <= 0) return []
-    const seriesMap = mockGradeSeries(
-      [{ key: selectedGrade, base, up: chartUp, pct: rangeDeltaPct }],
-      range,
-    )
+    if (
+      !hydrated ||
+      edition !== "JP" ||
+      selectedGrade !== "raw" ||
+      rawChart.points.length === 0
+    ) {
+      return []
+    }
+    const first = rawChart.points[0]!
+    const last = rawChart.points.at(-1)!
     return [
       {
-        key: selectedGrade,
+        key: "raw",
         label: gradeLabel,
-        points: seriesMap[selectedGrade] ?? [],
-        color: chartUp ? "var(--price-up)" : "var(--price-down)",
-        isEst: datum.value.isEst,
+        points: rawChart.points,
+        dateIsos: rawChart.dateIsos,
+        color:
+          last > first
+            ? "var(--price-up)"
+            : last < first
+              ? "var(--price-down)"
+              : "var(--muted-foreground)",
+        isEst: false,
       },
     ]
-  }, [hydrated, datum.hasData, datum.value, rangeDeltaPct, chartUp, selectedGrade, gradeLabel, range, currency])
+  }, [edition, gradeLabel, hydrated, rawChart, selectedGrade])
 
   const primaryPoints = seriesList[0]?.points ?? []
-  const activeValue = activeIndex != null && primaryPoints[activeIndex] != null ? primaryPoints[activeIndex] : latest
+  const primaryDateIsos = seriesList[0]?.dateIsos ?? []
+  const resolvedActiveIndex =
+    activeIndex != null && primaryPoints.length > 0
+      ? Math.max(0, Math.min(primaryPoints.length - 1, activeIndex))
+      : null
+  const activeValue =
+    resolvedActiveIndex != null
+      ? primaryPoints[resolvedActiveIndex]!
+      : primaryPoints.at(-1) ?? latest
   const open = primaryPoints[0] ?? null
   const shownDelta =
-    open != null && activeValue != null && open !== 0 ? ((activeValue - open) / open) * 100 : null
+    primaryPoints.length >= 2 && open != null && activeValue != null && open !== 0
+      ? ((activeValue - open) / open) * 100
+      : null
   const shownDate =
-    activeIndex != null && primaryPoints.length > 1
-      ? `${dateAtIndex({ i: 0, len: primaryPoints.length, range, latestUpdatedAt, lang: displayLang })} – ${dateAtIndex({ i: activeIndex, len: primaryPoints.length, range, latestUpdatedAt, lang: displayLang })}`
+    resolvedActiveIndex != null && primaryPoints.length > 1
+      ? `${dateAtIndex({
+          i: 0,
+          len: primaryPoints.length,
+          range,
+          latestUpdatedAt,
+          dateIsos: primaryDateIsos,
+          lang: displayLang,
+        })} – ${dateAtIndex({
+          i: resolvedActiveIndex,
+          len: primaryPoints.length,
+          range,
+          latestUpdatedAt,
+          dateIsos: primaryDateIsos,
+          lang: displayLang,
+        })}`
       : null
 
-  const barPoints = useMemo(() => {
-    if (!hydrated || !datum.hasData || latest == null || latest <= 0) return []
-    const seriesMap = mockGradeSeries(
-      [{ key: selectedGrade, base: latest, up, pct: datum.delta30d?.pct ?? null }],
-      range,
-    )
-    return seriesMap[selectedGrade] ?? []
-  }, [hydrated, datum.hasData, datum.delta30d?.pct, selectedGrade, latest, up, range])
-  const priceLow = barPoints.length >= 2 ? Math.min(...barPoints) : null
-  const priceHigh = barPoints.length >= 2 ? Math.max(...barPoints) : null
+  const priceLow = primaryPoints.length >= 2 ? Math.min(...primaryPoints) : null
+  const priceHigh = primaryPoints.length >= 2 ? Math.max(...primaryPoints) : null
   const pricePos =
-    priceLow != null && priceHigh != null && priceHigh > priceLow && latest != null
-      ? Math.max(0, Math.min(100, ((latest - priceLow) / (priceHigh - priceLow)) * 100))
+    priceLow != null && priceHigh != null && priceHigh > priceLow && activeValue != null
+      ? Math.max(0, Math.min(100, ((activeValue - priceLow) / (priceHigh - priceLow)) * 100))
       : 50
 
   const marketRows = useMemo<CardSourcePrice[]>(() => {
@@ -336,7 +461,7 @@ export function useCardDetailModel({
 
   const tabs = [
     { id: "overview", label: t(displayLang, "overview") },
-    // "sources" now anchors the real, server-rendered price-history table.
+    // The price-history tab lands on the chart; the duplicate dated table was removed.
     { id: "sources", label: t(displayLang, "priceHistory") },
     { id: "market", label: t(displayLang, "sellingNow") },
     ...(siblings.length > 0 ? [{ id: "versions", label: t(displayLang, "otherVersions") }] : []),
@@ -428,6 +553,9 @@ export function useCardDetailModel({
     datum,
     gradeLabel,
     seriesList,
+    chartLoading,
+    chartError,
+    retryChart,
     activeValue,
     shownDelta,
     shownDate,

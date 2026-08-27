@@ -12,12 +12,13 @@ import {
   Heart,
 } from "lucide-react";
 import { CommandSearchModal } from "@/components/shared/command-search";
-import { GameSwitcher } from "@/components/layout/game-switcher";
+import { resolveHeaderGame } from "@/components/layout/header-catalog-control";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { formatCount } from "@/lib/utils/currency";
 import { t } from "@/lib/i18n";
 import { useHeaderData } from "@/hooks/use-header-data";
+import { useHeaderSets } from "@/hooks/use-header-sets";
 import { usePublicConfig } from "@/hooks/use-public-config";
 import { isNavActive } from "@/lib/game/constants";
 import { NAV_LINKS, MARKETPLACE_LINK } from "./header-constants";
@@ -29,6 +30,7 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname() ?? "/";
   const language = useUIStore((s) => s.language);
+  const currentGame = useUIStore((s) => s.currentGame);
   const searchOpen = useUIStore((s) => s.searchOpen);
   const setSearchOpen = useUIStore((s) => s.setSearchOpen);
 
@@ -47,6 +49,8 @@ export function Header() {
     mounted,
     handleLogout,
   } = useHeaderData();
+  const headerGame = resolveHeaderGame(pathname, currentGame);
+  const headerSets = useHeaderSets(headerGame);
 
   // Transparent at the very top (lets the page's hero/overhead glow flow through
   // the chrome uninterrupted), opaque once scrolled (so nav text stays legible
@@ -95,6 +99,11 @@ export function Header() {
     >
       <HeaderMarketTicker
         stats={stats}
+        game={headerGame}
+        sets={headerSets.sets}
+        setsLoading={headerSets.loading}
+        setsError={headerSets.error}
+        onSetsRetry={headerSets.retry}
         authLoaded={authLoaded}
         authUser={authUser}
         canUpgrade={canUpgrade}
@@ -124,8 +133,6 @@ export function Header() {
             />
             <span className="hidden text-base font-bold tracking-tight lg:inline">Meecard</span>
           </Link>
-
-          <GameSwitcher className="mr-2 min-h-11 px-2.5 lg:mr-5 lg:min-h-0 lg:px-3" />
 
           <nav className="flex items-center">
             {navLinks.map((link) => {
@@ -263,6 +270,11 @@ export function Header() {
     <HeaderMobile
       isAuthenticated={authLoaded && Boolean(authUser)}
       authLoaded={authLoaded}
+      game={headerGame}
+      sets={headerSets.sets}
+      setsLoading={headerSets.loading}
+      setsError={headerSets.error}
+      onSetsRetry={headerSets.retry}
     />
 
     <CommandSearchModal open={searchOpen} onClose={closeSearch} />

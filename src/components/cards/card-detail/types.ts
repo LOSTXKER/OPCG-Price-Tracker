@@ -1,6 +1,5 @@
 import type { ReactNode } from "react"
 
-import type { PriceHistorySummary } from "./price-history"
 import type { SaleRow } from "./sold-feed"
 
 export type CardListing = {
@@ -61,13 +60,6 @@ export interface CardDetailProps {
    * HTML response for every user agent (no hydration or fetch required).
    */
   introSlot?: ReactNode
-  /**
-   * Derived price history (server-computed, serialisable). Passed as DATA, not
-   * as a prebuilt node, so the chart's range control can govern how many rows
-   * the table shows. Every row still renders during SSR at the default range,
-   * so the crawler sees the full set.
-   */
-  priceHistory?: PriceHistorySummary
   /** Real settled sales from the DB (type = SOLD), newest first. */
   soldFeed?: SaleRow[]
   /** Per-card FAQ (also emits FAQPage JSON-LD). */

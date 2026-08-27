@@ -338,9 +338,8 @@ export function SetDetailContent({
   );
 
   // Click a rarity → smooth-scroll its section to sit comfortably below whatever
-  // is docked at the top (measured, not a magic 132: the top chrome is 56px on a
-  // phone and 100px from `md`, and the sticky rarity bar adds its own height on
-  // the breakpoints where it renders).
+  // is docked at the top (measured, not a magic number: the top chrome is 56px
+  // on a phone and 100px from `md`; the rarity bar adds its own rendered height).
   const scrollToRarity = (rarity: string) => {
     const el = document.getElementById(`rar-${rarity}`);
     if (!el) return;

@@ -158,6 +158,9 @@ describe("SelectStep filter layering", () => {
 
     expect(markup).toContain('data-picker-filter-blur="true"')
     expect(markup).toContain('data-slot="card-picker-game-static"')
+    expect(markup).toContain('data-slot="game-logo"')
+    expect(markup).toContain('data-game="opcg"')
+    expect(markup).toContain("%2Fgames%2Fone-piece-logo.png")
     expect(markup).toContain("One Piece")
     expect(markup).not.toContain("Pokémon")
     expect(markup).not.toContain("เร็ว ๆ นี้")
@@ -250,6 +253,10 @@ describe("SelectStep filter layering", () => {
 
     expect(markup).not.toContain('data-slot="card-picker-game-static"')
     expect(markup).toContain('aria-label="เลือกเกม"')
+    expect(markup).toContain('data-game="opcg"')
+    expect(markup).toContain('data-game="pokemon"')
+    expect(markup).toContain("%2Fgames%2Fone-piece-logo.png")
+    expect(markup).toContain("%2Fgames%2Fpokemon-logo.png")
     expect(markup).toContain("One Piece")
     expect(markup).toContain("Pokémon")
 

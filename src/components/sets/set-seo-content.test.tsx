@@ -13,6 +13,7 @@ import {
   setTypeHeading,
   type SetSeoData,
 } from "@/lib/seo/copy/sets";
+import { getJapaneseSetReleaseDate } from "@/lib/constants/sets";
 
 function card(id: number, overrides: Partial<CardData> = {}): CardData {
   return {
@@ -98,6 +99,39 @@ describe("set-detail SEO surface", () => {
     expect(h1![1]).toContain("OP01");
     expect(h1![1]).toContain("Romance Dawn");
     expect(markup.match(/<h1/g)).toHaveLength(1);
+  });
+
+  it("shows the verified Japanese release day and hides the row when absent", () => {
+    const op03ReleaseDate = getJapaneseSetReleaseDate("op03");
+    expect(op03ReleaseDate).toBe("2023-02-11");
+
+    const common = {
+      lang: "TH" as const,
+      code: "op03",
+      name: "Pillars of Strength",
+      type: "BOOSTER",
+      boxImage: null,
+      cardCount: 154,
+      rarityGroups: groups,
+      packsPerBox: 24,
+      cardsPerPack: 6,
+      hasDropRates: false,
+      grade: "raw" as const,
+    };
+    const dated = renderToStaticMarkup(
+      <SetHero
+        {...common}
+        releaseDate={`${op03ReleaseDate}T00:00:00.000Z`}
+      />,
+    );
+    const undated = renderToStaticMarkup(
+      <SetHero {...common} releaseDate={null} />,
+    );
+
+    expect(dated).toContain("วางจำหน่ายในญี่ปุ่น");
+    expect(dated).toContain("11 ก.พ. 2023");
+    expect(dated).not.toContain("2566");
+    expect(undated).not.toContain("วางจำหน่ายในญี่ปุ่น");
   });
 
   it("renders drop-rate rows as crawlable HTML (no dialog required)", () => {

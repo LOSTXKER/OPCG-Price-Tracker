@@ -16,7 +16,6 @@ import { CardDetailChartSection } from "./card-detail/card-detail-chart-section"
 import { CardDetailIdentity } from "./card-detail/card-detail-identity"
 import { CardDetailPrice } from "./card-detail/card-detail-price"
 import { CardDetailSectionNav } from "./card-detail/card-detail-section-nav"
-import { CardPriceHistory } from "./card-detail/price-history-table"
 import { CardViewTracker } from "./card-detail/card-view-tracker"
 import { RecentSales } from "./card-detail/recent-sales"
 import { SectionHead } from "./card-detail/section-head"
@@ -31,7 +30,7 @@ export type { CardDetailProps, RelatedCard, SiblingCard } from "./card-detail/ty
 
 
 export function CardDetail(props: CardDetailProps) {
-  const { card, siblings, relatedCards, latestUpdatedAt, introSlot, priceHistory, soldFeed, faqSlot } = props
+  const { card, siblings, relatedCards, latestUpdatedAt, introSlot, soldFeed, faqSlot } = props
   const {
     hydrated,
     displayLang,
@@ -63,6 +62,9 @@ export function CardDetail(props: CardDetailProps) {
     datum,
     gradeLabel,
     seriesList,
+    chartLoading,
+    chartError,
+    retryChart,
     activeValue,
     shownDelta,
     shownDate,
@@ -198,6 +200,9 @@ export function CardDetail(props: CardDetailProps) {
             range={range}
             onRangeChange={selectRange}
             series={seriesList}
+            loading={chartLoading}
+            error={chartError}
+            onRetry={retryChart}
             activeIndex={activeIndex}
             onScrub={setActiveIndex}
             activeValue={activeValue}
@@ -214,34 +219,19 @@ export function CardDetail(props: CardDetailProps) {
       {/* ── below the chart — recent sales + card info on lg.
           The right rail is 320–360px and scrolls with the page; <lg stacks. ── */}
       <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_360px]">
-        {/* ROW 1 LEFT — real price history (server-rendered table, no mock feed) */}
-        <section id="sources" className="min-w-0 scroll-mt-[calc(var(--chrome-h)_+_4.25rem)]">
-          {/* Same selector as the chart, same state, rendered in both blocks:
-              they stay in sync and each block shows the control next to the
-              data it governs — including the identical Pro locks. */}
-          {priceHistory && (
-            <CardPriceHistory
-              cardCode={card.cardCode}
-              history={priceHistory}
-              lang={displayLang}
-              currency={currency}
-              range={range}
-              onRangeChange={selectRange}
-            />
-          )}
+        {/* ROW 1 LEFT — real settled sales from the database. */}
+        <section className="min-w-0">
           {/* Settled sales — REAL rows from the database now (CardPrice where
               type = SOLD), so the generated feed and its `data-nosnippet` guard
               are both gone. Cards no source has reported a sale for simply show
               the empty state. */}
-          <div className="mt-12">
-            <RecentSales
-              sales={soldFeed ?? []}
-              currency={currency}
-              lang={displayLang}
-              range={range}
-              onRangeChange={selectRange}
-            />
-          </div>
+          <RecentSales
+            sales={soldFeed ?? []}
+            currency={currency}
+            lang={displayLang}
+            range={range}
+            onRangeChange={selectRange}
+          />
         </section>
 
         {/* ROW 1 RIGHT — card info (specs + effect) */}

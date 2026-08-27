@@ -181,7 +181,7 @@ export function HomeMarketOverview({
    * geometry but drop the tap-sort because their historical deltas aren't real.
    */
   const mobileListHeader = (m.isPending || m.cards.length > 0) && (
-    <div className="ease-chrome sticky top-[var(--chrome-h)] z-10 flex items-center justify-between gap-2 border-b border-hair bg-background/95 px-4 py-1.5 backdrop-blur-sm sm:hidden">
+    <div className="ease-chrome sticky top-[var(--chrome-h)] z-10 -mx-5 flex items-center justify-between gap-2 border-b border-hair bg-background/95 px-3 py-1.5 backdrop-blur-sm sm:hidden">
       <SegmentedControl<ChangePeriod>
         size="sm"
         variant="pill"
@@ -190,11 +190,11 @@ export function HomeMarketOverview({
         value={m.changePeriod}
         onChange={m.handleChangePeriod}
         ariaLabel={t(lang, "pricePeriod")}
-        className="shrink-0"
+        className="shrink-0 [&>svg:first-child]:hidden min-[360px]:[&>svg:first-child]:block"
       />
       {/* Column labels, not buttons-shouting: the row reads muted and the ONE
           active sort turns dark, so the eye lands on what's sorted. */}
-      <div className="flex items-center gap-2.5 text-muted-foreground">
+      <div className="flex items-center gap-1.5 text-muted-foreground min-[360px]:gap-2.5">
         {rawGrade ? (
           <SortableHeader<ColumnId>
             as="button"

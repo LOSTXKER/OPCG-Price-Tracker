@@ -46,9 +46,9 @@ export type HomeSetStripItem = {
  * home page passed zero link equity down to the set cluster — the layer the
  * plan calls the main battleground.
  *
- * Real <a> links (next/link), rendered in the first HTML response. Sits right
- * under the hero (owner decision 2026-08-06 — tried the tail, reverted), so
- * its top margin hugs the hero's own bottom padding.
+ * Real <a> links (next/link), rendered in the first HTML response. It follows
+ * the complete market table and pagination (owner decision 2026-08-26), so the
+ * market remains the primary task and set browsing reads as the next step.
  */
 export function HomeSetStrip({ sets }: { sets: HomeSetStripItem[] }) {
   const lang = useUIStore((s) => s.language)
@@ -57,7 +57,7 @@ export function HomeSetStrip({ sets }: { sets: HomeSetStripItem[] }) {
   if (sets.length === 0) return null
 
   return (
-    <section className="mt-2 sm:mt-4" aria-labelledby="home-set-strip">
+    <section className="mt-8 sm:mt-10" aria-labelledby="home-set-strip">
       <div className="flex items-end justify-between gap-3">
         <div className="min-w-0">
           <h2 id="home-set-strip" className="text-h4">
@@ -75,11 +75,10 @@ export function HomeSetStrip({ sets }: { sets: HomeSetStripItem[] }) {
       </div>
 
       {/* One swipeable row on phones, wrapping grid from `sm` up.
-          Wrapping at 390px put these 12 pills on SEVEN rows (~330px — taller
-          than the hero) and pushed the market table clean off the first screen,
-          with two of the rows holding a single pill so the block read as broken
-          rather than deliberate. The rail keeps every link in the server HTML —
-          it only changes how many are on screen at once. `no-sb` +
+          Wrapping at 390px puts these 12 pills on seven rows, with some rows
+          holding a single pill, so the block reads as broken rather than
+          deliberate. The rail keeps every link in the server HTML — it only
+          changes how many are on screen at once. `no-sb` +
           `overflow-x-auto` is the same rail the grade/scope controls use. */}
       <ul className="no-sb -mx-5 mt-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
         {sets.map((s, i) => (
@@ -93,9 +92,9 @@ export function HomeSetStrip({ sets }: { sets: HomeSetStripItem[] }) {
             >
               {/* Collectors recognise a set by its packaging long before they
                   recognise "op14". The slot stays narrow and pack-shaped so the
-                  whole strip grows by single-digit pixels — the rail has to stay
-                  one row on a phone or the market table leaves the first screen,
-                  which is why these are pills and not tiles. `object-cover`
+                  whole strip grows by single-digit pixels and the phone rail
+                  stays a compact next step, which is why these are pills rather
+                  than tiles. `object-cover`
                   earns its place here: the art is a portrait pack centred on a
                   square transparent canvas, so cropping to this ratio trims the
                   empty margin and renders the pack larger than `contain` would.

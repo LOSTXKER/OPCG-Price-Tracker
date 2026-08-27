@@ -66,6 +66,8 @@ export interface GameConfig {
   slug: string;
   name: string;
   nameEn: string;
+  /** Transparent logo mark shown before the game name in selection controls. */
+  logoUrl: string;
   /** Short label for the game-switcher pill (e.g. "OPCG", "Pokémon"). */
   shortName?: string;
   /** Friendly label for the unified MINE game rail (e.g. "One Piece"). */

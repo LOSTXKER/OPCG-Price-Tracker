@@ -21,4 +21,5 @@ describe("ConditionFilter", () => {
     expect(markup).toContain("overflow-x-auto");
     expect(markup).not.toContain("aria-pressed");
   });
+
 });

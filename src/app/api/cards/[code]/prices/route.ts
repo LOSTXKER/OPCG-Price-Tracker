@@ -1,5 +1,6 @@
 import { getAuthUser } from "@/lib/api/auth";
 import { apiHandler } from "@/lib/api/api-handler";
+import { PriceSource, type Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { effectiveTier, getLimits } from "@/lib/billing";
@@ -12,8 +13,15 @@ export const GET = apiHandler(async (
 ) => {
   const { code } = await params;
   const period = request.nextUrl.searchParams.get("period") || "7d";
-  const source = request.nextUrl.searchParams.get("source") || undefined;
+  const sourceParam = request.nextUrl.searchParams.get("source") || undefined;
+  const source = sourceParam && Object.values(PriceSource).includes(sourceParam as PriceSource)
+    ? sourceParam as PriceSource
+    : undefined;
   const grade = request.nextUrl.searchParams.get("grade") || undefined;
+
+  if (sourceParam && !source) {
+    return NextResponse.json({ error: "Invalid price source" }, { status: 400 });
+  }
 
   const card = await findCardByCode(code, { select: { id: true } });
 
@@ -37,14 +45,9 @@ export const GET = apiHandler(async (
   const requestedDays = PERIOD_DAYS[period] ?? 7;
   const effectiveDays = maxDays === Infinity ? requestedDays : Math.min(requestedDays, maxDays);
 
-  const now = new Date();
-  const since = effectiveDays === Infinity
-    ? new Date(0)
-    : new Date(now.getTime() - effectiveDays * 24 * 60 * 60 * 1000);
-
-  const whereClause: Record<string, unknown> = {
+  const whereClause: Prisma.CardPriceWhereInput = {
     cardId: card.id,
-    scrapedAt: { gte: since },
+    type: "SELL",
   };
 
   if (source) {
@@ -57,22 +60,47 @@ export const GET = apiHandler(async (
     whereClause.gradeCondition = grade;
   }
 
-  const prices = await prisma.cardPrice.findMany({
+  if (source === PRICE_SOURCE.YUYUTEI) {
+    whereClause.priceJpy = { gt: 0 };
+  } else if (source === PRICE_SOURCE.SNKRDUNK) {
+    whereClause.priceUsd = { gt: 0 };
+  }
+
+  // A card can be stale while still having valid history. End the requested
+  // window at its newest matching observation instead of at the wall clock.
+  const latest = await prisma.cardPrice.findFirst({
     where: whereClause,
-    orderBy: { scrapedAt: "asc" },
-    select: {
-      id: true,
-      source: true,
-      type: true,
-      priceJpy: true,
-      priceThb: true,
-      priceUsd: true,
-      priceEur: true,
-      inStock: true,
-      gradeCondition: true,
-      scrapedAt: true,
-    },
+    orderBy: { scrapedAt: "desc" },
+    select: { scrapedAt: true },
   });
+
+  const since = latest && effectiveDays !== Infinity
+    ? new Date(latest.scrapedAt.getTime() - effectiveDays * 24 * 60 * 60 * 1000)
+    : null;
+
+  const prices = latest
+    ? await prisma.cardPrice.findMany({
+        where: {
+          ...whereClause,
+          scrapedAt: since
+            ? { gte: since, lte: latest.scrapedAt }
+            : { lte: latest.scrapedAt },
+        },
+        orderBy: [{ scrapedAt: "asc" }, { id: "asc" }],
+        select: {
+          id: true,
+          source: true,
+          type: true,
+          priceJpy: true,
+          priceThb: true,
+          priceUsd: true,
+          priceEur: true,
+          inStock: true,
+          gradeCondition: true,
+          scrapedAt: true,
+        },
+      })
+    : [];
 
   const useUsd = source === PRICE_SOURCE.SNKRDUNK;
   const currency = useUsd ? "USD" : "JPY";
@@ -100,5 +128,15 @@ export const GET = apiHandler(async (
 
   const sources = [...new Set(prices.map((p) => p.source))];
 
-  return NextResponse.json({ prices, high, low, avg, sources, currency });
+  return NextResponse.json({
+    prices,
+    high,
+    low,
+    avg,
+    sources,
+    currency,
+    // JSON cannot represent Infinity. Match the other quota endpoints: null
+    // means the effective plan allows the complete stored history.
+    effectiveDays: effectiveDays === Infinity ? null : effectiveDays,
+  });
 });

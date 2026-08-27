@@ -13,7 +13,7 @@ import {
 
 import { usdToJpy } from "@/lib/utils/currency"
 
-import { derivePriceHistory } from "./price-history"
+import { derivePriceHistory, deriveRawPriceChart } from "./price-history"
 import { deriveSoldFeed } from "./sold-feed"
 import { CardPriceHistory } from "./price-history-table"
 
@@ -88,6 +88,69 @@ describe("derivePriceHistory", () => {
 
   it("returns an empty summary when there is nothing to show", () => {
     expect(derivePriceHistory([])).toEqual({ points: [], windows: [], latestIso: null })
+  })
+})
+
+describe("deriveRawPriceChart", () => {
+  it("keeps only real raw Yuyutei asks, newest per UTC day, in chronological order", () => {
+    const chart = deriveRawPriceChart(
+      [
+        { scrapedAt: "2026-07-01T12:00:00.000Z", priceJpy: 1_000, priceThb: 210, source: "YUYUTEI", type: "SELL", gradeCondition: null },
+        { scrapedAt: "2026-07-08T01:00:00.000Z", priceJpy: 1_100, priceThb: 231, source: "YUYUTEI", type: "SELL", gradeCondition: null },
+        { scrapedAt: "2026-07-08T22:00:00.000Z", priceJpy: 1_200, priceThb: 252, source: "YUYUTEI", type: "SELL", gradeCondition: null },
+        { scrapedAt: "2026-07-07T12:00:00.000Z", priceJpy: 99_000, priceThb: null, source: "SNKRDUNK", type: "SELL", gradeCondition: null },
+        { scrapedAt: "2026-07-07T12:00:00.000Z", priceJpy: 88_000, priceThb: null, source: "YUYUTEI", type: "SOLD", gradeCondition: null },
+        { scrapedAt: "2026-07-07T12:00:00.000Z", priceJpy: 77_000, priceThb: null, source: "YUYUTEI", type: "SELL", gradeCondition: "PSA 10" },
+      ],
+      { days: 30, currency: "JPY" },
+    )
+
+    expect(chart.points).toEqual([1_000, 1_200])
+    expect(chart.dateIsos).toEqual(["2026-07-01T12:00:00.000Z", "2026-07-08T22:00:00.000Z"])
+    expect(chart.latestIso).toBe("2026-07-08T22:00:00.000Z")
+  })
+
+  it("uses the later query row when two observations have the exact same timestamp", () => {
+    const chart = deriveRawPriceChart(
+      [
+        { scrapedAt: day(0), priceJpy: 1_000, priceThb: null, source: "YUYUTEI", type: "SELL", gradeCondition: null },
+        { scrapedAt: day(0), priceJpy: 1_200, priceThb: null, source: "YUYUTEI", type: "SELL", gradeCondition: null },
+      ],
+      { days: 30, currency: "JPY" },
+    )
+
+    expect(chart.points).toEqual([1_200])
+  })
+
+  it("measures the inclusive window from the latest observation and uses one FX contract", () => {
+    const chart = deriveRawPriceChart(
+      [
+        { scrapedAt: "2026-07-01T22:00:00.000Z", priceJpy: 1_000, priceThb: 215, source: "YUYUTEI", type: "SELL", gradeCondition: null },
+        { scrapedAt: "2026-06-30T21:59:59.000Z", priceJpy: 900, priceThb: 190, source: "YUYUTEI", type: "SELL", gradeCondition: null },
+        { scrapedAt: "2026-07-08T22:00:00.000Z", priceJpy: 1_200, priceThb: 260, source: "YUYUTEI", type: "SELL", gradeCondition: null },
+      ],
+      { days: 7, currency: "THB" },
+    )
+
+    // Explicit THB snapshots differ, but the chart consistently converts JPY
+    // with the same rate used by the Raw grade price above it.
+    expect(chart.points).toEqual([210, 252])
+    expect(chart.dateIsos).toHaveLength(2)
+  })
+
+  it("preserves honest empty and single-point states", () => {
+    expect(deriveRawPriceChart([], { days: 30, currency: "JPY" })).toEqual({
+      points: [],
+      dateIsos: [],
+      latestIso: null,
+    })
+
+    expect(
+      deriveRawPriceChart(
+        [{ scrapedAt: day(0), priceJpy: 1_000, priceThb: null, source: "YUYUTEI", type: "SELL", gradeCondition: null }],
+        { days: Number.POSITIVE_INFINITY, currency: "USD" },
+      ).points,
+    ).toEqual([6.7])
   })
 })
 

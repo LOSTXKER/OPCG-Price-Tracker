@@ -28,24 +28,29 @@ const ROTATING: Record<Language, string[]> = {
 }
 
 /**
- * Home hero — universal search as the page's focal point (VISION §5 "Universal
- * search = teleport"). A calm headline sits above a single oversized smart bar;
- * popular searches now live INSIDE the bar's focus dropdown (Fastwork-style),
- * not as chips below it.
+ * Home hero keeps the familiar search-first entry point. Set browsing is now a
+ * global catalog control in the header, so duplicating it here would compete
+ * with search and push the market table farther below the first viewport.
  *
  * NO z-index here on purpose. It used to be `relative z-30`, which made this
  * section a stacking context — and the suggestion dropdown inside it could then
  * never rise above the floating ad (35) or the mobile bottom nav (50): both
  * punched straight through the results list. The dropdown now lifts itself to
  * `z-dropdown` (see hero-search-bar), which only works while this section stays
- * a plain positioning parent. Overflow stays visible so it isn't clipped either.
+ * a plain positioning parent. Overflow stays visible so it is not clipped.
  */
-export function HomeSearchHero({ sets, trending }: { sets: SetSuggestion[]; trending?: HeroTrendingCard[] }) {
+export function HomeSearchHero({
+  sets,
+  trending,
+}: {
+  sets: SetSuggestion[]
+  trending?: HeroTrendingCard[]
+}) {
   const lang = useUIStore((s) => s.language)
 
   return (
     <section className="relative">
-      <div className="mx-auto max-w-2xl px-1 pb-6 pt-4 sm:pb-8 sm:pt-8">
+      <div className="mx-auto max-w-2xl px-1 pb-5 pt-4 sm:pb-6 sm:pt-6">
         <div className="text-center">
           {/* Eyebrow teaser → visible H1 → rotating subject.
               The H1 is the page's one keyword-bearing heading and must be real
@@ -57,7 +62,7 @@ export function HomeSearchHero({ sets, trending }: { sets: SetSuggestion[]; tren
           <h1 className="mt-1.5 text-3xl font-extrabold leading-[1.12] tracking-tight text-foreground sm:text-4xl">
             {buildHomeHeroHeading(lang)}
           </h1>
-          <p className="mt-2 text-lg font-semibold leading-snug tracking-tight text-foreground sm:mt-3 sm:text-2xl">
+          <p className="mt-1.5 text-base font-semibold leading-snug tracking-tight text-foreground sm:mt-2 sm:text-lg">
             <span className="sr-only">{buildHomeHeroSubtitle(lang)}</span>
             <span aria-hidden>
               <TypewriterText words={ROTATING[lang]} holdMs={2600} className="text-foreground" />
@@ -65,7 +70,7 @@ export function HomeSearchHero({ sets, trending }: { sets: SetSuggestion[]; tren
           </p>
         </div>
 
-        <div className="mt-6">
+        <div className="mx-auto mt-5 w-full sm:mt-6 sm:max-w-xl">
           <HeroSearchBar sets={sets} trending={trending} />
         </div>
       </div>

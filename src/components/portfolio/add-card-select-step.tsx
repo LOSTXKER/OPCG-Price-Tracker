@@ -5,7 +5,6 @@ import Image from "next/image"
 import {
   Check,
   CircleAlert,
-  Gamepad2,
   Loader2,
   Package,
   Search,
@@ -13,6 +12,7 @@ import {
 } from "lucide-react"
 
 import { EmptyState } from "@/components/shared/empty-state"
+import { GameCrest } from "@/components/shared/game-crest"
 import {
   DialogDescription,
   DialogHeader,
@@ -312,6 +312,7 @@ export function SelectStep({
   const gameOptions = getActiveGameConfigs().map((g) => ({
     value: g.slug,
     label: g.filterName ?? g.shortName ?? g.nameEn,
+    logoUrl: g.logoUrl,
   }))
   const activeGameOption = gameOptions.find((game) => game.value === activeGame)
 
@@ -503,12 +504,16 @@ export function SelectStep({
                   data-slot="card-picker-game-static"
                   className="flex h-11 items-center gap-2 rounded-lg border border-hair bg-muted/45 px-2.5 text-sm sm:h-10"
                 >
-                  <span className="flex size-6 shrink-0 items-center justify-center rounded-sm bg-muted">
-                    <Gamepad2
-                      aria-hidden
-                      className="size-3.5 text-muted-foreground/60"
-                    />
-                  </span>
+                  <GameCrest
+                    game={activeGameOption ? {
+                      slug: activeGameOption.value,
+                      nameEn: activeGameOption.label,
+                      logoUrl: activeGameOption.logoUrl,
+                    } : null}
+                    size={24}
+                    variant="selector"
+                    decorative
+                  />
                   <span className="min-w-0 flex-1 truncate text-foreground">
                     {activeGameOption?.label}
                   </span>
@@ -528,12 +533,16 @@ export function SelectStep({
                       data-slot="select-value"
                       className="flex min-w-0 flex-1 items-center gap-2 text-left"
                     >
-                      <span className="flex size-6 shrink-0 items-center justify-center rounded-sm bg-muted">
-                        <Gamepad2
-                          aria-hidden
-                          className="size-3.5 text-muted-foreground/60"
-                        />
-                      </span>
+                      <GameCrest
+                        game={activeGameOption ? {
+                          slug: activeGameOption.value,
+                          nameEn: activeGameOption.label,
+                          logoUrl: activeGameOption.logoUrl,
+                        } : null}
+                        size={24}
+                        variant="selector"
+                        decorative
+                      />
                       <span className="truncate text-foreground">
                         {activeGameOption?.label}
                       </span>
@@ -546,9 +555,15 @@ export function SelectStep({
                   >
                     {gameOptions.map((game) => (
                       <SelectItem key={game.value} value={game.value}>
-                        <Gamepad2
-                          aria-hidden
-                          className="size-3.5 text-muted-foreground/60"
+                        <GameCrest
+                          game={{
+                            slug: game.value,
+                            nameEn: game.label,
+                            logoUrl: game.logoUrl,
+                          }}
+                          size={24}
+                          variant="selector"
+                          decorative
                         />
                         <span>{game.label}</span>
                       </SelectItem>

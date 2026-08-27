@@ -9,9 +9,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { GameCrest } from "@/components/shared/game-crest";
 import {
   getAllGameConfigs,
-  getGameAccentTint,
   hasMultipleActiveGames,
   isGameLaunchReady,
   type GameConfig,
@@ -61,16 +61,44 @@ function persistGameCookie(slug: string) {
  * coming-soon entries, while only launch-ready games may change the active
  * catalog, cookie or URL. In-page MINE filters remain data-driven and separate.
  */
-export function GameSwitcher({ className }: { className?: string }) {
+type GameSwitcherProps = {
+  className?: string;
+  /** Route-derived catalog scope when the switcher is embedded in global chrome. */
+  game?: string;
+  /** Removes the standalone pill surface when embedded in a compound control. */
+  appearance?: "standalone" | "context";
+  /** Keeps the 44px pill but shows only its crest below 360px. */
+  compactOnNarrow?: boolean;
+};
+
+export function GameSwitcher({
+  className,
+  game,
+  appearance = "standalone",
+  compactOnNarrow = false,
+}: GameSwitcherProps) {
   if (GAMES.length === 0) return null;
-  return <ActiveGameSwitcher className={className} />;
+  return (
+    <ActiveGameSwitcher
+      className={className}
+      game={game}
+      appearance={appearance}
+      compactOnNarrow={compactOnNarrow}
+    />
+  );
 }
 
-function ActiveGameSwitcher({ className }: { className?: string }) {
+function ActiveGameSwitcher({
+  className,
+  game,
+  appearance,
+  compactOnNarrow,
+}: Required<Pick<GameSwitcherProps, "appearance" | "compactOnNarrow">> &
+  Pick<GameSwitcherProps, "className" | "game">) {
   const lang = useUIStore((s) => s.language);
-  const currentGame = useUIStore((s) => s.currentGame);
+  const storedGame = useUIStore((s) => s.currentGame);
   const setCurrentGame = useUIStore((s) => s.setCurrentGame);
-  const { active, options } = getGameSwitcherState(currentGame);
+  const { active, options } = getGameSwitcherState(game ?? storedGame);
   const router = useRouter();
   const pathname = usePathname();
   const dismissedHint = useUIStore((s) => s.dismissedSwitcherHint);
@@ -79,7 +107,8 @@ function ActiveGameSwitcher({ className }: { className?: string }) {
   // are genuinely live, surface a one-time hint toward the in-page filter.
   const seg0 = pathname.split("/").filter(Boolean)[0] ?? "";
   const isMineRoute = GAME_AGNOSTIC_FEATURES.has(seg0);
-  const activeTint = getGameAccentTint(active!.slug);
+  const activeLabel = active!.nameEn ?? active!.name;
+  const activeShortLabel = active!.shortName ?? active!.slug.toUpperCase();
 
   // Switch game = stay on the same feature, swap the `/[game]` segment. Persist
   // the cookie so middleware redirects un-prefixed URLs to the chosen game too.
@@ -112,12 +141,19 @@ function ActiveGameSwitcher({ className }: { className?: string }) {
     return (
       <span
         className={cn(
-          "surface-2 hairline inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-foreground lg:min-h-0",
+          "inline-flex min-h-11 shrink-0 items-center text-xs font-semibold text-foreground",
+          compactOnNarrow
+            ? "size-11 justify-center gap-0 px-0 min-[360px]:w-auto min-[360px]:gap-1.5 min-[360px]:px-3 min-[360px]:py-1.5"
+            : "gap-1.5 px-3 py-1.5",
+          appearance === "standalone" &&
+            "surface-2 hairline rounded-full lg:min-h-0",
           className,
         )}
       >
-        <span className="size-2 rounded-full" style={{ background: activeTint }} aria-hidden />
-        {active!.shortName ?? active!.slug.toUpperCase()}
+        <GameCrest game={active!} size={20} variant="selector" decorative />
+        <span className={cn(compactOnNarrow && "hidden min-[360px]:inline")}>
+          {activeShortLabel}
+        </span>
       </span>
     );
   }
@@ -125,17 +161,31 @@ function ActiveGameSwitcher({ className }: { className?: string }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label={t(lang, "chooseGame")}
+        aria-label={`${t(lang, "chooseGame")}: ${activeLabel}`}
         className={cn(
-          "ease-chrome surface-2 ring-inset inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-foreground ring-1 ring-hair focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 lg:min-h-0",
+          "ease-chrome ring-inset inline-flex min-h-11 shrink-0 items-center text-xs font-semibold text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+          compactOnNarrow
+            ? "size-11 justify-center gap-0 px-0 min-[360px]:w-auto min-[360px]:gap-1.5 min-[360px]:px-3 min-[360px]:py-1.5"
+            : "gap-1.5 px-3 py-1.5",
+          appearance === "standalone"
+            ? "surface-2 rounded-full ring-1 ring-hair lg:min-h-0"
+            : "rounded-lg transition-colors hover:bg-muted/70",
           className,
         )}
       >
-        <span className="size-2 rounded-full" style={{ background: activeTint }} aria-hidden />
-        {active!.shortName ?? active!.slug.toUpperCase()}
-        <ChevronDown className="size-3 text-muted-foreground" aria-hidden />
+        <GameCrest game={active!} size={20} variant="selector" decorative />
+        <span className={cn(compactOnNarrow && "hidden min-[360px]:inline")}>
+          {activeShortLabel}
+        </span>
+        <ChevronDown
+          className={cn(
+            "size-3 text-muted-foreground",
+            compactOnNarrow && "hidden min-[360px]:block",
+          )}
+          aria-hidden
+        />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" sideOffset={8} className="min-w-[220px]">
+      <DropdownMenuContent align="start" sideOffset={8} className="min-w-[248px]">
         {/* Navigate-framed eyebrow — this control browses the catalog; it never
             filters the MINE lists (that's the in-page chips). */}
         <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/70">
@@ -148,14 +198,8 @@ function ActiveGameSwitcher({ className }: { className?: string }) {
               onClick={() => (launchReady ? switchGame(game.slug) : goComingSoon(game.slug))}
               className={cn("flex items-center gap-2", isActive && "font-semibold text-foreground")}
             >
-              <span
-                aria-hidden
-                className="size-2 shrink-0 rounded-full"
-                style={{
-                  background: `color-mix(in srgb, ${getGameAccentTint(game.slug)} 70%, transparent)`,
-                }}
-              />
-              <span className="flex-1">{game.nameEn}</span>
+              <GameCrest game={game} size={22} variant="selector" decorative />
+              <span className="flex-1 whitespace-nowrap">{game.nameEn}</span>
               {isActive && <Check className="size-4 text-primary" aria-hidden />}
               {!launchReady && (
                 <span className="text-micro text-muted-foreground">{t(lang, "comingSoon")}</span>

@@ -2,46 +2,50 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { Moon, Search, Sun } from "lucide-react";
+import { LogIn, Moon, Search, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { NotificationBell } from "@/components/layout/notification-bell";
+import { HeaderCatalogControl } from "@/components/layout/header-catalog-control";
 import { Button } from "@/components/ui/button";
-import { GameSwitcher } from "@/components/layout/game-switcher";
+import type { SetPickerItem } from "@/components/shared/set-picker";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { useScrolled } from "@/hooks/use-scrolled";
 import { useUIStore } from "@/stores/ui-store";
-import { stripGamePrefix } from "@/lib/game/constants";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 /**
- * Phone chrome: identity (logo + game) on the left, account/appearance on the
- * right.
+ * Phone chrome: brand, the global Game → Set catalog control, and route-aware
+ * utilities share one 56px top row. Every utility remains reachable; only
+ * labels and separators yield as space tightens. The bear is the stable,
+ * compact home affordance at every phone width.
  *
- * Search is route-aware (เบส): the home hero owns search there, so the icon
- * would only duplicate it — but it is the ONLY phone trigger for
- * `CommandSearchModal` everywhere else (the desktop trigger lives in the
- * md-only ticker), so it renders on every other route.
+ * Search remains a global phone action on every route, including Home. It
+ * opens the shared `CommandSearchModal`; the Home hero search stays as the
+ * larger in-content entry point.
  */
 export function HeaderMobile({
   isAuthenticated,
   authLoaded = true,
+  game,
+  sets,
+  setsLoading,
+  setsError,
+  onSetsRetry,
 }: {
   isAuthenticated: boolean;
   /** Keeps the guest CTA from flashing before the session resolves. */
   authLoaded?: boolean;
+  game: string;
+  sets: readonly SetPickerItem[];
+  setsLoading: boolean;
+  setsError: boolean;
+  onSetsRetry: () => void;
 }) {
   const language = useUIStore((s) => s.language);
   const setSearchOpen = useUIStore((s) => s.setSearchOpen);
-  const pathname = usePathname() ?? "/";
-  const isHome = stripGamePrefix(pathname) === "/";
 
-  // Transparent at the top (the page's ambient glow flows through uninterrupted),
-  // frosted + hairline once scrolled — same collapsing pattern as the desktop
-  // header (header.tsx) and the /proto/ios showcase's nav bar.
-  //
   // Same collapsing chrome as the desktop header — starts false (hydration- and
   // scroll-restoration-safe), corrects on mount. CHROME-11: one shared hook.
   const scrolled = useScrolled();
@@ -54,40 +58,50 @@ export function HeaderMobile({
 
   return (
     <div
+      data-mobile-header
       className={cn(
         "ease-chrome sticky top-0 z-chrome transition-colors md:hidden",
         scrolled ? "hairline-b bg-background" : "bg-transparent",
       )}
     >
-      <div className="flex h-14 items-center gap-0.5 px-4">
-        <Link href="/" className="flex min-h-11 shrink-0 items-center gap-2">
+      <div
+        data-mobile-header-row="primary"
+        className="flex h-14 min-w-0 items-center px-2 sm:px-4"
+      >
+        <Link
+          href="/"
+          aria-label="Meecard"
+          className="mr-1 flex size-11 shrink-0 items-center justify-center"
+        >
           <Image
             src="/meecard.png"
-            alt="Meecard"
+            alt=""
             width={754}
             height={694}
-            className="h-auto shrink-0 select-none"
-            style={{ width: 26, height: "auto" }}
+            className="h-auto w-7 shrink-0 select-none min-[360px]:w-8"
           />
-          <span className="text-base font-bold tracking-tight">Meecard</span>
         </Link>
 
-        <GameSwitcher className="ml-1.5" />
+        <HeaderCatalogControl
+          game={game}
+          sets={sets}
+          loading={setsLoading}
+          error={setsError}
+          onRetry={onSetsRetry}
+          presentation="mobile"
+          className="min-w-0 flex-1"
+        />
 
-        <div className="flex-1" />
-
-        {!isHome && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            aria-label={t(language, "search")}
-            onClick={() => setSearchOpen(true)}
-            className="text-muted-foreground"
-          >
-            <Search className="size-[18px]" />
-          </Button>
-        )}
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          aria-label={t(language, "search")}
+          onClick={() => setSearchOpen(true)}
+          className="min-h-11 min-w-11 text-muted-foreground"
+        >
+          <Search className="size-[18px]" />
+        </Button>
 
         {isAuthenticated && <NotificationBell />}
 
@@ -97,7 +111,7 @@ export function HeaderMobile({
           size="icon-sm"
           aria-label={t(language, isDark ? "lightMode" : "darkMode")}
           onClick={() => setTheme(isDark ? "light" : "dark")}
-          className="text-muted-foreground"
+          className="min-h-11 min-w-11 text-muted-foreground"
         >
           {isDark ? (
             <Sun className="size-[18px]" />
@@ -107,8 +121,14 @@ export function HeaderMobile({
         </Button>
 
         {authLoaded && !isAuthenticated && (
-          <Button size="sm" className="ml-1" render={<Link href="/login" />}>
-            {t(language, "login")}
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t(language, "login")}
+            className="min-h-11 min-w-11 text-muted-foreground"
+            render={<Link href="/login" />}
+          >
+            <LogIn className="size-[18px]" />
           </Button>
         )}
       </div>

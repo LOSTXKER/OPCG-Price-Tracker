@@ -18,8 +18,8 @@ export type TabDescriptor = {
  *
  *   - Sticks to the top of the viewport while scrolling so visitors never
  *     lose the navigation when browsing long listing/collection grids.
- *     Offsets account for both the mobile (h-14 = 56px) and desktop (~86px)
- *     site headers so tabs land flush under whichever header is showing.
+ *     The shared chrome token keeps tabs flush below the 56px mobile header
+ *     and the 100px desktop ticker + navigation.
  *   - Uses the canonical tabs primitive for the WAI-ARIA relationship,
  *     roving focus, and ←/→/Home/End keyboard navigation.
  *   - Active tab uses one clear underline instead of stacked indicators.
