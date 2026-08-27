@@ -54,22 +54,12 @@ export async function getHomeData() {
 
     const [
       totalCards,
-      totalValueAgg,
-      latestExchangeRate,
       initialTableCards,
       initialTableTotal,
       sets,
       rarityRows,
     ] = await Promise.all([
       prisma.card.count(),
-      prisma.card.aggregate({
-        _sum: { latestPriceJpy: true },
-        where: { latestPriceJpy: { gt: 0 } },
-      }),
-      prisma.exchangeRate.findFirst({
-        orderBy: { fetchedAt: "desc" },
-        select: { rate: true },
-      }),
       prisma.card.findMany({
         orderBy: { latestPriceJpy: { sort: "desc", nulls: "last" } },
         take: TABLE_PAGE_SIZE,
@@ -115,10 +105,6 @@ export async function getHomeData() {
       topLosers,
       highestPriced,
       totalCards,
-      totalValue: totalValueAgg._sum.latestPriceJpy ?? 0,
-      // Preserve the legacy header/API fallback so this layout-only move does
-      // not change the value visitors see while the rate table is empty.
-      exchangeRate: latestExchangeRate?.rate ?? 0.296,
       initialTableCards,
       initialTableTotal,
       initialTableTotalPages: Math.ceil(initialTableTotal / TABLE_PAGE_SIZE),

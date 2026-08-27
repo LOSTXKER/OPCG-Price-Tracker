@@ -135,11 +135,44 @@ describe("home search dedupe", () => {
     expect(page).not.toContain("<HeroSearchBar")
   })
 
-  it("keeps market status to one desktop track and reserves the fourth xl track for ads", () => {
+  // Owner call 2026-08-28: the sitewide figures belong to the header ticker
+  // ALONE. The home highlight row went back to its three editorial blocks
+  // (มูลค่าสูงสุด · ขึ้น · ลง) and gained a fourth xl track for advertising.
+  it("keeps the home highlights editorial and gives the fourth xl track to ads", () => {
     const page = source("src/app/page.tsx")
 
     expect(page).toContain("lg:grid-cols-3 xl:grid-cols-4")
     expect(page).toContain('className="sm:col-span-2 lg:col-span-1"')
     expect(page).toContain('data-slot="home-highlight-grid"')
+    expect(page).toContain("<HomeFeaturedCard")
+
+    // Scope the ad checks to the ad cell. `zone="home-highlight-rail"` on its
+    // own would also be satisfied by the string sitting anywhere in the file,
+    // and the cell without its slot is an empty column nobody notices.
+    const adStart = page.indexOf('data-slot="home-highlight-ad"')
+    expect(adStart).toBeGreaterThan(-1)
+    const adCell = page.slice(adStart, page.indexOf("</div>", adStart))
+    expect(adCell).toContain("<AdInventorySlot")
+    expect(adCell).toContain('zone="home-highlight-rail"')
+
+    // The metrics panel must not come back here while the ticker carries them —
+    // that duplication is exactly what this round removed.
+    expect(page).not.toContain("<HomeMarketStatus")
+    expect(page).not.toContain("totalValue={")
+    expect(page).not.toContain("exchangeRate={")
+  })
+
+  it("stops paying for home aggregates nothing renders", () => {
+    const homeData = source("src/lib/data/home.ts")
+
+    // The ticker fetches its own figures client-side, so the home page query
+    // must not also SUM every card price on each render.
+    //
+    // Assert on the QUERIES, not on variable names: an adversarial check proved
+    // that `not.toContain("totalValueAgg")` passes the moment someone renames
+    // the binding, while the expensive aggregate keeps running on every render.
+    expect(homeData).not.toContain("prisma.card.aggregate")
+    expect(homeData).not.toContain("prisma.exchangeRate")
+    expect(homeData).not.toContain("_sum")
   })
 })

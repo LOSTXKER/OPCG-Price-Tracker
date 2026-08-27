@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 
 import { EmptyState } from "@/components/shared/empty-state";
 import {
-  HomeMarketStatus,
+  HomeFeaturedCard,
   HomeMiniTable,
 } from "@/components/home/home-client-sections";
+import { AdInventorySlot } from "@/components/ads/ad-inventory-slot";
 import { HomeMarketIntro } from "@/components/home/home-market-intro";
 import { HomeMarketOverview } from "@/components/home/home-market-overview";
 import { HomeSearchHero } from "@/components/home/home-search-hero";
@@ -56,8 +57,6 @@ export default async function HomePage() {
     topLosers,
     highestPriced,
     totalCards,
-    totalValue,
-    exchangeRate,
     initialTableCards,
     initialTableTotal,
     initialTableTotalPages,
@@ -159,25 +158,34 @@ export default async function HomePage() {
       {/* Search now lives in the global navbar; keep one compact, visible H1. */}
       <HomeSearchHero />
 
-      {/* Market status: each highlight owns one desktop track. At xl the fourth
-          track stays available for the planned ad inventory after losers.
+      {/* Highlights: มูลค่าสูงสุด · ราคาขึ้นมากสุด · ราคาลงมากสุด. Minimal — no
+          dividers, no borders, no boxes; columns separated by whitespace alone so
+          the page reads calm and editorial rather than gridded. The sitewide
+          figures (การ์ดทั้งหมด / มูลค่ารวม / JPY-THB) live in the header ticker,
+          not here — owner call 2026-08-28, after they briefly appeared in both.
+          A fourth track opens at `xl` for advertising; below that the three
+          editorial blocks own the row and the ad simply does not render.
           HIDDEN ON PHONES (เบส): stacked, the three blocks pushed the market list
           a full screen down. From `sm` up they sit side by side and cost nothing,
           so they stay. Kept in the DOM (display:none) — no SEO loss. */}
-      <div
-        className="mt-3 hidden gap-x-6 gap-y-6 sm:mt-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+      <section
+        className="mt-3 hidden gap-x-8 gap-y-6 sm:mt-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         data-slot="home-highlight-grid"
       >
-        <HomeMarketStatus
-          card={featured}
-          totalCards={totalCards}
-          totalValue={totalValue}
-          exchangeRate={exchangeRate}
-          className="sm:col-span-2 lg:col-span-1"
-        />
+        {featured && (
+          <div className="sm:col-span-2 lg:col-span-1">
+            <HomeFeaturedCard card={featured} />
+          </div>
+        )}
         <HomeMiniTable cards={gainers} type="gainers" />
         <HomeMiniTable cards={losers} type="losers" />
-      </div>
+        <div
+          className="hidden xl:flex xl:items-start xl:justify-center"
+          data-slot="home-highlight-ad"
+        >
+          <AdInventorySlot zone="home-highlight-rail" />
+        </div>
+      </section>
 
       {/* The market — core browse tool. Generous air above so it reads as its
           own document section, the way card-detail separates its blocks. */}
