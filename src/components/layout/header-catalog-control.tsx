@@ -476,7 +476,7 @@ export function HeaderCatalogControl({
         "surface-2 hairline ease-chrome flex min-w-0 items-center gap-1.5 rounded-full text-left text-label text-foreground transition-colors hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
         presentation === "mobile"
           ? "h-11 min-w-11 flex-1 px-2 min-[480px]:max-w-56"
-          : "h-11 w-40 px-2.5 lg:h-8 lg:w-52",
+          : "h-11 w-40 px-2.5 lg:h-8 lg:w-48",
       )}
     />
   )

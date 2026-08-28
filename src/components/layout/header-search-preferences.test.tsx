@@ -12,21 +12,25 @@ function occurrences(value: string, needle: string): number {
 }
 
 /**
- * Owner decision 2026-08-28 (evening): the desktop chrome is BACK to the
- * shipped two-row layout after three redesign rounds were tried and rejected.
+ * Owner decisions 2026-08-28 (evening), in order:
+ *  1. the desktop chrome went BACK to the shipped two-row layout after three
+ *     redesign rounds were tried and rejected;
+ *  2. search and the account cluster SWAPPED rows;
+ *  3. then, following CoinGecko / CoinMarketCap: the brand moved up into the
+ *     strip, language + currency + theme moved OFF the bar and into the account
+ *     menu (with a gear for guests), and search became a real field wide enough
+ *     to be the page's only way in — the home hero no longer has an input.
  *
- *   Row 1 (ticker, 44px): Game → Set · market figures · search · upgrade ·
- *                         language · currency · theme
- *   Row 2 (header, 56px): wordmark · nav hubs · portfolio/watchlist/honey ·
- *                         account menu
+ *   Row 1 (strip, 44px): brand · Game → Set · market figures · upgrade ·
+ *                        chat/notifications/account-menu (or guest gear)
+ *   Row 2 (header, 56px): nav hubs · SEARCH FIELD · portfolio/watchlist/honey
  *
- * These tests lock that restored shape so a later refactor cannot quietly
- * reintroduce a rejected variant. What did NOT come back with it: the phone
- * header's theme toggle (lives on /more since 2026-08-27) and the home
- * market-status panel (a separate, still-approved surface).
+ * These tests lock that shape so a later refactor cannot quietly reintroduce a
+ * rejected variant. What did NOT move: the phone header keeps its own search
+ * trigger and its /more preferences.
  */
-describe("restored two-row desktop chrome", () => {
-  it("keeps the ticker as row 1 with catalog, figures, search and preferences", () => {
+describe("two-row desktop chrome, CoinGecko-style", () => {
+  it("keeps brand, catalog, figures and account in the strip — and preferences out of it", () => {
     const header = source("src/components/layout/header.tsx")
     const ticker = source("src/components/layout/header-market-ticker.tsx")
 
@@ -35,33 +39,82 @@ describe("restored two-row desktop chrome", () => {
       header.indexOf("<header"),
     )
 
-    // The ticker owns the catalog scope, the market figures, the search entry
-    // and the three display preferences — one strip, one row of chrome.
+    expect(ticker).toContain('aria-label="Meecard"')
     expect(ticker).toContain("<HeaderCatalogControl")
     expect(ticker).toContain('presentation="desktop"')
-    expect(ticker).toContain("onSearchOpen")
     for (const figure of ["totalCards", "totalValue", "exchangeRate", "JPY/THB"]) {
       expect(ticker).toContain(figure)
     }
-    for (const preference of ["LANG_OPTIONS", "CURRENCY_OPTIONS", "useTheme"]) {
-      expect(ticker).toContain(preference)
-    }
     expect(ticker).toContain('href={`/${game}/market-overview`}')
+
+    // Search and the three display preferences both left this strip.
+    expect(ticker).not.toContain("onSearchOpen")
+    expect(ticker).not.toContain("<Search")
+    for (const preference of ["LANG_OPTIONS", "CURRENCY_OPTIONS", "useTheme"]) {
+      expect(ticker).not.toContain(preference)
+    }
+    expect(ticker).toContain("children")
   })
 
-  it("keeps the account menu in row 2 and never duplicates it", () => {
+  it("puts the account menu in row 1 and the search field in row 2, never the reverse", () => {
     const header = source("src/components/layout/header.tsx")
     const primaryRow = header.indexOf("<header")
     const userMenu = header.indexOf("<HeaderUserMenu")
+    const searchTrigger = header.indexOf("<CommandSearchTrigger")
 
     expect(primaryRow).toBeGreaterThan(-1)
-    expect(userMenu).toBeGreaterThan(primaryRow)
     expect(occurrences(header, "<HeaderUserMenu")).toBe(1)
-    // The rejected rounds moved these into row 1 / a tab strip. They belong to
-    // row 2's right-hand cluster.
+    expect(occurrences(header, "<CommandSearchTrigger")).toBe(1)
+    // Account renders inside the ticker element, which opens before <header>.
+    expect(userMenu).toBeLessThan(primaryRow)
+    // Search renders inside <header>, after it opens.
+    expect(searchTrigger).toBeGreaterThan(primaryRow)
+    // The brand left row 2 so the search field could have that width.
+    expect(header).not.toContain('src="/meecard.png"')
+    // The saved-state links stay in row 2 beside search.
     expect(header).toContain('href="/portfolio"')
     expect(header).toContain('href="/watchlist"')
     expect(header).toContain('href="/honey"')
+  })
+
+  it("reaches language, currency and theme from both the account menu and the guest gear", () => {
+    const header = source("src/components/layout/header.tsx")
+    const userMenu = source("src/components/layout/header-user-menu.tsx")
+    const preferences = source("src/components/layout/header-preferences-menu.tsx")
+
+    // Signed in: inside the account menu.
+    expect(userMenu).toContain("<HeaderPreferencesMenuItems")
+    // Signed out: the gear, in the guest branch only, exactly once.
+    expect(header).toContain("<HeaderGuestPreferencesMenu />")
+    expect(occurrences(header, "<HeaderGuestPreferencesMenu />")).toBe(1)
+    const guestBranchStart = header.indexOf(") : authLoaded ? (")
+    expect(guestBranchStart).toBeGreaterThan(-1)
+    expect(
+      header.slice(guestBranchStart, header.indexOf(") : null}", guestBranchStart)),
+    ).toContain("<HeaderGuestPreferencesMenu />")
+
+    // All three settings live in the one shared component.
+    expect(preferences).toContain("setLanguage")
+    expect(preferences).toContain("setCurrency")
+    expect(preferences).toContain("setTheme")
+    // Theme is a visible segmented switch, not a third nested submenu.
+    expect(preferences).toContain("<SegmentedControl")
+    // The trigger has to look like a menu, not just an avatar.
+    expect(userMenu).toContain("<Menu ")
+  })
+
+  it("paints search as a field, since the home hero no longer has an input", () => {
+    const search = source("src/components/shared/command-search.tsx")
+    const hero = source("src/components/home/home-search-hero.tsx")
+
+    // Full-width bordered box with placeholder text and the "/" hint, not an
+    // icon-only button a visitor has to recognise.
+    expect(search).toContain("md:w-full")
+    expect(search).toContain('t(lang, "searchCardsDots")')
+    expect(search).toContain("md:inline")
+    // The hero must not grow an input back while this is the only entry point.
+    expect(hero).not.toContain("<input")
+    expect(hero).not.toContain("HeroSearchBar")
   })
 
   it("fetches the market figures once, in the header data hook", () => {
@@ -131,7 +184,10 @@ describe("home search dedupe", () => {
   it("mounts the compact home intro once and never remounts HeroSearchBar", () => {
     const page = source("src/app/page.tsx")
 
-    expect(occurrences(page, "<HomeSearchHero />")).toBe(1)
+    // No trailing "/>" — the hero takes props now (counts + the per-language
+    // updated-date map); the import line has no "<", so this still counts
+    // only JSX mounts.
+    expect(occurrences(page, "<HomeSearchHero")).toBe(1)
     expect(page).not.toContain("<HeroSearchBar")
   })
 

@@ -70,15 +70,18 @@ export default async function HomePage() {
   // Google was finding an internal link to /marketplace from the pillar page.
   const marketplaceEnabled = await isMarketplaceEnabled();
 
-  // Formatted on the server so the market intro interpolates one stable date
-  // string (React 19 forbids Date work during a client render — same
-  // constraint as /opcg/most-expensive's `updatedLabel`).
-  const updatedLabel = lastUpdated
-    ? new Date(lastUpdated).toLocaleDateString("th-TH", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })
+  // Formatted on the server, once per language, so the client hero only picks
+  // a stable pre-built string (React 19 forbids Date work during a client
+  // render, and server/client timezones could disagree on the calendar day).
+  // th-TH renders the Buddhist year Thai readers expect; EN/JP now get their
+  // own calendars instead of inheriting the Thai one.
+  const dateOpts = { day: "numeric", month: "long", year: "numeric" } as const;
+  const updatedLabels = lastUpdated
+    ? {
+        TH: new Date(lastUpdated).toLocaleDateString("th-TH", dateOpts),
+        EN: new Date(lastUpdated).toLocaleDateString("en-GB", dateOpts),
+        JP: new Date(lastUpdated).toLocaleDateString("ja-JP", dateOpts),
+      }
     : null;
 
   if (totalCards === 0) {
@@ -155,8 +158,14 @@ export default async function HomePage() {
         )}
       />
 
-      {/* Search now lives in the global navbar; keep one compact, visible H1. */}
-      <HomeSearchHero />
+      {/* Search now lives in the global navbar; keep one compact, visible H1
+          plus ONE lead sentence (coverage + grades + freshness date — owner
+          ruling 2026-08-28). */}
+      <HomeSearchHero
+        totalCards={totalCards}
+        totalSets={sets.length}
+        updatedLabels={updatedLabels}
+      />
 
       {/* Highlights: มูลค่าสูงสุด · ราคาขึ้นมากสุด · ราคาลงมากสุด. Minimal — no
           dividers, no borders, no boxes; columns separated by whitespace alone so
@@ -179,10 +188,10 @@ export default async function HomePage() {
         )}
         <HomeMiniTable cards={gainers} type="gainers" />
         <HomeMiniTable cards={losers} type="losers" />
-        <div
-          className="hidden xl:flex xl:items-start xl:justify-center"
-          data-slot="home-highlight-ad"
-        >
+        {/* Stretches with the row instead of pinning to its top: the slot's own
+            frame is now "fill the column", so the ad ends where the editorial
+            columns beside it end. */}
+        <div className="hidden xl:block" data-slot="home-highlight-ad">
           <AdInventorySlot zone="home-highlight-rail" />
         </div>
       </section>
@@ -197,13 +206,9 @@ export default async function HomePage() {
           filterDefinitions={filterDefinitions}
           sets={setOptions}
         >
-          {/* The section's H2 + context prose — numbers alone read as a thin
-              page, and the table had no heading at all (SEO plan §3.1). */}
-          <HomeMarketIntro
-            totalCards={totalCards}
-            totalSets={sets.length}
-            updatedLabel={updatedLabel}
-          />
+          {/* The section's slim H2 — the keyword phrase and the freshness
+              date moved up into the hero lead (owner ruling 2026-08-28). */}
+          <HomeMarketIntro />
         </HomeMarketOverview>
       </div>
 

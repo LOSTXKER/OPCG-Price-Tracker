@@ -36,8 +36,6 @@ export const jp = {
   adDismissLabel: "このセッション中は広告を閉じる",
   adSponsoredLabel: "スポンサー",
   adOpenNewWindow: "新しいウィンドウで開きます",
-  heroSearchTitle: "トレカ、全グレードの相場",
-  heroTeaser: "トレカのすべてを、ひとつに",
   searchShortcuts: "ショートカット",
   trendingShort: "急上昇",
   photoSearchTitle: "画像で検索",
@@ -1893,7 +1891,7 @@ export const jp = {
   safeBuyTipsLink: "安全な購入のコツ",
 
   // Footer
-  footerTagline: "ワンピースカードゲームの毎日価格、ポートフォリオ、ウォッチリスト、コミュニティマーケットプレイスをひとつに。",
+  footerTagline: "ワンピースカードゲームの価格、ポートフォリオ、ウォッチリスト、コミュニティマーケットプレイスをひとつに。",
   footerExplore: "探す",
   footerCommunity: "コミュニティ",
   footerSources: "価格データ：日本市場 · カード画像 © BANDAI",
@@ -2329,8 +2327,8 @@ export const jp = {
   // --- home SEO content ---
   seoFeaturesHeading: "Meecardはワンピースカードの価格追跡をどう手伝う?",
   seoFeaturesSub: "OPCGコレクター・トレーダーのための充実したツール",
-  seoFeatPriceTitle: "ワンピースカード価格を毎日更新",
-  seoFeatPriceDesc: "日本市場のOPCGカード価格を毎日更新して追跡。価格推移チャートで相場の動きが分かります。",
+  seoFeatPriceTitle: "ワンピースカードの参考相場",
+  seoFeatPriceDesc: "日本市場のOPCGカード価格を追跡。価格推移チャートで相場の動きが分かります。",
   seoFeatPortfolioTitle: "カードのポートフォリオを管理",
   seoFeatPortfolioDesc: "所有するワンピースカードを追加すると、最新価格から自動計算した総資産額を確認できます。チャートと統計付き。",
   seoFeatDropTitle: "ボックスの封入率を計算",
@@ -2359,7 +2357,7 @@ export const jp = {
   seoPriceP3mid: "、または",
   seoPriceP3Link2: "OPCG初心者ガイド",
   seoFaq1Q: "Meecardとは?",
-  seoFaq1A: "Meecardは毎日更新されるワンピースカードゲーム(OPCG)の価格追跡サイトです。ポートフォリオ、封入率計算、価格比較を一か所にまとめています。",
+  seoFaq1A: "Meecardはワンピースカードゲーム(OPCG)の価格追跡サイトです。ポートフォリオ、封入率計算、価格比較を一か所にまとめています。",
   seoFaq3Q: "ワンピースカードの価格更新頻度は?",
   seoFaq3A: "価格は少なくとも1日1回更新され、価格推移チャートでカードが上昇か下落かが分かります。",
   seoFaq4Q: "Meecardのポートフォリオは何のため?",

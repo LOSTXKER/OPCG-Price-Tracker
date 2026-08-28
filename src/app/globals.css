@@ -495,17 +495,6 @@
 .pl-safe { padding-left: env(safe-area-inset-left); }
 .pr-safe { padding-right: env(safe-area-inset-right); }
 
-/* blinking caret for the typewriter headline (its own solid colour, a small honey
-   accent beside the neutral headline) */
-@keyframes tw-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-.tw-caret {
-  margin-left: 0.06em;
-  font-weight: 500;
-  color: var(--primary);
-  animation: tw-blink 1.05s steps(1, end) infinite;
-}
-@media (prefers-reduced-motion: reduce) { .tw-caret { animation: none; } }
-
 /* Opaque elevation — reserved for sticky bars / sheets (not inline cards). */
 .frost {
   background: var(--background);

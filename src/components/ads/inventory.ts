@@ -28,6 +28,12 @@ export type AdInventoryDefinition = {
   route: AdRoute
   mobileSize: string
   desktopSize: string
+  /**
+   * Overrides the format's fixed frame for one zone. Use it where the slot has
+   * to obey a layout it sits inside — a grid column that other content already
+   * sizes — rather than impose its own box on that layout.
+   */
+  frameClass?: string
 }
 
 /**
@@ -61,8 +67,14 @@ export const AD_INVENTORY: Record<AdZone, AdInventoryDefinition> = {
     strategy: "GOOGLE_ONLY",
     format: "RECTANGLE",
     route: "HOME",
-    mobileSize: "300 × 250",
-    desktopSize: "336 × 280",
+    // Owner call 2026-08-28: this slot matches the three editorial columns
+    // beside it instead of setting the row's height. The RECTANGLE frame is
+    // 280px tall while the highlight columns need only ~166px, so the fixed box
+    // was inflating the whole row and pushing the market table down — the ad
+    // looked bigger than everything around it because it was.
+    frameClass: "h-full w-full",
+    mobileSize: "ไม่แสดงบนมือถือ",
+    desktopSize: "เต็มคอลัมน์ไฮไลต์",
   },
   "home-results-after-8": {
     zone: "home-results-after-8",

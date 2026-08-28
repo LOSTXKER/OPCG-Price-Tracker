@@ -74,9 +74,11 @@ const NAV_ACTIONS: { href: string; labelKey: TranslationKey; icon: LucideIcon }[
 ]
 
 /**
- * Compact palette trigger. The desktop chrome carries its own inline search
- * button inside the ticker (restored 2026-08-28), so this stays available for
- * any surface that wants the standalone control.
+ * The site's search entry point. Since the home hero dropped its own input
+ * (owner call 2026-08-28, following CoinGecko), this is the ONLY search field a
+ * visitor sees, so it is painted as a field — full-width bordered box, real
+ * placeholder text, visible `/` hint — rather than an icon button they have to
+ * recognise. It shrinks to an icon only on the narrowest chrome width.
  */
 export function CommandSearchTrigger({
   onClick,
@@ -93,19 +95,19 @@ export function CommandSearchTrigger({
       onClick={onClick}
       aria-label={t(lang, "searchCardsDots")}
       className={cn(
-        "surface-3 hairline ease-chrome flex h-11 w-11 shrink-0 items-center justify-center gap-2 rounded-xl px-0 text-label text-foreground transition-[background-color,box-shadow] hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        "md:h-9 md:w-20 md:justify-start md:px-2.5 lg:w-28 lg:px-3 xl:w-44",
+        "hairline ease-chrome group flex h-11 w-11 items-center justify-center gap-2 rounded-xl bg-card px-0 text-left text-label transition-[background-color,box-shadow,border-color] hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        "md:w-full md:justify-start md:px-3 lg:h-9",
         className,
       )}
     >
-      <Search className="size-4 shrink-0 text-foreground/70" aria-hidden />
-      <span className="hidden min-w-0 flex-1 truncate text-left md:inline lg:hidden">
-        {t(lang, "search")}
-      </span>
-      <span className="hidden min-w-0 flex-1 truncate text-left lg:inline">
+      <Search
+        className="size-[18px] shrink-0 text-muted-foreground transition-colors group-hover:text-foreground"
+        aria-hidden
+      />
+      <span className="hidden min-w-0 flex-1 truncate text-body-sm text-muted-foreground md:inline">
         {t(lang, "searchCardsDots")}
       </span>
-      <kbd className="hidden shrink-0 rounded-md bg-background/70 px-1.5 py-0.5 font-mono text-micro text-muted-foreground xl:inline">
+      <kbd className="hairline hidden shrink-0 rounded-md bg-background px-1.5 py-0.5 font-sans text-micro text-muted-foreground md:inline">
         /
       </kbd>
     </button>

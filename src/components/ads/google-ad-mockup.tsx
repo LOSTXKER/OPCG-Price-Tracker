@@ -25,7 +25,10 @@ export function GoogleAdMockup({
       data-ad-zone={definition.zone}
       data-ad-format={definition.format}
       data-ad-size={`${definition.mobileSize}|${definition.desktopSize}`}
-      className={cn(AD_FORMAT_CLASS[definition.format], className)}
+      className={cn(
+        definition.frameClass ?? AD_FORMAT_CLASS[definition.format],
+        className,
+      )}
     >
       <Surface
         variant="outline"

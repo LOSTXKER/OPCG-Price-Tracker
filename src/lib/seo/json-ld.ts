@@ -17,7 +17,7 @@ export function websiteJsonLd() {
     url: BASE_URL,
     inLanguage: "th-TH",
     description:
-      "เช็คราคาการ์ดวันพีช (One Piece Card Game) ทุกใบ ทุกเกรด — ราคากลางอัปเดตทุกวัน พร้อมกราฟราคาย้อนหลังและเครื่องมือจัดพอร์ต",
+      "เช็คราคาการ์ดวันพีช (One Piece Card Game) ทุกใบ ทุกเกรด — ราคากลางอ้างอิงตลาดญี่ปุ่น พร้อมกราฟราคาย้อนหลังและเครื่องมือจัดพอร์ต",
     // No SearchAction: Google retired the sitelinks search box (Nov 2024),
     // so the markup was dead weight.
   };
@@ -53,7 +53,7 @@ export function organizationJsonLd(options?: {
     url: BASE_URL,
     logo: `${BASE_URL}/icon`,
     description:
-      "Meecard — เว็บเช็คราคาการ์ดวันพีช (One Piece Card Game) สำหรับตลาดไทย ราคากลางอัปเดตทุกวันจากตลาดญี่ปุ่น",
+      "Meecard — เว็บเช็คราคาการ์ดวันพีช (One Piece Card Game) สำหรับตลาดไทย ราคากลางอ้างอิงตลาดญี่ปุ่น",
     ...(options?.sameAs?.length ? { sameAs: options.sameAs } : {}),
     ...(options?.contactUrl
       ? {

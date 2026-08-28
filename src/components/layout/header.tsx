@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 
@@ -11,8 +10,12 @@ import {
   Crown,
   Heart,
 } from "lucide-react";
-import { CommandSearchModal } from "@/components/shared/command-search";
+import {
+  CommandSearchModal,
+  CommandSearchTrigger,
+} from "@/components/shared/command-search";
 import { resolveHeaderGame } from "@/components/layout/header-catalog-control";
+import { HeaderGuestPreferencesMenu } from "@/components/layout/header-preferences-menu";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { formatCount } from "@/lib/utils/currency";
@@ -46,7 +49,6 @@ export function Header() {
     userId,
     userName,
     userAvatar,
-    mounted,
     handleLogout,
   } = useHeaderData();
   const headerGame = resolveHeaderGame(pathname, currentGame);
@@ -107,34 +109,61 @@ export function Header() {
         authLoaded={authLoaded}
         authUser={authUser}
         canUpgrade={canUpgrade}
-        mounted={mounted}
-        onSearchOpen={openSearch}
         scrolled={scrolled}
-      />
+      >
+        {authLoaded && authUser ? (
+          <HeaderUserMenu
+            authUser={authUser}
+            authLoaded={authLoaded}
+            userTier={userTier}
+            userName={userName}
+            userAvatar={userAvatar}
+            userId={userId}
+            honeyPoints={honeyPoints}
+            honeyLifetime={honeyLifetime}
+            honeyPendingActions={honeyPendingActions}
+            unreadMessages={unreadMessages}
+            pathname={pathname}
+            marketplaceEnabled={publicConfig.marketplaceEnabled}
+            onLogout={doLogout}
+          />
+        ) : authLoaded ? (
+          <div className="flex items-center gap-2">
+            {/* Language, currency and theme moved into the account menu, which
+                guests do not have — this gear is their door to the same
+                controls, the way CoinGecko keeps a settings icon in its top
+                strip for signed-out visitors. */}
+            <HeaderGuestPreferencesMenu />
+            <Link
+              href="/pricing"
+              className="ease-chrome flex items-center gap-1 rounded-full px-2.5 py-1 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <Crown className="size-3 text-primary" />
+              {t(language, "pricing")}
+            </Link>
+            <Link
+              href="/login"
+              className="ease-chrome rounded-full px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              {t(language, "login")}
+            </Link>
+            <Link
+              href="/register"
+              className="ease-chrome rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              {t(language, "register")}
+            </Link>
+          </div>
+        ) : null}
+      </HeaderMarketTicker>
 
       <header
         style={{
           boxShadow: scrolled ? "inset 0 -1px 0 0 var(--p-hair)" : "none",
         }}
       >
-        <div className="flex h-14 items-center px-4 lg:px-8">
-          <Link
-            href="/"
-            aria-label="Meecard"
-            className="mr-2 flex min-h-11 shrink-0 items-center gap-2 lg:mr-3 lg:min-h-0 lg:gap-2.5"
-          >
-            <Image
-              src="/meecard.png"
-              alt="Meecard"
-              width={754}
-              height={694}
-              className="h-auto shrink-0 select-none"
-              style={{ width: 28, height: "auto" }}
-            />
-            <span className="hidden text-base font-bold tracking-tight lg:inline">Meecard</span>
-          </Link>
-
-          <nav className="flex items-center">
+        <div className="flex h-14 items-center gap-3 px-4 lg:px-8">
+          <nav className="flex shrink-0 items-center">
             {navLinks.map((link) => {
               const active = isNavActive(pathname, link.href, link.owns);
               return (
@@ -143,7 +172,7 @@ export function Header() {
                   href={link.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "ease-chrome inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-2 py-2 text-sm lg:min-h-0 lg:px-3",
+                    "ease-chrome inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-2 py-2 text-sm lg:h-9 lg:min-h-0 lg:py-0 lg:px-3",
                     active
                       ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
                       : "font-medium text-muted-foreground hover:text-foreground"
@@ -155,15 +184,21 @@ export function Header() {
             })}
           </nav>
 
-          <div className="flex-1" />
+          {/* Search is the row's centrepiece, not a trailing icon. The home
+              hero no longer carries an input (CoinGecko's pattern, owner call
+              2026-08-28), so this field is the only way in — it has to read as
+              a search box on sight, at a width nobody can miss. */}
+          <div className="flex min-w-0 flex-1 justify-center">
+            <CommandSearchTrigger onClick={openSearch} className="w-full max-w-md" />
+          </div>
 
-          <div className="flex items-center gap-0.5 lg:gap-1.5">
+          <div className="flex shrink-0 items-center gap-0.5 lg:gap-1.5">
             <Link
               href="/portfolio"
               aria-label={t(language, "portfolioNav")}
               aria-current={isNavActive(pathname, "/portfolio") ? "page" : undefined}
               className={cn(
-                "ease-chrome flex size-11 items-center justify-center rounded-full text-sm font-medium transition-colors xl:size-auto xl:gap-1.5 xl:px-3 xl:py-1.5",
+                "ease-chrome flex size-11 items-center justify-center rounded-full text-sm font-medium transition-colors xl:h-9 xl:w-auto xl:gap-1.5 xl:px-3",
                 isNavActive(pathname, "/portfolio")
                   ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -185,7 +220,7 @@ export function Header() {
               aria-label={t(language, "watchlistNav")}
               aria-current={isNavActive(pathname, "/watchlist") ? "page" : undefined}
               className={cn(
-                "ease-chrome flex size-11 items-center justify-center rounded-full text-sm font-medium transition-colors xl:size-auto xl:gap-1.5 xl:px-3 xl:py-1.5",
+                "ease-chrome flex size-11 items-center justify-center rounded-full text-sm font-medium transition-colors xl:h-9 xl:w-auto xl:gap-1.5 xl:px-3",
                 isNavActive(pathname, "/watchlist")
                   ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -200,7 +235,7 @@ export function Header() {
               aria-label="Honey"
               aria-current={isNavActive(pathname, "/honey") ? "page" : undefined}
               className={cn(
-                "ease-chrome relative flex size-11 items-center justify-center rounded-full text-sm font-medium transition-colors xl:size-auto xl:gap-1.5 xl:px-3 xl:py-1.5",
+                "ease-chrome relative flex size-11 items-center justify-center rounded-full text-sm font-medium transition-colors xl:h-9 xl:w-auto xl:gap-1.5 xl:px-3",
                 isNavActive(pathname, "/honey")
                   ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -221,47 +256,6 @@ export function Header() {
               )}
             </Link>
 
-            <div className="mx-0.5 h-5 w-px bg-border/40 lg:mx-1.5" />
-
-            {authLoaded && authUser ? (
-              <HeaderUserMenu
-                authUser={authUser}
-                authLoaded={authLoaded}
-                userTier={userTier}
-                userName={userName}
-                userAvatar={userAvatar}
-                userId={userId}
-                honeyPoints={honeyPoints}
-                honeyLifetime={honeyLifetime}
-                honeyPendingActions={honeyPendingActions}
-                unreadMessages={unreadMessages}
-                pathname={pathname}
-                marketplaceEnabled={publicConfig.marketplaceEnabled}
-                onLogout={doLogout}
-              />
-            ) : authLoaded ? (
-              <div className="flex items-center gap-2">
-                <Link
-                  href="/pricing"
-                  className="ease-chrome flex items-center gap-1 rounded-full px-2.5 py-1 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <Crown className="size-3 text-primary" />
-                  {t(language, "pricing")}
-                </Link>
-                <Link
-                  href="/login"
-                  className="ease-chrome rounded-full px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  {t(language, "login")}
-                </Link>
-                <Link
-                  href="/register"
-                  className="ease-chrome rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-                >
-                  {t(language, "register")}
-                </Link>
-              </div>
-            ) : null}
           </div>
         </div>
       </header>

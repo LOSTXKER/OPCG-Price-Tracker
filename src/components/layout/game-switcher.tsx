@@ -158,7 +158,7 @@ function ActiveGameSwitcher({
               ? "gap-0 px-2 py-1.5 lg:gap-1.5 lg:px-3"
               : "gap-1.5 px-3 py-1.5",
           appearance === "standalone" &&
-            "surface-2 hairline rounded-full lg:min-h-0",
+            "surface-2 hairline rounded-full lg:h-8 lg:min-h-0",
           className,
         )}
       >
@@ -187,7 +187,7 @@ function ActiveGameSwitcher({
               ? "gap-0 px-2 py-1.5 lg:gap-1.5 lg:px-3"
               : "gap-1.5 px-3 py-1.5",
           appearance === "standalone"
-            ? "surface-2 rounded-full ring-1 ring-hair lg:min-h-0"
+            ? "surface-2 rounded-full ring-1 ring-hair lg:h-8 lg:min-h-0"
             : "rounded-lg transition-colors hover:bg-muted/70",
           className,
         )}

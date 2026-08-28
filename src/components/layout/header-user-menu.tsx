@@ -9,6 +9,7 @@ import {
   Info,
   LogOut,
   Mail,
+  Menu,
   MessageCircle,
   Settings,
   ShoppingBag,
@@ -27,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NotificationBell } from "@/components/layout/notification-bell";
+import { HeaderPreferencesMenuItems } from "@/components/layout/header-preferences-menu";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 import { formatCount } from "@/lib/utils/currency";
@@ -74,8 +76,6 @@ export function HeaderUserMenu({
 
   const tierInfo = TIER_DISPLAY[userTier];
   const TierIcon = tierInfo.icon;
-  /** Inline meta row: tier chips use `bg-*` — strip for text-only styling in the navbar trigger. */
-  const tierTextClass = tierInfo.color.replace(/\bbg-[^\s]+/g, "").replace(/\s+/g, " ").trim();
   const canUpgrade = userTier === "FREE" || userTier === "PRO";
 
   const { tiers } = useRankTiers();
@@ -102,7 +102,9 @@ export function HeaderUserMenu({
           href="/messages"
           aria-label={t(language, "messagesTitle")}
           className={cn(
-            "relative flex size-11 items-center justify-center rounded-lg motion-base lg:size-9",
+            // 32px from lg up — the shared control height of the utility strip
+            // this cluster now lives in. See the note on the trigger below.
+            "relative flex size-11 items-center justify-center rounded-full motion-base lg:size-8",
             isMessagesActive
               ? "bg-primary/15 text-primary"
               : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
@@ -118,46 +120,52 @@ export function HeaderUserMenu({
       )}
       <NotificationBell />
       <DropdownMenu>
+        {/* Menu glyph + avatar in one outlined pill — the CoinMarketCap
+            affordance (owner reference 2026-08-28). A bare avatar reads as
+            "my account"; the lines and the outline say "this opens a menu",
+            which matters now that language, currency and theme live inside it
+            and no longer sit on the bar. */}
         <DropdownMenuTrigger
-          aria-label={userName}
+          aria-label={`${userName} · ${t(language, "preferences")}`}
           className={cn(
-            "flex size-11 items-center justify-center rounded-full p-1.5 motion-base xl:size-auto xl:max-w-[12rem] xl:justify-start xl:gap-2.5 xl:py-1.5 xl:pl-1.5 xl:pr-3.5",
+            "hairline flex min-h-11 items-center justify-center gap-1.5 rounded-full pl-2 pr-1 motion-base",
+            "lg:h-8 lg:min-h-0",
             "hover:bg-muted/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/35"
           )}
         >
+          <Menu className="size-4 shrink-0 text-muted-foreground" aria-hidden />
           <Avatar
             size="sm"
-            className={cn("h-7 w-7 shrink-0 ring-2", !accent && rankDisplayFallback.ring)}
+            className={cn("size-6 shrink-0 ring-2", !accent && rankDisplayFallback.ring)}
             style={accent ? { boxShadow: `0 0 0 2px ${accent}` } : undefined}
           >
             {userAvatar ? <AvatarImage src={userAvatar} alt="" /> : null}
-            <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
+            <AvatarFallback className="bg-primary/10 text-[10px] font-bold text-primary">
               {userName.slice(0, 1).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <div className="hidden min-w-0 flex-col items-start gap-0.5 text-left xl:flex">
-            <span className="max-w-[7.5rem] truncate text-sm font-medium leading-tight text-foreground">
-              {userName}
-            </span>
-            <div className="flex max-w-[7.5rem] flex-wrap items-center gap-x-1 gap-y-0.5 text-meta leading-tight">
-              <span className={tierTextClass}>{tierInfo.label}</span>
-              <span className="select-none text-muted-foreground/40" aria-hidden>
-                ·
-              </span>
-              <span
-                className={!accent ? rankDisplayFallback.color : undefined}
-                style={accent ? { color: accent } : undefined}
-              >
-                {rankLabel}
-              </span>
-            </div>
-          </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" sideOffset={8} className="w-64">
+        <DropdownMenuContent align="end" sideOffset={8} className="w-72">
           <DropdownMenuGroup>
             <DropdownMenuLabel className="font-normal">
-              <p className="truncate text-sm font-medium text-foreground">{userName}</p>
-              <p className="truncate text-meta">{authUser.email}</p>
+              {/* Identity block, CoinMarketCap-style: the avatar repeats here so
+                  the menu names who you are before it offers to change anything. */}
+              <div className="flex items-center gap-2.5">
+                <Avatar
+                  size="sm"
+                  className={cn("size-10 shrink-0 ring-2", !accent && rankDisplayFallback.ring)}
+                  style={accent ? { boxShadow: `0 0 0 2px ${accent}` } : undefined}
+                >
+                  {userAvatar ? <AvatarImage src={userAvatar} alt="" /> : null}
+                  <AvatarFallback className="bg-primary/10 text-sm font-bold text-primary">
+                    {userName.slice(0, 1).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-foreground">{userName}</p>
+                  <p className="truncate text-meta">{authUser.email}</p>
+                </div>
+              </div>
 
               <div className="mt-2 flex items-center gap-1.5">
                 <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro", tierInfo.color)}>
@@ -227,6 +235,11 @@ export function HeaderUserMenu({
               </div>
             </DropdownMenuLabel>
           </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          {/* Display preferences sit near the top, the way CoinGecko and
+              CoinMarketCap place them: they are the reason most people open
+              this menu now that they left the bar. */}
+          <HeaderPreferencesMenuItems />
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => router.push(userId ? `/profile/${userId}` : "/profile")}>
             <User className="size-4" />
