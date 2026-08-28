@@ -1,4 +1,4 @@
-# E668 "Router action dispatched before initialization" — เสียงรบกวนของ dev เท่านั้น
+# E668 "Router action dispatched before initialization" (+ warning "React state update … hasn't mounted yet") — เสียงรบกวนของ dev เท่านั้น
 
 > ตรวจแล้ว 2026-08-28 · Next.js 16.3.0 (Turbopack) · React 19.2.4
 > **ข้อสรุป: ไม่ต้องแก้อะไรในโค้ดเรา** — error นี้เกิดเฉพาะตอนรัน `next dev` และไม่มีทางเกิดใน production
@@ -11,6 +11,14 @@ Uncaught Error: Internal Next.js error: Router action dispatched before initiali
 ```
 
 โผล่ตอนโหลดหน้า ประมาณ 1–8 ครั้งต่อการโหลด · เจอได้ทุกหน้า รวมหน้าที่ไม่มี header เลย (`/login`, `/proto/navbar`) · stack ชี้เข้า `node_modules/next/dist/client/...`
+
+และมักมีเพื่อนอีกตัวโผล่คู่กัน (สาเหตุเดียวกันเป๊ะ — ดูหัวข้อ "อาการที่สอง" ท้ายไฟล์):
+
+```
+Can't perform a React state update on a component that hasn't mounted yet.
+This indicates that you have a side-effect in your render function that
+asynchronously tries to update the component. Move this work to useEffect instead.
+```
 
 ## 1) เกิดใน production ไหม — ไม่เกิด
 
@@ -74,6 +82,40 @@ Uncaught Error: … (E668)
 **ทางเลือกที่มี แต่ไม่ทำ:**
 - patch `node_modules` ให้ `hmrRefresh()` เช็ค `getCurrentAppRouterState() !== null` ก่อน → ต้องดูแล patch ตลอด แลกกับการลบ log ที่ไม่มีผลอะไร ไม่คุ้ม
 - `next dev --webpack` → เลี่ยงได้แต่ dev ช้าลงทั้งทีม ไม่คุ้ม
+
+## อาการที่สอง: warning "React state update on a component that hasn't mounted yet"
+
+**สาเหตุเดียวกับ E668 เป๊ะ และไม่ใช่โค้ดเราเช่นกัน** (ตรวจ 2026-08-28 · จับ stack ได้ 3 ครั้ง สัญญาณเหมือนกันทุกครั้ง)
+
+ข้อความ warning ฟังเหมือนกำลังด่าโค้ดเรา ("คุณมี side-effect ใน render") แต่ stack จริงไม่มีไฟล์ของเราอยู่เลยสักบรรทัด อ่านจากล่างขึ้นบน:
+
+```
+WebSocket.handleMessage          ← websocket ของ dev server
+  processMessage
+    startTransition
+      Object.hmrRefresh          ← hot-reloader ของ Next
+        dispatchAppRouterAction
+          nextDispatch
+            startTransition
+              dispatchOptimisticSetState        ← React
+                enqueueConcurrentHookUpdate
+                  warnAboutUpdateOnNotYetMountedFiberInDEV   ← warning ออกตรงนี้
+```
+
+ตัวที่สั่ง state update คือ **ตัวบอกสถานะ render ของ Next DevTools** (`useAppDevRenderingIndicator` ใน `node_modules/next/dist/next-devtools/userspace/use-app-dev-rendering-indicator.js` — คือ `useTransition()` เฉยๆ) ซึ่งถูกเรียกใน `use-action-queue.js` **ใต้ `if (process.env.NODE_ENV !== 'production')`** ตรงๆ → production ไม่มีโค้ดนี้เลย
+
+เทียบสองอาการ (race เดียวกัน คนละจังหวะเสี้ยววินาที):
+
+| HMR refresh มาถึงตอน | ผลลัพธ์ |
+| --- | --- |
+| `useActionQueue` ยังไม่ทันรันเลย (`dispatch === null`) | **throw E668** |
+| `useActionQueue` รันแล้ว แต่ fiber ของ Router ยัง mount ไม่เสร็จ | **warning "hasn't mounted yet"** |
+
+ยืนยันว่าโค้ดเราไม่เกี่ยว:
+- โหลดหน้าปกติ (ไม่แก้ไฟล์ระหว่างนั้น) → ไม่มี warning เลยสักหน้า
+- Fast Refresh บนหน้าที่เปิดค้างอยู่แล้ว (hydrate เสร็จแล้ว) → ก็ไม่มี
+- จะโผล่เฉพาะตอน "โหลดหน้าใหม่ + มี update จากการเซฟไฟล์ตกลงมาพอดี" เท่านั้น
+- ดัก `console.error` ด้วยสคริปต์ที่รันก่อน hydrate แล้วเก็บ stack ได้ 3 ครั้ง (`/marketplace`, `/guide/versions`, `/honey`) — **ไม่มี frame ของ `src/app` หรือ `src/components` เลยแม้แต่ครั้งเดียว**
 
 ## ถ้าเจอ E668 ใน production ขึ้นมาจริง
 
