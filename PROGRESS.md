@@ -34,6 +34,7 @@
 ## สถานะ git
 
 - branch `feat/navbar-direction-r2` · **ไม่มี** schema/migration/dependency/config change (route ใหม่ 1 ไฟล์ + field ใน response)
+- ⚠️ **commit `06c9aa5` มีงานของ session อื่นติดไปด้วย** — ฉันใช้ `git add -A` เลยดูดไฟล์ที่ session คู่ขนานกำลังทำค้าง (`api/cards/spotlight/route.ts` + `route.test.ts` · `hooks/use-search-spotlight.ts` — งานหน้าค้นหาตอนยังไม่พิมพ์) เข้ามาในคอมมิตแถบชีพจร · **ไฟล์ไม่หาย ไม่พัง** (ผ่าน lint/test/build ทั้งหมด ยังไม่มีใคร import = ไม่กระทบหน้าเว็บ) แต่ประวัติปนสองงาน · ไม่แก้ให้เพราะ push แล้วและการถอดออกอาจทำลายงานค้างของเขา — **ห้ามใครไปลบไฟล์ชุด spotlight**
 - หมายเหตุ: `/proto/navbar` = ภาพตอนตัดสินใจ (ยังไม่มีสายพาน) เก็บไว้เป็นบันทึก ไม่ใช่ของล่าสุด — ของจริงดูที่เว็บ
 
 ## NEXT
