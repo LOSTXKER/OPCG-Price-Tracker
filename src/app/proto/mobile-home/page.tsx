@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-import { getHomeData, mapCardToTrending } from "@/lib/data/home"
+import { getHomeData } from "@/lib/data/home"
 
 import { MobileHomeCompare } from "./mobile-home-compare"
 
@@ -13,17 +13,14 @@ export const metadata: Metadata = {
 }
 
 /**
- * /proto/mobile-home — the mobile home page rebuilt twice for an owner
- * decision: variant A ("จัดระเบียบ") tidies gutters/hero/controls in place,
- * variant B adds the market-highlight strip that today exists only on desktop.
- * Real data via getHomeData(); the winning layout gets migrated into
- * src/app/page.tsx + HomeMarketOverview in a later round.
+ * /proto/mobile-home — owner decisions run through this page. Round 1 picked
+ * layout "จัดระเบียบ" (2026-08-28); round 2 compares the bottom bar: today's
+ * 5-tab bar vs a raised center-search button. Real data via getHomeData();
+ * the winning combination gets migrated into src/app/page.tsx +
+ * HomeMarketOverview (+ BottomNav if center-search wins) in a later round.
  */
 export default async function MobileHomeProtoPage() {
   const {
-    topGainers,
-    topLosers,
-    highestPriced,
     totalCards,
     initialTableCards,
     initialTableTotalPages,
@@ -57,10 +54,6 @@ export default async function MobileHomeProtoPage() {
     psa10PriceUsd: prices?.[0]?.priceUsd ?? null,
   }))
 
-  const featured = highestPriced[0] ? mapCardToTrending(highestPriced[0]) : null
-  const gainers = topGainers.map(mapCardToTrending).slice(0, 3)
-  const losers = topLosers.map(mapCardToTrending).slice(0, 3)
-
   const setOptions = sets.map((s) => ({
     code: s.code,
     name: s.name,
@@ -76,9 +69,6 @@ export default async function MobileHomeProtoPage() {
       totalCards={totalCards}
       totalSets={sets.length}
       updatedLabels={updatedLabels}
-      featured={featured}
-      gainers={gainers}
-      losers={losers}
       recentSets={recentSets}
       tableCards={tableCards}
       tableTotalPages={initialTableTotalPages}

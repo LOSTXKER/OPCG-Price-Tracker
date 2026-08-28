@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-08-28 (ดึก) — **หน้าเทียบ "หน้าแรกมือถือ" 2 แบบ เสร็จแล้ว รอเบสเปิดดูบนมือถือแล้วเคาะ** (branch `claude/mobile-home-layout-c8d6e8`)
+อัปเดตล่าสุด: 2026-08-28 (ดึก รอบ 2) — **เบสเคาะ layout แบบ A แล้ว · หน้าเทียบเปลี่ยนเป็นเทียบแถบล่าง: 5 ช่องเดิม vs ปุ่มค้นหานูนกลาง — รอเบสเคาะ** (branch `claude/mobile-home-layout-c8d6e8`)
 
 ## รอบนี้ทำอะไร (session นี้ — worktree mobile-home-layout)
 
@@ -25,7 +25,12 @@
 - branch `claude/mobile-home-layout-c8d6e8` (worktree แยก) — commit + push แล้ว
 - ไม่มี schema / dependency / config change · ไม่แตะไฟล์ที่ session อื่นค้าง (globals.css, home-set-strip, copy/i18n)
 
+## รอบ 2 (ต่อจากเคาะ A)
+- **เบสเคาะ: เอาแบบ A (จัดระเบียบ)** — ไม่เอาแถบไฮไลต์ (แบบ B ถอดออกจากหน้าแล้ว โค้ด `proto-highlight-strip.tsx` ยังอยู่เฉยๆ ไม่ถูก mount เผื่อเรียกกลับ)
+- เบสขอเพิ่ม: **ลองปุ่มค้นหาเด่นๆ กลางแถบล่าง** → หน้าเทียบเปลี่ยนเป็นเนื้อหา A ล็อกตาย + ปุ่มลอยสลับแถบล่าง 2 แบบ: "แถบล่างเดิม" (5 ช่อง) vs **"ค้นหากลาง"** (ปุ่มกลม `bg-primary` นูน -mt-7 ring-4 กลางแถบ · แถบบนถอดปุ่มค้นหาออกไม่ให้ซ้ำ · **ข้อแลก: รายการโปรด หลุดจากแถบ ต้องย้ายเป็นแท็บย่อยในพอร์ต** — เขียนบอกใน explainer แล้ว)
+- Verify รอบ 2: tsc clean · eslint โฟลเดอร์ proto 0 warning · build 212 หน้า ผ่าน · เปิดจริง 375×812 ทั้ง 2 แถบ ทั้ง Light/Dark (dark = ปุ่มทอง honey เด่นตามที่เบสขอ)
+
 ## NEXT
-1. **เบสเปิดดูบนมือถือ**: `http://192.168.1.145:59283/proto/mobile-home` (Wi-Fi วงเดียวกัน, dev server ต้องรันอยู่ — หรือรัน `npm run dev` แล้วเปิด `/proto/mobile-home`) → กดปุ่มลอยล่างสลับ A/B → เคาะแบบ
-2. เบสเคาะแล้ว → วางแผนย้ายแบบที่ชนะเข้า `/` จริง (แก้ HomeSearchHero / HomeSetStrip header / HomeMarketOverview in-place + ลบ proto) — ตอนนั้นค่อยแตะไฟล์จริงหลังงาน ticker ของอีก session จบ
+1. **เบสเปิดดูบนมือถือ**: `http://192.168.1.145:59283/proto/mobile-home` (Wi-Fi วงเดียวกัน, dev server ต้องรันอยู่ — หรือรัน `npm run dev` แล้วเปิด `/proto/mobile-home`) → ปุ่มลอยสลับ "แถบล่างเดิม / ค้นหากลาง" → เคาะแถบล่าง (จุดตัดสิน: ยอมย้าย รายการโปรด เข้าพอร์ตไหม)
+2. เบสเคาะแถบล่างแล้ว → ย้ายของจริงเข้า `/`: HomeSearchHero หด · HomeSetStrip header บรรทัดเดียว · HomeMarketOverview ยุบ 3→2 แถว + gutter เดียว (+ BottomNav ถ้าเอาค้นหากลาง: สลับช่องกลางเป็นค้นหา + ย้าย รายการโปรด เข้า hub พอร์ต) + ลบ proto — ระวังไฟล์ `home-set-strip.tsx`/`globals.css` ที่อีก session ถือค้างอยู่
 3. งานค้างเดิมของ session อื่น (กวาดคำ "อัปเดตทุกวัน" บน `chore/next-16.3` · `priceValidUntil` ใน json-ld) — ไม่เกี่ยวกับ branch นี้ ดู PROGRESS บน branch นั้น

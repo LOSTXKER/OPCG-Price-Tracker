@@ -8,40 +8,53 @@ import type { CardRow } from "@/components/home/market-types"
 import type { SetPickerItem } from "@/components/shared/set-picker"
 import { IconButton } from "@/components/ui/icon-button"
 import { SegmentedControl } from "@/components/ui/segmented-control"
-import type { HomeSetLink, TrendingCard } from "@/lib/data/home"
+import type { HomeSetLink } from "@/lib/data/home"
 import type { Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
-import { ProtoBottomNav, ProtoTopBar } from "./components/proto-chrome"
+import {
+  ProtoBottomNav,
+  ProtoTopBar,
+  type BottomNavVariant,
+} from "./components/proto-chrome"
 import { ProtoHero } from "./components/proto-hero"
-import { ProtoHighlightStrip } from "./components/proto-highlight-strip"
 import { ProtoMarketSection } from "./components/proto-market-section"
 import { ProtoSetStrip } from "./components/proto-set-strip"
 
-type Variant = "a" | "b"
+// Layout "แบบ A — จัดระเบียบ" is the owner-approved content (2026-08-28); the
+// remaining open decision this page compares is the BOTTOM BAR: today's 5-tab
+// bar vs a raised center-search button. (The retired variant-B highlight strip
+// still lives in ./components/proto-highlight-strip.tsx, just unmounted.)
 
-const VARIANT_OPTIONS = [
-  { value: "a" as const, label: "A · จัดระเบียบ", ariaLabel: "แบบ A จัดระเบียบ" },
-  { value: "b" as const, label: "B · มีไฮไลต์", ariaLabel: "แบบ B มีไฮไลต์ตลาด" },
+const NAV_OPTIONS = [
+  {
+    value: "plain" as const,
+    label: "แถบล่างเดิม",
+    ariaLabel: "แถบล่างแบบเดิม 5 ช่อง",
+  },
+  {
+    value: "search" as const,
+    label: "ค้นหากลาง",
+    ariaLabel: "แถบล่างแบบปุ่มค้นหากลาง",
+  },
 ]
 
-const VARIANT_COPY: Record<
-  Variant,
+const NAV_COPY: Record<
+  BottomNavVariant,
   { name: string; summary: string; tradeoff: string }
 > = {
-  a: {
-    name: "แบบ A — จัดระเบียบ",
+  plain: {
+    name: "แถบล่างเดิม — 5 ช่องเท่ากัน",
     summary:
-      "คงทุกส่วนเดิมครบ แต่จัดขอบซ้าย–ขวาให้ตรงกันทั้งหน้า หดหัวเรื่องจากย่อหน้ายาวเหลือสามบรรทัด และยุบแถบควบคุมจากสามแถวเหลือสองแถว — ช่วงเวลา 24h/7d/30d กลายเป็นปุ่มเล็กติดกับคำว่า เปลี่ยนแปลง แตะเพื่อสลับ",
-    tradeoff:
-      "หน้าตาใกล้ของเดิมที่สุดและเห็นราคาเร็วขึ้นเกือบเท่าตัว แต่ไม่มีของใหม่ให้ดู",
+      "หน้าแรก · ชุดการ์ด · รายการโปรด · พอร์ต · ดูเพิ่มเติม ครบเหมือนทุกวันนี้ ปุ่มค้นหาอยู่มุมขวาบนตามเดิม",
+    tradeoff: "ไม่มีอะไรต้องย้าย แต่ปุ่มค้นหาก็ไม่ได้เด่นขึ้น",
   },
-  b: {
-    name: "แบบ B — จัดระเบียบ + ไฮไลต์ตลาด",
+  search: {
+    name: "ค้นหากลาง — ปุ่มนูนกลางแถบ",
     summary:
-      "ทุกอย่างของแบบ A แล้วเพิ่มแถบการ์ดเด่นปัดข้างได้ (มูลค่าสูงสุด · ขึ้นแรง · ลงแรง) ซึ่งวันนี้มีเฉพาะบนจอคอม — มือถือไม่เคยเห็นเลย",
+      "ปุ่มค้นหาทรงกลมสีหลักของเว็บนูนขึ้นกลางแถบล่าง กดถึงง่ายสุดด้วยนิ้วโป้ง และช่องค้นหาที่มุมขวาบนถูกถอดออก (เหลือจุดเดียว ไม่ซ้ำซ้อน)",
     tradeoff:
-      "หน้าดูมีชีวิตขึ้นและเล่าเรื่องตลาดได้ทันที แต่ตารางราคาถูกดันลงไปราวหนึ่งช่วงนิ้วโป้ง",
+      "ช่องกลางของแถบวันนี้คือ รายการโปรด — แบบนี้ รายการโปรด ต้องย้ายไปเป็นแท็บย่อยในพอร์ต (กดเพิ่มหนึ่งชั้นกว่าจะถึง)",
   },
 }
 
@@ -51,9 +64,6 @@ export function MobileHomeCompare({
   totalCards,
   totalSets,
   updatedLabels,
-  featured,
-  gainers,
-  losers,
   recentSets,
   tableCards,
   tableTotalPages,
@@ -62,15 +72,12 @@ export function MobileHomeCompare({
   totalCards: number
   totalSets: number
   updatedLabels: Record<Language, string> | null
-  featured: TrendingCard | null
-  gainers: TrendingCard[]
-  losers: TrendingCard[]
   recentSets: HomeSetLink[]
   tableCards: CardRow[]
   tableTotalPages: number
   sets: SetPickerItem[]
 }) {
-  const [variant, setVariant] = useState<Variant>("a")
+  const [nav, setNav] = useState<BottomNavVariant>("plain")
 
   // Same theme-preview pattern as /proto/navbar: flip the real site theme so
   // the whole frame previews light/dark; gate on hydration so SSR agrees.
@@ -91,7 +98,7 @@ export function MobileHomeCompare({
       style={{ "--chrome-h": "3.5rem" } as CSSProperties}
     >
       <div className="mx-auto w-full max-w-md md:border-x md:border-hair">
-        <ProtoTopBar />
+        <ProtoTopBar showSearch={nav === "plain"} />
 
         {/* THE gutter: 20px, once. No descendant re-adds horizontal padding —
             full-bleed rails cancel it with -mx-5, the row list with -mx-4. */}
@@ -102,14 +109,6 @@ export function MobileHomeCompare({
             updatedLabels={updatedLabels}
           />
 
-          {variant === "b" && (
-            <ProtoHighlightStrip
-              featured={featured}
-              gainers={gainers}
-              losers={losers}
-            />
-          )}
-
           <ProtoSetStrip sets={recentSets} />
 
           <ProtoMarketSection
@@ -118,18 +117,18 @@ export function MobileHomeCompare({
             sets={sets}
           />
 
-          <Explainer variant={variant} />
+          <Explainer nav={nav} />
         </main>
       </div>
 
-      <ProtoBottomNav />
+      <ProtoBottomNav variant={nav} />
 
-      <div className="fixed bottom-24 left-1/2 z-floating flex -translate-x-1/2 items-center gap-1.5">
-        <SegmentedControl<Variant>
-          options={VARIANT_OPTIONS}
-          value={variant}
-          onChange={setVariant}
-          ariaLabel="เลือกแบบหน้าแรกที่กำลังดู"
+      <div className="fixed bottom-28 left-1/2 z-floating flex -translate-x-1/2 items-center gap-1.5">
+        <SegmentedControl<BottomNavVariant>
+          options={NAV_OPTIONS}
+          value={nav}
+          onChange={setNav}
+          ariaLabel="เลือกแบบแถบล่างที่กำลังดู"
           size="sm"
           variant="pill"
           className="rounded-full border border-hair bg-background/95 shadow-lg backdrop-blur-sm"
@@ -147,29 +146,30 @@ export function MobileHomeCompare({
   )
 }
 
-function Explainer({ variant }: { variant: Variant }) {
+function Explainer({ nav }: { nav: BottomNavVariant }) {
   return (
     <section className="mt-12 space-y-3">
       <h2 className="text-h4">หน้าเทียบนี้คืออะไร</h2>
       <p className="text-body-sm text-muted-foreground">
-        หน้าแรกมือถือจัดใหม่ 2 แบบ ใช้ข้อมูลจริงจากเว็บทั้งหมด —
-        ปุ่มลอยด้านล่างสลับแบบได้ทันทีโดยหน้าไม่เลื่อนกลับขึ้นบน
-        ลองเลื่อนเทียบว่ากว่าจะถึงราคาแถวแรกต้องผ่านอะไรบ้าง
+        โครงหน้าเป็นแบบ &quot;จัดระเบียบ&quot; ที่เบสเคาะแล้ว —
+        ที่เหลือให้เลือกคือแถบล่าง: ปุ่มลอยด้านล่างสลับระหว่างแถบเดิม 5 ช่อง
+        กับแบบปุ่มค้นหานูนกลางแถบ สังเกตมุมขวาบนด้วย —
+        แบบค้นหากลางจะถอดปุ่มค้นหาบนออก เหลือจุดเดียว
       </p>
 
-      {(["a", "b"] as const).map((v) => (
+      {(["plain", "search"] as const).map((v) => (
         <div
           key={v}
           className={cn(
             "rounded-xl border p-3.5",
-            v === variant ? "border-primary/40 bg-primary/5" : "border-hair",
+            v === nav ? "border-primary/40 bg-primary/5" : "border-hair",
           )}
         >
-          <p className="text-label text-foreground">{VARIANT_COPY[v].name}</p>
+          <p className="text-label text-foreground">{NAV_COPY[v].name}</p>
           <p className="mt-1 text-body-sm text-muted-foreground">
-            {VARIANT_COPY[v].summary}
+            {NAV_COPY[v].summary}
           </p>
-          <p className="mt-1.5 text-meta">ข้อแลก: {VARIANT_COPY[v].tradeoff}</p>
+          <p className="mt-1.5 text-meta">ข้อแลก: {NAV_COPY[v].tradeoff}</p>
         </div>
       ))}
 
