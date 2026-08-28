@@ -159,13 +159,18 @@ export function MobileHomeCompare({
             sets={sets}
           />
 
-          <Explainer nav={nav} />
+          <Explainer nav={nav} onSelect={setNav} />
         </main>
       </div>
 
       <ProtoBottomNav variant={nav} />
 
-      <div className="fixed bottom-28 left-1/2 z-floating flex -translate-x-1/2 items-center gap-1.5">
+      {/* Floating switcher. bottom = mock-nav height + FAB overshoot + safe
+          area — on a notched phone the pb-safe nav grows ~34px taller and the
+          raised FAB pokes higher still; the old fixed 112px sat underneath
+          both (z-chrome > z-floating), which is why taps died on a real
+          device. z-popup so no mock chrome can ever paint over it. */}
+      <div className="fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] left-1/2 z-popup flex -translate-x-1/2 items-center gap-1.5">
         <SegmentedControl<ChromeVariant>
           options={NAV_OPTIONS}
           value={nav}
@@ -188,7 +193,13 @@ export function MobileHomeCompare({
   )
 }
 
-function Explainer({ nav }: { nav: ChromeVariant }) {
+function Explainer({
+  nav,
+  onSelect,
+}: {
+  nav: ChromeVariant
+  onSelect: (v: ChromeVariant) => void
+}) {
   return (
     <section className="mt-12 space-y-3">
       <h2 className="text-h4">หน้าเทียบนี้คืออะไร</h2>
@@ -196,8 +207,10 @@ function Explainer({ nav }: { nav: ChromeVariant }) {
         โครงหน้าเป็นแบบ &quot;จัดระเบียบ&quot; ที่เบสเคาะแล้ว — ที่เหลือคือ
         &quot;ค้นหาอยู่ตรงไหน&quot; 5 แบบ: แถบเดิม · ปุ่มนูนกลาง 5 ช่อง ·
         7 ช่องเพิ่มเปรียบเทียบ · และค้นหาบนแบบ 2 แถว (ตรึงตลอด /
-        แถวชุดยุบตอนเลื่อน) — แบบปุ่มนูนถอดปุ่มค้นหาบนออก
-        ส่วนแบบค้นหาบนได้ทั้งช่องค้นหายาวและ OPCG → เลือกชุด ครบ
+        แถวชุดยุบตอนเลื่อน) — สลับได้จากปุ่มลอยด้านล่าง{" "}
+        <strong className="text-foreground">
+          หรือแตะการ์ดข้างล่างนี้ก็สลับได้เหมือนกัน
+        </strong>{" "}
         (แบบ &quot;6 ช่อง&quot; กับ &quot;ค้นหาบนไม่มีแถวชุด&quot;
         พับเก็บแล้ว — เรียกกลับมาดูได้ถ้าต้องการ)
       </p>
@@ -205,19 +218,40 @@ function Explainer({ nav }: { nav: ChromeVariant }) {
       {(
         ["plain", "search", "searchCompare", "topTwoRow", "topCollapse"] as const
       ).map((v) => (
-        <div
+        <button
           key={v}
+          type="button"
+          onClick={() => onSelect(v)}
+          aria-pressed={v === nav}
           className={cn(
-            "rounded-xl border p-3.5",
-            v === nav ? "border-primary/40 bg-primary/5" : "border-hair",
+            "ease-chrome block w-full rounded-xl border p-3.5 text-left",
+            v === nav
+              ? "border-primary/40 bg-primary/5"
+              : "border-hair hover:border-primary/25 hover:bg-primary/5",
           )}
         >
-          <p className="text-label text-foreground">{NAV_COPY[v].name}</p>
-          <p className="mt-1 text-body-sm text-muted-foreground">
+          <span className="flex items-center justify-between gap-2">
+            <span className="text-label text-foreground">
+              {NAV_COPY[v].name}
+            </span>
+            <span
+              className={cn(
+                "text-micro shrink-0 rounded-full px-2 py-0.5",
+                v === nav
+                  ? "bg-primary/15 text-primary"
+                  : "border border-hair text-muted-foreground",
+              )}
+            >
+              {v === nav ? "กำลังดู" : "แตะเพื่อดู"}
+            </span>
+          </span>
+          <span className="mt-1 block text-body-sm text-muted-foreground">
             {NAV_COPY[v].summary}
-          </p>
-          <p className="mt-1.5 text-meta">ข้อแลก: {NAV_COPY[v].tradeoff}</p>
-        </div>
+          </span>
+          <span className="mt-1.5 block text-meta">
+            ข้อแลก: {NAV_COPY[v].tradeoff}
+          </span>
+        </button>
       ))}
 
       <ul className="list-disc space-y-1 ps-4 text-meta">
