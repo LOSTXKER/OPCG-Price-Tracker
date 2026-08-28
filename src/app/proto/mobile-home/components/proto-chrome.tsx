@@ -61,7 +61,7 @@ export function ProtoTopBar({ showSearch = true }: { showSearch?: boolean }) {
   )
 }
 
-export type BottomNavVariant = "plain" | "search"
+export type BottomNavVariant = "plain" | "search" | "searchAll"
 
 type MockTab = { label: string; icon: typeof LineChart; active?: boolean }
 
@@ -75,10 +75,15 @@ const PLAIN_TABS: MockTab[] = [
 ]
 
 /**
- * Center-search trial: a true-center FAB needs an even tab count around it, so
- * the middle tab (รายการโปรด) yields its slot — its home becomes a sub-tab
- * inside พอร์ต, the hub VISION already assigns it to. The trade-off is the
- * whole point of the comparison; the explainer spells it out for the owner.
+ * "search": a TRUE-center FAB needs an even tab count around it, so the middle
+ * tab (รายการโปรด) yields its slot — its home becomes a sub-tab inside พอร์ต,
+ * the hub VISION already assigns it to.
+ *
+ * "searchAll": the owner asked whether รายการโปรด can stay. It can — but 5
+ * tabs + search = 6 slots, and 6 has no middle slot, so the FAB sits half a
+ * slot right of true center (~31px on a 375px phone) and every slot narrows
+ * to ~62px, which forces the smaller label size. Both costs are the point of
+ * showing it; the explainer spells them out.
  */
 const SEARCH_TABS: MockTab[] = [
   { label: "หน้าแรก", icon: LineChart, active: true },
@@ -87,17 +92,18 @@ const SEARCH_TABS: MockTab[] = [
   { label: "ดูเพิ่มเติม", icon: Menu },
 ]
 
-function MockTabItem({ tab }: { tab: MockTab }) {
+function MockTabItem({ tab, dense = false }: { tab: MockTab; dense?: boolean }) {
   return (
     <li className="min-w-0 flex-1">
       <span
         className={cn(
-          "flex w-full flex-col items-center gap-0.5 py-2 text-xs font-medium",
+          "flex w-full flex-col items-center gap-0.5 py-2 font-medium",
+          dense ? "text-micro" : "text-xs",
           tab.active ? "text-primary" : "text-muted-foreground",
         )}
       >
         <tab.icon className={cn("size-5", tab.active && "stroke-[2.5]")} />
-        <span>{tab.label}</span>
+        <span className="max-w-full truncate">{tab.label}</span>
         <span
           className={cn(
             "h-1 w-1 rounded-full bg-primary",
@@ -109,12 +115,38 @@ function MockTabItem({ tab }: { tab: MockTab }) {
   )
 }
 
+function SearchFab({ dense = false }: { dense?: boolean }) {
+  return (
+    <li className="min-w-0 flex-1">
+      <span
+        className={cn(
+          "flex w-full flex-col items-center gap-0.5 py-2 font-medium text-muted-foreground",
+          dense ? "text-micro" : "text-xs",
+        )}
+      >
+        {/* Raised honey FAB — the one loud element; ring-4 in the page
+            background color cuts it cleanly out of the hairline. */}
+        <span className="-mt-7 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-4 ring-background">
+          <Search className="size-6" strokeWidth={2.25} />
+        </span>
+        <span>ค้นหา</span>
+        <span className="h-1 w-1 rounded-full bg-primary opacity-0" />
+      </span>
+    </li>
+  )
+}
+
 export function ProtoBottomNav({
   variant = "plain",
 }: {
   variant?: BottomNavVariant
 }) {
+  // Which tabs render, where the FAB slots in, and how tight the row is:
+  // plain = 5 tabs, no FAB · search = 2 + FAB + 2 (true center) ·
+  // searchAll = 3 + FAB + 2 (6 slots — FAB half a slot off center, dense labels)
   const tabs = variant === "search" ? SEARCH_TABS : PLAIN_TABS
+  const splitAt = variant === "search" ? 2 : 3
+  const dense = variant === "searchAll"
 
   return (
     <nav
@@ -122,26 +154,19 @@ export function ProtoBottomNav({
       className="hairline-t pb-safe fixed bottom-0 left-1/2 z-chrome w-full max-w-md -translate-x-1/2 bg-background"
     >
       <ul className="flex items-stretch justify-around">
-        {tabs.slice(0, variant === "search" ? 2 : tabs.length).map((tab) => (
-          <MockTabItem key={tab.label} tab={tab} />
-        ))}
-
-        {variant === "search" && (
-          <li className="min-w-0 flex-1">
-            <span className="flex w-full flex-col items-center gap-0.5 py-2 text-xs font-medium text-muted-foreground">
-              {/* Raised honey FAB — the one loud element; ring-4 in the page
-                  background color cuts it cleanly out of the hairline. */}
-              <span className="-mt-7 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-4 ring-background">
-                <Search className="size-6" strokeWidth={2.25} />
-              </span>
-              <span>ค้นหา</span>
-              <span className="h-1 w-1 rounded-full bg-primary opacity-0" />
-            </span>
-          </li>
+        {variant === "plain" ? (
+          tabs.map((tab) => <MockTabItem key={tab.label} tab={tab} />)
+        ) : (
+          <>
+            {tabs.slice(0, splitAt).map((tab) => (
+              <MockTabItem key={tab.label} tab={tab} dense={dense} />
+            ))}
+            <SearchFab dense={dense} />
+            {tabs.slice(splitAt).map((tab) => (
+              <MockTabItem key={tab.label} tab={tab} dense={dense} />
+            ))}
+          </>
         )}
-
-        {variant === "search" &&
-          tabs.slice(2).map((tab) => <MockTabItem key={tab.label} tab={tab} />)}
       </ul>
     </nav>
   )
