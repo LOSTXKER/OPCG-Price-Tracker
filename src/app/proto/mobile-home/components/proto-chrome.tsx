@@ -14,6 +14,7 @@ import {
   Search,
 } from "lucide-react"
 
+import { useScrolled } from "@/hooks/use-scrolled"
 import { cn } from "@/lib/utils"
 
 /**
@@ -23,15 +24,23 @@ import { cn } from "@/lib/utils"
  * decorative: spans only, aria-hidden, nothing tappable.
  *
  * The chrome variant drives BOTH bars: the FAB variants drop the top bar's
- * search circle (search moved down — keeping both would double it), and
- * "topSearch" replaces the whole catalog row with a Shopee-style full-width
- * search field (game→set selection then lives with the content; the home body
- * already has the set strip + "ทุกชุด" picker).
+ * search circle (search moved down — keeping both would double it). The
+ * "top*" variants are the Shopee direction with the owner's correction kept
+ * in (2026-08-28 "คนชอบเลือกชุดการ์ดด้วย" — matches how collectors browse):
+ * a full-width search field on row 1 AND the game→set catalog row back on
+ * row 2. "topTwoRow" pins both rows; "topCollapse" hides the catalog row
+ * once the page scrolls, so the permanent chrome stays 56px.
  */
 export function ProtoTopBar({ variant = "plain" }: { variant?: ChromeVariant }) {
-  if (variant === "topSearch") {
+  // Same collapsing-chrome signal the real header uses (use-scrolled.ts).
+  // Called unconditionally (hook rules); only topCollapse acts on it.
+  const scrolled = useScrolled()
+
+  if (variant === "topTwoRow" || variant === "topCollapse") {
+    const collapsed = variant === "topCollapse" && scrolled
     return (
       <div aria-hidden className="hairline-b sticky top-0 z-chrome bg-background">
+        {/* Row 1 — Shopee grammar: the search field owns the first row. */}
         <div className="flex h-14 min-w-0 items-center px-2">
           <span className="mr-1 flex size-11 shrink-0 items-center justify-center">
             <Image
@@ -50,6 +59,24 @@ export function ProtoTopBar({ variant = "plain" }: { variant?: ChromeVariant }) 
           </span>
           <span className="ml-1 flex size-11 shrink-0 items-center justify-center text-muted-foreground">
             <Bell className="size-[18px]" />
+          </span>
+        </div>
+
+        {/* Row 2 — game → set, back in the chrome. In topCollapse it folds
+            away on scroll and returns at the top of the page. */}
+        <div
+          className={cn(
+            "ease-chrome flex min-w-0 items-center gap-1.5 overflow-hidden px-2 transition-all",
+            collapsed ? "h-0 opacity-0" : "h-12 opacity-100",
+          )}
+        >
+          <span className="flex h-9 shrink-0 items-center gap-1 rounded-full border border-hair bg-background px-3 text-sm font-semibold text-foreground">
+            OPCG
+            <ChevronDown className="size-3.5 text-muted-foreground" />
+          </span>
+          <span className="flex h-9 min-w-0 flex-1 items-center gap-1 rounded-full border border-hair bg-background px-3 text-sm text-muted-foreground">
+            <span className="truncate">เลือกชุด</span>
+            <ChevronDown className="ml-auto size-3.5 shrink-0" />
           </span>
         </div>
       </div>
@@ -97,9 +124,9 @@ export function ProtoTopBar({ variant = "plain" }: { variant?: ChromeVariant }) 
 export type ChromeVariant =
   | "plain"
   | "search"
-  | "searchAll"
   | "searchCompare"
-  | "topSearch"
+  | "topTwoRow"
+  | "topCollapse"
 
 type MockTab = { label: string; icon: typeof LineChart; active?: boolean }
 
@@ -117,20 +144,17 @@ const PLAIN_TABS: MockTab[] = [
  * tab (รายการโปรด) yields its slot — its home becomes a sub-tab inside พอร์ต,
  * the hub VISION already assigns it to.
  *
- * "searchAll": the owner asked whether รายการโปรด can stay. It can — but 5
- * tabs + search = 6 slots, and 6 has no middle slot, so the FAB sits half a
- * slot right of true center (~31px on a 375px phone) and every slot narrows
- * to ~62px, which forces the smaller label size. Both costs are the point of
- * showing it; the explainer spells them out.
- *
  * "searchCompare": the owner's follow-up — add เปรียบเทียบ (Scale icon +
  * label, same as compare-button.tsx) as a 7th slot so the FAB has 3 tabs on
- * each side and lands dead center again. Cost: ~54px slots — the long labels
- * (รายการโปรด / เปรียบเทียบ) truncate even at the smallest label size. That
- * visible truncation is the honest answer to "เยอะไปไหม".
+ * each side and lands dead center again. Cost: ~54px slots — labels drop to
+ * text-overlay (they still fit, barely).
  *
- * "topSearch": Shopee grammar — search is a full-width field in the TOP bar,
- * the bottom bar returns to today's untouched 5 tabs.
+ * Retired but recoverable from git: "searchAll" (6 slots, FAB half a slot
+ * off center — searchCompare supersedes it) and the single-row "topSearch"
+ * (no catalog row — owner: set selection must stay in the chrome).
+ *
+ * "topTwoRow" / "topCollapse": Shopee grammar — search field on top, catalog
+ * row under it, bottom bar back to today's untouched 5 tabs.
  */
 const SEARCH_TABS: MockTab[] = [
   { label: "หน้าแรก", icon: LineChart, active: true },
@@ -204,23 +228,13 @@ export function ProtoBottomNav({
   variant?: ChromeVariant
 }) {
   // Which tabs render, where the FAB slots in, and how tight the row is:
-  // plain / topSearch = today's 5 tabs, no FAB · search = 2 + FAB + 2 (true
-  // center) · searchAll = 3 + FAB + 2 (6 slots, FAB half a slot off center,
-  // text-micro) · searchCompare = 3 + FAB + 3 (7 slots, centered, text-overlay)
-  const plainBar = variant === "plain" || variant === "topSearch"
-  const tabs =
-    variant === "search"
-      ? SEARCH_TABS
-      : variant === "searchCompare"
-        ? COMPARE_TABS
-        : PLAIN_TABS
+  // plain / top* = today's 5 tabs, no FAB · search = 2 + FAB + 2 (true
+  // center) · searchCompare = 3 + FAB + 3 (7 slots, centered, text-overlay)
+  const plainBar =
+    variant === "plain" || variant === "topTwoRow" || variant === "topCollapse"
+  const tabs = variant === "search" ? SEARCH_TABS : COMPARE_TABS
   const splitAt = variant === "search" ? 2 : 3
-  const labelClass =
-    variant === "searchAll"
-      ? "text-micro"
-      : variant === "searchCompare"
-        ? "text-overlay"
-        : "text-xs"
+  const labelClass = variant === "searchCompare" ? "text-overlay" : "text-xs"
 
   return (
     <nav
