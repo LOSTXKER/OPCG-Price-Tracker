@@ -6,7 +6,6 @@ import {
   HomeMiniTable,
 } from "@/components/home/home-client-sections";
 import { AdInventorySlot } from "@/components/ads/ad-inventory-slot";
-import { HomeMarketIntro } from "@/components/home/home-market-intro";
 import { HomeMarketOverview } from "@/components/home/home-market-overview";
 import { HomeSearchHero } from "@/components/home/home-search-hero";
 import { HomeSeoContent } from "@/components/home/home-seo-content";
@@ -197,25 +196,24 @@ export default async function HomePage() {
       </section>
 
       {/* The market — core browse tool. Generous air above so it reads as its
-          own document section, the way card-detail separates its blocks. */}
+          own document section, the way card-detail separates its blocks.
+          The section is HEADED by the latest-sets strip (owner ruling
+          2026-08-28, reversing 2026-08-26): the old "ตารางราคาการ์ด" h2 is
+          gone and the strip's own heading + one-row rail introduce the table
+          instead — collectors pick the set first, so the set links earn the
+          headline slot. The crawlable links stay in the first HTML response. */}
       <div className="mt-9 sm:mt-12">
-        <HomeMarketOverview
-          initialCards={tableCards}
-          initialTotal={initialTableTotal}
-          initialTotalPages={initialTableTotalPages}
-          filterDefinitions={filterDefinitions}
-          sets={setOptions}
-        >
-          {/* The section's slim H2 — the keyword phrase and the freshness
-              date moved up into the hero lead (owner ruling 2026-08-28). */}
-          <HomeMarketIntro />
-        </HomeMarketOverview>
+        <HomeSetStrip sets={recentSets} />
+        <div className="mt-4 sm:mt-5">
+          <HomeMarketOverview
+            initialCards={tableCards}
+            initialTotal={initialTableTotal}
+            initialTotalPages={initialTableTotalPages}
+            filterDefinitions={filterDefinitions}
+            sets={setOptions}
+          />
+        </div>
       </div>
-
-      {/* Crawlable set links remain in the first HTML response, but the market
-          table is the primary browse workflow. Owner decision 2026-08-26:
-          latest sets are the next step after the complete table + pagination. */}
-      <HomeSetStrip sets={recentSets} />
 
       <HomeSeoContent marketplaceEnabled={marketplaceEnabled} />
     </>

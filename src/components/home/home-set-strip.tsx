@@ -5,29 +5,7 @@ import Link from "next/link"
 
 import { ArrowLink } from "@/components/shared/arrow-link"
 import { buildHomeSetStripCopy } from "@/lib/seo/copy/home"
-import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
-
-/**
- * Keeps the wrapping grid at exactly two rows (owner ruling เบส 2026-08-08).
- *
- * Pill widths are set by the set names, so a fixed count wraps to a different
- * number of rows at every width — measured against the twelve live names, two
- * rows hold 4 pills at `sm`, 6 at `md`, 8 at `lg` and 10 from `xl`. The content
- * column stops growing at 1216px, so ten is the ceiling on any monitor and the
- * remainder would always have made a third row.
- *
- * The hidden pills stay in the HTML: the strip exists to pass link equity to
- * the set cluster (SEO plan §3.1), the phone rail still scrolls through all of
- * them, and "ดูชุดทั้งหมด" is right there.
- */
-function twoRowVisibility(index: number): string {
-  if (index < 4) return ""
-  if (index < 6) return "sm:hidden md:block"
-  if (index < 8) return "sm:hidden lg:block"
-  if (index < 10) return "sm:hidden xl:block"
-  return "sm:hidden"
-}
 
 export type HomeSetStripItem = {
   code: string
@@ -46,9 +24,16 @@ export type HomeSetStripItem = {
  * home page passed zero link equity down to the set cluster — the layer the
  * plan calls the main battleground.
  *
- * Real <a> links (next/link), rendered in the first HTML response. It follows
- * the complete market table and pagination (owner decision 2026-08-26), so the
- * market remains the primary task and set browsing reads as the next step.
+ * Real <a> links (next/link), rendered in the first HTML response. It HEADS
+ * the market section (owner ruling 2026-08-28, reversing 2026-08-26's tail
+ * placement): collectors pick the set first, so the set links introduce the
+ * table instead of trailing it, and the strip's h2 is the section's heading.
+ *
+ * ONE row at every width (same ruling — the old two-row wrapping grid is
+ * gone): a snap-scroll rail with the scrollbar hidden, bleeding to the screen
+ * edge on phones, plus a static right-edge fade so a half-cropped pill and the
+ * fade together say "more this way". Every link stays in the server HTML — the
+ * rail only changes how many are on screen at once.
  */
 export function HomeSetStrip({ sets }: { sets: HomeSetStripItem[] }) {
   const lang = useUIStore((s) => s.language)
@@ -57,67 +42,76 @@ export function HomeSetStrip({ sets }: { sets: HomeSetStripItem[] }) {
   if (sets.length === 0) return null
 
   return (
-    <section className="mt-8 sm:mt-10" aria-labelledby="home-set-strip">
+    <section aria-labelledby="home-set-strip">
       <div className="flex items-end justify-between gap-3">
         <div className="min-w-0">
-          <h2 id="home-set-strip" className="text-h4">
+          <h2 id="home-set-strip" className="text-h2">
             {copy.heading}
           </h2>
-          {/* Restates the h2 two pixels above it, so phones drop it and keep
-              the header on one line. `hidden` is display:none — the sentence
-              stays in the server HTML, same trade page.tsx already makes for
-              the highlights row. */}
-          <p className="mt-0.5 hidden text-meta sm:block">{copy.description}</p>
+          {/* Visible at every width now — as the market section's heading the
+              sentence is the section's one line of context, not a restatement
+              it can afford to drop on phones. */}
+          <p className="mt-1 text-body-sm text-muted-foreground">
+            {copy.description}
+          </p>
         </div>
         <ArrowLink href="/opcg/sets" className="shrink-0">
           {copy.allLabel}
         </ArrowLink>
       </div>
 
-      {/* One swipeable row on phones, wrapping grid from `sm` up.
-          Wrapping at 390px puts these 12 pills on seven rows, with some rows
-          holding a single pill, so the block reads as broken rather than
-          deliberate. The rail keeps every link in the server HTML — it only
-          changes how many are on screen at once. `no-sb` +
-          `overflow-x-auto` is the same rail the grade/scope controls use. */}
-      <ul className="no-sb -mx-5 mt-3 flex snap-x snap-mandatory gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
-        {sets.map((s, i) => (
-          <li
-            key={s.code}
-            className={cn("shrink-0 snap-start sm:shrink", twoRowVisibility(i))}
-          >
-            <Link
-              href={`/opcg/sets/${s.code}`}
-              className="ease-chrome flex items-center gap-2 rounded-lg border border-hair bg-background py-1 pe-2.5 ps-1 text-xs hover:border-primary/35 hover:bg-primary/5"
-            >
-              {/* Collectors recognise a set by its packaging long before they
-                  recognise "op14". The slot stays narrow and pack-shaped so the
-                  whole strip grows by single-digit pixels and the phone rail
-                  stays a compact next step, which is why these are pills rather
-                  than tiles. `object-cover`
-                  earns its place here: the art is a portrait pack centred on a
-                  square transparent canvas, so cropping to this ratio trims the
-                  empty margin and renders the pack larger than `contain` would.
-                  No background tint — the alpha channel is the point. */}
-              <span className="relative block h-8 w-[1.43rem] shrink-0 overflow-hidden rounded-sm">
-                {s.coverUrl && (
-                  <Image
-                    src={s.coverUrl}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    sizes="24px"
-                  />
-                )}
-              </span>
-              <span className="font-semibold text-foreground">{s.code}</span>
-              <span className="max-w-[11rem] truncate text-muted-foreground">
-                {s.name}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {/* The one-row rail. `-mx-5 px-5` bleeds through the page gutter on
+          phones (PageContainer is px-5 there); from `sm` up it stays inside
+          the content column and simply scrolls. `no-sb` + `overflow-x-auto`
+          is the same rail the grade/scope controls use. */}
+      <div className="relative -mx-5 mt-4 sm:mx-0">
+        <ul className="no-sb flex snap-x gap-2 overflow-x-auto px-5 sm:px-0 sm:pe-10">
+          {sets.map((s) => (
+            <li key={s.code} className="shrink-0 snap-start">
+              <Link
+                href={`/opcg/sets/${s.code}`}
+                className="ease-chrome group flex items-center gap-2.5 rounded-xl border border-hair bg-background py-1.5 pe-3.5 ps-1.5 hover:border-primary/35 hover:bg-primary/5"
+              >
+                {/* Collectors recognise a set by its packaging long before
+                    they recognise "op14". The slot keeps the pack's own
+                    portrait ratio; `object-cover` trims the transparent
+                    margin around the art so the pack renders larger than
+                    `contain` would. No background tint — the alpha channel is
+                    the point. */}
+                <span className="relative block h-10 w-[1.79rem] shrink-0 overflow-hidden rounded-md">
+                  {s.coverUrl && (
+                    <Image
+                      src={s.coverUrl}
+                      alt=""
+                      fill
+                      className="ease-chrome object-cover group-hover:scale-105"
+                      sizes="29px"
+                    />
+                  )}
+                </span>
+                {/* Two stacked lines keep each pill narrow, which is what
+                    lets twelve of them read as one calm row instead of a
+                    half-page block. */}
+                <span className="min-w-0">
+                  <span className="block text-xs font-semibold leading-tight text-foreground">
+                    {s.code}
+                  </span>
+                  <span className="mt-0.5 block max-w-[7.5rem] truncate text-xs leading-tight text-muted-foreground">
+                    {s.name}
+                  </span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        {/* Static scroll hint — sits above the rail's right edge, under the
+            pointer's reach (pointer-events-none), and fades the last visible
+            pill into the page background in both themes. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-background to-transparent"
+        />
+      </div>
     </section>
   )
 }
