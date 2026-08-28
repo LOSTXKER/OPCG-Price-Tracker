@@ -43,6 +43,9 @@ export type MarketStats = {
   totalCards: number;
   totalValue: number;
   exchangeRate: number;
+  /** "อัปเดตล่าสุด" per language, pre-formatted when the stats fetch lands —
+   *  render only ever picks a string (no Date work during render). */
+  updatedLabels: Record<Language, string> | null;
 };
 
 export const LANG_OPTIONS: { value: Language; label: string }[] = [

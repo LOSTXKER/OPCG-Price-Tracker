@@ -172,7 +172,7 @@ export function Header() {
                   href={link.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "ease-chrome inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-2 py-2 text-sm lg:h-9 lg:min-h-0 lg:py-0 lg:px-3",
+                    "ease-chrome inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-2 py-2 text-sm lg:h-9 lg:min-h-0 lg:py-0 lg:px-3.5",
                     active
                       ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
                       : "font-medium text-muted-foreground hover:text-foreground"
@@ -184,13 +184,7 @@ export function Header() {
             })}
           </nav>
 
-          {/* Search is the row's centrepiece, not a trailing icon. The home
-              hero no longer carries an input (CoinGecko's pattern, owner call
-              2026-08-28), so this field is the only way in — it has to read as
-              a search box on sight, at a width nobody can miss. */}
-          <div className="flex min-w-0 flex-1 justify-center">
-            <CommandSearchTrigger onClick={openSearch} className="w-full max-w-md" />
-          </div>
+          <div className="min-w-0 flex-1" />
 
           <div className="flex shrink-0 items-center gap-0.5 lg:gap-1.5">
             <Link
@@ -256,6 +250,15 @@ export function Header() {
               )}
             </Link>
 
+          </div>
+
+          {/* Owner call 2026-08-28 (navbar แบบ C): search closes the row at its
+              far right, after Honey — the nav reads uninterrupted from the left
+              and the field sits in the tools corner, the way CoinMarketCap ends
+              its main row. Still the page's only search entry, still painted as
+              a real field with the visible "/" hint. */}
+          <div className="w-52 shrink-0 lg:w-80">
+            <CommandSearchTrigger onClick={openSearch} />
           </div>
         </div>
       </header>

@@ -19,11 +19,16 @@ function occurrences(value: string, needle: string): number {
  *  3. then, following CoinGecko / CoinMarketCap: the brand moved up into the
  *     strip, language + currency + theme moved OFF the bar and into the account
  *     menu (with a gear for guests), and search became a real field wide enough
- *     to be the page's only way in — the home hero no longer has an input.
+ *     to be the page's only way in — the home hero no longer has an input;
+ *  4. later that evening the owner picked "navbar แบบ C" from the /proto/navbar
+ *     comparison: the market figures moved onto a thin ticker strip of their
+ *     own (plain text, never chips, no green on chrome), and the search field
+ *     moved to the FAR RIGHT of the nav row, after Honey.
  *
- *   Row 1 (strip, 44px): brand · Game → Set · market figures · upgrade ·
- *                        chat/notifications/account-menu (or guest gear)
- *   Row 2 (header, 56px): nav hubs · SEARCH FIELD · portfolio/watchlist/honey
+ *   Strip (28px):  market figures · "อัปเดตล่าสุด"
+ *   Row 1 (44px):  brand · Game → Set · upgrade ·
+ *                  chat/notifications/account-menu (or guest gear)
+ *   Row 2 (56px):  nav hubs · portfolio/watchlist/honey · SEARCH FIELD
  *
  * These tests lock that shape so a later refactor cannot quietly reintroduce a
  * rejected variant. What did NOT move: the phone header keeps its own search
@@ -46,6 +51,11 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
       expect(ticker).toContain(figure)
     }
     expect(ticker).toContain('href={`/${game}/market-overview`}')
+    // navbar แบบ C: the figures live on their own thin strip as plain text —
+    // chips up here read as buttons, and green is reserved for real P/L.
+    expect(ticker).toContain('data-slot="ticker-strip"')
+    expect(ticker).not.toContain("bg-muted/50")
+    expect(ticker).not.toContain("text-price-up")
 
     // Search and the three display preferences both left this strip.
     expect(ticker).not.toContain("onSearchOpen")
@@ -75,6 +85,9 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     expect(header).toContain('href="/portfolio"')
     expect(header).toContain('href="/watchlist"')
     expect(header).toContain('href="/honey"')
+    // navbar แบบ C: search closes the row at its far right, AFTER Honey —
+    // the nav reads uninterrupted from the left.
+    expect(header.indexOf('href="/honey"')).toBeLessThan(searchTrigger)
   })
 
   it("reaches language, currency and theme from both the account menu and the guest gear", () => {

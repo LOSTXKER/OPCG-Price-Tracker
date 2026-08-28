@@ -107,6 +107,7 @@ export const th = {
   table: "ตาราง",
   grid: "กริด",
   totalCards: "การ์ดทั้งหมด",
+  lastUpdatedLabel: "อัปเดตล่าสุด",
   avgPerCard: "เฉลี่ยต่อการ์ด",
   marketPricePerCard: "ราคาตลาด/ใบ",
   portfolioCardCountSummary: "{holdings} แบบ · รวม {copies} ใบ",

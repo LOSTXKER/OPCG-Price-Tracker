@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
   count: vi.fn(),
   aggregate: vi.fn(),
   groupBy: vi.fn(),
+  priceFindFirst: vi.fn(),
 }))
 
 vi.mock("@/lib/db", () => ({
@@ -15,6 +16,10 @@ vi.mock("@/lib/db", () => ({
       count: mocks.count,
       aggregate: mocks.aggregate,
       groupBy: mocks.groupBy,
+    },
+    // The header's "อัปเดตล่าสุด" figure — freshest scrape overall.
+    cardPrice: {
+      findFirst: mocks.priceFindFirst,
     },
   },
 }))
@@ -35,6 +40,9 @@ describe("cards route grade lens", () => {
     mocks.count.mockResolvedValue(1)
     mocks.aggregate.mockResolvedValue({ _sum: { latestPriceJpy: 12_000 } })
     mocks.groupBy.mockResolvedValue([])
+    mocks.priceFindFirst.mockResolvedValue({
+      scrapedAt: new Date("2026-04-05T00:00:00Z"),
+    })
   })
 
   it("uses the PSA 10 anchor for modeled grades without applying hidden Raw constraints", async () => {

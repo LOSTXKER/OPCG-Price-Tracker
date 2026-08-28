@@ -107,6 +107,7 @@ export const jp = {
   table: "テーブル",
   grid: "グリッド",
   totalCards: "全カード",
+  lastUpdatedLabel: "最終更新",
   avgPerCard: "1枚あたり平均",
   marketPricePerCard: "市場価格 / 1枚",
   portfolioCardCountSummary: "{holdings}種類 · 合計{copies}枚",

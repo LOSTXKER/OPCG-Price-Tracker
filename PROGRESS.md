@@ -1,31 +1,33 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-08-28 (ค่ำ รอบ 2) — **เบสเคาะ navbar แบบ C แล้ว · เหลือเลือกตำแหน่งช่องค้นหา 3 ตัวเลือกที่ `/proto/navbar`**
+อัปเดตล่าสุด: 2026-08-28 (ดึก) — **Navbar แบบ C ลงของจริงแล้ว: แถบชีพจรแยก + ช่องค้นหาขวาสุดหลัง Honey (ตามเบสเคาะ) รอเบสรีวิวบน preview**
 
-## เรื่องราวรอบนี้ (งานเก็บ navbar หลังโครง CoinGecko)
+## การตัดสินใจของเบสรอบนี้ (ครบทั้งสาย)
 
-1. เบสถาม "มีแนวทางทำ navbar ให้สวย ดูดี เหมาะใช้จริงกว่านี้มั้ย" → วินิจฉัยจากจอจริง+โค้ด+VISION ได้ 4 ปัญหา: สถิติเป็นชิปเลยดูเป็นปุ่ม · **มูลค่ารวมสีเขียวบน chrome ผิด VISION §1** · มุมโค้งปน 3 ตระกูล · เส้นแบ่ง 3 เส้น
-2. ทำหน้าเทียบ 4 แบบ (ปัจจุบัน/A โต๊ะเทรดนิ่ง/B อุ่นขัดเงา/C แถบชีพจรแยก) ตามกติกา VISION "เห็นภาพจริงก่อน implement" — commit `631753e`
-3. **เบสเคาะแบบ C (แถบชีพจรแยก)** แต่ทัก "ช่องค้นหามันดูแปลกๆ" → วินิจฉัย: ช่องค้นหา rounded-xl ตัวเดียวท่ามกลางแคปซูลกลม + ถูกวางคั่นกลางลิงก์สองกลุ่ม
-4. เขียนทับหน้าเทียบเป็นรอบช่องค้นหา: **ทุกตัวเลือกคือ C เต็มร่าง** (แถบชีพจร h-7 + สองแถว, ช่องค้นหา/เมนูจัดเป็นแคปซูลตระกูลเดียวแล้ว) ต่างกันแค่ตำแหน่งช่องค้นหา:
-   - **C1 · กลางแถวเมนู** — ที่เดิมที่เบสเลือกไว้ เปลี่ยนทรงอย่างเดียว (สูงรวม ~129px)
-   - **C2 · ชิดขวา** — ตามผัง CMC จริง ช่องค้นหากะทัดรัด w-80 ท้ายแถวเมนู (~129px · ความเด่นค้นหาลด)
-   - **C3 · ขึ้นแถวโลโก้ (ฉันแนะนำ)** — เติมช่องว่างกลางแถวโลโก้ที่แบบ C สร้างขึ้นพอดี แต่ละชั้นเหลือหน้าที่เดียว (ตัวเลข → ตัวตน+ค้นหา+บัญชี → เมนู) แถวเมนูเตี้ยลง h-12 รวม ~125px เตี้ยกว่า C1/C2
-   - แบบ A/B รอบแรกยังดูได้จาก commit `631753e` ถ้าเบสอยากย้อน
+จากคำถาม "มีแนวทางทำ navbar ให้สวย/เหมาะใช้จริงกว่านี้มั้ย" → หน้าเทียบ 2 รอบที่ `/proto/navbar` → เบสเคาะเป็นลำดับ: **แบบ C (แถบชีพจรแยกแบบ CoinMarketCap)** → แล้วเคาะช่องค้นหา **"เอา C2 แต่อยู่ขวาสุดหลัง Honey"** — implement จบในคืนเดียว
 
-## หลักฐานตรวจรับ (รอบล่าสุด)
+## สิ่งที่ลงของจริง (in-place ตามแบบ)
 
-- ESLint ไฟล์ผ่าน + full lint 0 errors · `tsc --noEmit` ผ่าน · test **151 ไฟล์ / 906 ข้อผ่าน** · build ผ่าน
-- Browser จริง: C1/C2/C3 + ปัจจุบัน × สว่าง/มืด ครบ · console ไม่มี error · สลับแบบ/ธีมทำงาน
-- **ไฟล์ header จริงยังไม่ถูกแตะ** — รอเบสเคาะตำแหน่งช่องค้นหาก่อนแล้วค่อยลงของจริง
+**โครงใหม่ 3 ชั้น (desktop ≥md · รวม 128px):**
+1. **แถบชีพจร h-7 (28px)** — `data-slot="ticker-strip"` ใน `header-market-ticker.tsx`: การ์ดทั้งหมด · **ชุดการ์ด 51 (ใหม่** จาก `sets.length`**)** · มูลค่ารวม (ลิงก์ market-overview เดิม) · JPY/THB · ขวาสุด **"อัปเดตล่าสุด 5 เม.ย. 2569" (ใหม่** — วันที่จริงจาก DB**)** — ตัวหนังสือเปล่า label จาง+เลขเข้ม tabular **ไม่มีชิป ไม่มีสีเขียว** (แก้ตามกติกา VISION §1)
+2. **แถวโลโก้ h-11 (44px)** — โลโก้ · เกม›ชุด (ตัวเดิม) · อัปเกรด · แชท/กระดิ่ง/แคปซูล — **เส้นแบ่งแนวตั้งถูกตัดออกหมด**
+3. **แถวเมนู h-14 (56px)** — เมนู 4 ลิงก์ (**rounded-full** จากเดิม rounded-lg) · พอร์ต/รายการโปรด/Honey · **ช่องค้นหาขวาสุดท้ายแถว** (แคปซูล rounded-full, `w-52 lg:w-80`, kbd "/" เดิม, ⌘K+/ shortcut เดิม)
+
+**ไฟล์ที่แตะ:** `header-market-ticker.tsx` (โครงใหม่ทั้งไฟล์) · `header.tsx` (ลำดับแถวเมนู+radius) · `command-search.tsx` (trigger rounded-xl→full, lg:h-9→h-10) · `globals.css` (**`--chrome-h` md: 6.25rem→8rem**) · `api/cards/route.ts` (+`lastPriceAt` จาก `cardPrice.findFirst` scrapedAt desc — มี index) · `use-header-data.ts` (+`updatedLabels` format 3 locale ตอน fetch เสร็จ ตาม pattern หน้าแรก) · `header-constants.ts` (type) · dict 3 ภาษา (+`lastUpdatedLabel`) · เทสต์ 3 ไฟล์อัปเดต literal โดยคงเจตนา + **เพิ่ม assertion ใหม่**: strip ต้องอยู่, ห้ามชิป/ห้ามเขียวใน ticker, ค้นหาต้องอยู่หลัง Honey · proto/navbar อัปเดตเป็นแบบที่เคาะ
+
+## หลักฐานตรวจรับ
+
+- ESLint **0 errors** ทั้งโปรเจค · tsc ผ่าน · **test 151 ไฟล์/906 ข้อผ่าน** (แก้ mock `cardPrice` ใน route.test) · build ผ่าน · ตัวตรวจดีไซน์ 0 findings
+- Browser จริง (วัดจาก DOM + ภาพ): หน้าแรกมืด+สว่างครบ 3 ชั้น · `--chrome-h`=8rem, ความสูงจริง 129px (128+เส้น 1px — overhang เดิมของโครงเก่าอยู่แล้ว) · **sticky ทุกจุดตาม var อัตโนมัติ**: card detail section-nav top=128px, set detail แถบ sticky top=128px ที่ 768 · ไม่มี overflow ที่ 768/1024/1512 · สถานะโปร่งใส→ทึบตอน scroll ทำงาน · **มือถือ 375 ไม่กระทบ** (header 56px, `--chrome-h` 3.5rem เดิม)
+- วันที่บนแถบ = ของจริงจาก DB (5 เม.ย. 2569 — ข้อมูล demo หยุดตามที่เบสรับรู้แล้ว) เปลี่ยนตามภาษา TH/EN/JP
 
 ## สถานะ git
 
-- branch `feat/navbar-direction-r2` · commit รอบช่องค้นหา push แล้ว · ไม่มี schema / migration / dependency / config change
+- branch `feat/navbar-direction-r2` — commit implement + push แล้ว · **ไม่มี** schema/migration/dependency/config change (แตะแค่ API response field เพิ่ม ไม่ break ของเดิม)
 
 ## NEXT
 
-1. **เบสเปิด `http://localhost:3000/proto/navbar`** → สลับ C1/C2/C3 สองธีม → เคาะตำแหน่งช่องค้นหา
-2. เคาะแล้ว → เฟส 2 ลงของจริง in-place: `header-market-ticker.tsx` (แยกแถบชีพจร + เอาชิป/เขียว/เส้นแบ่งออก) · `header.tsx` (แถวเมนูแคปซูล + ตำแหน่งค้นหาตามเคาะ) · `command-search.tsx` (trigger เป็นแคปซูล) · `globals.css` (`--chrome-h` → ~8rem สำหรับ C1/C2 หรือ ~7.75rem สำหรับ C3) + ไล่เช็ค sticky 6 จุดที่อ่าน `--chrome-h` (set detail rarity rail · card detail section nav · watchlist selection bar · profile tabs ฯลฯ) + อัปเดต literal ในเทสต์ `header-search-preferences.test.tsx` / `header-catalog-control.test.tsx` โดยคงเจตนา + เก็บ data plumbing "ชุด 51" (มีจาก useHeaderSets แล้ว) กับ "อัปเดตล่าสุด" (ต้องส่งวันที่จาก API/props — หน้าแรกมีอยู่แล้วฝั่ง server) — แผนเต็ม: `~/.claude/plans/navbar-goofy-peach.md`
-3. คิวเดิมที่ยังค้าง (อย่าลืม): กวาดคำ "อัปเดตทุกวัน" ~35 จุดทั้งเว็บ · `getHomeData().rarityRows` query ทิ้งเปล่า · "อัปเดตล่าสุด:" hardcode ไทยที่ trending + most-expensive
+1. **เบสรีเฟรช `localhost:3000` ดู navbar จริง** (ทุกหน้า desktop ได้แถบใหม่หมด) — จุดที่ควรกวาดตา: หน้าที่มีแถบ sticky (set detail มือถือ/แท็บเล็ต · card detail · watchlist เลือกหลายใบ · โปรไฟล์สาธารณะ) ว่าระยะเกาะไม่แปลก
+2. พอใจแล้วสั่งเปิด PR `feat/navbar-direction-r2` → master ได้เลย
+3. คิวเดิมค้าง: กวาด "อัปเดตทุกวัน" ~35 จุด · `getHomeData().rarityRows` query ทิ้งเปล่า · "อัปเดตล่าสุด:" hardcode ไทยที่ trending + most-expensive (ตอนนี้ header มี pattern `updatedLabels` 3 locale ให้ลอกแล้ว)

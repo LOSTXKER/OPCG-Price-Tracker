@@ -64,11 +64,11 @@ const CONCEPT_COPY: Record<
       "ช่องค้นหายังคั่นกลางระหว่างลิงก์ซ้าย-ขวาเหมือนเดิม ถ้าความรู้สึกแปลกมาจากตำแหน่ง ไม่ใช่แค่ทรง แบบนี้จะยังไม่หายสนิท · สูงรวม ~129px เท่าแบบ C ที่เบสเห็น",
   },
   right: {
-    name: "C2 · ชิดขวา — ตามผังจริงของ CoinMarketCap",
+    name: "C2 · ชิดขวาสุด — แบบที่เบสเคาะ (28 ส.ค.)",
     summary:
-      "เว็บต้นแบบวางช่องค้นหาแบบกะทัดรัดไว้ท้ายแถวเมนู: เมนูอ่านต่อเนื่องจากซ้ายโดยไม่โดนผ่ากลาง ส่วนช่องค้นหาไปอยู่ติดกับของประจำตัว (พอร์ต/รายการโปรด/Honey) กลายเป็นมุมเครื่องมือของฉันชัดๆ",
+      "เมนูอ่านต่อเนื่องจากซ้ายโดยไม่โดนผ่ากลาง ของประจำตัว (พอร์ต/รายการโปรด/Honey) ตามมา แล้วปิดท้ายแถวด้วยช่องค้นหาที่ขวาสุดตามที่เบสสั่ง — ตำแหน่งเดียวกับที่ CoinMarketCap วางช่องค้นหาเป็นเครื่องมือท้ายแถว",
     tradeoff:
-      "ความเด่นของช่องค้นหาลดลงจากที่เบสเคยตั้งใจไว้ว่าเป็นทางเข้าค้นหาทางเดียวต้องเห็นชัด · สูงรวม ~129px",
+      "ความเด่นของช่องค้นหาลดลงจากตอนอยู่กลางจอ · สูงรวม ~129px · แบบนี้คือแบบที่กำลังลงของจริง",
   },
   brand: {
     name: "C3 · ขึ้นแถวโลโก้ — เติมช่องว่างที่แบบ C สร้างขึ้นพอดี",
@@ -500,8 +500,8 @@ function CNavbar({ placement }: { placement: "center" | "right" | "brand" }) {
         ) : (
           <>
             <div className="min-w-0 flex-1" />
-            <SearchField variant="capsule" className="h-10 w-80" />
             <MyStuffCluster />
+            <SearchField variant="capsule" className="h-10 w-80" />
           </>
         )}
       </div>
@@ -567,7 +567,7 @@ function HomeFold() {
 const subscribeNever = () => () => {}
 
 export default function NavbarPrototypePage() {
-  const [concept, setConcept] = useState<Concept>("center")
+  const [concept, setConcept] = useState<Concept>("right")
   // Flip the real site theme (next-themes) so the whole page — frame included —
   // previews light/dark; a frame-scoped class can't force light under a dark root.
   const { resolvedTheme, setTheme } = useTheme()
@@ -638,9 +638,9 @@ export default function NavbarPrototypePage() {
           <div className="border-l-2 border-primary pl-4">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-h3">{conceptCopy.name}</h2>
-              {concept === "brand" && (
+              {concept === "right" && (
                 <span className="rounded-full bg-primary/15 px-2 py-1 text-micro text-primary">
-                  ฉันแนะนำ
+                  เบสเคาะแบบนี้
                 </span>
               )}
             </div>

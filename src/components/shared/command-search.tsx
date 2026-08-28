@@ -76,9 +76,10 @@ const NAV_ACTIONS: { href: string; labelKey: TranslationKey; icon: LucideIcon }[
 /**
  * The site's search entry point. Since the home hero dropped its own input
  * (owner call 2026-08-28, following CoinGecko), this is the ONLY search field a
- * visitor sees, so it is painted as a field — full-width bordered box, real
- * placeholder text, visible `/` hint — rather than an icon button they have to
- * recognise. It shrinks to an icon only on the narrowest chrome width.
+ * visitor sees, so it is painted as a field — bordered box, real placeholder
+ * text, visible `/` hint — rather than an icon button they have to recognise.
+ * Navbar แบบ C (same evening): the field is a rounded capsule like every other
+ * control on the bar, and sits at the far right of the nav row, after Honey.
  */
 export function CommandSearchTrigger({
   onClick,
@@ -95,8 +96,8 @@ export function CommandSearchTrigger({
       onClick={onClick}
       aria-label={t(lang, "searchCardsDots")}
       className={cn(
-        "hairline ease-chrome group flex h-11 w-11 items-center justify-center gap-2 rounded-xl bg-card px-0 text-left text-label transition-[background-color,box-shadow,border-color] hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        "md:w-full md:justify-start md:px-3 lg:h-9",
+        "hairline ease-chrome group flex h-11 w-11 items-center justify-center gap-2 rounded-full bg-card px-0 text-left text-label transition-[background-color,box-shadow,border-color] hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        "md:w-full md:justify-start md:px-3.5 lg:h-10",
         className,
       )}
     >
@@ -107,7 +108,7 @@ export function CommandSearchTrigger({
       <span className="hidden min-w-0 flex-1 truncate text-body-sm text-muted-foreground md:inline">
         {t(lang, "searchCardsDots")}
       </span>
-      <kbd className="hairline hidden shrink-0 rounded-md bg-background px-1.5 py-0.5 font-sans text-micro text-muted-foreground md:inline">
+      <kbd className="hairline hidden shrink-0 rounded-full bg-background px-1.5 py-0.5 font-sans text-micro text-muted-foreground md:inline">
         /
       </kbd>
     </button>

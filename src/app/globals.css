@@ -155,8 +155,9 @@
   --radius: 0.75rem;
 
   /* Top-chrome height — mobile = header (h-14 = 56px); desktop override below
-     = ticker (h-11 = 44px) + header (h-14 = 56px) = 100px. Sticky offsets and
-     scroll-margins read from this single var (TOKENS-04) instead of magic numbers. */
+     = ticker strip (h-7 = 28px) + brand row (h-11 = 44px) + header (h-14 = 56px)
+     = 128px. Sticky offsets and scroll-margins read from this single var
+     (TOKENS-04) instead of magic numbers. */
   --chrome-h: 3.5rem;
   --floating-ad-clearance: 0rem;
 
@@ -222,12 +223,13 @@
   --neutral-soft: var(--muted);
 }
 
-/* Desktop top chrome = ticker (h-11 = 44px) + header (h-14 = 56px) = 100px.
+/* Desktop top chrome = ticker strip (h-7 = 28px) + brand row (h-11 = 44px)
+   + header (h-14 = 56px) = 128px (navbar แบบ C, เบสเคาะ 2026-08-28).
    Kept OUTSIDE @layer (and outside :root's body) — a layered override would
    lose to the unlayered base value above. */
 @media (min-width: 768px) {
   :root {
-    --chrome-h: 6.25rem;
+    --chrome-h: 8rem;
   }
 }
 
