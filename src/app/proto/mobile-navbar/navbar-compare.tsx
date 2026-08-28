@@ -22,12 +22,25 @@ import { ProtoMarketSection } from "./components/proto-market-section"
 import { ProtoSetStrip } from "./components/proto-set-strip"
 
 const VARIANT_OPTIONS = [
-  { value: "current" as const, label: "ปัจจุบัน", ariaLabel: "แถบบนแบบปัจจุบัน แถวเดียว" },
-  { value: "twoRow" as const, label: "2 แถว", ariaLabel: "แถบบนสองแถว ตรึงทั้งคู่" },
   {
-    value: "twoRowCollapse" as const,
-    label: "2 แถว ยุบ",
-    ariaLabel: "แถบบนสองแถว แถวเลือกชุดยุบตอนเลื่อน",
+    value: "current" as const,
+    label: "ปัจจุบัน",
+    ariaLabel: "แถบบนแบบปัจจุบัน แถวเดียว",
+  },
+  {
+    value: "twoRow" as const,
+    label: "2 แถว",
+    ariaLabel: "แถบบนสองแถว ตามที่สั่งไว้",
+  },
+  {
+    value: "polished" as const,
+    label: "ขัดเงา",
+    ariaLabel: "แถบบนสองแถว เวอร์ชันขัดเงา",
+  },
+  {
+    value: "polishedCollapse" as const,
+    label: "ขัดเงา+ยุบ",
+    ariaLabel: "แถบบนสองแถวขัดเงา แถวบริบทยุบตอนเลื่อน",
   },
 ]
 
@@ -49,10 +62,17 @@ const VARIANT_COPY: Record<
     tradeoff:
       "หัวเว็บสูงขึ้นจาก 56px เป็น 104px กินจอถาวรราวหนึ่งแถวราคาตลอดเวลาที่เลื่อนอ่าน",
   },
-  twoRowCollapse: {
-    name: "2 แถว + ยุบตอนเลื่อน (ฉันแนะนำ)",
+  polished: {
+    name: "ขัดเงา — 2 แถวเหมือนกัน แต่เก็บงานละเอียดขึ้น (ฉันแนะนำ)",
     summary:
-      "บนสุดหน้าตาเหมือนแบบ 2 แถวทุกอย่าง แต่พอเลื่อนอ่านราคา แถวเลือกชุดจะหุบเก็บเอง เหลือแถวบน 56px เท่าเดิม เลื่อนกลับขึ้นบนสุดก็คลี่กลับมา",
+      "โครงเดียวกับที่เบสสั่งเป๊ะ ปรับ 4 จุด: (1) กลางแถวบนเปลี่ยนจากคำว่า Meecard เป็นชื่อหน้าที่กำลังดู เพราะโลโก้บอกชื่อเว็บอยู่แล้ว (2) จัดกลุ่มปุ่ม — เครื่องมือ (รายการโปรด · แจ้งเตือน) แยกจากบัญชีด้วยเส้นบางๆ ไม่ใช่ไอคอนสี่อันเรียงพรืด (3) ออกจากระบบย้ายเข้าเมนูรูปโปรไฟล์แบบเว็บทั่วไป คืนที่ว่างมาให้ชื่อหน้า และตอนยังไม่ล็อกอินได้ปุ่ม เข้าสู่ระบบ แบบมีข้อความเต็ม (4) แถวสองมีพื้นหลังอ่อนๆ แยกชั้น พร้อมโลโก้เกมกับภาพกล่องชุด + ชื่อชุดเต็ม",
+    tradeoff:
+      "ชื่อหน้าต้องเปลี่ยนตามหน้าที่เปิดอยู่ (ต้องต่อระบบเพิ่มนิดหน่อยตอนทำจริง) และรูปกล่องชุดในแถวสองจะโชว์ก็ต่อเมื่อเลือกชุดแล้ว",
+  },
+  polishedCollapse: {
+    name: "ขัดเงา + ยุบตอนเลื่อน",
+    summary:
+      "ทุกอย่างของแบบขัดเงา แต่แถวสอง (แถบบริบท) หุบเก็บเองตอนเลื่อนอ่านราคา แล้วคลี่กลับเมื่อเลื่อนขึ้นบนสุด — หัวเว็บกลับมา 56px เท่าเดิมตอนอ่าน",
     tradeoff:
       "ระหว่างเลื่อนกลางหน้าจะไม่เห็นช่องเลือกชุด (ใช้ปุ่ม ทุกชุด ที่หัวตารางแทนได้) และมีจังหวะยุบ/คลี่ให้เห็นตอนเลื่อนใกล้หัวหน้า",
   },
@@ -77,7 +97,7 @@ export function NavbarCompare({
   tableTotalPages: number
   sets: SetPickerItem[]
 }) {
-  const [variant, setVariant] = useState<NavbarVariant>("twoRow")
+  const [variant, setVariant] = useState<NavbarVariant>("polished")
   const [signedIn, setSignedIn] = useState(true)
 
   const { resolvedTheme, setTheme } = useTheme()
@@ -95,7 +115,10 @@ export function NavbarCompare({
       // collapsing one is back to 56px by the time anything sticks.
       style={
         {
-          "--chrome-h": variant === "twoRow" ? "6.5rem" : "3.5rem",
+          // The pinned two-row variants permanently raise the chrome; the
+          // collapsing one is back to 56px by the time anything sticks.
+          "--chrome-h":
+            variant === "twoRow" || variant === "polished" ? "6.5rem" : "3.5rem",
         } as CSSProperties
       }
     >
@@ -184,7 +207,7 @@ function Explainer({
         {signedIn ? " ล็อกอินแล้ว" : " ยังไม่ล็อกอิน"})
       </p>
 
-      {(["current", "twoRow", "twoRowCollapse"] as const).map((v) => (
+      {(["current", "twoRow", "polished", "polishedCollapse"] as const).map((v) => (
         <button
           key={v}
           type="button"

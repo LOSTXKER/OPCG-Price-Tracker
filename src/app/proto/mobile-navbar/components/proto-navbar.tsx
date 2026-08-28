@@ -18,7 +18,7 @@ import {
 import { useScrolled } from "@/hooks/use-scrolled"
 import { cn } from "@/lib/utils"
 
-export type NavbarVariant = "current" | "twoRow" | "twoRowCollapse"
+export type NavbarVariant = "current" | "twoRow" | "polished" | "polishedCollapse"
 
 /**
  * Static replicas of the phone chrome for the /proto/mobile-navbar comparison.
@@ -62,6 +62,59 @@ function Logo() {
         className="h-auto w-8 shrink-0 select-none"
       />
     </span>
+  )
+}
+
+/**
+ * Polished row 2: a CONTEXT bar, not a second chrome row. Three things change
+ * from the plain version — a faint surface tint so the eye reads "this line
+ * says where you are" instead of "more buttons", the game shown as its crest
+ * rather than a text pill, and the set trigger carrying the chosen set's box
+ * art plus its full name (the width row 2 exists to give it).
+ */
+function PolishedContextRow({ collapsed }: { collapsed: boolean }) {
+  return (
+    <div
+      className={cn(
+        "ease-chrome flex min-w-0 items-center gap-1.5 overflow-hidden bg-muted/30 px-2 transition-all",
+        collapsed ? "h-0 opacity-0" : "h-12 opacity-100",
+      )}
+    >
+      <span className="flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-hair bg-background ps-1.5 pe-2.5 text-sm font-semibold text-foreground">
+        <span className="relative flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted">
+          <Image
+            src="/games/one-piece-logo.png"
+            alt=""
+            width={48}
+            height={48}
+            className="size-6 object-contain"
+          />
+        </span>
+        OPCG
+        <ChevronDown className="size-3.5 text-muted-foreground" />
+      </span>
+
+      <span className="flex h-9 min-w-0 flex-1 items-center gap-2 rounded-full border border-hair bg-background ps-1.5 pe-2.5">
+        <span className="relative block h-7 w-5 shrink-0 overflow-hidden rounded-sm bg-muted">
+          <Image
+            src="https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/sets/op15.webp"
+            alt=""
+            fill
+            className="object-cover"
+            sizes="20px"
+          />
+        </span>
+        <span className="min-w-0 flex-1 text-start">
+          <span className="block text-xs font-semibold leading-tight text-foreground">
+            OP15
+          </span>
+          <span className="block truncate text-xs leading-tight text-muted-foreground">
+            Adventure on KAMI&apos;s Island
+          </span>
+        </span>
+        <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
+      </span>
+    </div>
   )
 }
 
@@ -124,9 +177,62 @@ export function ProtoNavbar({
     )
   }
 
-  // Owner request: TWO rows — identity + account utilities on top, the
-  // game→set catalog control on its own full-width row underneath.
-  const collapsed = variant === "twoRowCollapse" && scrolled
+  // Polished pass on the same two-row idea (owner: "ทำให้ดีกว่านี้หน่อย").
+  // Four changes, each earning its place:
+  //  1. Row 1's middle carries the PAGE NAME instead of the wordmark — the
+  //     logo already says which site this is; the space is better spent
+  //     saying where you are (iOS toolbar grammar).
+  //  2. The utilities are grouped: tools (watchlist, alerts) then a hairline
+  //     then the account, so four icons stop reading as one undifferentiated
+  //     row.
+  //  3. Sign-out lives inside the avatar menu like every other site, which
+  //     buys back a whole 44px slot for the page name.
+  //  4. Row 2 becomes a tinted CONTEXT bar showing the game crest and the
+  //     set's box art + full name — the payoff for spending the second row.
+  if (variant === "polished" || variant === "polishedCollapse") {
+    const collapsedCtx = variant === "polishedCollapse" && scrolled
+    return (
+      <div aria-hidden className="hairline-b sticky top-0 z-chrome bg-background">
+        <div className="flex h-14 min-w-0 items-center px-2">
+          <Logo />
+          <span className="min-w-0 flex-1 truncate text-h5 text-foreground">
+            ราคาการ์ด
+          </span>
+
+          <Slot label="รายการโปรด">
+            <Heart className="size-[18px]" />
+          </Slot>
+          <span className="relative">
+            <Slot filled={false} label="แจ้งเตือน">
+              <Bell className="size-[18px]" />
+            </Slot>
+            <span className="absolute right-2 top-2 size-2 rounded-full bg-danger" />
+          </span>
+
+          <span aria-hidden className="mx-1 h-5 w-px shrink-0 bg-hair" />
+
+          {signedIn ? (
+            // One control, not two: tapping it opens the account menu, where
+            // "ออกจากระบบ" lives with settings and preferences.
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
+              บ
+            </span>
+          ) : (
+            <span className="flex h-11 shrink-0 items-center gap-1.5 rounded-full bg-primary px-3.5 text-sm font-semibold text-primary-foreground">
+              <LogIn className="size-4" />
+              เข้าสู่ระบบ
+            </span>
+          )}
+        </div>
+
+        <PolishedContextRow collapsed={collapsedCtx} />
+      </div>
+    )
+  }
+
+  // Owner request as literally specced: identity + account utilities on top,
+  // the game→set catalog control on its own full-width row underneath.
+  const collapsed = false
 
   return (
     <div aria-hidden className="hairline-b sticky top-0 z-chrome bg-background">
