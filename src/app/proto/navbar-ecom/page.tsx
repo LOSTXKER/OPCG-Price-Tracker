@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils"
 
 /* ------------------------------------------------------------------ data */
 
-type Variant = "twoRow" | "mineRight" | "current"
+type Variant = "mergedPulse" | "twoRow" | "current"
 
 /** ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.) เพื่อเทียบแบบตาต่อตา */
 const STATS = {
@@ -71,8 +71,8 @@ const SETS = [
 ] as const
 
 const VARIANT_OPTIONS = [
-  { value: "twoRow", label: "D · เหลือสองแถว" },
-  { value: "mineRight", label: "A · สามแถว (ปรับแล้ว)" },
+  { value: "mergedPulse", label: "D2 · ชีพจรรวมแถวบน" },
+  { value: "twoRow", label: "D · ชีพจรแยกแถว" },
   { value: "current", label: "ปัจจุบัน" },
 ] as const
 
@@ -80,35 +80,35 @@ const VARIANT_COPY: Record<
   Variant,
   { name: string; summary: string; tradeoff: string }
 > = {
-  twoRow: {
-    name: "D · เหลือสองแถว — โลโก้ลงมานำแถวล่าง",
+  mergedPulse: {
+    name: "D2 · ชีพจรรวมกับแถวบน — เหลือสองแถวจริงๆ",
     summary:
-      "แถวบน (48px) = บริบทกับบัญชี: เกม › ชุด บอกว่ากำลังดูแคตตาล็อกไหน แล้วของฉันกับบัญชีชิดขวา · แถวล่าง (56px) = ตัวตนกับการลงมือ: โลโก้นำหน้าซ้ายสุด ตามด้วยเมนู แล้วปิดท้ายด้วยช่องค้นหาชิดขวา — เตี้ยกว่าแบบ A อยู่ 8px และแต่ละแถวอ่านเป็นเรื่องเดียวชัดกว่า",
+      "ยุบแถบชีพจรเข้าไปอยู่แถวเดียวกับเกม › ชุด และกลุ่มบัญชี แล้วย้ายพอร์ต · รายการโปรด · Honey ลงมาอยู่ซ้ายของช่องค้นหาในแถวล่าง — เหลือสองแถวจริงๆ สูงรวมแค่ 104px เตี้ยกว่าของจริง 28px และแถวล่างอ่านเป็นลำดับเดียว: ตัวตน → ทางไป → ของฉัน → ค้นหา",
     tradeoff:
-      "โลโก้ไม่ได้อยู่บนสุดของแถบแล้ว (มีเกม › ชุด อยู่เหนือมันหนึ่งชั้น) ซึ่งขัดกับความเคยชินว่าแบรนด์ต้องอยู่มุมบนซ้ายเสมอ · แถวบนซ้ายเริ่มด้วยปุ่มเกมแทนโลโก้ อาจดูเหมือนแถบเครื่องมือมากกว่าหัวเว็บ",
+      "สายพานเหลือที่วิ่ง 309px จากเดิม 781px (แคบลง 60%) เห็นการ์ดพร้อมกันได้ราวใบครึ่งเท่านั้น — ถ้าสายพานคือของที่อยากให้คนเห็น อันนี้คือราคาที่แพงที่สุดของแบบนี้ · ต้องซ่อนสถิติสองตัว (จำนวนชุด · อัปเดตล่าสุด) ถึงจะใส่ลงแถวเดียวได้",
   },
-  mineRight: {
-    name: "A · สามแถว — ปรับให้ช่องค้นหาชิดขวาแล้ว",
+  twoRow: {
+    name: "D · ชีพจรแยกแถว — แบบก่อนหน้า เก็บไว้เทียบ",
     summary:
-      "แบบ A จากรอบก่อน (โลโก้ · เกม › ชุด อยู่แถว 2 · ของฉันชิดขวาติดบัญชี) แต่ปรับตามที่เบสสั่ง: ช่องค้นหาไม่ยืดเต็มแถวอีกแล้ว ไปชิดขวาสุดแถว 3 กว้าง 480px — เมนูกับช่องค้นหาอยู่คนละมุม ไม่ติดกันจนอ่านเป็นก้อนเดียว",
+      "แถบชีพจรยังเป็นแถวของตัวเองเต็มความกว้าง สายพานเลยมีที่วิ่งเต็มที่ · แถวกลาง = เกม › ชุด ⟷ ของฉัน ‖ บัญชี · แถวล่าง = โลโก้ · เมนู ⟷ ค้นหาชิดขวา",
     tradeoff:
-      "ช่องค้นหาแคบลงจาก 981px เหลือ 480px (ยังกว้างกว่าของจริง 320px อยู่ 1.5 เท่า) · เกิดช่องว่างกลางแถว 3 ที่ยังไม่ได้ใช้ทำอะไร",
+      "สูง 136px มากกว่า D2 อยู่ 32px · ของฉันอยู่แถวบน ห่างจากช่องค้นหาที่อยู่แถวล่าง",
   },
   current: {
     name: "ปัจจุบัน — แบบ C ที่ขึ้นเว็บอยู่",
     summary:
-      "ตัวตั้งเทียบ: ของฉันยังอยู่แถว 3 เบียดกับช่องค้นหาที่กว้างแค่ 320px และแถว 2 เหลือช่องว่างกลางทั้งแถว",
+      "ตัวตั้งเทียบ: สามแถว สูง 132px · ช่องค้นหา 320px ซุกอยู่ขวาสุดแถวเมนู",
     tradeoff: "—",
   },
 }
 
 const SHARED_NOTES = [
-  "แถบชีพจรตลาดยังล็อกอยู่แถวบนสุดทั้งสองแบบ ไม่มีใครแตะ",
-  "ช่องค้นหาชิดขวาทั้งสองแบบตามที่เบสสั่ง กว้าง 480px (ของจริงตอนนี้ 320px)",
-  "พอร์ต · รายการโปรด · Honey อยู่ชิดขวาติดกลุ่มบัญชีทั้งสองแบบ มีเส้นคั่นบาง",
-  "ปุ่มชุดเป็น dropdown มีรูปกล่อง + รหัส + ชื่อชุด · ปุ่มเลือกเกมนำหน้าเสมอ",
+  "D2 ทำตามที่เบสสั่ง: ชีพจรรวมแถวบน + ของฉันย้ายไปอยู่ซ้ายของช่องค้นหา · สูงรวม 104px เตี้ยกว่าของจริง 28px",
+  "ราคาที่ต้องจ่ายคือที่วิ่งของสายพาน — วัดจริง: D2 เหลือ 309px ส่วน D (ชีพจรแยกแถว) ได้ 781px เท่าของจริง คือแคบลง 60%",
+  "D2 ยังต้องซ่อนสถิติสองตัว (จำนวนชุด · อัปเดตล่าสุด) ถึงจะใส่ลงแถวเดียวได้",
+  "ช่องค้นหาชิดขวาทั้งสองแบบ · D2 กว้าง 416px · D กว้าง 480px (ของจริงตอนนี้ 320px)",
   "ทุกปุ่มสูง 40px ขึ้นไป · ของฉันมีป้ายชื่อครบ · ภาษา/สกุลเงิน/ธีมอยู่ในเมนูโปรไฟล์",
-  "ต่างกันจุดเดียว: โลโก้อยู่บนสุด (A · สามแถว) หรือลงมานำแถวล่าง (D · สองแถว)",
+  "ปุ่มทุกปุ่มกดไม่ได้จริง (หุ่นโชว์ผัง) · ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.)",
 ] as const
 
 /** ตารางพิสูจน์ "ไม่มีอะไรหายเงียบ" — ของ 15 ชิ้นจากแถบจริง ลงตรงไหนในแต่ละแบบ */
@@ -131,40 +131,40 @@ const PLACEMENTS: Record<Variant, ReadonlyArray<{ item: string; where: string }>
     { item: "ช่องค้นหา", where: "แถวเมนู ขวาสุด (กว้าง 320px)" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ซ่อนในเมนูโปรไฟล์ (guest = ปุ่มเฟือง)" },
   ],
-  twoRow: [
-    { item: "สถิติตลาด", where: "แถบชีพจร — ล็อก ไม่แตะ" },
-    { item: "สายพานการ์ดขยับแรง", where: "แถบชีพจร — ล็อก ไม่แตะ" },
-    { item: "โลโก้ Meecard", where: "🔁 แถวล่าง ซ้ายสุด — นำหน้าเมนู" },
-    { item: "ปุ่มเลือกเกม", where: "แถวบน ซ้ายสุด" },
-    { item: "ตัวเลือกชุดการ์ด", where: "แถวบน ซ้ายสุด — dropdown มีรูปกล่อง" },
+  mergedPulse: [
+    { item: "สถิติตลาด", where: "🔁 แถวบน ซ้ายสุด — รวมแถวกับของอื่น (ซ่อนสถิติ 2 ตัว)" },
+    { item: "สายพานการ์ดขยับแรง", where: "🔁 แถวบน ซ้ายสุด — รวมแถวกับของอื่น (ซ่อนสถิติ 2 ตัว)" },
+    { item: "โลโก้ Meecard", where: "แถวล่าง ซ้ายสุด" },
+    { item: "ปุ่มเลือกเกม", where: "แถวบน กลางแถว" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถวบน กลางแถว — dropdown มีรูปกล่อง" },
     { item: "ปุ่มอัปเกรด", where: "แถวบน ฝั่งขวา — ปุ่มมีกรอบ" },
     { item: "ข้อความ", where: "แถวบน ฝั่งขวา (ไอคอน 40px)" },
     { item: "การแจ้งเตือน", where: "แถวบน ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
     { item: "โปรไฟล์", where: "แถวบน ฝั่งขวา ขวาสุด (แคปซูล 40px)" },
     { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
     { item: "เมนูหลัก", where: "แถวล่าง — ถัดจากโลโก้" },
-    { item: "พอร์ต", where: "แถวบน ฝั่งขวา — ติดกลุ่มบัญชี" },
-    { item: "รายการโปรด", where: "แถวบน ฝั่งขวา — ติดกลุ่มบัญชี" },
-    { item: "Honey + แต้ม", where: "แถวบน ฝั่งขวา — ติดกลุ่มบัญชี" },
-    { item: "ช่องค้นหา", where: "แถวล่าง ขวาสุด — 480px" },
+    { item: "พอร์ต", where: "🔁 แถวล่าง — ซ้ายของช่องค้นหา" },
+    { item: "รายการโปรด", where: "🔁 แถวล่าง — ซ้ายของช่องค้นหา" },
+    { item: "Honey + แต้ม", where: "🔁 แถวล่าง — ซ้ายของช่องค้นหา" },
+    { item: "ช่องค้นหา", where: "แถวล่าง ขวาสุด — 416px" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
-  mineRight: [
-    { item: "สถิติตลาด", where: "แถบชีพจร — ล็อก ไม่แตะ" },
-    { item: "สายพานการ์ดขยับแรง", where: "แถบชีพจร — ล็อก ไม่แตะ" },
-    { item: "โลโก้ Meecard", where: "แถว 2 ซ้ายสุด (บนสุดของแถบ)" },
-    { item: "ปุ่มเลือกเกม", where: "แถว 2 ถัดจากโลโก้" },
-    { item: "ตัวเลือกชุดการ์ด", where: "แถว 2 ถัดจากโลโก้ — dropdown มีรูปกล่อง" },
-    { item: "ปุ่มอัปเกรด", where: "แถว 2 ฝั่งขวา — ปุ่มมีกรอบ" },
-    { item: "ข้อความ", where: "แถว 2 ฝั่งขวา (ไอคอน 40px)" },
-    { item: "การแจ้งเตือน", where: "แถว 2 ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
-    { item: "โปรไฟล์", where: "แถว 2 ฝั่งขวา ขวาสุด (แคปซูล 40px)" },
+  twoRow: [
+    { item: "สถิติตลาด", where: "แถบชีพจร — แถวของตัวเอง เต็มความกว้าง" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถบชีพจร — แถวของตัวเอง เต็มความกว้าง" },
+    { item: "โลโก้ Meecard", where: "แถวล่าง ซ้ายสุด" },
+    { item: "ปุ่มเลือกเกม", where: "แถวกลาง ซ้ายสุด" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถวกลาง ซ้ายสุด — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถวกลาง ฝั่งขวา ขวาสุด (แคปซูล 40px)" },
     { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
-    { item: "เมนูหลัก", where: "แถว 3 ซ้ายสุด" },
-    { item: "พอร์ต", where: "แถว 2 ฝั่งขวา — ติดกลุ่มบัญชี" },
-    { item: "รายการโปรด", where: "แถว 2 ฝั่งขวา — ติดกลุ่มบัญชี" },
-    { item: "Honey + แต้ม", where: "แถว 2 ฝั่งขวา — ติดกลุ่มบัญชี" },
-    { item: "ช่องค้นหา", where: "🔁 แถว 3 ขวาสุด — 480px (เดิมยืดเต็มแถว)" },
+    { item: "เมนูหลัก", where: "แถวล่าง — ถัดจากโลโก้" },
+    { item: "พอร์ต", where: "แถวกลาง ฝั่งขวา — ติดกลุ่มบัญชี" },
+    { item: "รายการโปรด", where: "แถวกลาง ฝั่งขวา — ติดกลุ่มบัญชี" },
+    { item: "Honey + แต้ม", where: "แถวกลาง ฝั่งขวา — ติดกลุ่มบัญชี" },
+    { item: "ช่องค้นหา", where: "แถวล่าง ขวาสุด — 480px" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
 }
@@ -694,22 +694,29 @@ function ProtoMarquee() {
   )
 }
 
-/**
- * แถว 1 — แถบชีพจรตลาด ล็อกตายตัว (เบสสั่ง 2026-08-29: "แถว 1 ขอบังคับเป็น
- * ชีพจรตลาดเท่านั้น") ตรงตามที่ขึ้นเว็บอยู่: สถิติซ้าย · สายพานการ์ดขวา
- * ทุกแบบด้านล่างใช้แถวนี้เหมือนกันหมด ไม่มีใครแตะ
- */
+/** สถิติ + สายพาน — เนื้อในของแถบชีพจร ใช้ซ้ำได้ทั้งแบบแถวเดี่ยวและแบบรวมแถว */
+function PulseContent({ compact = false }: { compact?: boolean }) {
+  return (
+    <>
+      <StatText label="การ์ดทั้งหมด" value={STATS.cards} />
+      {!compact && <StatText label="ชุด" value={STATS.sets} />}
+      <StatText label="มูลค่ารวม" value={STATS.value} link />
+      <StatText label="JPY/THB" value={STATS.rate} />
+      {!compact && (
+        <span className="shrink-0 whitespace-nowrap text-meta">
+          อัปเดตล่าสุด {STATS.updated}
+        </span>
+      )}
+      <ProtoMarquee />
+    </>
+  )
+}
+
+/** แถบชีพจรตลาดแบบแถวของตัวเอง (h-8) — ตรงตามที่ขึ้นเว็บอยู่ */
 function PulseStrip() {
   return (
     <div className="hairline-b flex h-8 items-center gap-4 overflow-hidden px-8">
-      <StatText label="การ์ดทั้งหมด" value={STATS.cards} />
-      <StatText label="ชุด" value={STATS.sets} />
-      <StatText label="มูลค่ารวม" value={STATS.value} link />
-      <StatText label="JPY/THB" value={STATS.rate} />
-      <span className="shrink-0 whitespace-nowrap text-meta">
-        อัปเดตล่าสุด {STATS.updated}
-      </span>
-      <ProtoMarquee />
+      <PulseContent />
     </div>
   )
 }
@@ -743,35 +750,6 @@ function CurrentNavbar() {
 }
 
 /**
- * A — ของฉันชิดขวา จับกลุ่มกับบัญชี · ช่องค้นหาชิดขวาสุดแถว 3
- * (เบสสั่งปรับ 2026-08-29: เดิมค้นหายืดเต็มแถว ตอนนี้ให้ไปชิดขวา)
- */
-function MineRightNavbar() {
-  return (
-    <div>
-      <PulseStrip />
-      <div className="flex h-14 items-center gap-3 px-8">
-        <BrandMark />
-        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
-        <GameSelect />
-        <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
-        <SetDropdown width="w-52" />
-        <div className="min-w-0 flex-1" />
-        <MyStuffCluster />
-        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
-        <UpgradeButton />
-        <AccountIcons />
-      </div>
-      <div className="hairline-t flex h-14 items-center gap-3 px-8">
-        <TextNavCluster />
-        <div className="min-w-0 flex-1" />
-        <HeroSearch className="w-[30rem] shrink-0" />
-      </div>
-    </div>
-  )
-}
-
-/**
  * D — เหลือสองแถว (ไม่นับแถบชีพจร) ตามที่เบสสั่ง
  *
  * แถวบน = บริบท + บัญชี: เกม › ชุด บอกว่ากำลังดูอะไร · ของฉันกับบัญชีชิดขวา
@@ -798,6 +776,38 @@ function TwoRowNavbar() {
         <TextNavCluster />
         <div className="min-w-0 flex-1" />
         <HeroSearch className="w-[30rem] shrink-0" />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * D2 — ตามที่เบสสั่งต่อจาก D: ยุบแถบชีพจรเข้าไปรวมกับแถวบริบท/บัญชี
+ * แล้วย้ายของฉันลงไปอยู่ซ้ายของช่องค้นหาในแถวล่าง
+ *
+ * ผลคือเหลือสองแถวจริงๆ สูงรวม 104px — เตี้ยกว่าของจริง 28px
+ * แต่สายพานต้องแบ่งแถวกับอีกสามก้อน จึงเหลือที่วิ่งแคบลงมาก (ดูตัวเลขจริงในข้อแลก)
+ */
+function MergedPulseNavbar() {
+  return (
+    <div>
+      <div className="hairline-b flex h-12 items-center gap-4 overflow-hidden px-8">
+        <PulseContent compact />
+        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
+        <GameSelect />
+        <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
+        <SetDropdown width="w-44" />
+        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
+        <UpgradeButton />
+        <AccountIcons />
+      </div>
+      <div className="flex h-14 items-center gap-3 px-8">
+        <BrandMark />
+        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
+        <TextNavCluster />
+        <div className="min-w-0 flex-1" />
+        <MyStuffCluster />
+        <HeroSearch className="w-[26rem] shrink-0" />
       </div>
     </div>
   )
@@ -862,12 +872,12 @@ const subscribeNever = () => () => {}
 
 const NAVBARS: Record<Variant, () => React.ReactNode> = {
   current: CurrentNavbar,
+  mergedPulse: MergedPulseNavbar,
   twoRow: TwoRowNavbar,
-  mineRight: MineRightNavbar,
 }
 
 export default function NavbarEcomPrototypePage() {
-  const [variant, setVariant] = useState<Variant>("twoRow")
+  const [variant, setVariant] = useState<Variant>("mergedPulse")
   // Flip the real site theme (next-themes) so the whole page — frame included —
   // previews light/dark; a frame-scoped class can't force light under a dark root.
   const { resolvedTheme, setTheme } = useTheme()
@@ -886,11 +896,11 @@ export default function NavbarEcomPrototypePage() {
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-10">
       <div className="mx-auto max-w-[1440px]">
-        <h1 className="text-h1">ลองยุบเหลือสองแถว — เทียบกับแบบ A ที่ปรับแล้ว</h1>
+        <h1 className="text-h1">ยุบชีพจรเข้าแถวบน — เหลือสองแถวจริงๆ</h1>
         <p className="mt-2 max-w-3xl text-body text-muted-foreground">
-          แบบ D ยุบเหลือสองแถว (ไม่นับแถบชีพจร) โดยยกเกม › ชุด กับกลุ่มบัญชีขึ้นแถวบน
-          แล้วให้โลโก้ลงมานำแถวล่างคู่กับเมนูและช่องค้นหา · ส่วนแบบ A คือของเดิมที่เก็บไว้
-          ตามที่เบสสั่ง เพียงแต่ปรับให้ช่องค้นหาไปชิดขวาแล้ว — ทั้งคู่ค้นหากว้าง 480px เท่ากัน
+          D2 ทำตามที่เบสสั่ง: ยุบแถบชีพจรเข้าไปรวมกับแถวบน แล้วย้ายพอร์ต · รายการโปรด ·
+          Honey ลงมาอยู่ซ้ายของช่องค้นหา — เหลือสองแถวจริงๆ สูงแค่ 104px แต่มีราคาที่ต้อง
+          จ่ายเรื่องที่วิ่งของสายพาน เทียบกับ D (ชีพจรแยกแถว) ได้เลย
         </p>
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
