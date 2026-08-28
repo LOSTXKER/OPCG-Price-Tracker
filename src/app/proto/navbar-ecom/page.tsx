@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils"
 
 /* ------------------------------------------------------------------ data */
 
-type Variant = "current" | "figuresDown" | "scopeInSearch" | "tickerLast"
+type Variant = "current" | "siteThenMine" | "scopeInSearch" | "searchRow3" | "mineUp"
 
 /** ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.) เพื่อเทียบแบบตาต่อตา */
 const STATS = {
@@ -72,9 +72,10 @@ const SETS = [
 
 const VARIANT_OPTIONS = [
   { value: "current", label: "ปัจจุบัน" },
-  { value: "scopeInSearch", label: "D · ชุดเข้าช่องค้นหา" },
-  { value: "tickerLast", label: "K · สายพานลงล่างสุด" },
-  { value: "figuresDown", label: "B · สถิติลงแถว 3" },
+  { value: "siteThenMine", label: "1 · เว็บบน ฉันล่าง" },
+  { value: "scopeInSearch", label: "2 · ชุดในช่องค้นหา" },
+  { value: "searchRow3", label: "3 · ค้นหาลงแถว 3" },
+  { value: "mineUp", label: "4 · ของฉันขึ้นบน" },
 ] as const
 
 const VARIANT_COPY: Record<
@@ -87,35 +88,42 @@ const VARIANT_COPY: Record<
       "ตัวตั้งเทียบ: ช่องค้นหาซุกอยู่ขวาสุดแถวเมนู · ตัวเลือกเกมกับชุดอยู่บนแถวโลโก้",
     tradeoff: "—",
   },
+  siteThenMine: {
+    name: "1 · เว็บบน ฉันล่าง — แบ่งตามเจ้าของ",
+    summary:
+      "แถว 2 คือของเว็บทั้งหมด (ตัวตน · แคตตาล็อกที่กำลังดู · ค้นหา · บัญชี) แถว 3 คือทางไปกับของฉัน (เมนู · พอร์ต · รายการโปรด · Honey) — เดาได้ทันทีว่าอะไรอยู่แถวไหน และเป็นแบบที่ใกล้ของเดิมที่สุด คนที่ใช้อยู่จะสะดุดน้อยสุด",
+    tradeoff:
+      "แถว 2 มีของห้าก้อน แน่นกว่าแบบ 2 · แถว 3 เหลือช่องว่างกลางกว้าง (ดีถ้าจะเพิ่มปุ่มทีหลัง แต่ตอนนี้คือที่ว่าง)",
+  },
   scopeInSearch: {
-    name: "D · ชุดเข้าไปอยู่ในช่องค้นหา — แถบมีของน้อยที่สุด",
+    name: "2 · ชุดเข้าไปในช่องค้นหา — แถบมีของน้อยที่สุด",
     summary:
-      "เปลี่ยนสมมติฐานว่า \"ปุ่มชุดต้องเป็นปุ่มลอยเดี่ยวๆ\" — ยกเกม › ชุด (พร้อมรูปกล่อง) เข้าไปเป็นหัวช่องค้นหาแบบ Lazada/Amazon พอรวมเป็นก้อนเดียว แถว 3 ก็ไม่เหลือแคตตาล็อกให้จัดอีกเลย เหลือแค่นำทางซ้าย · ของฉันขวา อ่านง่ายสุดในทุกแบบที่ทำมา และความหมายก็เปลี่ยนไปในทางที่ดี: ชุดที่เลือกอยู่ = ขอบเขตที่กำลังจะค้น",
+      "ยกเกม › ชุด (พร้อมรูปกล่อง) เข้าไปเป็นหัวช่องค้นหาแบบ Lazada/Amazon แถว 2 เลยเหลือแค่สามก้อน: โลโก้ · ช่องค้นหายาวเต็มแถว · บัญชี — สะอาดที่สุดในทุกแบบ และความหมายเปลี่ยนไปในทางที่ดี: ชุดที่เลือกอยู่คือขอบเขตที่กำลังจะค้น",
     tradeoff:
-      "ปุ่มชุดกลืนไปกับช่องค้นหา คนที่คุ้นกับปุ่มลอยข้างโลโก้อาจหาไม่เจอครั้งแรก · ช่องค้นหาแบ่งที่ให้หัวขอบเขตไปราว 200px · สูงรวม 136px",
+      "ปุ่มชุดกลืนไปกับช่องค้นหา คนที่คุ้นกับปุ่มลอยข้างโลโก้อาจหาไม่เจอครั้งแรก · เวลาอยากเปลี่ยนชุดเฉยๆ (ไม่ได้จะค้น) ต้องไปกดในช่องค้นหา ซึ่งอ่านแล้วเหมือนกำลังจะค้นหา",
   },
-  tickerLast: {
-    name: "K · สายพานลงล่างสุด — สลับลำดับชั้นทั้งแถบ",
+  searchRow3: {
+    name: "3 · ค้นหาลงแถว 3 — แถวลงมือรวมอยู่ชั้นเดียว",
     summary:
-      "เปลี่ยนสมมติฐานว่า \"แถบชีพจรต้องอยู่บนสุด\" — เอาสิ่งที่คนมาทำขึ้นก่อน (ตัวตน · เกม › ชุด · ค้นหา · บัญชี) แล้วนำทาง แล้วปิดท้ายด้วยตลาดที่ล่างสุด ซึ่งไหลต่อเข้าตารางราคาข้างล่างพอดี — สายพานเลยกลายเป็นบทนำของเนื้อหา ไม่ใช่แถบลอยเหนือหัว",
+      "แถว 2 เบามาก เหลือแค่ตัวตน · แคตตาล็อก · บัญชี แล้วยกช่องค้นหาลงมาอยู่แถว 3 คั่นกลางระหว่างเมนูกับของฉัน — แถว 3 เลยกลายเป็นแถวลงมือทั้งแถว (จะไปไหน · จะค้นอะไร · ของฉันอยู่ไหน) และช่องค้นหาขยับใกล้เนื้อหาลงมาอีกหนึ่งชั้น",
     tradeoff:
-      "สายพานเคลื่อนไหวอยู่ติดกับเนื้อหา อาจดึงสายตาแย่งกับตารางราคามากกว่าตอนอยู่บนสุด · แถบชีพจรที่เพิ่งขึ้นเว็บย้ายที่ คนที่ชินแล้วต้องหาใหม่ · สูงรวม 136px",
+      "แถว 2 ดูโล่งไปหน่อยเพราะเหลือของสามก้อนที่ห่างกันมาก · ช่องค้นหาอยู่ต่ำลง คนที่กวาดตาหาที่ \"หัวเว็บ\" ตามความเคยชินอาจสะดุดครั้งแรก · แถว 3 สูง 56px ทำให้แถบรวม 144px",
   },
-  figuresDown: {
-    name: "B · สถิติลงแถว 3 — แบบจากรอบก่อน เก็บไว้เทียบ",
+  mineUp: {
+    name: "4 · ของฉันขึ้นบน — พอร์ตอยู่ระดับเดียวกับค้นหา",
     summary:
-      "ยกตัวเลขตลาดลงมาเติมกลางแถว 3 แล้วแถบชีพจรบนสุดเหลือสายพานล้วนเต็มความกว้าง เห็นการ์ดที่ขยับแรงต่อรอบเยอะขึ้นเกือบเท่าตัว",
+      "มองว่าพอร์ตกับรายการโปรดคือของที่คนใช้บ่อยพอๆ กับค้นหา เลยยกขึ้นไปอยู่แถว 2 คู่กัน แล้วแถว 3 เป็นแถวนำทางกับแคตตาล็อก (เมนู ‖ เกม › ชุด) — เหมาะกับคนที่เข้าเว็บมาเช็คพอร์ตก่อนเป็นอันดับแรก",
     tradeoff:
-      "ตัวเลขห่างจากสายพานที่เคยอยู่ด้วยกัน · แถว 3 มีของสี่ก้อน เพิ่มปุ่มในอนาคตได้น้อยกว่าแบบ D · สูงรวม 136px",
+      "แถว 2 แน่นสุดในสี่แบบ ช่องค้นหาเลยแคบกว่าเพื่อน · แคตตาล็อกที่บอกว่ากำลังดูชุดอะไรอยู่ ตกไปอยู่แถวล่างสุด ซึ่งเป็นข้อมูลบริบทที่ควรเห็นก่อน",
   },
 }
 
 const SHARED_NOTES = [
-  "ทุกแบบใช้ปุ่มชุดแบบ dropdown ปุ่มเดียว (มีรูปกล่อง + รหัส + ชื่อชุด) ตามที่เบสสั่ง — ไม่มีชั้นวางเรียงยาวแล้ว",
-  "D กับ K เปลี่ยนสมมติฐานคนละข้อ: D ว่าปุ่มชุดไม่ต้องเป็นปุ่มลอย · K ว่าสายพานไม่ต้องอยู่บนสุด",
-  "แบบ B จากรอบก่อนเก็บไว้ให้เทียบว่าอันไหนเข้าท่ากว่ากัน",
-  "ทุกแบบสูง 136px เท่ากันหมด เทียบกันได้ตรงๆ ว่าจัดของแบบไหนอ่านง่ายกว่า",
+  "แถว 1 ล็อกเป็นแถบชีพจรตลาดเท่านั้นทุกแบบ ตรงตามที่ขึ้นเว็บอยู่ (สถิติซ้าย · สายพานการ์ดขวา) ไม่มีแบบไหนแตะ",
+  "ทุกแบบใช้ปุ่มชุดแบบ dropdown ปุ่มเดียวที่มีรูปกล่อง + รหัส + ชื่อชุด",
+  "เมนูเว็บแยกจากแคตตาล็อกทุกแบบ เพิ่มปุ่มเมนูในอนาคตได้โดยไม่แตะที่ของชุด",
   "ทุกปุ่มสูง 40px ขึ้นไป · พอร์ต · รายการโปรด · Honey มีชื่อครบ · ภาษา/สกุลเงิน/ธีมอยู่ในเมนูโปรไฟล์",
+  "สูงรวม 136px ทุกแบบ ยกเว้นแบบ 3 ที่ 144px (แถว 3 ต้องสูงขึ้นเพราะมีช่องค้นหา)",
   "ปุ่มทุกปุ่มกดไม่ได้จริง (หุ่นโชว์ผัง) · ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.)",
 ] as const
 
@@ -139,58 +147,76 @@ const PLACEMENTS: Record<Variant, ReadonlyArray<{ item: string; where: string }>
     { item: "ช่องค้นหา", where: "แถวเมนู ขวาสุด (กว้าง 320px)" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ซ่อนในเมนูโปรไฟล์ (guest = ปุ่มเฟือง)" },
   ],
-  scopeInSearch: [
-    { item: "สถิติตลาด", where: "แถบชีพจรบนสุด" },
-    { item: "สายพานการ์ดขยับแรง", where: "แถบชีพจรบนสุด" },
-    { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "🔁 เป็นหัวช่องค้นหา (ในกรอบเดียวกัน)" },
-    { item: "ตัวเลือกชุดการ์ด", where: "🔁 เป็นหัวช่องค้นหา (ในกรอบเดียวกัน) — dropdown มีรูปกล่อง" },
-    { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
-    { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
-    { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
-    { item: "โปรไฟล์", where: "แถวกลาง ขวาสุด (แคปซูล 40px)" },
+  siteThenMine: [
+    { item: "สถิติตลาด", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
+    { item: "โลโก้ Meecard", where: "แถว 2 ซ้ายสุด" },
+    { item: "ปุ่มเลือกเกม", where: "แถว 2 ถัดจากโลโก้" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถว 2 ถัดจากโลโก้ — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มอัปเกรด", where: "แถว 2 ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถว 2 ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถว 2 ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถว 2 ขวาสุด (แคปซูล 40px)" },
     { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
-    { item: "เมนูหลัก", where: "แถวล่าง ซ้ายสุด" },
-    { item: "พอร์ต", where: "แถวล่าง ขวาสุด — มีป้ายชื่อ" },
-    { item: "รายการโปรด", where: "แถวล่าง ขวาสุด — มีป้ายชื่อ" },
-    { item: "Honey + แต้ม", where: "แถวล่าง ขวาสุด — มีป้ายชื่อ" },
-    { item: "ช่องค้นหา", where: "แถวกลาง สูง 44px" },
-    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
-  ],
-  tickerLast: [
-    { item: "สถิติตลาด", where: "🔁 แถบชีพจรที่ย้ายลงล่างสุด" },
-    { item: "สายพานการ์ดขยับแรง", where: "🔁 ล่างสุด ติดกับเนื้อหา" },
-    { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "แถวบนสุด ถัดจากโลโก้" },
-    { item: "ตัวเลือกชุดการ์ด", where: "แถวบนสุด ถัดจากโลโก้ — dropdown มีรูปกล่อง" },
-    { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
-    { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
-    { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
-    { item: "โปรไฟล์", where: "แถวกลาง ขวาสุด (แคปซูล 40px)" },
-    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
-    { item: "เมนูหลัก", where: "แถวกลาง ซ้ายสุด" },
-    { item: "พอร์ต", where: "แถวกลาง ขวาสุด — มีป้ายชื่อ" },
-    { item: "รายการโปรด", where: "แถวกลาง ขวาสุด — มีป้ายชื่อ" },
-    { item: "Honey + แต้ม", where: "แถวกลาง ขวาสุด — มีป้ายชื่อ" },
-    { item: "ช่องค้นหา", where: "แถวกลาง สูง 44px" },
-    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
-  ],
-  figuresDown: [
-    { item: "สถิติตลาด", where: "🔁 ย้ายลงแถว 3 กลางแถว" },
-    { item: "สายพานการ์ดขยับแรง", where: "แถบบนสุด — เต็มความกว้าง" },
-    { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "แถว 3 ซ้ายสุด" },
-    { item: "ตัวเลือกชุดการ์ด", where: "แถว 3 ซ้ายสุด — dropdown มีรูปกล่อง" },
-    { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
-    { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
-    { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
-    { item: "โปรไฟล์", where: "แถวกลาง ขวาสุด (แคปซูล 40px)" },
-    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
-    { item: "เมนูหลัก", where: "แถวกลาง ถัดจากโลโก้" },
+    { item: "เมนูหลัก", where: "แถว 3 ซ้ายสุด" },
     { item: "พอร์ต", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "รายการโปรด", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "Honey + แต้ม", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
-    { item: "ช่องค้นหา", where: "แถวกลาง สูง 44px" },
+    { item: "ช่องค้นหา", where: "แถว 2 กลางแถว สูง 44px" },
+    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
+  ],
+  scopeInSearch: [
+    { item: "สถิติตลาด", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
+    { item: "โลโก้ Meecard", where: "แถว 2 ซ้ายสุด" },
+    { item: "ปุ่มเลือกเกม", where: "🔁 เป็นหัวช่องค้นหา (ในกรอบเดียวกัน)" },
+    { item: "ตัวเลือกชุดการ์ด", where: "🔁 เป็นหัวช่องค้นหา (ในกรอบเดียวกัน) — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มอัปเกรด", where: "แถว 2 ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถว 2 ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถว 2 ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถว 2 ขวาสุด (แคปซูล 40px)" },
+    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
+    { item: "เมนูหลัก", where: "แถว 3 ซ้ายสุด" },
+    { item: "พอร์ต", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
+    { item: "รายการโปรด", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
+    { item: "Honey + แต้ม", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
+    { item: "ช่องค้นหา", where: "แถว 2 ยาวเต็มแถว สูง 44px" },
+    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
+  ],
+  searchRow3: [
+    { item: "สถิติตลาด", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
+    { item: "โลโก้ Meecard", where: "แถว 2 ซ้ายสุด" },
+    { item: "ปุ่มเลือกเกม", where: "แถว 2 ถัดจากโลโก้" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถว 2 ถัดจากโลโก้ — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มอัปเกรด", where: "แถว 2 ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถว 2 ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถว 2 ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถว 2 ขวาสุด (แคปซูล 40px)" },
+    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
+    { item: "เมนูหลัก", where: "แถว 3 ซ้ายสุด" },
+    { item: "พอร์ต", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
+    { item: "รายการโปรด", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
+    { item: "Honey + แต้ม", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
+    { item: "ช่องค้นหา", where: "🔁 แถว 3 กลางแถว — คั่นเมนูกับของฉัน" },
+    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
+  ],
+  mineUp: [
+    { item: "สถิติตลาด", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
+    { item: "โลโก้ Meecard", where: "แถว 2 ซ้ายสุด" },
+    { item: "ปุ่มเลือกเกม", where: "🔁 แถว 3 — ถัดจากเมนู" },
+    { item: "ตัวเลือกชุดการ์ด", where: "🔁 แถว 3 — ถัดจากเมนู — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มอัปเกรด", where: "แถว 2 ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถว 2 ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถว 2 ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถว 2 ขวาสุด (แคปซูล 40px)" },
+    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
+    { item: "เมนูหลัก", where: "แถว 3 ซ้ายสุด" },
+    { item: "พอร์ต", where: "🔁 แถว 2 ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "รายการโปรด", where: "🔁 แถว 2 ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "Honey + แต้ม", where: "🔁 แถว 2 ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "ช่องค้นหา", where: "แถว 2 กลางแถว สูง 44px" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
 }
@@ -663,21 +689,6 @@ function SetDropdown({ width = "w-64" }: { width?: string }) {
   )
 }
 
-/** สถิติตลาดชุดเดียวกับแถบชีพจร — ใช้ตอนย้ายลงมาเติมแถว 3 */
-function MarketFigures() {
-  return (
-    <div className="flex min-w-0 items-center gap-5 overflow-hidden">
-      <StatText label="การ์ดทั้งหมด" value={STATS.cards} />
-      <StatText label="ชุด" value={STATS.sets} />
-      <StatText label="มูลค่ารวม" value={STATS.value} link />
-      <StatText label="JPY/THB" value={STATS.rate} />
-      <span className="shrink-0 whitespace-nowrap text-meta">
-        อัปเดตล่าสุด {STATS.updated}
-      </span>
-    </div>
-  )
-}
-
 /** แถบวิ่งการ์ดขยับแรง — โครงเดียวกับของจริง (สองชุดวิ่งต่อกัน ชุดหลัง aria-hidden) */
 function ProtoMarquee() {
   const items = MOVERS.map((mover) => {
@@ -731,23 +742,20 @@ function ProtoMarquee() {
 }
 
 /**
- * แถบชีพจรตลาด (h-8) — `figures` ปิดได้ สำหรับแบบที่ย้ายสถิติลงไปเติมแถว 3
- * แล้วปล่อยให้สายพานการ์ดกินความกว้างทั้งแถบ (เห็นการ์ดต่อรอบเยอะขึ้นเท่าตัว)
+ * แถว 1 — แถบชีพจรตลาด ล็อกตายตัว (เบสสั่ง 2026-08-29: "แถว 1 ขอบังคับเป็น
+ * ชีพจรตลาดเท่านั้น") ตรงตามที่ขึ้นเว็บอยู่: สถิติซ้าย · สายพานการ์ดขวา
+ * ทุกแบบด้านล่างใช้แถวนี้เหมือนกันหมด ไม่มีใครแตะ
  */
-function PulseStrip({ figures = true }: { figures?: boolean }) {
+function PulseStrip() {
   return (
     <div className="hairline-b flex h-8 items-center gap-4 overflow-hidden px-8">
-      {figures && (
-        <>
-          <StatText label="การ์ดทั้งหมด" value={STATS.cards} />
-          <StatText label="ชุด" value={STATS.sets} />
-          <StatText label="มูลค่ารวม" value={STATS.value} link />
-          <StatText label="JPY/THB" value={STATS.rate} />
-          <span className="shrink-0 whitespace-nowrap text-meta">
-            อัปเดตล่าสุด {STATS.updated}
-          </span>
-        </>
-      )}
+      <StatText label="การ์ดทั้งหมด" value={STATS.cards} />
+      <StatText label="ชุด" value={STATS.sets} />
+      <StatText label="มูลค่ารวม" value={STATS.value} link />
+      <StatText label="JPY/THB" value={STATS.rate} />
+      <span className="shrink-0 whitespace-nowrap text-meta">
+        อัปเดตล่าสุด {STATS.updated}
+      </span>
       <ProtoMarquee />
     </div>
   )
@@ -782,17 +790,19 @@ function CurrentNavbar() {
 }
 
 /**
- * B — ย้ายสถิติตลาดลงมาเติมกลางแถว 3 แล้วแถบชีพจรบนสุดเหลือสายพานล้วน
- * ได้สองอย่างพร้อมกัน: แถว 3 ไม่โล่ง และสายพานกินความกว้างทั้งแถบ
+ * 1 — แบ่งตามเจ้าของ: แถว 2 คือ "ของเว็บ" (ตัวตน · แคตตาล็อก · ค้นหา · บัญชี)
+ * แถว 3 คือ "ทางไป + ของฉัน" — แบ่งชัดที่สุด เดาได้ว่าอะไรอยู่แถวไหน
  */
-function FiguresDownNavbar() {
+function SiteThenMineNavbar() {
   return (
     <div>
-      <PulseStrip figures={false} />
+      <PulseStrip />
       <div className="flex h-14 items-center gap-3 px-8">
         <BrandMark />
         <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
-        <TextNavCluster />
+        <GameSelect />
+        <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
+        <SetDropdown width="w-52" />
         <div className="min-w-0 flex-1 px-2">
           <HeroSearch />
         </div>
@@ -800,11 +810,7 @@ function FiguresDownNavbar() {
         <AccountIcons />
       </div>
       <div className="hairline-t flex h-12 items-center gap-3 px-8">
-        <GameSelect />
-        <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
-        <SetDropdown />
-        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
-        <MarketFigures />
+        <TextNavCluster />
         <div className="min-w-0 flex-1" />
         <MyStuffCluster />
       </div>
@@ -813,9 +819,8 @@ function FiguresDownNavbar() {
 }
 
 /**
- * D — ขอบเขตเข้าไปอยู่ในช่องค้นหา (ท่า Lazada/Amazon)
- * เกม › ชุด กลายเป็นหัวช่องค้นหา แถว 3 เลยไม่เหลือแคตตาล็อกให้จัด —
- * เหลือแค่ "นำทาง" ซ้าย กับ "ของฉัน" ขวา แถบทั้งอันมีของน้อยที่สุดในทุกแบบ
+ * 2 — ชุดเข้าไปเป็นหัวช่องค้นหา (ท่า Lazada/Amazon)
+ * แถว 2 เหลือสามก้อน แถบทั้งอันมีของน้อยที่สุด และช่องค้นหากว้างที่สุด
  */
 function ScopeInSearchNavbar() {
   return (
@@ -839,31 +844,60 @@ function ScopeInSearchNavbar() {
 }
 
 /**
- * K — สลับลำดับชั้น: สายพานย้ายลงล่างสุดติดกับเนื้อหา
- * บนสุดคือตัวตน + ค้นหา (สิ่งที่คนมาทำ) แล้วนำทาง แล้วปิดท้ายด้วยตลาด
- * ซึ่งอ่านต่อเนื่องเข้าตารางราคาข้างล่างพอดี
+ * 3 — ค้นหาลงมาอยู่แถว 3 กลางระหว่างเมนูกับของฉัน
+ * แถว 2 เบามาก (แค่ตัวตน · แคตตาล็อก · บัญชี) แล้วแถว 3 คือแถวลงมือ:
+ * จะไปไหน · จะค้นอะไร · ของฉันอยู่ไหน — ค้นหาขยับใกล้เนื้อหาลงมาหนึ่งชั้น
  */
-function TickerLastNavbar() {
+function SearchInRow3Navbar() {
   return (
     <div>
+      <PulseStrip />
       <div className="flex h-14 items-center gap-3 px-8">
         <BrandMark />
         <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
         <GameSelect />
         <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
-        <SetDropdown width="w-52" />
+        <SetDropdown width="w-64" />
+        <div className="min-w-0 flex-1" />
+        <UpgradeButton />
+        <AccountIcons />
+      </div>
+      <div className="hairline-t flex h-14 items-center gap-3 px-8">
+        <TextNavCluster />
         <div className="min-w-0 flex-1 px-2">
           <HeroSearch />
         </div>
+        <MyStuffCluster />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * 4 — ของฉันขึ้นไปอยู่แถว 2 คู่ช่องค้นหา แล้วแถว 3 เป็นแถวนำทาง + แคตตาล็อก
+ * เหมาะถ้ามองว่าพอร์ต/รายการโปรดคือของที่ใช้บ่อยพอๆ กับค้นหา
+ */
+function MineUpNavbar() {
+  return (
+    <div>
+      <PulseStrip />
+      <div className="flex h-14 items-center gap-3 px-8">
+        <BrandMark />
+        <div className="min-w-0 flex-1 px-2">
+          <HeroSearch />
+        </div>
+        <MyStuffCluster />
         <UpgradeButton />
         <AccountIcons />
       </div>
       <div className="hairline-t flex h-12 items-center gap-3 px-8">
         <TextNavCluster />
+        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
+        <GameSelect />
+        <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
+        <SetDropdown width="w-52" />
         <div className="min-w-0 flex-1" />
-        <MyStuffCluster />
       </div>
-      <PulseStrip />
     </div>
   )
 }
@@ -927,13 +961,14 @@ const subscribeNever = () => () => {}
 
 const NAVBARS: Record<Variant, () => React.ReactNode> = {
   current: CurrentNavbar,
-  figuresDown: FiguresDownNavbar,
+  siteThenMine: SiteThenMineNavbar,
   scopeInSearch: ScopeInSearchNavbar,
-  tickerLast: TickerLastNavbar,
+  searchRow3: SearchInRow3Navbar,
+  mineUp: MineUpNavbar,
 }
 
 export default function NavbarEcomPrototypePage() {
-  const [variant, setVariant] = useState<Variant>("scopeInSearch")
+  const [variant, setVariant] = useState<Variant>("siteThenMine")
   // Flip the real site theme (next-themes) so the whole page — frame included —
   // previews light/dark; a frame-scoped class can't force light under a dark root.
   const { resolvedTheme, setTheme } = useTheme()
@@ -952,12 +987,12 @@ export default function NavbarEcomPrototypePage() {
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-10">
       <div className="mx-auto max-w-[1440px]">
-        <h1 className="text-h1">อีกสองทางที่ยังไม่ได้ลอง — เปลี่ยนสมมติฐานคนละข้อ</h1>
+        <h1 className="text-h1">แถว 1 ล็อกแล้ว — เหลือจัดแถว 2 กับ 3</h1>
         <p className="mt-2 max-w-3xl text-body text-muted-foreground">
-          สามแบบก่อนหน้าเถียงกันแค่ว่า &ldquo;แถว 3 ควรมีอะไร&rdquo; รอบนี้ถอยมาตั้งคำถาม
-          ที่ใหญ่กว่านั้น — D ถามว่าปุ่มชุดต้องเป็นปุ่มลอยจริงไหม (ยกเข้าไปในช่องค้นหา
-          เลย) ส่วน K ถามว่าแถบชีพจรต้องอยู่บนสุดจริงไหม (ย้ายลงไปติดเนื้อหา) และเก็บ
-          แบบ B จากรอบก่อนไว้เทียบด้วย
+          แถบชีพจรตลาดอยู่แถว 1 ตายตัวทุกแบบตามที่เบสสั่ง ไม่มีใครแตะ — ที่เหลือคือ
+          ของ 8 ก้อน (โลโก้ · เกม › ชุด · เมนู · ค้นหา · พอร์ต/รายการโปรด/Honey ·
+          อัปเกรด · ข้อความ+แจ้งเตือน · โปรไฟล์) ที่ต้องลงสองแถว สี่แบบนี้คือสี่วิธี
+          แบ่งของลงสองแถวนั้น
         </p>
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
