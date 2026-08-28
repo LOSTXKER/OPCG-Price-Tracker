@@ -454,14 +454,16 @@ export function buildSetsIndexMeta(lang: Language): {
     return {
       title: "ชุดการ์ดวันพีช (OPCG) ทั้งหมด — ราคา จำนวนการ์ด วันวางขาย",
       // ≤160: the old version ran 203 chars and Google cut it mid-sentence.
+      // No "ทุกวัน" claim (owner ruling 2026-08-28) — prices are not scraped
+      // on a schedule (demo site).
       description:
-        "รวมชุดการ์ดวันพีช (One Piece Card Game) ทุกชุด ทั้งบูสเตอร์ สตาร์ทเตอร์เด็ค และโปรโม กดเข้าไปเช็คราคาการ์ดวันพีซทุกใบในชุดนั้นได้ทันที อัปเดตทุกวัน",
+        "รวมชุดการ์ดวันพีช (One Piece Card Game) ทุกชุด ทั้งบูสเตอร์ สตาร์ทเตอร์เด็ค และโปรโม กดเข้าไปเช็คราคาการ์ดวันพีซทุกใบในชุดนั้นได้ทันที",
     };
   }
   return {
     title: "All One Piece Card Game Sets — Prices, Card Counts, Releases",
     description:
-      "Every One Piece Card Game set: boosters, extra boosters, starter decks and promos, with card counts and release dates. Open a set to see daily prices for every card in it.",
+      "Every One Piece Card Game set: boosters, extra boosters, starter decks and promos, with card counts and release dates. Open a set to see the price for every card in it.",
   };
 }
 
@@ -480,10 +482,11 @@ export function buildSetsIndexHeading(lang: Language): { title: string } {
 /**
  * ONE short sentence, keyword-first — owner ruling 2026-08-06 ("เน้น SEO
  * เน้นๆ"): only what ranks earns a place here. Keyword up front, both Thai
- * spellings, the coverage numbers, the freshness claim, and (once
- * `releaseDate` is backfilled) the newest set. Set types, usage hints and
- * the English-names note all went — the filter tabs and the FAQ under the
- * grid already carry them as real text.
+ * spellings, the coverage numbers, and (once `releaseDate` is backfilled)
+ * the newest set. Set types, usage hints and the English-names note all
+ * went — the filter tabs and the FAQ under the grid already carry them as
+ * real text. No update-frequency claim (owner ruling 2026-08-28) — prices
+ * are not scraped on a schedule (demo site).
  */
 export function buildSetsIndexIntro(
   lang: Language,
@@ -496,7 +499,7 @@ export function buildSetsIndexIntro(
       ? ` ชุดล่าสุดคือ ${data.latest.code.toUpperCase()} ${data.latest.name}${latestDate ? ` วางจำหน่าย ${latestDate}` : ""}`
       : "";
     return [
-      `รวมชุดการ์ดวันพีช (One Piece Card Game) ทั้ง ${formatCount(data.setCount)} ชุด — เช็คราคาการ์ดวันพีซทุกใบรวม ${formatCount(data.cardCount)} ใบ อัปเดตทุกวัน${latestPart}`,
+      `รวมชุดการ์ดวันพีช (One Piece Card Game) ทั้ง ${formatCount(data.setCount)} ชุด — เช็คราคาการ์ดวันพีซทุกใบรวม ${formatCount(data.cardCount)} ใบ${latestPart}`,
     ];
   }
 
@@ -504,7 +507,7 @@ export function buildSetsIndexIntro(
     ? ` The newest set is ${data.latest.code.toUpperCase()} ${data.latest.name}${latestDate ? `, released ${latestDate}` : ""}.`
     : "";
   return [
-    `All ${formatCount(data.setCount)} One Piece Card Game sets — daily prices for every card, ${formatCount(data.cardCount)} in total.${latestPart}`,
+    `All ${formatCount(data.setCount)} One Piece Card Game sets — prices for every card, ${formatCount(data.cardCount)} in total.${latestPart}`,
   ];
 }
 
@@ -529,9 +532,13 @@ export function buildSetsIndexFaq(
           "OP = บูสเตอร์หลัก (Booster Pack) ออกต่อเนื่องเป็นชุดใหญ่, EB = เอ็กซ์ตร้าบูสเตอร์ ชุดเสริมที่การ์ดน้อยกว่า, ST = สตาร์ทเตอร์เด็ค ซื้อแล้วเล่นได้เลย ส่วน P หรือ PRB คือการ์ดโปรโมที่แจกตามอีเวนต์หรือแถมในสินค้าอื่น",
       },
       {
-        question: "ราคาการ์ดในแต่ละชุดอัปเดตบ่อยแค่ไหน",
+        // Owner ruling 2026-08-28: reframed away from "how often" — prices
+        // are not scraped on a schedule (demo site), so a frequency claim
+        // would be false. Each set page's own "อัปเดตล่าสุด" date is the
+        // real freshness signal.
+        question: "ราคาการ์ดในแต่ละชุดมาจากไหน",
         answer:
-          "ราคากลางอัปเดตทุกวัน กดเข้าไปในชุดจะเห็นทั้งราคาปัจจุบันและการเปลี่ยนแปลง 24 ชั่วโมง / 7 วัน / 30 วัน ของการ์ดวันพีชทุกใบ",
+          "ราคากลางอ้างอิงจากตลาดญี่ปุ่น กดเข้าไปในชุดจะเห็นทั้งราคาปัจจุบันและการเปลี่ยนแปลง 24 ชั่วโมง / 7 วัน / 30 วัน ของการ์ดวันพีชทุกใบ พร้อมวันที่อัปเดตล่าสุดจริง",
         link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
       },
       {
@@ -556,9 +563,9 @@ export function buildSetsIndexFaq(
         "OP = main booster set, EB = extra booster (a smaller supplementary set), ST = starter deck (ready to play out of the box). P/PRB codes are promo cards handed out at events or bundled with other products.",
     },
     {
-      question: "How often are set prices updated?",
+      question: "Where do set prices come from?",
       answer:
-        "Reference prices update daily. Each set page shows the current price plus 24h / 7d / 30d change for every card.",
+        "Reference prices come from the Japanese market. Each set page shows the current price, 24h / 7d / 30d change for every card, and a real last-updated date.",
       link: { href: "/about#methodology", label: "How Meecard prices work" },
     },
   ];

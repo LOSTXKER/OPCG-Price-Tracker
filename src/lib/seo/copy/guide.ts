@@ -52,8 +52,10 @@ function pickList(lang: Language, value: { TH: string[]; EN: string[]; JP?: stri
 export const GUIDE_META = {
   hub: {
     title: "คู่มือ One Piece Card Game (การ์ดวันพีช) มือใหม่",
+    // No "ทุกวัน" claim (owner ruling 2026-08-28) — prices are not scraped on
+    // a schedule (demo site).
     description:
-      "คู่มือการ์ดวันพีซ (One Piece Card Game) ฉบับมือใหม่ เช็คราคากลางได้ทุกใบ อัปเดตทุกวัน ครบทั้งวิธีเล่น ประเภทการ์ด ความหายาก สี ชุดการ์ด และวิธีซื้อ",
+      "คู่มือการ์ดวันพีซ (One Piece Card Game) ฉบับมือใหม่ เช็คราคากลางได้ทุกใบ ครบทั้งวิธีเล่น ประเภทการ์ด ความหายาก สี ชุดการ์ด และวิธีซื้อ",
   },
   gettingStarted: {
     title: "วิธีเล่น One Piece Card Game (การ์ดวันพีช) มือใหม่",
@@ -137,11 +139,11 @@ export function guideHubIntroParagraphs(lang: Language): string[] {
   return pickList(lang, {
     TH: [
       "การ์ดวันพีช หรือ One Piece Card Game (OPCG / OPTCG บางคนสะกดว่า “การ์ดวันพีซ”) คือเกมการ์ดสะสมและแข่งขันจาก Bandai ที่สร้างจากมังงะและอนิเมะ One Piece เปิดตัวในญี่ปุ่นปี 2022 เสน่ห์ของเกมนี้อยู่ที่การ์ดใบเดียวกันอาจมีหลายเวอร์ชัน ทั้งภาพปกติ ภาพพิเศษ (Parallel) และระดับความหายากตั้งแต่ Common ไปจนถึง Secret Rare และ Treasure Rare ทำให้ราคาซื้อขายจริงห่างกันได้หลายสิบเท่าแม้เป็นตัวละครเดียวกัน คนที่เพิ่งเริ่มจึงมักจ่ายแพงเกินจำเป็นเพราะไม่รู้ว่าการ์ดใบที่ถืออยู่คือเวอร์ชันไหน",
-      "Meecard ทำหน้าที่เป็นราคาอ้างอิง — เราดึงราคาจากตลาดญี่ปุ่นซึ่งเป็นตลาดหลักของเกมนี้ อัปเดตทุกวัน แปลงเป็นเงินบาทให้อัตโนมัติ พร้อมกราฟราคาย้อนหลัง เพื่อให้คุณรู้ว่าราคาที่ผู้ขายเสนอมานั้นสมเหตุสมผลหรือไม่ก่อนจะกดซื้อ",
+      "Meecard ทำหน้าที่เป็นราคาอ้างอิง — เราดึงราคาจากตลาดญี่ปุ่นซึ่งเป็นตลาดหลักของเกมนี้ แปลงเป็นเงินบาทให้อัตโนมัติ พร้อมกราฟราคาย้อนหลัง เพื่อให้คุณรู้ว่าราคาที่ผู้ขายเสนอมานั้นสมเหตุสมผลหรือไม่ก่อนจะกดซื้อ",
     ],
     EN: [
       "The One Piece Card Game (OPCG / OPTCG) is Bandai's trading card game based on the One Piece manga and anime, launched in Japan in 2022. What makes it interesting — and expensive — is that a single card can exist in several versions: normal art, alternate (Parallel) art, and rarities from Common up to Secret Rare and Treasure Rare. Real market prices between those versions can differ by tens of times, even for the same character, and new players routinely overpay simply because they cannot tell which version they are holding.",
-      "Meecard exists to be that reference price. We pull prices from the Japanese market — the primary market for this game — refresh them daily, convert them to Thai baht automatically, and keep price history charts so you can tell whether an asking price is reasonable before you pay.",
+      "Meecard exists to be that reference price. We pull prices from the Japanese market — the primary market for this game — convert them to Thai baht automatically, and keep price history charts so you can tell whether an asking price is reasonable before you pay.",
     ],
   });
 }
@@ -158,11 +160,13 @@ export function guideHubPricesHeading(lang: Language): string {
 }
 
 export function guideHubPricesIntro(lang: Language, data: { setCount: number; cardCount: number }): string {
+  // No "ทุกวัน"/"daily" claim (owner ruling 2026-08-28) — prices are not
+  // scraped on a schedule (demo site).
   return pick(
     lang,
     tri(
-      `อ่านคู่มือจบแล้วลองใช้งานจริง — Meecard เก็บราคาการ์ดวันพีชไว้ ${data.cardCount.toLocaleString("th-TH")} ใบ จาก ${data.setCount} ชุด อัปเดตทุกวัน เลือกชุดที่ต้องการเพื่อดูราคาทุกใบในชุดนั้น`,
-      `Put the guide to work — Meecard tracks ${data.cardCount.toLocaleString("en-US")} cards across ${data.setCount} sets, refreshed daily. Pick a set to see every card's price.`
+      `อ่านคู่มือจบแล้วลองใช้งานจริง — Meecard เก็บราคาการ์ดวันพีชไว้ ${data.cardCount.toLocaleString("th-TH")} ใบ จาก ${data.setCount} ชุด เลือกชุดที่ต้องการเพื่อดูราคาทุกใบในชุดนั้น`,
+      `Put the guide to work — Meecard tracks ${data.cardCount.toLocaleString("en-US")} cards across ${data.setCount} sets. Pick a set to see every card's price.`
     )
   );
 }
@@ -1028,8 +1032,8 @@ export function guideBuyFaq(lang: Language): GuideFaqItem[] {
       answer: pick(
         lang,
         tri(
-          "ราคากลางอ้างอิงจากตลาดญี่ปุ่น อัปเดตทุกวัน ใช้เป็นราคาต่อรองและเทียบข้อเสนอได้ ไม่ใช่ราคาขายของ Meecard เอง",
-          "Reference prices come from the Japanese market, updated daily — for negotiating and comparing offers; Meecard is not the seller."
+          "ราคากลางอ้างอิงจากตลาดญี่ปุ่น ใช้เป็นราคาต่อรองและเทียบข้อเสนอได้ ไม่ใช่ราคาขายของ Meecard เอง",
+          "Reference prices come from the Japanese market — for negotiating and comparing offers; Meecard is not the seller."
         )
       ),
       link: {
@@ -1055,7 +1059,7 @@ export function guideBuySources(lang: Language): Array<{ label: string; desc: st
     },
     {
       label: pick(lang, tri("ราคาการ์ดวันพีชบน Meecard", "One Piece card prices on Meecard")),
-      desc: pick(lang, tri("ราคากลางทุกใบ อัปเดตทุกวัน พร้อมกราฟย้อนหลัง", "Daily reference prices for every card, with history charts.")),
+      desc: pick(lang, tri("ราคากลางทุกใบ พร้อมกราฟย้อนหลัง", "Reference prices for every card, with history charts.")),
       url: "/",
       internal: true,
     },

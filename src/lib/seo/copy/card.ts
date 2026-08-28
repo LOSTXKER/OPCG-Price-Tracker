@@ -208,17 +208,19 @@ export function buildCardIntro(lang: Language, data: CardSeoData): string[] {
     return [
       hasPrice
         ? // "ความหายาก" is not repeated in the tail — it already appears above,
-          // and the owner's draft carried it twice.
-          `เช็คราคา${head} พร้อมข้อมูลการ์ด กราฟราคา และประวัติราคา อัปเดตทุกวัน`
-        : `${head} ตอนนี้ยังไม่มีราคากลางล่าสุด เพราะยังไม่พบประกาศขายจากแหล่งที่เราติดตามในตลาดญี่ปุ่น เราเก็บราคาใหม่ทุกวัน`,
+          // and the owner's draft carried it twice. No "อัปเดตทุกวัน" claim
+          // (owner ruling 2026-08-28) — the real per-card date renders on
+          // screen instead of a schedule promise here.
+          `เช็คราคา${head} พร้อมข้อมูลการ์ด กราฟราคา และประวัติราคา`
+        : `${head} ตอนนี้ยังไม่มีราคากลางล่าสุด เพราะยังไม่พบประกาศขายจากแหล่งที่เราติดตามในตลาดญี่ปุ่น`,
     ];
   }
 
   const head = `${data.nameLatin}, card ${code}, a ${data.rarity} card from ${data.setName} in the One Piece Card Game`;
   return [
     hasPrice
-      ? `Check the price of ${head}, with card details, a price chart and full price history, updated daily.`
-      : `${head}. There is no reference price yet — we have not seen it listed by the sources we track in Japan, and prices are collected daily.`,
+      ? `Check the price of ${head}, with card details, a price chart and full price history.`
+      : `${head}. There is no reference price yet — we have not seen it listed by the sources we track in Japan.`,
   ];
 }
 
@@ -255,8 +257,11 @@ export function buildCardFaq(lang: Language, data: CardSeoData): CardFaqItem[] {
           : `ตอนนี้ยังไม่มีราคากลางล่าสุดของ ${name} (${code}) เพราะยังไม่พบประกาศขายจากแหล่งที่เราติดตาม ลองกดติดตามการ์ดใบนี้ไว้ ระบบจะเก็บราคาให้ทันทีที่มีคนตั้งขาย`,
       },
       {
-        question: "ราคามาจากแหล่งไหน อัปเดตบ่อยแค่ไหน?",
-        answer: `ราคากลางอ้างอิงจากตลาดญี่ปุ่น อัปเดตทุกวัน แล้วแปลงเป็นเงินบาทให้อัตโนมัติ${updated ? ` การ์ด ${code} อัปเดตล่าสุดเมื่อ ${updated}` : ""}`,
+        // Owner ruling 2026-08-28: reframed away from "how often" — prices
+        // are not scraped on a schedule (demo site). The real per-card date
+        // still appends when available.
+        question: "ราคามาจากแหล่งไหน?",
+        answer: `ราคากลางอ้างอิงจากตลาดญี่ปุ่น แล้วแปลงเป็นเงินบาทให้อัตโนมัติ${updated ? ` การ์ด ${code} อัปเดตล่าสุดเมื่อ ${updated}` : ""}`,
         link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
       },
     ];
@@ -270,8 +275,8 @@ export function buildCardFaq(lang: Language, data: CardSeoData): CardFaqItem[] {
         : `There is no reference price for ${name} (${code}) yet — no tracked source currently lists it.`,
     },
     {
-      question: "Where do the prices come from and how often are they updated?",
-      answer: `Reference prices come from the Japanese market, rescraped daily and converted to THB automatically${updated ? `; ${code} was last updated ${updated}` : ""}.`,
+      question: "Where do the prices come from?",
+      answer: `Reference prices come from the Japanese market, converted to THB automatically${updated ? `; ${code} was last updated ${updated}` : ""}.`,
       link: { href: "/about#methodology", label: "How Meecard prices work" },
     },
   ];
@@ -288,7 +293,7 @@ export function buildPriceHistoryCopy(
       title: `ประวัติราคา ${code}`,
       lead: data.pointCount
         ? `ราคากลางจากตลาดญี่ปุ่น${data.latestDate ? ` อัปเดตล่าสุด ${data.latestDate}` : ""} ทุกช่วงคำนวณย้อนหลังจากวันที่อัปเดตล่าสุด`
-        : `ยังไม่มีประวัติราคาย้อนหลังของ ${code} มากพอจะสรุปเป็นตาราง ระบบจะเก็บราคาใหม่ให้ทุกวัน`,
+        : `ยังไม่มีประวัติราคาย้อนหลังของ ${code} มากพอจะสรุปเป็นตาราง`,
       recentTitle: "ราคารายวัน",
       windowsTitle: "สรุปช่วงราคา",
       emptyText: "ยังไม่มีข้อมูลราคาย้อนหลังสำหรับการ์ดใบนี้",
@@ -298,7 +303,7 @@ export function buildPriceHistoryCopy(
     title: `${code} price history`,
     lead: data.pointCount
       ? `Market reference prices from Japan${data.latestDate ? `, updated ${data.latestDate}` : ""}. Every window is measured back from the most recent update.`
-      : `Not enough price history for ${code} yet — new prices are collected daily.`,
+      : `Not enough price history for ${code} yet.`,
     recentTitle: "Daily prices",
     windowsTitle: "Range summary",
     emptyText: "No price history for this card yet.",
