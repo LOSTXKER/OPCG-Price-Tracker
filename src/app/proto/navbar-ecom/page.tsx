@@ -10,7 +10,6 @@ import {
   Briefcase,
   ChevronDown,
   ChevronRight,
-  Globe,
   Heart,
   LayoutGrid,
   Menu,
@@ -29,7 +28,7 @@ import { cn } from "@/lib/utils"
 
 /* ------------------------------------------------------------------ data */
 
-type Variant = "current" | "scoped" | "sets" | "twoRow"
+type Variant = "current" | "scoped" | "sets" | "searchLast"
 
 /** ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.) เพื่อเทียบแบบตาต่อตา */
 const STATS = {
@@ -67,7 +66,7 @@ const VARIANT_OPTIONS = [
   { value: "current", label: "ปัจจุบัน" },
   { value: "scoped", label: "1 · ค้นหาครองแถว" },
   { value: "sets", label: "2 · แถบชุดการ์ด" },
-  { value: "twoRow", label: "3 · สองแถวจบ" },
+  { value: "searchLast", label: "3 · ค้นหาลงล่าง" },
 ] as const
 
 const VARIANT_COPY: Record<
@@ -83,31 +82,32 @@ const VARIANT_COPY: Record<
   scoped: {
     name: "1 · ค้นหาครองแถว — ตัวเลือกชุดเข้าไปอยู่ในช่องค้นหา",
     summary:
-      "ยืมท่าของ Lazada/Amazon: ตัวเลือกเกม›ชุดไม่ใช่ปุ่มลอยข้างโลโก้อีกต่อไป แต่กลายเป็นหัวช่องค้นหา — พอรวมเป็นก้อนเดียว ช่องค้นหาเลยยืดได้เต็มแถวโดยไม่แย่งที่ใคร และสื่อความหมายใหม่ว่า \"ค้นเฉพาะในชุดที่เลือกอยู่\" แถวล่างเหลือแค่เมนูกับของบัญชี ทำให้บางลงได้",
+      "ยืมท่าของ Lazada/Amazon: ตัวเลือกเกม›ชุดไม่ใช่ปุ่มลอยข้างโลโก้อีกต่อไป แต่กลายเป็นหัวช่องค้นหา — พอรวมเป็นก้อนเดียว ช่องค้นหาเลยยืดได้เต็มแถวโดยไม่แย่งที่ใคร และสื่อความหมายใหม่ว่า \"ค้นเฉพาะในชุดที่เลือกอยู่\" · หน้าที่แยกกันชัดสองชั้น: แถวกลาง = ตัวตน + ค้นหา + บัญชี · แถวล่าง = นำทาง + ของฉัน",
     tradeoff:
-      "ปุ่มเลือกชุดกลืนไปกับช่องค้นหา คนที่คุ้นกับปุ่มเดิมข้างโลโก้อาจหาไม่เจอในครั้งแรก · แถวล่าง 36px เตี้ยลงจากเดิม 20px ปุ่มเมนูเลยเล็กลงตาม · สูงรวม 132px เท่าเดิมเป๊ะ (ไม่ต้องแก้ระยะเลื่อนของทั้งเว็บ)",
+      "ปุ่มเลือกชุดกลืนไปกับช่องค้นหา คนที่คุ้นกับปุ่มเดิมข้างโลโก้อาจหาไม่เจอในครั้งแรก · ทางลัดชุดยังต้องกดสองจังหวะ (เปิดตัวเลือก → เลือกชุด) ต่างจากแบบ 2 · สูงรวม 132px เท่าเดิมเป๊ะ",
   },
   sets: {
-    name: "2 · แถบชุดการ์ด — แถวล่างกลายเป็นชั้นวางชุด",
+    name: "2 · แถบชุดการ์ด — แถวล่างเป็นแถวนำทางเต็มรูป",
     summary:
-      "Shopee/Lazada มีแถบหมวดหมู่สินค้าใต้ช่องค้นหา ของเราหมวดหมู่จริงคือ \"ชุดการ์ด\" — เพราะคนเล่นเช็คราคาโดยเลือกชุดก่อนเสมอ แบบนี้เลยเอาชุดล่าสุด 8 ชุดมาเรียงเป็นทางลัดกดเดียวถึง (ชุดใหม่สุดมีป้ายกำกับ) แทนที่จะต้องกดปุ่มเลือกชุดแล้วค่อยหาในรายการ",
+      "Shopee/Lazada มีแถบหมวดหมู่สินค้าใต้ช่องค้นหา ของเราหมวดหมู่จริงคือ \"ชุดการ์ด\" — เพราะคนเล่นเช็คราคาโดยเลือกชุดก่อนเสมอ แบบนี้เลยรวมเมนูหลักกับชุดล่าสุด 8 ชุดไว้แถวล่างเป็นแถวนำทางแถวเดียว (ชุดใหม่สุดมีป้ายกำกับ) กดถึงชุดได้ในจังหวะเดียว",
     tradeoff:
-      "เมนูหลัก 4 ลิงก์ต้องขึ้นไปอยู่แถวกลางแทน ทำให้แถวกลางมีของเยอะสุดในสามแบบ · ทางลัดชุดโชว์ได้แค่ 8 ชุดจาก 51 ชุด ต้องมีปุ่ม \"ทุกชุด\" คู่เสมอ · สูงรวม 132px เท่าเดิม",
+      "แถวล่างมีของสองประเภทปนกัน (เมนูเว็บ + ชุดการ์ด) ต้องใช้เส้นคั่นช่วยแยก · ทางลัดโชว์ได้ 8 ชุดจาก 51 ชุด ต้องมีปุ่ม \"ทุกชุด\" คู่เสมอ · ช่องค้นหาแคบกว่าแบบ 1 เพราะแบ่งที่ให้ของฉันบนแถวเดียวกัน · สูงรวม 132px",
   },
-  twoRow: {
-    name: "3 · สองแถวจบ — คืนพื้นที่ให้เนื้อหา 36px",
+  searchLast: {
+    name: "3 · ค้นหาลงล่าง — ช่องค้นหายักษ์ติดกับเนื้อหา",
     summary:
-      "ตัดให้เหลือน้อยที่สุดที่ยังครบ: แถบชีพจรบนสุด แล้วทุกอย่างที่เหลือยัดลงแถวเดียว โลโก้ · เมนู · ช่องค้นหาที่ยืดเต็มช่องว่างตรงกลาง · ของประจำตัวย่อเป็นไอคอน · บัญชี — เตี้ยลงจากของจริง 36px ซึ่งบนจอโน้ตบุ๊กคือได้เห็นราคาการ์ดเพิ่มอีกแถวครึ่งทันทีที่เปิดหน้า",
+      "พลิกลำดับจากสองแบบบน: แถวกลางเก็บของที่ \"อยู่กับเว็บ\" (โลโก้ · เมนู · อัปเกรด · บัญชี) ส่วนแถวล่างยกให้ช่องค้นหาเต็มความกว้างพร้อมตัวเลือกชุดเป็นหัว วางชิดกับเนื้อหาเลย — เพราะค้นหาคือสิ่งสุดท้ายที่คนทำก่อนเข้าไปดูราคา อยู่ใกล้มือที่สุดตอนสายตาเลื่อนลง",
     tradeoff:
-      "แน่นที่สุด ทุกอย่างเบียดกันในแถวเดียว · พอร์ต/รายการโปรดเหลือแค่ไอคอนไม่มีป้ายชื่อ · ถ้าเปิดเมนูซื้อขายหรือเพิ่มลิงก์อีกอันในอนาคตจะเริ่มไม่พอที่ · สูงรวม 96px",
+      "แถวล่างสูง 56px ทำให้แถบรวมสูงกว่าสองแบบบน 12px (144px) · ช่องค้นหาอยู่ไกลจากโลโก้ คนที่มองหาช่องค้นหาที่ \"หัวเว็บ\" ตามความเคยชินอาจสะดุดครั้งแรก · เมนูหลักขึ้นไปเบียดกับบัญชีบนแถวเดียว",
   },
 }
 
 const SHARED_NOTES = [
-  "ทั้งสามแบบใหม่อยู่บนพื้นสีเดิมของเว็บ ไม่ทาสีแบรนด์ทับ และแถบชีพจรพร้อมสายพานการ์ดขยับแรงอยู่ครบเหมือนเดิมทุกแบบ",
-  "เอาแถวคำค้นยอดนิยมออกหมดแล้วตามที่เบสสั่ง",
-  "ช่องค้นหาโตขึ้น 2–3 เท่าและย้ายมาอยู่กลางแถว แทนที่จะซุกอยู่ขวาสุดแบบตอนนี้",
-  "ของครบทุกชิ้นจากแถบเดิม — ตารางท้ายหน้าไล่ให้ดูทีละชิ้นว่าแบบที่เลือกอยู่เอาไปวางตรงไหน",
+  "ทุกปุ่มสูง 40px ขึ้นไปตามกฎ hit target ของเราเอง — รอบแรกย่อของบัญชีเหลือ 28px ซึ่งเล็กเกินกดจริง",
+  "พอร์ต · รายการโปรด · Honey มีป้ายชื่อครบทุกแบบ ไม่ย่อเหลือไอคอน (เบสสั่ง)",
+  "ภาษา · สกุลเงิน · ธีม กลับไปอยู่ในเมนูโปรไฟล์เหมือนของจริง — เป็นของตั้งครั้งเดียวจบ ไม่ควรกินที่หน้าแถบตลอดเวลา",
+  "ขนาดไล่ตามหน้าที่: ช่องค้นหา 44px ใหญ่สุด → อัปเกรดเป็นปุ่มมีกรอบเพราะเป็นทางไปจ่ายเงิน → เมนู/ของฉัน 40px → แจ้งเตือนเป็นไอคอนแต่จุดแดงเห็นชัด",
+  "ทุกแบบอยู่บนพื้นสีเดิม ไม่ทาสีแบรนด์ทับ และแถบชีพจรพร้อมสายพานการ์ดขยับแรงอยู่ครบเหมือนเดิม",
   "ปุ่มทุกปุ่มในตัวอย่างกดไม่ได้จริง (หุ่นโชว์ผัง) · ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.)",
 ] as const
 
@@ -133,53 +133,53 @@ const PLACEMENTS: Record<Variant, ReadonlyArray<{ item: string; where: string }>
   scoped: [
     { item: "สถิติตลาด", where: "แถบชีพจรบนสุด — เหมือนเดิมทุกอย่าง" },
     { item: "สายพานการ์ดขยับแรง", where: "แถบชีพจรบนสุด — เหมือนเดิมทุกอย่าง" },
-    { item: "โลโก้ Meecard", where: "แถวพระเอก ซ้ายสุด" },
-    { item: "ตัวเลือกเกม › ชุด", where: "🔁 กลายเป็นหัวช่องค้นหา (ซ้ายในกรอบเดียวกัน)" },
-    { item: "ปุ่มอัปเกรด", where: "แถวล่าง ฝั่งขวา" },
-    { item: "ข้อความ", where: "แถวล่าง ฝั่งขวา" },
-    { item: "การแจ้งเตือน", where: "แถวล่าง ฝั่งขวา" },
-    { item: "โปรไฟล์", where: "แถวล่าง ขวาสุด" },
-    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์ บนแถวล่าง" },
-    { item: "เมนูหลัก", where: "แถวล่าง ฝั่งซ้าย (ตัวหนังสือ ไม่ใช่แคปซูล)" },
-    { item: "พอร์ต", where: "แถวพระเอก ฝั่งขวา" },
-    { item: "รายการโปรด", where: "แถวพระเอก ฝั่งขวา" },
-    { item: "Honey + แต้ม", where: "แถวพระเอก ฝั่งขวา" },
-    { item: "ช่องค้นหา", where: "แถวพระเอก ยืดเต็มกลางแถว มีตัวเลือกชุดเป็นหัว" },
-    { item: "ภาษา · สกุลเงิน · ธีม", where: "ภาษาขึ้นแถวล่างตรงๆ · สกุลเงิน/ธีมยังอยู่ในเมนูโปรไฟล์" },
+    { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
+    { item: "ตัวเลือกเกม › ชุด", where: "🔁 กลายเป็นหัวช่องค้นหา (ในกรอบเดียวกัน)" },
+    { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ เด่นกว่าไอคอนข้างๆ" },
+    { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถวกลาง ขวาสุด (แคปซูล 40px)" },
+    { item: "ฝั่งยังไม่ล็อกอิน (เฟือง · แพ็กเกจ · เข้าสู่ระบบ · สมัคร)", where: "ตำแหน่งเดียวกับโปรไฟล์" },
+    { item: "เมนูหลัก", where: "แถวล่าง ฝั่งซ้าย (ปุ่มสูง 40px)" },
+    { item: "พอร์ต", where: "แถวล่าง ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "รายการโปรด", where: "แถวล่าง ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "Honey + แต้ม", where: "แถวล่าง ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "ช่องค้นหา", where: "แถวกลาง ยืดเต็มแถว สูง 44px มีตัวเลือกชุดเป็นหัว" },
+    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง — ของตั้งครั้งเดียวจบ)" },
   ],
   sets: [
     { item: "สถิติตลาด", where: "แถบชีพจรบนสุด — เหมือนเดิมทุกอย่าง" },
     { item: "สายพานการ์ดขยับแรง", where: "แถบชีพจรบนสุด — เหมือนเดิมทุกอย่าง" },
-    { item: "โลโก้ Meecard", where: "แถวพระเอก ซ้ายสุด" },
-    { item: "ตัวเลือกเกม › ชุด", where: "🔁 แตกเป็นปุ่มเกมบนแถวพระเอก + ปุ่ม \"ทุกชุด\" นำแถบชุดล่าง" },
-    { item: "ปุ่มอัปเกรด", where: "แถวพระเอก ฝั่งขวา" },
-    { item: "ข้อความ", where: "แถวพระเอก ฝั่งขวา" },
-    { item: "การแจ้งเตือน", where: "แถวพระเอก ฝั่งขวา" },
-    { item: "โปรไฟล์", where: "แถวพระเอก ขวาสุด" },
+    { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
+    { item: "ตัวเลือกเกม › ชุด", where: "🔁 แตกเป็นปุ่ม \"ทุกชุด\" นำแถบชุด + ชุดล่าสุด 8 ชุดกดถึงตรงๆ" },
+    { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถวกลาง ขวาสุด (แคปซูล 40px)" },
     { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
-    { item: "เมนูหลัก", where: "แถวพระเอก ถัดจากโลโก้ (ตัวหนังสือเล็ก)" },
-    { item: "พอร์ต", where: "แถวพระเอก ฝั่งขวา (ย่อเหลือไอคอน)" },
-    { item: "รายการโปรด", where: "แถวพระเอก ฝั่งขวา (ย่อเหลือไอคอน)" },
-    { item: "Honey + แต้ม", where: "แถวพระเอก ฝั่งขวา (🍯 + เลขแต้ม)" },
-    { item: "ช่องค้นหา", where: "แถวพระเอก กลางแถว" },
-    { item: "ภาษา · สกุลเงิน · ธีม", where: "ซ่อนในเมนูโปรไฟล์ (เหมือนเดิม)" },
+    { item: "เมนูหลัก", where: "แถวล่าง ซ้ายสุด — นำหน้าแถบชุด มีเส้นคั่น" },
+    { item: "พอร์ต", where: "แถวกลาง ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "รายการโปรด", where: "แถวกลาง ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "Honey + แต้ม", where: "แถวกลาง ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "ช่องค้นหา", where: "แถวกลาง กลางแถว สูง 44px" },
+    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
-  twoRow: [
+  searchLast: [
     { item: "สถิติตลาด", where: "แถบชีพจรบนสุด — เหมือนเดิมทุกอย่าง" },
     { item: "สายพานการ์ดขยับแรง", where: "แถบชีพจรบนสุด — เหมือนเดิมทุกอย่าง" },
-    { item: "โลโก้ Meecard", where: "แถวเดียว ซ้ายสุด (เหลือรูป ไม่มีตัวหนังสือ)" },
-    { item: "ตัวเลือกเกม › ชุด", where: "แถวเดียว ถัดจากโลโก้ (ย่อเหลือปุ่มชุดปุ่มเดียว)" },
-    { item: "ปุ่มอัปเกรด", where: "แถวเดียว ฝั่งขวา (ย่อเหลือไอคอน)" },
-    { item: "ข้อความ", where: "แถวเดียว ฝั่งขวา" },
-    { item: "การแจ้งเตือน", where: "แถวเดียว ฝั่งขวา" },
-    { item: "โปรไฟล์", where: "แถวเดียว ขวาสุด" },
+    { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
+    { item: "ตัวเลือกเกม › ชุด", where: "🔁 เป็นหัวช่องค้นหาที่แถวล่าง" },
+    { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถวกลาง ขวาสุด (แคปซูล 40px)" },
     { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
-    { item: "เมนูหลัก", where: "แถวเดียว ถัดจากตัวเลือกชุด" },
-    { item: "พอร์ต", where: "แถวเดียว ฝั่งขวา (ย่อเหลือไอคอน)" },
-    { item: "รายการโปรด", where: "แถวเดียว ฝั่งขวา (ย่อเหลือไอคอน)" },
-    { item: "Honey + แต้ม", where: "แถวเดียว ฝั่งขวา (🍯 + เลขแต้ม)" },
-    { item: "ช่องค้นหา", where: "แถวเดียว ยืดเต็มช่องว่างตรงกลาง" },
-    { item: "ภาษา · สกุลเงิน · ธีม", where: "ซ่อนในเมนูโปรไฟล์ (เหมือนเดิม)" },
+    { item: "เมนูหลัก", where: "แถวกลาง ถัดจากโลโก้ (ปุ่มสูง 40px)" },
+    { item: "พอร์ต", where: "แถวล่าง ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "รายการโปรด", where: "แถวล่าง ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "Honey + แต้ม", where: "แถวล่าง ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "ช่องค้นหา", where: "แถวล่างทั้งแถว สูง 44px ติดกับเนื้อหา มีตัวเลือกชุดเป็นหัว" },
+    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
 }
 
@@ -263,13 +263,13 @@ function GhostIcon({
       aria-label={label}
       className={cn(
         "ease-chrome relative grid shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        size === "sm" ? "size-7" : "size-9",
+        size === "sm" ? "size-9" : "size-10",
       )}
     >
-      <Icon className={cn(size === "sm" ? "size-3.5" : "size-4", iconClassName)} aria-hidden />
+      <Icon className={cn(size === "sm" ? "size-4" : "size-[18px]", iconClassName)} aria-hidden />
       {dot && (
         <span
-          className="absolute right-1.5 top-1.5 size-2 rounded-full bg-danger"
+          className="absolute right-2 top-2 size-2 rounded-full bg-danger"
           aria-hidden
         />
       )}
@@ -277,40 +277,17 @@ function GhostIcon({
   )
 }
 
-function ProfileCapsule({ compact = false }: { compact?: boolean }) {
+function ProfileCapsule() {
   return (
     <button
       type="button"
-      aria-label="เปิดเมนูโปรไฟล์และการตั้งค่า"
-      className={cn(
-        "hairline ease-chrome flex shrink-0 items-center gap-1.5 rounded-full pl-2 pr-1 transition-colors hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        compact ? "h-7" : "h-8",
-      )}
+      aria-label="เปิดเมนูโปรไฟล์ ตั้งค่า ภาษา และธีม"
+      className="hairline ease-chrome flex h-10 shrink-0 items-center gap-1.5 rounded-full pl-2.5 pr-1 transition-colors hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
     >
-      <Menu className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-      <span
-        className={cn(
-          "grid shrink-0 place-items-center rounded-full bg-primary/10 font-bold text-primary ring-2 ring-primary/25",
-          compact ? "size-5 text-[9px]" : "size-6 text-[10px]",
-        )}
-      >
+      <Menu className="size-[18px] shrink-0 text-muted-foreground" aria-hidden />
+      <span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary/10 text-[11px] font-bold text-primary ring-2 ring-primary/25">
         T
       </span>
-    </button>
-  )
-}
-
-/** ปุ่มภาษา — ของที่เดิมซ่อนอยู่ในเมนูโปรไฟล์ ยกขึ้นมาโชว์บนแถวบัญชี */
-function LangPill() {
-  return (
-    <button
-      type="button"
-      aria-label="เปลี่ยนภาษา"
-      className="ease-chrome flex h-7 shrink-0 items-center gap-1 rounded-full px-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
-    >
-      <Globe className="size-3.5" aria-hidden />
-      ไทย
-      <ChevronDown className="size-3" aria-hidden />
     </button>
   )
 }
@@ -326,7 +303,7 @@ function UpgradeButton({
       <button
         type="button"
         aria-label="อัปเกรดแพ็กเกจ"
-        className="ease-chrome grid size-9 shrink-0 place-items-center rounded-full text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+        className="ease-chrome grid size-10 shrink-0 place-items-center rounded-full text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
       >
         <Zap className="size-4" aria-hidden />
       </button>
@@ -346,7 +323,7 @@ function UpgradeButton({
   return (
     <button
       type="button"
-      className="ease-chrome flex h-8 shrink-0 items-center gap-1 rounded-full border border-primary/30 px-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+      className="ease-chrome flex h-10 shrink-0 items-center gap-1.5 rounded-full border border-primary/40 px-3.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
     >
       <Zap className="size-3" aria-hidden />
       อัปเกรด
@@ -360,7 +337,7 @@ function NavLinkItem({ label, active = false }: { label: string; active?: boolea
       type="button"
       aria-current={active ? "page" : undefined}
       className={cn(
-        "ease-chrome inline-flex h-9 shrink-0 items-center whitespace-nowrap rounded-full px-3.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        "ease-chrome inline-flex h-10 shrink-0 items-center whitespace-nowrap rounded-full px-3.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
         active
           ? "bg-[var(--p-honey-soft)] font-semibold text-primary"
           : "font-medium text-muted-foreground hover:text-foreground",
@@ -382,23 +359,14 @@ function NavCluster() {
   )
 }
 
-/** ลิงก์ตัวหนังสือเปล่าสำหรับแถวบางๆ */
-function TextLink({
-  label,
-  active = false,
-  size = "sm",
-}: {
-  label: string
-  active?: boolean
-  size?: "sm" | "xs"
-}) {
+/** ลิงก์เมนูแบบตัวหนังสือ — ไม่มีพื้นหลัง แต่กรอบกดสูง 40px เต็มตามกฎ hit target */
+function TextLink({ label, active = false }: { label: string; active?: boolean }) {
   return (
     <button
       type="button"
       aria-current={active ? "page" : undefined}
       className={cn(
-        "ease-chrome shrink-0 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        size === "xs" ? "text-xs" : "text-sm",
+        "ease-chrome inline-flex h-10 shrink-0 items-center whitespace-nowrap rounded-full px-3 text-sm transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
         active
           ? "font-semibold text-primary"
           : "font-medium text-muted-foreground hover:text-foreground",
@@ -409,13 +377,13 @@ function TextLink({
   )
 }
 
-function TextNavCluster({ size = "sm" }: { size?: "sm" | "xs" }) {
+function TextNavCluster() {
   return (
-    <nav className="flex shrink-0 items-center gap-4" aria-label="เมนูหลัก">
-      <TextLink size={size} label="หน้าแรก" active />
-      <TextLink size={size} label="ชุดการ์ด" />
-      <TextLink size={size} label="เด็คและเครื่องมือ" />
-      <TextLink size={size} label="ซื้อขาย" />
+    <nav className="flex shrink-0 items-center gap-0.5" aria-label="เมนูหลัก">
+      <TextLink label="หน้าแรก" active />
+      <TextLink label="ชุดการ์ด" />
+      <TextLink label="เด็คและเครื่องมือ" />
+      <TextLink label="ซื้อขาย" />
     </nav>
   )
 }
@@ -434,7 +402,7 @@ function MyStuffLink({
   return (
     <button
       type="button"
-      className="ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+      className="ease-chrome relative flex h-10 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
     >
       {ping && (
         <span className="absolute -right-1 -top-1 flex size-2" aria-hidden>
@@ -449,25 +417,22 @@ function MyStuffLink({
   )
 }
 
-/** 🍯 + แต้ม — ใช้ได้ทั้งแบบมีป้ายชื่อและแบบย่อ */
-function HoneyButton({ compact = false }: { compact?: boolean }) {
+/** 🍯 + ชื่อ + แต้ม — ชื่อห้ามหาย (เบสสั่ง 2026-08-29) */
+function HoneyButton() {
   return (
     <button
       type="button"
       aria-label="Honey — มี 20 แต้ม"
-      className={cn(
-        "ease-chrome relative flex h-9 shrink-0 items-center gap-1 rounded-full text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        compact ? "px-2.5" : "px-3",
-      )}
+      className="ease-chrome relative flex h-10 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
     >
       <span className="absolute -right-1 -top-1 flex size-2" aria-hidden>
         <span className="absolute inline-flex size-full animate-ping rounded-full bg-danger opacity-75" />
         <span className="relative inline-flex size-2 rounded-full bg-danger" />
       </span>
-      <span className="text-sm leading-none" aria-hidden>
+      <span className="text-base leading-none" aria-hidden>
         🍯
       </span>
-      {!compact && <span>Honey</span>}
+      <span>Honey</span>
       <span className="font-bold tabular-nums text-amber-600 dark:text-amber-400">
         20
       </span>
@@ -491,23 +456,13 @@ function MyStuffCluster() {
   )
 }
 
-/** ของประจำตัวแบบย่อ — ไอคอนล้วน สำหรับแถวที่มีของแน่น */
-function MyStuffIcons() {
+/** ของบัญชี — ข้อความ · แจ้งเตือน · โปรไฟล์ ขนาดเต็มเสมอ (กดจริงได้ 40px) */
+function AccountIcons() {
   return (
     <div className="flex shrink-0 items-center gap-0.5">
-      <GhostIcon icon={Briefcase} label="พอร์ต" />
-      <GhostIcon icon={Heart} label="รายการโปรด" iconClassName="text-primary" />
-      <HoneyButton compact />
-    </div>
-  )
-}
-
-function AccountIcons({ compact = false }: { compact?: boolean }) {
-  return (
-    <div className="flex shrink-0 items-center gap-0.5">
-      <GhostIcon size={compact ? "sm" : "md"} icon={MessageCircle} label="ข้อความ" />
-      <GhostIcon size={compact ? "sm" : "md"} icon={Bell} label="การแจ้งเตือน" dot />
-      <ProfileCapsule compact={compact} />
+      <GhostIcon icon={MessageCircle} label="ข้อความ" />
+      <GhostIcon icon={Bell} label="การแจ้งเตือน" dot />
+      <ProfileCapsule />
     </div>
   )
 }
@@ -517,7 +472,7 @@ function GamePill() {
     <button
       type="button"
       aria-label="เลือกแคตตาล็อกเกม: One Piece Card Game"
-      className="surface-2 ease-chrome flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 text-xs font-semibold text-foreground ring-1 ring-hair transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+      className="surface-2 ease-chrome flex h-10 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-foreground ring-1 ring-hair transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
     >
       <GameCrest game={{ slug: "opcg" }} size={18} variant="selector" decorative />
       OPCG
@@ -532,7 +487,7 @@ function SetTrigger({ className }: { className?: string }) {
       type="button"
       aria-label="เลือกชุดการ์ด"
       className={cn(
-        "surface-2 hairline ease-chrome flex h-8 w-48 items-center gap-1.5 rounded-full px-2.5 text-label text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        "surface-2 hairline ease-chrome flex h-10 w-48 items-center gap-1.5 rounded-full px-3 text-label text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
         className,
       )}
     >
@@ -600,7 +555,7 @@ function HeroSearch({
           <button
             type="button"
             aria-label="เลือกแคตตาล็อก: OPCG · ทุกชุด"
-            className="ease-chrome flex h-9 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-xs font-semibold text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+            className="ease-chrome flex h-10 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
           >
             <GameCrest game={{ slug: "opcg" }} size={18} variant="selector" decorative />
             OPCG
@@ -614,7 +569,7 @@ function HeroSearch({
       <button
         type="button"
         aria-label="ค้นหาการ์ด"
-        className="flex min-w-0 flex-1 items-center gap-2 text-left focus-visible:outline-none"
+        className="flex min-w-0 flex-1 self-stretch items-center gap-2 text-left focus-visible:outline-none"
       >
         <span className="min-w-0 flex-1 truncate text-body-sm text-muted-foreground">
           ค้นหาการ์ด ชุด หรือรหัส เช่น OP13-118...
@@ -623,7 +578,7 @@ function HeroSearch({
           /
         </kbd>
       </button>
-      <span className="ml-2 flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground">
+      <span className="ml-2 flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground">
         <Search className="size-4" aria-hidden />
         ค้นหา
       </span>
@@ -637,7 +592,7 @@ function SetRail() {
     <div className="flex min-w-0 items-center gap-1 overflow-hidden">
       <button
         type="button"
-        className="ease-chrome flex h-8 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+        className="ease-chrome flex h-10 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
       >
         <LayoutGrid className="size-3.5 text-muted-foreground" aria-hidden />
         ทุกชุด
@@ -649,7 +604,7 @@ function SetRail() {
           key={set.code}
           type="button"
           title={set.code + " · " + set.name}
-          className="ease-chrome flex h-8 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+          className="ease-chrome flex h-10 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
         >
           {set.code}
           {set.fresh && (
@@ -759,70 +714,80 @@ function CurrentNavbar() {
   )
 }
 
-/** แบบ 1 — ตัวเลือกชุดเข้าไปเป็นหัวช่องค้นหา ช่องค้นหาเลยยืดเต็มแถว */
+/**
+ * แบบ 1 — ตัวเลือกชุดเข้าไปเป็นหัวช่องค้นหา ช่องค้นหาเลยยืดเต็มแถว
+ *
+ * ลำดับหน้าที่: แถวกลาง = ตัวตน + ค้นหา + บัญชี · แถวล่าง = นำทาง + ของฉัน
+ * ทุกปุ่มสูง 40px ขึ้นไป และของฉันมีป้ายชื่อครบทุกตัว
+ */
 function ScopedNavbar() {
   return (
     <div>
       <PulseStrip />
-      <div className="flex h-16 items-center gap-4 px-8">
+      <div className="flex h-14 items-center gap-3 px-8">
         <BrandMark />
         <div className="min-w-0 flex-1">
           <HeroSearch scope />
         </div>
-        <MyStuffCluster />
+        <UpgradeButton />
+        <AccountIcons />
       </div>
-      <div className="hairline-t flex h-9 items-center gap-5 px-8">
+      <div className="hairline-t flex h-11 items-center gap-3 px-8">
         <TextNavCluster />
         <div className="min-w-0 flex-1" />
-        <div className="flex shrink-0 items-center gap-1">
-          <UpgradeButton variant="bare" />
-          <LangPill />
-          <AccountIcons compact />
-        </div>
+        <MyStuffCluster />
       </div>
     </div>
   )
 }
 
-/** แบบ 2 — แถวล่างกลายเป็นชั้นวางชุดการ์ด (ท่าแถบหมวดหมู่ของ Lazada) */
+/**
+ * แบบ 2 — แถวล่างเป็นแถวนำทางเต็มรูป: เมนูหลัก + ชั้นวางชุดการ์ด
+ * (ท่าแถบหมวดหมู่ของ Lazada แต่หมวดของเราคือ "ชุด")
+ */
 function SetsNavbar() {
   return (
     <div>
       <PulseStrip />
-      <div className="flex h-16 items-center gap-4 px-8">
+      <div className="flex h-14 items-center gap-3 px-8">
         <BrandMark />
-        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
-        <TextNavCluster />
         <div className="flex min-w-0 flex-1 justify-center px-4">
-          <HeroSearch className="max-w-xl" />
+          <HeroSearch className="max-w-2xl" />
         </div>
-        <MyStuffIcons />
-        <UpgradeButton variant="icon" />
+        <MyStuffCluster />
+        <UpgradeButton />
         <AccountIcons />
       </div>
-      <div className="hairline-t flex h-9 items-center px-8">
+      <div className="hairline-t flex h-11 items-center gap-2 px-8">
+        <TextNavCluster />
+        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
         <SetRail />
       </div>
     </div>
   )
 }
 
-/** แบบ 3 — ทุกอย่างที่เหลือยัดลงแถวเดียว เตี้ยสุด คืนที่ให้เนื้อหา */
-function TwoRowNavbar() {
+/**
+ * แบบ 3 — พลิกลำดับ: แถวกลางเป็นนำทาง+บัญชี แถวล่างเป็นช่องค้นหายักษ์
+ * เต็มความกว้างติดกับเนื้อหา (ค้นหาคือสิ่งสุดท้ายก่อนเข้าเนื้อหา)
+ */
+function SearchLastNavbar() {
   return (
     <div>
       <PulseStrip />
-      <div className="flex h-16 items-center gap-3 px-8">
-        <BrandMark wordmark={false} />
-        <SetTrigger className="w-44" />
-        <span className="mx-0.5 h-5 w-px shrink-0 bg-border" aria-hidden />
+      <div className="flex h-14 items-center gap-3 px-8">
+        <BrandMark />
+        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
         <TextNavCluster />
-        <div className="min-w-0 flex-1 px-2">
-          <HeroSearch />
-        </div>
-        <MyStuffIcons />
-        <UpgradeButton variant="icon" />
+        <div className="min-w-0 flex-1" />
+        <UpgradeButton />
         <AccountIcons />
+      </div>
+      <div className="hairline-t flex h-14 items-center gap-3 px-8">
+        <div className="min-w-0 flex-1">
+          <HeroSearch scope />
+        </div>
+        <MyStuffCluster />
       </div>
     </div>
   )
@@ -889,7 +854,7 @@ const NAVBARS: Record<Variant, () => React.ReactNode> = {
   current: CurrentNavbar,
   scoped: ScopedNavbar,
   sets: SetsNavbar,
-  twoRow: TwoRowNavbar,
+  searchLast: SearchLastNavbar,
 }
 
 export default function NavbarEcomPrototypePage() {
