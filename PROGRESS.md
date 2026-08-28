@@ -1,36 +1,31 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-08-28 (ค่ำ) — **กวาดคำ "อัปเดตทุกวัน" ที่เหลือทั้งเว็บเสร็จแล้ว (verify ครบ ยังไม่ commit)**
+อัปเดตล่าสุด: 2026-08-28 (ดึก) — **หน้าเทียบ "หน้าแรกมือถือ" 2 แบบ เสร็จแล้ว รอเบสเปิดดูบนมือถือแล้วเคาะ** (branch `claude/mobile-home-layout-c8d6e8`)
 
-## รอบนี้ทำอะไร (session นี้)
+## รอบนี้ทำอะไร (session นี้ — worktree mobile-home-layout)
 
-ต่องานคำสั่งเบส "ไล่เก็บคำว่า 'อัปเดตทุกวัน' ที่เหลือ 35 จุดต่อเลย" — เหตุผลเดิม: pipeline scrape ราคาเสีย ~5 เดือนแล้ว เบสตัดสินว่าเว็บตอนนี้เป็น "demo" ยังไม่ซ่อม pipeline ทันที ดังนั้นคำสัญญา "อัปเดตทุกวัน/updated daily/毎日更新" (รวมคำนุ่มๆ อย่าง "เรียลไทม์/real-time") เป็นเท็จ ต้องเอาออกทั้งหมด เหลือแค่ "อัปเดตล่าสุด <วันที่จริง>" ต่อหน้าเป็นสัญญาณความสดที่ซื่อสัตย์
+เบสส่งภาพหน้าแรกมือถือมาถาม "มีวิธีจัดให้ดี ให้สวยกว่านี้มั้ย" → สำรวจแล้วพบปัญหาจริง 4 ข้อ:
+1. กว่าจะเห็นราคาแถวแรกต้องเลื่อนผ่าน ~530px (hero ยาว + แถบควบคุม 3 แถว)
+2. ขอบซ้ายไม่ตรงกัน (36 / 20 / 12 / 36px แล้วแต่บล็อก)
+3. ตัวเลือกชุดโผล่ 3 ที่บนจอเดียว
+4. มือถือไม่เห็นไฮไลต์ตลาด (มูลค่าสูงสุด/ขึ้น/ลง มีเฉพาะ desktop)
 
-**ไฟล์ที่แก้ (ยังไม่ commit):**
-- `src/app/layout.tsx`, `src/app/opengraph-image.tsx` — title/description/OG alt
-- `src/app/guide/versions/page.tsx`, `src/app/blog/[slug]/page.tsx`, `src/app/most-expensive/page.tsx` — meta/copy ตรงๆ
-- `src/lib/seo/copy/{card,sets,most-expensive,guide,tools,site}.ts` — intro/FAQ/meta ทุกภาษา (บาง FAQ **เปลี่ยนคำถามใหม่** แทนแก้แค่คำตอบ เช่น "อัปเดตบ่อยแค่ไหน" → "มาจากไหน" เพราะคำตอบเดิมสัญญา schedule ไม่ได้แล้ว)
-- `src/lib/i18n/{th,en,jp}.ts` — footer disclaimer, login hero, about tagline/features/sources, mkt/guide related-links, ฯลฯ
+เบสเคาะ (AskUserQuestion): **ทำหน้าเทียบให้ดูก่อน แล้วค่อยเลือก** → สร้าง `/proto/mobile-home` (ไฟล์ใหม่ทั้งหมดใต้ `src/app/proto/mobile-home/` — **ไม่แตะไฟล์เดิมแม้แต่ไฟล์เดียว**):
 
-**ตั้งใจไม่แตะ** (ไม่ใช่คำสัญญา schedule): Honey daily check-in/streak/mission ทั้งหมด · weekly digest · "ราคาขยับได้ทุกวัน"/"Prices move daily" (คำเตือนเรื่องความผันผวน ไม่ใช่สัญญาอัปเดต) · "ราคารายวัน"/"Daily prices" (ป้ายชื่อตาราง price-history หมายถึง granularity รายวัน ไม่ใช่ schedule) · `aboutFeaturePortfolioDesc` "แบบเรียลไทม์" (พูดถึง client คำนวณใหม่ทันทีตอนราคาเปลี่ยน ไม่ใช่ความสดของข้อมูลราคา)
+- **แบบ A "จัดระเบียบ"**: ขอบเดียว 20px ทั้งหน้า · hero หด (H1 + โปรย 1 บรรทัด + meta "N ใบ · M ชุด · อัปเดต <วันที่>") · หัวแถบชุดเหลือบรรทัดเดียว · แถบควบคุม 3→2 แถว (แถวติดหนึบ = ราง grade + "ราคา | เปลี่ยนแปลง | ปุ่ม 24h/7d/30d กดวน") → แถวราคาแรกที่ ~437px (เดิม ~525) เห็น ~7 แถวก่อนเลื่อน
+- **แบบ B = A + แถบไฮไลต์**: การ์ดปัดข้าง มูลค่าสูงสุด·ขึ้นแรง·ลงแรง (ข้อมูลจริงจาก getHomeData) → แถวแรก ~600px เห็น ~4 แถว — ปุ่มลอยสลับ A↔B ในหน้าเดียว + ปุ่มสลับ light/dark + การ์ดอธิบาย trade-off ท้ายหน้า
+- chrome บน/ล่างเป็น mock นิ่ง (กันหลุดออกจากหน้า + fold ตรงจริง) · ข้อมูลจริง ISR 300s · interaction จริงบน 24 ใบตัวอย่าง: เกรด/ช่วงเวลา/เรียง/list-grid/FilterModal (rarity+เวอร์ชัน กรองจริง) · SetPicker+Pagination เป็นเดโมเลย์เอาต์ (บอกไว้ใน explainer)
 
-**Verify**: `tsc --noEmit` clean · `eslint src` 0 error (26 warning เดิมเท่าเดิม) · `vitest run` 151 ไฟล์/906 ผ่าน (จำนวนเท่าเดิม ไม่มี test ไหนต้องแก้) · `npm run build` 211/211 หน้า · เปิด dev จริงเช็ค `/` `/about` `/guide` `/opcg/trending` `/opcg/market-overview` `/opcg/sets` `/most-expensive` ทั้ง curl (grep คำต้องห้ามสามภาษา = 0 จุด) และเปิดเบราว์เซอร์จริงดูหน้าแรก+about (เห็น "อัปเดตล่าสุด 5 เมษายน 2569" ของจริงแทน)
+**Verify ครบ**: tsc clean · eslint 0 error (26 warning เดิม) · vitest 152 ไฟล์/913 ผ่าน · build 212 หน้า (`/proto/mobile-home` ISR 5m) · เปิดจริง 375×812 ทั้ง A/B ทั้ง Light/Dark: ขอบตรงเส้นเดียว, sticky เกาะใต้แถบบน 56px, dropdown ชุดทับ sticky ไม่โดน clip, สลับเกรด→ราคา/เรียงเปลี่ยนจริง, วนช่วงเวลา→% เปลี่ยน, กรอง P-SEC เหลือครบทุกแถวจริง, ไม่มี console error
 
-**พบเพิ่มระหว่างทาง (ยังไม่แก้ — รอเบสตัดสิน):** `src/lib/seo/json-ld.ts` มีฟิลด์ `priceValidUntil = scrapedAt + 24 ชม.` ใน Product JSON-LD — เพราะ scrape จริงหยุดมาเป็นเดือนแล้ว ฟิลด์นี้จะคำนวณออกมาเป็น**วันที่หมดอายุไปแล้ว**เกือบทุกหน้าการ์ด (Google อาจมองว่าราคาไม่ valid) — เป็นปัญหาคนละชั้นกับ copy (เชิงเทคนิค/SEO ไม่ใช่คำโฆษณา) เลยไม่แตะในรอบนี้ รอเบสสั่งว่าจะทำยังไง (เอาออก / ขยายเป็น 7 วัน / อย่างอื่น)
-
-## ⚠️ งานคู่ขนานใน tree (ไม่ใช่ของ session นี้ — อย่าเหมารวม)
-
-ระหว่างทำมีไฟล์แก้ค้างของอีก session อยู่ด้วย: `src/app/globals.css`, `src/components/home/home-set-strip.tsx`, `src/components/home/set-ticker-motion.ts` (+ test) — ดูเหมือนกำลังต่องาน ticker แถบชุดการ์อหน้าแรก (commit ล่าสุดของสายนั้น: `2fabbab`, `c68df1d`) ให้ session นั้นปิดงานเอง — **ห้าม commit ไฟล์กลุ่มนี้ปนกับงานกวาดคำของ session นี้**
+**การตัดสินใจระหว่างทาง**: snap rail ต้องใส่ `scroll-ps-5` ไม่งั้น snap กินขอบ 20px · การ์ดไฮไลต์ w-44 + PriceTag แบบ plain กันราคาตกบรรทัด · เพิ่มเส้นแบ่งบางระหว่างราง grade กับชุดเรียงในแถว sticky
 
 ## สถานะ git
-
-- branch `chore/next-16.3` @ `2fabbab` (จากอีก session) + **ของ session นี้ยังไม่ commit** (แก้เฉพาะไฟล์ copy/i18n/seo ตามลิสต์ด้านบน)
-- ไม่มี schema / migration / dependency / config change
-- รอเบสสั่ง "commit push" ชัดๆ ก่อน (ตามแพทเทิร์นทุกครั้งใน session นี้)
+- branch `claude/mobile-home-layout-c8d6e8` (worktree แยก) — commit + push แล้ว
+- ไม่มี schema / dependency / config change · ไม่แตะไฟล์ที่ session อื่นค้าง (globals.css, home-set-strip, copy/i18n)
 
 ## NEXT
-
-1. รอเบสสั่ง commit + push งานกวาด "อัปเดตทุกวัน"
-2. ตัดสินเรื่อง `priceValidUntil` ใน `src/lib/seo/json-ld.ts` (ดูหัวข้อด้านบน)
-3. คิวงานค้างเดิม (ยังไม่แตะ): `getHomeData().rarityRows` query ทิ้งเปล่า · "อัปเดตล่าสุด:" hardcode ไทยที่ trending + most-expensive (ย้ายมาใช้ pattern map 3 locale ของหน้าแรก)
+1. **เบสเปิดดูบนมือถือ**: `http://192.168.1.145:59283/proto/mobile-home` (Wi-Fi วงเดียวกัน, dev server ต้องรันอยู่ — หรือรัน `npm run dev` แล้วเปิด `/proto/mobile-home`) → กดปุ่มลอยล่างสลับ A/B → เคาะแบบ
+2. เบสเคาะแล้ว → วางแผนย้ายแบบที่ชนะเข้า `/` จริง (แก้ HomeSearchHero / HomeSetStrip header / HomeMarketOverview in-place + ลบ proto) — ตอนนั้นค่อยแตะไฟล์จริงหลังงาน ticker ของอีก session จบ
+3. งานค้างเดิมของ session อื่น (กวาดคำ "อัปเดตทุกวัน" บน `chore/next-16.3` · `priceValidUntil` ใน json-ld) — ไม่เกี่ยวกับ branch นี้ ดู PROGRESS บน branch นั้น
