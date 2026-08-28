@@ -778,8 +778,13 @@
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
+/* One pass over a single copy of the rail. Chrome should read as calm, so the
+   duration is set well past the point where the eye has to track it: on the
+   current header rail that is ~37px/s (owner ruling 2026-08-28 — "ขอช้ากว่านี้
+   หน่อย", down from 60s). Raise this number to slow the rail down; the travel
+   distance is a percentage, so a wider rail moves faster at the same duration. */
 .animate-ticker {
-  animation: ticker-scroll 60s linear infinite;
+  animation: ticker-scroll 90s linear infinite;
 }
 .animate-ticker:hover {
   animation-play-state: paused;
