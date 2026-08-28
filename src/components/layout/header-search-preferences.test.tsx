@@ -19,11 +19,16 @@ function occurrences(value: string, needle: string): number {
  *  3. then, following CoinGecko / CoinMarketCap: the brand moved up into the
  *     strip, language + currency + theme moved OFF the bar and into the account
  *     menu (with a gear for guests), and search became a real field wide enough
- *     to be the page's only way in — the home hero no longer has an input.
+ *     to be the page's only way in — the home hero no longer has an input;
+ *  4. later that evening the owner picked "navbar แบบ C" from the /proto/navbar
+ *     comparison: the market figures moved onto a thin ticker strip of their
+ *     own (plain text, never chips, no green on chrome), and the search field
+ *     moved to the FAR RIGHT of the nav row, after Honey.
  *
- *   Row 1 (strip, 44px): brand · Game → Set · market figures · upgrade ·
- *                        chat/notifications/account-menu (or guest gear)
- *   Row 2 (header, 56px): nav hubs · SEARCH FIELD · portfolio/watchlist/honey
+ *   Strip (28px):  market figures · "อัปเดตล่าสุด"
+ *   Row 1 (44px):  brand · Game → Set · upgrade ·
+ *                  chat/notifications/account-menu (or guest gear)
+ *   Row 2 (56px):  nav hubs · portfolio/watchlist/honey · SEARCH FIELD
  *
  * These tests lock that shape so a later refactor cannot quietly reintroduce a
  * rejected variant. What did NOT move: the phone header keeps its own search
@@ -46,6 +51,22 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
       expect(ticker).toContain(figure)
     }
     expect(ticker).toContain('href={`/${game}/market-overview`}')
+    // navbar แบบ C: the figures live on their own thin strip as plain text —
+    // chips up here read as buttons.
+    expect(ticker).toContain('data-slot="ticker-strip"')
+    expect(ticker).not.toContain("bg-muted/50")
+    // A catalog total is not a profit, so it must not be painted like one.
+    // Scope this to the totalValue link: the strip's OTHER half (the marquee)
+    // legitimately carries green and red, so a file-wide `not.toContain` would
+    // be the wrong guard — it would pass only until the two live in one file.
+    const totalValueStart = ticker.indexOf('t(language, "totalValue")')
+    expect(totalValueStart).toBeGreaterThan(-1)
+    const totalValueBlock = ticker.slice(
+      totalValueStart,
+      ticker.indexOf("</Link>", totalValueStart),
+    )
+    expect(totalValueBlock).not.toContain("text-price-up")
+    expect(totalValueBlock).not.toContain("text-price-down")
 
     // Search and the three display preferences both left this strip.
     expect(ticker).not.toContain("onSearchOpen")
@@ -75,6 +96,9 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     expect(header).toContain('href="/portfolio"')
     expect(header).toContain('href="/watchlist"')
     expect(header).toContain('href="/honey"')
+    // navbar แบบ C: search closes the row at its far right, AFTER Honey —
+    // the nav reads uninterrupted from the left.
+    expect(header.indexOf('href="/honey"')).toBeLessThan(searchTrigger)
   })
 
   it("reaches language, currency and theme from both the account menu and the guest gear", () => {
@@ -122,11 +146,61 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     const ticker = source("src/components/layout/header-market-ticker.tsx")
 
     expect(headerData).toContain("/api/exchange-rate")
-    expect(headerData).toContain("/api/cards?limit=1")
+    // One purpose-built endpoint carries the figures AND the movers, so adding
+    // the marquee did not add a third request. It replaced `/api/cards?limit=1`,
+    // which returned a whole card row to read two aggregates.
+    expect(headerData).toContain("/api/cards/ticker")
+    expect(headerData).not.toContain("/api/cards?limit=1")
     // The strip renders what the hook resolved; it must not open its own
     // request path (that was the rejected round's shape).
     expect(ticker).not.toContain("apiGet")
     expect(ticker).toContain("stats.totalCards")
+  })
+
+  // Owner call 2026-08-28 (late): the strip gained colour, more data and
+  // motion — the movers marquee. These lock the parts that are easy to break
+  // silently: the colour rule, the seamless loop, and the motion opt-outs.
+  it("scrolls real movers with arrows, a cloned run, and motion opt-outs", () => {
+    const ticker = source("src/components/layout/header-market-ticker.tsx")
+    const marquee = source("src/components/layout/header-ticker-marquee.tsx")
+    const globals = source("src/app/globals.css")
+
+    expect(ticker).toContain("<HeaderTickerMarquee")
+    expect(marquee).toContain('data-slot="ticker-marquee"')
+
+    // Real per-card deltas earn green/red — but colour is never the only
+    // signal, so each one ships with its arrow (VISION §4 rule 3).
+    for (const token of ["text-price-up", "text-price-down", "ArrowUp", "ArrowDown"]) {
+      expect(marquee).toContain(token)
+    }
+
+    // Reader-facing codes drop the scraper's printing suffix; the href keeps it.
+    expect(marquee).toContain("baseCardCode(mover.cardCode)")
+    expect(marquee).toContain("href={`/opcg/cards/${mover.cardCode}`}")
+
+    // Owner request: a small card thumbnail rides along. It must stay
+    // decorative (the card is already named beside it) and load eagerly —
+    // a transform-driven rail never retriggers the lazy observer.
+    expect(marquee).toContain("<Image")
+    expect(marquee).toContain('alt=""')
+    expect(marquee).toContain('loading="eager"')
+    expect(marquee).toContain("mover.imageUrl &&")
+
+    // The -50% keyframe only loops seamlessly against a duplicated run, and the
+    // clone must be hidden from assistive tech so cards are announced once.
+    expect(marquee).toContain("animate-ticker")
+    expect(marquee).toContain("aria-hidden")
+    expect(marquee.match(/\{items\}/g)?.length).toBe(2)
+    // No data must leave no empty rail behind.
+    expect(marquee).toContain("movers.length === 0")
+
+    // Motion opt-outs: hover and keyboard focus pause it, and reduced-motion
+    // turns the rail into a plain scroller instead of hiding the cards.
+    expect(globals).toContain(".animate-ticker:hover")
+    expect(globals).toContain(".ticker-viewport:focus-within .animate-ticker")
+    expect(globals).toContain("@media (prefers-reduced-motion: reduce)")
+    const reduced = globals.slice(globals.indexOf(".animate-ticker {\n    animation: none;"))
+    expect(reduced).toContain("overflow-x: auto")
   })
 
   it("keeps both keyboard shortcuts and restores focus after Escape", () => {
@@ -153,6 +227,41 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     expect(more).toContain("setCurrency(")
     expect(more).toContain("setTheme(")
     expect(more).toContain("THEME_OPTIONS")
+  })
+
+  // Owner direction 2026-08-28 (after navbar แบบ C): the search popup follows
+  // CoinMarketCap — BEFORE the visitor types it is a discovery surface (recent
+  // searches → most-viewed chip rail → 24h movers with real deltas → page
+  // shortcuts as pills), and the first keystroke swaps all of it for results.
+  it("opens on discovery content, CoinMarketCap-style, before the visitor types", () => {
+    const search = source("src/components/shared/command-search.tsx")
+    const hook = source("src/hooks/use-search-spotlight.ts")
+
+    // Discovery data rides its own lazy endpoint: fetched when the palette
+    // first opens, cached for the page's life — never a page-load cost.
+    expect(search).toContain("useSearchSpotlight(open)")
+    expect(hook).toContain("/api/cards/spotlight")
+    expect(hook).toContain("let cached")
+
+    // Both sections live in the shared keyboard order, and only in the empty
+    // state — `isEmptyQuery` is the single switch between the two modes.
+    expect(search).toContain("isEmptyQuery")
+    for (const token of ['"spot-popular"', '"spot-mover"'] ) {
+      expect(occurrences(search, token)).toBeGreaterThanOrEqual(2)
+    }
+
+    // Movers carry REAL per-card deltas, so they earn green/red — always
+    // paired with an arrow (VISION §4 rule 3), same contract as the marquee.
+    for (const token of ["text-price-up", "text-price-down", "ArrowUp", "ArrowDown"]) {
+      expect(search).toContain(token)
+    }
+
+    // The movers section bridges to the full trending page.
+    expect(search).toContain('goToPage("/opcg/trending")')
+
+    // Page shortcuts stay complete (IA-NAV-04's guarantee) but shrink to
+    // pills in the empty state so discovery keeps the vertical room.
+    expect(search).toContain("rounded-full px-3 text-xs")
   })
 
   it("keeps set and photo search inside the command palette", () => {
