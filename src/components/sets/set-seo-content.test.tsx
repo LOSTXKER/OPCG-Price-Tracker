@@ -3,17 +3,20 @@ import { describe, expect, it } from "vitest";
 
 import { SetHero } from "./set-hero";
 import { SetDropRateTable, toDropRateRows } from "./set-drop-rate-table";
+import { LocalizedBreadcrumb } from "@/components/shared/localized-breadcrumb";
 import type { CardData, RarityGroup } from "./set-detail-content";
 import {
   buildSetDetailMeta,
   buildSetFaq,
   buildSetIntro,
   buildSetsIndexIntro,
-  rarityHeadingLabel,
   setTypeHeading,
   type SetSeoData,
 } from "@/lib/seo/copy/sets";
-import { getJapaneseSetReleaseDate } from "@/lib/constants/sets";
+import {
+  getJapaneseSetReleaseDate,
+  resolveSetReleaseDate,
+} from "@/lib/constants/sets";
 
 function card(id: number, overrides: Partial<CardData> = {}): CardData {
   return {
@@ -60,7 +63,10 @@ const seo: SetSeoData = {
   name: "Romance Dawn",
   type: "BOOSTER",
   releaseDate: new Date("2022-12-02T00:00:00.000Z"),
-  cardCount: 121,
+  baseCardCount: 121,
+  variantCount: 33,
+  cardCount: 154,
+  latestPriceAt: new Date("2026-04-05T03:00:00.000Z"),
   packsPerBox: 24,
   cardsPerPack: 6,
   rarities: [
@@ -85,11 +91,11 @@ describe("set-detail SEO surface", () => {
         type="BOOSTER PACK"
         releaseDate={null}
         boxImage={null}
-        cardCount={121}
+        cardCount={154}
         rarityGroups={groups}
         packsPerBox={24}
         cardsPerPack={6}
-        hasDropRates={false}
+        hasDropRates
         grade="raw"
       />,
     );
@@ -99,11 +105,40 @@ describe("set-detail SEO surface", () => {
     expect(h1![1]).toContain("OP01");
     expect(h1![1]).toContain("Romance Dawn");
     expect(markup.match(/<h1/g)).toHaveLength(1);
+    const visibleText = markup.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+    expect(visibleText).toContain("การ์ด 154");
+    expect(visibleText).toContain("อัตราดรอป 2");
+    expect(visibleText).not.toContain("หมายเลขการ์ด");
+    expect(visibleText).not.toContain("เวอร์ชันพิเศษ");
+    expect(visibleText).not.toContain("เวอร์ชันทั้งหมด");
+  });
+
+  it("renders the canonical mobile back button above deep-page content", () => {
+    const markup = renderToStaticMarkup(
+      <LocalizedBreadcrumb
+        items={[
+          { labelKey: "home", href: "/" },
+          { labelKey: "sets", href: "/opcg/sets" },
+          { label: "OP13" },
+        ]}
+      />,
+    );
+
+    expect(markup).toContain('href="/opcg/sets"');
+    expect(markup).toContain('aria-label="ชุดการ์ด"');
+    expect(markup).toContain("md:hidden");
   });
 
   it("shows the verified Japanese release day and hides the row when absent", () => {
     const op03ReleaseDate = getJapaneseSetReleaseDate("op03");
+    const op13ReleaseDate = getJapaneseSetReleaseDate("op13");
     expect(op03ReleaseDate).toBe("2023-02-11");
+    expect(op13ReleaseDate).toBe("2025-08-23");
+
+    const catalogFallback = resolveSetReleaseDate("op13", null);
+    const databaseDate = new Date("2025-08-24T00:00:00.000Z");
+    expect(catalogFallback?.toISOString()).toBe("2025-08-23T00:00:00.000Z");
+    expect(resolveSetReleaseDate("op13", databaseDate)).toBe(databaseDate);
 
     const common = {
       lang: "TH" as const,
@@ -127,10 +162,19 @@ describe("set-detail SEO surface", () => {
     const undated = renderToStaticMarkup(
       <SetHero {...common} releaseDate={null} />,
     );
+    const op13Dated = renderToStaticMarkup(
+      <SetHero
+        {...common}
+        code="op13"
+        name="Carrying on His Will"
+        releaseDate={`${op13ReleaseDate}T00:00:00.000Z`}
+      />,
+    );
 
     expect(dated).toContain("วางจำหน่ายในญี่ปุ่น");
     expect(dated).toContain("11 ก.พ. 2023");
     expect(dated).not.toContain("2566");
+    expect(op13Dated).toContain("23 ส.ค. 2025");
     expect(undated).not.toContain("วางจำหน่ายในญี่ปุ่น");
   });
 
@@ -164,15 +208,15 @@ describe("set SEO copy", () => {
   it("builds a Thai title within budget and covers both Thai spellings", () => {
     const { title, description } = buildSetDetailMeta("TH", seo);
 
-    expect(title).toBe("ราคาการ์ดวันพีช OP01 Romance Dawn ทุกใบ อัปเดตทุกวัน");
+    expect(title).toBe("ราคาการ์ดวันพีช OP01 Romance Dawn ทุกเวอร์ชัน");
     expect(title.length).toBeLessThanOrEqual(60);
     expect(title).toContain("วันพีช");
     expect(description).toContain("วันพีซ");
-    expect(description).toContain("121");
-    expect(description).toContain("มังกี้ ดี. ลูฟี่");
-    // THB is derived from JPY (latestPriceThb is NULL in production).
-    // Owner ruling 2026-08-06 ("ไม่เอาเยน"): baht only, never yen, in copy.
-    expect(description).toContain("฿");
+    expect(description).toContain("154 เวอร์ชัน");
+    expect(description).toContain("121 หมายเลขหลัก");
+    expect(description).toContain("33 เวอร์ชันพิเศษ");
+    // The count semantics now get priority in the bounded snippet; if the
+    // top-card clause does not fit, it is intentionally omitted as a whole.
     expect(description).not.toContain("¥");
   });
 
@@ -186,19 +230,20 @@ describe("set SEO copy", () => {
     expect(long.title).toContain("PRB01");
   });
 
-  it("generates ONE short keyword sentence, no data dump", () => {
+  it("generates one compact comparison sentence without repeating hero facts", () => {
     const paragraphs = buildSetIntro("TH", seo);
-    // Owner ruling เบส 2026-08-07: the intro restated facts already visible
-    // on the page (top card in the hero, rarity split in the wall headings,
-    // box config in the drop-rate section) and read as a dump. Only what a
-    // reader needs at this point survives.
     expect(paragraphs).toHaveLength(1);
     const text = paragraphs.join(" ");
-    expect(text).toContain("2 ธ.ค. 2022");
-    expect(text).toContain("121 ใบ");
-    expect(text).toContain("วันพีช");
+    expect(text).toContain("Raw");
+    expect(text).toContain("PSA");
+    expect(text).toContain("ตลาดญี่ปุ่น");
+    expect(text).toContain("ราคา Raw อัปเดตล่าสุด 5 เม.ย. 2026");
     expect(text).toContain("วันพีซ");
-    // Facts the page already shows must NOT be restated here.
+    expect(text).not.toContain("2 ธ.ค. 2022");
+    expect(text).not.toContain("154");
+    expect(text).not.toContain("121");
+    expect(text).not.toContain("33");
+    expect(text).not.toContain("Romance Dawn");
     expect(text).not.toContain("SEC 2 ใบ");
     expect(text).not.toContain("24 ซอง");
     expect(text).not.toContain("OP01-003");
@@ -215,14 +260,11 @@ describe("set SEO copy", () => {
     expect(faq.every((item) => item.answer.length > 40)).toBe(true);
   });
 
-  it("labels rarity + set-type headings in Thai as well as English", () => {
-    expect(rarityHeadingLabel("TH", "SEC", "Secret Rare")).toBe(
-      "Secret Rare (ซีเคร็ทแรร์)",
-    );
-    expect(rarityHeadingLabel("TH", "P-SR", "Parallel Super Rare")).toBe(
-      "Parallel Super Rare (พาราเรลซูเปอร์แรร์)",
-    );
-    expect(rarityHeadingLabel("EN", "SEC", "Secret Rare")).toBe("Secret Rare");
+  // Rarity-wall headings no longer append the Thai gloss — เบส removed it
+  // 2026-08-27 because "Parallel Secret Rare (พาราเรลซีเคร็ทแรร์)" wrapped on
+  // phones. The Thai rarity names stay on the page via the drop-rate table
+  // (asserted above). Set-type headings keep their bilingual label.
+  it("labels set-type headings in Thai as well as English", () => {
     expect(setTypeHeading("TH", "BOOSTER")).toBe("บูสเตอร์ (Booster Pack)");
     expect(setTypeHeading("EN", "STARTER")).toBe("Starter Deck");
   });

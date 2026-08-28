@@ -28,14 +28,16 @@ export type HomeFaqEntry = {
 
 export type HomeSeoLink = { href: string; label: string };
 
-// SEO round 2: the old title ("เช็คราคาการ์ดวันพีซ (One Piece Card Game)
-// อัปเดตทุกวัน") ran to 64 chars with the " | Meecard" suffix — over the
-// ~60-char SERP cutoff. "One Piece Card Game" already carries the English
-// name in HOME_META_DESCRIPTION and the H2 body (buildHomeMarketIntro), so
-// dropping it from the title costs nothing and buys back the room for the
-// higher-intent "ทุกใบ ทุกเกรด" phrase.
+// Owner ruling 2026-08-28 (CoinMarketCap-style header): the title mirrors the
+// H1 — the noun head term + freshness first ("ราคาการ์ดวันพีชวันนี้", the way
+// CMC titles "Today's Cryptocurrency Prices"), check-intent second. ~51 chars
+// with the " | Meecard" suffix — inside the ~60-char SERP cutoff. "One Piece
+// Card Game" still lives in HOME_META_DESCRIPTION and the hero lead. No
+// "อัปเดตทุกวัน" claim anywhere on this page: prices are not scraped on a
+// schedule (demo site), so freshness is carried by the visible, real
+// "อัปเดตล่าสุด" date in the hero lead instead.
 /** Visible part of the <title>; the root layout appends " | Meecard". */
-export const HOME_META_TITLE = "เช็คราคาการ์ดวันพีช ทุกใบ ทุกเกรด อัปเดตทุกวัน";
+export const HOME_META_TITLE = "ราคาการ์ดวันพีชวันนี้ — เช็คทุกใบ ทุกเกรด";
 
 // Owner decision (2026-08-06): no source-brand names anywhere on the home
 // surface except the one FAQ answer that directly answers "how is the
@@ -43,67 +45,64 @@ export const HOME_META_TITLE = "เช็คราคาการ์ดวัน
 // carries the trust signal; the brand name only advertises someone else's
 // shop on our own search snippet.
 export const HOME_META_DESCRIPTION =
-  "เช็คราคาการ์ดวันพีซทุกใบ ทุกเกรด — ราคากลางอ้างอิงตลาดญี่ปุ่น อัปเดตทุกวัน พร้อมกราฟราคาย้อนหลัง ราคา PSA 10 พอร์ตสะสม และรายการโปรด ใช้ฟรี";
+  "เช็คราคาการ์ดวันพีซทุกใบ ทุกเกรด — ราคากลางอ้างอิงตลาดญี่ปุ่น พร้อมกราฟราคาย้อนหลัง ราคา PSA 10 พอร์ตสะสม และรายการโปรด ใช้ฟรี";
 
 /** The one visible H1 of the site's pillar page. Must carry "การ์ดวันพีช". */
 export function buildHomeHeroHeading(lang: Language): string {
   switch (lang) {
     case "EN":
-      return "One Piece card prices — every card, every grade";
+      return "Today's One Piece Card Prices — Every Card, Every Grade";
     case "JP":
-      return "ワンピースカード相場 — 全カード・全グレード";
+      return "今日のワンピースカード価格 — 全カード・全グレード";
     default:
-      return "เช็คราคาการ์ดวันพีช ทุกใบ ทุกเกรด";
+      return "ราคาการ์ดวันพีชวันนี้ — เช็คทุกใบ ทุกเกรด";
   }
 }
 
 /**
- * Static, screen-reader-safe version of the rotating typewriter line that sits
- * under the H1 (the animation itself is decorative and stays `aria-hidden`).
+ * The ONE sentence directly under the H1 (owner ruling 2026-08-28: the hero
+ * lead absorbed the old typewriter subtitle, the market-intro paragraph and
+ * the separate "อัปเดตล่าสุด" line — the industry-standard descriptor is
+ * coverage + grades + source + freshness in a single sentence). The visible
+ * last-updated date is the page's freshness/E-E-A-T signal: a real DB date,
+ * never a frequency claim — competitors' frozen listicles cannot show one.
  */
-export function buildHomeHeroSubtitle(lang: Language): string {
-  switch (lang) {
-    // "Daily", not "live" — prices update once a day (same honesty rule as
-    // the seoFeat* strings, SEO round 2/3).
-    case "EN":
-      return "Daily prices · trending cards · PSA 10 prices · your portfolio";
-    case "JP":
-      return "毎日更新の相場・急上昇カード・PSA 10 相場・ポートフォリオ";
-    default:
-      return "ราคากลาง · การ์ดมาแรง · ราคา PSA 10 · พอร์ตการ์ด";
-  }
-}
-
-/** H2 + context sentences that sit directly above the market table. */
-export function buildHomeMarketIntro(
+export function buildHomeHeroLead(
   lang: Language,
-  data: { totalCards: number; totalSets: number }
-): { heading: string; body: string } {
+  data: { totalCards: number; totalSets: number; updatedLabel: string | null }
+): string {
   const cards = formatCount(data.totalCards);
   const sets = formatCount(data.totalSets);
 
-  // ONE sentence (owner ruling เบส 2026-08-07, same rule as the set pages):
-  // the old three-clause paragraph restated the methodology (the "อัปเดต
-  // ล่าสุด" line above + /about#methodology own that) and narrated how to use
-  // the table that sits directly below it. Counts + OPTCG (the abbreviation
-  // serious players search) stay; the body spells it "วันพีช" like every
-  // visible surface — the "วันพีซ" carrier is HOME_META_DESCRIPTION.
   switch (lang) {
     case "EN":
-      return {
-        heading: "One Piece card prices today",
-        body: `Meecard tracks ${cards} One Piece Card Game (OPTCG) cards across ${sets} sets, priced daily from the Japanese market.`,
-      };
+      return `Meecard tracks Raw and PSA 10 market prices for ${cards} One Piece Card Game (OPTCG) cards across ${sets} sets, based on the Japanese market${
+        data.updatedLabel ? ` · Updated ${data.updatedLabel}` : ""
+      }`;
     case "JP":
-      return {
-        heading: "ワンピースカード 本日の相場",
-        body: `Meecard は ${sets} 弾・${cards} 枚のワンピースカードの相場を毎日更新しています。`,
-      };
+      return `MeecardはOne Piece Card Game（OPTCG）全${sets}弾・${cards}枚のRaw／PSA 10相場を日本市場ベースで掲載${
+        data.updatedLabel ? ` · 最終更新 ${data.updatedLabel}` : ""
+      }`;
     default:
-      return {
-        heading: "ราคาตลาดการ์ดวันพีชวันนี้",
-        body: `Meecard ติดตามราคาการ์ดวันพีช (One Piece Card Game / OPTCG) ทั้งหมด ${cards} ใบ จาก ${sets} ชุด อัปเดตทุกวันจากตลาดญี่ปุ่น`,
-      };
+      return `Meecard ติดตามราคากลาง Raw และ PSA 10 ของ One Piece Card Game (OPTCG) ครบ ${cards} ใบ จาก ${sets} ชุด อ้างอิงตลาดญี่ปุ่น${
+        data.updatedLabel ? ` · อัปเดตล่าสุด ${data.updatedLabel}` : ""
+      }`;
+  }
+}
+
+/**
+ * Slim heading over the market table. The keyword-bearing phrase
+ * ("ราคาการ์ดวันพีชวันนี้") moved up into the H1, so this h2 only has to name
+ * the section — no prose under it any more.
+ */
+export function buildHomeMarketHeading(lang: Language): string {
+  switch (lang) {
+    case "EN":
+      return "All Card Prices";
+    case "JP":
+      return "カード価格一覧";
+    default:
+      return "ตารางราคาการ์ด";
   }
 }
 
@@ -146,7 +145,7 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
         {
           question: "Which One Piece card is the most expensive?",
           answer:
-            "The ranking moves every day with the market. The top slots are almost always SEC, Manga Rare and Parallel cards from sets that are out of print. Meecard re-ranks them automatically from live price data.",
+            "The ranking moves with the market. The top slots are almost always SEC, Manga Rare and Parallel cards from sets that are out of print. Meecard re-ranks them automatically from the latest price data.",
           link: { href: "/opcg/most-expensive", label: "Most expensive One Piece cards" },
         },
         {
@@ -164,7 +163,7 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
         {
           question: "How is the reference price calculated?",
           answer:
-            "It is based on real selling prices in the Japanese market, re-scraped daily and converted to Thai baht with a fixed rate. It is a reference for comparison, not a price Meecard sells at.",
+            "It is based on real selling prices in the Japanese market, converted to Thai baht with a fixed rate. It is a reference for comparison, not a price Meecard sells at.",
           // Site-wide rule (SEO round 1): methodology has ONE home —
           // /about#methodology. Every other page answers in a sentence and
           // links there instead of restating it.
@@ -176,7 +175,7 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
         {
           question: "一番高いワンピースカードは？",
           answer:
-            "ランキングは相場とともに毎日入れ替わります。上位はほぼ絶版弾の SEC・マンガレア・パラレルです。Meecard は最新価格から自動で順位を更新しています。",
+            "ランキングは相場とともに入れ替わります。上位はほぼ絶版弾の SEC・マンガレア・パラレルです。Meecard は最新価格から自動で順位を更新しています。",
           link: { href: "/opcg/most-expensive", label: "高額ワンピースカードランキング" },
         },
         {
@@ -194,7 +193,7 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
         {
           question: "参考価格はどう算出している？",
           answer:
-            "日本市場の実売価格を毎日取得し、固定レートでタイバーツに換算しています。比較のための参考値であり、Meecard の販売価格ではありません。",
+            "日本市場の実売価格を取得し、固定レートでタイバーツに換算しています。比較のための参考値であり、Meecard の販売価格ではありません。",
           link: { href: "/about#methodology", label: "価格の算出方法について" },
         },
       ];
@@ -203,7 +202,7 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
         {
           question: "การ์ดวันพีชใบไหนแพงที่สุด",
           answer:
-            "อันดับการ์ดที่แพงที่สุดขยับทุกวันตามราคาตลาด ใบที่ยืนอยู่หัวตารางเกือบทั้งหมดเป็นการ์ดระดับ SEC, Manga Rare และ Parallel จากชุดเก่าที่เลิกพิมพ์ไปแล้ว Meecard จัดอันดับใหม่ให้อัตโนมัติจากราคาล่าสุด",
+            "อันดับการ์ดที่แพงที่สุดขยับตามราคาตลาด ใบที่ยืนอยู่หัวตารางเกือบทั้งหมดเป็นการ์ดระดับ SEC, Manga Rare และ Parallel จากชุดเก่าที่เลิกพิมพ์ไปแล้ว Meecard จัดอันดับใหม่ให้อัตโนมัติจากราคาล่าสุด",
           link: { href: "/opcg/most-expensive", label: "การ์ดวันพีชที่แพงที่สุด" },
         },
         {
@@ -221,7 +220,7 @@ export function buildHomeLongTailFaq(lang: Language): HomeFaqEntry[] {
         {
           question: "ราคากลางบน Meecard คำนวณจากอะไร",
           answer:
-            "ราคากลางอ้างอิงจากราคาขายจริงในตลาดญี่ปุ่น ระบบดึงข้อมูลใหม่ทุกวันแล้วแปลงเป็นเงินบาทด้วยอัตราแลกเปลี่ยนคงที่ ตัวเลขนี้เป็นราคาอ้างอิงไว้เทียบก่อนซื้อขาย ไม่ใช่ราคาที่ Meecard ขายเอง",
+            "ราคากลางอ้างอิงจากราคาขายจริงในตลาดญี่ปุ่น แปลงเป็นเงินบาทด้วยอัตราแลกเปลี่ยนคงที่ ตัวเลขนี้เป็นราคาอ้างอิงไว้เทียบก่อนซื้อขาย ไม่ใช่ราคาที่ Meecard ขายเอง",
           link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
         },
       ];

@@ -57,6 +57,38 @@ export function cardVariant(cardCode: string): CardVariant | null {
     : { kind: "parallel", index };
 }
 
+export type CardCodeSummary = {
+  /** Distinct Bandai card numbers, e.g. every OP02-001 printing counts once. */
+  baseCardCount: number;
+  /** Alternate-art / reprint records carrying a machine printing suffix. */
+  variantCount: number;
+  /** Every catalogue version shown in the set wall, priced or not. */
+  recordCount: number;
+};
+
+/**
+ * Reader-facing count semantics for a set page. A catalogue can contain 154
+ * versions without containing 154 different Bandai card numbers; this keeps
+ * those two claims separate while preserving every printing in the wall.
+ */
+export function summarizeCardCodes(
+  cardCodes: readonly string[],
+): CardCodeSummary {
+  const baseCodes = new Set<string>();
+  let variantCount = 0;
+
+  for (const code of cardCodes) {
+    baseCodes.add(baseCardCode(code));
+    if (cardVariant(code)) variantCount += 1;
+  }
+
+  return {
+    baseCardCount: baseCodes.size,
+    variantCount,
+    recordCount: cardCodes.length,
+  };
+}
+
 /**
  * The printing named in words: `"Parallel 2"`, `"Reprint 1"`, `""` for a
  * standard print.

@@ -10,19 +10,21 @@ import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName, t } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 
+export type HomeFeaturedCardData = {
+  cardCode: string
+  nameJp: string
+  nameEn?: string | null
+  nameTh?: string | null
+  rarity: string
+  imageUrl: string | null
+  latestPriceJpy: number | null
+  set: { code: string }
+}
+
 export function HomeFeaturedCard({
   card,
 }: {
-  card: {
-    cardCode: string
-    nameJp: string
-    nameEn?: string | null
-    nameTh?: string | null
-    rarity: string
-    imageUrl: string | null
-    latestPriceJpy: number | null
-    set: { code: string }
-  }
+  card: HomeFeaturedCardData
 }) {
   const lang = useUIStore((s) => s.language)
   const name = getCardName(lang, card)
@@ -30,7 +32,8 @@ export function HomeFeaturedCard({
   return (
     <Link
       href={`/opcg/cards/${card.cardCode}`}
-      className="group ease-chrome flex flex-col gap-3 rounded-xl p-3 hover:bg-muted/70 sm:flex-row sm:items-center sm:gap-4"
+      className="group ease-chrome flex flex-col gap-3 rounded-xl p-3 transition-colors hover:bg-muted/70 focus-visible:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:flex-row sm:items-center sm:gap-4"
+      data-slot="highest-value-card"
     >
       <div className="relative aspect-[63/88] w-[100px] shrink-0 overflow-hidden rounded-lg bg-muted sm:w-[112px] lg:w-[100px]">
         {card.imageUrl && (
@@ -39,7 +42,7 @@ export function HomeFeaturedCard({
             alt={name}
             fill
             className="object-contain motion-slow group-hover:scale-105"
-            sizes="100px"
+            sizes="(min-width: 640px) 112px, 100px"
             placeholder="blur"
             blurDataURL={BLUR_DATA_URL}
             loading="eager"
@@ -57,7 +60,10 @@ export function HomeFeaturedCard({
           <span>&middot;</span>
           <RarityBadge rarity={card.rarity} size="sm" />
         </div>
-        <p className="mt-2 font-price text-xl font-bold tracking-tight">
+        <p
+          className="mt-2 whitespace-nowrap font-price text-xl font-bold tracking-tight"
+          data-slot="highest-value-price"
+        >
           <Price jpy={card.latestPriceJpy ?? 0} />
         </p>
       </div>

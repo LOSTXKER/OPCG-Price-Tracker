@@ -5,6 +5,7 @@ import {
   User,
   Zap,
 } from "lucide-react";
+import type { TranslationKey } from "@/lib/i18n";
 import type { Language, Currency } from "@/stores/ui-store";
 
 // Primary hubs (stable IA — mirrors the mobile bottom-nav). Marketplace is a
@@ -57,6 +58,20 @@ export const CURRENCY_OPTIONS: { value: Currency; label: string }[] = [
 ];
 
 export const CURRENCY_SYMBOL: Record<Currency, string> = { THB: "฿", JPY: "¥", USD: "$" };
+
+// Kept alongside the restored ticker: `/more` (mobile "ดูเพิ่มเติม") owns the
+// phone-side theme picker and reads these options, so they are not part of the
+// desktop chrome revert.
+export type ThemeChoice = "system" | "light" | "dark";
+
+export const THEME_OPTIONS: ReadonlyArray<{
+  value: ThemeChoice;
+  labelKey: TranslationKey;
+}> = [
+  { value: "system", labelKey: "themeSystem" },
+  { value: "light", labelKey: "lightMode" },
+  { value: "dark", labelKey: "darkMode" },
+];
 
 export const RANK_DISPLAY: Record<string, { color: string; bg: string; ring: string }> = {
   Newbie:  { color: "text-muted-foreground",                          bg: "bg-muted text-muted-foreground",                                  ring: "ring-border" },

@@ -2,14 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { LogIn, Moon, Search, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { LogIn, Search } from "lucide-react";
 
 import { NotificationBell } from "@/components/layout/notification-bell";
 import { HeaderCatalogControl } from "@/components/layout/header-catalog-control";
 import { Button } from "@/components/ui/button";
 import type { SetPickerItem } from "@/components/shared/set-picker";
-import { useHydrated } from "@/hooks/use-hydrated";
 import { useScrolled } from "@/hooks/use-scrolled";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
@@ -21,9 +19,15 @@ import { cn } from "@/lib/utils";
  * labels and separators yield as space tightens. The bear is the stable,
  * compact home affordance at every phone width.
  *
- * Search remains a global phone action on every route, including Home. It
- * opens the shared `CommandSearchModal`; the Home hero search stays as the
- * larger in-content entry point.
+ * Search remains a global phone action on every route, including Home. It is
+ * the only search entry in the top viewport now, so its quiet filled surface
+ * distinguishes it from notification/account utilities without stealing width
+ * from the Game → Set control.
+ *
+ * The theme toggle deliberately does NOT live here: it already ships in
+ * "ดูเพิ่มเติม", and its 44px slot was the width the set control needed for the
+ * set name to survive at phone widths. Set selection is the primary axis; a
+ * theme switch is a once-a-month preference.
  */
 export function HeaderMobile({
   isAuthenticated,
@@ -49,12 +53,6 @@ export function HeaderMobile({
   // Same collapsing chrome as the desktop header — starts false (hydration- and
   // scroll-restoration-safe), corrects on mount. CHROME-11: one shared hook.
   const scrolled = useScrolled();
-
-  // next-themes resolves on the client only, so the icon waits for hydration
-  // rather than guessing and flipping (`useHydrated` = the shared guard).
-  const { resolvedTheme, setTheme } = useTheme();
-  const hydrated = useHydrated();
-  const isDark = hydrated && resolvedTheme === "dark";
 
   return (
     <div
@@ -93,32 +91,18 @@ export function HeaderMobile({
         />
 
         <Button
+          data-mobile-search-trigger
           type="button"
           variant="ghost"
           size="icon-sm"
           aria-label={t(language, "search")}
           onClick={() => setSearchOpen(true)}
-          className="min-h-11 min-w-11 text-muted-foreground"
+          className="surface-2 hairline min-h-11 min-w-11 rounded-full text-foreground"
         >
           <Search className="size-[18px]" />
         </Button>
 
         {isAuthenticated && <NotificationBell />}
-
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          aria-label={t(language, isDark ? "lightMode" : "darkMode")}
-          onClick={() => setTheme(isDark ? "light" : "dark")}
-          className="min-h-11 min-w-11 text-muted-foreground"
-        >
-          {isDark ? (
-            <Sun className="size-[18px]" />
-          ) : (
-            <Moon className="size-[18px]" />
-          )}
-        </Button>
 
         {authLoaded && !isAuthenticated && (
           <Button

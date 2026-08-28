@@ -1,41 +1,41 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-08-27 — **Global Game → Set navigation shipped to Production**
+อัปเดตล่าสุด: 2026-08-28 (รอบดึก · สองงานคู่ขนานคืนเดียวกัน) — **หัวหน้าแรกยุบเหลือหัวข้อ + ประโยคเดียวแบบ CoinMarketCap · Navbar จัดใหม่แบบ CoinGecko**
 
-## ผลลัพธ์
+## ผลลัพธ์ 1 — หัวหน้าแรก + copy (session นี้)
 
-- เปลี่ยน label ย่อของปุ่มชุดบน mobile จาก `ชุด` เป็นคำสั่งที่ชัดเจน `เลือกชุด`; desktop และข้อความเต็มใน dialog ยังใช้ `เลือกชุดการ์ด` ตามเดิม
-- เพิ่มคำแปลเฉพาะจุดครบ TH `เลือกชุด` / EN `Select set` / JP `セット選択` และล็อกค่าด้วย regression test
-- เพื่อให้คำเต็มอ่านได้บนจอแคบ ซ่อน Package icon ที่เป็นของตกแต่งบน mobile และเลื่อน connector Game→Set ไปแสดงตั้งแต่ 430px; dropdown chevron ยังอยู่ตั้งแต่ 360px
-- โครง `Logo · Game · เลือกชุด · Search · Bell/Login · Theme` ยังเป็นแถวเดียวสูง 56px และทุก target อย่างน้อย 44×44px
+เบสเห็นข้อความหัวหน้าแรกกอง 5 ชิ้น (H1 · คำหมุนพิมพ์เอง · H2 ตลาด · บรรทัดอัปเดตล่าสุด · ประโยค Meecard ติดตาม 3,838 ใบ) สั่ง "ยุบทิ้งรวมกัน หรือคิดคำใหม่เลย เอาให้ดีต่อ SEO" — วิจัย SERP/คู่แข่งแล้วเสนอ 3 แบบ เบสเลือก **สไตล์ CoinMarketCap**:
 
-## หลักฐานตรวจรับ
+- **H1 ใหม่:** "ราคาการ์ดวันพีชวันนี้ — เช็คทุกใบ ทุกเกรด" (สูตรเดียวกับ "Today's Cryptocurrency Prices" ของ CMC และ "[Game] Card Prices" ที่เว็บติดอันดับใช้ทั้งวงการ) · meta title ตาม
+- **ประโยคเดียวใต้ H1** เก็บครบ: ตัวเลขสด + เกรด Raw/PSA 10 + ตลาดญี่ปุ่น + **วันที่อัปเดตจริงจาก DB** (ย้ายจากบรรทัดแยกมาไว้ท้ายประโยค) — 3 ภาษา TH/EN/JP ใน `lib/seo/copy/home.ts` (`buildHomeHeroLead`)
+- **หัวตารางเหลือ "ตารางราคาการ์ด"** เฉยๆ ไม่มีย่อหน้าใต้ (`buildHomeMarketHeading`)
+- **คำหมุน TypewriterText ตัดทิ้งทั้งระบบ** (เบสเคาะ): ลบ component + CSS + key ตาย `heroSearchTitle`/`heroTeaser` ใน dict 3 ภาษา
+- **แก้บั๊กแฝง:** วันที่เคยโชว์แบบไทย/พ.ศ. แม้เปิดโหมด EN/JP — ตอนนี้ format ฝั่ง server 3 locale (`5 เมษายน 2569` / `5 April 2026` / `2026年4月5日`) client เลือกตามภาษา
 
-- Browser หน้าแรก 320×667: Set trigger 71px, label box `clientWidth === scrollWidth === 55px`, เห็น `เลือกชุด` ครบ; Logo/Game/Search/Bell/Theme ยัง 44px และ horizontal overflow = 0
-- Browser หน้าแรก 390×667: Set trigger ~88px, label box `clientWidth === scrollWidth === 52px`, เห็น `เลือกชุด` ครบพร้อม dropdown chevron; horizontal overflow = 0
-- กด `เลือกชุด` เปิด dialog และช่อง `ค้นหารหัสหรือชื่อชุด...`; Escape ปิดและคืน focus ที่ trigger; console/hydration ไม่มี warning/error
-- React best-practices review ไม่พบ state/effect/render regression · Impeccable layout detector `[]`
-- `npx tsc --noEmit` ผ่าน · `npm run lint` 0 errors (34 warnings เดิม) · `npm run test` **149 files / 882 tests ผ่าน** · `npm run build` ผ่าน **210 หน้า**
-- PR #119 ผ่าน Vercel Preview และ merge เข้า `master` ที่ `0b2461f`; fetch ยืนยัน `origin/master` ตรงกับ merge commit
-- Vercel Production `dpl_AeAvooHEKRjr1k7goNkEKJhBEWjQ` สถานะ Ready และ `https://opcg-price-tracker.vercel.app` ตอบ 200
-- Browser Production หน้าแรก 390×844 + 1280×720 และ `/opcg/sets/op03` ที่ 390×844 ผ่าน: `เลือกชุด`/Search ครบ, ทุก mobile target 44px, ไม่มี horizontal overflow, dialog ไม่มีหมวด “ชุดล่าสุด”, Escape คืน focus และ console สะอาด
+### เจอเรื่องใหญ่ระหว่างตรวจ + เบสเคาะ "เว็บ demo"
 
-## ไฟล์หลักที่เปลี่ยนในรอบล่าสุด
+เว็บจริงบน Vercel ก็โชว์ "อัปเดตล่าสุด: 5 เมษายน 2569" — **ข้อมูลราคาหยุดจริงมา ~5 เดือน** (cron `scrape-prices` ตั้งไว้แต่พังเงียบ ไม่มี commit สั่งปิด) → เบสเคาะ: **"เป็นแค่เว็บ demo จำเรื่องนี้ด้วย"** ไม่ซ่อม pipeline → ผลพวง: **กวาดคำเคลม "อัปเดตทุกวัน/daily/毎日" ออกจากหน้าแรกหมด** (meta title/description · hero · FAQ 6 ข้อความ×3 ภาษา · footer tagline · JSON-LD WebSite/Organization) — วันที่จริงที่โชว์คือตัวบอกความสดแทน · บันทึกลง memory แล้ว
+**ยังเหลือ ~35 จุด** บนหน้า guide/tools/sets/about (sweep แยกรอบ — อย่ารวมกับงานอื่น)
 
-- `src/components/layout/header-catalog-control.tsx`
-- `src/components/layout/header-catalog-control.test.tsx`
-- `src/lib/i18n/{th,en,jp}.ts`
-- `src/lib/i18n.test.ts`
+## ผลลัพธ์ 2 — Navbar แบบ CoinGecko (session คู่ขนาน · สรุปจาก entry ของเขา)
 
-## Worktree / ขอบเขต
+ภาษา/สกุลเงิน/ธีมย้ายเข้าเมนูโปรไฟล์ (guest มีปุ่มเฟือง) · ปุ่มโปรไฟล์เป็นแคปซูล ☰+รูป · ช่องค้นหาย้ายมากลางแถวล่างกว้าง 448px เป็นทางเข้าค้นหาทางเดียว · โลโก้ขึ้นแถวบน · ความสูงแถบรวมคง 101px · วัดจริงไม่มี overflow 768–1920 · ธง "home-seo.test.tsx type พัง" ของเขา = ภาพตอน session นี้แก้ค้างกลางมือ **ตอนนี้เขียวแล้ว** (`tsc --noEmit` exit 0 ทั้งโปรเจค)
 
-- checkpoint ก่อนเริ่ม navbar อยู่ที่ `aa0c8a2`
-- production navbar + owner revisions commit `037ccad`; prototype แยก commit `072276a`
-- PR #119 merge เข้า default branch `master` แล้ว (repository ไม่มี branch `main` และห้าม direct push เข้า `master`)
-- ไม่มี schema, migration, dependency, config change หรือ data mutation; deploy ผ่าน Vercel Git integration
-- dev server เปิดกลับที่ `http://localhost:3000` หลัง production build ผ่าน
+## หลักฐานตรวจรับ (รันหลังสองงานรวมกันในทรี)
+
+- ESLint 0 errors · **tsc --noEmit ผ่านทั้งโปรเจค** · full test **151 files / 906 tests ผ่าน** · build **211 หน้า**
+- HTML ฝั่ง server (curl): title/description/H1/lead ใหม่ครบ · `<h1>` เดียว · ไม่มี `tw-caret` · **ไม่มีคำ "อัปเดตทุกวัน" เหลือบนหน้าแรกแม้แต่จุดเดียว**
+- Browser จริง: desktop มืด+สว่าง · มือถือ 375px (H1→ประโยค→ตารางเลย สั้นกว่าเดิม ~3 บรรทัด) · สลับ TH→EN→JP ประโยค+หัวตาราง+**วันที่**เปลี่ยนตามภาษา · ลำดับ DOM h1→h2 ถูก · การ์ดเด่น+ช่องโฆษณาเดิมไม่กระทบ
+- เทสต์ปักของใหม่แล้ว: `home-seo.test.tsx` (hero lead/slim h2/ไม่มี typewriter/วันพีช-วันพีซ) · `header-search-preferences.test.tsx` (literal `<HomeSearchHero` รับ props ได้)
+
+## สถานะ git
+
+- branch `chore/next-16.3` · งานคืนนี้ทั้งก้อน (hero copy + navbar + ads frame) เข้าเป็น commit `30a8b19` **push แล้ว** (session navbar เป็นคน commit รวม — ระบุในท้าย commit ชัดว่าพ่วงงาน copy หน้าแรกของอีก session มาด้วย) · ไฟล์นี้ตามเข้า commit ถัดไป
+- ไม่มี schema / migration / dependency / config change
 
 ## NEXT
 
-1. รอ owner review หน้า Production และเก็บ feedback รอบถัดไปจากของจริง
+1. เบสรีเฟรช `http://localhost:3001` ดู: หัวหน้าแรกใหม่ (H1+ประโยคเดียว) + navbar ใหม่ (ปุ่ม ☰ มุมขวาบน)
+2. พอใจแล้วสั่งเปิด PR ไป master ได้ (แบบ #119/#120)
+3. งานต่อที่ค้างเป็นคิว: กวาด "อัปเดตทุกวัน" ~35 จุดที่เหลือทั้งเว็บ · `getHomeData().rarityRows` query ทิ้งเปล่า · "อัปเดตล่าสุด:" hardcode ไทยที่ trending + most-expensive (ย้ายมาใช้ pattern map 3 locale ของหน้าแรก)

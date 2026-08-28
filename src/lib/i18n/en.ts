@@ -36,8 +36,6 @@ export const en = {
   adDismissLabel: "Dismiss ad for this session",
   adSponsoredLabel: "Sponsored",
   adOpenNewWindow: "opens in a new window",
-  heroSearchTitle: "Every trading card. Every grade.",
-  heroTeaser: "Everything trading cards, in one place",
   searchShortcuts: "Shortcuts",
   trendingShort: "Trending",
   photoSearchTitle: "Search by photo",
@@ -1920,7 +1918,7 @@ export const en = {
   safeBuyTipsLink: "Safe buying tips",
 
   // Footer
-  footerTagline: "Daily One Piece Card Game prices, portfolios, watchlists, and a community marketplace — all in one place.",
+  footerTagline: "One Piece Card Game prices, portfolios, watchlists, and a community marketplace — all in one place.",
   footerExplore: "Explore",
   footerCommunity: "Community",
   footerSources: "Prices via the Japanese market · Card images © BANDAI",
@@ -2356,8 +2354,8 @@ export const en = {
   // --- home SEO content ---
   seoFeaturesHeading: "How does Meecard help you track One Piece card prices?",
   seoFeaturesSub: "A complete toolkit for OPCG collectors and traders",
-  seoFeatPriceTitle: "One Piece card prices, updated daily",
-  seoFeatPriceDesc: "Track OPCG card prices from the Japanese market, updated daily, with price history charts to spot market trends.",
+  seoFeatPriceTitle: "One Piece card reference prices",
+  seoFeatPriceDesc: "Track OPCG card prices from the Japanese market, with price history charts to spot market trends.",
   seoFeatPortfolioTitle: "Manage your card portfolio",
   seoFeatPortfolioDesc: "Add the One Piece cards you own and see your total portfolio value auto-calculated from the latest prices, with charts and stats.",
   seoFeatDropTitle: "Calculate booster-box drop rates",
@@ -2386,7 +2384,7 @@ export const en = {
   seoPriceP3mid: "or start with",
   seoPriceP3Link2: "the beginner's guide to OPCG",
   seoFaq1Q: "What is Meecard?",
-  seoFaq1A: "Meecard is a One Piece Card Game (OPCG) price-tracking site updated daily, bringing Portfolio, Drop Calculator, and price comparison together in one place.",
+  seoFaq1A: "Meecard is a One Piece Card Game (OPCG) price-tracking site, bringing Portfolio, Drop Calculator, and price comparison together in one place.",
   seoFaq3Q: "How often are One Piece card prices updated?",
   seoFaq3A: "Prices update at least once a day, with price history charts to show whether a card is trending up or down.",
   seoFaq4Q: "What is the Portfolio in Meecard for?",

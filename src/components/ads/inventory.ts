@@ -2,6 +2,7 @@ import { stripGamePrefix } from "@/lib/game/constants"
 
 export const AD_ZONES = [
   "global-bottom-anchor",
+  "home-highlight-rail",
   "home-results-after-8",
   "search-results-after-8",
   "set-detail-before-rarity",
@@ -27,6 +28,12 @@ export type AdInventoryDefinition = {
   route: AdRoute
   mobileSize: string
   desktopSize: string
+  /**
+   * Overrides the format's fixed frame for one zone. Use it where the slot has
+   * to obey a layout it sits inside — a grid column that other content already
+   * sizes — rather than impose its own box on that layout.
+   */
+  frameClass?: string
 }
 
 /**
@@ -50,6 +57,24 @@ export const AD_INVENTORY: Record<AdZone, AdInventoryDefinition> = {
     route: "GLOBAL",
     mobileSize: "320 × 64",
     desktopSize: "728 × 90",
+  },
+  // Owner request 2026-08-28: the home highlight row gains a fourth column
+  // reserved for advertising, beside ราคาลงมากสุด. It only renders from `xl`,
+  // where the row can carry four tracks without squeezing the three editorial
+  // blocks — the grid itself is what hides it below that width.
+  "home-highlight-rail": {
+    zone: "home-highlight-rail",
+    strategy: "GOOGLE_ONLY",
+    format: "RECTANGLE",
+    route: "HOME",
+    // Owner call 2026-08-28: this slot matches the three editorial columns
+    // beside it instead of setting the row's height. The RECTANGLE frame is
+    // 280px tall while the highlight columns need only ~166px, so the fixed box
+    // was inflating the whole row and pushing the market table down — the ad
+    // looked bigger than everything around it because it was.
+    frameClass: "h-full w-full",
+    mobileSize: "ไม่แสดงบนมือถือ",
+    desktopSize: "เต็มคอลัมน์ไฮไลต์",
   },
   "home-results-after-8": {
     zone: "home-results-after-8",

@@ -13,6 +13,9 @@ import { TrendingUpDown } from "lucide-react";
 
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { GradeControl } from "@/components/market/price-mode-control";
+import { FilterModal } from "@/components/shared/filter-modal";
+import { FilterButton } from "@/components/ui/toolbar";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -36,10 +39,7 @@ import {
 } from "@/lib/pricing/grade-tiers";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
-import {
-  rarityHeadingLabel,
-  setRarityGuideLinkLabel,
-} from "@/lib/seo/copy/sets";
+import { setRarityGuideLinkLabel } from "@/lib/seo/copy/sets";
 import { useUIStore } from "@/stores/ui-store";
 import {
   CARD_COLORS,
@@ -157,8 +157,9 @@ interface SetDetailContentProps {
 
 /**
  * How much is docked at the top right now: the global chrome (`--chrome-h`:
- * 56px phone / 100px from `md`) plus the sticky rarity bar on the breakpoints
- * where it renders (`offsetParent === null` while `lg:hidden` hides it).
+ * 56px phone / 100px from `md`) plus the sticky two-row control group on the
+ * breakpoints where it renders (`offsetParent === null` while `lg:hidden`
+ * hides it).
  * Jump-scroll and scrollspy both read this so no magic number can drift.
  */
 function getStickyChromeHeight(): number {
@@ -173,6 +174,18 @@ function getStickyChromeHeight(): number {
   const barHeight =
     bar && bar.offsetParent !== null ? bar.getBoundingClientRect().height : 0;
   return chromeRem * rootFontSize + barHeight;
+}
+
+/** Keep nearby jumps calm, but never animate a long page traversal. */
+export function getRarityScrollBehavior(
+  distance: number,
+  viewportHeight: number,
+  prefersReducedMotion: boolean,
+): ScrollBehavior {
+  if (prefersReducedMotion) return "auto";
+  return Math.abs(distance) > Math.max(viewportHeight, 1) * 2
+    ? "auto"
+    : "smooth";
 }
 
 /* ------------------------------------------------------------------ */
@@ -247,12 +260,16 @@ export function SetDetailContent({
 }: SetDetailContentProps) {
   const [activeType, setActiveType] = useState<string>("all");
   const [activeColor, setActiveColor] = useState<string>("all");
+  // Mobile-only canonical FilterModal for the two facets above (เบส
+  // 2026-08-27 — the two inline dropdowns cost a full toolbar row on phones;
+  // this page's old keep-the-selects exception is retired). Desktop keeps the
+  // sidebar selects, which don't compete for vertical space.
+  const [filterOpen, setFilterOpen] = useState(false);
   const [changePeriod, setChangePeriod] = useState<ChangePeriod>("7d");
   // activeRarity = the section currently in view (scrollspy), NOT a filter —
   // the rarity rail is a jump-nav (เบส): click scrolls to that section.
   const [activeRarity, setActiveRarity] = useState<string>("");
   const sectionsRef = useRef<HTMLDivElement>(null);
-  const chipsRef = useRef<HTMLElement>(null);
   const lang = useUIStore((s) => s.language);
 
   const allCards = useMemo(() => groups.flatMap((g) => g.cards), [groups]);
@@ -301,30 +318,6 @@ export function SetDetailContent({
     return () => window.removeEventListener("scroll", onScroll);
   }, [visibleGroups]);
 
-  // A set can carry a dozen rarities, so the docked chip strip keeps the section
-  // you are actually reading in view. Only the strip's own horizontal scroll
-  // moves (never `scrollIntoView`, which would yank the page vertically).
-  useEffect(() => {
-    const nav = chipsRef.current;
-    if (!nav || !activeRarity) return;
-    const chip = nav.querySelector<HTMLElement>(
-      `[data-rarity-chip="${activeRarity}"]`,
-    );
-    if (!chip) return;
-    const navRect = nav.getBoundingClientRect();
-    const chipRect = chip.getBoundingClientRect();
-    const fullyVisible =
-      chipRect.left >= navRect.left + 4 && chipRect.right <= navRect.right - 4;
-    if (fullyVisible) return;
-    nav.scrollTo({
-      left:
-        nav.scrollLeft +
-        (chipRect.left - navRect.left) -
-        (navRect.width - chipRect.width) / 2,
-      behavior: "smooth",
-    });
-  }, [activeRarity]);
-
   if (totalCards === 0) {
     return <EmptyState mascot="kuma" title={t(lang, "noCardsInSet")} />;
   }
@@ -343,12 +336,21 @@ export function SetDetailContent({
   const scrollToRarity = (rarity: string) => {
     const el = document.getElementById(`rar-${rarity}`);
     if (!el) return;
-    window.scrollTo({
-      top:
-        el.getBoundingClientRect().top +
+    const top = Math.max(
+      0,
+      el.getBoundingClientRect().top +
         window.scrollY -
         (getStickyChromeHeight() + 16),
-      behavior: "smooth",
+    );
+    const prefersReducedMotion =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    window.scrollTo({
+      top,
+      behavior: getRarityScrollBehavior(
+        top - window.scrollY,
+        window.innerHeight,
+        prefersReducedMotion,
+      ),
     });
   };
 
@@ -374,12 +376,47 @@ export function SetDetailContent({
     })),
   ];
 
+  const hasFacets = availableTypes.length > 1 || availableColors.length > 1;
+  const activeFilterCount =
+    (activeType !== "all" ? 1 : 0) + (activeColor !== "all" ? 1 : 0);
+  const hasActiveCardFilters =
+    activeFilterCount > 0 || !isRawGrade(grade);
+
+  // Single-select facet chip inside the FilterModal — same visual grammar as
+  // the home market modal's chips ("ทั้งหมด" first as the reset, one value per
+  // facet, values apply live so Apply just closes).
+  const facetChip = (
+    o: FilterOption,
+    current: string,
+    onSelect: (v: string) => void,
+  ) => {
+    const active = current === o.value;
+    return (
+      <button
+        key={o.value}
+        type="button"
+        aria-pressed={active}
+        onClick={() => onSelect(o.value)}
+        className={cn(
+          "ease-chrome flex min-h-11 items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium lg:min-h-0",
+          active
+            ? "border-primary/40 bg-primary/5 text-primary"
+            : "border-hair bg-background text-muted-foreground hover:text-foreground",
+        )}
+      >
+        {o.label}
+      </button>
+    );
+  };
+
   const rarityNav = visibleGroups.map((g) => ({
     value: g.rarity,
     count: g.cards.length,
   }));
+  const selectedRarity =
+    rarityNav.find((item) => item.value === activeRarity) ?? rarityNav[0] ?? null;
 
-  const rarityButton = (rt: { value: string; count: number }, variant: "rail" | "chip") => {
+  const rarityButton = (rt: { value: string; count: number }) => {
     const active = activeRarity === rt.value;
     return (
       <button
@@ -387,42 +424,29 @@ export function SetDetailContent({
         type="button"
         onClick={() => scrollToRarity(rt.value)}
         aria-current={active ? "true" : undefined}
-        data-rarity-chip={variant === "chip" ? rt.value : undefined}
         className={cn(
-          "ease-chrome flex items-center gap-1.5 transition-colors",
-          variant === "rail"
-            ? cn(
-                "w-full justify-between gap-2 rounded-lg px-2 py-1.5",
-                active ? "bg-[var(--p-honey-soft)]" : "hover:bg-muted",
-              )
-            : cn(
-                "shrink-0 rounded-full px-2.5 py-1.5",
-                active ? "bg-[var(--p-honey-soft)]" : "bg-muted/60",
-              ),
+          "ease-chrome flex w-full items-center justify-between gap-2 rounded-lg px-2 py-1.5 transition-colors",
+          active ? "bg-[var(--p-honey-soft)]" : "hover:bg-muted",
         )}
       >
-        {variant === "rail" ? (
-          // Minimal rail row: a small rarity-colour dot + plain code (no pill).
-          <span className="flex min-w-0 items-center gap-2">
-            <span
-              aria-hidden
-              className={cn(
-                "size-2 shrink-0 rounded-full",
-                RARITY_BAR_COLOR[rt.value] ?? "bg-muted-foreground/40",
-              )}
-            />
-            <span
-              className={cn(
-                "truncate text-xs font-medium",
-                active ? "text-primary" : "text-foreground/80",
-              )}
-            >
-              {rt.value}
-            </span>
+        {/* Minimal rail row: a small rarity-colour dot + plain code (no pill). */}
+        <span className="flex min-w-0 items-center gap-2">
+          <span
+            aria-hidden
+            className={cn(
+              "size-2 shrink-0 rounded-full",
+              RARITY_BAR_COLOR[rt.value] ?? "bg-muted-foreground/40",
+            )}
+          />
+          <span
+            className={cn(
+              "truncate text-xs font-medium",
+              active ? "text-primary" : "text-foreground/80",
+            )}
+          >
+            {rt.value}
           </span>
-        ) : (
-          <RarityBadge rarity={rt.value} size="sm" />
-        )}
+        </span>
         <span
           className={cn(
             "shrink-0 text-xs tabular-nums",
@@ -499,7 +523,7 @@ export function SetDetailContent({
               <span className="tabular-nums text-muted-foreground/40">{totalVisible}</span>
             </p>
             <div className="space-y-0.5">
-              {rarityNav.map((rt) => rarityButton(rt, "rail"))}
+              {rarityNav.map((rt) => rarityButton(rt))}
             </div>
           </nav>
         </div>
@@ -507,58 +531,145 @@ export function SetDetailContent({
 
       {/* ── RIGHT (desktop) / full width (mobile) ── */}
       <div ref={sectionsRef} className="min-w-0 flex-1">
-        {/* MOBILE/TABLET controls (desktop uses the sidebar): filters + period
-            on one wrapping row, then the rarity jump-chips. */}
-        <div className="mb-3 lg:hidden">
-          <div className="flex flex-wrap items-center gap-2">
-            <GradeControl value={grade} onChange={onGradeChange} />
-            {availableTypes.length > 1 && (
-              <FilterSelect
-                label={t(lang, "type")}
-                value={activeType}
-                onChange={setActiveType}
-                options={typeOptions}
-              />
-            )}
-            {availableColors.length > 1 && (
-              <FilterSelect
-                label={t(lang, "color")}
-                value={activeColor}
-                onChange={setActiveColor}
-                options={colorOptions}
-              />
-            )}
-            {isRawGrade(grade) && (
-              <SegmentedControl
-                size="sm"
-                variant="pill"
-                leadingIcon={TrendingUpDown}
-                options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
-                value={changePeriod}
-                onChange={setChangePeriod}
-                ariaLabel={t(lang, "pricePeriod")}
-              />
-            )}
-          </div>
-        </div>
+        {/* Canonical facet modal (opened from the mobile row only — the desktop
+            sidebar keeps its inline selects). Chip taps apply immediately, so
+            Apply just closes; Reset returns both facets to "all". */}
+        <FilterModal
+          open={filterOpen}
+          onOpenChange={setFilterOpen}
+          onReset={() => {
+            setActiveType("all");
+            setActiveColor("all");
+          }}
+          resetDisabled={activeFilterCount === 0}
+        >
+          {availableTypes.length > 1 && (
+            <div>
+              <span className="mb-1.5 block text-eyebrow">{t(lang, "type")}</span>
+              <div className="flex flex-wrap gap-1.5">
+                {typeOptions.map((o) => facetChip(o, activeType, setActiveType))}
+              </div>
+            </div>
+          )}
+          {availableColors.length > 1 && (
+            <div>
+              <span className="mb-1.5 block text-eyebrow">{t(lang, "color")}</span>
+              <div className="flex flex-wrap gap-1.5">
+                {colorOptions.map((o) => facetChip(o, activeColor, setActiveColor))}
+              </div>
+            </div>
+          )}
+        </FilterModal>
 
-        {/* Rarity jump-nav — STICKY under the top chrome so it follows the card
-            wall on the way down (เบส), the same job the desktop sidebar rail
-            already does. It has to be a direct child of the tall sections
-            container: inside the short filters block a sticky element would
-            unstick the moment that block scrolled past. Same docking treatment
-            as the watchlist selection bar. */}
+        {/* MOBILE/TABLET: both control rows dock together under the global chrome
+            so the selected grade stays available while browsing the card wall.
+            One sticky wrapper also gives scrollspy a single measured offset. */}
         <div
           data-slot="set-rarity-nav-sticky"
           className="sticky top-[var(--chrome-h)] z-sticky -mx-5 border-b border-hair bg-background/95 px-5 py-2 backdrop-blur-sm md:-mx-6 md:px-6 lg:hidden"
         >
-          <nav
-            ref={chipsRef}
-            aria-label={t(lang, "rarity")}
-            className="no-sb flex items-center gap-1.5 overflow-x-auto"
+          {/* The canonical grade lens owns the full first line so all five grades
+              remain visible at both 390px and the 768px boundary. */}
+          <div data-slot="set-mobile-grade-row" className="mb-2">
+            <GradeControl
+              value={grade}
+              onChange={onGradeChange}
+              className="sm:w-full"
+            />
+          </div>
+
+          {/* Rarity uses a Select instead of the clipped horizontal chip rail;
+              period and facets keep the same behavior as the desktop controls. */}
+          <div
+            data-slot="set-mobile-control-row"
+            className="flex min-w-0 items-center gap-2"
           >
-            {rarityNav.map((rt) => rarityButton(rt, "chip"))}
-          </nav>
+            {isRawGrade(grade) && (
+              <Select
+                value={changePeriod}
+                onValueChange={(value) => {
+                  if (value) setChangePeriod(value);
+                }}
+              >
+                <SelectTrigger
+                  size="sm"
+                  aria-label={t(lang, "pricePeriod")}
+                  className="min-h-11 w-[5.25rem] shrink-0 px-2.5 sm:min-h-11!"
+                >
+                  <TrendingUpDown aria-hidden className="size-3.5 text-muted-foreground" />
+                  <span className="text-label text-foreground">{changePeriod}</span>
+                </SelectTrigger>
+                <SelectContent
+                  align="start"
+                  alignItemWithTrigger={false}
+                  sideOffset={6}
+                  className="p-1"
+                >
+                  {CHANGE_PERIODS.map((period) => (
+                    <SelectItem
+                      key={period}
+                      value={period}
+                      className="min-h-11 py-2 pr-7 pl-2.5 sm:min-h-11!"
+                    >
+                      {period}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+
+            {selectedRarity && (
+              <Select
+                value={selectedRarity.value}
+                onValueChange={(value) => {
+                  if (value) scrollToRarity(value);
+                }}
+              >
+                <SelectTrigger
+                  size="sm"
+                  aria-label={t(lang, "rarity")}
+                  className="min-h-11 min-w-0 flex-1 px-2.5 sm:min-h-11!"
+                >
+                  <span className="flex min-w-0 items-center gap-1.5">
+                    <RarityBadge rarity={selectedRarity.value} size="sm" />
+                    <span className="text-meta shrink-0 tabular-nums">
+                      {selectedRarity.count}
+                    </span>
+                  </span>
+                </SelectTrigger>
+                <SelectContent
+                  align="start"
+                  alignItemWithTrigger={false}
+                  sideOffset={6}
+                  className="min-w-40 p-1"
+                >
+                  {rarityNav.map((item) => (
+                    <SelectItem
+                      key={item.value}
+                      value={item.value}
+                      className="min-h-11 py-2 pr-7 pl-2.5 sm:min-h-11!"
+                    >
+                      <RarityBadge rarity={item.value} size="sm" />
+                      <span className="text-meta tabular-nums">{item.count}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+
+            {hasFacets && (
+              <FilterButton
+                aria-label={t(lang, "filter")}
+                aria-expanded={filterOpen}
+                onClick={() => setFilterOpen(true)}
+                active={filterOpen || activeFilterCount > 0}
+                count={activeFilterCount}
+                className="shrink-0 md:h-11! md:min-w-11!"
+              >
+                {t(lang, "filter")}
+              </FilterButton>
+            )}
+          </div>
         </div>
 
         <div className="space-y-8 pt-4 lg:pt-0">
@@ -573,18 +684,19 @@ export function SetDetailContent({
                 className="scroll-mt-32"
               >
                 {/* centered section heading (เบส) — name + RarityBadge + count,
-                    flanked by hairlines on both sides. The Thai gloss next to
-                    the English rarity name is the SEO hook ("ซีเคร็ทแรร์"), and
-                    the first section links out to the rarity guide once. */}
+                    flanked by hairlines on both sides. English name only: the
+                    Thai gloss ("พาราเรลซีเคร็ทแรร์") made the heading wrap on
+                    phones, so เบส removed it here (2026-08-27) — the Thai
+                    rarity names still render in this page's drop-rate table,
+                    so the keyword stays on the page. The first section links
+                    out to the rarity guide once. */}
                 <div className="mb-5 flex items-center gap-3 sm:gap-4">
                   <span aria-hidden className="h-px flex-1 bg-hair" />
-                  {/* min-w-0 (not shrink-0): the heading now carries the Thai
-                      gloss too, which is long enough to overflow a phone if the
-                      block refuses to shrink — let it wrap instead. */}
+                  {/* min-w-0 (not shrink-0): long names ("Parallel Secret
+                      Rare") can still overflow a phone if the block refuses
+                      to shrink — let the heading wrap instead. */}
                   <div className="flex min-w-0 items-center gap-2">
-                    <h2 className="text-h4 min-w-0 text-center">
-                      {rarityHeadingLabel(lang, g.rarity, g.name)}
-                    </h2>
+                    <h2 className="text-h4 min-w-0 text-center">{g.name}</h2>
                     <RarityBadge rarity={g.rarity} size="sm" />
                     <span className="text-meta tabular-nums">{g.cards.length}</span>
                   </div>
@@ -615,9 +727,27 @@ export function SetDetailContent({
           ))}
 
           {displayGroups.length === 0 && (
-            <div className="py-16 text-center text-sm text-muted-foreground">
-              {t(lang, "noData")}
-            </div>
+            <EmptyState
+              variant="plain"
+              size="sm"
+              title={t(lang, "noData")}
+              action={
+                hasActiveCardFilters ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="sm:min-h-11!"
+                    onClick={() => {
+                      setActiveType("all");
+                      setActiveColor("all");
+                      onGradeChange("raw");
+                    }}
+                  >
+                    {t(lang, "clearAllFilters")}
+                  </Button>
+                ) : undefined
+              }
+            />
           )}
         </div>
       </div>

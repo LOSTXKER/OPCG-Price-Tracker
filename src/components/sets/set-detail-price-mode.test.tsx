@@ -2,7 +2,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import {
+  getRarityScrollBehavior,
   getVisibleSetGroups,
+  SetDetailContent,
   type CardData,
   type RarityGroup,
 } from "./set-detail-content";
@@ -12,6 +14,7 @@ import {
   formatByCurrency,
   formatUsdByCurrency,
 } from "@/lib/utils/currency";
+import { t } from "@/lib/i18n";
 import { useUIStore } from "@/stores/ui-store";
 
 function card(
@@ -50,6 +53,62 @@ beforeEach(() => {
 });
 
 describe("set-detail grade lens", () => {
+  it("keeps rarity motion short and honors reduced-motion", () => {
+    expect(getRarityScrollBehavior(800, 844, false)).toBe("smooth");
+    expect(getRarityScrollBehavior(1_700, 844, false)).toBe("auto");
+    expect(getRarityScrollBehavior(100, 844, true)).toBe("auto");
+  });
+
+  it("keeps both mobile control rows in one sticky group without shrinking touch targets", () => {
+    const groups = [
+      group([
+        card(1, { color: "Red", cardType: "CHARACTER" }),
+        card(2, { color: "Blue", cardType: "EVENT" }),
+      ]),
+    ];
+    const markup = renderToStaticMarkup(
+      <SetDetailContent
+        groups={groups}
+        totalCards={2}
+        grade="raw"
+        onGradeChange={() => undefined}
+      />,
+    );
+
+    const stickyIndex = markup.indexOf('data-slot="set-rarity-nav-sticky"');
+    const gradeIndex = markup.indexOf('data-slot="set-mobile-grade-row"');
+    const compactControlsIndex = markup.indexOf(
+      'data-slot="set-mobile-control-row"',
+    );
+    expect(stickyIndex).toBeGreaterThan(-1);
+    expect(gradeIndex).toBeGreaterThan(stickyIndex);
+    expect(compactControlsIndex).toBeGreaterThan(gradeIndex);
+    expect(markup).toContain(
+      "sticky top-[var(--chrome-h)] z-sticky",
+    );
+    const mobileGradeRow = markup.slice(gradeIndex, compactControlsIndex);
+    expect(mobileGradeRow).toContain("sm:w-full");
+    expect(mobileGradeRow).not.toContain("sm:w-56");
+    expect(markup).toContain(`aria-label="${t("TH", "pricePeriod")}"`);
+    expect(markup).toContain(`aria-label="${t("TH", "rarity")}"`);
+    expect(markup).toContain(`aria-label="${t("TH", "filter")}"`);
+    expect(markup).toContain("sm:min-h-11!");
+  });
+
+  it("offers a recovery action when grade filtering removes every card", () => {
+    const markup = renderToStaticMarkup(
+      <SetDetailContent
+        groups={[group([card(1, { psa10PriceUsd: null })])]}
+        totalCards={1}
+        grade="psa_10"
+        onGradeChange={() => undefined}
+      />,
+    );
+
+    expect(markup).toContain(t("TH", "noData"));
+    expect(markup).toContain(t("TH", "clearAllFilters"));
+  });
+
   it("keeps Raw order but limits graded tiers to PSA-anchored cards", () => {
     const cards = [
       card(1, { psa10PriceUsd: 40 }),
@@ -132,8 +191,13 @@ describe("set-detail grade lens", () => {
   it("resolves the set leader from the selected grade", () => {
     const groups = [
       group([
-        card(1, { latestPriceJpy: 1_000, psa10PriceUsd: 100 }),
+        card(1, {
+          cardCode: "OP03-001_p2",
+          latestPriceJpy: 1_000,
+          psa10PriceUsd: 100,
+        }),
         card(2, {
+          imageUrl: "/cards/op03-002.webp",
           latestPriceJpy: 5_000,
           latestPriceThb: 1_250,
           psa10PriceUsd: 40,
@@ -152,8 +216,13 @@ describe("set-detail grade lens", () => {
   it("renders the hero summary from the selected grade without estimate copy", () => {
     const groups = [
       group([
-        card(1, { latestPriceJpy: 1_000, psa10PriceUsd: 100 }),
+        card(1, {
+          cardCode: "OP03-001_p2",
+          latestPriceJpy: 1_000,
+          psa10PriceUsd: 100,
+        }),
         card(2, {
+          imageUrl: "/cards/op03-002.webp",
           latestPriceJpy: 5_000,
           latestPriceThb: 1_250,
           psa10PriceUsd: 40,
@@ -187,9 +256,21 @@ describe("set-detail grade lens", () => {
       formatByCurrency(5_000, "THB", 1_250).primary,
     );
     expect(rawMarkup).not.toContain("est.");
+    expect(rawMarkup).toContain('<img alt=""');
+    expect(rawMarkup).toContain(
+      '<span class="sr-only">OP03-002 การ์ดทดสอบ 2</span>',
+    );
+    expect(rawMarkup).toContain("min-h-11");
+    expect(rawMarkup).toContain("การ์ด");
+    expect(rawMarkup).not.toContain("การ์ดทั้งหมด");
+    expect(rawMarkup).not.toContain("หมายเลขการ์ด");
+    expect(rawMarkup).not.toContain("เวอร์ชันพิเศษ");
+    expect(rawMarkup).not.toContain("เวอร์ชันทั้งหมด");
 
     expect(bgsMarkup).toContain("มูลค่าสูงสุด · BGS 9.5");
-    expect(bgsMarkup).toContain('href="/opcg/cards/OP03-001"');
+    expect(bgsMarkup).toContain('href="/opcg/cards/OP03-001_p2"');
+    expect(bgsMarkup).toContain("OP03-001");
+    expect(bgsMarkup).not.toContain(">OP03-001_p2<");
     expect(bgsMarkup).toContain(formatUsdByCurrency(115, "THB").primary);
     expect(bgsMarkup).not.toContain("est.");
     expect(bgsMarkup).not.toContain("ราคาตัวอย่าง");

@@ -14,6 +14,7 @@ import {
   Bookmark,
   LogOut,
   MessageCircle,
+  MonitorCog,
   Moon,
   Settings,
   ShoppingBag,
@@ -44,7 +45,9 @@ import { t } from "@/lib/i18n";
 import {
   LANG_OPTIONS,
   CURRENCY_OPTIONS,
+  THEME_OPTIONS,
   TIER_DISPLAY,
+  type ThemeChoice,
 } from "@/components/layout/header-constants";
 
 /** Red count badge for the trailing slot (messages). */
@@ -85,7 +88,7 @@ export default function MoreClient() {
   const setLanguage = useUIStore((s) => s.setLanguage);
   const currency = useUIStore((s) => s.currency);
   const setCurrency = useUIStore((s) => s.setCurrency);
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   const {
     authUser,
@@ -100,6 +103,16 @@ export default function MoreClient() {
     handleLogout,
   } = useHeaderData();
   const { config: publicConfig } = usePublicConfig();
+  const themeChoice: ThemeChoice =
+    mounted && (theme === "system" || theme === "light" || theme === "dark")
+      ? theme
+      : "system";
+  const themeOptions = THEME_OPTIONS.map((option) => ({
+    value: option.value,
+    label: t(language, option.labelKey),
+  }));
+  const ThemeIcon =
+    themeChoice === "dark" ? Moon : themeChoice === "light" ? Sun : MonitorCog;
 
   const doLogout = useCallback(async () => {
     await handleLogout();
@@ -311,15 +324,31 @@ export default function MoreClient() {
               }
             />
             <GroupedRow
-              icon={mounted && resolvedTheme === "dark" ? Moon : Sun}
+              icon={ThemeIcon}
               iconClassName="bg-muted text-muted-foreground"
               title={t(language, "themeLabel")}
               chevron={false}
-              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
               trailing={
-                <span className="text-meta">
-                  {mounted && resolvedTheme === "dark" ? "Dark" : "Light"}
-                </span>
+                <Select
+                  items={themeOptions}
+                  value={themeChoice}
+                  onValueChange={(value) => {
+                    if (value === "system" || value === "light" || value === "dark") {
+                      setTheme(value);
+                    }
+                  }}
+                >
+                  <SelectTrigger size="sm" aria-label="Theme" className="text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {themeOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               }
             />
           </GroupedSection>

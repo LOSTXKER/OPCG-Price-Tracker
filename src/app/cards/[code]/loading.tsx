@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CardDetailLoading() {
   return (
-    <div className="mx-auto max-w-7xl">
+    <div>
       {/* breadcrumb */}
       <Skeleton className="h-4 w-48" />
 

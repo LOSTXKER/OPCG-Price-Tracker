@@ -45,7 +45,10 @@ export function DirectSponsorCreative({
       data-ad-format={definition.format}
       data-ad-size={`${definition.mobileSize}|${definition.desktopSize}`}
       data-direct-status="ACTIVE"
-      className={cn(AD_FORMAT_CLASS[definition.format], className)}
+      className={cn(
+        definition.frameClass ?? AD_FORMAT_CLASS[definition.format],
+        className,
+      )}
     >
       <Surface
         variant="outline"

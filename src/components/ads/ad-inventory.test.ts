@@ -165,7 +165,7 @@ describe("advertising route inventory", () => {
     }
   })
 
-  it("keeps two sponsor-replaceable slots and four contextual Google-only zones", () => {
+  it("keeps two sponsor-replaceable slots and five contextual Google-only zones", () => {
     const replaceable = Object.values(AD_INVENTORY).filter(
       (definition) => definition.strategy === "DIRECT_THEN_GOOGLE",
     )
@@ -177,7 +177,29 @@ describe("advertising route inventory", () => {
       "global-bottom-anchor",
       "card-detail-chart-rail",
     ])
-    expect(googleOnly).toHaveLength(4)
+    // home-highlight-rail joined 2026-08-28 (owner request: an ad column beside
+    // the home highlights). New zones stay Google-only until a real Direct
+    // campaign is approved for them.
+    expect(googleOnly).toHaveLength(5)
+  })
+
+  it("binds the home highlight rail to the home route as a rectangle", () => {
+    expect(getEligibleAdInventory("home-highlight-rail", "/opcg")).toMatchObject(
+      {
+        strategy: "GOOGLE_ONLY",
+        format: "RECTANGLE",
+        route: "HOME",
+      },
+    )
+    for (const pathname of [
+      "/opcg/search",
+      "/opcg/sets/OP04",
+      "/opcg/cards/OP01-001",
+    ]) {
+      expect(
+        getEligibleAdInventory("home-highlight-rail", pathname),
+      ).toBeNull()
+    }
   })
 
   it("defaults every replaceable slot to Google until a real Direct campaign is active", () => {

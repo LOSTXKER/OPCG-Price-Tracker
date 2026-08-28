@@ -36,8 +36,6 @@ export const th = {
   adDismissLabel: "ปิดโฆษณาสำหรับเซสชันนี้",
   adSponsoredLabel: "ผู้สนับสนุน",
   adOpenNewWindow: "เปิดในหน้าต่างใหม่",
-  heroSearchTitle: "เช็คราคาการ์ดเกม ทุกใบ ทุกเกรด",
-  heroTeaser: "ทุกอย่างของการ์ดเกม ในที่เดียว",
   searchShortcuts: "ทางลัด",
   trendingShort: "มาแรง",
   photoSearchTitle: "ค้นหาด้วยรูปภาพ",
@@ -1893,7 +1891,7 @@ export const th = {
   safeBuyTipsLink: "ดูเคล็ดลับซื้อปลอดภัย",
 
   // Footer
-  footerTagline: "ราคาการ์ด One Piece Card Game อัปเดตทุกวัน พอร์ต เฝ้าดู และตลาดซื้อขายของคอมมูนิตี้ — ครบจบในที่เดียว",
+  footerTagline: "ราคาการ์ด One Piece Card Game พอร์ต เฝ้าดู และตลาดซื้อขายของคอมมูนิตี้ — ครบจบในที่เดียว",
   footerExplore: "สำรวจ",
   footerCommunity: "คอมมูนิตี้",
   footerSources: "ข้อมูลราคาจากตลาดญี่ปุ่น · ภาพการ์ด © BANDAI",
@@ -2329,8 +2327,8 @@ export const th = {
   // --- home SEO content ---
   seoFeaturesHeading: "Meecard ช่วยคุณติดตามราคาการ์ด One Piece ได้ยังไงบ้าง?",
   seoFeaturesSub: "เครื่องมือครบชุดสำหรับนักสะสมและนักเทรดการ์ด OPCG",
-  seoFeatPriceTitle: "ราคาการ์ดวันพีชอัปเดตทุกวัน",
-  seoFeatPriceDesc: "ติดตามราคาการ์ด OPCG จากตลาดญี่ปุ่น อัปเดตทุกวัน พร้อมกราฟราคาย้อนหลังให้ดูแนวโน้มตลาด",
+  seoFeatPriceTitle: "ราคากลางการ์ดวันพีชทุกใบ",
+  seoFeatPriceDesc: "ติดตามราคาการ์ด OPCG จากตลาดญี่ปุ่น พร้อมกราฟราคาย้อนหลังให้ดูแนวโน้มตลาด",
   seoFeatPortfolioTitle: "จัดการ Portfolio การ์ดของคุณ",
   seoFeatPortfolioDesc: "เพิ่มการ์ด One Piece ที่ถืออยู่ แล้วดูมูลค่าพอร์ตรวมคำนวณจากราคาล่าสุดอัตโนมัติ พร้อมกราฟและสถิติ",
   seoFeatDropTitle: "คำนวณ Drop Rate กล่องสุ่ม",
@@ -2359,7 +2357,7 @@ export const th = {
   seoPriceP3mid: "หรือเริ่มต้นด้วย",
   seoPriceP3Link2: "คู่มือเล่น OPCG สำหรับมือใหม่",
   seoFaq1Q: "Meecard คืออะไร?",
-  seoFaq1A: "Meecard คือเว็บไซต์ติดตามราคาการ์ด One Piece Card Game (OPCG) ที่อัปเดตทุกวัน รวมฟีเจอร์ Portfolio, Drop Calculator และเปรียบเทียบราคาไว้ในที่เดียว",
+  seoFaq1A: "Meecard คือเว็บไซต์ติดตามราคาการ์ด One Piece Card Game (OPCG) รวมฟีเจอร์ Portfolio, Drop Calculator และเปรียบเทียบราคาไว้ในที่เดียว",
   seoFaq3Q: "อัปเดตราคาการ์ดวันพีชบ่อยแค่ไหน?",
   seoFaq3A: "ราคาอัปเดตอย่างน้อยวันละ 1 ครั้ง พร้อมกราฟราคาย้อนหลังให้ดูแนวโน้มตลาดว่าการ์ดขึ้นหรือลง",
   seoFaq4Q: "Portfolio ใน Meecard ใช้ทำอะไร?",

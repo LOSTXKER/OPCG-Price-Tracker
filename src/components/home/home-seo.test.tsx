@@ -3,8 +3,8 @@ import { resolve } from "node:path"
 import { renderToStaticMarkup } from "react-dom/server"
 import { describe, expect, it, vi } from "vitest"
 
-// The hero's search bar calls useRouter; there is no app-router context in a
-// plain SSR render.
+// Some supporting home components use app-router hooks; there is no router
+// context in a plain SSR render.
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
     push: () => undefined,
@@ -31,6 +31,17 @@ function countTag(markup: string, tag: string): number {
   return markup.split(`<${tag}`).length - 1
 }
 
+// The hero's props are server-fed live data; tests pin the rendered shape.
+const heroProps = {
+  totalCards: 3838,
+  totalSets: 51,
+  updatedLabels: {
+    TH: "27 สิงหาคม 2569",
+    EN: "27 August 2026",
+    JP: "2026年8月27日",
+  },
+}
+
 /**
  * The home page is the site's SEO pillar (doc/seo-content-plan.md §3.1). These
  * assertions pin the three things that regressed before: a keyword-bearing H1
@@ -39,41 +50,30 @@ function countTag(markup: string, tag: string): number {
  */
 describe("home page SEO shell", () => {
   it("puts the target keyword in the H1's own visible text", () => {
-    const markup = renderToStaticMarkup(
-      <HomeSearchHero sets={[]} trending={[]} />,
-    )
+    const markup = renderToStaticMarkup(<HomeSearchHero {...heroProps} />)
 
     const h1 = markup.slice(markup.indexOf("<h1"), markup.indexOf("</h1>"))
 
     expect(countTag(markup, "h1")).toBe(1)
     expect(h1).toContain("การ์ดวันพีช")
-    // The keyword must not be hidden from sighted users, and the rotating
-    // typewriter must not be the H1's only visible content.
+    // The keyword must not be hidden from sighted users.
     expect(h1).not.toContain("sr-only")
     expect(h1).not.toContain("aria-hidden")
-    expect(h1).not.toContain("tw-caret")
-    // ...but the animation is still on the page, one level down.
-    expect(markup).toContain("tw-caret")
+    // The rotating typewriter is gone (owner ruling 2026-08-28) — the lead
+    // under the H1 is one plain, static sentence.
+    expect(markup).not.toContain("tw-caret")
   })
 
-  it("keeps search in the hero without duplicating the global set navigator", () => {
-    const markup = renderToStaticMarkup(
-      <HomeSearchHero
-        sets={[
-          { code: "op15", name: "皇帝の帰還", nameEn: "The Emperor Returns", type: "BOOSTER" },
-          { code: "eb02", name: "二つの伝説", nameEn: "Two Legends", type: "EXTRA_BOOSTER" },
-        ]}
-        trending={[]}
-      />,
-    )
+  it("removes the duplicate hero search now that navbar search is primary", () => {
+    const markup = renderToStaticMarkup(<HomeSearchHero {...heroProps} />)
 
-    expect(markup).toContain("<input")
+    expect(markup).not.toContain("<input")
     expect(markup).not.toContain("เลือกชุดการ์ด")
   })
 
   it("keeps the supporting blocks at h2 or lower (one H1 per page)", () => {
     const blocks = [
-      renderToStaticMarkup(<HomeMarketIntro totalCards={3838} totalSets={51} />),
+      renderToStaticMarkup(<HomeMarketIntro />),
       renderToStaticMarkup(
         <HomeSetStrip sets={[{ code: "OP01", name: "Romance Dawn" }]} />,
       ),
@@ -83,25 +83,52 @@ describe("home page SEO shell", () => {
     for (const markup of blocks) expect(countTag(markup, "h1")).toBe(0)
   })
 
-  it("renders the market section heading + context prose on the server", () => {
-    const markup = renderToStaticMarkup(
-      <HomeMarketIntro totalCards={3838} totalSets={51} />,
-    )
+  it("carries coverage, grades and the freshness date in the hero lead", () => {
+    const markup = renderToStaticMarkup(<HomeSearchHero {...heroProps} />)
 
-    expect(markup).toContain("<h2")
-    expect(markup).toContain("ราคาตลาดการ์ดวันพีชวันนี้")
+    expect(markup).toContain("อัปเดตล่าสุด")
+    expect(markup).toContain("27 สิงหาคม 2569")
     expect(markup).toContain("3,838")
     expect(markup).toContain("51")
+    expect(markup).toContain("OPTCG")
+    expect(markup).toContain("Raw")
+    expect(markup).toContain("PSA 10")
     // Owner decision 2026-08-06: the trust claim is "ตลาดญี่ปุ่น", never a
-    // source brand name — the intro must not advertise another shop.
+    // source brand name — the sentence must not advertise another shop.
     expect(markup).toContain("ตลาดญี่ปุ่น")
-    expect(markup).not.toContain("Yuyu-tei")
     // Dual spelling coverage, roles swapped (owner decision 2026-08-08): the
-    // visible body spells it "วันพีช" only; the second spelling "วันพีซ" lives
+    // visible copy spells it "วันพีช" only; the second spelling "วันพีซ" lives
     // in the meta description, not the body.
     expect(markup).toContain("วันพีช")
     expect(markup).not.toContain("วันพีซ")
     expect(HOME_META_DESCRIPTION).toContain("วันพีซ")
+  })
+
+  it("omits the freshness segment when no scrape date exists yet", () => {
+    const markup = renderToStaticMarkup(
+      <HomeSearchHero {...heroProps} updatedLabels={null} />,
+    )
+
+    expect(markup).not.toContain("อัปเดตล่าสุด")
+  })
+
+  it("keeps the market heading slim — a section name, no prose", () => {
+    const markup = renderToStaticMarkup(<HomeMarketIntro />)
+
+    expect(markup).toContain("<h2")
+    expect(markup).toContain("ตารางราคาการ์ด")
+    // The keyword sentence, the date line and the coverage paragraph all
+    // moved into the hero lead (owner ruling 2026-08-28) — no prose may
+    // creep back in under this heading.
+    expect(countTag(markup, "p")).toBe(0)
+    expect(markup).not.toContain("วันพีซ")
+  })
+
+  it("restores the original feature subtitle under the feature heading", () => {
+    const markup = renderToStaticMarkup(<HomeSeoContent />)
+
+    expect(markup).toContain("เครื่องมือครบชุดสำหรับนักสะสมและนักเทรดการ์ด OPCG")
+    expect(markup).not.toContain("Meecard ติดตามราคาการ์ดวันพีช")
   })
 
   it("renders real set links, not a client-only picker", () => {
@@ -175,8 +202,8 @@ describe("home page SEO shell", () => {
   it("never names a price-source brand anywhere on the page", () => {
     const surfaces = [
       renderToStaticMarkup(<HomeSeoContent />),
-      renderToStaticMarkup(<HomeSearchHero sets={[]} trending={[]} />),
-      renderToStaticMarkup(<HomeMarketIntro totalCards={3838} totalSets={51} />),
+      renderToStaticMarkup(<HomeSearchHero {...heroProps} />),
+      renderToStaticMarkup(<HomeMarketIntro />),
       renderToStaticMarkup(
         <HomeSetStrip sets={[{ code: "OP01", name: "Romance Dawn" }]} />,
       ),

@@ -2,9 +2,10 @@ import { cache } from "react";
 
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { RARITIES, raritySort } from "@/lib/constants/rarities";
-import { getJapaneseSetReleaseDate } from "@/lib/constants/sets";
+import { resolveSetReleaseDate } from "@/lib/constants/sets";
 import { prisma } from "@/lib/db";
 import { getCardName, type Language } from "@/lib/i18n";
+import { summarizeCardCodes } from "@/lib/cards/card-code";
 import { pullChance, PACKS_PER_BOX } from "@/lib/utils/pull-rate";
 import type { SetSeoData } from "@/lib/seo/copy/sets";
 import type {
@@ -45,17 +46,30 @@ export const getSet = cache(async (setCode: string) => {
     },
   });
 
-  const catalogReleaseDate = getJapaneseSetReleaseDate(code);
-  const releaseDate =
-    cardSet.releaseDate ??
-    (catalogReleaseDate
-      ? new Date(`${catalogReleaseDate}T00:00:00.000Z`)
-      : null);
+  // Freshness must come from the market rows themselves. Card.updatedAt also
+  // changes for translations/admin edits, so it cannot support a price claim.
+  const cardIds = cards.map((card) => card.id);
+  const latestRawPrice = cardIds.length
+    ? await prisma.cardPrice.findFirst({
+        where: {
+          cardId: { in: cardIds },
+          source: PRICE_SOURCE.YUYUTEI,
+          type: "SELL",
+          gradeCondition: null,
+          priceJpy: { gt: 0 },
+        },
+        orderBy: { scrapedAt: "desc" },
+        select: { scrapedAt: true },
+      })
+    : null;
+
+  const releaseDate = resolveSetReleaseDate(code, cardSet.releaseDate);
 
   return {
     ...cardSet,
     releaseDate,
     cards,
+    latestRawPriceAt: latestRawPrice?.scrapedAt ?? null,
     productCardCount: cards.length,
   };
 });
@@ -130,6 +144,8 @@ export type SetDetailTopCard = {
 export type SetDetailData = {
   set: NonNullable<Awaited<ReturnType<typeof getSet>>>;
   cardCount: number;
+  baseCardCount: number;
+  variantCount: number;
   rarityGroups: RarityGroup[];
   totalValue: number;
   avgPrice: number;
@@ -148,6 +164,7 @@ export const getSetDetailData = cache(async (
   if (!set) return null;
 
   const { cards } = set;
+  const cardSummary = summarizeCardCodes(cards.map((card) => card.cardCode));
   const withPrice = cards.filter(
     (c) => c.latestPriceJpy != null && c.latestPriceJpy > 0,
   );
@@ -235,6 +252,8 @@ export const getSetDetailData = cache(async (
   return {
     set,
     cardCount: cards.length,
+    baseCardCount: cardSummary.baseCardCount,
+    variantCount: cardSummary.variantCount,
     rarityGroups,
     totalValue,
     avgPrice,
@@ -262,6 +281,9 @@ export function toSetSeoData(
     type: data.set.type,
     releaseDate: data.set.releaseDate,
     cardCount: data.cardCount,
+    baseCardCount: data.baseCardCount,
+    variantCount: data.variantCount,
+    latestPriceAt: data.set.latestRawPriceAt,
     packsPerBox: data.set.packsPerBox,
     cardsPerPack: data.set.cardsPerPack,
     rarities: data.rarityGroups.map((group) => ({

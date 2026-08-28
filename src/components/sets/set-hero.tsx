@@ -8,6 +8,7 @@ import { FormattedDate } from "@/components/shared/formatted-date";
 import { DropRateDialog } from "@/app/sets/[setCode]/set-page-client";
 import { getCardName, t, type Language } from "@/lib/i18n";
 import { hasWideBoxArt } from "@/lib/constants/sets";
+import { baseCardCode } from "@/lib/cards/card-code";
 import type {
   CardData,
   RarityGroup,
@@ -67,7 +68,7 @@ export interface SetHeroProps {
  * Set hero — identity-led (not a financial dashboard): the box art is the ONE
  * saturated anchor (chrome stays espresso-neutral) lit by the warm overhead glow
  * the page renders above it; the OP code is the hero, with the set name + a calm
- * stat line (count · avg · top card) supporting it. (VISION §1 card-is-hero · §4
+ * stat line (count · top card) supporting it. (VISION §1 card-is-hero · §4
  * restraint — depth by light, not shadow.)
  */
 export function SetHero({
@@ -90,21 +91,19 @@ export function SetHero({
 
   return (
     <header className="relative flex flex-row items-center gap-4 sm:gap-7 lg:gap-10">
-      {/* box art — the one saturated element (lit by the page's overhead glow).
-          Row layout (card left, identity right) at every width. Sized tall enough
-          that the art reaches down past the stat line to the drop-rate (เบส). */}
-      {/* On phones the card self-stretches to the identity column's height so the
-          art reaches the drop-rate (เบส); on sm+ it's the fixed-aspect poster. */}
-      <div className="surface-1 relative w-40 shrink-0 self-stretch overflow-hidden rounded-xl sm:aspect-[3/4] sm:w-52 sm:self-center lg:w-60">
+      {/* The approved composition keeps the pack as the saturated anchor at
+          every width. On phones it stretches with the information column; at
+          sm+ it returns to the product's fixed poster ratio. */}
+      <div className="surface-1 relative w-[clamp(8rem,40vw,10rem)] shrink-0 self-stretch overflow-hidden rounded-xl sm:aspect-[3/4] sm:w-52 sm:self-center lg:w-60">
         {boxImage ? (
           <Image
             src={boxImage}
-            alt={name}
+            alt={`${type} ${code.toUpperCase()} ${name} — One Piece Card Game`}
             fill
             className={
               hasWideBoxArt(code) ? "object-contain" : "object-cover object-top"
             }
-            sizes="(min-width: 1024px) 240px, (min-width: 640px) 208px, 160px"
+            sizes="(min-width: 1024px) 240px, (min-width: 640px) 208px, (min-width: 400px) 160px, 40vw"
             preload
           />
         ) : (
@@ -114,51 +113,41 @@ export function SetHero({
         )}
       </div>
 
-      {/* identity — OP code is the hero */}
       <div className="min-w-0 flex-1">
-        <p className="text-eyebrow">
-          {type}
-          {releaseDate && (
-            <>
-              {" · "}
-              {t(lang, "japanRelease")} {" "}
-              <FormattedDate
-                date={releaseDate}
-                language={lang}
-                options={{
-                  calendar: "gregory",
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                  timeZone: "UTC",
-                }}
-              />
-            </>
-          )}
-        </p>
-        {/* One visible H1 carrying BOTH the set code and the set name — the
-            code keeps the display weight, the name sits on its own line inside
-            the same heading (Google reads "OP01 Romance Dawn"). */}
+        <p className="text-eyebrow">{type}</p>
         <h1 className="mt-1.5">
           <span className="text-display block text-foreground">
             {code.toUpperCase()}
           </span>
-          {/* The two lines are separate blocks, so without this the heading's
-              text content reads "OP01Romance Dawn" to crawlers and screen
-              readers. Visually nothing changes. */}
           <span className="sr-only"> — </span>
           <span className="text-h3 mt-0.5 block font-normal text-muted-foreground">
             {name}
           </span>
         </h1>
 
-        {/* calm stat line — count · top card (เบส: avg price dropped) */}
+        {releaseDate && (
+          <p className="text-meta mt-2 flex flex-wrap items-baseline gap-x-1.5 sm:mt-3">
+            <span>{t(lang, "japanRelease")}</span>
+            <FormattedDate
+              date={releaseDate}
+              language={lang}
+              options={{
+                calendar: "gregory",
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                timeZone: "UTC",
+              }}
+            />
+          </p>
+        )}
+
         <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2.5">
           <Stat label={t(lang, "card")}>
             <span className="tnum">{cardCount.toLocaleString()}</span>
           </Stat>
 
-          {topCard && (
+          {topCard && highest && (
             <>
               <span
                 aria-hidden
@@ -166,13 +155,13 @@ export function SetHero({
               />
               <Link
                 href={`/opcg/cards/${topCard.cardCode}`}
-                className="group ease-chrome -mx-1.5 flex items-center gap-2 rounded-lg px-1.5 py-1 transition-colors hover:bg-muted/60"
+                className="group ease-chrome -mx-1.5 flex min-h-11 items-center gap-2 rounded-lg px-1.5 py-1 transition-colors hover:bg-muted/60"
               >
                 <span className="surface-1 relative aspect-[63/88] w-7 shrink-0 overflow-hidden rounded-sm">
                   {topCard.imageUrl ? (
                     <Image
                       src={topCard.imageUrl}
-                      alt={getCardName(lang, topCard)}
+                      alt=""
                       fill
                       className="object-contain"
                       sizes="28px"
@@ -181,17 +170,20 @@ export function SetHero({
                     <Crown className="absolute inset-0 m-auto size-3 text-muted-foreground/30" />
                   )}
                 </span>
+                <span className="sr-only">
+                  {baseCardCode(topCard.cardCode)} {getCardName(lang, topCard)}
+                </span>
                 <span className="flex flex-col leading-tight">
                   <span className="text-meta flex items-center gap-1">
                     <Crown className="size-3 text-primary" />
                     {t(lang, "highestValue")} · {tier.label}
                   </span>
                   <span className="text-price tnum inline-flex flex-wrap items-baseline gap-1 text-foreground group-hover:text-primary">
-                    {highest?.price.currency === "USD" ? (
+                    {highest.price.currency === "USD" ? (
                       <PriceUsd usd={highest.price.amount} />
                     ) : (
                       <Price
-                        jpy={highest?.price.amount ?? 0}
+                        jpy={highest.price.amount}
                         thb={topCard.latestPriceThb}
                       />
                     )}

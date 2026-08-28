@@ -83,10 +83,15 @@ export function DropRateDialog({
 
   return (
     <Dialog>
-      <DialogTrigger className="ease-chrome inline-flex min-h-11 items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:min-h-9">
+      <DialogTrigger
+        aria-label={t(lang, "dropRate")}
+        className="ease-chrome inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-muted/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:min-h-9"
+      >
         <BarChart3 className="size-3.5 text-primary" />
-        {t(lang, "dropRate")}
-        <span className="tnum text-muted-foreground/60">{pullRateGroups.length}</span>
+        <span>{t(lang, "dropRate")}</span>
+        <span className="tnum text-muted-foreground/60">
+          {pullRateGroups.length}
+        </span>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md">

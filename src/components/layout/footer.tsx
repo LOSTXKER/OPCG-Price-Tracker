@@ -15,6 +15,7 @@ import type { LucideIcon } from "lucide-react";
 import { useUIStore } from "@/stores/ui-store";
 import { usePublicConfig } from "@/hooks/use-public-config";
 import { t } from "@/lib/i18n";
+import { PageContainer } from "@/components/layout/page-container";
 
 type FooterLink = {
   href: string;
@@ -80,7 +81,7 @@ export function Footer() {
   return (
     <footer className="border-t border-hair bg-muted/10">
       {/* pb clears the fixed mobile bottom-nav (md+ has no bottom-nav). */}
-      <div className="mx-auto max-w-7xl px-5 pt-10 pb-28 md:px-6 md:py-12 md:pb-12 lg:px-8">
+      <PageContainer className="pt-10 pb-28 md:py-12 md:pb-12">
         <div className="grid gap-10 lg:grid-cols-12">
           {/* Brand block */}
           <div className="lg:col-span-4">
@@ -166,7 +167,7 @@ export function Footer() {
             </Link>
           </nav>
         </div>
-      </div>
+      </PageContainer>
     </footer>
   );
 }

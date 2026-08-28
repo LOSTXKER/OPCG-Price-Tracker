@@ -70,7 +70,8 @@ const FULL_WIDTH_ROUTES: ReadonlyArray<RegExp> = [
 ];
 
 /**
- * Per-route width override. Pages absent from this map use `default` (7xl).
+ * Per-route width override. Pages absent from this map use the default
+ * 1400px market canvas.
  * Add entries here when a route needs a narrower or wider container so
  * widths stay declarative instead of hand-rolling `mx-auto max-w-...`.
  */

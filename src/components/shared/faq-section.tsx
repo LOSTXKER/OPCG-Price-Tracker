@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { type ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 
 import { JsonLd } from "@/lib/seo/json-ld-script";
@@ -19,15 +20,27 @@ export interface FaqItem {
 
 export function FaqSection({
   title = "คำถามที่พบบ่อย",
+  intro,
   items,
 }: {
   title?: string;
+  /**
+   * Optional context sentence under the title, before the question box —
+   * lets a page park its SEO paragraph here instead of spending
+   * above-the-fold space on it (set detail does this, เบส 2026-08-27).
+   */
+  intro?: ReactNode;
   items: FaqItem[];
 }) {
   return (
     <section className={title ? "mt-12 space-y-4" : "space-y-4"}>
       <JsonLd data={faqJsonLd(items)} />
       {title && <h2 className="text-h3">{title}</h2>}
+      {intro && (
+        <p className="max-w-3xl text-body-sm leading-relaxed text-muted-foreground">
+          {intro}
+        </p>
+      )}
       <Surface variant="outline" className="divide-y divide-hair overflow-hidden">
         {items.map((item, i) => (
           <details key={i} className="group">

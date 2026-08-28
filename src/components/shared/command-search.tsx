@@ -1,5 +1,6 @@
 "use client"
 
+import dynamic from "next/dynamic"
 import { useRouter } from "next/navigation"
 import {
   useCallback,
@@ -7,16 +8,19 @@ import {
   useId,
   useMemo,
   useRef,
+  useState,
 } from "react"
 import {
   ArrowRightLeft,
   BarChart3,
   BookOpen,
   Briefcase,
+  Camera,
   Clock,
   Heart,
   LayoutGrid,
   LineChart,
+  PackageOpen,
   Search,
   Settings,
   Sparkles,
@@ -35,12 +39,20 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { SearchResultRow } from "@/components/shared/search-result-row"
-import { getCardName, t, type TranslationKey } from "@/lib/i18n"
+import type { SetPickerItem } from "@/components/shared/set-picker"
+import { getCardName, getSetName, t, type TranslationKey } from "@/lib/i18n"
 import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import { useCardSearch } from "@/hooks/use-card-search"
 import { useRecentSearches } from "@/hooks/use-recent-searches"
 import { useSearchKeyboardNav } from "@/hooks/use-search-keyboard-nav"
+
+const MAX_SET_RESULTS = 4
+
+const PhotoSearchButton = dynamic(
+  () => import("@/app/search/photo-search-button").then((module) => module.PhotoSearchButton),
+  { ssr: false },
+)
 
 /** Navigation shortcuts surfaced in the palette (cards + "go to" pages). */
 const NAV_ACTIONS: { href: string; labelKey: TranslationKey; icon: LucideIcon }[] = [
@@ -61,26 +73,66 @@ const NAV_ACTIONS: { href: string; labelKey: TranslationKey; icon: LucideIcon }[
   { href: "/settings", labelKey: "settingsTitle", icon: Settings },
 ]
 
-export function CommandSearchTrigger({ onClick }: { onClick: () => void }) {
+/**
+ * The site's search entry point. Since the home hero dropped its own input
+ * (owner call 2026-08-28, following CoinGecko), this is the ONLY search field a
+ * visitor sees, so it is painted as a field — full-width bordered box, real
+ * placeholder text, visible `/` hint — rather than an icon button they have to
+ * recognise. It shrinks to an icon only on the narrowest chrome width.
+ */
+export function CommandSearchTrigger({
+  onClick,
+  className,
+}: {
+  onClick: () => void
+  className?: string
+}) {
   const lang = useUIStore((s) => s.language);
   return (
     <button
+      data-header-search
       type="button"
       onClick={onClick}
-      className="flex h-8 w-52 items-center gap-2 rounded-lg border border-transparent dark:border-hair bg-muted/40 px-2.5 text-sm text-muted-foreground/60 motion-base hover:bg-muted/70 hover:text-muted-foreground lg:w-60"
+      aria-label={t(lang, "searchCardsDots")}
+      className={cn(
+        "hairline ease-chrome group flex h-11 w-11 items-center justify-center gap-2 rounded-xl bg-card px-0 text-left text-label transition-[background-color,box-shadow,border-color] hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        "md:w-full md:justify-start md:px-3 lg:h-9",
+        className,
+      )}
     >
-      <Search className="size-3.5 shrink-0" />
-      <span className="flex-1 text-left">{t(lang, "searchCardsDots")}</span>
-      <kbd className="hidden rounded-md border border-hair bg-background px-1.5 py-0.5 font-mono text-micro text-muted-foreground/60 sm:inline">/</kbd>
+      <Search
+        className="size-[18px] shrink-0 text-muted-foreground transition-colors group-hover:text-foreground"
+        aria-hidden
+      />
+      <span className="hidden min-w-0 flex-1 truncate text-body-sm text-muted-foreground md:inline">
+        {t(lang, "searchCardsDots")}
+      </span>
+      <kbd className="hairline hidden shrink-0 rounded-md bg-background px-1.5 py-0.5 font-sans text-micro text-muted-foreground md:inline">
+        /
+      </kbd>
     </button>
   )
 }
 
-export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function CommandSearchModal({
+  open,
+  onClose,
+  sets = [],
+}: {
+  open: boolean
+  onClose: () => void
+  sets?: SetPickerItem[]
+}) {
   const router = useRouter()
   const lang = useUIStore((s) => s.language)
   const listboxId = useId()
   const restoreFocusRef = useRef<HTMLElement | null>(null)
+  const [photoSearchOpen, setPhotoSearchOpen] = useState(false)
+
+  const openPhotoSearch = useCallback(() => {
+    onClose()
+    setPhotoSearchOpen(true)
+  }, [onClose])
 
   // This palette is opened by global header buttons/keyboard shortcuts rather
   // than a DialogTrigger nested under its Root. Remember the last focused
@@ -140,6 +192,20 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
     return recent.filter((r) => r.toLowerCase().includes(tq))
   }, [recent, query])
 
+  const normalizedQuery = query.trim().toLowerCase()
+  const setMatches = useMemo(() => {
+    if (!normalizedQuery) return []
+
+    return sets
+      .filter((set) =>
+        set.code.toLowerCase().includes(normalizedQuery) ||
+        set.name.toLowerCase().includes(normalizedQuery) ||
+        (set.nameEn ?? "").toLowerCase().includes(normalizedQuery) ||
+        (set.nameTh ?? "").toLowerCase().includes(normalizedQuery),
+      )
+      .slice(0, MAX_SET_RESULTS)
+  }, [normalizedQuery, sets])
+
   // Nav shortcuts: all of them when the box is empty (quick links), otherwise
   // those whose localized label matches the query.
   const matchedNav = useMemo(() => {
@@ -149,28 +215,33 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
   }, [query, lang])
 
   const allItems = useMemo(() => {
-    const items: { type: "result" | "search" | "nav" | "recent"; key: string }[] = []
+    const items: { type: "result" | "set" | "search" | "nav" | "recent"; key: string }[] = []
     for (const r of results) items.push({ type: "result", key: r.cardCode })
-    if (results.length > 0) items.push({ type: "search", key: query.trim() })
+    for (const set of setMatches) items.push({ type: "set", key: set.code })
+    if (query.trim().length >= 2) items.push({ type: "search", key: query.trim() })
     for (const a of matchedNav) items.push({ type: "nav", key: a.href })
-    if (results.length === 0) for (const r of filteredRecent) items.push({ type: "recent", key: r })
+    if (results.length === 0 && setMatches.length === 0) {
+      for (const r of filteredRecent) items.push({ type: "recent", key: r })
+    }
     return items
-  }, [results, matchedNav, filteredRecent, query])
+  }, [results, setMatches, matchedNav, filteredRecent, query])
 
-  const searchIndex = results.length
-  const navBase = results.length + (results.length > 0 ? 1 : 0)
-  const recentBase = results.length + matchedNav.length
+  const setBase = results.length
+  const searchIndex = setBase + setMatches.length
+  const hasSearchAction = query.trim().length >= 2
+  const navBase = searchIndex + (hasSearchAction ? 1 : 0)
+  const recentBase = navBase + matchedNav.length
 
   const { activeIdx, setActiveIdx, onKeyDown: handleKeyDown } = useSearchKeyboardNav({
     length: allItems.length,
     onSelect: (i) => {
       const item = allItems[i]
       if (item.type === "result") goToCard(item.key)
+      else if (item.type === "set") goToPage(`/opcg/sets/${item.key}`)
       else if (item.type === "nav") goToPage(item.key)
       else commitSearch(item.key)
     },
     onCommit: () => commitSearch(query),
-    onEscape: onClose,
     arrowUpFloor: -1,
   })
 
@@ -180,7 +251,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
   useEffect(() => {
     const tm = setTimeout(() => setActiveIdx(-1), 0)
     return () => clearTimeout(tm)
-  }, [results, setActiveIdx])
+  }, [results, setMatches, setActiveIdx])
 
   useEffect(() => {
     if (!open) return
@@ -199,10 +270,11 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
     activeIdx >= 0 ? `${listboxId}-option-${activeIdx}` : undefined
 
   return (
+    <>
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
       <DialogContent
         showCloseButton={false}
-        finalFocus={restoreFocusRef}
+        finalFocus={photoSearchOpen ? false : restoreFocusRef}
         className="top-[15vh] block max-w-lg translate-y-0 overflow-hidden rounded-2xl p-0 sm:max-w-lg"
       >
         <DialogTitle className="sr-only">
@@ -254,6 +326,21 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
             </DialogClose>
           </div>
 
+          <div className="border-b border-hair p-2">
+            <button
+              data-command-photo-search
+              type="button"
+              onClick={openPhotoSearch}
+              className="ease-chrome flex min-h-11 w-full items-center gap-2.5 rounded-xl px-3 text-left text-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+            >
+              <Camera className="size-4 text-primary" aria-hidden />
+              <span className="flex-1">{t(lang, "photoSearchTitle")}</span>
+              <span className="hidden max-w-[14rem] truncate text-meta sm:inline">
+                {t(lang, "photoSearchDescription")}
+              </span>
+            </button>
+          </div>
+
           {/* Results */}
           <div
             id={listboxId}
@@ -303,6 +390,48 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                     />
                   </button>
                 ))}
+              </div>
+            )}
+
+            {setMatches.length > 0 && (
+              <div className="p-2">
+                <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
+                  {t(lang, "sets")}
+                </p>
+                {setMatches.map((set, i) => {
+                  const itemIndex = setBase + i
+                  return (
+                    <button
+                      key={set.code}
+                      id={`${listboxId}-option-${itemIndex}`}
+                      type="button"
+                      role="option"
+                      aria-selected={activeIdx === itemIndex}
+                      onClick={() => goToPage(`/opcg/sets/${set.code}`)}
+                      className={cn(
+                        "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left motion-base",
+                        activeIdx === itemIndex ? "bg-accent" : "hover:bg-accent/60",
+                      )}
+                    >
+                      <span className="surface-2 flex size-10 shrink-0 items-center justify-center rounded-lg">
+                        <PackageOpen className="size-4 text-muted-foreground" aria-hidden />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-medium text-foreground">
+                          {getSetName(lang, set)}
+                        </span>
+                        <span className="text-code text-muted-foreground">
+                          {set.code.toUpperCase()}
+                        </span>
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+
+            {hasSearchAction && (
+              <div className="px-2 pb-2">
                 <button
                   id={`${listboxId}-option-${searchIndex}`}
                   type="button"
@@ -310,11 +439,11 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
                   aria-selected={activeIdx === searchIndex}
                   onClick={() => commitSearch(query)}
                   className={cn(
-                    "mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-meta motion-base hover:bg-accent/60 hover:text-foreground",
+                    "flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-meta motion-base hover:bg-accent/60 hover:text-foreground",
                     activeIdx === searchIndex && "bg-accent text-foreground",
                   )}
                 >
-                  <Search className="size-3" />
+                  <Search className="size-3" aria-hidden />
                   {t(lang, "viewAllResults")} &ldquo;{query.trim()}&rdquo;
                 </button>
               </div>
@@ -355,7 +484,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
               </div>
             )}
 
-            {results.length === 0 && !loading && filteredRecent.length > 0 && (
+            {results.length === 0 && setMatches.length === 0 && !loading && filteredRecent.length > 0 && (
               <div className="p-2">
                 <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
                   {t(lang, "recentSearches")}
@@ -383,6 +512,7 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
             {!loading &&
               query.trim().length >= 2 &&
               results.length === 0 &&
+              setMatches.length === 0 &&
               !error && (
               <div className="px-4 py-8 text-center text-sm text-muted-foreground">
                 {t(lang, "noResultsFor")} &ldquo;{query.trim()}&rdquo;
@@ -397,5 +527,12 @@ export function CommandSearchModal({ open, onClose }: { open: boolean; onClose: 
           </div>
       </DialogContent>
     </Dialog>
+    <PhotoSearchButton
+      open={photoSearchOpen}
+      onOpenChange={setPhotoSearchOpen}
+      trigger={null}
+      finalFocus={restoreFocusRef}
+    />
+    </>
   )
 }

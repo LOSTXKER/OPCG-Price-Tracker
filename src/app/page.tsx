@@ -5,6 +5,7 @@ import {
   HomeFeaturedCard,
   HomeMiniTable,
 } from "@/components/home/home-client-sections";
+import { AdInventorySlot } from "@/components/ads/ad-inventory-slot";
 import { HomeMarketIntro } from "@/components/home/home-market-intro";
 import { HomeMarketOverview } from "@/components/home/home-market-overview";
 import { HomeSearchHero } from "@/components/home/home-search-hero";
@@ -69,15 +70,18 @@ export default async function HomePage() {
   // Google was finding an internal link to /marketplace from the pillar page.
   const marketplaceEnabled = await isMarketplaceEnabled();
 
-  // Formatted on the server so the market intro interpolates one stable date
-  // string (React 19 forbids Date work during a client render — same
-  // constraint as /opcg/most-expensive's `updatedLabel`).
-  const updatedLabel = lastUpdated
-    ? new Date(lastUpdated).toLocaleDateString("th-TH", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })
+  // Formatted on the server, once per language, so the client hero only picks
+  // a stable pre-built string (React 19 forbids Date work during a client
+  // render, and server/client timezones could disagree on the calendar day).
+  // th-TH renders the Buddhist year Thai readers expect; EN/JP now get their
+  // own calendars instead of inheriting the Thai one.
+  const dateOpts = { day: "numeric", month: "long", year: "numeric" } as const;
+  const updatedLabels = lastUpdated
+    ? {
+        TH: new Date(lastUpdated).toLocaleDateString("th-TH", dateOpts),
+        EN: new Date(lastUpdated).toLocaleDateString("en-GB", dateOpts),
+        JP: new Date(lastUpdated).toLocaleDateString("ja-JP", dateOpts),
+      }
     : null;
 
   if (totalCards === 0) {
@@ -154,16 +158,29 @@ export default async function HomePage() {
         )}
       />
 
-      {/* Universal search hero — the page's focal point (VISION §5 teleport) */}
-      <HomeSearchHero sets={setOptions} trending={gainers} />
+      {/* Search now lives in the global navbar; keep one compact, visible H1
+          plus ONE lead sentence (coverage + grades + freshness date — owner
+          ruling 2026-08-28). */}
+      <HomeSearchHero
+        totalCards={totalCards}
+        totalSets={sets.length}
+        updatedLabels={updatedLabels}
+      />
 
       {/* Highlights: มูลค่าสูงสุด · ราคาขึ้นมากสุด · ราคาลงมากสุด. Minimal — no
           dividers, no borders, no boxes; columns separated by whitespace alone so
-          the page reads calm and editorial rather than gridded.
+          the page reads calm and editorial rather than gridded. The sitewide
+          figures (การ์ดทั้งหมด / มูลค่ารวม / JPY-THB) live in the header ticker,
+          not here — owner call 2026-08-28, after they briefly appeared in both.
+          A fourth track opens at `xl` for advertising; below that the three
+          editorial blocks own the row and the ad simply does not render.
           HIDDEN ON PHONES (เบส): stacked, the three blocks pushed the market list
           a full screen down. From `sm` up they sit side by side and cost nothing,
           so they stay. Kept in the DOM (display:none) — no SEO loss. */}
-      <section className="mt-3 hidden gap-x-8 gap-y-6 sm:mt-4 sm:grid sm:grid-cols-2 lg:grid-cols-3">
+      <section
+        className="mt-3 hidden gap-x-8 gap-y-6 sm:mt-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        data-slot="home-highlight-grid"
+      >
         {featured && (
           <div className="sm:col-span-2 lg:col-span-1">
             <HomeFeaturedCard card={featured} />
@@ -171,6 +188,12 @@ export default async function HomePage() {
         )}
         <HomeMiniTable cards={gainers} type="gainers" />
         <HomeMiniTable cards={losers} type="losers" />
+        {/* Stretches with the row instead of pinning to its top: the slot's own
+            frame is now "fill the column", so the ad ends where the editorial
+            columns beside it end. */}
+        <div className="hidden xl:block" data-slot="home-highlight-ad">
+          <AdInventorySlot zone="home-highlight-rail" />
+        </div>
       </section>
 
       {/* The market — core browse tool. Generous air above so it reads as its
@@ -183,13 +206,9 @@ export default async function HomePage() {
           filterDefinitions={filterDefinitions}
           sets={setOptions}
         >
-          {/* The section's H2 + context prose — numbers alone read as a thin
-              page, and the table had no heading at all (SEO plan §3.1). */}
-          <HomeMarketIntro
-            totalCards={totalCards}
-            totalSets={sets.length}
-            updatedLabel={updatedLabel}
-          />
+          {/* The section's slim H2 — the keyword phrase and the freshness
+              date moved up into the hero lead (owner ruling 2026-08-28). */}
+          <HomeMarketIntro />
         </HomeMarketOverview>
       </div>
 

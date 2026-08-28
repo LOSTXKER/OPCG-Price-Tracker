@@ -59,7 +59,14 @@ export type SetSeoData = {
   /** Raw SetType enum value, e.g. "BOOSTER" / "STARTER". */
   type: string;
   releaseDate: Date | string | null;
+  /** Distinct printed Bandai numbers (all printings of OP02-001 count once). */
+  baseCardCount: number;
+  /** Alternate-art and reprint catalogue records. */
+  variantCount: number;
+  /** Total catalogue records, including rows that do not yet have a price. */
   cardCount: number;
+  /** Freshest Raw market row backing the default set-page prices. */
+  latestPriceAt: Date | string | null;
   packsPerBox: number | null;
   cardsPerPack: number | null;
   rarities: SetSeoRarity[];
@@ -176,19 +183,10 @@ export function rarityThaiName(rarity: string): string | null {
   return isParallel ? `พาราเรล${thai}` : thai;
 }
 
-/**
- * Heading label for a rarity section: Thai readers search "SEC คือ" but also
- * "ซีเคร็ทแรร์", so the heading carries both.
- */
-export function rarityHeadingLabel(
-  lang: Language,
-  rarity: string,
-  englishName: string,
-): string {
-  if (lang !== "TH") return englishName;
-  const thai = rarityThaiName(rarity);
-  return thai ? `${englishName} (${thai})` : englishName;
-}
+// The rarity-wall headings used to append the Thai gloss — "Secret Rare
+// (ซีเคร็ทแรร์)" — via a rarityHeadingLabel helper. เบส removed it 2026-08-27:
+// the glossed heading wrapped on phones. The Thai names above still reach the
+// page through the drop-rate table (rarityThaiName), so the keyword survives.
 
 const SET_TYPE_TH: Record<string, string> = {
   BOOSTER: "บูสเตอร์",
@@ -219,10 +217,6 @@ export function setTypeHeading(lang: Language, type: string): string {
   return thai ? `${thai} (${english})` : english;
 }
 
-function setTypeThai(type: string): string {
-  return SET_TYPE_TH[normalizeType(type)] ?? "การ์ด";
-}
-
 /* ------------------------------------------------------------------ */
 /*  Set detail — metadata                                              */
 /* ------------------------------------------------------------------ */
@@ -242,6 +236,12 @@ export function buildSetDetailMeta(
 ): { title: string; description: string } {
   const code = set.code.toUpperCase();
   const count = formatCount(set.cardCount);
+  const baseCount = formatCount(set.baseCardCount);
+  const updated = formatSetDate(lang, set.latestPriceAt);
+  const variantPart =
+    set.variantCount > 0
+      ? ` โดยมี ${formatCount(set.variantCount)} เวอร์ชันพิเศษ`
+      : "";
 
   // Google truncates descriptions around ~160 chars — the old template ran
   // ~195-205 with a long top-card name, cutting the drop-rate benefit and the
@@ -254,25 +254,27 @@ export function buildSetDetailMeta(
 
   if (lang === "TH") {
     const title = clampTitle([
-      `ราคาการ์ดวันพีช ${code} ${set.name} ทุกใบ อัปเดตทุกวัน`,
-      `ราคาการ์ดวันพีช ${code} ${set.name} ทุกใบ`,
-      `ราคาการ์ดวันพีช ${code} ทุกใบ อัปเดตทุกวัน`,
+      `ราคาการ์ดวันพีช ${code} ${set.name} ทุกเวอร์ชัน`,
+      `ราคาการ์ดวันพีช ${code} ทุกเวอร์ชัน`,
     ]);
     const top = set.topCard
       ? ` ใบแพงสุด ${set.topCard.name} ${priceLabel(set.topCard.priceJpy)}`
       : "";
-    const tail = " พร้อมอัตราออกต่อกล่องของการ์ดวันพีซทุกระดับ";
+    const freshness = updated
+      ? ` ล่าสุด ${updated} จากตลาดญี่ปุ่น`
+      : " จากตลาดญี่ปุ่น";
+    const lead = `เช็กราคาการ์ดวันพีซ ${code} ครบ ${count} เวอร์ชัน ครอบคลุม ${baseCount} หมายเลขหลัก${variantPart} เลือก Raw/PSA${freshness}`;
     const description = clampDesc([
-      `เช็คราคาการ์ดวันพีช ${code} ${set.name} ครบ ${count} ใบ อัปเดตทุกวัน —${top}${tail}`,
-      `เช็คราคาการ์ดวันพีช ${code} ครบ ${count} ใบ อัปเดตทุกวัน —${top}${tail}`,
-      `เช็คราคาการ์ดวันพีช ${code} ${set.name} ครบ ${count} ใบ อัปเดตทุกวัน —${tail}`,
+      `${lead}.${top} พร้อมอัตราออกต่อกล่อง`,
+      `${lead} พร้อมอัตราออกต่อกล่อง`,
+      lead,
     ]);
     return { title, description };
   }
 
   const title = clampTitle([
-    `${code} ${set.name} — Every Card Price, Updated Daily`,
-    `${code} ${set.name} — Card Prices`,
+    `${code} ${set.name} — Every Card Version Price`,
+    `${code} ${set.name} — Card Version Prices`,
   ]);
   const top = set.topCard
     ? ` Most valuable: ${set.topCard.name} ${priceLabel(set.topCard.priceJpy)}.`
@@ -280,9 +282,8 @@ export function buildSetDetailMeta(
   return {
     title,
     description: clampDesc([
-      `All ${count} cards in One Piece Card Game set ${code} ${set.name} with daily prices.${top} Includes per-box drop rates.`,
-      `All ${count} cards in set ${code} with daily prices.${top} Includes per-box drop rates.`,
-      `All ${count} cards in One Piece Card Game set ${code} with daily prices and per-box drop rates.`,
+      `Prices for all ${count} ${code} versions across ${baseCount} card numbers, including ${formatCount(set.variantCount)} special printings. Raw and PSA data${updated ? ` updated ${updated}` : ""} from the Japanese market.${top}`,
+      `Prices for all ${count} ${code} versions: ${baseCount} card numbers with Raw and PSA prices from the Japanese market and per-box pull rates.`,
     ]),
   };
 }
@@ -295,31 +296,27 @@ export function buildSetDetailMeta(
 export function buildSetIntroHeading(lang: Language, set: SetSeoData): string {
   const code = set.code.toUpperCase();
   return lang === "TH"
-    ? `ราคาการ์ดวันพีช ${code} ทุกใบ`
-    : `Every card price in ${code}`;
+    ? `ราคาการ์ดวันพีช ${code} ทุกเวอร์ชัน`
+    : `Every ${code} card version price`;
 }
 
 /**
- * ONE short keyword sentence (owner ruling เบส 2026-08-07, from the live
- * page): every fact this paragraph used to carry is ALREADY VISIBLE on the
- * page — the top card + price sit in the hero directly above it, the rarity
- * breakdown IS the price wall's section headings below, and the box
- * configuration lives in the drop-rate section and its FAQ item. Restating
- * them here read as a data dump. What remains is the only sentence a reader
- * needs at this point: what the page is, how fresh it is, both spellings.
+ * One compact sentence directly under the price-wall heading. The hero already
+ * owns set identity, total card count and highest-value card, so this line only
+ * explains the comparison lens and the verified Raw-data freshness.
  */
 export function buildSetIntro(lang: Language, set: SetSeoData): string[] {
   const code = set.code.toUpperCase();
-  const released = formatSetDate(lang, set.releaseDate);
+  const updated = formatSetDate(lang, set.latestPriceAt);
 
   if (lang === "TH") {
     return [
-      `${code} ${set.name} — ชุด${setTypeThai(set.type)}ของการ์ดวันพีช (One Piece Card Game)${released ? ` วางจำหน่าย ${released}` : ""} เช็คราคาการ์ดวันพีซครบทั้ง ${formatCount(set.cardCount)} ใบ อัปเดตทุกวันจากตลาดญี่ปุ่น`,
+      `เปรียบเทียบราคาการ์ดวันพีซแบบ Raw และ PSA จากตลาดญี่ปุ่น${updated ? ` โดยราคา Raw อัปเดตล่าสุด ${updated}` : " พร้อมตัวกรองตามความหายาก"}`,
     ];
   }
 
   return [
-    `${code} ${set.name} — a ${SET_TYPE_EN[normalizeType(set.type)] ?? "set"} for the One Piece Card Game${released ? `, released ${released}` : ""}. Every one of its ${formatCount(set.cardCount)} cards is priced daily from the Japanese market.`,
+    `Compare Raw and PSA prices for ${code} using Japanese-market data${updated ? `; Raw prices were last updated ${updated}` : ", with rarity filters"}.`,
   ];
 }
 
@@ -351,13 +348,18 @@ export function buildSetFaq(lang: Language, set: SetSeoData): SeoFaqItem[] {
   const withDropRate = set.rarities.filter((r) => r.avgPerBox != null);
 
   if (lang === "TH") {
+    const setCountSummary = `${formatCount(set.cardCount)} เวอร์ชัน ครอบคลุม ${formatCount(set.baseCardCount)} หมายเลขหลัก${
+      set.variantCount > 0
+        ? ` โดย ${formatCount(set.variantCount)} รายการเป็นเวอร์ชันพิเศษ`
+        : ""
+    }`;
     const items: SeoFaqItem[] = [
       {
         question: `กล่อง ${code} มีกี่ซอง ซองละกี่ใบ`,
         answer:
           packs && perPack
-            ? `กล่องของชุด ${code} มี ${packs} ซอง ซองละ ${perPack} ใบ รวม ${formatCount(packs * perPack)} ใบต่อกล่อง ส่วนการ์ดที่ต่างกันในชุดนี้มีทั้งหมด ${formatCount(set.cardCount)} ใบ`
-            : `ระบบยังไม่มีข้อมูลจำนวนซองต่อกล่องของชุด ${code} โดยทั่วไปบูสเตอร์การ์ดวันพีชฉบับญี่ปุ่นจะเป็นกล่องละ ${PACKS_PER_BOX} ซอง ซองละ ${CARDS_PER_PACK_JP} ใบ (รวม ${PACKS_PER_BOX * CARDS_PER_PACK_JP} ใบต่อกล่อง) ส่วนการ์ดที่ต่างกันในชุดนี้มี ${formatCount(set.cardCount)} ใบ`,
+            ? `กล่องของชุด ${code} มี ${packs} ซอง ซองละ ${perPack} ใบ รวม ${formatCount(packs * perPack)} ใบต่อกล่อง ส่วนรายการในชุดนี้แยกเป็น ${setCountSummary}`
+            : `ระบบยังไม่มีข้อมูลจำนวนซองต่อกล่องของชุด ${code} โดยทั่วไปบูสเตอร์การ์ดวันพีชฉบับญี่ปุ่นจะเป็นกล่องละ ${PACKS_PER_BOX} ซอง ซองละ ${CARDS_PER_PACK_JP} ใบ (รวม ${PACKS_PER_BOX * CARDS_PER_PACK_JP} ใบต่อกล่อง) ส่วนรายการในชุดนี้แยกเป็น ${setCountSummary}`,
       },
       {
         question: `การ์ดที่แพงที่สุดใน ${code} คือใบไหน`,
@@ -402,8 +404,8 @@ export function buildSetFaq(lang: Language, set: SetSeoData): SeoFaqItem[] {
       question: `How many packs and cards are in a ${code} box?`,
       answer:
         packs && perPack
-          ? `A ${code} box holds ${packs} packs of ${perPack} cards (${formatCount(packs * perPack)} cards per box). The set itself contains ${formatCount(set.cardCount)} distinct cards.`
-          : `Pack-per-box data for ${code} is not in the database yet. Japanese One Piece Card Game boosters are typically ${PACKS_PER_BOX} packs of ${CARDS_PER_PACK_JP} cards. The set contains ${formatCount(set.cardCount)} distinct cards.`,
+          ? `A ${code} box holds ${packs} packs of ${perPack} cards (${formatCount(packs * perPack)} cards per box). The catalogue has ${formatCount(set.cardCount)} versions across ${formatCount(set.baseCardCount)} card numbers, including ${formatCount(set.variantCount)} special printings.`
+          : `Pack-per-box data for ${code} is not in the database yet. Japanese One Piece Card Game boosters are typically ${PACKS_PER_BOX} packs of ${CARDS_PER_PACK_JP} cards. The catalogue has ${formatCount(set.cardCount)} versions across ${formatCount(set.baseCardCount)} card numbers, including ${formatCount(set.variantCount)} special printings.`,
     },
     {
       question: `Which card is the most expensive in ${code}?`,
@@ -606,8 +608,11 @@ export function setDropRateCopy(lang: Language, code: string) {
   };
 }
 
+// One short line (เบส 2026-08-27): the old question-plus-CTA phrasing wrapped
+// to two lines on phones, delaying the first card row. The anchor keeps the
+// keyword ("ความหายากการ์ดวันพีช") so the internal link loses nothing.
 export function setRarityGuideLinkLabel(lang: Language): string {
   return lang === "TH"
-    ? "ความหายากแต่ละระดับต่างกันยังไง? อ่านคู่มือความหายากการ์ดวันพีช"
-    : "What do these rarity codes mean? Read the rarity guide";
+    ? "คู่มือความหายากการ์ดวันพีช"
+    : "One Piece rarity guide";
 }
