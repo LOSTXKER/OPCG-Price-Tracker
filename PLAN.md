@@ -3,6 +3,18 @@
 > งานใหญ่แตกเป็น task ติ๊กได้ · ทำทีละอัน · ติ๊กเมื่อ **verify แล้ว** (ไม่ใช่แค่เขียนเสร็จ)
 > ลำดับ milestone = ข้อเสนอ — เบสสลับได้ · แผนธุรกิจ/north star อยู่ `doc/archive/detailed-plan-2026-04-28.md` (archived snapshot) ไม่ใช่ไฟล์นี้
 
+## 📱 Mobile home + chrome "กลาง 5" (owner selected · 2026-08-29)
+
+> เบสเลือกจากหน้าเทียบ `/proto/mobile-home`: **โครงหน้าแบบ A "จัดระเบียบ" + แถบล่างแบบ "กลาง 5"** (ปุ่มค้นหานูนกลางแถบล่าง · รายการโปรดขึ้นเป็นไอคอนหัวใจบน navbar มือถือ) · ขอบเขต = หน้าแรกฝั่งมือถือ + chrome มือถือเท่านั้น ไม่แตะ desktop chrome (งานอีก session เพิ่งขึ้น master)
+
+- [x] **MHOME-01 — Chrome มือถือ:** `bottom-nav.tsx` ถอด `/watchlist` ออกจากแท็บ แล้วแทรกปุ่มค้นหาทรงกลมนูนกลางแถบ (2 แท็บ + FAB + 2 แท็บ · FAB เปิด search modal ผ่าน `setSearchOpen` ไม่ใช่ลิงก์ · ≥44px · aria ครบ) · `header-mobile.tsx` ถอดปุ่มค้นหาออก (ย้ายลงล่างแล้ว) แล้วใส่ไอคอนหัวใจ → `/watchlist` แทนช่องเดิม
+- [x] **MHOME-02 — Hero หด:** `home-search-hero.tsx` ถอด `px-4` ที่ซ้อนกับ gutter หน้า · โปรยเหลือ 1 บรรทัด + บรรทัด meta (`N ใบ · M ชุด · อัปเดตล่าสุด <วันที่จริง>`) · แก้ `buildHomeHeroLead` ใน `lib/seo/copy/home.ts` ให้สั้นลงโดยคง keyword "การ์ดวันพีช"/OPTCG และห้ามสัญญา schedule
+- [x] **MHOME-03 — หัวแถบชุดบรรทัดเดียว:** `home-set-strip.tsx` บนมือถือให้หัวเป็นแถวเดียว (h2 ซ้าย + "ดูชุดทั้งหมด" ขวา) ซ่อนบรรทัดคำอธิบายใต้หัวเฉพาะ `<sm` · desktop คงของเดิม (ลูกศร + คำอธิบาย)
+- [x] **MHOME-04 — แถบควบคุม 3→2 แถว + ขอบเดียว:** `home-market-overview.tsx` รวมแถวเลือกชุด/ตัวกรอง/มุมมองเป็นแถวเดียว · แถวติดหนึบ = ราง grade + ชุดเรียง (ราคา | เปลี่ยนแปลง + ปุ่มช่วงเวลากดวน) · ทุกบล็อกใช้ขอบ 20px เดียวกัน (เลิก `px-4` ซ้อน, sticky `-mx-5 px-5`) · sticky ใช้ token `z-sticky` แทน `z-10`
+- [x] **MHOME-05 — ระยะห่างหน้าแรก:** `page.tsx` ลด `mt-9 sm:mt-12` เป็นระยะ section มาตรฐาน 4px scale บนมือถือ (desktop คงเดิม)
+- [x] **MHOME-06 — Verify:** tsc ผ่าน · lint **0 errors** (26 warnings เดิม) · test **154 ไฟล์/924 ข้อผ่าน** (เพิ่ม `mobile-home-layout.test.tsx` 6 ข้อล็อกกติกาใหม่ + อัปเดต 2 เทสต์เดิมที่ล็อกค้นหาไว้บน header มือถือ) · build **214 หน้า** · เปิดจริง 375×812: ขอบซ้าย 20px ตรงกันทุกบล็อก (h1 · meta · h2 · pill แรก · SetPicker · ราง grade) · ราคาชิดขวา 355 ตรงกับป้ายเรียง 354 · sticky เกาะที่ 56px พอดี · FAB ค้นหา hit-test ผ่าน เปิด modal + โฟกัสช่องพิมพ์จริง · หัวใจ 44px ลิงก์ `/watchlist` · console 0 error · Light mode ปุ่มค้นหาใช้สีเดียวกับ CTA หลักของเว็บ (`#73533e` ขาวบนน้ำตาล ผ่าน AA) · desktop 1280px ไม่กระทบ (ตารางเดิม · ราง grade เหลือ 1 · chrome มือถือซ่อนหมด) · **แถวราคาแรก 608px → 496px (เร็วขึ้น 112px ≈ 2 แถว)** วัดเทียบ production จริง
+- [ ] **MHOME-07 — เก็บบ้าน:** ลบ `/proto/mobile-home` เมื่อเบสรับงานบนเว็บจริงแล้ว (ตอนนี้เก็บไว้ให้ย้อนดูแบบที่ไม่ได้เลือก)
+
 ## 📐 Site-wide market canvas (owner direction · 2026-08-28)
 
 > ขยายพื้นที่ข้อมูลของหน้าปกติให้ใกล้เว็บตลาดอย่าง CoinMarketCap/CoinGecko โดยคง mobile เดิมและคง reading/form/dialog widths ที่ตั้งใจแคบ ไม่เปลี่ยน spacing, typography, query, state หรือ workflow

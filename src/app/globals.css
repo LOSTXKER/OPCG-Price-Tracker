@@ -237,10 +237,18 @@
    controls. Once the dismissible dock leaves the DOM, every control returns to
    its original bottom offset without route-specific state or duplicated logic. */
 :root:has([data-floating-ad-dock]) {
-  --floating-ad-clearance: 5rem;
+  --floating-ad-clearance: 6.75rem;
 }
 
 @media (min-width: 640px) {
+  :root:has([data-floating-ad-dock]) {
+    --floating-ad-clearance: 8.25rem;
+  }
+}
+
+/* From the chrome breakpoint the bottom nav (and its raised search button) is
+   gone, so the dock no longer has to clear them. */
+@media (min-width: 768px) {
   :root:has([data-floating-ad-dock]) {
     --floating-ad-clearance: 6.5rem;
   }

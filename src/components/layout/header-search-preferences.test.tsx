@@ -214,11 +214,25 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     expect(search).toContain("finalFocus={restoreFocusRef}")
   })
 
-  it("keeps the phone header's own search entry and its /more preferences", () => {
+  // Owner selection 2026-08-29 (from /proto/mobile-home): on phones search is
+  // the raised button in the middle of the bottom nav, and the header slot it
+  // used to occupy now carries รายการโปรด — the tab that stepped aside for it.
+  // Exactly ONE phone search entry either way.
+  it("puts the phone's search entry in the bottom nav and watchlist in the header", () => {
     const mobile = source("src/components/layout/header-mobile.tsx")
+    const nav = source("src/components/layout/bottom-nav.tsx")
     const more = source("src/app/more/more-client.tsx")
 
-    expect(occurrences(mobile, "data-mobile-search-trigger")).toBe(1)
+    expect(mobile).not.toContain("data-mobile-search-trigger")
+    expect(occurrences(mobile, "data-mobile-watchlist-trigger")).toBe(1)
+    expect(mobile).toContain('href="/watchlist"')
+
+    // The bottom-nav button opens the modal in place — it must not become a
+    // route, or the raised control would take the reader off their page.
+    expect(occurrences(nav, "setSearchOpen(true)")).toBe(1)
+    expect(nav).toContain('aria-haspopup="dialog"')
+    expect(nav).not.toContain('href="/watchlist"')
+
     expect(mobile).toContain("surface-2 hairline")
     // Phone chrome is untouched by the desktop revert: its theme toggle still
     // lives on /more, not in the row.

@@ -67,7 +67,25 @@ export function buildHomeHeroHeading(lang: Language): string {
  * last-updated date is the page's freshness/E-E-A-T signal: a real DB date,
  * never a frequency claim — competitors' frozen listicles cannot show one.
  */
-export function buildHomeHeroLead(
+export function buildHomeHeroLead(lang: Language): string {
+  switch (lang) {
+    case "EN":
+      return "Raw and PSA 10 market prices for the One Piece Card Game (OPTCG), based on the Japanese market";
+    case "JP":
+      return "One Piece Card Game（OPTCG）のRaw／PSA 10相場を日本市場ベースで掲載";
+    default:
+      return "ราคากลาง Raw และ PSA 10 ของการ์ดวันพีช (OPTCG) อ้างอิงตลาดญี่ปุ่น";
+  }
+}
+
+/**
+ * The counts + freshness date, split off the lead sentence (owner selection
+ * 2026-08-29, from /proto/mobile-home): as one long sentence this wrapped to
+ * five lines on a 390px phone and pushed the market list most of a screen
+ * down. Same facts, one dense tabular line — and the visible last-updated date
+ * remains a real DB date, never a frequency claim.
+ */
+export function buildHomeHeroMeta(
   lang: Language,
   data: { totalCards: number; totalSets: number; updatedLabel: string | null }
 ): string {
@@ -76,15 +94,15 @@ export function buildHomeHeroLead(
 
   switch (lang) {
     case "EN":
-      return `Meecard tracks Raw and PSA 10 market prices for ${cards} One Piece Card Game (OPTCG) cards across ${sets} sets, based on the Japanese market${
+      return `${cards} cards · ${sets} sets${
         data.updatedLabel ? ` · Updated ${data.updatedLabel}` : ""
       }`;
     case "JP":
-      return `MeecardはOne Piece Card Game（OPTCG）全${sets}弾・${cards}枚のRaw／PSA 10相場を日本市場ベースで掲載${
+      return `全${sets}弾・${cards}枚${
         data.updatedLabel ? ` · 最終更新 ${data.updatedLabel}` : ""
       }`;
     default:
-      return `Meecard ติดตามราคากลาง Raw และ PSA 10 ของ One Piece Card Game (OPTCG) ครบ ${cards} ใบ จาก ${sets} ชุด อ้างอิงตลาดญี่ปุ่น${
+      return `${cards} ใบ · ${sets} ชุด${
         data.updatedLabel ? ` · อัปเดตล่าสุด ${data.updatedLabel}` : ""
       }`;
   }

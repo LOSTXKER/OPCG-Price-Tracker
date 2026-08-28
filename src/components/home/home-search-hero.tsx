@@ -5,6 +5,7 @@ import { useUIStore } from "@/stores/ui-store"
 import {
   buildHomeHeroHeading,
   buildHomeHeroLead,
+  buildHomeHeroMeta,
 } from "@/lib/seo/copy/home"
 
 /**
@@ -34,14 +35,21 @@ export function HomeSearchHero({
 
   return (
     <section className="relative">
-      <div className="px-4 pb-2 pt-2 sm:pb-4 sm:pt-4">
+      {/* No horizontal padding of its own: the page container already sets the
+          one gutter every block on this page lines up on (owner selection
+          2026-08-29 — the old px-4 inset the hero 16px past the set strip and
+          the market rows). */}
+      <div className="pb-2 pt-2 sm:pb-4 sm:pt-4">
         {/* The H1 is the page's one keyword-bearing heading and must remain
             real visible text. */}
         <h1 className="text-h1 text-foreground">
           {buildHomeHeroHeading(lang)}
         </h1>
         <p className="mt-1 max-w-3xl text-body-sm leading-relaxed text-muted-foreground">
-          {buildHomeHeroLead(lang, {
+          {buildHomeHeroLead(lang)}
+        </p>
+        <p className="mt-1.5 text-meta tabular-nums">
+          {buildHomeHeroMeta(lang, {
             totalCards,
             totalSets,
             updatedLabel: updatedLabels?.[lang] ?? null,

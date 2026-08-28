@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { LogIn, Search } from "lucide-react";
+import { Heart, LogIn } from "lucide-react";
+
+import { usePathname } from "next/navigation";
 
 import { NotificationBell } from "@/components/layout/notification-bell";
 import { HeaderCatalogControl } from "@/components/layout/header-catalog-control";
@@ -10,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import type { SetPickerItem } from "@/components/shared/set-picker";
 import { useScrolled } from "@/hooks/use-scrolled";
 import { useUIStore } from "@/stores/ui-store";
+import { isNavActive } from "@/lib/game/constants";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -19,10 +22,11 @@ import { cn } from "@/lib/utils";
  * labels and separators yield as space tightens. The bear is the stable,
  * compact home affordance at every phone width.
  *
- * Search remains a global phone action on every route, including Home. It is
- * the only search entry in the top viewport now, so its quiet filled surface
- * distinguishes it from notification/account utilities without stealing width
- * from the Game → Set control.
+ * Search is NOT here (owner selection 2026-08-29): it is the raised round
+ * button in the middle of the bottom nav, where the thumb already rests. Its
+ * old slot carries รายการโปรด instead — the tab that gave up its place in the
+ * bar for that button — so the row keeps exactly the width it had and the
+ * watchlist stays one tap from every route.
  *
  * The theme toggle deliberately does NOT live here: it already ships in
  * "ดูเพิ่มเติม", and its 44px slot was the width the set control needed for the
@@ -48,7 +52,7 @@ export function HeaderMobile({
   onSetsRetry: () => void;
 }) {
   const language = useUIStore((s) => s.language);
-  const setSearchOpen = useUIStore((s) => s.setSearchOpen);
+  const pathname = usePathname() ?? "/";
 
   // Same collapsing chrome as the desktop header — starts false (hydration- and
   // scroll-restoration-safe), corrects on mount. CHROME-11: one shared hook.
@@ -91,15 +95,22 @@ export function HeaderMobile({
         />
 
         <Button
-          data-mobile-search-trigger
-          type="button"
+          data-mobile-watchlist-trigger
           variant="ghost"
           size="icon-sm"
-          aria-label={t(language, "search")}
-          onClick={() => setSearchOpen(true)}
-          className="surface-2 hairline min-h-11 min-w-11 rounded-full text-foreground"
+          aria-label={t(language, "watchlistNav")}
+          aria-current={
+            isNavActive(pathname, "/watchlist") ? "page" : undefined
+          }
+          className={cn(
+            "surface-2 hairline min-h-11 min-w-11 rounded-full",
+            isNavActive(pathname, "/watchlist")
+              ? "text-primary"
+              : "text-foreground",
+          )}
+          render={<Link href="/watchlist" />}
         >
-          <Search className="size-[18px]" />
+          <Heart className="size-[18px]" />
         </Button>
 
         {isAuthenticated && <NotificationBell />}

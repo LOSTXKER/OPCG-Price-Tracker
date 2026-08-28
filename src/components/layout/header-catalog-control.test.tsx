@@ -184,8 +184,12 @@ describe("header catalog topology", () => {
     expect(mobile).not.toContain("min-[480px]:inline")
     expect(mobile).not.toContain('{!isHome && (')
     expect(mobile).not.toContain("const isHome")
-    expect(mobile).toContain("setSearchOpen(true)")
-    expect(mobile).toContain('<Search className="size-[18px]" />')
+    // Owner selection 2026-08-29: search left this row for the raised button
+    // in the bottom nav, and รายการโปรด took the slot it vacated — same
+    // geometry, one tap, and only ONE search entry on the phone.
+    expect(mobile).not.toContain("setSearchOpen(true)")
+    expect(mobile).not.toContain('<Search className="size-[18px]" />')
+    expect(mobile).toContain('<Heart className="size-[18px]" />')
     expect(mobile).toContain("{isAuthenticated && <NotificationBell />}")
     // Owner decision 2026-08-27: the phone row's theme toggle moved to
     // "ดูเพิ่มเติม" so the set control could keep the width its name needs.
