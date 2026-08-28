@@ -33,6 +33,18 @@ export interface UIState {
   dismissedSwitcherHint: boolean;
   /** Shared, persisted balance privacy for portfolio hub and detail pages. */
   portfolioBalanceHidden: boolean;
+  /**
+   * The set the page you are on belongs to, when the URL cannot say it.
+   *
+   * The header's set control reads the code straight out of `/sets/<code>`,
+   * but a card page's URL carries only the card. Deriving the set from the
+   * card code is wrong for 1 card in 6 — reprints and promos keep their
+   * original code while living in another set (`OP09-006_r1` is in ST23) — so
+   * the card page, which already has the real set, publishes it here on mount
+   * and clears it on the way out. Never persisted: it describes the current
+   * page, not a preference.
+   */
+  activeSetCode: string | null;
   setLanguage: (language: Language) => void;
   cycleLanguage: () => void;
   setCurrency: (currency: Currency) => void;
@@ -44,6 +56,7 @@ export interface UIState {
   setUnreadMessages: (count: number) => void;
   dismissSwitcherHint: () => void;
   setPortfolioBalanceHidden: (hidden: boolean) => void;
+  setActiveSetCode: (code: string | null) => void;
 }
 
 export function selectPersistedUIState(state: UIState) {
@@ -70,6 +83,7 @@ export const useUIStore = create<UIState>()(
       unreadMessages: 0,
       dismissedSwitcherHint: false,
       portfolioBalanceHidden: false,
+      activeSetCode: null,
       setLanguage: (language) => {
         writeLangCookie(language);
         set({ language });
@@ -94,6 +108,7 @@ export const useUIStore = create<UIState>()(
       setUnreadMessages: (count) => set({ unreadMessages: count }),
       dismissSwitcherHint: () => set({ dismissedSwitcherHint: true }),
       setPortfolioBalanceHidden: (portfolioBalanceHidden) => set({ portfolioBalanceHidden }),
+      setActiveSetCode: (activeSetCode) => set({ activeSetCode }),
     }),
     {
       name: "kuma-ui-preferences",
