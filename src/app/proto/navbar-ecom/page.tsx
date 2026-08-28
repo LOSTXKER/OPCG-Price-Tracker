@@ -2,14 +2,13 @@
 
 import Image from "next/image"
 import { useTheme } from "next-themes"
-import { useRef, useState, useSyncExternalStore } from "react"
+import { useState, useSyncExternalStore } from "react"
 import {
   ArrowDown,
   ArrowUp,
   Bell,
   Briefcase,
   ChevronDown,
-  ChevronLeft,
   ChevronRight,
   Heart,
   Menu,
@@ -28,7 +27,7 @@ import { cn } from "@/lib/utils"
 
 /* ------------------------------------------------------------------ data */
 
-type Variant = "current" | "boxCompact" | "boxFull"
+type Variant = "current" | "calm" | "figuresDown" | "twoRow"
 
 /** ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.) เพื่อเทียบแบบตาต่อตา */
 const STATS = {
@@ -73,8 +72,9 @@ const SETS = [
 
 const VARIANT_OPTIONS = [
   { value: "current", label: "ปัจจุบัน" },
-  { value: "boxCompact", label: "รูปกล่อง + รหัสชุด" },
-  { value: "boxFull", label: "รูปกล่อง + ชื่อชุด" },
+  { value: "calm", label: "A · โล่งสองฝั่ง" },
+  { value: "figuresDown", label: "B · ย้ายสถิติลงมา" },
+  { value: "twoRow", label: "C · สองแถวจบ" },
 ] as const
 
 const VARIANT_COPY: Record<
@@ -84,32 +84,39 @@ const VARIANT_COPY: Record<
   current: {
     name: "ปัจจุบัน — แบบ C ที่ขึ้นเว็บอยู่",
     summary:
-      "ตัวตั้งเทียบ: ชุดการ์ดยังซ่อนอยู่ใน dropdown ต้องกดเปิดก่อนถึงเห็นว่ามีชุดอะไร และเห็นทีละหน้าจอ",
+      "ตัวตั้งเทียบ: ช่องค้นหาซุกอยู่ขวาสุดแถวเมนู · ตัวเลือกเกมกับชุดอยู่บนแถวโลโก้",
     tradeoff: "—",
   },
-  boxCompact: {
-    name: "รูปกล่อง + รหัสชุด — เม็ดยากะทัดรัด แถวสูง 48px",
+  calm: {
+    name: "A · โล่งสองฝั่ง — ซ้ายบอกกำลังดูอะไร ขวาคือของฉัน",
     summary:
-      "แบบ B ที่เบสเคาะ พร้อมรูปกล่องจริงจากคลังของเรา (ตัวเดียวกับที่แถบชุดหน้าแรกใช้) — เม็ดยาโชว์กล่องกับรหัสชุด เห็นได้ราว 8–9 ชุดในหน้าจอเดียวก่อนต้องเลื่อน และแถวสูงกว่าแบบไม่มีรูปแค่ 4px",
+      "แถว 3 มีแค่สองก้อนคนละฝั่ง: ซ้าย = เกม › ชุด (บอกว่ากำลังดูแคตตาล็อกไหนอยู่) ขวา = พอร์ต · รายการโปรด · Honey — ตรงกลางปล่อยว่างโดยตั้งใจ อ่านจบในสายตาเดียวไม่มีอะไรมาแย่งความสนใจ และเหลือที่ให้เพิ่มปุ่มในอนาคตได้สบายที่สุดในสามแบบ",
     tradeoff:
-      "คนที่ยังไม่ชินกับรหัส (OP15 คืออะไร) ต้องอาศัยรูปกล่องล้วนๆ ในการจำ · ชื่อชุดเต็มโผล่เฉพาะตอนเอาเมาส์ไปชี้",
+      "ช่องว่างกลางแถวกว้างราว 700px ถ้ามองว่าพื้นที่บนแถบมีค่า อันนี้คือปล่อยทิ้งไปหนึ่งแถว · สูงรวม 136px",
   },
-  boxFull: {
-    name: "รูปกล่อง + ชื่อชุด — เม็ดยาเต็ม แถวสูง 64px",
+  figuresDown: {
+    name: "B · ย้ายสถิติลงมา — ได้สองอย่างในการย้ายครั้งเดียว",
     summary:
-      "เม็ดยาแบบเดียวกับแถบชุดหน้าแรกเป๊ะ: รูปกล่องใหญ่ขึ้น + รหัสชุดบรรทัดบน + ชื่อชุดภาษาอังกฤษบรรทัดล่าง — อ่านออกทันทีว่าชุดไหนคืออะไรโดยไม่ต้องเอาเมาส์ไปชี้ และหน้าตาสอดคล้องกับแถบชุดที่มีอยู่แล้วบนหน้าแรก",
+      "ยกตัวเลขตลาด (การ์ดทั้งหมด · ชุด · มูลค่ารวม · JPY/THB · อัปเดตล่าสุด) ลงมาเติมกลางแถว 3 — แถว 3 เลยไม่โล่ง และแถบชีพจรบนสุดเหลือสายพานการ์ดล้วนเต็มความกว้าง เห็นการ์ดที่ขยับแรงต่อรอบเยอะขึ้นเกือบเท่าตัว ทั้งแถวอ่านเป็นเรื่องเดียว: กำลังดูแคตตาล็อกไหน · ตลาดใหญ่แค่ไหน · ของฉันอยู่ตรงนี้",
     tradeoff:
-      "เม็ดยากว้างขึ้นเกือบเท่าตัว เห็นได้ราว 5–6 ชุดต่อหน้าจอ ต้องเลื่อนบ่อยกว่า · แถบเมนูรวมสูง 152px (มากกว่าของจริง 20px) ซึ่งกินพื้นที่เนื้อหาทุกหน้า",
+      "ตัวเลขห่างจากสายพานที่เคยอยู่ด้วยกัน คนที่อ่านสองอย่างคู่กันต้องกวาดตาสองแถว · แถว 3 กลับมามีของสี่ก้อน จะเพิ่มปุ่มในอนาคตได้น้อยกว่าแบบ A · สูงรวม 136px",
+  },
+  twoRow: {
+    name: "C · สองแถวจบ — เตี้ยลงจากของจริง 32px",
+    summary:
+      "พอชุดเป็น dropdown แล้ว ของก็น้อยพอจะยุบเหลือสองแถวได้จริง: เมนูเว็บขึ้นไปอยู่แถวบนสุดคู่กับสายพาน (ท่าแถบ utility ของ Lazada) แล้วแถวล่างรวบทุกอย่าง — โลโก้ · เกม › ชุด · ค้นหา · ของฉัน · บัญชี · เตี้ยลง 32px คือได้เห็นราคาการ์ดเพิ่มอีกแถวครึ่งทันทีที่เปิดหน้า",
+    tradeoff:
+      "แน่นที่สุด และที่สำคัญกว่านั้นคือช่องค้นหาเหลือกว้างราว 350px — แคบที่สุดในสามแบบ และเกือบเท่าของจริงตอนนี้ (320px) เท่ากับว่าแลกจุดขายของงานนี้ทิ้งไปเพื่อความเตี้ย · ต้องตัดตัวหนังสือ Meecard ข้างโลโก้ออกและย่อปุ่มชุดแล้วถึงพอ · เมนูเว็บไปอยู่บนสุดคู่สายพาน อาจอ่านเป็นของคนละชุดกัน · สูงรวม 100px",
   },
 }
 
 const SHARED_NOTES = [
-  "แบบ B ล็อกแล้วตามที่เบสเคาะ — แถว 3 เป็นแคตตาล็อกล้วน (เกม › ชุด) ปิดท้ายด้วยของฉัน · เมนูเว็บอยู่แถวกลาง จึงเพิ่มปุ่มได้ไม่แตะพื้นที่ชุด",
-  "รูปกล่องเป็นรูปจริงจากคลังของเรา (boxImageUrl ของแต่ละชุด) ตัวเดียวกับที่แถบชุดหน้าแรกใช้อยู่",
-  "ปุ่มเลือกเกมยืนนำหน้าชุดเสมอ เพราะเกมเป็นตัวกำหนดว่าชุดไหนโผล่ในแถบ",
-  "ชั้นวางชุดเลื่อนซ้าย-ขวาได้จริง (ปัด · ล้อเมาส์ · ปุ่มลูกศร) และไม่เลื่อนเอง เหมือนแถบชุดหน้าแรกที่เบสเคาะไว้ · ตัวอย่างใส่ 14 ชุด ของจริงมี 51",
+  "ชุดการ์ดกลับมาเป็น dropdown แล้วตามที่เบสสั่ง — ชั้นวางเรียงยาว 14 ชุดตัดทิ้ง",
+  "รูปกล่องไม่ได้หายไปไหน: ปุ่มชุดโชว์กล่องของชุดที่เลือกอยู่ + รหัส + ชื่อชุด และในรายการที่กางออกมาทุกชุดก็มีกล่องของตัวเอง",
+  "ปุ่มเลือกเกมยังยืนนำหน้าชุดเสมอ เพราะเกมเป็นตัวกำหนดว่ามีชุดอะไรให้เลือก",
+  "เมนูเว็บแยกออกจากแคตตาล็อกทุกแบบ (คนละแถวหรือคนละก้อน) เพิ่มปุ่มเมนูในอนาคตได้โดยไม่แตะที่ของชุด",
   "ทุกปุ่มสูง 40px ขึ้นไป · พอร์ต · รายการโปรด · Honey มีชื่อครบ · ภาษา/สกุลเงิน/ธีมอยู่ในเมนูโปรไฟล์",
-  "ปุ่มทุกปุ่มกดไม่ได้จริง ยกเว้นลูกศรเลื่อนชุดที่เลื่อนได้จริงให้ลอง · ตัวเลขชุดเดียวกับจอจริงของเบส",
+  "ปุ่มทุกปุ่มกดไม่ได้จริง (หุ่นโชว์ผัง) · ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.)",
 ] as const
 
 /** ตารางพิสูจน์ "ไม่มีอะไรหายเงียบ" — ของ 15 ชิ้นจากแถบจริง ลงตรงไหนในแต่ละแบบ */
@@ -132,39 +139,57 @@ const PLACEMENTS: Record<Variant, ReadonlyArray<{ item: string; where: string }>
     { item: "ช่องค้นหา", where: "แถวเมนู ขวาสุด (กว้าง 320px)" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ซ่อนในเมนูโปรไฟล์ (guest = ปุ่มเฟือง)" },
   ],
-  boxCompact: [
-    { item: "สถิติตลาด", where: "แถบชีพจรบนสุด — เหมือนเดิมทุกอย่าง" },
-    { item: "สายพานการ์ดขยับแรง", where: "แถบชีพจรบนสุด — เหมือนเดิมทุกอย่าง" },
+  calm: [
+    { item: "สถิติตลาด", where: "แถบชีพจรบนสุด ซ้าย (เหมือนเดิม)" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถบบนสุด" },
     { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "แถว 3 ซ้ายสุด — นำหน้าทั้งแถว" },
-    { item: "ตัวเลือกชุดการ์ด", where: "แถว 3 — ชั้นวางรูปกล่องเลื่อนได้ + ปุ่มทุกชุด (51)" },
+    { item: "ปุ่มเลือกเกม", where: "แถว 3 ซ้ายสุด — นำหน้าปุ่มชุด" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถว 3 — dropdown มีรูปกล่อง + รหัส + ชื่อชุด" },
     { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
     { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
     { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
     { item: "โปรไฟล์", where: "แถวกลาง ขวาสุด (แคปซูล 40px)" },
     { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
-    { item: "เมนูหลัก", where: "แถวกลาง ถัดจากโลโก้ — เพิ่มปุ่มได้โดยไม่แตะแคตตาล็อก" },
+    { item: "เมนูหลัก", where: "แถวกลาง ถัดจากโลโก้" },
     { item: "พอร์ต", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "รายการโปรด", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "Honey + แต้ม", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "ช่องค้นหา", where: "แถวกลาง สูง 44px" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
-  boxFull: [
-    { item: "สถิติตลาด", where: "แถบชีพจรบนสุด — เหมือนเดิมทุกอย่าง" },
-    { item: "สายพานการ์ดขยับแรง", where: "แถบชีพจรบนสุด — เหมือนเดิมทุกอย่าง" },
+  figuresDown: [
+    { item: "สถิติตลาด", where: "🔁 ย้ายลงแถว 3 กลางแถว" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถบบนสุด" },
     { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "แถว 3 ซ้ายสุด — นำหน้าทั้งแถว" },
-    { item: "ตัวเลือกชุดการ์ด", where: "แถว 3 — ชั้นวางรูปกล่องเลื่อนได้ + ปุ่มทุกชุด (51)" },
+    { item: "ปุ่มเลือกเกม", where: "แถว 3 ซ้ายสุด — นำหน้าปุ่มชุด" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถว 3 — dropdown มีรูปกล่อง + รหัส + ชื่อชุด" },
     { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
     { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
     { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
     { item: "โปรไฟล์", where: "แถวกลาง ขวาสุด (แคปซูล 40px)" },
     { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
-    { item: "เมนูหลัก", where: "แถวกลาง ถัดจากโลโก้ — เพิ่มปุ่มได้โดยไม่แตะแคตตาล็อก" },
+    { item: "เมนูหลัก", where: "แถวกลาง ถัดจากโลโก้" },
     { item: "พอร์ต", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "รายการโปรด", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "Honey + แต้ม", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
+    { item: "ช่องค้นหา", where: "แถวกลาง สูง 44px" },
+    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
+  ],
+  twoRow: [
+    { item: "สถิติตลาด", where: "🔁 ตัดออกจากแถบบน — แถบบนเหลือเมนู + สายพาน" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถบบนสุด" },
+    { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
+    { item: "ปุ่มเลือกเกม", where: "แถว 3 ซ้ายสุด — นำหน้าปุ่มชุด" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถว 3 — dropdown มีรูปกล่อง + รหัส + ชื่อชุด" },
+    { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถวกลาง ขวาสุด (แคปซูล 40px)" },
+    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
+    { item: "เมนูหลัก", where: "แถวบนสุด ซ้ายสุด (คู่กับสายพาน)" },
+    { item: "พอร์ต", where: "แถวล่าง ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "รายการโปรด", where: "แถวล่าง ฝั่งขวา — มีป้ายชื่อ" },
+    { item: "Honey + แต้ม", where: "แถวล่าง ฝั่งขวา — มีป้ายชื่อ" },
     { item: "ช่องค้นหา", where: "แถวกลาง สูง 44px" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
@@ -589,109 +614,56 @@ function GameSelect() {
 }
 
 /**
- * ชั้นวางชุดการ์ด — เลื่อนซ้าย-ขวาได้จริงด้วย scrollLeft เหมือน home-set-strip
- * ของจริง (ปัด/ล้อเมาส์/ปุ่มลูกศร) และ **ไม่เลื่อนเอง** ตามที่เบสสั่งไว้กับแถบชุดหน้าแรก
- * — นี่คือสิ่งที่ทำให้แถวนี้รับชุดเพิ่มได้ไม่จำกัด ไม่ใช่ตัดจบที่ 8 ชุด
+ * ปุ่มเลือกชุด — dropdown เดียวจบ (เบสเคาะ 2026-08-29: ชั้นวางชุดเรียงยาวรก)
  *
- * `size` คุมว่าเม็ดยาโชว์แค่รหัสชุด (compact) หรือรหัส + ชื่อชุดสองบรรทัด (full)
- * — รูปกล่องจริงจาก R2 (`CardSet.boxImageUrl`) มาทั้งสองแบบ เพราะนักสะสม
- * จำกล่องได้ก่อนจำรหัส "op14" เสมอ (เหตุผลเดียวกับแถบชุดหน้าแรก)
+ * รูปกล่องไม่ได้หายไปไหน: ปุ่มโชว์กล่องของชุดที่เลือกอยู่ และในรายการที่กางออกมา
+ * ทุกชุดก็มีกล่องของตัวเอง — นักสะสมจำกล่องได้ก่อนจำรหัส "op14" เสมอ
  */
-function SetShelf({ size = "compact" }: { size?: "compact" | "full" }) {
-  const railRef = useRef<HTMLDivElement>(null)
-
-  const nudge = (dir: -1 | 1) => {
-    const rail = railRef.current
-    if (!rail) return
-    rail.scrollBy({
-      left: dir * 320,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "auto"
-        : "smooth",
-    })
-  }
-
-  const arrow = (dir: -1 | 1) => (
-    <IconButton
-      aria-label={dir < 0 ? "เลื่อนชุดไปทางซ้าย" : "เลื่อนชุดไปทางขวา"}
-      onClick={() => nudge(dir)}
-      className="size-10 shrink-0 rounded-full"
-    >
-      {dir < 0 ? (
-        <ChevronLeft className="size-[18px]" aria-hidden />
-      ) : (
-        <ChevronRight className="size-[18px]" aria-hidden />
-      )}
-    </IconButton>
-  )
-
+function SetDropdown({ width = "w-64" }: { width?: string }) {
+  const current = SETS[0]
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-1">
-      {arrow(-1)}
-      <div
-        ref={railRef}
-        className="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {SETS.map((set) => (
-          <button
-            key={set.code}
-            type="button"
-            title={set.code + " · " + set.name}
-            className={cn(
-              "ease-chrome flex shrink-0 items-center rounded-xl border border-hair bg-background transition-colors hover:border-primary/35 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-              size === "full" ? "h-12 gap-2 py-1 pe-3 ps-1" : "h-10 gap-1.5 py-1 pe-2.5 ps-1",
-            )}
-          >
-            {/* รูปกล่องจริง — object-cover ตัดขอบใสรอบกล่องทิ้ง ให้กล่องดูใหญ่กว่า contain */}
-            <span
-              className={cn(
-                "relative block shrink-0 overflow-hidden rounded-md bg-muted",
-                size === "full" ? "h-10 w-[1.79rem]" : "h-8 w-[1.43rem]",
-              )}
-            >
-              <Image
-                src={set.box}
-                alt=""
-                fill
-                sizes={size === "full" ? "29px" : "23px"}
-                loading="eager"
-                className="select-none object-cover"
-              />
-            </span>
-            <span className="min-w-0 text-left">
-              <span
-                className={cn(
-                  "flex items-center gap-1 font-semibold leading-tight text-foreground",
-                  size === "full" ? "text-xs" : "text-sm",
-                )}
-              >
-                {set.code}
-                {"fresh" in set && set.fresh && (
-                  <span className="rounded-full bg-[var(--p-honey-soft)] px-1.5 text-micro font-semibold text-primary">
-                    ใหม่
-                  </span>
-                )}
-              </span>
-              {size === "full" && (
-                <span className="mt-0.5 block max-w-[7.5rem] truncate text-xs leading-tight text-muted-foreground">
-                  {set.name}
-                </span>
-              )}
-            </span>
-          </button>
-        ))}
-        <button
-          type="button"
-          className={cn(
-            "ease-chrome flex shrink-0 items-center gap-1 whitespace-nowrap rounded-xl border border-dashed border-hair px-3 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/35 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-            size === "full" ? "h-12" : "h-10",
-          )}
-        >
-          ทุกชุด (51)
-          <ChevronRight className="size-3.5" aria-hidden />
-        </button>
-      </div>
-      {arrow(1)}
+    <button
+      type="button"
+      aria-label={"เลือกชุดการ์ด — ตอนนี้คือ " + current.code}
+      className={cn(
+        "surface-2 hairline ease-chrome flex h-10 shrink-0 items-center gap-2 rounded-full py-1 pe-2.5 ps-1 text-left transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        width,
+      )}
+    >
+      <span className="relative block h-8 w-[1.43rem] shrink-0 overflow-hidden rounded-md bg-muted">
+        <Image
+          src={current.box}
+          alt=""
+          fill
+          sizes="23px"
+          loading="eager"
+          className="select-none object-cover"
+        />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-xs font-semibold leading-tight text-foreground">
+          {current.code}
+        </span>
+        <span className="block truncate text-xs leading-tight text-muted-foreground">
+          {current.name}
+        </span>
+      </span>
+      <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
+    </button>
+  )
+}
+
+/** สถิติตลาดชุดเดียวกับแถบชีพจร — ใช้ตอนย้ายลงมาเติมแถว 3 */
+function MarketFigures() {
+  return (
+    <div className="flex min-w-0 items-center gap-5 overflow-hidden">
+      <StatText label="การ์ดทั้งหมด" value={STATS.cards} />
+      <StatText label="ชุด" value={STATS.sets} />
+      <StatText label="มูลค่ารวม" value={STATS.value} link />
+      <StatText label="JPY/THB" value={STATS.rate} />
+      <span className="shrink-0 whitespace-nowrap text-meta">
+        อัปเดตล่าสุด {STATS.updated}
+      </span>
     </div>
   )
 }
@@ -748,17 +720,24 @@ function ProtoMarquee() {
   )
 }
 
-/** แถบชีพจรตลาดตามของจริง (h-8) — ทุกแบบใหม่เก็บอันนี้ไว้ครบ ไม่แตะ */
-function PulseStrip() {
+/**
+ * แถบชีพจรตลาด (h-8) — `figures` ปิดได้ สำหรับแบบที่ย้ายสถิติลงไปเติมแถว 3
+ * แล้วปล่อยให้สายพานการ์ดกินความกว้างทั้งแถบ (เห็นการ์ดต่อรอบเยอะขึ้นเท่าตัว)
+ */
+function PulseStrip({ figures = true }: { figures?: boolean }) {
   return (
     <div className="hairline-b flex h-8 items-center gap-4 overflow-hidden px-8">
-      <StatText label="การ์ดทั้งหมด" value={STATS.cards} />
-      <StatText label="ชุด" value={STATS.sets} />
-      <StatText label="มูลค่ารวม" value={STATS.value} link />
-      <StatText label="JPY/THB" value={STATS.rate} />
-      <span className="shrink-0 whitespace-nowrap text-meta">
-        อัปเดตล่าสุด {STATS.updated}
-      </span>
+      {figures && (
+        <>
+          <StatText label="การ์ดทั้งหมด" value={STATS.cards} />
+          <StatText label="ชุด" value={STATS.sets} />
+          <StatText label="มูลค่ารวม" value={STATS.value} link />
+          <StatText label="JPY/THB" value={STATS.rate} />
+          <span className="shrink-0 whitespace-nowrap text-meta">
+            อัปเดตล่าสุด {STATS.updated}
+          </span>
+        </>
+      )}
       <ProtoMarquee />
     </div>
   )
@@ -793,12 +772,10 @@ function CurrentNavbar() {
 }
 
 /**
- * แบบ B ที่เบสเคาะ — แถว 3 เป็นแคตตาล็อกล้วน (เกม › ชุด) + ของฉันชิดขวา
- * เมนูเว็บอยู่แถวกลาง จึงเพิ่มปุ่มได้โดยไม่แตะพื้นที่ชุดเลย
- *
- * `shelfSize` = ขนาดเม็ดยาชุดที่ยังไม่เคาะ: รหัสอย่างเดียว หรือรหัส + ชื่อชุด
+ * A — แถว 3 โล่งแบบตั้งใจ: ซ้ายบอก "กำลังดูอะไร" ขวาคือ "ของฉัน"
+ * อ่านจบในสายตาเดียว ไม่มีอะไรมาแย่งความสนใจ
  */
-function CatalogRowNavbar({ shelfSize }: { shelfSize: "compact" | "full" }) {
+function CalmRowNavbar() {
   return (
     <div>
       <PulseStrip />
@@ -812,17 +789,71 @@ function CatalogRowNavbar({ shelfSize }: { shelfSize: "compact" | "full" }) {
         <UpgradeButton />
         <AccountIcons />
       </div>
-      <div
-        className={cn(
-          "hairline-t flex items-center gap-2 px-8",
-          shelfSize === "full" ? "h-16" : "h-12",
-        )}
-      >
+      <div className="hairline-t flex h-12 items-center gap-2 px-8">
         <GameSelect />
         <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
-        <SetShelf size={shelfSize} />
-        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
+        <SetDropdown />
+        <div className="min-w-0 flex-1" />
         <MyStuffCluster />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * B — ย้ายสถิติตลาดลงมาเติมกลางแถว 3 แล้วแถบชีพจรบนสุดเหลือสายพานล้วน
+ * ได้สองอย่างพร้อมกัน: แถว 3 ไม่โล่ง และสายพานกินความกว้างทั้งแถบ
+ */
+function FiguresDownNavbar() {
+  return (
+    <div>
+      <PulseStrip figures={false} />
+      <div className="flex h-14 items-center gap-3 px-8">
+        <BrandMark />
+        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
+        <TextNavCluster />
+        <div className="min-w-0 flex-1 px-2">
+          <HeroSearch />
+        </div>
+        <UpgradeButton />
+        <AccountIcons />
+      </div>
+      <div className="hairline-t flex h-12 items-center gap-3 px-8">
+        <GameSelect />
+        <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
+        <SetDropdown />
+        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
+        <MarketFigures />
+        <div className="min-w-0 flex-1" />
+        <MyStuffCluster />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * C — ยุบเหลือสองแถว: เมนูเว็บขึ้นไปอยู่แถวบนสุดคู่กับสายพาน (ท่าแถบ utility
+ * ของ Lazada) แล้วทุกอย่างที่เหลือลงแถวเดียว — เตี้ยลงจากของจริง 32px
+ */
+function TwoRowNavbar() {
+  return (
+    <div>
+      <div className="hairline-b flex h-11 items-center gap-3 px-8">
+        <TextNavCluster />
+        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
+        <ProtoMarquee />
+      </div>
+      <div className="flex h-14 items-center gap-3 px-8">
+        <BrandMark wordmark={false} />
+        <GameSelect />
+        <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
+        <SetDropdown width="w-44" />
+        <div className="min-w-0 flex-1 px-2">
+          <HeroSearch />
+        </div>
+        <MyStuffCluster />
+        <UpgradeButton />
+        <AccountIcons />
       </div>
     </div>
   )
@@ -887,12 +918,13 @@ const subscribeNever = () => () => {}
 
 const NAVBARS: Record<Variant, () => React.ReactNode> = {
   current: CurrentNavbar,
-  boxCompact: () => <CatalogRowNavbar shelfSize="compact" />,
-  boxFull: () => <CatalogRowNavbar shelfSize="full" />,
+  calm: CalmRowNavbar,
+  figuresDown: FiguresDownNavbar,
+  twoRow: TwoRowNavbar,
 }
 
 export default function NavbarEcomPrototypePage() {
-  const [variant, setVariant] = useState<Variant>("boxCompact")
+  const [variant, setVariant] = useState<Variant>("figuresDown")
   // Flip the real site theme (next-themes) so the whole page — frame included —
   // previews light/dark; a frame-scoped class can't force light under a dark root.
   const { resolvedTheme, setTheme } = useTheme()
@@ -911,12 +943,11 @@ export default function NavbarEcomPrototypePage() {
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-10">
       <div className="mx-auto max-w-[1440px]">
-        <h1 className="text-h1">แถวชุดการ์ดมีรูปกล่องแล้ว — เหลือเลือกขนาดเม็ดยา</h1>
+        <h1 className="text-h1">ชุดกลับเป็น dropdown แล้ว — เหลือเลือกวิธีจัดแถว 3</h1>
         <p className="mt-2 max-w-3xl text-body text-muted-foreground">
-          แบบ B ล็อกแล้วตามที่เบสเคาะ และเติมรูปกล่องจริงลงในแถบชุดเรียบร้อย —
-          เหลือให้เลือกอย่างเดียวว่าเม็ดยาชุดควรใหญ่แค่ไหน: โชว์รูปกล่องกับรหัสชุด
-          พอ หรือใส่ชื่อชุดลงไปด้วยแบบเดียวกับแถบชุดหน้าแรก (ลองกดลูกศรเลื่อนดูได้
-          ใส่มา 14 ชุด ของจริงมี 51)
+          ชั้นวางชุดเรียงยาวตัดทิ้งแล้ว เหลือปุ่มชุดปุ่มเดียว (ยังมีรูปกล่องอยู่ในปุ่ม
+          และในรายการที่กางออกมา) — พอชุดไม่กินที่แล้ว แถว 3 ก็เหลือที่ว่างเยอะ
+          สามแบบนี้คือสามวิธีใช้ที่ว่างนั้น ตั้งแต่ปล่อยโล่งไปจนถึงยุบทิ้งทั้งแถว
         </p>
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
