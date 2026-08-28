@@ -1,10 +1,19 @@
 /**
- * Motion maths for the home page's latest-sets ticker (`home-set-strip.tsx`).
+ * Motion maths for the home page's latest-sets rail (`home-set-strip.tsx`).
  *
  * Kept apart from the component so it can be tested in the plain node
- * environment this repo's vitest runs in — the ticker drives `scrollLeft`, so
- * a DOM-based test would be the only alternative and there is no DOM test
- * setup here.
+ * environment this repo's vitest runs in — the rail drives `scrollLeft`, so a
+ * DOM-based test would be the only alternative and there is no DOM test setup
+ * here.
+ *
+ * ⚠️ SELF-SCROLLING IS OFF (owner ruling 2026-08-28, third pass — "ขอแบบไม่ต้อง
+ * เลื่อนเอง นิ่งๆ"). The rail now only moves when a person moves it, so
+ * `NUDGE` is the only export the component still uses. `AUTO_SPEED`,
+ * `RESUME_DELAY`, `MAX_FRAME_SECONDS`, `SELF_SCROLL_EPSILON`, `nextTickerPos`,
+ * `isUserScroll` and `prewrapForNudge` are kept — with their tests — because
+ * the drift has been switched on and off twice in one evening and this is the
+ * whole of it, ready to reattach. Delete them (and the matching test file) once
+ * the still version has stuck.
  */
 
 /** Drift speed of the idle ticker, in CSS px per second. */
