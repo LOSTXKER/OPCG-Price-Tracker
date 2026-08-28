@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils"
 
 /* ------------------------------------------------------------------ data */
 
-type Variant = "current" | "calm" | "figuresDown" | "twoRow"
+type Variant = "current" | "figuresDown" | "scopeInSearch" | "tickerLast"
 
 /** ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.) เพื่อเทียบแบบตาต่อตา */
 const STATS = {
@@ -72,9 +72,9 @@ const SETS = [
 
 const VARIANT_OPTIONS = [
   { value: "current", label: "ปัจจุบัน" },
-  { value: "calm", label: "A · โล่งสองฝั่ง" },
-  { value: "figuresDown", label: "B · ย้ายสถิติลงมา" },
-  { value: "twoRow", label: "C · สองแถวจบ" },
+  { value: "scopeInSearch", label: "D · ชุดเข้าช่องค้นหา" },
+  { value: "tickerLast", label: "K · สายพานลงล่างสุด" },
+  { value: "figuresDown", label: "B · สถิติลงแถว 3" },
 ] as const
 
 const VARIANT_COPY: Record<
@@ -87,34 +87,34 @@ const VARIANT_COPY: Record<
       "ตัวตั้งเทียบ: ช่องค้นหาซุกอยู่ขวาสุดแถวเมนู · ตัวเลือกเกมกับชุดอยู่บนแถวโลโก้",
     tradeoff: "—",
   },
-  calm: {
-    name: "A · โล่งสองฝั่ง — ซ้ายบอกกำลังดูอะไร ขวาคือของฉัน",
+  scopeInSearch: {
+    name: "D · ชุดเข้าไปอยู่ในช่องค้นหา — แถบมีของน้อยที่สุด",
     summary:
-      "แถว 3 มีแค่สองก้อนคนละฝั่ง: ซ้าย = เกม › ชุด (บอกว่ากำลังดูแคตตาล็อกไหนอยู่) ขวา = พอร์ต · รายการโปรด · Honey — ตรงกลางปล่อยว่างโดยตั้งใจ อ่านจบในสายตาเดียวไม่มีอะไรมาแย่งความสนใจ และเหลือที่ให้เพิ่มปุ่มในอนาคตได้สบายที่สุดในสามแบบ",
+      "เปลี่ยนสมมติฐานว่า \"ปุ่มชุดต้องเป็นปุ่มลอยเดี่ยวๆ\" — ยกเกม › ชุด (พร้อมรูปกล่อง) เข้าไปเป็นหัวช่องค้นหาแบบ Lazada/Amazon พอรวมเป็นก้อนเดียว แถว 3 ก็ไม่เหลือแคตตาล็อกให้จัดอีกเลย เหลือแค่นำทางซ้าย · ของฉันขวา อ่านง่ายสุดในทุกแบบที่ทำมา และความหมายก็เปลี่ยนไปในทางที่ดี: ชุดที่เลือกอยู่ = ขอบเขตที่กำลังจะค้น",
     tradeoff:
-      "ช่องว่างกลางแถวกว้างราว 700px ถ้ามองว่าพื้นที่บนแถบมีค่า อันนี้คือปล่อยทิ้งไปหนึ่งแถว · สูงรวม 136px",
+      "ปุ่มชุดกลืนไปกับช่องค้นหา คนที่คุ้นกับปุ่มลอยข้างโลโก้อาจหาไม่เจอครั้งแรก · ช่องค้นหาแบ่งที่ให้หัวขอบเขตไปราว 200px · สูงรวม 136px",
+  },
+  tickerLast: {
+    name: "K · สายพานลงล่างสุด — สลับลำดับชั้นทั้งแถบ",
+    summary:
+      "เปลี่ยนสมมติฐานว่า \"แถบชีพจรต้องอยู่บนสุด\" — เอาสิ่งที่คนมาทำขึ้นก่อน (ตัวตน · เกม › ชุด · ค้นหา · บัญชี) แล้วนำทาง แล้วปิดท้ายด้วยตลาดที่ล่างสุด ซึ่งไหลต่อเข้าตารางราคาข้างล่างพอดี — สายพานเลยกลายเป็นบทนำของเนื้อหา ไม่ใช่แถบลอยเหนือหัว",
+    tradeoff:
+      "สายพานเคลื่อนไหวอยู่ติดกับเนื้อหา อาจดึงสายตาแย่งกับตารางราคามากกว่าตอนอยู่บนสุด · แถบชีพจรที่เพิ่งขึ้นเว็บย้ายที่ คนที่ชินแล้วต้องหาใหม่ · สูงรวม 136px",
   },
   figuresDown: {
-    name: "B · ย้ายสถิติลงมา — ได้สองอย่างในการย้ายครั้งเดียว",
+    name: "B · สถิติลงแถว 3 — แบบจากรอบก่อน เก็บไว้เทียบ",
     summary:
-      "ยกตัวเลขตลาด (การ์ดทั้งหมด · ชุด · มูลค่ารวม · JPY/THB · อัปเดตล่าสุด) ลงมาเติมกลางแถว 3 — แถว 3 เลยไม่โล่ง และแถบชีพจรบนสุดเหลือสายพานการ์ดล้วนเต็มความกว้าง เห็นการ์ดที่ขยับแรงต่อรอบเยอะขึ้นเกือบเท่าตัว ทั้งแถวอ่านเป็นเรื่องเดียว: กำลังดูแคตตาล็อกไหน · ตลาดใหญ่แค่ไหน · ของฉันอยู่ตรงนี้",
+      "ยกตัวเลขตลาดลงมาเติมกลางแถว 3 แล้วแถบชีพจรบนสุดเหลือสายพานล้วนเต็มความกว้าง เห็นการ์ดที่ขยับแรงต่อรอบเยอะขึ้นเกือบเท่าตัว",
     tradeoff:
-      "ตัวเลขห่างจากสายพานที่เคยอยู่ด้วยกัน คนที่อ่านสองอย่างคู่กันต้องกวาดตาสองแถว · แถว 3 กลับมามีของสี่ก้อน จะเพิ่มปุ่มในอนาคตได้น้อยกว่าแบบ A · สูงรวม 136px",
-  },
-  twoRow: {
-    name: "C · สองแถวจบ — เตี้ยลงจากของจริง 32px",
-    summary:
-      "พอชุดเป็น dropdown แล้ว ของก็น้อยพอจะยุบเหลือสองแถวได้จริง: เมนูเว็บขึ้นไปอยู่แถวบนสุดคู่กับสายพาน (ท่าแถบ utility ของ Lazada) แล้วแถวล่างรวบทุกอย่าง — โลโก้ · เกม › ชุด · ค้นหา · ของฉัน · บัญชี · เตี้ยลง 32px คือได้เห็นราคาการ์ดเพิ่มอีกแถวครึ่งทันทีที่เปิดหน้า",
-    tradeoff:
-      "แน่นที่สุด และที่สำคัญกว่านั้นคือช่องค้นหาเหลือกว้างราว 350px — แคบที่สุดในสามแบบ และเกือบเท่าของจริงตอนนี้ (320px) เท่ากับว่าแลกจุดขายของงานนี้ทิ้งไปเพื่อความเตี้ย · ต้องตัดตัวหนังสือ Meecard ข้างโลโก้ออกและย่อปุ่มชุดแล้วถึงพอ · เมนูเว็บไปอยู่บนสุดคู่สายพาน อาจอ่านเป็นของคนละชุดกัน · สูงรวม 100px",
+      "ตัวเลขห่างจากสายพานที่เคยอยู่ด้วยกัน · แถว 3 มีของสี่ก้อน เพิ่มปุ่มในอนาคตได้น้อยกว่าแบบ D · สูงรวม 136px",
   },
 }
 
 const SHARED_NOTES = [
-  "ชุดการ์ดกลับมาเป็น dropdown แล้วตามที่เบสสั่ง — ชั้นวางเรียงยาว 14 ชุดตัดทิ้ง",
-  "รูปกล่องไม่ได้หายไปไหน: ปุ่มชุดโชว์กล่องของชุดที่เลือกอยู่ + รหัส + ชื่อชุด และในรายการที่กางออกมาทุกชุดก็มีกล่องของตัวเอง",
-  "ปุ่มเลือกเกมยังยืนนำหน้าชุดเสมอ เพราะเกมเป็นตัวกำหนดว่ามีชุดอะไรให้เลือก",
-  "เมนูเว็บแยกออกจากแคตตาล็อกทุกแบบ (คนละแถวหรือคนละก้อน) เพิ่มปุ่มเมนูในอนาคตได้โดยไม่แตะที่ของชุด",
+  "ทุกแบบใช้ปุ่มชุดแบบ dropdown ปุ่มเดียว (มีรูปกล่อง + รหัส + ชื่อชุด) ตามที่เบสสั่ง — ไม่มีชั้นวางเรียงยาวแล้ว",
+  "D กับ K เปลี่ยนสมมติฐานคนละข้อ: D ว่าปุ่มชุดไม่ต้องเป็นปุ่มลอย · K ว่าสายพานไม่ต้องอยู่บนสุด",
+  "แบบ B จากรอบก่อนเก็บไว้ให้เทียบว่าอันไหนเข้าท่ากว่ากัน",
+  "ทุกแบบสูง 136px เท่ากันหมด เทียบกันได้ตรงๆ ว่าจัดของแบบไหนอ่านง่ายกว่า",
   "ทุกปุ่มสูง 40px ขึ้นไป · พอร์ต · รายการโปรด · Honey มีชื่อครบ · ภาษา/สกุลเงิน/ธีมอยู่ในเมนูโปรไฟล์",
   "ปุ่มทุกปุ่มกดไม่ได้จริง (หุ่นโชว์ผัง) · ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.)",
 ] as const
@@ -139,30 +139,48 @@ const PLACEMENTS: Record<Variant, ReadonlyArray<{ item: string; where: string }>
     { item: "ช่องค้นหา", where: "แถวเมนู ขวาสุด (กว้าง 320px)" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ซ่อนในเมนูโปรไฟล์ (guest = ปุ่มเฟือง)" },
   ],
-  calm: [
-    { item: "สถิติตลาด", where: "แถบชีพจรบนสุด ซ้าย (เหมือนเดิม)" },
-    { item: "สายพานการ์ดขยับแรง", where: "แถบบนสุด" },
+  scopeInSearch: [
+    { item: "สถิติตลาด", where: "แถบชีพจรบนสุด" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถบชีพจรบนสุด" },
     { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "แถว 3 ซ้ายสุด — นำหน้าปุ่มชุด" },
-    { item: "ตัวเลือกชุดการ์ด", where: "แถว 3 — dropdown มีรูปกล่อง + รหัส + ชื่อชุด" },
+    { item: "ปุ่มเลือกเกม", where: "🔁 เป็นหัวช่องค้นหา (ในกรอบเดียวกัน)" },
+    { item: "ตัวเลือกชุดการ์ด", where: "🔁 เป็นหัวช่องค้นหา (ในกรอบเดียวกัน) — dropdown มีรูปกล่อง" },
     { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
     { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
     { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
     { item: "โปรไฟล์", where: "แถวกลาง ขวาสุด (แคปซูล 40px)" },
     { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
-    { item: "เมนูหลัก", where: "แถวกลาง ถัดจากโลโก้" },
-    { item: "พอร์ต", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
-    { item: "รายการโปรด", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
-    { item: "Honey + แต้ม", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
+    { item: "เมนูหลัก", where: "แถวล่าง ซ้ายสุด" },
+    { item: "พอร์ต", where: "แถวล่าง ขวาสุด — มีป้ายชื่อ" },
+    { item: "รายการโปรด", where: "แถวล่าง ขวาสุด — มีป้ายชื่อ" },
+    { item: "Honey + แต้ม", where: "แถวล่าง ขวาสุด — มีป้ายชื่อ" },
+    { item: "ช่องค้นหา", where: "แถวกลาง สูง 44px" },
+    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
+  ],
+  tickerLast: [
+    { item: "สถิติตลาด", where: "🔁 แถบชีพจรที่ย้ายลงล่างสุด" },
+    { item: "สายพานการ์ดขยับแรง", where: "🔁 ล่างสุด ติดกับเนื้อหา" },
+    { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
+    { item: "ปุ่มเลือกเกม", where: "แถวบนสุด ถัดจากโลโก้" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถวบนสุด ถัดจากโลโก้ — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถวกลาง ขวาสุด (แคปซูล 40px)" },
+    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
+    { item: "เมนูหลัก", where: "แถวกลาง ซ้ายสุด" },
+    { item: "พอร์ต", where: "แถวกลาง ขวาสุด — มีป้ายชื่อ" },
+    { item: "รายการโปรด", where: "แถวกลาง ขวาสุด — มีป้ายชื่อ" },
+    { item: "Honey + แต้ม", where: "แถวกลาง ขวาสุด — มีป้ายชื่อ" },
     { item: "ช่องค้นหา", where: "แถวกลาง สูง 44px" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
   figuresDown: [
     { item: "สถิติตลาด", where: "🔁 ย้ายลงแถว 3 กลางแถว" },
-    { item: "สายพานการ์ดขยับแรง", where: "แถบบนสุด" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถบบนสุด — เต็มความกว้าง" },
     { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "แถว 3 ซ้ายสุด — นำหน้าปุ่มชุด" },
-    { item: "ตัวเลือกชุดการ์ด", where: "แถว 3 — dropdown มีรูปกล่อง + รหัส + ชื่อชุด" },
+    { item: "ปุ่มเลือกเกม", where: "แถว 3 ซ้ายสุด" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถว 3 ซ้ายสุด — dropdown มีรูปกล่อง" },
     { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
     { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
     { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
@@ -172,24 +190,6 @@ const PLACEMENTS: Record<Variant, ReadonlyArray<{ item: string; where: string }>
     { item: "พอร์ต", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "รายการโปรด", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "Honey + แต้ม", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
-    { item: "ช่องค้นหา", where: "แถวกลาง สูง 44px" },
-    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
-  ],
-  twoRow: [
-    { item: "สถิติตลาด", where: "🔁 ตัดออกจากแถบบน — แถบบนเหลือเมนู + สายพาน" },
-    { item: "สายพานการ์ดขยับแรง", where: "แถบบนสุด" },
-    { item: "โลโก้ Meecard", where: "แถวกลาง ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "แถว 3 ซ้ายสุด — นำหน้าปุ่มชุด" },
-    { item: "ตัวเลือกชุดการ์ด", where: "แถว 3 — dropdown มีรูปกล่อง + รหัส + ชื่อชุด" },
-    { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
-    { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
-    { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
-    { item: "โปรไฟล์", where: "แถวกลาง ขวาสุด (แคปซูล 40px)" },
-    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
-    { item: "เมนูหลัก", where: "แถวบนสุด ซ้ายสุด (คู่กับสายพาน)" },
-    { item: "พอร์ต", where: "แถวล่าง ฝั่งขวา — มีป้ายชื่อ" },
-    { item: "รายการโปรด", where: "แถวล่าง ฝั่งขวา — มีป้ายชื่อ" },
-    { item: "Honey + แต้ม", where: "แถวล่าง ฝั่งขวา — มีป้ายชื่อ" },
     { item: "ช่องค้นหา", where: "แถวกลาง สูง 44px" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
@@ -566,13 +566,23 @@ function HeroSearch({
         <>
           <button
             type="button"
-            aria-label="เลือกแคตตาล็อก: OPCG · ทุกชุด"
+            aria-label="เลือกขอบเขตการค้นหา: OPCG · ชุด OP15"
             className="ease-chrome flex h-10 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
           >
             <GameCrest game={{ slug: "opcg" }} size={18} variant="selector" decorative />
             OPCG
             <ChevronRight className="size-3 text-muted-foreground/60" aria-hidden />
-            <span className="text-label font-medium text-muted-foreground">ทุกชุด</span>
+            <span className="relative block h-7 w-5 shrink-0 overflow-hidden rounded bg-muted">
+              <Image
+                src={SETS[0].box}
+                alt=""
+                fill
+                sizes="20px"
+                loading="eager"
+                className="select-none object-cover"
+              />
+            </span>
+            {SETS[0].code}
             <ChevronDown className="size-3.5 text-muted-foreground" aria-hidden />
           </button>
           <span className="mx-1.5 h-5 w-px shrink-0 bg-border" aria-hidden />
@@ -772,35 +782,6 @@ function CurrentNavbar() {
 }
 
 /**
- * A — แถว 3 โล่งแบบตั้งใจ: ซ้ายบอก "กำลังดูอะไร" ขวาคือ "ของฉัน"
- * อ่านจบในสายตาเดียว ไม่มีอะไรมาแย่งความสนใจ
- */
-function CalmRowNavbar() {
-  return (
-    <div>
-      <PulseStrip />
-      <div className="flex h-14 items-center gap-3 px-8">
-        <BrandMark />
-        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
-        <TextNavCluster />
-        <div className="min-w-0 flex-1 px-2">
-          <HeroSearch />
-        </div>
-        <UpgradeButton />
-        <AccountIcons />
-      </div>
-      <div className="hairline-t flex h-12 items-center gap-2 px-8">
-        <GameSelect />
-        <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
-        <SetDropdown />
-        <div className="min-w-0 flex-1" />
-        <MyStuffCluster />
-      </div>
-    </div>
-  )
-}
-
-/**
  * B — ย้ายสถิติตลาดลงมาเติมกลางแถว 3 แล้วแถบชีพจรบนสุดเหลือสายพานล้วน
  * ได้สองอย่างพร้อมกัน: แถว 3 ไม่โล่ง และสายพานกินความกว้างทั้งแถบ
  */
@@ -832,29 +813,57 @@ function FiguresDownNavbar() {
 }
 
 /**
- * C — ยุบเหลือสองแถว: เมนูเว็บขึ้นไปอยู่แถวบนสุดคู่กับสายพาน (ท่าแถบ utility
- * ของ Lazada) แล้วทุกอย่างที่เหลือลงแถวเดียว — เตี้ยลงจากของจริง 32px
+ * D — ขอบเขตเข้าไปอยู่ในช่องค้นหา (ท่า Lazada/Amazon)
+ * เกม › ชุด กลายเป็นหัวช่องค้นหา แถว 3 เลยไม่เหลือแคตตาล็อกให้จัด —
+ * เหลือแค่ "นำทาง" ซ้าย กับ "ของฉัน" ขวา แถบทั้งอันมีของน้อยที่สุดในทุกแบบ
  */
-function TwoRowNavbar() {
+function ScopeInSearchNavbar() {
   return (
     <div>
-      <div className="hairline-b flex h-11 items-center gap-3 px-8">
-        <TextNavCluster />
-        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
-        <ProtoMarquee />
-      </div>
+      <PulseStrip />
       <div className="flex h-14 items-center gap-3 px-8">
-        <BrandMark wordmark={false} />
-        <GameSelect />
-        <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
-        <SetDropdown width="w-44" />
+        <BrandMark />
         <div className="min-w-0 flex-1 px-2">
-          <HeroSearch />
+          <HeroSearch scope />
         </div>
-        <MyStuffCluster />
         <UpgradeButton />
         <AccountIcons />
       </div>
+      <div className="hairline-t flex h-12 items-center gap-3 px-8">
+        <TextNavCluster />
+        <div className="min-w-0 flex-1" />
+        <MyStuffCluster />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * K — สลับลำดับชั้น: สายพานย้ายลงล่างสุดติดกับเนื้อหา
+ * บนสุดคือตัวตน + ค้นหา (สิ่งที่คนมาทำ) แล้วนำทาง แล้วปิดท้ายด้วยตลาด
+ * ซึ่งอ่านต่อเนื่องเข้าตารางราคาข้างล่างพอดี
+ */
+function TickerLastNavbar() {
+  return (
+    <div>
+      <div className="flex h-14 items-center gap-3 px-8">
+        <BrandMark />
+        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
+        <GameSelect />
+        <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
+        <SetDropdown width="w-52" />
+        <div className="min-w-0 flex-1 px-2">
+          <HeroSearch />
+        </div>
+        <UpgradeButton />
+        <AccountIcons />
+      </div>
+      <div className="hairline-t flex h-12 items-center gap-3 px-8">
+        <TextNavCluster />
+        <div className="min-w-0 flex-1" />
+        <MyStuffCluster />
+      </div>
+      <PulseStrip />
     </div>
   )
 }
@@ -918,13 +927,13 @@ const subscribeNever = () => () => {}
 
 const NAVBARS: Record<Variant, () => React.ReactNode> = {
   current: CurrentNavbar,
-  calm: CalmRowNavbar,
   figuresDown: FiguresDownNavbar,
-  twoRow: TwoRowNavbar,
+  scopeInSearch: ScopeInSearchNavbar,
+  tickerLast: TickerLastNavbar,
 }
 
 export default function NavbarEcomPrototypePage() {
-  const [variant, setVariant] = useState<Variant>("figuresDown")
+  const [variant, setVariant] = useState<Variant>("scopeInSearch")
   // Flip the real site theme (next-themes) so the whole page — frame included —
   // previews light/dark; a frame-scoped class can't force light under a dark root.
   const { resolvedTheme, setTheme } = useTheme()
@@ -943,11 +952,12 @@ export default function NavbarEcomPrototypePage() {
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-10">
       <div className="mx-auto max-w-[1440px]">
-        <h1 className="text-h1">ชุดกลับเป็น dropdown แล้ว — เหลือเลือกวิธีจัดแถว 3</h1>
+        <h1 className="text-h1">อีกสองทางที่ยังไม่ได้ลอง — เปลี่ยนสมมติฐานคนละข้อ</h1>
         <p className="mt-2 max-w-3xl text-body text-muted-foreground">
-          ชั้นวางชุดเรียงยาวตัดทิ้งแล้ว เหลือปุ่มชุดปุ่มเดียว (ยังมีรูปกล่องอยู่ในปุ่ม
-          และในรายการที่กางออกมา) — พอชุดไม่กินที่แล้ว แถว 3 ก็เหลือที่ว่างเยอะ
-          สามแบบนี้คือสามวิธีใช้ที่ว่างนั้น ตั้งแต่ปล่อยโล่งไปจนถึงยุบทิ้งทั้งแถว
+          สามแบบก่อนหน้าเถียงกันแค่ว่า &ldquo;แถว 3 ควรมีอะไร&rdquo; รอบนี้ถอยมาตั้งคำถาม
+          ที่ใหญ่กว่านั้น — D ถามว่าปุ่มชุดต้องเป็นปุ่มลอยจริงไหม (ยกเข้าไปในช่องค้นหา
+          เลย) ส่วน K ถามว่าแถบชีพจรต้องอยู่บนสุดจริงไหม (ย้ายลงไปติดเนื้อหา) และเก็บ
+          แบบ B จากรอบก่อนไว้เทียบด้วย
         </p>
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
