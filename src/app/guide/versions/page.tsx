@@ -223,7 +223,7 @@ export default async function VersionsGuidePage() {
             href: "/opcg/sets",
             icon: Layers,
             title: "ชุดการ์ดวันพีชทั้งหมด",
-            description: "ราคาการ์ดทุกใบแยกตามชุด อัปเดตทุกวัน",
+            description: "ราคาการ์ดทุกใบแยกตามชุด",
           },
           {
             href: "/opcg/market-overview",

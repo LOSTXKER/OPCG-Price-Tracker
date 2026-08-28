@@ -25,11 +25,12 @@ import { Layers, LineChart, Sparkles } from "lucide-react"
 export const revalidate = 1800
 
 const FALLBACK_META = {
-  title: "การ์ดวันพีชที่แพงที่สุด — อัปเดตทุกวัน",
+  title: "การ์ดวันพีชที่แพงที่สุด",
   // Description carries the second spelling "วันพีซ" (dual coverage), same as
-  // mostExpensiveMeta.
+  // mostExpensiveMeta. No "ทุกวัน" claim (owner ruling 2026-08-28) — prices
+  // are not scraped on a schedule (demo site).
   description:
-    "อันดับการ์ดวันพีซที่ราคาแพงที่สุดตอนนี้ จัดอันดับใหม่จากราคาตลาดจริงทุกวัน พร้อมเปลี่ยนแปลง 30 วัน",
+    "อันดับการ์ดวันพีซที่ราคาแพงที่สุดตอนนี้ จัดอันดับจากราคาตลาดจริง พร้อมเปลี่ยนแปลง 30 วัน",
 }
 
 export async function generateMetadata(): Promise<Metadata> {

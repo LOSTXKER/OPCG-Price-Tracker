@@ -22,7 +22,6 @@ process.env.NEXT_PUBLIC_SUPABASE_URL ||= "https://test.supabase.co"
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||= "test-anon-key"
 
 const { HomeSearchHero } = await import("./home-search-hero")
-const { HomeMarketIntro } = await import("./home-market-intro")
 const { HomeSetStrip } = await import("./home-set-strip")
 const { HomeSeoContent } = await import("./home-seo-content")
 const { HOME_META_DESCRIPTION } = await import("@/lib/seo/copy/home")
@@ -73,7 +72,6 @@ describe("home page SEO shell", () => {
 
   it("keeps the supporting blocks at h2 or lower (one H1 per page)", () => {
     const blocks = [
-      renderToStaticMarkup(<HomeMarketIntro />),
       renderToStaticMarkup(
         <HomeSetStrip sets={[{ code: "OP01", name: "Romance Dawn" }]} />,
       ),
@@ -112,16 +110,23 @@ describe("home page SEO shell", () => {
     expect(markup).not.toContain("อัปเดตล่าสุด")
   })
 
-  it("keeps the market heading slim — a section name, no prose", () => {
-    const markup = renderToStaticMarkup(<HomeMarketIntro />)
+  it("heads the market with the set strip — the plain table heading is gone", () => {
+    // Owner ruling 2026-08-28: the "ตารางราคาการ์ด" h2 was removed and the
+    // latest-sets strip (its own h2 + one-row rail) introduces the table,
+    // because collectors pick the set first.
+    const source = readFileSync(resolve(process.cwd(), "src/app/page.tsx"), "utf8")
+
+    expect(source).not.toContain("HomeMarketIntro")
+
+    const markup = renderToStaticMarkup(
+      <HomeSetStrip sets={[{ code: "OP01", name: "Romance Dawn" }]} />,
+    )
 
     expect(markup).toContain("<h2")
-    expect(markup).toContain("ตารางราคาการ์ด")
-    // The keyword sentence, the date line and the coverage paragraph all
-    // moved into the hero lead (owner ruling 2026-08-28) — no prose may
-    // creep back in under this heading.
-    expect(countTag(markup, "p")).toBe(0)
-    expect(markup).not.toContain("วันพีซ")
+    expect(markup).toContain("ชุดการ์ดวันพีชล่าสุด")
+    // The section's one line of context stays visible at every width — no
+    // `hidden` may creep back onto it now that it titles the market.
+    expect(markup).toContain("เลือกดูราคาการ์ดทุกใบ แยกตามชุด")
   })
 
   it("restores the original feature subtitle under the feature heading", () => {
@@ -148,15 +153,15 @@ describe("home page SEO shell", () => {
     expect(markup).toContain("Romance Dawn")
   })
 
-  it("places latest sets after the complete market table", () => {
+  it("places latest sets directly above the market table it introduces", () => {
     const source = readFileSync(resolve(process.cwd(), "src/app/page.tsx"), "utf8")
-    const marketEnd = source.indexOf("</HomeMarketOverview>")
+    const hero = source.indexOf("<HomeSearchHero")
     const latestSets = source.indexOf("<HomeSetStrip")
-    const seoTail = source.indexOf("<HomeSeoContent")
+    const marketStart = source.indexOf("<HomeMarketOverview")
 
-    expect(marketEnd).toBeGreaterThan(-1)
-    expect(latestSets).toBeGreaterThan(marketEnd)
-    expect(latestSets).toBeLessThan(seoTail)
+    expect(hero).toBeGreaterThan(-1)
+    expect(latestSets).toBeGreaterThan(hero)
+    expect(latestSets).toBeLessThan(marketStart)
   })
 
   it("renders the long-tail FAQ and its destination links on the server", () => {
@@ -203,7 +208,6 @@ describe("home page SEO shell", () => {
     const surfaces = [
       renderToStaticMarkup(<HomeSeoContent />),
       renderToStaticMarkup(<HomeSearchHero {...heroProps} />),
-      renderToStaticMarkup(<HomeMarketIntro />),
       renderToStaticMarkup(
         <HomeSetStrip sets={[{ code: "OP01", name: "Romance Dawn" }]} />,
       ),

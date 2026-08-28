@@ -1,7 +1,9 @@
 import { ImageResponse } from "next/og";
 import { BRAND_GOLD, BRAND_SURFACE } from "@/lib/constants/brand";
 
-export const alt = "Meecard — OPCG Card Prices Updated Daily";
+// Owner ruling 2026-08-28: no "updated daily" claim anywhere on the site —
+// prices are not scraped on a schedule (demo site).
+export const alt = "Meecard — OPCG Card Prices";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -63,7 +65,7 @@ export default function OGImage() {
             lineHeight: 1.4,
           }}
         >
-          One Piece Card Game Prices Updated Daily
+          One Piece Card Game Prices
         </p>
         <div
           style={{

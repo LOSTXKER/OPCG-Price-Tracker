@@ -91,22 +91,11 @@ export function buildHomeHeroLead(
 }
 
 /**
- * Slim heading over the market table. The keyword-bearing phrase
- * ("ราคาการ์ดวันพีชวันนี้") moved up into the H1, so this h2 only has to name
- * the section — no prose under it any more.
+ * Heading + helper copy for the "latest sets" link strip — which is ALSO the
+ * market section's heading (owner ruling 2026-08-28: the plain "ตารางราคาการ์ด"
+ * h2 is gone; the set strip heads the table because collectors pick a set
+ * first).
  */
-export function buildHomeMarketHeading(lang: Language): string {
-  switch (lang) {
-    case "EN":
-      return "All Card Prices";
-    case "JP":
-      return "カード価格一覧";
-    default:
-      return "ตารางราคาการ์ด";
-  }
-}
-
-/** Heading + helper copy for the crawlable "latest sets" link strip. */
 export function buildHomeSetStripCopy(lang: Language): {
   heading: string;
   description: string;

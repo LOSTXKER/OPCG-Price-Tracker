@@ -74,7 +74,7 @@ const CATEGORY_CTA: Record<
     { href: "/guide", icon: BookOpen, title: "คู่มือ OPCG", description: "เรียนรู้เกมตั้งแต่เริ่มต้น" },
   ],
   NEWS: [
-    { href: "/", icon: TrendingUp, title: "ตลาดราคา", description: "ดูราคาการ์ดอัปเดตทุกวัน" },
+    { href: "/", icon: TrendingUp, title: "ตลาดราคา", description: "ดูราคากลางการ์ดวันพีช" },
     { href: "/marketplace", icon: Store, title: "Marketplace", description: "ซื้อขายการ์ด" },
   ],
 };
