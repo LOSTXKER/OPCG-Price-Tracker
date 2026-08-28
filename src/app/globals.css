@@ -530,20 +530,6 @@
 .no-sb { scrollbar-width: none; -ms-overflow-style: none; }
 .no-sb::-webkit-scrollbar { display: none; }
 
-/* Home latest-sets ticker (home-set-strip): the track holds TWO copies of the
-   pill list and slides exactly one copy's width per loop, so the row flows
-   forever with no visible seam. Pause-on-hover/focus lives at the call site
-   (arbitrary animation-play-state variants). Reduced motion turns the ticker
-   off — the call site then falls back to a plain scroll rail and hides the
-   duplicate copy. */
-@keyframes set-marquee {
-  to { transform: translateX(-50%); }
-}
-.set-marquee { animation: set-marquee 60s linear infinite; }
-@media (prefers-reduced-motion: reduce) {
-  .set-marquee { animation: none; }
-}
-
 /* Card hover (เบส 2026-06-29) — replaces the old ring/border outline. The card
    rises toward the cursor and casts a deeper shadow (light: warm · dark: black so
    it reads on espresso). Two flavors, tuned in ONE place for the whole site:

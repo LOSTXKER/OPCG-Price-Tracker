@@ -2,11 +2,21 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useCallback, useEffect, useRef } from "react"
 
+import { IconButton } from "@/components/ui/icon-button"
+import { t } from "@/lib/i18n"
 import { buildHomeSetStripCopy } from "@/lib/seo/copy/home"
-import { cn } from "@/lib/utils"
 import { useUIStore } from "@/stores/ui-store"
+
+import {
+  NUDGE,
+  RESUME_DELAY,
+  isUserScroll,
+  nextTickerPos,
+  prewrapForNudge,
+} from "./set-ticker-motion"
 
 export type HomeSetStripItem = {
   code: string
@@ -20,10 +30,9 @@ export type HomeSetStripItem = {
 }
 
 /**
- * One copy of the pill list. The ticker renders it twice — the second copy is
- * `aria-hidden` (screen readers and crawlers should see each set once) and
- * disappears entirely under reduced motion, where the rail stops moving and
- * becomes a plain scroll strip.
+ * One copy of the pill list. The rail renders it twice so the loop has no
+ * seam; the second copy is `aria-hidden` and untabbable, so screen readers and
+ * crawlers still see each set exactly once.
  */
 function SetPills({
   sets,
@@ -35,10 +44,7 @@ function SetPills({
   clone?: boolean
 }) {
   return (
-    <ul
-      aria-hidden={clone || undefined}
-      className={cn("flex gap-2 pe-2", clone && "motion-reduce:hidden")}
-    >
+    <ul aria-hidden={clone || undefined} className="flex gap-2 pe-2">
       {sets.map((s) => (
         <li key={s.code} className="shrink-0">
           <Link
@@ -97,28 +103,120 @@ function SetPills({
  * plan calls the main battleground.
  *
  * Real <a> links (next/link), rendered in the first HTML response. It HEADS
- * the market section (owner ruling 2026-08-28): collectors pick the set
- * first, so the set links introduce the table instead of trailing it, and the
- * strip's h2 is the section's heading.
+ * the market section (owner ruling 2026-08-28) in ONE row: collectors pick the
+ * set first, and the whole block costs ~54px instead of a stacked header.
  *
- * ONE self-flowing row (same-day follow-up ruling — the stacked header +
- * static rail still cost ~3 rows of height): the header sits inline on the
- * left and the pills drift by on their own like a market ticker, pausing on
- * hover/focus so they can be clicked. Phones stack header over rail — two
- * compact rows is the floor a 375px screen allows. Reduced motion stops the
- * loop and leaves a plain scroll rail.
+ * DRIVEN BY `scrollLeft`, not by a CSS transform (owner ruling 2026-08-28,
+ * second pass — "อยากเลื่อนซ้ายขวาเองได้ด้วย"). The previous marquee animated
+ * `translateX` inside an `overflow-hidden` box, which meant the row could not
+ * be touched: no swipe, no wheel, no arrows. A real scroll container gives
+ * every native gesture back for free, and a rAF loop nudges `scrollLeft` while
+ * nobody is interacting. Any interaction wins immediately — hover and focus
+ * hold the row still, and a swipe or an arrow press buys ~1.6s of quiet before
+ * the drift picks up from wherever the user left it.
  */
 export function HomeSetStrip({ sets }: { sets: HomeSetStripItem[] }) {
   const lang = useUIStore((s) => s.language)
   const copy = buildHomeSetStripCopy(lang)
 
+  const railRef = useRef<HTMLDivElement>(null)
+  /** Pointer/touch/focus is currently on the rail — hold indefinitely. */
+  const engagedRef = useRef(false)
+  /** Timestamp (ms, rAF clock) to stay still until — set by scroll / arrows. */
+  const holdUntilRef = useRef(0)
+  /** Sub-pixel drift position. `scrollLeft` alone would stall: at 38px/s a
+   *  frame moves 0.6px, which some browsers round away to nothing. */
+  const posRef = useRef(0)
+  /** The last `scrollLeft` the drift itself wrote. Scroll events don't say who
+   *  caused them, so without this the rAF loop reads its own writes as user
+   *  input, holds for every one of them, and freezes on the first frame. */
+  const selfScrollRef = useRef(-1)
+
+  const hold = useCallback((ms: number) => {
+    holdUntilRef.current = performance.now() + ms
+  }, [])
+
+  useEffect(() => {
+    const rail = railRef.current
+    if (!rail) return
+    // Respect the OS setting: the row still scrolls by hand and by arrow, it
+    // just never moves on its own.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+
+    let raf = 0
+    let last = 0
+
+    const step = (now: number) => {
+      raf = requestAnimationFrame(step)
+      const dt = last ? (now - last) / 1000 : 0
+      last = now
+
+      const held = engagedRef.current || now < holdUntilRef.current
+      const next = nextTickerPos({
+        pos: posRef.current,
+        half: rail.scrollWidth / 2,
+        dtSeconds: dt,
+        held,
+      })
+
+      if (next === null) {
+        // While the user is in charge, track their position instead of
+        // fighting it — the drift then resumes from wherever they stopped.
+        if (held) posRef.current = rail.scrollLeft
+        return
+      }
+
+      posRef.current = next
+      rail.scrollLeft = next
+      // Read back what the browser actually kept (it may round or clamp), so
+      // the scroll event this write triggers recognises itself.
+      selfScrollRef.current = rail.scrollLeft
+    }
+
+    raf = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  const nudge = useCallback(
+    (dir: -1 | 1) => {
+      const rail = railRef.current
+      if (!rail) return
+
+      const prewrap = prewrapForNudge({
+        direction: dir,
+        scrollLeft: rail.scrollLeft,
+        half: rail.scrollWidth / 2,
+      })
+      if (prewrap !== null) rail.scrollLeft = prewrap
+
+      rail.scrollBy({ left: dir * NUDGE, behavior: "smooth" })
+      hold(RESUME_DELAY)
+    },
+    [hold],
+  )
+
   if (sets.length === 0) return null
+
+  const arrow = (dir: -1 | 1) => (
+    <IconButton
+      aria-label={t(lang, dir < 0 ? "prev" : "next")}
+      variant="solid"
+      onClick={() => nudge(dir)}
+      className="size-8 rounded-full"
+    >
+      {dir < 0 ? (
+        <ChevronLeft className="size-4" />
+      ) : (
+        <ChevronRight className="size-4" />
+      )}
+    </IconButton>
+  )
 
   return (
     <section aria-labelledby="home-set-strip">
       <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-5">
-        {/* The whole header block is the link to the set catalog — the ticker
-            itself has no fixed corner to hang a "view all" on. */}
+        {/* The whole header block is the link to the set catalog — a moving
+            rail has no fixed corner to hang a "view all" on. */}
         <Link href="/opcg/sets" className="group/head block shrink-0">
           <h2
             id="home-set-strip"
@@ -130,28 +228,68 @@ export function HomeSetStrip({ sets }: { sets: HomeSetStripItem[] }) {
           <p className="mt-0.5 text-meta">{copy.description}</p>
         </Link>
 
-        {/* The ticker viewport. Bleeds through the page gutter on phones
-            (PageContainer is px-5 there); from `sm` up it fills the space the
-            header leaves. `overflow-x-auto` + `no-sb` is the reduced-motion /
-            no-JS fallback; while the marquee animates, the track is wider
-            than the viewport and simply slides behind the edge fades. */}
-        <div className="group relative -mx-5 min-w-0 flex-1 sm:mx-0">
-          <div className="no-sb overflow-x-auto motion-safe:overflow-x-hidden">
-            <div className="set-marquee flex w-max group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]">
-              <SetPills sets={sets} allLabel={copy.allLabel} />
-              <SetPills sets={sets} allLabel={copy.allLabel} clone />
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          {/* Viewport. Bleeds through the page gutter on phones (PageContainer
+              is px-5 there) so the row runs edge to edge; from `sm` up it fills
+              whatever the header and arrows leave. */}
+          <div className="relative -mx-5 min-w-0 flex-1 sm:mx-0">
+            <div
+              ref={railRef}
+              className="no-sb overflow-x-auto overscroll-x-contain px-5 sm:px-0"
+              onPointerEnter={() => {
+                engagedRef.current = true
+              }}
+              onPointerLeave={() => {
+                engagedRef.current = false
+              }}
+              // Touch has no "leave": end the hold on a timer instead, long
+              // enough for iOS momentum to finish before the drift resumes.
+              onTouchStart={() => {
+                engagedRef.current = true
+              }}
+              onTouchEnd={() => {
+                engagedRef.current = false
+                hold(RESUME_DELAY)
+              }}
+              onFocusCapture={() => {
+                engagedRef.current = true
+              }}
+              onBlurCapture={() => {
+                engagedRef.current = false
+              }}
+              // A wheel/trackpad scroll can fire with no pointer state change,
+              // so hold here too — but only for a jump the drift did not make
+              // itself (see selfScrollRef; 2px covers browser rounding).
+              onScroll={(e) => {
+                if (engagedRef.current) return
+                if (isUserScroll(e.currentTarget.scrollLeft, selfScrollRef.current)) {
+                  hold(RESUME_DELAY)
+                }
+              }}
+            >
+              <div className="flex w-max">
+                <SetPills sets={sets} allLabel={copy.allLabel} />
+                <SetPills sets={sets} allLabel={copy.allLabel} clone />
+              </div>
             </div>
+            {/* Edge fades — the row dissolves into the page instead of being
+                cut, and they read as "this keeps going". */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background to-transparent"
+            />
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent"
+            />
           </div>
-          {/* Edge fades — the row dissolves into the page instead of being
-              cut, and they double as the "this flows" affordance. */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background to-transparent"
-          />
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent"
-          />
+
+          {/* Arrows are the desktop affordance — phones already swipe, and two
+              more targets there would crowd a 375px row. */}
+          <div className="hidden shrink-0 items-center gap-1 sm:flex">
+            {arrow(-1)}
+            {arrow(1)}
+          </div>
         </div>
       </div>
     </section>
