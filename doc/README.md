@@ -11,6 +11,7 @@
 | [MARKETPLACE_OVERHAUL.md](MARKETPLACE_OVERHAUL.md) | สเปก marketplace / seller-center — BUILT vs PENDING | PLAN.md M3 |
 | [uxui-refactor-plan.md](uxui-refactor-plan.md) | **แผนแม่บท UX/UI refactor ทั้งเว็บ** (8 phases · checklist ติ๊กได้ · กติกา) | PLAN.md §🧭 |
 | [uxui-audit-findings-2026-07-04.md](uxui-audit-findings-2026-07-04.md) | หลักฐาน audit 230 findings (generate จาก workflow — ห้ามแก้มือ) | uxui-refactor-plan.md |
+| [nextjs-e668-router-action-dev-only.md](nextjs-e668-router-action-dev-only.md) | error `E668 Router action dispatched before initialization` ใน console = เสียงรบกวนของ `next dev` เท่านั้น (ไม่เกิดใน production · ไม่ต้องแก้โค้ดเรา) — อ่านก่อนคิดจะไล่ซ้ำ | — |
 
 ### archive/ — snapshot ประวัติ (ไม่อัปเดต)
 - `REDESIGN.md` — แผน redesign เฟสแรก (P0–P2, mobile-first IA) · เสร็จ+merge แล้ว · ทิศปัจจุบันอยู่ `VISION.md` ที่ root
