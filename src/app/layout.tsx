@@ -41,11 +41,14 @@ const GOOGLE_SITE_VERIFICATION = clientEnv().NEXT_PUBLIC_GOOGLE_SITE_VERIFICATIO
 // the body is parsed. StoreHydrator keeps it in sync after hydration.
 const INITIAL_HTML_LANG_SCRIPT = `(()=>{const m=document.cookie.match(/(?:^|; )kuma-lang=([^;]*)/);const l=m?decodeURIComponent(m[1]):"TH";document.documentElement.lang=l==="EN"?"en":l==="JP"?"ja":"th"})()`;
 
-const SITE_TITLE = "Meecard — เช็คราคาการ์ดวันพีช (One Piece Card Game) อัปเดตทุกวัน";
+const SITE_TITLE = "Meecard — เช็คราคาการ์ดวันพีช (One Piece Card Game)";
 // Owner decision (2026-08-06): no source-brand names in site metadata — the
 // trust claim is "ตลาดญี่ปุ่น"; the brand is named only in the home FAQ answer.
+// Owner ruling 2026-08-28: no "อัปเดตทุกวัน" claim anywhere on the site — prices
+// are not scraped on a schedule (demo site). Real per-page "อัปเดตล่าสุด" dates
+// carry freshness instead; site-wide metadata just states what the site is.
 const SITE_DESCRIPTION =
-  "เช็คราคาการ์ดวันพีซทุกใบ ทุกเกรด — ราคากลางอ้างอิงตลาดญี่ปุ่น อัปเดตทุกวัน พร้อมกราฟราคาย้อนหลัง ราคา PSA 10 พอร์ตสะสม และแจ้งเตือนราคา";
+  "เช็คราคาการ์ดวันพีซทุกใบ ทุกเกรด — ราคากลางอ้างอิงตลาดญี่ปุ่น พร้อมกราฟราคาย้อนหลัง ราคา PSA 10 พอร์ตสะสม และแจ้งเตือนราคา";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

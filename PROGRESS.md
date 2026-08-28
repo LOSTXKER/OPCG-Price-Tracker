@@ -1,41 +1,36 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-08-28 (รอบดึก · สองงานคู่ขนานคืนเดียวกัน) — **หัวหน้าแรกยุบเหลือหัวข้อ + ประโยคเดียวแบบ CoinMarketCap · Navbar จัดใหม่แบบ CoinGecko**
+อัปเดตล่าสุด: 2026-08-28 (ค่ำ) — **กวาดคำ "อัปเดตทุกวัน" ที่เหลือทั้งเว็บเสร็จแล้ว (verify ครบ ยังไม่ commit)**
 
-## ผลลัพธ์ 1 — หัวหน้าแรก + copy (session นี้)
+## รอบนี้ทำอะไร (session นี้)
 
-เบสเห็นข้อความหัวหน้าแรกกอง 5 ชิ้น (H1 · คำหมุนพิมพ์เอง · H2 ตลาด · บรรทัดอัปเดตล่าสุด · ประโยค Meecard ติดตาม 3,838 ใบ) สั่ง "ยุบทิ้งรวมกัน หรือคิดคำใหม่เลย เอาให้ดีต่อ SEO" — วิจัย SERP/คู่แข่งแล้วเสนอ 3 แบบ เบสเลือก **สไตล์ CoinMarketCap**:
+ต่องานคำสั่งเบส "ไล่เก็บคำว่า 'อัปเดตทุกวัน' ที่เหลือ 35 จุดต่อเลย" — เหตุผลเดิม: pipeline scrape ราคาเสีย ~5 เดือนแล้ว เบสตัดสินว่าเว็บตอนนี้เป็น "demo" ยังไม่ซ่อม pipeline ทันที ดังนั้นคำสัญญา "อัปเดตทุกวัน/updated daily/毎日更新" (รวมคำนุ่มๆ อย่าง "เรียลไทม์/real-time") เป็นเท็จ ต้องเอาออกทั้งหมด เหลือแค่ "อัปเดตล่าสุด <วันที่จริง>" ต่อหน้าเป็นสัญญาณความสดที่ซื่อสัตย์
 
-- **H1 ใหม่:** "ราคาการ์ดวันพีชวันนี้ — เช็คทุกใบ ทุกเกรด" (สูตรเดียวกับ "Today's Cryptocurrency Prices" ของ CMC และ "[Game] Card Prices" ที่เว็บติดอันดับใช้ทั้งวงการ) · meta title ตาม
-- **ประโยคเดียวใต้ H1** เก็บครบ: ตัวเลขสด + เกรด Raw/PSA 10 + ตลาดญี่ปุ่น + **วันที่อัปเดตจริงจาก DB** (ย้ายจากบรรทัดแยกมาไว้ท้ายประโยค) — 3 ภาษา TH/EN/JP ใน `lib/seo/copy/home.ts` (`buildHomeHeroLead`)
-- **หัวตารางเหลือ "ตารางราคาการ์ด"** เฉยๆ ไม่มีย่อหน้าใต้ (`buildHomeMarketHeading`)
-- **คำหมุน TypewriterText ตัดทิ้งทั้งระบบ** (เบสเคาะ): ลบ component + CSS + key ตาย `heroSearchTitle`/`heroTeaser` ใน dict 3 ภาษา
-- **แก้บั๊กแฝง:** วันที่เคยโชว์แบบไทย/พ.ศ. แม้เปิดโหมด EN/JP — ตอนนี้ format ฝั่ง server 3 locale (`5 เมษายน 2569` / `5 April 2026` / `2026年4月5日`) client เลือกตามภาษา
+**ไฟล์ที่แก้ (ยังไม่ commit):**
+- `src/app/layout.tsx`, `src/app/opengraph-image.tsx` — title/description/OG alt
+- `src/app/guide/versions/page.tsx`, `src/app/blog/[slug]/page.tsx`, `src/app/most-expensive/page.tsx` — meta/copy ตรงๆ
+- `src/lib/seo/copy/{card,sets,most-expensive,guide,tools,site}.ts` — intro/FAQ/meta ทุกภาษา (บาง FAQ **เปลี่ยนคำถามใหม่** แทนแก้แค่คำตอบ เช่น "อัปเดตบ่อยแค่ไหน" → "มาจากไหน" เพราะคำตอบเดิมสัญญา schedule ไม่ได้แล้ว)
+- `src/lib/i18n/{th,en,jp}.ts` — footer disclaimer, login hero, about tagline/features/sources, mkt/guide related-links, ฯลฯ
 
-### เจอเรื่องใหญ่ระหว่างตรวจ + เบสเคาะ "เว็บ demo"
+**ตั้งใจไม่แตะ** (ไม่ใช่คำสัญญา schedule): Honey daily check-in/streak/mission ทั้งหมด · weekly digest · "ราคาขยับได้ทุกวัน"/"Prices move daily" (คำเตือนเรื่องความผันผวน ไม่ใช่สัญญาอัปเดต) · "ราคารายวัน"/"Daily prices" (ป้ายชื่อตาราง price-history หมายถึง granularity รายวัน ไม่ใช่ schedule) · `aboutFeaturePortfolioDesc` "แบบเรียลไทม์" (พูดถึง client คำนวณใหม่ทันทีตอนราคาเปลี่ยน ไม่ใช่ความสดของข้อมูลราคา)
 
-เว็บจริงบน Vercel ก็โชว์ "อัปเดตล่าสุด: 5 เมษายน 2569" — **ข้อมูลราคาหยุดจริงมา ~5 เดือน** (cron `scrape-prices` ตั้งไว้แต่พังเงียบ ไม่มี commit สั่งปิด) → เบสเคาะ: **"เป็นแค่เว็บ demo จำเรื่องนี้ด้วย"** ไม่ซ่อม pipeline → ผลพวง: **กวาดคำเคลม "อัปเดตทุกวัน/daily/毎日" ออกจากหน้าแรกหมด** (meta title/description · hero · FAQ 6 ข้อความ×3 ภาษา · footer tagline · JSON-LD WebSite/Organization) — วันที่จริงที่โชว์คือตัวบอกความสดแทน · บันทึกลง memory แล้ว
-**ยังเหลือ ~35 จุด** บนหน้า guide/tools/sets/about (sweep แยกรอบ — อย่ารวมกับงานอื่น)
+**Verify**: `tsc --noEmit` clean · `eslint src` 0 error (26 warning เดิมเท่าเดิม) · `vitest run` 151 ไฟล์/906 ผ่าน (จำนวนเท่าเดิม ไม่มี test ไหนต้องแก้) · `npm run build` 211/211 หน้า · เปิด dev จริงเช็ค `/` `/about` `/guide` `/opcg/trending` `/opcg/market-overview` `/opcg/sets` `/most-expensive` ทั้ง curl (grep คำต้องห้ามสามภาษา = 0 จุด) และเปิดเบราว์เซอร์จริงดูหน้าแรก+about (เห็น "อัปเดตล่าสุด 5 เมษายน 2569" ของจริงแทน)
 
-## ผลลัพธ์ 2 — Navbar แบบ CoinGecko (session คู่ขนาน · สรุปจาก entry ของเขา)
+**พบเพิ่มระหว่างทาง (ยังไม่แก้ — รอเบสตัดสิน):** `src/lib/seo/json-ld.ts` มีฟิลด์ `priceValidUntil = scrapedAt + 24 ชม.` ใน Product JSON-LD — เพราะ scrape จริงหยุดมาเป็นเดือนแล้ว ฟิลด์นี้จะคำนวณออกมาเป็น**วันที่หมดอายุไปแล้ว**เกือบทุกหน้าการ์ด (Google อาจมองว่าราคาไม่ valid) — เป็นปัญหาคนละชั้นกับ copy (เชิงเทคนิค/SEO ไม่ใช่คำโฆษณา) เลยไม่แตะในรอบนี้ รอเบสสั่งว่าจะทำยังไง (เอาออก / ขยายเป็น 7 วัน / อย่างอื่น)
 
-ภาษา/สกุลเงิน/ธีมย้ายเข้าเมนูโปรไฟล์ (guest มีปุ่มเฟือง) · ปุ่มโปรไฟล์เป็นแคปซูล ☰+รูป · ช่องค้นหาย้ายมากลางแถวล่างกว้าง 448px เป็นทางเข้าค้นหาทางเดียว · โลโก้ขึ้นแถวบน · ความสูงแถบรวมคง 101px · วัดจริงไม่มี overflow 768–1920 · ธง "home-seo.test.tsx type พัง" ของเขา = ภาพตอน session นี้แก้ค้างกลางมือ **ตอนนี้เขียวแล้ว** (`tsc --noEmit` exit 0 ทั้งโปรเจค)
+## ⚠️ งานคู่ขนานใน tree (ไม่ใช่ของ session นี้ — อย่าเหมารวม)
 
-## หลักฐานตรวจรับ (รันหลังสองงานรวมกันในทรี)
-
-- ESLint 0 errors · **tsc --noEmit ผ่านทั้งโปรเจค** · full test **151 files / 906 tests ผ่าน** · build **211 หน้า**
-- HTML ฝั่ง server (curl): title/description/H1/lead ใหม่ครบ · `<h1>` เดียว · ไม่มี `tw-caret` · **ไม่มีคำ "อัปเดตทุกวัน" เหลือบนหน้าแรกแม้แต่จุดเดียว**
-- Browser จริง: desktop มืด+สว่าง · มือถือ 375px (H1→ประโยค→ตารางเลย สั้นกว่าเดิม ~3 บรรทัด) · สลับ TH→EN→JP ประโยค+หัวตาราง+**วันที่**เปลี่ยนตามภาษา · ลำดับ DOM h1→h2 ถูก · การ์ดเด่น+ช่องโฆษณาเดิมไม่กระทบ
-- เทสต์ปักของใหม่แล้ว: `home-seo.test.tsx` (hero lead/slim h2/ไม่มี typewriter/วันพีช-วันพีซ) · `header-search-preferences.test.tsx` (literal `<HomeSearchHero` รับ props ได้)
+ระหว่างทำมีไฟล์แก้ค้างของอีก session อยู่ด้วย: `src/app/globals.css`, `src/components/home/home-set-strip.tsx`, `src/components/home/set-ticker-motion.ts` (+ test) — ดูเหมือนกำลังต่องาน ticker แถบชุดการ์อหน้าแรก (commit ล่าสุดของสายนั้น: `2fabbab`, `c68df1d`) ให้ session นั้นปิดงานเอง — **ห้าม commit ไฟล์กลุ่มนี้ปนกับงานกวาดคำของ session นี้**
 
 ## สถานะ git
 
-- branch `chore/next-16.3` · งานคืนนี้ทั้งก้อน (hero copy + navbar + ads frame) เข้าเป็น commit `30a8b19` **push แล้ว** (session navbar เป็นคน commit รวม — ระบุในท้าย commit ชัดว่าพ่วงงาน copy หน้าแรกของอีก session มาด้วย) · ไฟล์นี้ตามเข้า commit ถัดไป
+- branch `chore/next-16.3` @ `2fabbab` (จากอีก session) + **ของ session นี้ยังไม่ commit** (แก้เฉพาะไฟล์ copy/i18n/seo ตามลิสต์ด้านบน)
 - ไม่มี schema / migration / dependency / config change
+- รอเบสสั่ง "commit push" ชัดๆ ก่อน (ตามแพทเทิร์นทุกครั้งใน session นี้)
 
 ## NEXT
 
-1. เบสรีเฟรช `http://localhost:3001` ดู: หัวหน้าแรกใหม่ (H1+ประโยคเดียว) + navbar ใหม่ (ปุ่ม ☰ มุมขวาบน)
-2. พอใจแล้วสั่งเปิด PR ไป master ได้ (แบบ #119/#120)
-3. งานต่อที่ค้างเป็นคิว: กวาด "อัปเดตทุกวัน" ~35 จุดที่เหลือทั้งเว็บ · `getHomeData().rarityRows` query ทิ้งเปล่า · "อัปเดตล่าสุด:" hardcode ไทยที่ trending + most-expensive (ย้ายมาใช้ pattern map 3 locale ของหน้าแรก)
+1. รอเบสสั่ง commit + push งานกวาด "อัปเดตทุกวัน"
+2. ตัดสินเรื่อง `priceValidUntil` ใน `src/lib/seo/json-ld.ts` (ดูหัวข้อด้านบน)
+3. คิวงานค้างเดิม (ยังไม่แตะ): `getHomeData().rarityRows` query ทิ้งเปล่า · "อัปเดตล่าสุด:" hardcode ไทยที่ trending + most-expensive (ย้ายมาใช้ pattern map 3 locale ของหน้าแรก)

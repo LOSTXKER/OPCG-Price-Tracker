@@ -32,8 +32,9 @@ export function mostExpensiveTitle(lang: Language): string {
  * description slot (sitewide owner ruling 2026-08-06: H1 → one keyword
  * sentence → content; the old generic subtitle + separate intro paragraph
  * both collapsed into this). Carries the query answer (top card + live
- * price), the keyword, the coverage and the freshness claim; provenance and
- * volatility caveats live in the FAQ below the table.
+ * price) and the keyword and coverage; provenance and volatility caveats
+ * live in the FAQ below the table. No update-frequency claim (owner ruling
+ * 2026-08-28) — this function has no per-render date to be honest with.
  */
 export function mostExpensiveIntro(
   lang: Language,
@@ -49,12 +50,12 @@ export function mostExpensiveIntro(
   const priceText = formatThb(Math.round(jpyToThb(data.topPriceJpy)))
 
   if (lang === "EN") {
-    return `The ${data.rankedCount} most expensive One Piece Card Game (OPTCG) cards — out of ${data.totalCardCount.toLocaleString()} across ${data.setCount} sets — by latest Japanese-market price, updated daily. Right now the top card is ${data.topName} (${data.topCode}) at about ${priceText}.`
+    return `The ${data.rankedCount} most expensive One Piece Card Game (OPTCG) cards — out of ${data.totalCardCount.toLocaleString()} across ${data.setCount} sets — by latest Japanese-market price. Right now the top card is ${data.topName} (${data.topCode}) at about ${priceText}.`
   }
   if (lang === "JP") {
-    return `ワンピースカードゲーム（OPTCG）全${data.totalCardCount.toLocaleString()}枚・${data.setCount}セットから高額上位${data.rankedCount}枚を日本市場の最新価格順に毎日更新。現在の1位は${data.topName}（${data.topCode}）、およそ${priceText}です。`
+    return `ワンピースカードゲーム（OPTCG）全${data.totalCardCount.toLocaleString()}枚・${data.setCount}セットから高額上位${data.rankedCount}枚を日本市場の最新価格順にランキング。現在の1位は${data.topName}（${data.topCode}）、およそ${priceText}です。`
   }
-  return `จัดอันดับการ์ดวันพีช (One Piece Card Game / OPTCG) ที่แพงที่สุด ${data.rankedCount} ใบ จากทั้งหมด ${data.totalCardCount.toLocaleString()} ใบ ใน ${data.setCount} ชุด ตามราคาตลาดญี่ปุ่นล่าสุด อัปเดตทุกวัน — อันดับ 1 ตอนนี้คือ ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText}`
+  return `จัดอันดับการ์ดวันพีช (One Piece Card Game / OPTCG) ที่แพงที่สุด ${data.rankedCount} ใบ จากทั้งหมด ${data.totalCardCount.toLocaleString()} ใบ ใน ${data.setCount} ชุด ตามราคาตลาดญี่ปุ่นล่าสุด — อันดับ 1 ตอนนี้คือ ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText}`
 }
 
 export function mostExpensiveSectionHeadings(lang: Language) {
@@ -113,7 +114,7 @@ export function mostExpensiveFaq(
       {
         question: "Where do these prices come from?",
         answer:
-          "Reference prices from the Japanese market, updated daily — not offers to sell. Always compare with the shop you are actually buying from.",
+          "Reference prices from the Japanese market — not offers to sell. Always compare with the shop you are actually buying from.",
         link: { href: "/about#methodology", label: "How Meecard prices work" },
       },
       {
@@ -137,7 +138,7 @@ export function mostExpensiveFaq(
       {
         question: "価格の出どころは？",
         answer:
-          "日本の二次流通市場から毎日取得し、参考用にタイバーツへ換算しています。売買のオファーではありません。",
+          "日本の二次流通市場から取得し、参考用にタイバーツへ換算しています。売買のオファーではありません。",
         link: { href: "/about#methodology", label: "価格の算出方法について" },
       },
       {
@@ -159,7 +160,7 @@ export function mostExpensiveFaq(
     {
       question: "ราคาที่เห็นในหน้านี้มาจากไหน?",
       answer:
-        "เป็นราคากลางอ้างอิงจากตลาดญี่ปุ่น อัปเดตทุกวัน ไม่ใช่ประกาศขาย ก่อนซื้อจริงควรเทียบกับร้านที่คุณจะซื้อด้วยเสมอ",
+        "เป็นราคากลางอ้างอิงจากตลาดญี่ปุ่น ไม่ใช่ประกาศขาย ก่อนซื้อจริงควรเทียบกับร้านที่คุณจะซื้อด้วยเสมอ",
       link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
     },
     {
@@ -178,13 +179,14 @@ export function mostExpensiveMeta(data: {
 }) {
   const priceText = `${formatThb(Math.round(jpyToThb(data.topPriceJpy)))}`
   return {
-    title: `การ์ดวันพีชที่แพงที่สุด ${data.count} อันดับ — อัปเดตทุกวัน`,
+    title: `การ์ดวันพีชที่แพงที่สุด ${data.count} อันดับ`,
     // SEO round 2: dropped "กราฟราคาย้อนหลังรายใบ" — this ranking page has no
     // per-card price chart (that lives on /opcg/cards/[code]), so the claim
     // overclaimed what the snippet's landing page actually shows. Also
     // shortened so it stays ≤160 chars with real (longer) card names.
     // "วันพีซ" here is the deliberate second-spelling carrier (dual coverage —
     // the title and every visible heading use the primary "วันพีช").
-    description: `อันดับการ์ดวันพีซแพงสุดตอนนี้ อันดับ 1 ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText} อัปเดตจากราคาตลาดจริงทุกวัน พร้อมเปลี่ยนแปลง 30 วัน`,
+    // No "ทุกวัน" claim (owner ruling 2026-08-28) — this fallback has no date.
+    description: `อันดับการ์ดวันพีซแพงสุดตอนนี้ อันดับ 1 ${data.topName} (${data.topCode}) ราคาประมาณ ${priceText} จัดอันดับจากราคาตลาดจริง พร้อมเปลี่ยนแปลง 30 วัน`,
   }
 }

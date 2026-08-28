@@ -57,8 +57,10 @@ export const SEO_PAGE_META = {
   },
   about: {
     title: "เกี่ยวกับเรา — เว็บเช็คราคาการ์ดวันพีชของคนไทย",
+    // No "ทุกวัน" claim (owner ruling 2026-08-28) — prices are not scraped on
+    // a schedule (demo site).
     description:
-      "Meecard คือเว็บอิสระที่รวมราคากลางการ์ดวันพีซ (OPTCG) จากตลาดญี่ปุ่น อัปเดตทุกวันและแปลงเป็นเงินบาท — อ่านว่าเราเก็บราคาจากแหล่งไหนและคิดราคาบาทอย่างไร",
+      "Meecard คือเว็บอิสระที่รวมราคากลางการ์ดวันพีซ (OPTCG) จากตลาดญี่ปุ่นและแปลงเป็นเงินบาท — อ่านว่าเราเก็บราคาจากแหล่งไหนและคิดราคาบาทอย่างไร",
   },
   contact: {
     title: "ติดต่อทีมงาน — แจ้งราคาผิด เสนอฟีเจอร์ รายงานบั๊ก",
@@ -228,8 +230,11 @@ export function buildAboutMethodology(lang: Language): {
   return pick(lang, {
     TH: {
       title: "ราคามาจากไหน อัปเดตยังไง",
+      // No "ทุกวัน" claim (owner ruling 2026-08-28) — prices are not scraped
+      // on a schedule (demo site). This is the methodology page every price
+      // FAQ links to, so it has to be the most careful about the wording.
       intro: [
-        "ราคาการ์ดวันพีชบน Meecard ไม่ได้มาจากการที่ผู้ใช้กรอกกันเอง แต่ดึงจากร้านค้าจริงในตลาดญี่ปุ่นซึ่งเป็นตลาดต้นทางของ One Piece Card Game แล้วบันทึกทุกวันเป็นประวัติราคา",
+        "ราคาการ์ดวันพีชบน Meecard ไม่ได้มาจากการที่ผู้ใช้กรอกกันเอง แต่ดึงจากร้านค้าจริงในตลาดญี่ปุ่นซึ่งเป็นตลาดต้นทางของ One Piece Card Game แล้วบันทึกเป็นประวัติราคาทุกครั้งที่มีการเก็บ",
         "ด้านล่างคือวิธีที่เราได้ตัวเลขมาและข้อจำกัดที่ควรรู้ก่อนใช้ราคาการ์ดวันพีชเหล่านี้ตัดสินใจซื้อขาย",
       ],
       items: [
@@ -244,9 +249,9 @@ export function buildAboutMethodology(lang: Language): {
             "ราคา PSA 10 ดึงจากตลาดซื้อขายการ์ดเกรด ส่วนเกรดรองอย่าง PSA 9, PSA 8 และ BGS 9.5 คำนวณจากสัดส่วนอ้างอิงของตลาดเทียบกับราคา PSA 10 ของใบนั้น",
         },
         {
-          term: "อัปเดตบ่อยแค่ไหน",
+          term: "การบันทึกประวัติราคา",
           detail:
-            "ระบบเก็บราคาใหม่ทุกวัน และบันทึกทุกครั้งลงฐานข้อมูล กราฟย้อนหลังจึงเป็นข้อมูลจริงที่สะสมเอง ไม่ใช่การประมาณย้อนหลัง",
+            "ทุกครั้งที่ระบบเก็บราคาใหม่ จะบันทึกลงฐานข้อมูลทันที กราฟย้อนหลังจึงเป็นข้อมูลจริงที่สะสมเอง ไม่ใช่การประมาณย้อนหลัง",
         },
         {
           term: "แปลงเป็นเงินบาทยังไง",
@@ -285,9 +290,9 @@ export function buildAboutMethodology(lang: Language): {
             "PSA 10 prices come from the graded-card market. Lower grades (PSA 9, PSA 8, BGS 9.5) are derived from market reference ratios applied to that card's PSA 10 price.",
         },
         {
-          term: "Update frequency",
+          term: "How price history is recorded",
           detail:
-            "Prices are collected daily and every run is written to the database, so the historical chart is real collected data rather than a backfilled estimate.",
+            "Every time prices are collected, that run is written straight to the database, so the historical chart is real collected data rather than a backfilled estimate.",
         },
         {
           term: "How THB is derived",
@@ -311,7 +316,7 @@ export function buildAboutMethodology(lang: Language): {
     JP: {
       title: "価格の出どころと更新方法",
       intro: [
-        "Meecard の価格はユーザー投稿ではなく、ワンピースカードゲームの本場である日本の実店舗・通販の価格を毎日取得し、価格履歴として保存しています。",
+        "Meecard の価格はユーザー投稿ではなく、ワンピースカードゲームの本場である日本の実店舗・通販の価格を取得し、価格履歴として保存しています。",
         "以下が各数値の作り方と、取引判断に使う前に知っておきたい制限です。",
       ],
       items: [
@@ -326,9 +331,9 @@ export function buildAboutMethodology(lang: Language): {
             "PSA 10 は鑑定カード市場から取得。PSA 9 / PSA 8 / BGS 9.5 は、そのカードの PSA 10 価格に市場の参照比率を適用して算出しています。",
         },
         {
-          term: "更新頻度",
+          term: "価格履歴の記録方法",
           detail:
-            "毎日価格を取得し、そのつどデータベースに保存します。チャートは後付けの推定ではなく実際に蓄積したデータです。",
+            "価格を取得するたびにデータベースへ保存します。チャートは後付けの推定ではなく実際に蓄積したデータです。",
         },
         {
           term: "バーツ換算の方法",
@@ -438,7 +443,7 @@ export function buildHoneyExplainer(lang: Language): {
       title: "Honey คืออะไร และได้มายังไง",
       intro: [
         "Honey คือแต้มสะสมของ Meecard เว็บเช็คราคาการ์ดวันพีช ได้มาจากการใช้งานเว็บตามปกติ ไม่ต้องเสียเงินซื้อและไม่ต้องผูกบัตรเครดิต",
-        "สะสมแล้วนำไปแลกบัตรผ่าน Pro หรือแลกตั๋วลุ้นรางวัลประจำเดือน ทำให้คนที่เข้ามาเช็คราคาการ์ดวันพีชทุกวันได้อะไรกลับไปด้วย",
+        "สะสมแล้วนำไปแลกบัตรผ่าน Pro หรือแลกตั๋วลุ้นรางวัลประจำเดือน ทำให้คนที่เข้ามาเช็คราคาการ์ดวันพีชเป็นประจำได้อะไรกลับไปด้วย",
       ],
       sections: [
         {
@@ -492,7 +497,7 @@ export function buildHoneyExplainer(lang: Language): {
       title: "Honey とは・貯め方",
       intro: [
         "Honey は Meecard のポイントです。普通にサイトを使うだけで貯まり、購入もカード登録も不要です。",
-        "貯めた Honey は Pro パスや毎月の抽選チケットと交換できます。毎日ワンピースカードの価格を見に来ることが、そのまま特典になります。",
+        "貯めた Honey は Pro パスや毎月の抽選チケットと交換できます。ワンピースカードの価格をこまめに見に来ることが、そのまま特典になります。",
       ],
       sections: [
         {
@@ -612,17 +617,17 @@ export function buildBlogRelated(
 export function buildBlogIntro(lang: Language): string[] {
   return pick(lang, {
     TH: [
-      "ที่นี่คือบล็อกของ Meecard เว็บเช็คราคาการ์ดวันพีช (One Piece Card Game) สำหรับตลาดไทย เราเขียนจากข้อมูลราคาจริงที่เก็บทุกวัน ไม่ใช่ความรู้สึกว่าใบไหนน่าจะแพง",
+      "ที่นี่คือบล็อกของ Meecard เว็บเช็คราคาการ์ดวันพีช (One Piece Card Game) สำหรับตลาดไทย เราเขียนจากข้อมูลราคาจริงที่เก็บไว้ ไม่ใช่ความรู้สึกว่าใบไหนน่าจะแพง",
       "เนื้อหาแบ่งเป็น 4 หมวด คือ วิเคราะห์ตลาด รีวิวชุดการ์ด เทคนิคสำหรับนักสะสม และข่าวที่มีผลกับราคาการ์ดวันพีช",
       "ระหว่างรอบทความใหม่ ดูราคาปัจจุบันได้จากหน้าการ์ดที่ราคาขยับ หน้ารวมชุดการ์ด หรืออ่านพื้นฐานจากคู่มือมือใหม่",
     ],
     EN: [
-      "This is the Meecard blog — written by the team behind a One Piece Card Game price tracker for the Thai market, using the daily price data we collect rather than guesswork.",
+      "This is the Meecard blog — written by the team behind a One Piece Card Game price tracker for the Thai market, using the price data we collect rather than guesswork.",
       "Posts fall into four categories: market analysis, set reviews, collector tips, and news that moves card prices.",
       "While you wait for the next post, check today's movers, browse every set, or start with the beginner's guide.",
     ],
     JP: [
-      "ここはタイ市場向けワンピースカードゲーム価格サイト Meecard のブログです。毎日収集している実価格データにもとづいて書いています。",
+      "ここはタイ市場向けワンピースカードゲーム価格サイト Meecard のブログです。収集している実価格データにもとづいて書いています。",
       "記事は相場分析・セットレビュー・収集のコツ・価格に影響するニュースの 4 カテゴリに分かれています。",
       "新しい記事が出るまでは、値動きランキングやセット一覧、初心者ガイドをご覧ください。",
     ],

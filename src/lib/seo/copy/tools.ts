@@ -69,13 +69,13 @@ export const TOOL_PAGE_METADATA: Record<
   { title: string; description: string; canonical: string }
 > = {
   trending: {
-    // ≤60 with the " | Meecard" suffix — "อัปเดตทุกวัน" already lives in the
-    // description, and the old title ran 65 chars total (SEO round 2).
+    // ≤60 with the " | Meecard" suffix (SEO round 2).
     title: "การ์ดวันพีชราคาขึ้นแรงสุดวันนี้ (Trending)",
     description:
       // "ราคาบาทและเยน" was a stale claim — the page shows THB only since the
-      // owner cut the yen column (2026-08-06).
-      "จัดอันดับการ์ดวันพีซ (One Piece Card Game) ที่ราคาขึ้นและลงแรงที่สุดในรอบ 24 ชั่วโมง 7 วัน และ 30 วัน พร้อมราคาบาทจากตลาดญี่ปุ่น อัปเดตทุกวัน",
+      // owner cut the yen column (2026-08-06). No "ทุกวัน" claim (owner
+      // ruling 2026-08-28) — prices are not scraped on a schedule (demo site).
+      "จัดอันดับการ์ดวันพีซ (One Piece Card Game) ที่ราคาขึ้นและลงแรงที่สุดในรอบ 24 ชั่วโมง 7 วัน และ 30 วัน พร้อมราคาบาทจากตลาดญี่ปุ่น",
     canonical: "/opcg/trending",
   },
   search: {
@@ -83,13 +83,16 @@ export const TOOL_PAGE_METADATA: Record<
     description:
       // Not "ชื่อไทย": Card.nameTh mirrors the Latin name for every row in
       // production, so promising Thai-name search would be an overclaim.
-      "ค้นหาการ์ดวันพีซ (One Piece Card Game) จากชื่อการ์ดหรือรหัสการ์ด เช่น OP13-118 ดูราคากลางเป็นเงินบาท ความหายาก และชุดที่การ์ดอยู่ อัปเดตทุกวัน",
+      // No "ทุกวัน" claim (owner ruling 2026-08-28).
+      "ค้นหาการ์ดวันพีซ (One Piece Card Game) จากชื่อการ์ดหรือรหัสการ์ด เช่น OP13-118 ดูราคากลางเป็นเงินบาท ความหายาก และชุดที่การ์ดอยู่",
     canonical: "/opcg/search",
   },
   marketOverview: {
     title: "ภาพรวมตลาดการ์ดวันพีช — มูลค่าตลาด ราคาเฉลี่ย รายวัน",
+    // No "ทุกวัน" claim (owner ruling 2026-08-28) — prices are not scraped on
+    // a schedule (demo site).
     description:
-      "สรุปภาพรวมตลาดการ์ดวันพีซ (One Piece Card Game) มูลค่ารวมทั้งตลาด ราคาเฉลี่ยต่อใบ สัดส่วนมูลค่าตามความหายาก และชุดที่มูลค่าสูงสุด อัปเดตทุกวันจากตลาดญี่ปุ่น",
+      "สรุปภาพรวมตลาดการ์ดวันพีซ (One Piece Card Game) มูลค่ารวมทั้งตลาด ราคาเฉลี่ยต่อใบ สัดส่วนมูลค่าตามความหายาก และชุดที่มูลค่าสูงสุด จากตลาดญี่ปุ่น",
     canonical: "/opcg/market-overview",
   },
   dropCalculator: {
@@ -100,8 +103,9 @@ export const TOOL_PAGE_METADATA: Record<
   },
   deckCalculator: {
     title: "สร้างเด็ควันพีช พร้อมคำนวณราคาเด็ครวมเป็นเงินบาท",
+    // No "ทุกวัน" claim (owner ruling 2026-08-28).
     description:
-      "สร้างเด็คการ์ดวันพีซ (One Piece Card Game) 50 ใบ + Leader แล้วดูราคารวมของทั้งเด็คเป็นเงินบาทและเยนทันที อิงราคากลางจากตลาดญี่ปุ่นที่อัปเดตทุกวัน",
+      "สร้างเด็คการ์ดวันพีซ (One Piece Card Game) 50 ใบ + Leader แล้วดูราคารวมของทั้งเด็คเป็นเงินบาทและเยนทันที อิงราคากลางจากตลาดญี่ปุ่น",
     canonical: "/opcg/deck-calculator",
   },
   decks: {
@@ -204,12 +208,14 @@ export function buildTrendingSummary(
   lang: Language,
   data: { name: string; cardCode: string; changePct: number; priceThb: string } | null,
 ): string {
+  // No "ทุกวัน"/"daily" update-frequency claim (owner ruling 2026-08-28) —
+  // prices are not scraped on a schedule (demo site).
   if (!data) {
     return pick(
       lang,
       thEn(
-        "จัดอันดับการ์ดวันพีช (One Piece Card Game) ที่ราคาขยับแรงสุดใน 24 ชั่วโมง 7 วัน และ 30 วัน จากราคาตลาดญี่ปุ่น อัปเดตทุกวัน",
-        "The One Piece Card Game cards with the biggest price moves over 24 hours, 7 days and 30 days — from Japanese-market prices, updated daily.",
+        "จัดอันดับการ์ดวันพีช (One Piece Card Game) ที่ราคาขยับแรงสุดใน 24 ชั่วโมง 7 วัน และ 30 วัน จากราคาตลาดญี่ปุ่น",
+        "The One Piece Card Game cards with the biggest price moves over 24 hours, 7 days and 30 days — from Japanese-market prices.",
       ),
     );
   }
@@ -219,8 +225,8 @@ export function buildTrendingSummary(
   return pick(
     lang,
     thEn(
-      `จัดอันดับการ์ดวันพีช (One Piece Card Game) ที่ราคาขยับแรงสุดใน 24 ชั่วโมง 7 วัน และ 30 วัน อัปเดตทุกวัน — วันนี้ ${data.name} (${code}) ขึ้นแรงสุด ${pct} ราคาล่าสุด ${data.priceThb}`,
-      `The One Piece Card Game cards with the biggest price moves over 24 hours, 7 days and 30 days, updated daily — today's biggest gainer is ${data.name} (${code}) at ${pct}, now ${data.priceThb}.`,
+      `จัดอันดับการ์ดวันพีช (One Piece Card Game) ที่ราคาขยับแรงสุดใน 24 ชั่วโมง 7 วัน และ 30 วัน — วันนี้ ${data.name} (${code}) ขึ้นแรงสุด ${pct} ราคาล่าสุด ${data.priceThb}`,
+      `The One Piece Card Game cards with the biggest price moves over 24 hours, 7 days and 30 days — today's biggest gainer is ${data.name} (${code}) at ${pct}, now ${data.priceThb}.`,
     ),
   );
 }
@@ -383,7 +389,7 @@ export function buildSearchFaq(lang: Language): SeoFaqItem[] {
         {
           question: "ราคาที่แสดงมาจากไหน",
           answer:
-            "ราคากลางอ้างอิงจากตลาดญี่ปุ่น อัปเดตทุกวัน ใช้เป็นราคาอ้างอิงก่อนซื้อขายในไทยได้ แต่ราคาจริงอาจสูงหรือต่ำกว่านี้ตามสภาพการ์ดและความต้องการ",
+            "ราคากลางอ้างอิงจากตลาดญี่ปุ่น ใช้เป็นราคาอ้างอิงก่อนซื้อขายในไทยได้ แต่ราคาจริงอาจสูงหรือต่ำกว่านี้ตามสภาพการ์ดและความต้องการ",
           link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
         },
       ],
@@ -407,7 +413,7 @@ export function buildSearchFaq(lang: Language): SeoFaqItem[] {
         {
           question: "Where do the prices come from?",
           answer:
-            "Reference prices come from the Japanese market, updated daily. Treat them as a reference before buying locally; Thai market prices vary with condition and demand.",
+            "Reference prices come from the Japanese market. Treat them as a reference before buying locally; Thai market prices vary with condition and demand.",
           link: { href: "/about#methodology", label: "How Meecard prices work" },
         },
       ],
@@ -443,11 +449,13 @@ export function buildMarketOverviewCopy(
   // restated the KPI tiles rendered directly above it (total value, average,
   // 7-day move are all on screen — and server-rendered, so no SEO loss). Only
   // the top set survives: it is the one fact with no tile of its own.
+  // No "ทุกวัน"/"daily" claim (owner ruling 2026-08-28) — prices are not
+  // scraped on a schedule (demo site).
   return pick(
     lang,
     thEn(
       {
-        summary: `Meecard ติดตามราคาการ์ดวันพีช ${data.totalCards.toLocaleString()} ใบ จาก ${data.setCount.toLocaleString()} ชุด อัปเดตทุกวัน${
+        summary: `Meecard ติดตามราคาการ์ดวันพีช ${data.totalCards.toLocaleString()} ใบ จาก ${data.setCount.toLocaleString()} ชุด${
           data.topSetCode
             ? ` — ชุดที่มูลค่ารวมสูงสุดตอนนี้คือ ${data.topSetCode}${data.topSetName ? ` ${data.topSetName}` : ""}`
             : ""
@@ -455,7 +463,7 @@ export function buildMarketOverviewCopy(
         methodologyTitle: "ราคาบนเว็บนี้มาจากไหน",
       },
       {
-        summary: `Meecard tracks ${data.totalCards.toLocaleString()} One Piece cards across ${data.setCount.toLocaleString()} sets, updated daily${
+        summary: `Meecard tracks ${data.totalCards.toLocaleString()} One Piece cards across ${data.setCount.toLocaleString()} sets${
           data.topSetCode
             ? ` — the most valuable set right now is ${data.topSetCode}${data.topSetName ? ` ${data.topSetName}` : ""}`
             : ""
@@ -477,7 +485,7 @@ export function buildMarketMethodologyFaq(lang: Language): SeoFaqItem[] {
         {
           question: "ราคาการ์ดวันพีชบน Meecard มาจากไหน",
           answer:
-            "ราคากลางอ้างอิงจากตลาดญี่ปุ่น อัปเดตทุกวัน และทุกหน้าราคาบนเว็บใช้ชุดข้อมูลเดียวกันหมด",
+            "ราคากลางอ้างอิงจากตลาดญี่ปุ่น และทุกหน้าราคาบนเว็บใช้ชุดข้อมูลเดียวกันหมด",
           link: { href: "/about#methodology", label: "วิธีคิดราคากลางของ Meecard" },
         },
         {
@@ -501,7 +509,7 @@ export function buildMarketMethodologyFaq(lang: Language): SeoFaqItem[] {
         {
           question: "Where do Meecard's One Piece card prices come from?",
           answer:
-            "Reference prices come from the Japanese market, updated daily; every price page on the site uses the same dataset.",
+            "Reference prices come from the Japanese market; every price page on the site uses the same dataset.",
           link: { href: "/about#methodology", label: "How Meecard prices work" },
         },
         {
@@ -583,7 +591,7 @@ export function buildDropCalculatorCopy(lang: Language): {
           {
             href: "/opcg/sets",
             title: "ชุดการ์ดทั้งหมด",
-            description: "ราคาการ์ดวันพีชทุกใบ แยกตามชุด อัปเดตทุกวัน",
+            description: "ราคาการ์ดวันพีชทุกใบ แยกตามชุด",
           },
           {
             href: "/opcg/deck-calculator",
@@ -623,7 +631,7 @@ export function buildDropCalculatorCopy(lang: Language): {
           {
             href: "/opcg/sets",
             title: "All sets",
-            description: "Every card's price, set by set, updated daily",
+            description: "Every card's price, set by set",
           },
           {
             href: "/opcg/deck-calculator",
@@ -872,7 +880,7 @@ export function buildDecksHubCopy(lang: Language): {
       {
         h1: "One Piece decks & tools",
         intro:
-          "The tools collectors and players use most, all sharing the same daily reference prices as the price pages — so numbers stay comparable across tools.",
+          "The tools collectors and players use most, all sharing the same reference prices as the price pages — so numbers stay comparable across tools.",
         toolsTitle: "All tools",
         tools: [
           {
