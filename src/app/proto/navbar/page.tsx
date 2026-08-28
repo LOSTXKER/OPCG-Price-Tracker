@@ -28,34 +28,7 @@ import { cn } from "@/lib/utils"
 
 /* ------------------------------------------------------------------ data */
 
-type Concept = "current" | "calm" | "warm" | "ticker"
-
-type PrototypeSet = {
-  readonly code: string
-  readonly name: string
-  readonly imageUrl: string
-}
-
-const PROTOTYPE_SETS = [
-  {
-    code: "OP15",
-    name: "Adventure on KAMI's Island",
-    imageUrl:
-      "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/sets/op15.webp",
-  },
-  {
-    code: "OP14",
-    name: "The Azure Sea's Seven",
-    imageUrl:
-      "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/sets/op14.webp",
-  },
-  {
-    code: "OP13",
-    name: "Carrying on His Will",
-    imageUrl:
-      "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/sets/op13.webp",
-  },
-] as const satisfies readonly PrototypeSet[]
+type Concept = "current" | "center" | "right" | "brand"
 
 /** ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.) เพื่อเทียบแบบตาต่อตา */
 const STATS = {
@@ -68,9 +41,9 @@ const STATS = {
 
 const CONCEPT_OPTIONS = [
   { value: "current", label: "ปัจจุบัน" },
-  { value: "calm", label: "A · โต๊ะเทรดนิ่ง" },
-  { value: "warm", label: "B · อุ่นขัดเงา" },
-  { value: "ticker", label: "C · แถบชีพจรแยก" },
+  { value: "center", label: "C1 · กลางแถวเมนู" },
+  { value: "right", label: "C2 · ชิดขวา" },
+  { value: "brand", label: "C3 · ขึ้นแถวโลโก้" },
 ] as const
 
 const CONCEPT_COPY: Record<
@@ -80,93 +53,42 @@ const CONCEPT_COPY: Record<
   current: {
     name: "ปัจจุบัน — ตามที่ขึ้นเว็บอยู่",
     summary:
-      "เก็บไว้เป็นตัวตั้งเทียบ ปัญหาที่ทำให้ยังดูไม่แพง: สถิติถูกห่อเป็นเม็ดชิปสีพื้นเลยอ่านเป็น \"ปุ่ม\" ทั้งที่กดไม่ได้ · มูลค่ารวมเป็นสีเขียวทั้งที่ไม่ใช่กำไร-ขาดทุน (ผิดกติกาสีของเราเอง) · เส้นแบ่งตั้ง 3 เส้น · มุมโค้งปนกัน 3 ตระกูล — เมนูเหลี่ยมมน ชิปกลม ช่องค้นหาโค้งอีกขนาด",
+      "ตัวตั้งเทียบ จุดที่เบสทักว่าแปลกมีที่มา: ช่องค้นหาเป็นทรงเหลี่ยมขอบโค้งอยู่ตัวเดียว ท่ามกลางแคปซูลกลมทั้งแถบ (pill เกม/ชุด · ชิปสถิติ · ปุ่มโปรไฟล์ล้วนกลม) แถมถูกวางคั่นกลางระหว่างลิงก์สองกลุ่มพอดี เลยอ่านเป็นของคนละชุดมาวางรวมกัน",
     tradeoff: "—",
   },
-  calm: {
-    name: "A · โต๊ะเทรดนิ่ง",
+  center: {
+    name: "C1 · กลางแถวเมนู — เปลี่ยนทรงให้เข้าชุด",
     summary:
-      "แถบยึดพื้นทึบ มีเส้นขอบล่างบางตลอดเวลาแบบ TradingView สถิติกลายเป็นตัวหนังสือเปล่า — ตัวเลขเข้ม ป้ายจาง ไม่มีกรอบ มุมโค้งเหลือตระกูลเดียวทั้งแถบ (เหลี่ยมมน) ปุ่มอัปเกรดถอดกรอบเหลือตัวหนังสือสีทอง เส้นแบ่งหายหมด ให้ระยะห่างทำหน้าที่จัดกลุ่มแทน ทุกอย่างเงียบลงเพื่อให้เนื้อหาการ์ดข้างล่างเด่น",
+      "ตำแหน่งเดิมที่เบสเลือกไว้ (ค้นหาเด่นกลางจอ) แต่เปลี่ยนช่องค้นหาเป็นแคปซูลกลม สูงขึ้นนิด กว้างขึ้นหน่อย และปรับเมนูเป็นแคปซูลตระกูลเดียวกันทั้งแถบ — แก้ตรงจุด \"ดูแปลก\" โดยไม่ย้ายตำแหน่งอะไรเลย",
     tradeoff:
-      "ความรู้สึก \"ลอยโปร่ง\" ตอนอยู่บนสุดของหน้าหายไป (แถบทึบตลอด) · ความสูงเท่าเดิมเป๊ะ ไม่ต้องขยับระบบแถบลอยหน้าอื่นเลย",
+      "ช่องค้นหายังคั่นกลางระหว่างลิงก์ซ้าย-ขวาเหมือนเดิม ถ้าความรู้สึกแปลกมาจากตำแหน่ง ไม่ใช่แค่ทรง แบบนี้จะยังไม่หายสนิท · สูงรวม ~129px เท่าแบบ C ที่เบสเห็น",
   },
-  warm: {
-    name: "B · อุ่นขัดเงา",
+  right: {
+    name: "C2 · ชิดขวา — ตามผังจริงของ CoinMarketCap",
     summary:
-      "คงเสน่ห์ที่เบสเลือกไว้ทั้งหมด (โปร่งใสบนสุด ทรงแคปซูล) แล้วเก็บงานให้สุดทาง: เกม→ชุดรวมเป็นแคปซูลเดียว มีรูปซองการ์ดจริงชวนกด (ลองกดดูได้ — สลับชุดไปเรื่อยๆ) สถิติเป็นตัวหนังสือคั่นด้วยจุดกลางแบบเว็บราคาเหรียญตัวจริง ช่องค้นหา เมนู และปุ่มทุกตัวเปลี่ยนเป็นทรงแคปซูลตระกูลเดียวกันทั้งแถบ",
+      "เว็บต้นแบบวางช่องค้นหาแบบกะทัดรัดไว้ท้ายแถวเมนู: เมนูอ่านต่อเนื่องจากซ้ายโดยไม่โดนผ่ากลาง ส่วนช่องค้นหาไปอยู่ติดกับของประจำตัว (พอร์ต/รายการโปรด/Honey) กลายเป็นมุมเครื่องมือของฉันชัดๆ",
     tradeoff:
-      "แถวบนยังถือของ 3 กลุ่มเหมือนเดิม แค่เรียบร้อยขึ้นมาก · ความสูงเท่าเดิมเป๊ะ ไม่ต้องขยับระบบแถบลอยหน้าอื่นเลย",
+      "ความเด่นของช่องค้นหาลดลงจากที่เบสเคยตั้งใจไว้ว่าเป็นทางเข้าค้นหาทางเดียวต้องเห็นชัด · สูงรวม ~129px",
   },
-  ticker: {
-    name: "C · แถบชีพจรแยก",
+  brand: {
+    name: "C3 · ขึ้นแถวโลโก้ — เติมช่องว่างที่แบบ C สร้างขึ้นพอดี",
     summary:
-      "ยกสถิติขึ้นไปอยู่แถบเส้นบางของตัวเองบนสุด ตามกายวิภาคจริงของ CoinMarketCap/CoinGecko — ได้พื้นที่แถมสำหรับ \"ชุด 51\" กับ \"อัปเดตล่าสุด\" ฟรี ส่วนแถวโลโก้เหลือแค่แบรนด์ ตัวเลือกเกม→ชุด และบัญชี โล่งขึ้นทันตา",
+      "พอสถิติย้ายขึ้นแถบชีพจรแล้ว แถวโลโก้ของแบบ C เหลือช่องว่างตรงกลางทั้งแถว — แบบนี้เอาช่องค้นหาไปวางตรงนั้นเต็มความกว้างเดิม แต่ละชั้นเลยได้หน้าที่เดียวชัด: ตัวเลข → ตัวตน+ค้นหา+บัญชี → เมนู แถวเมนูเหลือแค่ลิงก์จึงเตี้ยลงได้ รวมทั้งแถบเตี้ยกว่า C1/C2 ราว 4px",
     tradeoff:
-      "แถบรวมสูงขึ้นราว 28px กินที่แนวตั้งของทุกหน้า และต้องขยับระบบแถบลอยที่เกาะใต้เมนูอีก 6 จุดตาม (ทำได้ แต่เป็นงานเทคนิคเพิ่ม)",
+      "ขยับโครงมากที่สุด (เทสต์ที่ปักหน้าตาแถบไว้ต้องอัปเดตตามเยอะสุด) และแถวโลโก้กลับมามีของหลายชิ้น — แต่ไม่แน่นเท่ารอบที่เคยถอยกลับ เพราะสถิติย้ายออกไปอยู่แถบชีพจรแล้ว",
   },
 }
 
 const SHARED_FIXES = [
+  "โครงแบบ C ครบทุกตัวเลือก: แถบชีพจรบางบนสุด (การ์ด · ชุด · มูลค่ารวม · JPY/THB · อัปเดตล่าสุด) แล้วแถวโลโก้ถึงโล่ง",
   "เอาสีเขียวออกจากมูลค่ารวม — เขียว/แดงสงวนไว้ให้กำไร-ขาดทุนของราคาเท่านั้น ตามกติกา VISION",
-  "ตัวเลขทุกตัวบนแถบเป็นเลขความกว้างคงที่ (tabular) — ตัวเลขนิ่ง ไม่ขยับซ้ายขวา",
-  "ลดเส้น: เส้นแบ่งแนวตั้งหายเกือบหมด ใช้ระยะห่างจัดกลุ่มแทน",
-  "มุมโค้งทั้งแถบเหลือตระกูลเดียว (A เหลี่ยมมน · B แคปซูล) ไม่ปน 3 ขนาดแบบตอนนี้",
+  "มุมโค้งจัดเป็นตระกูลแคปซูลเดียวทั้งแถบ (เมนู · ช่องค้นหา · ปุ่ม) ไม่ปน 3 ขนาดแบบตอนนี้",
+  "ตัวเลขทุกตัวเป็นเลขความกว้างคงที่ (tabular) และเส้นแบ่งแนวตั้งถูกตัดออก ใช้ระยะห่างจัดกลุ่มแทน",
 ] as const
 
 /* ----------------------------------------------------------------- atoms */
 
-function PackArtwork({
-  set,
-  className,
-}: {
-  set: PrototypeSet
-  className?: string
-}) {
-  return (
-    <span
-      className={cn(
-        "relative shrink-0 overflow-hidden rounded-[3px]",
-        className ?? "h-7 w-5",
-      )}
-    >
-      <Image
-        src={set.imageUrl}
-        alt=""
-        fill
-        sizes="24px"
-        className="scale-150 object-contain"
-      />
-    </span>
-  )
-}
-
-/** พัดซองการ์ด 3 ใบซ้อน — คำเชิญ "เลือกชุด" ของแบบ B ตอนยังไม่ได้เลือก */
-function PackFan() {
-  return (
-    <span className="flex shrink-0 items-center" aria-hidden>
-      {PROTOTYPE_SETS.map((set, i) => (
-        <span
-          key={set.code}
-          className={cn(
-            "relative h-6 w-[17px] overflow-hidden rounded-[3px] ring-1 ring-border/60",
-            i > 0 && "-ml-2",
-          )}
-          style={{ zIndex: PROTOTYPE_SETS.length - i }}
-        >
-          <Image
-            src={set.imageUrl}
-            alt=""
-            fill
-            sizes="17px"
-            className="scale-150 object-contain"
-          />
-        </span>
-      ))}
-    </span>
-  )
-}
-
-function BrandMark({ wordmark = true }: { wordmark?: boolean }) {
+function BrandMark() {
   return (
     <span className="flex h-8 shrink-0 items-center gap-2 pr-1">
       <Image
@@ -176,11 +98,9 @@ function BrandMark({ wordmark = true }: { wordmark?: boolean }) {
         height={694}
         className="h-auto w-6 shrink-0 select-none"
       />
-      {wordmark && (
-        <span className="text-sm font-bold tracking-tight text-foreground">
-          Meecard
-        </span>
-      )}
+      <span className="text-sm font-bold tracking-tight text-foreground">
+        Meecard
+      </span>
     </span>
   )
 }
@@ -189,7 +109,7 @@ function VDivider({ className }: { className?: string }) {
   return <span className={cn("h-5 w-px shrink-0 bg-border/60", className)} aria-hidden />
 }
 
-/** ป้ายจาง + ตัวเลขเข้ม — สถิติแบบ "ตัวหนังสือเปล่า" ที่ A/B/C ใช้ร่วมกัน */
+/** ป้ายจาง + ตัวเลขเข้ม — สถิติแบบ "ตัวหนังสือเปล่า" บนแถบชีพจร */
 function StatText({
   label,
   value,
@@ -236,21 +156,16 @@ function GhostIcon({
   icon: Icon,
   label,
   dot = false,
-  shape = "full",
 }: {
   icon: typeof Bell
   label: string
   dot?: boolean
-  shape?: "full" | "lg"
 }) {
   return (
     <button
       type="button"
       aria-label={label}
-      className={cn(
-        "ease-chrome relative grid size-8 shrink-0 place-items-center text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        shape === "full" ? "rounded-full" : "rounded-lg",
-      )}
+      className="ease-chrome relative grid size-8 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
     >
       <Icon className="size-4" aria-hidden />
       {dot && (
@@ -278,23 +193,23 @@ function ProfileCapsule() {
   )
 }
 
-function SearchBox({
-  radius,
-  height = "h-9",
+function SearchField({
+  variant,
+  className,
 }: {
-  radius: "xl" | "lg" | "full"
-  height?: string
+  /** current = ทรงเหลี่ยมโค้งเดิม · capsule = แคปซูลกลมเข้าชุดกับทั้งแถบ */
+  variant: "current" | "capsule"
+  className?: string
 }) {
   return (
     <button
       type="button"
       aria-label="ค้นหาการ์ด"
       className={cn(
-        "hairline ease-chrome group flex w-full max-w-md items-center gap-2 bg-card px-3 text-left transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        height,
-        radius === "xl" && "rounded-xl",
-        radius === "lg" && "rounded-lg",
-        radius === "full" && "rounded-full px-4",
+        "hairline ease-chrome group flex items-center gap-2 bg-card text-left transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        variant === "current" && "h-9 rounded-xl px-3",
+        variant === "capsule" && "rounded-full px-4",
+        className,
       )}
     >
       <Search
@@ -307,7 +222,7 @@ function SearchBox({
       <kbd
         className={cn(
           "hairline shrink-0 bg-background px-1.5 py-0.5 font-sans text-micro text-muted-foreground",
-          radius === "full" ? "rounded-full" : "rounded-md",
+          variant === "capsule" ? "rounded-full" : "rounded-md",
         )}
       >
         /
@@ -342,26 +257,32 @@ function NavLinkItem({
   )
 }
 
+function NavCluster({ shape = "lg" }: { shape?: "lg" | "full" }) {
+  return (
+    <nav className="flex shrink-0 items-center gap-0.5" aria-label="เมนูหลัก">
+      <NavLinkItem label="หน้าแรก" active shape={shape} />
+      <NavLinkItem label="ชุดการ์ด" shape={shape} />
+      <NavLinkItem label="เด็คและเครื่องมือ" shape={shape} />
+      <NavLinkItem label="ซื้อขาย" shape={shape} />
+    </nav>
+  )
+}
+
 function MyStuffLink({
   icon,
   label,
   trailing,
   ping = false,
-  shape = "full",
 }: {
   icon: React.ReactNode
   label: string
   trailing?: React.ReactNode
   ping?: boolean
-  shape?: "full" | "lg"
 }) {
   return (
     <button
       type="button"
-      className={cn(
-        "ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        shape === "full" ? "rounded-full" : "rounded-lg",
-      )}
+      className="ease-chrome relative flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
     >
       {ping && (
         <span className="absolute -right-1 -top-1 flex size-2" aria-hidden>
@@ -376,21 +297,18 @@ function MyStuffLink({
   )
 }
 
-function MyStuffCluster({ shape = "full" }: { shape?: "full" | "lg" }) {
+function MyStuffCluster() {
   return (
     <div className="flex shrink-0 items-center gap-1.5">
       <MyStuffLink
-        shape={shape}
         icon={<Briefcase className="size-3.5 text-muted-foreground/60" aria-hidden />}
         label="พอร์ต"
       />
       <MyStuffLink
-        shape={shape}
         icon={<Heart className="size-3.5 text-primary" aria-hidden />}
         label="รายการโปรด"
       />
       <MyStuffLink
-        shape={shape}
         ping
         icon={
           <span className="text-sm leading-none" aria-hidden>
@@ -408,17 +326,12 @@ function MyStuffCluster({ shape = "full" }: { shape?: "full" | "lg" }) {
   )
 }
 
-function GamePill({ shape = "full" }: { shape?: "full" | "lg" }) {
+function GamePill() {
   return (
     <button
       type="button"
       aria-label="เลือกแคตตาล็อกเกม: One Piece Card Game"
-      className={cn(
-        "ease-chrome flex h-8 shrink-0 items-center gap-1.5 text-xs font-semibold text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        shape === "full"
-          ? "surface-2 rounded-full px-3 ring-1 ring-hair hover:bg-muted"
-          : "rounded-lg px-2 hover:bg-muted",
-      )}
+      className="surface-2 ease-chrome flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 text-xs font-semibold text-foreground ring-1 ring-hair transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
     >
       <GameCrest game={{ slug: "opcg" }} size={18} variant="selector" decorative />
       OPCG
@@ -427,17 +340,12 @@ function GamePill({ shape = "full" }: { shape?: "full" | "lg" }) {
   )
 }
 
-function SetTrigger({ shape = "full" }: { shape?: "full" | "lg" }) {
+function SetTrigger() {
   return (
     <button
       type="button"
       aria-label="เลือกชุดการ์ด"
-      className={cn(
-        "ease-chrome flex h-8 items-center gap-1.5 text-label text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        shape === "full"
-          ? "surface-2 hairline w-48 rounded-full px-2.5 hover:bg-muted"
-          : "rounded-lg px-2 hover:bg-muted",
-      )}
+      className="surface-2 hairline ease-chrome flex h-8 w-48 items-center gap-1.5 rounded-full px-2.5 text-label text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
     >
       <PackageOpen className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
       <span className="min-w-0 flex-1 truncate text-left">เลือกชุดการ์ด</span>
@@ -446,64 +354,51 @@ function SetTrigger({ shape = "full" }: { shape?: "full" | "lg" }) {
   )
 }
 
-/** แบบ B — เกม→ชุดรวมเป็นแคปซูลเดียว มีรูปซองจริงเป็นคำเชิญ */
-function CatalogCapsule({
-  selected,
-  onCycle,
-}: {
-  selected: PrototypeSet | null
-  onCycle: () => void
-}) {
+function CatalogControl() {
   return (
-    <span className="surface-2 hairline flex h-9 shrink-0 items-stretch overflow-hidden rounded-full">
-      <button
-        type="button"
-        aria-label="เลือกแคตตาล็อกเกม: One Piece Card Game"
-        className="ease-chrome flex items-center gap-1.5 pl-2.5 pr-2 text-xs font-semibold text-foreground transition-colors hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40"
-      >
-        <GameCrest game={{ slug: "opcg" }} size={18} variant="selector" decorative />
-        OPCG
-      </button>
-      <span className="my-2 w-px shrink-0 bg-border/60" aria-hidden />
-      <button
-        type="button"
-        onClick={onCycle}
-        aria-label={
-          selected
-            ? `ชุดที่เลือก ${selected.code} ${selected.name} — กดเพื่อเปลี่ยนชุด`
-            : "เลือกชุดการ์ด"
-        }
-        className="ease-chrome flex min-w-0 items-center gap-2 pl-2 pr-2.5 transition-colors hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/40"
-      >
-        {selected ? (
-          <PackArtwork set={selected} className="h-6 w-[17px]" />
-        ) : (
-          <PackFan />
-        )}
-        <span className="max-w-[180px] truncate text-label text-foreground">
-          {selected ? `${selected.code} · ${selected.name}` : "เลือกชุดการ์ด"}
-        </span>
-        <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
-      </button>
-    </span>
+    <div className="flex shrink-0 items-center">
+      <GamePill />
+      <ChevronRight className="mx-1 size-3 shrink-0 text-muted-foreground/60" aria-hidden />
+      <SetTrigger />
+    </div>
   )
 }
 
-function UpgradeButton({ variant }: { variant: "outline" | "text" | "soft" }) {
+function UpgradeButton() {
   return (
     <button
       type="button"
-      className={cn(
-        "ease-chrome flex h-8 shrink-0 items-center gap-1 text-sm font-semibold text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        variant === "outline" &&
-          "rounded-full border border-primary/30 px-2.5 hover:bg-primary/10",
-        variant === "text" && "rounded-lg px-2.5 hover:bg-primary/10",
-        variant === "soft" && "rounded-full bg-primary/10 px-3 hover:bg-primary/20",
-      )}
+      className="ease-chrome flex h-8 shrink-0 items-center gap-1 rounded-full border border-primary/30 px-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
     >
       <Zap className="size-3" aria-hidden />
       อัปเกรด
     </button>
+  )
+}
+
+function AccountCluster() {
+  return (
+    <div className="flex shrink-0 items-center gap-2">
+      <UpgradeButton />
+      <GhostIcon icon={MessageCircle} label="ข้อความ" />
+      <GhostIcon icon={Bell} label="การแจ้งเตือน" dot />
+      <ProfileCapsule />
+    </div>
+  )
+}
+
+/** แถบชีพจรบางบนสุด — หัวใจของแบบ C */
+function TickerStrip() {
+  return (
+    <div className="hairline-b flex h-7 items-center gap-4 overflow-hidden px-8">
+      <StatText label="การ์ดทั้งหมด" value={STATS.cards} compact />
+      <StatText label="ชุด" value={STATS.sets} compact />
+      <StatText label="มูลค่ารวม" value={STATS.value} link compact />
+      <StatText label="JPY/THB" value={STATS.rate} compact />
+      <span className="ml-auto shrink-0 whitespace-nowrap text-meta">
+        อัปเดตล่าสุด {STATS.updated}
+      </span>
+    </div>
   )
 }
 
@@ -516,11 +411,7 @@ function CurrentNavbar() {
       <div className="flex h-11 items-center gap-3 px-8">
         <BrandMark />
         <VDivider />
-        <div className="flex shrink-0 items-center">
-          <GamePill />
-          <ChevronRight className="mx-1 size-3 shrink-0 text-muted-foreground/60" aria-hidden />
-          <SetTrigger />
-        </div>
+        <CatalogControl />
         <VDivider />
         <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto overflow-y-hidden text-muted-foreground [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <div className="flex h-8 shrink-0 items-center gap-1.5 rounded-full bg-muted/50 px-2.5 text-sm">
@@ -547,7 +438,7 @@ function CurrentNavbar() {
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <UpgradeButton variant="outline" />
+          <UpgradeButton />
           <VDivider className="mx-1" />
           <GhostIcon icon={MessageCircle} label="ข้อความ" />
           <GhostIcon icon={Bell} label="การแจ้งเตือน" dot />
@@ -555,14 +446,9 @@ function CurrentNavbar() {
         </div>
       </div>
       <div className="flex h-14 items-center gap-3 px-8">
-        <nav className="flex shrink-0 items-center" aria-label="เมนูหลัก">
-          <NavLinkItem label="หน้าแรก" active />
-          <NavLinkItem label="ชุดการ์ด" />
-          <NavLinkItem label="เด็คและเครื่องมือ" />
-          <NavLinkItem label="ซื้อขาย" />
-        </nav>
+        <NavCluster />
         <div className="flex min-w-0 flex-1 justify-center">
-          <SearchBox radius="xl" />
+          <SearchField variant="current" className="w-full max-w-md" />
         </div>
         <MyStuffCluster />
       </div>
@@ -570,131 +456,54 @@ function CurrentNavbar() {
   )
 }
 
-/** A · โต๊ะเทรดนิ่ง — ทึบตลอด เส้นเดียวข้างล่าง ตระกูลเหลี่ยมมน ไร้ชิป ไร้เส้นแบ่ง */
-function CalmNavbar() {
-  return (
-    <div className="hairline-b bg-background">
-      <div className="flex h-10 items-center gap-4 px-8">
-        <BrandMark />
-        <div className="flex shrink-0 items-center gap-0.5">
-          <GamePill shape="lg" />
-          <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
-          <SetTrigger shape="lg" />
+/** แบบ C ทั้งสามตัวเลือก — โครงเดียวกัน ต่างกันเฉพาะตำแหน่ง/ทรงช่องค้นหา */
+function CNavbar({ placement }: { placement: "center" | "right" | "brand" }) {
+  if (placement === "brand") {
+    return (
+      <div>
+        <TickerStrip />
+        <div className="flex h-12 items-center gap-3 px-8">
+          <BrandMark />
+          <CatalogControl />
+          <div className="flex min-w-0 flex-1 justify-center px-3">
+            <SearchField variant="capsule" className="h-9 w-full max-w-md" />
+          </div>
+          <AccountCluster />
         </div>
-        <div className="flex min-w-0 flex-1 items-center gap-5 overflow-hidden pl-2">
-          <StatText label="การ์ดทั้งหมด" value={STATS.cards} />
-          <StatText label="มูลค่ารวม" value={STATS.value} link />
-          <StatText label="JPY/THB" value={STATS.rate} />
-        </div>
-        <div className="flex shrink-0 items-center gap-1.5">
-          <UpgradeButton variant="text" />
-          <GhostIcon icon={MessageCircle} label="ข้อความ" shape="lg" />
-          <GhostIcon icon={Bell} label="การแจ้งเตือน" dot shape="lg" />
-          <ProfileCapsule />
+        <div className="flex h-12 items-center gap-3 px-8">
+          <NavCluster shape="full" />
+          <div className="min-w-0 flex-1" />
+          <MyStuffCluster />
         </div>
       </div>
-      <div className="flex h-[60px] items-center gap-3 px-8">
-        <nav className="flex shrink-0 items-center" aria-label="เมนูหลัก">
-          <NavLinkItem label="หน้าแรก" active />
-          <NavLinkItem label="ชุดการ์ด" />
-          <NavLinkItem label="เด็คและเครื่องมือ" />
-          <NavLinkItem label="ซื้อขาย" />
-        </nav>
-        <div className="flex min-w-0 flex-1 justify-center">
-          <SearchBox radius="lg" height="h-10" />
-        </div>
-        <MyStuffCluster shape="lg" />
-      </div>
-    </div>
-  )
-}
+    )
+  }
 
-/** B · อุ่นขัดเงา — โครงเดิมเป๊ะ แต่แคปซูลตระกูลเดียว + เกม→ชุดรวมร่าง + สถิติไร้ชิป */
-function WarmNavbar({
-  selected,
-  onCycle,
-}: {
-  selected: PrototypeSet | null
-  onCycle: () => void
-}) {
   return (
     <div>
+      <TickerStrip />
       <div className="flex h-11 items-center gap-3 px-8">
         <BrandMark />
-        <CatalogCapsule selected={selected} onCycle={onCycle} />
-        <div className="flex min-w-0 flex-1 items-center gap-3 overflow-hidden pl-3">
-          <StatText label="การ์ดทั้งหมด" value={STATS.cards} />
-          <span className="text-muted-foreground/40" aria-hidden>
-            ·
-          </span>
-          <StatText label="มูลค่ารวม" value={STATS.value} link />
-          <span className="text-muted-foreground/40" aria-hidden>
-            ·
-          </span>
-          <StatText label="JPY/THB" value={STATS.rate} />
-        </div>
-        <div className="flex shrink-0 items-center gap-1.5">
-          <UpgradeButton variant="soft" />
-          <GhostIcon icon={MessageCircle} label="ข้อความ" />
-          <GhostIcon icon={Bell} label="การแจ้งเตือน" dot />
-          <ProfileCapsule />
-        </div>
-      </div>
-      <div className="flex h-14 items-center gap-3 px-8">
-        <nav className="flex shrink-0 items-center gap-0.5" aria-label="เมนูหลัก">
-          <NavLinkItem label="หน้าแรก" active shape="full" />
-          <NavLinkItem label="ชุดการ์ด" shape="full" />
-          <NavLinkItem label="เด็คและเครื่องมือ" shape="full" />
-          <NavLinkItem label="ซื้อขาย" shape="full" />
-        </nav>
-        <div className="flex min-w-0 flex-1 justify-center">
-          <SearchBox radius="full" height="h-10" />
-        </div>
-        <MyStuffCluster />
-      </div>
-    </div>
-  )
-}
-
-/** C · แถบชีพจรแยก — สถิติขึ้นแถบบางของตัวเองแบบ CMC แถวโลโก้โล่ง */
-function TickerNavbar() {
-  return (
-    <div>
-      <div className="hairline-b flex h-7 items-center gap-4 overflow-hidden px-8">
-        <StatText label="การ์ดทั้งหมด" value={STATS.cards} compact />
-        <StatText label="ชุด" value={STATS.sets} compact />
-        <StatText label="มูลค่ารวม" value={STATS.value} link compact />
-        <StatText label="JPY/THB" value={STATS.rate} compact />
-        <span className="ml-auto shrink-0 whitespace-nowrap text-meta">
-          อัปเดตล่าสุด {STATS.updated}
-        </span>
-      </div>
-      <div className="flex h-11 items-center gap-3 px-8">
-        <BrandMark />
-        <div className="flex shrink-0 items-center">
-          <GamePill />
-          <ChevronRight className="mx-1 size-3 shrink-0 text-muted-foreground/60" aria-hidden />
-          <SetTrigger />
-        </div>
+        <CatalogControl />
         <div className="min-w-0 flex-1" />
-        <div className="flex shrink-0 items-center gap-2">
-          <UpgradeButton variant="outline" />
-          <GhostIcon icon={MessageCircle} label="ข้อความ" />
-          <GhostIcon icon={Bell} label="การแจ้งเตือน" dot />
-          <ProfileCapsule />
-        </div>
+        <AccountCluster />
       </div>
       <div className="flex h-14 items-center gap-3 px-8">
-        <nav className="flex shrink-0 items-center" aria-label="เมนูหลัก">
-          <NavLinkItem label="หน้าแรก" active />
-          <NavLinkItem label="ชุดการ์ด" />
-          <NavLinkItem label="เด็คและเครื่องมือ" />
-          <NavLinkItem label="ซื้อขาย" />
-        </nav>
-        <div className="flex min-w-0 flex-1 justify-center">
-          <SearchBox radius="xl" />
-        </div>
-        <MyStuffCluster />
+        <NavCluster shape="full" />
+        {placement === "center" ? (
+          <>
+            <div className="flex min-w-0 flex-1 justify-center">
+              <SearchField variant="capsule" className="h-10 w-full max-w-lg" />
+            </div>
+            <MyStuffCluster />
+          </>
+        ) : (
+          <>
+            <div className="min-w-0 flex-1" />
+            <SearchField variant="capsule" className="h-10 w-80" />
+            <MyStuffCluster />
+          </>
+        )}
       </div>
     </div>
   )
@@ -758,7 +567,7 @@ function HomeFold() {
 const subscribeNever = () => () => {}
 
 export default function NavbarPrototypePage() {
-  const [concept, setConcept] = useState<Concept>("current")
+  const [concept, setConcept] = useState<Concept>("center")
   // Flip the real site theme (next-themes) so the whole page — frame included —
   // previews light/dark; a frame-scoped class can't force light under a dark root.
   const { resolvedTheme, setTheme } = useTheme()
@@ -770,28 +579,16 @@ export default function NavbarPrototypePage() {
     () => false,
   )
   const isDark = mounted && resolvedTheme === "dark"
-  // แบบ B: กดฝั่งชุดเพื่อวนดู ยังไม่เลือก → OP15 → OP14 → OP13 → วนกลับ
-  const [warmSetIndex, setWarmSetIndex] = useState<number | null>(null)
-  const warmSelected =
-    warmSetIndex === null ? null : (PROTOTYPE_SETS[warmSetIndex] ?? null)
   const conceptCopy = CONCEPT_COPY[concept]
-
-  const cycleWarmSet = () => {
-    setWarmSetIndex((index) => {
-      if (index === null) return 0
-      const next = index + 1
-      return next >= PROTOTYPE_SETS.length ? null : next
-    })
-  }
 
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-10">
       <div className="mx-auto max-w-[1440px]">
-        <h1 className="text-h1">เก็บงานแถบเมนูบน — เทียบ 3 แนวกับของปัจจุบัน</h1>
+        <h1 className="text-h1">แบบ C เคาะแล้ว — เหลือเลือกวิธีวางช่องค้นหา</h1>
         <p className="mt-2 max-w-3xl text-body text-muted-foreground">
-          โครงสองแถวที่เบสเคาะไว้ (โลโก้บน · ค้นหากลาง · ตั้งค่าในโปรไฟล์)
-          อยู่ครบทุกแบบ — สิ่งที่ต่างคือวิธีนำเสนอ: ความนิ่ง ความอุ่น
-          หรือแยกตัวเลขเป็นแถบของมันเอง
+          ทั้งสามตัวเลือกคือแบบ C เต็มร่าง (แถบชีพจร + สองแถว)
+          และจัดช่องค้นหาเป็นแคปซูลเข้าชุดกับทั้งแถบแล้ว —
+          ต่างกันที่ตำแหน่งเดียวเท่านั้น สลับเทียบกับของปัจจุบันได้
         </p>
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
@@ -800,7 +597,7 @@ export default function NavbarPrototypePage() {
               options={CONCEPT_OPTIONS}
               value={concept}
               onChange={setConcept}
-              ariaLabel="เลือกแบบแถบเมนู"
+              ariaLabel="เลือกตำแหน่งช่องค้นหา"
               className="min-w-max"
               compactVisual={false}
             />
@@ -826,27 +623,22 @@ export default function NavbarPrototypePage() {
           <div className="min-w-[1360px] bg-background text-foreground">
             {concept === "current" ? (
               <CurrentNavbar />
-            ) : concept === "calm" ? (
-              <CalmNavbar />
-            ) : concept === "warm" ? (
-              <WarmNavbar selected={warmSelected} onCycle={cycleWarmSet} />
             ) : (
-              <TickerNavbar />
+              <CNavbar placement={concept} />
             )}
             <HomeFold />
           </div>
         </section>
         <p className="mt-3 text-meta">
           ทุกแบบเป็นจอ desktop (≥1024px) สถานะบนสุดของหน้า ยังไม่ scroll ·
-          ตัวเลขคือชุดเดียวกับจอจริงของเบส · มือถือใช้แถบเดิม ไม่ถูกแตะ ·
-          ในแบบ B กดฝั่ง &quot;เลือกชุดการ์ด&quot; เพื่อวนดูสถานะตอนเลือกชุดแล้ว
+          ตัวเลขคือชุดเดียวกับจอจริงของเบส · มือถือใช้แถบเดิม ไม่ถูกแตะ
         </p>
 
         <section className="mt-8 grid gap-6 md:grid-cols-[minmax(0,1fr)_300px]">
           <div className="border-l-2 border-primary pl-4">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-h3">{conceptCopy.name}</h2>
-              {concept === "warm" && (
+              {concept === "brand" && (
                 <span className="rounded-full bg-primary/15 px-2 py-1 text-micro text-primary">
                   ฉันแนะนำ
                 </span>
@@ -860,7 +652,7 @@ export default function NavbarPrototypePage() {
             )}
           </div>
           <div className="space-y-2 text-body-sm text-muted-foreground">
-            <p className="font-medium text-foreground">แก้เหมือนกันทุกแบบ:</p>
+            <p className="font-medium text-foreground">ทุกตัวเลือกได้เหมือนกัน:</p>
             {SHARED_FIXES.map((fix) => (
               <p key={fix}>• {fix}</p>
             ))}
