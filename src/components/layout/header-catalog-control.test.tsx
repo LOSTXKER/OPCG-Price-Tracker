@@ -128,7 +128,7 @@ describe("header catalog helpers", () => {
 })
 
 describe("header catalog topology", () => {
-  it("keeps one 56px mobile row while desktop chrome stays 100px", () => {
+  it("keeps one 56px mobile row while desktop chrome stays 132px", () => {
     const header = readFileSync(
       resolve(process.cwd(), "src/components/layout/header.tsx"),
       "utf8",
@@ -253,7 +253,9 @@ describe("header catalog topology", () => {
     expect(catalog).not.toContain("backdrop-blur-sm")
     expect(globals).toContain("--chrome-h: 3.5rem")
     expect(globals).toContain("@media (min-width: 768px)")
-    expect(globals).toContain("--chrome-h: 6.25rem")
+    // navbar แบบ C (owner call 2026-08-28): ticker strip 32px + brand row 44px
+    // + nav row 56px = 132px of desktop chrome.
+    expect(globals).toContain("--chrome-h: 8.25rem")
     expect(setDetail).toContain(
       'parseFloat(styles.getPropertyValue("--chrome-h")) || 3.5',
     )
@@ -270,5 +272,43 @@ describe("header catalog topology", () => {
 
     expect(catalog).toContain("onCommit: () => selectOption(0)")
     expect(catalog).not.toContain("optionRefs.current = []")
+  })
+
+  // Owner request 2026-08-28: a card page should show ITS set in the header.
+  // The card page publishes the set it was served; the control falls back to
+  // that whenever the URL has no `/sets/<code>` of its own.
+  it("names the card page's set from the store, never from the card code", () => {
+    const catalog = readFileSync(
+      resolve(process.cwd(), "src/components/layout/header-catalog-control.tsx"),
+      "utf8",
+    )
+    const publisher = readFileSync(
+      resolve(
+        process.cwd(),
+        "src/components/cards/card-detail/active-set-publisher.tsx",
+      ),
+      "utf8",
+    )
+    const cardDetail = readFileSync(
+      resolve(process.cwd(), "src/components/cards/card-detail.tsx"),
+      "utf8",
+    )
+
+    // URL first, published set second — never the other way round, or a card
+    // page's leftover set would override the set page you actually opened.
+    expect(catalog).toContain(
+      "getHeaderSetCode(pathname) ?? publishedSetCode",
+    )
+
+    // The set must come from the server's own resolution. Deriving it from the
+    // card code is wrong for reprints and promos, which keep their original
+    // code inside a different set (measured: 16 of 100 cards).
+    expect(cardDetail).toContain("<ActiveSetPublisher setCode={set.code} />")
+    expect(publisher).not.toContain("cardCode")
+    expect(publisher).not.toContain("split(")
+
+    // And it must clear on the way out, or the control keeps naming a set you
+    // have already left.
+    expect(publisher).toContain("return () => setActiveSetCode(null)")
   })
 })

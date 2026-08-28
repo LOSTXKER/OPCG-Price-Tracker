@@ -3,13 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import {
-  TrendingUp,
-  Zap,
-} from "lucide-react";
+import { Zap } from "lucide-react";
 
 import { Price } from "@/components/shared/price-inline";
 import { HeaderCatalogControl } from "@/components/layout/header-catalog-control";
+import { HeaderTickerMarquee } from "@/components/layout/header-ticker-marquee";
 import type { SetPickerItem } from "@/components/shared/set-picker";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
@@ -31,6 +29,38 @@ interface MarketTickerProps {
   children?: ReactNode;
   /** True once the page is scrolled — chrome goes opaque; at the top it's transparent. */
   scrolled: boolean;
+}
+
+/** One market figure on the strip: muted label · bright tabular value — plain
+ *  text, never a chip, so nothing up here reads as a button (navbar แบบ C,
+ *  owner call 2026-08-28).
+ *
+ *  `secondary` figures fold away on narrower chrome so the moving half of the
+ *  strip always keeps room to read. */
+function StripFigure({
+  label,
+  secondary,
+  children,
+}: {
+  label: string;
+  secondary?: "lg" | "xl";
+  children: ReactNode;
+}) {
+  return (
+    <span
+      className={cn(
+        "shrink-0 items-baseline gap-1.5 whitespace-nowrap",
+        secondary === "lg" && "hidden lg:flex",
+        secondary === "xl" && "hidden xl:flex",
+        !secondary && "flex",
+      )}
+    >
+      <span className="text-meta">{label}</span>
+      <span className="text-xs font-semibold tabular-nums text-foreground">
+        {children}
+      </span>
+    </span>
+  );
 }
 
 export function HeaderMarketTicker({
@@ -55,9 +85,57 @@ export function HeaderMarketTicker({
         scrolled ? "border-hair" : "border-transparent",
       )}
     >
+      {/* Market pulse strip — the CMC/CoinGecko anatomy the owner picked
+          (แบบ C, 2026-08-28): the figures live on their own hairline band so
+          the brand row below stays a brand row. Figures are text, not chips.
+          The site-wide totals stay pinned and neutral on the left; the cards
+          that actually moved scroll on the right, where green/red is earned
+          (VISION §1) because those numbers really are gains and losses. */}
+      <div
+        data-slot="ticker-strip"
+        className="hairline-b flex h-8 items-center gap-4 overflow-hidden px-6 lg:px-8"
+      >
+        {stats.totalCards > 0 && (
+          <StripFigure label={t(language, "totalCards")}>
+            {formatCount(stats.totalCards)}
+          </StripFigure>
+        )}
+
+        {sets.length > 0 && (
+          <StripFigure label={t(language, "sets")} secondary="xl">
+            {formatCount(sets.length)}
+          </StripFigure>
+        )}
+
+        {stats.totalValue > 0 && (
+          <Link
+            href={`/${game}/market-overview`}
+            className="group flex shrink-0 items-baseline gap-1.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+          >
+            <span className="text-meta">{t(language, "totalValue")}</span>
+            <span className="ease-chrome text-xs font-semibold tabular-nums text-foreground transition-colors group-hover:text-primary">
+              <Price jpy={stats.totalValue} />
+            </span>
+          </Link>
+        )}
+
+        <StripFigure label="JPY/THB" secondary="lg">
+          {stats.exchangeRate.toFixed(3)}
+        </StripFigure>
+
+        {stats.updatedLabels && (
+          <span className="hidden shrink-0 whitespace-nowrap text-meta xl:inline">
+            {t(language, "lastUpdatedLabel")} {stats.updatedLabels[language]}
+          </span>
+        )}
+
+        <HeaderTickerMarquee movers={stats.movers} />
+      </div>
+
+      {/* Brand row — with the figures gone to the strip, this row holds only
+          identity (brand · Game → Set) and account. No vertical dividers:
+          spacing does the grouping. */}
       <div className="flex h-11 items-center gap-3 px-6 lg:px-8">
-        {/* The brand opens this row (owner call 2026-08-28), which frees the
-            row below to be nav + a search field wide enough to be found. */}
         <Link
           href="/"
           aria-label="Meecard"
@@ -76,10 +154,8 @@ export function HeaderMarketTicker({
           </span>
         </Link>
 
-        <div className="hidden h-5 w-px shrink-0 bg-border/60 lg:block" aria-hidden />
-
         {/* Global catalog scope: Game → Set. It stays available on every route
-            without adding a third chrome row. */}
+            without stealing width from the nav row below. */}
         <HeaderCatalogControl
           game={game}
           sets={sets}
@@ -89,69 +165,23 @@ export function HeaderMarketTicker({
           presentation="desktop"
         />
 
-        <div className="h-5 w-px shrink-0 bg-border/60" aria-hidden />
+        <div className="min-w-0 flex-1" />
 
-        {/* Market context remains available and scrolls before it can squeeze
-            either global navigation or the right-side actions. */}
-        <div className="flex min-h-0 min-w-0 flex-1 items-center gap-2 overflow-x-auto overflow-y-hidden text-muted-foreground [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {stats.totalCards > 0 && (
-            <div className="flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-muted/50 px-2.5 text-sm lg:h-8">
-              <span className="font-medium">{t(language, "totalCards")}</span>
-              <span className="font-semibold tabular-nums text-foreground">
-                {formatCount(stats.totalCards)}
-              </span>
-            </div>
-          )}
-
-          {stats.totalValue > 0 && (
+        {/* Right — upgrade + account. Below `lg` the standalone upgrade button
+            yields first — it is the only item here that is also a row in the
+            profile menu ("อัปเกรดแพ็กเกจ"), so nothing becomes unreachable. */}
+        <div className="flex shrink-0 items-center gap-2">
+          {authLoaded && authUser && canUpgrade && (
             <Link
-              href={`/${game}/market-overview`}
-              className="group ease-chrome flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-muted/50 px-2.5 text-sm transition-colors hover:bg-muted lg:h-8"
+              href="/pricing"
+              className="ease-chrome hidden min-h-11 items-center gap-1 rounded-full border border-primary/30 px-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 lg:flex lg:h-8 lg:min-h-0"
             >
-              <span className="font-medium">{t(language, "totalValue")}</span>
-              <span className="font-semibold tabular-nums text-price-up">
-                <Price jpy={stats.totalValue} />
-              </span>
-              <TrendingUp className="size-3 shrink-0 text-price-up opacity-60 transition-transform group-hover:translate-x-0.5" />
+              <Zap className="size-3" />
+              {t(language, "upgrade")}
             </Link>
           )}
 
-          <div className="flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-muted/50 px-2.5 text-sm lg:h-8">
-            <span className="font-medium">JPY/THB</span>
-            <span className="font-semibold tabular-nums text-foreground">
-              {stats.exchangeRate.toFixed(3)}
-            </span>
-          </div>
-        </div>
-
-        {/* Right — upgrade + preferences + account. Owner call 2026-08-28:
-            search left this strip for the taller primary row, and the account
-            cluster (chat · notifications · profile) came up here to sit with
-            the other "about me" controls. */}
-        <div className="flex shrink-0 items-center gap-2">
-          {/* Account moved into this strip, so seven controls now compete for
-              one 44px row. Below `lg` the standalone upgrade button yields
-              first — it is the only item here that is also a row in the
-              profile menu ("อัปเกรดแพ็กเกจ"), so nothing becomes unreachable. */}
-          {authLoaded && authUser && canUpgrade && (
-            <>
-              <Link
-                href="/pricing"
-                className="ease-chrome hidden min-h-11 items-center gap-1 rounded-full border border-primary/30 px-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 lg:flex lg:h-8 lg:min-h-0"
-              >
-                <Zap className="size-3" />
-                {t(language, "upgrade")}
-              </Link>
-              <div className="mx-1 hidden h-5 w-px bg-border/60 lg:block" />
-            </>
-          )}
-
-          {children && (
-            <>
-              <div className="mx-1 hidden h-5 w-px bg-border/60 sm:block" />
-              {children}
-            </>
-          )}
+          {children}
         </div>
       </div>
     </div>

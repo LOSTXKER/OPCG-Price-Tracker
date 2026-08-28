@@ -10,6 +10,7 @@ import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { t } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
+import { ActiveSetPublisher } from "./card-detail/active-set-publisher"
 import { MeecardAsksRail } from "./card-detail/asks-rail"
 import { CardDetailBuyBox } from "./card-detail/card-detail-buy-box"
 import { CardDetailChartSection } from "./card-detail/card-detail-chart-section"
@@ -295,6 +296,8 @@ export function CardDetail(props: CardDetailProps) {
       {faqSlot}
 
       <CardViewTracker cardCode={card.cardCode} />
+      {/* Lets the header's set control name the set you are looking at. */}
+      <ActiveSetPublisher setCode={set.code} />
 
       {/* lightbox */}
       <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>

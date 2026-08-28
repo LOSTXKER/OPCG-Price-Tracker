@@ -4,6 +4,7 @@ import Image from "next/image"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
+import { baseCardCode } from "@/lib/cards/card-code"
 import { getCardName, type Language } from "@/lib/i18n"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { cn } from "@/lib/utils"
@@ -37,7 +38,6 @@ export function SearchResultRow({
   blur = false,
   nameClassName = "text-h5",
   priceClassName = "font-mono text-sm font-semibold",
-  uppercaseSetCode = false,
   alt = "",
 }: {
   card: SearchResult
@@ -50,7 +50,6 @@ export function SearchResultRow({
   blur?: boolean
   nameClassName?: string
   priceClassName?: string
-  uppercaseSetCode?: boolean
   alt?: string
 }) {
   const box = size === "sm" ? "size-9" : "size-10"
@@ -74,11 +73,13 @@ export function SearchResultRow({
       <div className="min-w-0 flex-1">
         <p className={cn("truncate", nameClassName)}>{getCardName(lang, card)}</p>
         <div className="flex items-center gap-1.5 text-meta">
-          {card.set?.code && (
-            <span className="font-mono">
-              {uppercaseSetCode ? card.set.code.toUpperCase() : card.set.code}
-            </span>
-          )}
+          {/* The FULL card number, not just the set prefix (owner ask
+              2026-08-28 "แสดงรหัสของการ์ดให้ครบ") — base form only: the
+              printing suffix stays machine-side, and the rarity badge +
+              "(Parallel)" in the name already keep printings apart. */}
+          <span className="font-mono">
+            {baseCardCode(card.cardCode).toUpperCase()}
+          </span>
           <RarityBadge rarity={card.rarity} size="sm" />
         </div>
       </div>

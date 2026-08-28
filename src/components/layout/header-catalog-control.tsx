@@ -437,7 +437,13 @@ export function HeaderCatalogControl({
   const language = useUIStore((state) => state.language)
   const pathname = usePathname() ?? "/"
   const [open, setOpen] = useState(false)
-  const selectedCode = getHeaderSetCode(pathname)
+  // A `/sets/<code>` URL names its own set. A card page cannot — its URL holds
+  // only the card, and the set is NOT derivable from the card code (reprints
+  // and promos keep their old code in a new set), so the card page publishes
+  // the real one to the store and this control falls back to it. Owner request
+  // 2026-08-28: "เวลาไปหน้าการ์ดไหนก็ตาม อยากให้ navbar ชุดการ์ดเลือกชุดนั้นด้วย".
+  const publishedSetCode = useUIStore((state) => state.activeSetCode)
+  const selectedCode = getHeaderSetCode(pathname) ?? publishedSetCode
   const selectedSet = sets.find(
     (set) =>
       selectedCode?.toLocaleLowerCase() === set.code.toLocaleLowerCase(),

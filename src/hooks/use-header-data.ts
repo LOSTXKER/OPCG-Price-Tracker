@@ -7,7 +7,12 @@ import { useHydrated } from "@/hooks/use-hydrated";
 import { useSettings, invalidateSettings, refetchSettings } from "@/hooks/use-settings";
 import { useUIStore } from "@/stores/ui-store";
 import { isAuthBypassed } from "@/lib/env";
-import type { AuthUser, UserTierValue, MarketStats } from "@/components/layout/header-constants";
+import type {
+  AuthUser,
+  UserTierValue,
+  MarketStats,
+  MarketMover,
+} from "@/components/layout/header-constants";
 
 // Dev bypass is env-driven, so it is identical on server and client — safe
 // to resolve in the lazy initializers without a hydration mismatch.
@@ -24,6 +29,8 @@ export function useHeaderData() {
     totalCards: 0,
     totalValue: 0,
     exchangeRate: 0.296,
+    updatedLabels: null,
+    movers: [],
   });
   const [unreadCount, setUnreadCount] = useState(0);
   const setUnreadGlobal = useUIStore((s) => s.setUnreadMessages);
@@ -73,12 +80,32 @@ export function useHeaderData() {
     async function fetchStats() {
       const [rateData, cardsData] = await Promise.all([
         apiTry(apiGet<{ rate?: number }>("/api/exchange-rate")),
-        apiTry(apiGet<{ total?: number; totalValue?: number }>("/api/cards?limit=1")),
+        apiTry(
+          apiGet<{
+            totalCards?: number;
+            totalValue?: number;
+            lastPriceAt?: string | null;
+            movers?: MarketMover[];
+          }>("/api/cards/ticker"),
+        ),
       ]);
+      // Same rule as the home hero: format the date ONCE per language when the
+      // fetch lands (th-TH keeps the Buddhist year), and let render only pick a
+      // pre-built string — no Date work during a client render.
+      const dateOpts = { day: "numeric", month: "short", year: "numeric" } as const;
+      const updatedLabels = cardsData?.lastPriceAt
+        ? {
+            TH: new Date(cardsData.lastPriceAt).toLocaleDateString("th-TH", dateOpts),
+            EN: new Date(cardsData.lastPriceAt).toLocaleDateString("en-GB", dateOpts),
+            JP: new Date(cardsData.lastPriceAt).toLocaleDateString("ja-JP", dateOpts),
+          }
+        : null;
       setStats((prev) => ({
-        totalCards: cardsData?.total ?? prev.totalCards,
+        totalCards: cardsData?.totalCards ?? prev.totalCards,
         totalValue: cardsData?.totalValue ?? prev.totalValue,
         exchangeRate: rateData?.rate ?? prev.exchangeRate,
+        updatedLabels: updatedLabels ?? prev.updatedLabels,
+        movers: cardsData?.movers ?? prev.movers,
       }));
     }
     void fetchStats();
