@@ -40,7 +40,10 @@ export function ProtoTopBar({ variant = "plain" }: { variant?: ChromeVariant }) 
     const collapsed = variant === "topCollapse" && scrolled
     return (
       <div aria-hidden className="hairline-b sticky top-0 z-chrome bg-background">
-        {/* Row 1 — Shopee grammar: the search field owns the first row. */}
+        {/* Row 1 — today's navbar, verbatim (owner order 2026-08-29: game→set
+            stays on top): logo + OPCG + เลือกชุด + bell. In topCollapse, a
+            search circle appears here only while the field below is folded —
+            the scrolled state then looks exactly like the live site. */}
         <div className="flex h-14 min-w-0 items-center px-2">
           <span className="mr-1 flex size-11 shrink-0 items-center justify-center">
             <Image
@@ -51,32 +54,38 @@ export function ProtoTopBar({ variant = "plain" }: { variant?: ChromeVariant }) 
               className="h-auto w-8 shrink-0 select-none"
             />
           </span>
+          <span className="flex h-11 shrink-0 items-center gap-1 rounded-full border border-hair bg-background px-3 text-sm font-semibold text-foreground">
+            OPCG
+            <ChevronDown className="size-3.5 text-muted-foreground" />
+          </span>
+          <span className="ml-1.5 flex h-11 min-w-0 flex-1 items-center gap-1 rounded-full border border-hair bg-background px-3 text-sm text-muted-foreground">
+            <span className="truncate">เลือกชุด</span>
+            <ChevronDown className="ml-auto size-3.5 shrink-0" />
+          </span>
+          {collapsed && (
+            <span className="surface-2 hairline ml-1.5 flex size-11 shrink-0 items-center justify-center rounded-full text-foreground">
+              <Search className="size-[18px]" />
+            </span>
+          )}
+          <span className="flex size-11 shrink-0 items-center justify-center text-muted-foreground">
+            <Bell className="size-[18px]" />
+          </span>
+        </div>
+
+        {/* Row 2 — the full-width search field. In topCollapse it folds away
+            on scroll (handing search back to the circle above) and returns at
+            the top of the page. */}
+        <div
+          className={cn(
+            "ease-chrome flex min-w-0 items-center overflow-hidden px-2 transition-all",
+            collapsed ? "h-0 opacity-0" : "h-14 opacity-100",
+          )}
+        >
           <span className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-full border border-hair bg-muted/30 px-3.5 text-sm text-muted-foreground">
             <Search className="size-4 shrink-0" />
             <span className="truncate">ค้นหาการ์ด ชุด หรือรหัส…</span>
             {/* Photo search is a real feature — the field carries its entry. */}
             <Camera className="ml-auto size-[18px] shrink-0" />
-          </span>
-          <span className="ml-1 flex size-11 shrink-0 items-center justify-center text-muted-foreground">
-            <Bell className="size-[18px]" />
-          </span>
-        </div>
-
-        {/* Row 2 — game → set, back in the chrome. In topCollapse it folds
-            away on scroll and returns at the top of the page. */}
-        <div
-          className={cn(
-            "ease-chrome flex min-w-0 items-center gap-1.5 overflow-hidden px-2 transition-all",
-            collapsed ? "h-0 opacity-0" : "h-12 opacity-100",
-          )}
-        >
-          <span className="flex h-9 shrink-0 items-center gap-1 rounded-full border border-hair bg-background px-3 text-sm font-semibold text-foreground">
-            OPCG
-            <ChevronDown className="size-3.5 text-muted-foreground" />
-          </span>
-          <span className="flex h-9 min-w-0 flex-1 items-center gap-1 rounded-full border border-hair bg-background px-3 text-sm text-muted-foreground">
-            <span className="truncate">เลือกชุด</span>
-            <ChevronDown className="ml-auto size-3.5 shrink-0" />
           </span>
         </div>
       </div>
