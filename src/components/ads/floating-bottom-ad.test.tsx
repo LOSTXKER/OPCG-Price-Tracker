@@ -88,8 +88,11 @@ describe("floating bottom ad frame", () => {
     expect(markup).toContain("data-floating-ad-spacer")
     expect(markup).toContain('data-ad-zone="global-bottom-anchor"')
     expect(markup).toContain('aria-label="ปิดโฆษณาสำหรับเซสชันนี้"')
+    // 4rem bottom-nav + 1.75rem for the search button that overhangs it
+    // (owner selection 2026-08-29) + 0.5rem breathing room. Without the
+    // overhang term the dock covered that button.
     expect(markup).toContain(
-      "bottom-[calc(4rem+env(safe-area-inset-bottom)+0.5rem)]",
+      "bottom-[calc(4rem+1.75rem+env(safe-area-inset-bottom)+0.5rem)]",
     )
     expect(markup).toContain("md:bottom-4")
     // Ad dock sits on the shared stacking scale (globals.css `--z-index-ad`),
