@@ -251,7 +251,6 @@ export function HeroSearchBar({ sets = [], trending = [] }: { sets?: SetSuggesti
                       thumbClassName="rounded-md"
                       blur
                       nameClassName="text-sm font-medium"
-                      uppercaseSetCode
                       priceClassName="font-price text-sm font-semibold"
                       alt={getCardName(lang, card)}
                     />

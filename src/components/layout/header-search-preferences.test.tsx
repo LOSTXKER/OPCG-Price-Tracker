@@ -178,6 +178,14 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     expect(marquee).toContain("baseCardCode(mover.cardCode)")
     expect(marquee).toContain("href={`/opcg/cards/${mover.cardCode}`}")
 
+    // Owner request: a small card thumbnail rides along. It must stay
+    // decorative (the card is already named beside it) and load eagerly —
+    // a transform-driven rail never retriggers the lazy observer.
+    expect(marquee).toContain("<Image")
+    expect(marquee).toContain('alt=""')
+    expect(marquee).toContain('loading="eager"')
+    expect(marquee).toContain("mover.imageUrl &&")
+
     // The -50% keyframe only loops seamlessly against a duplicated run, and the
     // clone must be hidden from assistive tech so cards are announced once.
     expect(marquee).toContain("animate-ticker")
@@ -219,6 +227,41 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     expect(more).toContain("setCurrency(")
     expect(more).toContain("setTheme(")
     expect(more).toContain("THEME_OPTIONS")
+  })
+
+  // Owner direction 2026-08-28 (after navbar แบบ C): the search popup follows
+  // CoinMarketCap — BEFORE the visitor types it is a discovery surface (recent
+  // searches → most-viewed chip rail → 24h movers with real deltas → page
+  // shortcuts as pills), and the first keystroke swaps all of it for results.
+  it("opens on discovery content, CoinMarketCap-style, before the visitor types", () => {
+    const search = source("src/components/shared/command-search.tsx")
+    const hook = source("src/hooks/use-search-spotlight.ts")
+
+    // Discovery data rides its own lazy endpoint: fetched when the palette
+    // first opens, cached for the page's life — never a page-load cost.
+    expect(search).toContain("useSearchSpotlight(open)")
+    expect(hook).toContain("/api/cards/spotlight")
+    expect(hook).toContain("let cached")
+
+    // Both sections live in the shared keyboard order, and only in the empty
+    // state — `isEmptyQuery` is the single switch between the two modes.
+    expect(search).toContain("isEmptyQuery")
+    for (const token of ['"spot-popular"', '"spot-mover"'] ) {
+      expect(occurrences(search, token)).toBeGreaterThanOrEqual(2)
+    }
+
+    // Movers carry REAL per-card deltas, so they earn green/red — always
+    // paired with an arrow (VISION §4 rule 3), same contract as the marquee.
+    for (const token of ["text-price-up", "text-price-down", "ArrowUp", "ArrowDown"]) {
+      expect(search).toContain(token)
+    }
+
+    // The movers section bridges to the full trending page.
+    expect(search).toContain('goToPage("/opcg/trending")')
+
+    // Page shortcuts stay complete (IA-NAV-04's guarantee) but shrink to
+    // pills in the empty state so discovery keeps the vertical room.
+    expect(search).toContain("rounded-full px-3 text-xs")
   })
 
   it("keeps set and photo search inside the command palette", () => {

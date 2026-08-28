@@ -1,6 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import {
   useCallback,
@@ -11,7 +12,9 @@ import {
   useState,
 } from "react"
 import {
+  ArrowDown,
   ArrowRightLeft,
+  ArrowUp,
   BarChart3,
   BookOpen,
   Briefcase,
@@ -38,6 +41,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Price } from "@/components/shared/price-inline"
 import { SearchResultRow } from "@/components/shared/search-result-row"
 import type { SetPickerItem } from "@/components/shared/set-picker"
 import { getCardName, getSetName, t, type TranslationKey } from "@/lib/i18n"
@@ -46,6 +50,7 @@ import { cn } from "@/lib/utils"
 import { useCardSearch } from "@/hooks/use-card-search"
 import { useRecentSearches } from "@/hooks/use-recent-searches"
 import { useSearchKeyboardNav } from "@/hooks/use-search-keyboard-nav"
+import { useSearchSpotlight } from "@/hooks/use-search-spotlight"
 
 const MAX_SET_RESULTS = 4
 
@@ -115,6 +120,18 @@ export function CommandSearchTrigger({
   )
 }
 
+type PaletteItem = {
+  type: "result" | "set" | "search" | "nav" | "recent" | "spot-popular" | "spot-mover"
+  key: string
+}
+
+/**
+ * Before the visitor types, the palette is a discovery surface, not a blank
+ * box (owner direction 2026-08-28, following CoinMarketCap's search popup):
+ * recent searches, a chip rail of the most-viewed cards, the strongest 24h
+ * movers with their real deltas, and the page shortcuts shrunk to pills.
+ * The first keystroke swaps all of it for plain results.
+ */
 export function CommandSearchModal({
   open,
   onClose,
@@ -127,6 +144,7 @@ export function CommandSearchModal({
   const router = useRouter()
   const lang = useUIStore((s) => s.language)
   const listboxId = useId()
+  const inputRef = useRef<HTMLInputElement | null>(null)
   const restoreFocusRef = useRef<HTMLElement | null>(null)
   const [photoSearchOpen, setPhotoSearchOpen] = useState(false)
 
@@ -168,6 +186,8 @@ export function CommandSearchModal({
     debounceMs: 0,
   })
   const { recent, push: pushRecent, refresh: refreshRecent } = useRecentSearches()
+  // Discovery data arrives once, on the first open — never on page load.
+  const { popular, movers } = useSearchSpotlight(open)
 
   const goToCard = useCallback((code: string) => {
     onClose()
@@ -194,6 +214,8 @@ export function CommandSearchModal({
   }, [recent, query])
 
   const normalizedQuery = query.trim().toLowerCase()
+  const isEmptyQuery = normalizedQuery === ""
+
   const setMatches = useMemo(() => {
     if (!normalizedQuery) return []
 
@@ -215,8 +237,18 @@ export function CommandSearchModal({
     return NAV_ACTIONS.filter((a) => t(lang, a.labelKey).toLowerCase().includes(q))
   }, [query, lang])
 
+  // One flat list drives the keyboard order; it must mirror the visual order
+  // of whichever mode is on screen.
   const allItems = useMemo(() => {
-    const items: { type: "result" | "set" | "search" | "nav" | "recent"; key: string }[] = []
+    const items: PaletteItem[] = []
+    if (isEmptyQuery) {
+      // Discovery mode: recents → popular chips → movers → page pills.
+      for (const r of filteredRecent) items.push({ type: "recent", key: r })
+      for (const c of popular) items.push({ type: "spot-popular", key: c.cardCode })
+      for (const c of movers) items.push({ type: "spot-mover", key: c.cardCode })
+      for (const a of matchedNav) items.push({ type: "nav", key: a.href })
+      return items
+    }
     for (const r of results) items.push({ type: "result", key: r.cardCode })
     for (const set of setMatches) items.push({ type: "set", key: set.code })
     if (query.trim().length >= 2) items.push({ type: "search", key: query.trim() })
@@ -225,20 +257,31 @@ export function CommandSearchModal({
       for (const r of filteredRecent) items.push({ type: "recent", key: r })
     }
     return items
-  }, [results, setMatches, matchedNav, filteredRecent, query])
+  }, [isEmptyQuery, filteredRecent, popular, movers, matchedNav, results, setMatches, query])
 
-  const setBase = results.length
-  const searchIndex = setBase + setMatches.length
+  // Sections come and go per mode, so option indexes are looked up rather than
+  // maintained as base-offset arithmetic per section.
+  const itemIndexByKey = useMemo(() => {
+    const map = new Map<string, number>()
+    allItems.forEach((item, i) => map.set(`${item.type}:${item.key}`, i))
+    return map
+  }, [allItems])
+
+  const indexOf = useCallback(
+    (type: PaletteItem["type"], key: string) => itemIndexByKey.get(`${type}:${key}`) ?? -1,
+    [itemIndexByKey],
+  )
+
   const hasSearchAction = query.trim().length >= 2
-  const navBase = searchIndex + (hasSearchAction ? 1 : 0)
-  const recentBase = navBase + matchedNav.length
 
   const { activeIdx, setActiveIdx, onKeyDown: handleKeyDown } = useSearchKeyboardNav({
     length: allItems.length,
     onSelect: (i) => {
       const item = allItems[i]
-      if (item.type === "result") goToCard(item.key)
-      else if (item.type === "set") goToPage(`/opcg/sets/${item.key}`)
+      if (!item) return
+      if (item.type === "result" || item.type === "spot-popular" || item.type === "spot-mover") {
+        goToCard(item.key)
+      } else if (item.type === "set") goToPage(`/opcg/sets/${item.key}`)
       else if (item.type === "nav") goToPage(item.key)
       else commitSearch(item.key)
     },
@@ -246,13 +289,13 @@ export function CommandSearchModal({
     arrowUpFloor: -1,
   })
 
-  // A fresh result batch drops any stale keyboard highlight (debounceMs:0 means
+  // A fresh item list drops any stale keyboard highlight (debounceMs:0 means
   // an in-flight ArrowDown could otherwise retarget onto a different card and
   // mis-fire on Enter). setTimeout keeps the setState out of the effect body.
   useEffect(() => {
     const tm = setTimeout(() => setActiveIdx(-1), 0)
     return () => clearTimeout(tm)
-  }, [results, setMatches, setActiveIdx])
+  }, [allItems, setActiveIdx])
 
   useEffect(() => {
     if (!open) return
@@ -270,13 +313,47 @@ export function CommandSearchModal({
   const activeOptionId =
     activeIdx >= 0 ? `${listboxId}-option-${activeIdx}` : undefined
 
+  const optionClass = (index: number) =>
+    cn(
+      "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left motion-base",
+      activeIdx === index ? "bg-accent" : "hover:bg-accent/60",
+    )
+
+  const recentRows = (
+    <div className="p-2">
+      <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
+        {t(lang, "recentSearches")}
+      </p>
+      {filteredRecent.map((item) => {
+        const index = indexOf("recent", item)
+        return (
+          <button
+            key={item}
+            id={`${listboxId}-option-${index}`}
+            type="button"
+            role="option"
+            aria-selected={activeIdx === index}
+            onClick={() => commitSearch(item)}
+            className={cn(
+              "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm motion-base",
+              activeIdx === index ? "bg-accent" : "hover:bg-accent/60",
+            )}
+          >
+            <Clock className="size-3.5 text-muted-foreground" />
+            {item}
+          </button>
+        )
+      })}
+    </div>
+  )
+
   return (
     <>
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
       <DialogContent
         showCloseButton={false}
         finalFocus={photoSearchOpen ? false : restoreFocusRef}
-        className="top-[15vh] block max-w-lg translate-y-0 overflow-hidden rounded-2xl p-0 sm:max-w-lg"
+        className="top-[15vh] block max-w-lg translate-y-0 overflow-hidden rounded-2xl p-0 sm:max-w-xl md:max-w-2xl"
       >
         <DialogTitle className="sr-only">
           {t(lang, "searchCardsDots")}
@@ -285,6 +362,7 @@ export function CommandSearchModal({
           <div className="flex items-center gap-3 border-b border-hair px-4">
             <Search className="size-4 shrink-0 text-muted-foreground" />
             <input
+              ref={inputRef}
               autoFocus
               value={query}
               onChange={(e) => {
@@ -305,7 +383,12 @@ export function CommandSearchModal({
               <button
                 type="button"
                 aria-label="Clear search"
-                onClick={() => reset()}
+                // Clearing swaps the popup back to its discovery state — hand
+                // focus straight back to the field so arrow keys keep working.
+                onClick={() => {
+                  reset()
+                  inputRef.current?.focus()
+                }}
                 className="tap-safe flex size-6 items-center justify-center rounded-md text-muted-foreground hover:text-foreground"
               >
                 <XIcon className="size-3.5" />
@@ -347,183 +430,307 @@ export function CommandSearchModal({
             id={listboxId}
             role="listbox"
             aria-label={t(lang, "searchCardsDots")}
-            className="max-h-[50vh] overflow-y-auto"
+            className="max-h-[min(60vh,34rem)] overflow-y-auto"
           >
-            {loading && results.length === 0 && (
-              <div className="p-2 space-y-1">
-                {[0, 1, 2].map((i) => (
-                  <div key={i} className="flex items-center gap-3 rounded-xl px-3 py-2.5">
-                    <Skeleton className="size-10 shrink-0 rounded-lg" />
-                    <div className="min-w-0 flex-1 space-y-1.5">
-                      <Skeleton className="h-3.5 w-32 rounded-sm" />
-                      <Skeleton className="h-3 w-20 rounded-sm" />
+            {isEmptyQuery ? (
+              <>
+                {filteredRecent.length > 0 && recentRows}
+
+                {/* Most-viewed chip rail — CMC's "Top Boosted" slot. */}
+                {popular.length > 0 && (
+                  <div className="p-2 pb-0">
+                    <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
+                      {t(lang, "popular")}
+                    </p>
+                    <div className="no-sb flex gap-2 overflow-x-auto px-2 pb-1">
+                      {popular.map((card) => {
+                        const index = indexOf("spot-popular", card.cardCode)
+                        return (
+                          <button
+                            key={card.cardCode}
+                            id={`${listboxId}-option-${index}`}
+                            type="button"
+                            role="option"
+                            aria-selected={activeIdx === index}
+                            onClick={() => goToCard(card.cardCode)}
+                            className={cn(
+                              "hairline flex shrink-0 items-center gap-2.5 rounded-xl px-2.5 py-2 text-left motion-base",
+                              activeIdx === index ? "bg-accent" : "bg-card hover:bg-muted",
+                            )}
+                          >
+                            <span className="relative h-10 w-7 shrink-0 overflow-hidden rounded-[4px] bg-muted">
+                              {card.imageUrl && (
+                                <Image
+                                  src={card.imageUrl}
+                                  alt=""
+                                  fill
+                                  className="object-cover"
+                                  sizes="28px"
+                                />
+                              )}
+                            </span>
+                            <span className="min-w-0">
+                              <span className="block max-w-[9rem] truncate text-sm font-medium">
+                                {getCardName(lang, card)}
+                              </span>
+                              {card.latestPriceJpy != null && (
+                                <span className="block font-price text-meta tabular-nums">
+                                  <Price
+                                    jpy={Math.round(card.latestPriceJpy)}
+                                    thb={card.latestPriceThb}
+                                  />
+                                </span>
+                              )}
+                            </span>
+                          </button>
+                        )
+                      })}
                     </div>
-                    <Skeleton className="h-4 w-16 shrink-0 rounded-sm" />
                   </div>
-                ))}
-              </div>
-            )}
+                )}
 
-            {results.length > 0 && (
-              <div className="p-2">
-                <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
-                  {t(lang, "card")}
-                </p>
-                {results.map((card, i) => (
-                  <button
-                    key={card.cardCode}
-                    id={`${listboxId}-option-${i}`}
-                    type="button"
-                    role="option"
-                    aria-selected={activeIdx === i}
-                    onClick={() => goToCard(card.cardCode)}
-                    className={cn(
-                      "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left motion-base",
-                      activeIdx === i ? "bg-accent" : "hover:bg-accent/60"
-                    )}
-                  >
-                    <SearchResultRow
-                      card={card}
-                      lang={lang}
-                      thumbFit="contain"
-                      thumbClassName="rounded-lg"
-                      alt={getCardName(lang, card)}
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
+                {/* Strongest 24h movers — CMC's "Trending" slot, with real
+                    deltas: green/red is earned here and always arrow-paired. */}
+                {movers.length > 0 && (
+                  <div className="p-2 pb-0">
+                    <div className="flex items-baseline justify-between px-2 py-1.5">
+                      <p className="text-eyebrow text-muted-foreground/60">
+                        {t(lang, "trendingShort")}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => goToPage("/opcg/trending")}
+                        className="text-meta motion-base hover:text-foreground"
+                      >
+                        {t(lang, "viewAll")}
+                      </button>
+                    </div>
+                    {movers.map((card) => {
+                      const index = indexOf("spot-mover", card.cardCode)
+                      const change = card.priceChange24h ?? 0
+                      const up = change > 0
+                      const Arrow = up ? ArrowUp : ArrowDown
+                      return (
+                        <button
+                          key={card.cardCode}
+                          id={`${listboxId}-option-${index}`}
+                          type="button"
+                          role="option"
+                          aria-selected={activeIdx === index}
+                          onClick={() => goToCard(card.cardCode)}
+                          className={optionClass(index)}
+                        >
+                          <SearchResultRow
+                            card={{ ...card, set: card.set ?? undefined }}
+                            lang={lang}
+                            thumbFit="contain"
+                            thumbClassName="rounded-lg"
+                            alt={getCardName(lang, card)}
+                          />
+                          <span
+                            className={cn(
+                              "inline-flex shrink-0 items-center gap-0.5 font-price text-xs font-semibold tabular-nums",
+                              up ? "text-price-up" : "text-price-down",
+                            )}
+                          >
+                            <Arrow className="size-3" aria-hidden />
+                            {up ? "+" : ""}
+                            {change.toFixed(1)}%
+                          </span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
 
-            {setMatches.length > 0 && (
-              <div className="p-2">
-                <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
-                  {t(lang, "sets")}
-                </p>
-                {setMatches.map((set, i) => {
-                  const itemIndex = setBase + i
-                  return (
+                {/* Page shortcuts, shrunk to pills so discovery keeps the room. */}
+                <div className="p-2">
+                  <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
+                    {t(lang, "pages")}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5 px-2 pb-2">
+                    {matchedNav.map((action) => {
+                      const index = indexOf("nav", action.href)
+                      const Icon = action.icon
+                      return (
+                        <button
+                          key={action.href}
+                          id={`${listboxId}-option-${index}`}
+                          type="button"
+                          role="option"
+                          aria-selected={activeIdx === index}
+                          onClick={() => goToPage(action.href)}
+                          className={cn(
+                            "hairline flex min-h-9 items-center gap-1.5 rounded-full px-3 text-xs motion-base",
+                            activeIdx === index
+                              ? "bg-accent text-foreground"
+                              : "bg-card text-muted-foreground hover:bg-muted hover:text-foreground",
+                          )}
+                        >
+                          <Icon className="size-3.5" aria-hidden />
+                          {t(lang, action.labelKey)}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {loading && results.length === 0 && (
+                  <div className="p-2 space-y-1">
+                    {[0, 1, 2].map((i) => (
+                      <div key={i} className="flex items-center gap-3 rounded-xl px-3 py-2.5">
+                        <Skeleton className="size-10 shrink-0 rounded-lg" />
+                        <div className="min-w-0 flex-1 space-y-1.5">
+                          <Skeleton className="h-3.5 w-32 rounded-sm" />
+                          <Skeleton className="h-3 w-20 rounded-sm" />
+                        </div>
+                        <Skeleton className="h-4 w-16 shrink-0 rounded-sm" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {results.length > 0 && (
+                  <div className="p-2">
+                    <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
+                      {t(lang, "card")}
+                    </p>
+                    {results.map((card) => {
+                      const index = indexOf("result", card.cardCode)
+                      return (
+                        <button
+                          key={card.cardCode}
+                          id={`${listboxId}-option-${index}`}
+                          type="button"
+                          role="option"
+                          aria-selected={activeIdx === index}
+                          onClick={() => goToCard(card.cardCode)}
+                          className={optionClass(index)}
+                        >
+                          <SearchResultRow
+                            card={card}
+                            lang={lang}
+                            thumbFit="contain"
+                            thumbClassName="rounded-lg"
+                            alt={getCardName(lang, card)}
+                          />
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {setMatches.length > 0 && (
+                  <div className="p-2">
+                    <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
+                      {t(lang, "sets")}
+                    </p>
+                    {setMatches.map((set) => {
+                      const index = indexOf("set", set.code)
+                      return (
+                        <button
+                          key={set.code}
+                          id={`${listboxId}-option-${index}`}
+                          type="button"
+                          role="option"
+                          aria-selected={activeIdx === index}
+                          onClick={() => goToPage(`/opcg/sets/${set.code}`)}
+                          className={optionClass(index)}
+                        >
+                          <span className="surface-2 flex size-10 shrink-0 items-center justify-center rounded-lg">
+                            <PackageOpen className="size-4 text-muted-foreground" aria-hidden />
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-sm font-medium text-foreground">
+                              {getSetName(lang, set)}
+                            </span>
+                            <span className="text-code text-muted-foreground">
+                              {set.code.toUpperCase()}
+                            </span>
+                          </span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {hasSearchAction && (
+                  <div className="px-2 pb-2">
                     <button
-                      key={set.code}
-                      id={`${listboxId}-option-${itemIndex}`}
+                      id={`${listboxId}-option-${indexOf("search", query.trim())}`}
                       type="button"
                       role="option"
-                      aria-selected={activeIdx === itemIndex}
-                      onClick={() => goToPage(`/opcg/sets/${set.code}`)}
+                      aria-selected={activeIdx === indexOf("search", query.trim())}
+                      onClick={() => commitSearch(query)}
                       className={cn(
-                        "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left motion-base",
-                        activeIdx === itemIndex ? "bg-accent" : "hover:bg-accent/60",
+                        "flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-meta motion-base hover:bg-accent/60 hover:text-foreground",
+                        activeIdx === indexOf("search", query.trim()) && "bg-accent text-foreground",
                       )}
                     >
-                      <span className="surface-2 flex size-10 shrink-0 items-center justify-center rounded-lg">
-                        <PackageOpen className="size-4 text-muted-foreground" aria-hidden />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-medium text-foreground">
-                          {getSetName(lang, set)}
-                        </span>
-                        <span className="text-code text-muted-foreground">
-                          {set.code.toUpperCase()}
-                        </span>
-                      </span>
+                      <Search className="size-3" aria-hidden />
+                      {t(lang, "viewAllResults")} &ldquo;{query.trim()}&rdquo;
                     </button>
-                  )
-                })}
-              </div>
-            )}
+                  </div>
+                )}
 
-            {hasSearchAction && (
-              <div className="px-2 pb-2">
-                <button
-                  id={`${listboxId}-option-${searchIndex}`}
-                  type="button"
-                  role="option"
-                  aria-selected={activeIdx === searchIndex}
-                  onClick={() => commitSearch(query)}
-                  className={cn(
-                    "flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-meta motion-base hover:bg-accent/60 hover:text-foreground",
-                    activeIdx === searchIndex && "bg-accent text-foreground",
-                  )}
-                >
-                  <Search className="size-3" aria-hidden />
-                  {t(lang, "viewAllResults")} &ldquo;{query.trim()}&rdquo;
-                </button>
-              </div>
-            )}
+                {/* Pages — navigation shortcuts whose label matches the query */}
+                {matchedNav.length > 0 && (
+                  <div className="p-2">
+                    <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
+                      {t(lang, "pages")}
+                    </p>
+                    {matchedNav.map((action) => {
+                      const index = indexOf("nav", action.href)
+                      const Icon = action.icon
+                      return (
+                        <button
+                          key={action.href}
+                          id={`${listboxId}-option-${index}`}
+                          type="button"
+                          role="option"
+                          aria-selected={activeIdx === index}
+                          onClick={() => goToPage(action.href)}
+                          className={cn(
+                            "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm motion-base",
+                            activeIdx === index ? "bg-accent" : "hover:bg-accent/60",
+                          )}
+                        >
+                          <Icon className="size-4 text-muted-foreground" />
+                          {t(lang, action.labelKey)}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
 
-            {/* Pages — navigation shortcuts (all when empty, filtered when typing) */}
-            {matchedNav.length > 0 && (
-              <div className="p-2">
-                <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
-                  {t(lang, "pages")}
-                </p>
-                {matchedNav.map((action, i) => {
-                  const Icon = action.icon
-                  return (
-                    <button
-                      key={action.href}
-                      id={`${listboxId}-option-${navBase + i}`}
-                      type="button"
-                      role="option"
-                      aria-selected={activeIdx === navBase + i}
-                      onClick={() => goToPage(action.href)}
-                      className={cn(
-                        "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm motion-base",
-                        activeIdx === navBase + i ? "bg-accent" : "hover:bg-accent/60"
-                      )}
-                    >
-                      <Icon className="size-4 text-muted-foreground" />
-                      {t(lang, action.labelKey)}
-                    </button>
-                  )
-                })}
-              </div>
-            )}
+                {error && query.trim().length >= 2 && !loading && (
+                  <div className="border-b border-destructive/10 px-4 py-3 text-center text-sm text-destructive">
+                    Search failed. Please try again.
+                  </div>
+                )}
 
-            {error && query.trim().length >= 2 && !loading && (
-              <div className="border-b border-destructive/10 px-4 py-3 text-center text-sm text-destructive">
-                Search failed. Please try again.
-              </div>
-            )}
+                {results.length === 0 && setMatches.length === 0 && !loading && filteredRecent.length > 0 && (
+                  recentRows
+                )}
 
-            {results.length === 0 && setMatches.length === 0 && !loading && filteredRecent.length > 0 && (
-              <div className="p-2">
-                <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
-                  {t(lang, "recentSearches")}
-                </p>
-                {filteredRecent.map((item, i) => (
-                  <button
-                    key={item}
-                    id={`${listboxId}-option-${recentBase + i}`}
-                    type="button"
-                    role="option"
-                    aria-selected={activeIdx === recentBase + i}
-                    onClick={() => commitSearch(item)}
-                    className={cn(
-                      "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm motion-base",
-                      activeIdx === recentBase + i ? "bg-accent" : "hover:bg-accent/60"
-                    )}
-                  >
-                    <Clock className="size-3.5 text-muted-foreground" />
-                    {item}
-                  </button>
-                ))}
-              </div>
-            )}
+                {!loading &&
+                  query.trim().length >= 2 &&
+                  results.length === 0 &&
+                  setMatches.length === 0 &&
+                  !error && (
+                  <div className="px-4 py-8 text-center text-sm text-muted-foreground">
+                    {t(lang, "noResultsFor")} &ldquo;{query.trim()}&rdquo;
+                  </div>
+                )}
 
-            {!loading &&
-              query.trim().length >= 2 &&
-              results.length === 0 &&
-              setMatches.length === 0 &&
-              !error && (
-              <div className="px-4 py-8 text-center text-sm text-muted-foreground">
-                {t(lang, "noResultsFor")} &ldquo;{query.trim()}&rdquo;
-              </div>
-            )}
-
-            {!loading && query.trim().length < 2 && filteredRecent.length === 0 && matchedNav.length === 0 && (
-              <div className="px-4 py-8 text-center text-sm text-muted-foreground/50">
-                {t(lang, "typeToSearch")}
-              </div>
+                {!loading && query.trim().length < 2 && filteredRecent.length === 0 && matchedNav.length === 0 && (
+                  <div className="px-4 py-8 text-center text-sm text-muted-foreground/50">
+                    {t(lang, "typeToSearch")}
+                  </div>
+                )}
+              </>
             )}
           </div>
       </DialogContent>
