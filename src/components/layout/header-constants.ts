@@ -39,6 +39,17 @@ export const TIER_DISPLAY: Record<UserTierValue, { label: string; color: string;
   LIFETIME_PRO_PLUS: { label: "Pro+ ∞", color: "bg-primary/15 text-primary", icon: Crown },
 };
 
+/** One card on the scrolling half of the header strip. */
+export type MarketMover = {
+  cardCode: string;
+  nameJp: string | null;
+  nameEn: string | null;
+  nameTh: string | null;
+  latestPriceJpy: number | null;
+  latestPriceThb: number | null;
+  priceChange24h: number | null;
+};
+
 export type MarketStats = {
   totalCards: number;
   totalValue: number;
@@ -46,6 +57,8 @@ export type MarketStats = {
   /** "อัปเดตล่าสุด" per language, pre-formatted when the stats fetch lands —
    *  render only ever picks a string (no Date work during render). */
   updatedLabels: Record<Language, string> | null;
+  /** Biggest 24h gainers and losers, interleaved by the API. */
+  movers: MarketMover[];
 };
 
 export const LANG_OPTIONS: { value: Language; label: string }[] = [

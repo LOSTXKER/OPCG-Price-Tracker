@@ -52,10 +52,21 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     }
     expect(ticker).toContain('href={`/${game}/market-overview`}')
     // navbar แบบ C: the figures live on their own thin strip as plain text —
-    // chips up here read as buttons, and green is reserved for real P/L.
+    // chips up here read as buttons.
     expect(ticker).toContain('data-slot="ticker-strip"')
     expect(ticker).not.toContain("bg-muted/50")
-    expect(ticker).not.toContain("text-price-up")
+    // A catalog total is not a profit, so it must not be painted like one.
+    // Scope this to the totalValue link: the strip's OTHER half (the marquee)
+    // legitimately carries green and red, so a file-wide `not.toContain` would
+    // be the wrong guard — it would pass only until the two live in one file.
+    const totalValueStart = ticker.indexOf('t(language, "totalValue")')
+    expect(totalValueStart).toBeGreaterThan(-1)
+    const totalValueBlock = ticker.slice(
+      totalValueStart,
+      ticker.indexOf("</Link>", totalValueStart),
+    )
+    expect(totalValueBlock).not.toContain("text-price-up")
+    expect(totalValueBlock).not.toContain("text-price-down")
 
     // Search and the three display preferences both left this strip.
     expect(ticker).not.toContain("onSearchOpen")
@@ -135,11 +146,53 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     const ticker = source("src/components/layout/header-market-ticker.tsx")
 
     expect(headerData).toContain("/api/exchange-rate")
-    expect(headerData).toContain("/api/cards?limit=1")
+    // One purpose-built endpoint carries the figures AND the movers, so adding
+    // the marquee did not add a third request. It replaced `/api/cards?limit=1`,
+    // which returned a whole card row to read two aggregates.
+    expect(headerData).toContain("/api/cards/ticker")
+    expect(headerData).not.toContain("/api/cards?limit=1")
     // The strip renders what the hook resolved; it must not open its own
     // request path (that was the rejected round's shape).
     expect(ticker).not.toContain("apiGet")
     expect(ticker).toContain("stats.totalCards")
+  })
+
+  // Owner call 2026-08-28 (late): the strip gained colour, more data and
+  // motion — the movers marquee. These lock the parts that are easy to break
+  // silently: the colour rule, the seamless loop, and the motion opt-outs.
+  it("scrolls real movers with arrows, a cloned run, and motion opt-outs", () => {
+    const ticker = source("src/components/layout/header-market-ticker.tsx")
+    const marquee = source("src/components/layout/header-ticker-marquee.tsx")
+    const globals = source("src/app/globals.css")
+
+    expect(ticker).toContain("<HeaderTickerMarquee")
+    expect(marquee).toContain('data-slot="ticker-marquee"')
+
+    // Real per-card deltas earn green/red — but colour is never the only
+    // signal, so each one ships with its arrow (VISION §4 rule 3).
+    for (const token of ["text-price-up", "text-price-down", "ArrowUp", "ArrowDown"]) {
+      expect(marquee).toContain(token)
+    }
+
+    // Reader-facing codes drop the scraper's printing suffix; the href keeps it.
+    expect(marquee).toContain("baseCardCode(mover.cardCode)")
+    expect(marquee).toContain("href={`/opcg/cards/${mover.cardCode}`}")
+
+    // The -50% keyframe only loops seamlessly against a duplicated run, and the
+    // clone must be hidden from assistive tech so cards are announced once.
+    expect(marquee).toContain("animate-ticker")
+    expect(marquee).toContain("aria-hidden")
+    expect(marquee.match(/\{items\}/g)?.length).toBe(2)
+    // No data must leave no empty rail behind.
+    expect(marquee).toContain("movers.length === 0")
+
+    // Motion opt-outs: hover and keyboard focus pause it, and reduced-motion
+    // turns the rail into a plain scroller instead of hiding the cards.
+    expect(globals).toContain(".animate-ticker:hover")
+    expect(globals).toContain(".ticker-viewport:focus-within .animate-ticker")
+    expect(globals).toContain("@media (prefers-reduced-motion: reduce)")
+    const reduced = globals.slice(globals.indexOf(".animate-ticker {\n    animation: none;"))
+    expect(reduced).toContain("overflow-x: auto")
   })
 
   it("keeps both keyboard shortcuts and restores focus after Escape", () => {

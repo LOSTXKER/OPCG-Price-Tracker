@@ -128,7 +128,7 @@ describe("header catalog helpers", () => {
 })
 
 describe("header catalog topology", () => {
-  it("keeps one 56px mobile row while desktop chrome stays 128px", () => {
+  it("keeps one 56px mobile row while desktop chrome stays 132px", () => {
     const header = readFileSync(
       resolve(process.cwd(), "src/components/layout/header.tsx"),
       "utf8",
@@ -253,9 +253,9 @@ describe("header catalog topology", () => {
     expect(catalog).not.toContain("backdrop-blur-sm")
     expect(globals).toContain("--chrome-h: 3.5rem")
     expect(globals).toContain("@media (min-width: 768px)")
-    // navbar แบบ C (owner call 2026-08-28): ticker strip 28px + brand row 44px
-    // + nav row 56px = 128px of desktop chrome.
-    expect(globals).toContain("--chrome-h: 8rem")
+    // navbar แบบ C (owner call 2026-08-28): ticker strip 32px + brand row 44px
+    // + nav row 56px = 132px of desktop chrome.
+    expect(globals).toContain("--chrome-h: 8.25rem")
     expect(setDetail).toContain(
       'parseFloat(styles.getPropertyValue("--chrome-h")) || 3.5',
     )

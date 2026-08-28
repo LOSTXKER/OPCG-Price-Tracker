@@ -108,6 +108,7 @@ export const en = {
   grid: "Grid",
   totalCards: "Total Cards",
   lastUpdatedLabel: "Updated",
+  marketMovers: "Biggest 24h price movers",
   avgPerCard: "Avg. per Card",
   marketPricePerCard: "Market price / card",
   portfolioCardCountSummary: "{holdings} types · {copies} cards",

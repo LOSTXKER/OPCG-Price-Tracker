@@ -108,6 +108,7 @@ export const jp = {
   grid: "グリッド",
   totalCards: "全カード",
   lastUpdatedLabel: "最終更新",
+  marketMovers: "24時間の値動きが大きいカード",
   avgPerCard: "1枚あたり平均",
   marketPricePerCard: "市場価格 / 1枚",
   portfolioCardCountSummary: "{holdings}種類 · 合計{copies}枚",

@@ -155,8 +155,8 @@
   --radius: 0.75rem;
 
   /* Top-chrome height — mobile = header (h-14 = 56px); desktop override below
-     = ticker strip (h-7 = 28px) + brand row (h-11 = 44px) + header (h-14 = 56px)
-     = 128px. Sticky offsets and scroll-margins read from this single var
+     = ticker strip (h-8 = 32px) + brand row (h-11 = 44px) + header (h-14 = 56px)
+     = 132px. Sticky offsets and scroll-margins read from this single var
      (TOKENS-04) instead of magic numbers. */
   --chrome-h: 3.5rem;
   --floating-ad-clearance: 0rem;
@@ -223,13 +223,13 @@
   --neutral-soft: var(--muted);
 }
 
-/* Desktop top chrome = ticker strip (h-7 = 28px) + brand row (h-11 = 44px)
-   + header (h-14 = 56px) = 128px (navbar แบบ C, เบสเคาะ 2026-08-28).
+/* Desktop top chrome = ticker strip (h-8 = 32px) + brand row (h-11 = 44px)
+   + header (h-14 = 56px) = 132px (navbar แบบ C, เบสเคาะ 2026-08-28).
    Kept OUTSIDE @layer (and outside :root's body) — a layered override would
    lose to the unlayered base value above. */
 @media (min-width: 768px) {
   :root {
-    --chrome-h: 8rem;
+    --chrome-h: 8.25rem;
   }
 }
 
@@ -785,6 +785,33 @@
   animation-play-state: paused;
 }
 
+/* Window the header marquee runs inside. The mask dissolves both ends so cards
+   enter and leave instead of being guillotined by the viewport edge, and the
+   left fade also keeps the moving text from colliding with the pinned figures
+   beside it. */
+.ticker-viewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 24px,
+    #000 calc(100% - 24px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 24px,
+    #000 calc(100% - 24px),
+    transparent
+  );
+}
+/* A keyboard user tabbing through the marquee must be able to reach a card the
+   animation has carried off-screen. */
+.ticker-viewport:focus-within .animate-ticker {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto !important;
@@ -800,6 +827,18 @@
   }
   .animate-ticker {
     animation: none;
+  }
+  /* With the travel switched off, the same cards are still worth reading —
+     hand the row back to the reader as a normal horizontal scroller (and drop
+     the duplicate run's width by letting the track shrink to the viewport). */
+  .ticker-viewport {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .ticker-viewport::-webkit-scrollbar {
+    display: none;
   }
   .animate-pulse {
     animation: none;

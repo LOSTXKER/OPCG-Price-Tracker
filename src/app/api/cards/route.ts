@@ -175,7 +175,7 @@ export const GET = apiHandler(async (request: NextRequest) => {
       }).then(buildCardSearchFacets)
     : Promise.resolve(undefined);
 
-  const [rawCards, total, valueAgg, facets, latestPrice] = await Promise.all([
+  const [rawCards, total, valueAgg, facets] = await Promise.all([
     prisma.card.findMany({
       where,
       orderBy,
@@ -198,12 +198,6 @@ export const GET = apiHandler(async (request: NextRequest) => {
     prisma.card.count({ where }),
     prisma.card.aggregate({ _sum: { latestPriceJpy: true }, where: { latestPriceJpy: { gt: 0 } } }),
     facetsPromise,
-    // Freshest scrape overall — the header's "อัปเดตล่าสุด" figure. Indexed on
-    // scrapedAt, so this is a single index-tail read next to the aggregate above.
-    prisma.cardPrice.findFirst({
-      orderBy: { scrapedAt: "desc" },
-      select: { scrapedAt: true },
-    }),
   ]);
 
   const cards = rawCards.map(({ prices, ...rest }) => ({
@@ -215,7 +209,6 @@ export const GET = apiHandler(async (request: NextRequest) => {
     cards,
     total,
     totalValue: valueAgg._sum.latestPriceJpy ?? 0,
-    lastPriceAt: latestPrice?.scrapedAt ?? null,
     page,
     limit,
     totalPages: Math.ceil(total / limit),

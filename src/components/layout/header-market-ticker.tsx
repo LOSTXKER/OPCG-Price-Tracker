@@ -7,6 +7,7 @@ import { Zap } from "lucide-react";
 
 import { Price } from "@/components/shared/price-inline";
 import { HeaderCatalogControl } from "@/components/layout/header-catalog-control";
+import { HeaderTickerMarquee } from "@/components/layout/header-ticker-marquee";
 import type { SetPickerItem } from "@/components/shared/set-picker";
 import { useUIStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
@@ -32,16 +33,28 @@ interface MarketTickerProps {
 
 /** One market figure on the strip: muted label · bright tabular value — plain
  *  text, never a chip, so nothing up here reads as a button (navbar แบบ C,
- *  owner call 2026-08-28). */
+ *  owner call 2026-08-28).
+ *
+ *  `secondary` figures fold away on narrower chrome so the moving half of the
+ *  strip always keeps room to read. */
 function StripFigure({
   label,
+  secondary,
   children,
 }: {
   label: string;
+  secondary?: "lg" | "xl";
   children: ReactNode;
 }) {
   return (
-    <span className="flex shrink-0 items-baseline gap-1.5 whitespace-nowrap">
+    <span
+      className={cn(
+        "shrink-0 items-baseline gap-1.5 whitespace-nowrap",
+        secondary === "lg" && "hidden lg:flex",
+        secondary === "xl" && "hidden xl:flex",
+        !secondary && "flex",
+      )}
+    >
       <span className="text-meta">{label}</span>
       <span className="text-xs font-semibold tabular-nums text-foreground">
         {children}
@@ -74,11 +87,13 @@ export function HeaderMarketTicker({
     >
       {/* Market pulse strip — the CMC/CoinGecko anatomy the owner picked
           (แบบ C, 2026-08-28): the figures live on their own hairline band so
-          the brand row below stays a brand row. Figures are text, not chips;
-          green/red stays reserved for actual gains and losses (VISION §1). */}
+          the brand row below stays a brand row. Figures are text, not chips.
+          The site-wide totals stay pinned and neutral on the left; the cards
+          that actually moved scroll on the right, where green/red is earned
+          (VISION §1) because those numbers really are gains and losses. */}
       <div
         data-slot="ticker-strip"
-        className="hairline-b flex h-7 items-center gap-4 overflow-x-auto overflow-y-hidden px-6 lg:px-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="hairline-b flex h-8 items-center gap-4 overflow-hidden px-6 lg:px-8"
       >
         {stats.totalCards > 0 && (
           <StripFigure label={t(language, "totalCards")}>
@@ -87,7 +102,7 @@ export function HeaderMarketTicker({
         )}
 
         {sets.length > 0 && (
-          <StripFigure label={t(language, "sets")}>
+          <StripFigure label={t(language, "sets")} secondary="xl">
             {formatCount(sets.length)}
           </StripFigure>
         )}
@@ -104,13 +119,17 @@ export function HeaderMarketTicker({
           </Link>
         )}
 
-        <StripFigure label="JPY/THB">{stats.exchangeRate.toFixed(3)}</StripFigure>
+        <StripFigure label="JPY/THB" secondary="lg">
+          {stats.exchangeRate.toFixed(3)}
+        </StripFigure>
 
         {stats.updatedLabels && (
-          <span className="ml-auto shrink-0 whitespace-nowrap text-meta">
+          <span className="hidden shrink-0 whitespace-nowrap text-meta xl:inline">
             {t(language, "lastUpdatedLabel")} {stats.updatedLabels[language]}
           </span>
         )}
+
+        <HeaderTickerMarquee movers={stats.movers} />
       </div>
 
       {/* Brand row — with the figures gone to the strip, this row holds only

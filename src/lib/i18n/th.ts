@@ -108,6 +108,7 @@ export const th = {
   grid: "กริด",
   totalCards: "การ์ดทั้งหมด",
   lastUpdatedLabel: "อัปเดตล่าสุด",
+  marketMovers: "การ์ดที่ราคาขยับแรงใน 24 ชั่วโมง",
   avgPerCard: "เฉลี่ยต่อการ์ด",
   marketPricePerCard: "ราคาตลาด/ใบ",
   portfolioCardCountSummary: "{holdings} แบบ · รวม {copies} ใบ",
