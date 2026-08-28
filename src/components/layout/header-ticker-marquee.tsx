@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown, ArrowUp } from "lucide-react";
 
@@ -43,8 +44,25 @@ export function HeaderTickerMarquee({
         // all of them would spend the visitor's bandwidth on a browse aid they
         // may never click — the same call the catalog dropdown already makes.
         prefetch={false}
-        className="ease-chrome flex shrink-0 items-baseline gap-1.5 whitespace-nowrap rounded-full px-2 py-0.5 transition-colors hover:bg-muted/60"
+        className="ease-chrome flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-0.5 transition-colors hover:bg-muted/60"
       >
+        {mover.imageUrl && (
+          // Thumbnail at card ratio (63:88). Tiny on purpose — it is a visual
+          // handle for a card you already know, not a preview: the artwork's
+          // colour is what a collector recognises at this size. `eager` because
+          // the rail travels by transform, which does not retrigger the lazy
+          // observer as cards move into view.
+          <span className="relative h-5 w-[14px] shrink-0 overflow-hidden rounded-[2px] bg-muted ring-1 ring-border/50">
+            <Image
+              src={mover.imageUrl}
+              alt=""
+              fill
+              sizes="14px"
+              loading="eager"
+              className="select-none object-cover"
+            />
+          </span>
+        )}
         <span className="text-xs font-medium text-foreground">
           {getCardName(language, mover)}
         </span>

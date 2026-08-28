@@ -23,6 +23,7 @@ const moverSelect = {
   nameJp: true,
   nameEn: true,
   nameTh: true,
+  imageUrl: true,
   latestPriceJpy: true,
   latestPriceThb: true,
   priceChange24h: true,

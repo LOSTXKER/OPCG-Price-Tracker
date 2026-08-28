@@ -45,6 +45,7 @@ export type MarketMover = {
   nameJp: string | null;
   nameEn: string | null;
   nameTh: string | null;
+  imageUrl: string | null;
   latestPriceJpy: number | null;
   latestPriceThb: number | null;
   priceChange24h: number | null;
