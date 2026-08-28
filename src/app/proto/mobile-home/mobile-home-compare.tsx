@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils"
 import {
   ProtoBottomNav,
   ProtoTopBar,
-  type BottomNavVariant,
+  type ChromeVariant,
 } from "./components/proto-chrome"
 import { ProtoHero } from "./components/proto-hero"
 import { ProtoMarketSection } from "./components/proto-market-section"
@@ -34,18 +34,28 @@ const NAV_OPTIONS = [
   },
   {
     value: "search" as const,
-    label: "ค้นหากลาง",
+    label: "กลาง 5",
     ariaLabel: "แถบล่างแบบปุ่มค้นหากลาง 5 ช่อง",
   },
   {
     value: "searchAll" as const,
-    label: "ครบ 6 ช่อง",
+    label: "6 ช่อง",
     ariaLabel: "แถบล่างแบบปุ่มค้นหาและครบทุกช่องเดิม รวม 6 ช่อง",
+  },
+  {
+    value: "searchCompare" as const,
+    label: "7+เทียบ",
+    ariaLabel: "แถบล่าง 7 ช่อง เพิ่มปุ่มเปรียบเทียบให้ค้นหาอยู่กึ่งกลาง",
+  },
+  {
+    value: "topSearch" as const,
+    label: "ค้นหาบน",
+    ariaLabel: "ช่องค้นหาเต็มความกว้างบนแถบบน แถบล่างเป็นแบบเดิม",
   },
 ]
 
 const NAV_COPY: Record<
-  BottomNavVariant,
+  ChromeVariant,
   { name: string; summary: string; tradeoff: string }
 > = {
   plain: {
@@ -68,6 +78,20 @@ const NAV_COPY: Record<
     tradeoff:
       "6 ช่องแบ่งกึ่งกลางไม่ลงตัว ปุ่มค้นหาเลยเยื้องขวาจากกลางจอราวครึ่งช่อง และทุกช่องแคบลงจนตัวหนังสือต้องเล็กลงหนึ่งขั้น — ลองมองแล้วชั่งว่ารกไปไหม",
   },
+  searchCompare: {
+    name: "7 ช่อง — เพิ่ม เปรียบเทียบ ให้ปุ่มกลับมากึ่งกลาง",
+    summary:
+      "เพิ่ม เปรียบเทียบ เป็นช่องที่ 7 ข้างปุ่มค้นหา ทำให้ซ้าย–ขวาเท่ากัน (ฝั่งละ 3) ปุ่มค้นหากลับมาอยู่กึ่งกลางเป๊ะเหมือนแบบ 5 ช่อง",
+    tradeoff:
+      "ช่องแคบลงเหลือ ~54px ป้ายยาวอย่าง รายการโปรด กับ เปรียบเทียบ โดนตัดท้ายแม้ใช้ตัวหนังสือเล็กสุดแล้ว และ เปรียบเทียบ เป็นเครื่องมือที่ปกติโผล่ตอนเลือกการ์ดอยู่แล้ว การให้ที่ถาวรบนแถบอาจเกินน้ำหนักของมัน",
+  },
+  topSearch: {
+    name: "ค้นหาบน — ช่องค้นหายาวเต็มแถบแบบแอปช้อปปิ้ง",
+    summary:
+      "แถบบนกลายเป็นช่องค้นหายาวเต็มความกว้าง (พร้อมไอคอนกล้อง ค้นหาด้วยรูปได้) เห็นแล้วรู้ทันทีว่าพิมพ์ค้นหาตรงนี้ — ส่วนแถบล่างกลับเป็น 5 ช่องเดิมครบ ไม่ต้องย้ายอะไรเลย",
+    tradeoff:
+      "ตัวเลือกเกม → ชุดที่เคยอยู่แถบบนต้องหาที่อยู่ใหม่ — หน้าแรกไม่เดือดร้อน (มีแถบชุด + ปุ่มทุกชุดในหน้าอยู่แล้ว ซ้ำ 3 จุดจะเหลือจุดเดียวด้วยซ้ำ) แต่หน้าอื่นต้องออกแบบที่วางเพิ่ม",
+  },
 }
 
 const subscribeNever = () => () => {}
@@ -89,7 +113,7 @@ export function MobileHomeCompare({
   tableTotalPages: number
   sets: SetPickerItem[]
 }) {
-  const [nav, setNav] = useState<BottomNavVariant>("plain")
+  const [nav, setNav] = useState<ChromeVariant>("plain")
 
   // Same theme-preview pattern as /proto/navbar: flip the real site theme so
   // the whole frame previews light/dark; gate on hydration so SSR agrees.
@@ -110,7 +134,7 @@ export function MobileHomeCompare({
       style={{ "--chrome-h": "3.5rem" } as CSSProperties}
     >
       <div className="mx-auto w-full max-w-md md:border-x md:border-hair">
-        <ProtoTopBar showSearch={nav === "plain"} />
+        <ProtoTopBar variant={nav} />
 
         {/* THE gutter: 20px, once. No descendant re-adds horizontal padding —
             full-bleed rails cancel it with -mx-5, the row list with -mx-4. */}
@@ -136,11 +160,11 @@ export function MobileHomeCompare({
       <ProtoBottomNav variant={nav} />
 
       <div className="fixed bottom-28 left-1/2 z-floating flex -translate-x-1/2 items-center gap-1.5">
-        <SegmentedControl<BottomNavVariant>
+        <SegmentedControl<ChromeVariant>
           options={NAV_OPTIONS}
           value={nav}
           onChange={setNav}
-          ariaLabel="เลือกแบบแถบล่างที่กำลังดู"
+          ariaLabel="เลือกแบบแถบค้นหา/แถบล่างที่กำลังดู"
           size="sm"
           variant="pill"
           className="rounded-full border border-hair bg-background/95 shadow-lg backdrop-blur-sm"
@@ -158,18 +182,21 @@ export function MobileHomeCompare({
   )
 }
 
-function Explainer({ nav }: { nav: BottomNavVariant }) {
+function Explainer({ nav }: { nav: ChromeVariant }) {
   return (
     <section className="mt-12 space-y-3">
       <h2 className="text-h4">หน้าเทียบนี้คืออะไร</h2>
       <p className="text-body-sm text-muted-foreground">
         โครงหน้าเป็นแบบ &quot;จัดระเบียบ&quot; ที่เบสเคาะแล้ว —
-        ที่เหลือให้เลือกคือแถบล่าง 3 แบบ: แถบเดิม · ปุ่มค้นหานูนกลาง (ย้าย
-        รายการโปรด เข้าพอร์ต) · หรือครบ 6 ช่องไม่ย้ายอะไรเลย
-        สังเกตมุมขวาบนด้วย — สองแบบหลังถอดปุ่มค้นหาบนออก เหลือจุดเดียว
+        ที่เหลือคือ &quot;ค้นหาอยู่ตรงไหน&quot; 5 แบบ: แถบเดิม ·
+        ปุ่มนูนกลาง 5 ช่อง · ครบ 6 ช่อง · 7 ช่องเพิ่มเปรียบเทียบ ·
+        หรือช่องค้นหายาวบนแถบบนแบบแอปช้อปปิ้ง — แบบปุ่มนูนทุกแบบถอดปุ่มค้นหาบนออก
+        ส่วนแบบค้นหาบนถอดตัวเลือกเกม→ชุดออกจากแถบบนแทน
       </p>
 
-      {(["plain", "search", "searchAll"] as const).map((v) => (
+      {(
+        ["plain", "search", "searchAll", "searchCompare", "topSearch"] as const
+      ).map((v) => (
         <div
           key={v}
           className={cn(

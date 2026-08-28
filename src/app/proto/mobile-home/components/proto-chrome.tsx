@@ -4,11 +4,13 @@ import Image from "next/image"
 import {
   Bell,
   Briefcase,
+  Camera,
   ChevronDown,
   Heart,
   LayoutGrid,
   LineChart,
   Menu,
+  Scale,
   Search,
 } from "lucide-react"
 
@@ -20,10 +22,41 @@ import { cn } from "@/lib/utils"
  * without the real chrome navigating the owner away mid-comparison. Purely
  * decorative: spans only, aria-hidden, nothing tappable.
  *
- * `showSearch` drops the top bar's search circle — the center-search nav
- * variant moves search to the bottom bar, so keeping both would double it.
+ * The chrome variant drives BOTH bars: the FAB variants drop the top bar's
+ * search circle (search moved down — keeping both would double it), and
+ * "topSearch" replaces the whole catalog row with a Shopee-style full-width
+ * search field (game→set selection then lives with the content; the home body
+ * already has the set strip + "ทุกชุด" picker).
  */
-export function ProtoTopBar({ showSearch = true }: { showSearch?: boolean }) {
+export function ProtoTopBar({ variant = "plain" }: { variant?: ChromeVariant }) {
+  if (variant === "topSearch") {
+    return (
+      <div aria-hidden className="hairline-b sticky top-0 z-chrome bg-background">
+        <div className="flex h-14 min-w-0 items-center px-2">
+          <span className="mr-1 flex size-11 shrink-0 items-center justify-center">
+            <Image
+              src="/meecard.png"
+              alt=""
+              width={754}
+              height={694}
+              className="h-auto w-8 shrink-0 select-none"
+            />
+          </span>
+          <span className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-full border border-hair bg-muted/30 px-3.5 text-sm text-muted-foreground">
+            <Search className="size-4 shrink-0" />
+            <span className="truncate">ค้นหาการ์ด ชุด หรือรหัส…</span>
+            {/* Photo search is a real feature — the field carries its entry. */}
+            <Camera className="ml-auto size-[18px] shrink-0" />
+          </span>
+          <span className="ml-1 flex size-11 shrink-0 items-center justify-center text-muted-foreground">
+            <Bell className="size-[18px]" />
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  const showSearch = variant === "plain"
   return (
     <div aria-hidden className="hairline-b sticky top-0 z-chrome bg-background">
       <div className="flex h-14 min-w-0 items-center px-2">
@@ -61,7 +94,12 @@ export function ProtoTopBar({ showSearch = true }: { showSearch?: boolean }) {
   )
 }
 
-export type BottomNavVariant = "plain" | "search" | "searchAll"
+export type ChromeVariant =
+  | "plain"
+  | "search"
+  | "searchAll"
+  | "searchCompare"
+  | "topSearch"
 
 type MockTab = { label: string; icon: typeof LineChart; active?: boolean }
 
@@ -84,6 +122,15 @@ const PLAIN_TABS: MockTab[] = [
  * slot right of true center (~31px on a 375px phone) and every slot narrows
  * to ~62px, which forces the smaller label size. Both costs are the point of
  * showing it; the explainer spells them out.
+ *
+ * "searchCompare": the owner's follow-up — add เปรียบเทียบ (Scale icon +
+ * label, same as compare-button.tsx) as a 7th slot so the FAB has 3 tabs on
+ * each side and lands dead center again. Cost: ~54px slots — the long labels
+ * (รายการโปรด / เปรียบเทียบ) truncate even at the smallest label size. That
+ * visible truncation is the honest answer to "เยอะไปไหม".
+ *
+ * "topSearch": Shopee grammar — search is a full-width field in the TOP bar,
+ * the bottom bar returns to today's untouched 5 tabs.
  */
 const SEARCH_TABS: MockTab[] = [
   { label: "หน้าแรก", icon: LineChart, active: true },
@@ -92,13 +139,28 @@ const SEARCH_TABS: MockTab[] = [
   { label: "ดูเพิ่มเติม", icon: Menu },
 ]
 
-function MockTabItem({ tab, dense = false }: { tab: MockTab; dense?: boolean }) {
+const COMPARE_TABS: MockTab[] = [
+  { label: "หน้าแรก", icon: LineChart, active: true },
+  { label: "ชุดการ์ด", icon: LayoutGrid },
+  { label: "รายการโปรด", icon: Heart },
+  { label: "เปรียบเทียบ", icon: Scale },
+  { label: "พอร์ต", icon: Briefcase },
+  { label: "ดูเพิ่มเติม", icon: Menu },
+]
+
+function MockTabItem({
+  tab,
+  labelClass = "text-xs",
+}: {
+  tab: MockTab
+  labelClass?: string
+}) {
   return (
     <li className="min-w-0 flex-1">
       <span
         className={cn(
           "flex w-full flex-col items-center gap-0.5 py-2 font-medium",
-          dense ? "text-micro" : "text-xs",
+          labelClass,
           tab.active ? "text-primary" : "text-muted-foreground",
         )}
       >
@@ -115,13 +177,13 @@ function MockTabItem({ tab, dense = false }: { tab: MockTab; dense?: boolean }) 
   )
 }
 
-function SearchFab({ dense = false }: { dense?: boolean }) {
+function SearchFab({ labelClass = "text-xs" }: { labelClass?: string }) {
   return (
     <li className="min-w-0 flex-1">
       <span
         className={cn(
           "flex w-full flex-col items-center gap-0.5 py-2 font-medium text-muted-foreground",
-          dense ? "text-micro" : "text-xs",
+          labelClass,
         )}
       >
         {/* Raised honey FAB — the one loud element; ring-4 in the page
@@ -139,14 +201,26 @@ function SearchFab({ dense = false }: { dense?: boolean }) {
 export function ProtoBottomNav({
   variant = "plain",
 }: {
-  variant?: BottomNavVariant
+  variant?: ChromeVariant
 }) {
   // Which tabs render, where the FAB slots in, and how tight the row is:
-  // plain = 5 tabs, no FAB · search = 2 + FAB + 2 (true center) ·
-  // searchAll = 3 + FAB + 2 (6 slots — FAB half a slot off center, dense labels)
-  const tabs = variant === "search" ? SEARCH_TABS : PLAIN_TABS
+  // plain / topSearch = today's 5 tabs, no FAB · search = 2 + FAB + 2 (true
+  // center) · searchAll = 3 + FAB + 2 (6 slots, FAB half a slot off center,
+  // text-micro) · searchCompare = 3 + FAB + 3 (7 slots, centered, text-overlay)
+  const plainBar = variant === "plain" || variant === "topSearch"
+  const tabs =
+    variant === "search"
+      ? SEARCH_TABS
+      : variant === "searchCompare"
+        ? COMPARE_TABS
+        : PLAIN_TABS
   const splitAt = variant === "search" ? 2 : 3
-  const dense = variant === "searchAll"
+  const labelClass =
+    variant === "searchAll"
+      ? "text-micro"
+      : variant === "searchCompare"
+        ? "text-overlay"
+        : "text-xs"
 
   return (
     <nav
@@ -154,16 +228,16 @@ export function ProtoBottomNav({
       className="hairline-t pb-safe fixed bottom-0 left-1/2 z-chrome w-full max-w-md -translate-x-1/2 bg-background"
     >
       <ul className="flex items-stretch justify-around">
-        {variant === "plain" ? (
-          tabs.map((tab) => <MockTabItem key={tab.label} tab={tab} />)
+        {plainBar ? (
+          PLAIN_TABS.map((tab) => <MockTabItem key={tab.label} tab={tab} />)
         ) : (
           <>
             {tabs.slice(0, splitAt).map((tab) => (
-              <MockTabItem key={tab.label} tab={tab} dense={dense} />
+              <MockTabItem key={tab.label} tab={tab} labelClass={labelClass} />
             ))}
-            <SearchFab dense={dense} />
+            <SearchFab labelClass={labelClass} />
             {tabs.slice(splitAt).map((tab) => (
-              <MockTabItem key={tab.label} tab={tab} dense={dense} />
+              <MockTabItem key={tab.label} tab={tab} labelClass={labelClass} />
             ))}
           </>
         )}
