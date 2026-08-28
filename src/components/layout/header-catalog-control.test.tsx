@@ -168,10 +168,14 @@ describe("header catalog topology", () => {
     expect(header).not.toContain("<GameSwitcher")
     expect(desktop).toContain('className="flex h-11')
     expect(desktop).toContain('presentation="desktop"')
+    // Owner selection 2026-08-29: the phone chrome is TWO rows — identity and
+    // account on top, the game→set context bar under it, so the set control
+    // finally gets the width its names need (~123px → full row).
     expect(mobile).toContain('data-mobile-header-row="primary"')
-    expect(mobile.match(/data-mobile-header-row=/g)).toHaveLength(1)
-    expect(mobile).not.toContain('data-mobile-header-row="catalog"')
+    expect(mobile).toContain('data-mobile-header-row="context"')
+    expect(mobile.match(/data-mobile-header-row=/g)).toHaveLength(2)
     expect(mobile).toContain('className="flex h-14 min-w-0')
+    expect(mobile).toContain('className="flex h-12 min-w-0 items-center bg-muted/30')
     expect(mobile).toContain("px-2 sm:px-4")
     expect(mobile).toContain('presentation="mobile"')
     expect(mobile).toContain(
@@ -198,7 +202,11 @@ describe("header catalog topology", () => {
     // control stayed reachable on /more instead of in this row.
     expect(mobile).not.toContain("useTheme()")
     expect(more).toContain("setTheme(")
-    expect(mobile).toContain('<LogIn className="size-[18px]" />')
+    // Signing in is spelled out now that row 1 has the width; sign-out and
+    // profile live behind the account button, which goes to "ดูเพิ่มเติม".
+    expect(mobile).toContain('<LogIn className="size-4" />')
+    expect(mobile).toContain('data-mobile-account-trigger')
+    expect(mobile).toContain('href="/more"')
     expect(notificationBell).toContain(
       '<Bell className="size-[18px] md:size-4" />',
     )
@@ -223,26 +231,19 @@ describe("header catalog topology", () => {
     expect(catalog).not.toContain("HeaderSpotlightArtwork")
     expect(catalog).not.toContain("resolveHeaderSpotlightSet")
     expect(catalog).toContain("surface-2 hairline ease-chrome")
-    expect(catalog).toContain(
-      '? "h-11 min-w-11 flex-1 px-2 min-[480px]:max-w-56"',
-    )
+    // Owner selection 2026-08-29: on its own row the trigger drops the
+    // max-width cap and the truncating short-label pair, and shows the set's
+    // box art with its code above its FULL name.
+    expect(catalog).toContain('"h-9 min-w-11 flex-1 ps-1.5 pe-2.5"')
+    expect(catalog).not.toContain("min-[480px]:max-w-56")
+    expect(catalog).not.toContain("compactTriggerLabel")
+    expect(catalog).not.toContain('className="min-[430px]:hidden"')
+    expect(catalog).toContain('<SetArtwork set={selectedSet} size="trigger" />')
+    expect(catalog).toContain("{selectedSet.code.toUpperCase()}")
+    expect(catalog).toContain("{selectedName}")
     expect(catalog).toContain(
       'presentation === "mobile" && "min-w-0 flex-1 gap-1"',
     )
-    expect(catalog).toContain(
-      'presentation === "mobile" && "hidden"',
-    )
-    expect(catalog).toContain(
-      'presentation === "mobile" && "hidden min-[360px]:block"',
-    )
-    expect(catalog).toContain(
-      'presentation === "mobile" && "hidden min-[430px]:block"',
-    )
-    expect(catalog).toContain(
-      'selectedSet?.code ?? selectedCode ?? t(language, "selectSetShort")',
-    )
-    expect(catalog).toContain('className="min-[430px]:hidden"')
-    expect(catalog).toContain('className="hidden min-[430px]:inline"')
     expect(catalog).toContain("{triggerLabel}")
     expect(catalog).toContain("aria-label={triggerLabel}")
     expect(catalog).toContain('<ChevronRight')
@@ -255,7 +256,10 @@ describe("header catalog topology", () => {
     expect(catalog).toContain("border-b border-hair bg-popover px-3")
     expect(catalog).not.toContain("bg-popover/95")
     expect(catalog).not.toContain("backdrop-blur-sm")
-    expect(globals).toContain("--chrome-h: 3.5rem")
+    // Phone chrome = 56px row 1 + 48px context row (owner selection
+    // 2026-08-29). Every sticky sub-bar reads this var, so it must track the
+    // real header height.
+    expect(globals).toContain("--chrome-h: 6.5rem")
     expect(globals).toContain("@media (min-width: 768px)")
     // navbar แบบ C (owner call 2026-08-28): ticker strip 32px + brand row 44px
     // + nav row 56px = 132px of desktop chrome.

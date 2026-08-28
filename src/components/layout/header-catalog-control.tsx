@@ -186,23 +186,40 @@ function sectionLabel(kind: HeaderSetSectionKind, language: Language) {
   return null
 }
 
-function SetArtwork({ set }: { set: SetPickerItem }) {
+function SetArtwork({
+  set,
+  size = "list",
+}: {
+  set: SetPickerItem
+  /** `trigger` is the phone context row's inline thumbnail (box-shaped). */
+  size?: "list" | "trigger"
+}) {
+  const box =
+    size === "trigger"
+      ? "h-7 w-5 rounded-sm"
+      : "size-8 rounded-md"
+
   if (!set.imageUrl) {
     return (
-      <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted">
+      <span
+        className={cn(
+          "flex shrink-0 items-center justify-center bg-muted",
+          box,
+        )}
+      >
         <Package className="size-3.5 text-muted-foreground/50" aria-hidden />
       </span>
     )
   }
 
   return (
-    <span className="relative size-8 shrink-0 overflow-hidden rounded-md bg-muted">
+    <span className={cn("relative shrink-0 overflow-hidden bg-muted", box)}>
       <Image
         src={set.imageUrl}
         alt=""
         fill
-        sizes="32px"
-        className="object-contain"
+        sizes={size === "trigger" ? "20px" : "32px"}
+        className={size === "trigger" ? "object-cover" : "object-contain"}
       />
     </span>
   )
@@ -471,8 +488,6 @@ export function HeaderCatalogControl({
   const triggerLabel = selectedSet
     ? `${selectedSet.code} · ${selectedName}`
     : selectedCode ?? t(language, "selectSet")
-  const compactTriggerLabel =
-    selectedSet?.code ?? selectedCode ?? t(language, "selectSetShort")
 
   const trigger = (
     <button
@@ -481,43 +496,65 @@ export function HeaderCatalogControl({
       className={cn(
         "surface-2 hairline ease-chrome flex min-w-0 items-center gap-1.5 rounded-full text-left text-label text-foreground transition-colors hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
         presentation === "mobile"
-          ? "h-11 min-w-11 flex-1 px-2 min-[480px]:max-w-56"
+          ? // Its own row since 2026-08-29, so it finally gets real width: no
+            // max-width cap, and room on the left for the set's box art.
+            "h-9 min-w-11 flex-1 ps-1.5 pe-2.5"
           : "h-11 w-40 px-2.5 lg:h-8 lg:w-48",
       )}
     />
   )
 
-  const triggerContent = (
-    <>
-      <PackageOpen
-        className={cn(
-          "size-3.5 shrink-0 text-muted-foreground",
-          presentation === "mobile" && "hidden",
-        )}
-        aria-hidden
-      />
-      <span className="min-w-0 flex-1 truncate">
-        {presentation === "mobile" ? (
-          <>
-            <span className="min-[430px]:hidden">{compactTriggerLabel}</span>
-            <span className="hidden min-[430px]:inline">
-              {triggerLabel}
-            </span>
-          </>
+  const triggerContent =
+    presentation === "mobile" ? (
+      <>
+        {selectedSet ? (
+          <SetArtwork set={selectedSet} size="trigger" />
         ) : (
-          triggerLabel
+          <PackageOpen
+            className="ms-1 size-4 shrink-0 text-muted-foreground"
+            aria-hidden
+          />
         )}
-      </span>
-      <ChevronDown
-        className={cn(
-          "size-3.5 shrink-0 text-muted-foreground transition-transform",
-          presentation === "mobile" && "hidden min-[360px]:block",
-          open && "rotate-180",
-        )}
-        aria-hidden
-      />
-    </>
-  )
+        {/* Two lines when a set is chosen — the code stays scannable while the
+            full name is finally readable instead of truncated to "The Azure…". */}
+        <span className="min-w-0 flex-1">
+          {selectedSet ? (
+            <>
+              <span className="block truncate text-xs font-semibold leading-tight text-foreground">
+                {selectedSet.code.toUpperCase()}
+              </span>
+              <span className="block truncate text-xs leading-tight text-muted-foreground">
+                {selectedName}
+              </span>
+            </>
+          ) : (
+            <span className="block truncate">{t(language, "selectSet")}</span>
+          )}
+        </span>
+        <ChevronDown
+          className={cn(
+            "size-3.5 shrink-0 text-muted-foreground transition-transform",
+            open && "rotate-180",
+          )}
+          aria-hidden
+        />
+      </>
+    ) : (
+      <>
+        <PackageOpen
+          className="size-3.5 shrink-0 text-muted-foreground"
+          aria-hidden
+        />
+        <span className="min-w-0 flex-1 truncate">{triggerLabel}</span>
+        <ChevronDown
+          className={cn(
+            "size-3.5 shrink-0 text-muted-foreground transition-transform",
+            open && "rotate-180",
+          )}
+          aria-hidden
+        />
+      </>
+    )
 
   const sharedPanelProps = {
     game,

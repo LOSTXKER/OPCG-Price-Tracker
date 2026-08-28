@@ -267,6 +267,7 @@ export function Header() {
     <HeaderMobile
       isAuthenticated={authLoaded && Boolean(authUser)}
       authLoaded={authLoaded}
+      userName={userName}
       game={headerGame}
       sets={headerSets.sets}
       setsLoading={headerSets.loading}

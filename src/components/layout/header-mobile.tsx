@@ -13,8 +13,23 @@ import type { SetPickerItem } from "@/components/shared/set-picker";
 import { useScrolled } from "@/hooks/use-scrolled";
 import { useUIStore } from "@/stores/ui-store";
 import { isNavActive } from "@/lib/game/constants";
-import { t } from "@/lib/i18n";
+import { t, type Language } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+
+/**
+ * What row 1's middle says. Keyed off the same routes the bottom nav owns, so
+ * the two always agree on what the current place is called; anything deeper
+ * (a card, a set, settings…) falls back to the site name rather than guessing.
+ */
+function resolvePageTitle(pathname: string, language: Language): string {
+  if (pathname === "/") return t(language, "home");
+  if (isNavActive(pathname, "/opcg/sets", ["/cards", "/search", "/trending", "/market-overview"]))
+    return t(language, "sets");
+  if (isNavActive(pathname, "/watchlist")) return t(language, "watchlistNav");
+  if (isNavActive(pathname, "/portfolio")) return t(language, "portfolioNav");
+  if (isNavActive(pathname, "/more")) return t(language, "more");
+  return "Meecard";
+}
 
 /**
  * Phone chrome: brand, the global Game → Set catalog control, and route-aware
@@ -41,10 +56,13 @@ export function HeaderMobile({
   setsLoading,
   setsError,
   onSetsRetry,
+  userName,
 }: {
   isAuthenticated: boolean;
   /** Keeps the guest CTA from flashing before the session resolves. */
   authLoaded?: boolean;
+  /** First character seeds the account button, mirroring the desktop menu. */
+  userName?: string | null;
   game: string;
   sets: readonly SetPickerItem[];
   setsLoading: boolean;
@@ -53,6 +71,7 @@ export function HeaderMobile({
 }) {
   const language = useUIStore((s) => s.language);
   const pathname = usePathname() ?? "/";
+  const accountInitial = userName?.trim()?.[0]?.toUpperCase() ?? "?";
 
   // Same collapsing chrome as the desktop header — starts false (hydration- and
   // scroll-restoration-safe), corrects on mount. CHROME-11: one shared hook.
@@ -66,6 +85,9 @@ export function HeaderMobile({
         scrolled ? "hairline-b bg-background" : "bg-transparent",
       )}
     >
+      {/* Row 1 — identity + account. The middle carries the PAGE NAME, not the
+          wordmark: the bear already says which site this is, so the space is
+          better spent saying where you are (iOS toolbar grammar). */}
       <div
         data-mobile-header-row="primary"
         className="flex h-14 min-w-0 items-center px-2 sm:px-4"
@@ -84,15 +106,9 @@ export function HeaderMobile({
           />
         </Link>
 
-        <HeaderCatalogControl
-          game={game}
-          sets={sets}
-          loading={setsLoading}
-          error={setsError}
-          onRetry={onSetsRetry}
-          presentation="mobile"
-          className="min-w-0 flex-1"
-        />
+        <span className="text-h5 min-w-0 flex-1 truncate text-foreground">
+          {resolvePageTitle(pathname, language)}
+        </span>
 
         <Button
           data-mobile-watchlist-trigger
@@ -115,17 +131,59 @@ export function HeaderMobile({
 
         {isAuthenticated && <NotificationBell />}
 
-        {authLoaded && !isAuthenticated && (
+        {/* Tools (watchlist, alerts) end here; the account begins after the
+            rule. Four undifferentiated icons read as one blur without it. */}
+        {authLoaded && (
+          <span aria-hidden className="mx-1 h-5 w-px shrink-0 bg-hair" />
+        )}
+
+        {authLoaded && isAuthenticated && (
           <Button
+            data-mobile-account-trigger
             variant="ghost"
             size="icon-sm"
-            aria-label={t(language, "login")}
-            className="min-h-11 min-w-11 text-muted-foreground"
-            render={<Link href="/login" />}
+            aria-label={t(language, "more")}
+            className="min-h-11 min-w-11 rounded-full bg-primary/15 text-sm font-semibold text-primary"
+            render={<Link href="/more" />}
           >
-            <LogIn className="size-[18px]" />
+            {accountInitial}
           </Button>
         )}
+
+        {authLoaded && !isAuthenticated && (
+          // Spelled out, not a lone glyph: signing in is the one thing a
+          // visitor might be looking for up here, and the row has the width
+          // for it now that sign-out lives inside "ดูเพิ่มเติม".
+          <Button
+            size="sm"
+            aria-label={t(language, "login")}
+            className="min-h-11 shrink-0 gap-1.5 rounded-full px-3.5 text-sm font-semibold"
+            render={<Link href="/login" />}
+          >
+            <LogIn className="size-4" />
+            {t(language, "login")}
+          </Button>
+        )}
+      </div>
+
+      {/* Row 2 — the context bar: which game, which set. Faintly tinted so it
+          reads as "where you are" rather than a second row of chrome, and wide
+          enough for the set's box art and full name (owner selection
+          2026-08-29 — at phone widths the old inline control was squeezed to
+          ~123px and truncated every real set name). */}
+      <div
+        data-mobile-header-row="context"
+        className="flex h-12 min-w-0 items-center bg-muted/30 px-2 sm:px-4"
+      >
+        <HeaderCatalogControl
+          game={game}
+          sets={sets}
+          loading={setsLoading}
+          error={setsError}
+          onRetry={onSetsRetry}
+          presentation="mobile"
+          className="min-w-0 flex-1"
+        />
       </div>
     </div>
   );

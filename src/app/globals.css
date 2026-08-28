@@ -158,7 +158,11 @@
      = ticker strip (h-8 = 32px) + brand row (h-11 = 44px) + header (h-14 = 56px)
      = 132px. Sticky offsets and scroll-margins read from this single var
      (TOKENS-04) instead of magic numbers. */
-  --chrome-h: 3.5rem;
+  /* Phone chrome = row 1 (h-14 = 56px) + the context row (h-12 = 48px)
+     = 104px (owner selection 2026-08-29). Every sticky sub-bar and
+     scroll-margin on the site reads this one var, so they follow the taller
+     header without any per-page numbers. */
+  --chrome-h: 6.5rem;
   --floating-ad-clearance: 0rem;
 
   /* Frameless in light: .panel lifts by the warm --card fill alone (no hairline).
