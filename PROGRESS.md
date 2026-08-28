@@ -1,7 +1,7 @@
 # 📍 PROGRESS — สถานะสด
 > **เขียนทับทุกครั้ง ไม่สะสม log** · อ่านอันนี้ก่อน แล้วทำต่อจาก NEXT
 
-อัปเดตล่าสุด: 2026-08-29 (เช้ามืด) — ✅ **หน้าแรกมือถือโฉมใหม่ + แถบล่างปุ่มค้นหากลาง อยู่บน branch `claude/mobile-home-layout-c8d6e8` แล้ว** (verify ครบ · ยังไม่ merge master รอเบสดูก่อน)
+อัปเดตล่าสุด: 2026-08-29 (เช้ามืด) — ✅ **ขึ้น master แล้ว (`62516d6`) · เบสสั่งเอง · Vercel deploy อัตโนมัติ** — หน้าแรกมือถือโฉมใหม่ + แถบล่างปุ่มค้นหากลาง
 
 ## รอบนี้ทำอะไร
 
@@ -29,12 +29,18 @@ tsc ผ่าน · `npm run lint` **0 errors** (26 warnings เดิม/นอ
 
 ## สถานะ git
 
-- branch `claude/mobile-home-layout-c8d6e8` — **merge `origin/master` เข้ามาแล้ว** (master มี 13 commit ใหม่จากอีก session: navbar แบบ C · แถบชีพจร · popup ค้นหา CMC · แถบชุดหยุดไหล) conflict มีแค่ PROGRESS.md
+- **master = `62516d6`** (fast-forward จาก 13 commits ของ branch `claude/mobile-home-layout-c8d6e8`) — เบสสั่ง "commit push main เลย" จึง push ตรงตามอนุมัติ (ปกติกฎห้าม push master ของ repo ที่ต่อ Vercel)
+- ก่อน push ได้ merge `origin/master` เข้ามาแล้ว (master มี 13 commit ใหม่จากอีก session: navbar แบบ C · แถบชีพจร · popup ค้นหา CMC · แถบชุดหยุดไหล) conflict มีแค่ PROGRESS.md
 - ไม่มี schema / dependency / config change
-- `/proto/mobile-home` **ยังอยู่** — เก็บไว้ให้ย้อนดูแบบที่ไม่ได้เลือก ลบเมื่อเบสรับงานแล้ว (PLAN: MHOME-07)
+- **ลบ `/proto/mobile-home` แล้ว** (MHOME-07 ปิด) — ย้อนดูแบบที่ไม่ได้เลือกได้จาก git history ที่ commit `032e83d` และก่อนหน้า (มีทั้งแถบไฮไลต์ตลาด · 6 ช่อง · 7+เทียบ · ค้นหาบน 2 แถว/ยุบเอง)
+- dev server รันอยู่ที่ **port 3000** (เคลียร์ตัวค้าง 4 ตัวไปแล้ว: 3000/3001/3002/52861 — ตัวที่ 3000 เป็นของ session เก่าที่ทำให้เบส "ไม่เห็นงานที่ทำ")
+
+## ⚠️ ข้อผิดพลาดที่เกิดรอบนี้ (กันซ้ำ)
+
+แก้โค้ด (ยกระยะกล่องโฆษณา) **หลัง**รัน `npm run test` แล้วไม่ได้รันซ้ำก่อน commit → commit `14ea474` มีเทสต์ `floating-bottom-ad.test.tsx` ค้างพังไป 1 ข้อ เพิ่งมาเจอตอนตรวจก่อน push (แก้แล้วใน `62516d6`) — **กฎ: แตะโค้ดเมื่อไหร่ ต้องรัน test ใหม่ก่อน commit เสมอ ไม่ว่าจะแก้เล็กแค่ไหน**
 
 ## NEXT
 
-1. **เบสดูของจริง** — บนเครื่องนี้เปิด `http://localhost:52861` ได้เลย · ถ้าจะดูบนมือถือต้อง `npm run build && npm run start` แล้วเปิดผ่าน IP (dev server บล็อก JS ข้ามเครื่อง)
-2. เบสรับงาน → **เบสสั่ง merge เข้า master เอง** (repo ต่อ Vercel) + ลบ `/proto/mobile-home`
-3. ถ้าอยากได้เพิ่มทีหลัง: แถบไฮไลต์ตลาดบนมือถือ (แบบ B ที่ไม่ได้เลือก) โค้ดยังอยู่ที่ `src/app/proto/mobile-home/components/proto-highlight-strip.tsx`
+1. **เบสดูของจริงบนเว็บ** — Vercel deploy จาก master อัตโนมัติ (รอสักครู่) · ดูบนเครื่องนี้ที่ `http://localhost:3000`
+2. ถ้าอยากได้เพิ่มทีหลัง: **แถบไฮไลต์ตลาดบนมือถือ** (มูลค่าสูงสุด/ขึ้นแรง/ลงแรง แบบปัดข้าง — แบบ B ที่ไม่ได้เลือก) กู้โค้ดจาก `git show 032e83d:src/app/proto/mobile-home/components/proto-highlight-strip.tsx`
+3. คิวเดิมที่ยังไม่แตะ: `getHomeData().rarityRows` query ทิ้งเปล่า · `priceValidUntil` ใน `lib/seo/json-ld.ts` (คำนวณเป็นวันที่หมดอายุไปแล้วเกือบทุกหน้าการ์ด)
