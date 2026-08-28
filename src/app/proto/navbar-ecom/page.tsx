@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils"
 
 /* ------------------------------------------------------------------ data */
 
-type Variant = "current" | "siteThenMine" | "scopeInSearch" | "searchRow3" | "mineUp"
+type Variant = "compare" | "siteThenMine" | "scopeInSearch" | "hybrid" | "current"
 
 /** ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.) เพื่อเทียบแบบตาต่อตา */
 const STATS = {
@@ -71,59 +71,58 @@ const SETS = [
 ] as const
 
 const VARIANT_OPTIONS = [
+  { value: "compare", label: "เทียบ 1 ↔ 2" },
+  { value: "siteThenMine", label: "1 · ชุดอยู่นอก" },
+  { value: "scopeInSearch", label: "2 · ชุดอยู่ใน" },
+  { value: "hybrid", label: "1+ · ลูกผสม" },
   { value: "current", label: "ปัจจุบัน" },
-  { value: "siteThenMine", label: "1 · เว็บบน ฉันล่าง" },
-  { value: "scopeInSearch", label: "2 · ชุดในช่องค้นหา" },
-  { value: "searchRow3", label: "3 · ค้นหาลงแถว 3" },
-  { value: "mineUp", label: "4 · ของฉันขึ้นบน" },
 ] as const
 
 const VARIANT_COPY: Record<
   Variant,
   { name: string; summary: string; tradeoff: string }
 > = {
+  compare: {
+    name: "เทียบ 1 ↔ 2 — ต่างกันจุดเดียวจริงๆ",
+    summary:
+      "แถว 1 (ชีพจร) กับแถว 3 (เมนู ⟷ ของฉัน) ของสองแบบนี้เหมือนกันเป๊ะ ต่างกันแค่แถว 2 จุดเดียว: ปุ่มชุดลอยอยู่ข้างโลโก้ (แบบ 1) หรือฝังเป็นหัวช่องค้นหา (แบบ 2) — วางซ้อนกันให้เห็นชัดว่าจุดต่างนั้นเปลี่ยนความรู้สึกทั้งแถบแค่ไหน",
+    tradeoff: "—",
+  },
+  siteThenMine: {
+    name: "1 · ชุดอยู่นอก — ปุ่มชุดลอยข้างโลโก้",
+    summary:
+      "อ่านเป็น \"ตอนนี้อยู่ที่ OPCG › OP15\" คือบอกบริบทว่ากำลังดูอะไรอยู่ กดเปลี่ยนชุดได้ตรงๆ โดยไม่ต้องแตะช่องค้นหาเลย — ใกล้ของเดิมที่สุด คนที่ใช้อยู่แล้วสะดุดน้อยสุด",
+    tradeoff:
+      "แถว 2 มีของห้าก้อน ช่องค้นหาเลยได้ 575px (น้อยกว่าแบบ 2 อยู่ 383px) · ปุ่มชุดกับช่องค้นหาไม่ได้บอกว่าเกี่ยวกัน คนอาจไม่รู้ว่าค้นแล้วจะได้ผลจากชุดไหน",
+  },
+  scopeInSearch: {
+    name: "2 · ชุดอยู่ใน — ปุ่มชุดเป็นหัวช่องค้นหา",
+    summary:
+      "อ่านเป็น \"ค้นใน OPCG › OP15\" คือบอกขอบเขตของการค้นหา ท่าเดียวกับ Lazada/Amazon — แถว 2 เหลือแค่สามก้อน สะอาดที่สุด และช่องค้นหากว้าง 958px กว้างสุดในทุกแบบที่เคยทำมา",
+    tradeoff:
+      "เวลาอยากเปลี่ยนชุดเฉยๆ (ไม่ได้จะค้นหา) ต้องไปกดในช่องค้นหา ซึ่งอ่านแล้วเหมือนกำลังจะค้น · คนที่คุ้นกับปุ่มลอยข้างโลโก้อาจหาไม่เจอครั้งแรก",
+  },
+  hybrid: {
+    name: "1+ · ลูกผสม — เอาข้อดีทั้งสองมารวม",
+    summary:
+      "ปุ่มชุดยังลอยอยู่นอกแบบที่ 1 (กดเปลี่ยนชุดได้ตรงๆ ไม่ต้องแตะช่องค้นหา) แต่ยืมความหมายของแบบ 2 มาด้วยการให้ช่องค้นหาบอกเองว่า \"ค้นในชุด OP15\" — ได้ทั้งบริบทและขอบเขตพร้อมกัน แล้วย้ายปุ่มอัปเกรดไปอยู่ในเมนูโปรไฟล์ (ของจริงมีแถวนั้นอยู่แล้ว) เพื่อคืนความกว้างให้ช่องค้นหา",
+    tradeoff:
+      "ปุ่มอัปเกรดหายไปจากหน้าแถบ เหลือทางเข้าเดียวคือในเมนูโปรไฟล์ — ถ้าอยากดันยอดสมัคร อาจไม่คุ้ม · ข้อความในช่องค้นหายาวขึ้น ต้องดูว่าบนจอแคบจะโดนตัดไหม",
+  },
   current: {
     name: "ปัจจุบัน — แบบ C ที่ขึ้นเว็บอยู่",
     summary:
       "ตัวตั้งเทียบ: ช่องค้นหาซุกอยู่ขวาสุดแถวเมนู · ตัวเลือกเกมกับชุดอยู่บนแถวโลโก้",
     tradeoff: "—",
   },
-  siteThenMine: {
-    name: "1 · เว็บบน ฉันล่าง — แบ่งตามเจ้าของ",
-    summary:
-      "แถว 2 คือของเว็บทั้งหมด (ตัวตน · แคตตาล็อกที่กำลังดู · ค้นหา · บัญชี) แถว 3 คือทางไปกับของฉัน (เมนู · พอร์ต · รายการโปรด · Honey) — เดาได้ทันทีว่าอะไรอยู่แถวไหน และเป็นแบบที่ใกล้ของเดิมที่สุด คนที่ใช้อยู่จะสะดุดน้อยสุด",
-    tradeoff:
-      "แถว 2 มีของห้าก้อน แน่นกว่าแบบ 2 · แถว 3 เหลือช่องว่างกลางกว้าง (ดีถ้าจะเพิ่มปุ่มทีหลัง แต่ตอนนี้คือที่ว่าง)",
-  },
-  scopeInSearch: {
-    name: "2 · ชุดเข้าไปในช่องค้นหา — แถบมีของน้อยที่สุด",
-    summary:
-      "ยกเกม › ชุด (พร้อมรูปกล่อง) เข้าไปเป็นหัวช่องค้นหาแบบ Lazada/Amazon แถว 2 เลยเหลือแค่สามก้อน: โลโก้ · ช่องค้นหายาวเต็มแถว · บัญชี — สะอาดที่สุดในทุกแบบ และความหมายเปลี่ยนไปในทางที่ดี: ชุดที่เลือกอยู่คือขอบเขตที่กำลังจะค้น",
-    tradeoff:
-      "ปุ่มชุดกลืนไปกับช่องค้นหา คนที่คุ้นกับปุ่มลอยข้างโลโก้อาจหาไม่เจอครั้งแรก · เวลาอยากเปลี่ยนชุดเฉยๆ (ไม่ได้จะค้น) ต้องไปกดในช่องค้นหา ซึ่งอ่านแล้วเหมือนกำลังจะค้นหา",
-  },
-  searchRow3: {
-    name: "3 · ค้นหาลงแถว 3 — แถวลงมือรวมอยู่ชั้นเดียว",
-    summary:
-      "แถว 2 เบามาก เหลือแค่ตัวตน · แคตตาล็อก · บัญชี แล้วยกช่องค้นหาลงมาอยู่แถว 3 คั่นกลางระหว่างเมนูกับของฉัน — แถว 3 เลยกลายเป็นแถวลงมือทั้งแถว (จะไปไหน · จะค้นอะไร · ของฉันอยู่ไหน) และช่องค้นหาขยับใกล้เนื้อหาลงมาอีกหนึ่งชั้น",
-    tradeoff:
-      "แถว 2 ดูโล่งไปหน่อยเพราะเหลือของสามก้อนที่ห่างกันมาก · ช่องค้นหาอยู่ต่ำลง คนที่กวาดตาหาที่ \"หัวเว็บ\" ตามความเคยชินอาจสะดุดครั้งแรก · แถว 3 สูง 56px ทำให้แถบรวม 144px",
-  },
-  mineUp: {
-    name: "4 · ของฉันขึ้นบน — พอร์ตอยู่ระดับเดียวกับค้นหา",
-    summary:
-      "มองว่าพอร์ตกับรายการโปรดคือของที่คนใช้บ่อยพอๆ กับค้นหา เลยยกขึ้นไปอยู่แถว 2 คู่กัน แล้วแถว 3 เป็นแถวนำทางกับแคตตาล็อก (เมนู ‖ เกม › ชุด) — เหมาะกับคนที่เข้าเว็บมาเช็คพอร์ตก่อนเป็นอันดับแรก",
-    tradeoff:
-      "แถว 2 แน่นสุดในสี่แบบ ช่องค้นหาเลยแคบกว่าเพื่อน · แคตตาล็อกที่บอกว่ากำลังดูชุดอะไรอยู่ ตกไปอยู่แถวล่างสุด ซึ่งเป็นข้อมูลบริบทที่ควรเห็นก่อน",
-  },
 }
 
 const SHARED_NOTES = [
-  "แถว 1 ล็อกเป็นแถบชีพจรตลาดเท่านั้นทุกแบบ ตรงตามที่ขึ้นเว็บอยู่ (สถิติซ้าย · สายพานการ์ดขวา) ไม่มีแบบไหนแตะ",
-  "ทุกแบบใช้ปุ่มชุดแบบ dropdown ปุ่มเดียวที่มีรูปกล่อง + รหัส + ชื่อชุด",
-  "เมนูเว็บแยกจากแคตตาล็อกทุกแบบ เพิ่มปุ่มเมนูในอนาคตได้โดยไม่แตะที่ของชุด",
+  "แถว 1 ล็อกเป็นแถบชีพจรตลาดเท่านั้นทุกแบบ ตรงตามที่ขึ้นเว็บอยู่ ไม่มีแบบไหนแตะ",
+  "แถว 3 ของทั้งสามแบบเหมือนกันเป๊ะ: เมนูเว็บซ้าย ⟷ พอร์ต · รายการโปรด · Honey ขวา",
+  "เหลือคำถามเดียวจริงๆ: ปุ่มชุดควรอยู่นอกช่องค้นหา (บอกว่ากำลังดูอะไร) หรืออยู่ใน (บอกว่าจะค้นที่ไหน)",
   "ทุกปุ่มสูง 40px ขึ้นไป · พอร์ต · รายการโปรด · Honey มีชื่อครบ · ภาษา/สกุลเงิน/ธีมอยู่ในเมนูโปรไฟล์",
-  "สูงรวม 136px ทุกแบบ ยกเว้นแบบ 3 ที่ 144px (แถว 3 ต้องสูงขึ้นเพราะมีช่องค้นหา)",
+  "สูงรวม 136px ทุกแบบ (ของจริงตอนนี้ 132px)",
   "ปุ่มทุกปุ่มกดไม่ได้จริง (หุ่นโชว์ผัง) · ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.)",
 ] as const
 
@@ -147,12 +146,12 @@ const PLACEMENTS: Record<Variant, ReadonlyArray<{ item: string; where: string }>
     { item: "ช่องค้นหา", where: "แถวเมนู ขวาสุด (กว้าง 320px)" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ซ่อนในเมนูโปรไฟล์ (guest = ปุ่มเฟือง)" },
   ],
-  siteThenMine: [
+  compare: [
     { item: "สถิติตลาด", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
     { item: "สายพานการ์ดขยับแรง", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
     { item: "โลโก้ Meecard", where: "แถว 2 ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "แถว 2 ถัดจากโลโก้" },
-    { item: "ตัวเลือกชุดการ์ด", where: "แถว 2 ถัดจากโลโก้ — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มเลือกเกม", where: "แถว 2 ถัดจากโลโก้ (ปุ่มลอย)" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถว 2 ถัดจากโลโก้ (ปุ่มลอย) — dropdown มีรูปกล่อง" },
     { item: "ปุ่มอัปเกรด", where: "แถว 2 ฝั่งขวา — ปุ่มมีกรอบ" },
     { item: "ข้อความ", where: "แถว 2 ฝั่งขวา (ไอคอน 40px)" },
     { item: "การแจ้งเตือน", where: "แถว 2 ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
@@ -162,7 +161,25 @@ const PLACEMENTS: Record<Variant, ReadonlyArray<{ item: string; where: string }>
     { item: "พอร์ต", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "รายการโปรด", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "Honey + แต้ม", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
-    { item: "ช่องค้นหา", where: "แถว 2 กลางแถว สูง 44px" },
+    { item: "ช่องค้นหา", where: "แถว 2 กลางแถว — 575px" },
+    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
+  ],
+  siteThenMine: [
+    { item: "สถิติตลาด", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
+    { item: "โลโก้ Meecard", where: "แถว 2 ซ้ายสุด" },
+    { item: "ปุ่มเลือกเกม", where: "แถว 2 ถัดจากโลโก้ (ปุ่มลอย)" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถว 2 ถัดจากโลโก้ (ปุ่มลอย) — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มอัปเกรด", where: "แถว 2 ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถว 2 ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถว 2 ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถว 2 ขวาสุด (แคปซูล 40px)" },
+    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
+    { item: "เมนูหลัก", where: "แถว 3 ซ้ายสุด" },
+    { item: "พอร์ต", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
+    { item: "รายการโปรด", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
+    { item: "Honey + แต้ม", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
+    { item: "ช่องค้นหา", where: "แถว 2 กลางแถว — 575px" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
   scopeInSearch: [
@@ -180,16 +197,16 @@ const PLACEMENTS: Record<Variant, ReadonlyArray<{ item: string; where: string }>
     { item: "พอร์ต", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "รายการโปรด", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "Honey + แต้ม", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
-    { item: "ช่องค้นหา", where: "แถว 2 ยาวเต็มแถว สูง 44px" },
+    { item: "ช่องค้นหา", where: "แถว 2 ยาวเต็มแถว — 958px" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
-  searchRow3: [
+  hybrid: [
     { item: "สถิติตลาด", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
     { item: "สายพานการ์ดขยับแรง", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
     { item: "โลโก้ Meecard", where: "แถว 2 ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "แถว 2 ถัดจากโลโก้" },
-    { item: "ตัวเลือกชุดการ์ด", where: "แถว 2 ถัดจากโลโก้ — dropdown มีรูปกล่อง" },
-    { item: "ปุ่มอัปเกรด", where: "แถว 2 ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ปุ่มเลือกเกม", where: "แถว 2 ถัดจากโลโก้ (ปุ่มลอย)" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถว 2 ถัดจากโลโก้ (ปุ่มลอย) — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มอัปเกรด", where: "🔁 ย้ายเข้าเมนูโปรไฟล์ (คืนที่ให้ช่องค้นหา)" },
     { item: "ข้อความ", where: "แถว 2 ฝั่งขวา (ไอคอน 40px)" },
     { item: "การแจ้งเตือน", where: "แถว 2 ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
     { item: "โปรไฟล์", where: "แถว 2 ขวาสุด (แคปซูล 40px)" },
@@ -198,25 +215,7 @@ const PLACEMENTS: Record<Variant, ReadonlyArray<{ item: string; where: string }>
     { item: "พอร์ต", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "รายการโปรด", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
     { item: "Honey + แต้ม", where: "แถว 3 ขวาสุด — มีป้ายชื่อ" },
-    { item: "ช่องค้นหา", where: "🔁 แถว 3 กลางแถว — คั่นเมนูกับของฉัน" },
-    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
-  ],
-  mineUp: [
-    { item: "สถิติตลาด", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
-    { item: "สายพานการ์ดขยับแรง", where: "แถว 1 — แถบชีพจร (ล็อก ไม่แตะ)" },
-    { item: "โลโก้ Meecard", where: "แถว 2 ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "🔁 แถว 3 — ถัดจากเมนู" },
-    { item: "ตัวเลือกชุดการ์ด", where: "🔁 แถว 3 — ถัดจากเมนู — dropdown มีรูปกล่อง" },
-    { item: "ปุ่มอัปเกรด", where: "แถว 2 ฝั่งขวา — ปุ่มมีกรอบ" },
-    { item: "ข้อความ", where: "แถว 2 ฝั่งขวา (ไอคอน 40px)" },
-    { item: "การแจ้งเตือน", where: "แถว 2 ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
-    { item: "โปรไฟล์", where: "แถว 2 ขวาสุด (แคปซูล 40px)" },
-    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
-    { item: "เมนูหลัก", where: "แถว 3 ซ้ายสุด" },
-    { item: "พอร์ต", where: "🔁 แถว 2 ฝั่งขวา — มีป้ายชื่อ" },
-    { item: "รายการโปรด", where: "🔁 แถว 2 ฝั่งขวา — มีป้ายชื่อ" },
-    { item: "Honey + แต้ม", where: "🔁 แถว 2 ฝั่งขวา — มีป้ายชื่อ" },
-    { item: "ช่องค้นหา", where: "แถว 2 กลางแถว สูง 44px" },
+    { item: "ช่องค้นหา", where: "แถว 2 กลางแถว — บอกขอบเขตในข้อความ" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
 }
@@ -574,10 +573,13 @@ function SearchField({ className }: { className?: string }) {
 /** ช่องค้นหาพระเอก — แคปซูลใหญ่ + ปุ่มค้นหาสีเต็มฝังขวา (สูตร Shopee/Lazada) */
 function HeroSearch({
   scope = false,
+  scopeHint = false,
   className,
 }: {
   /** scope = มีตัวเลือกเกม›ชุดฝังเป็นหัวช่องค้นหา (ท่า Lazada/Amazon) */
   scope?: boolean
+  /** scopeHint = ปุ่มชุดอยู่นอก แต่ช่องค้นหาบอกเองว่ากำลังค้นในชุดไหน */
+  scopeHint?: boolean
   className?: string
 }) {
   return (
@@ -620,7 +622,9 @@ function HeroSearch({
         className="flex min-w-0 flex-1 self-stretch items-center gap-2 text-left focus-visible:outline-none"
       >
         <span className="min-w-0 flex-1 truncate text-body-sm text-muted-foreground">
-          ค้นหาการ์ด ชุด หรือรหัส เช่น OP13-118...
+          {scopeHint
+            ? "ค้นในชุด " + SETS[0].code + " — พิมพ์ชื่อการ์ดหรือรหัส..."
+            : "ค้นหาการ์ด ชุด หรือรหัส เช่น OP13-118..."}
         </span>
         <kbd className="hairline shrink-0 rounded-full bg-background px-1.5 py-0.5 font-sans text-micro text-muted-foreground">
           /
@@ -844,11 +848,12 @@ function ScopeInSearchNavbar() {
 }
 
 /**
- * 3 — ค้นหาลงมาอยู่แถว 3 กลางระหว่างเมนูกับของฉัน
- * แถว 2 เบามาก (แค่ตัวตน · แคตตาล็อก · บัญชี) แล้วแถว 3 คือแถวลงมือ:
- * จะไปไหน · จะค้นอะไร · ของฉันอยู่ไหน — ค้นหาขยับใกล้เนื้อหาลงมาหนึ่งชั้น
+ * 1+ — ลูกผสม: ปุ่มชุดยังลอยอยู่นอกช่องค้นหาแบบ 1 (กดเปลี่ยนชุดได้โดยไม่ต้อง
+ * แตะช่องค้นหา) แต่ยืมความหมายของแบบ 2 มาด้วยการให้ช่องค้นหาบอกเองว่ากำลังค้น
+ * ในชุดไหน — และย้ายปุ่มอัปเกรดไปอยู่ในเมนูโปรไฟล์ (ของจริงมีแถวนั้นอยู่แล้ว)
+ * เพื่อคืนความกว้างให้ช่องค้นหา
  */
-function SearchInRow3Navbar() {
+function HybridNavbar() {
   return (
     <div>
       <PulseStrip />
@@ -857,47 +862,39 @@ function SearchInRow3Navbar() {
         <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
         <GameSelect />
         <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
-        <SetDropdown width="w-64" />
-        <div className="min-w-0 flex-1" />
-        <UpgradeButton />
+        <SetDropdown width="w-52" />
+        <div className="min-w-0 flex-1 px-2">
+          <HeroSearch scopeHint />
+        </div>
         <AccountIcons />
       </div>
-      <div className="hairline-t flex h-14 items-center gap-3 px-8">
+      <div className="hairline-t flex h-12 items-center gap-3 px-8">
         <TextNavCluster />
-        <div className="min-w-0 flex-1 px-2">
-          <HeroSearch />
-        </div>
+        <div className="min-w-0 flex-1" />
         <MyStuffCluster />
       </div>
     </div>
   )
 }
 
-/**
- * 4 — ของฉันขึ้นไปอยู่แถว 2 คู่ช่องค้นหา แล้วแถว 3 เป็นแถวนำทาง + แคตตาล็อก
- * เหมาะถ้ามองว่าพอร์ต/รายการโปรดคือของที่ใช้บ่อยพอๆ กับค้นหา
- */
-function MineUpNavbar() {
+/** ป้ายกำกับในโหมดเทียบ */
+function CompareLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-2 bg-muted/40 px-8 py-1.5">
+      <span className="text-eyebrow text-primary">{children}</span>
+    </div>
+  )
+}
+
+/** เทียบแบบ 1 กับ 2 ซ้อนกันในจอเดียว — ต่างกันแค่แถว 2 เท่านั้น */
+function CompareNavbar() {
   return (
     <div>
-      <PulseStrip />
-      <div className="flex h-14 items-center gap-3 px-8">
-        <BrandMark />
-        <div className="min-w-0 flex-1 px-2">
-          <HeroSearch />
-        </div>
-        <MyStuffCluster />
-        <UpgradeButton />
-        <AccountIcons />
-      </div>
-      <div className="hairline-t flex h-12 items-center gap-3 px-8">
-        <TextNavCluster />
-        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
-        <GameSelect />
-        <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
-        <SetDropdown width="w-52" />
-        <div className="min-w-0 flex-1" />
-      </div>
+      <CompareLabel>แบบ 1 — ปุ่มชุดลอยอยู่นอกช่องค้นหา</CompareLabel>
+      <SiteThenMineNavbar />
+      <div className="h-6 bg-muted/20" />
+      <CompareLabel>แบบ 2 — ปุ่มชุดอยู่ในช่องค้นหา</CompareLabel>
+      <ScopeInSearchNavbar />
     </div>
   )
 }
@@ -961,14 +958,14 @@ const subscribeNever = () => () => {}
 
 const NAVBARS: Record<Variant, () => React.ReactNode> = {
   current: CurrentNavbar,
+  compare: CompareNavbar,
   siteThenMine: SiteThenMineNavbar,
   scopeInSearch: ScopeInSearchNavbar,
-  searchRow3: SearchInRow3Navbar,
-  mineUp: MineUpNavbar,
+  hybrid: HybridNavbar,
 }
 
 export default function NavbarEcomPrototypePage() {
-  const [variant, setVariant] = useState<Variant>("siteThenMine")
+  const [variant, setVariant] = useState<Variant>("compare")
   // Flip the real site theme (next-themes) so the whole page — frame included —
   // previews light/dark; a frame-scoped class can't force light under a dark root.
   const { resolvedTheme, setTheme } = useTheme()
@@ -987,12 +984,11 @@ export default function NavbarEcomPrototypePage() {
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-10">
       <div className="mx-auto max-w-[1440px]">
-        <h1 className="text-h1">แถว 1 ล็อกแล้ว — เหลือจัดแถว 2 กับ 3</h1>
+        <h1 className="text-h1">เหลือคำถามเดียว — ปุ่มชุดอยู่นอกหรืออยู่ในช่องค้นหา</h1>
         <p className="mt-2 max-w-3xl text-body text-muted-foreground">
-          แถบชีพจรตลาดอยู่แถว 1 ตายตัวทุกแบบตามที่เบสสั่ง ไม่มีใครแตะ — ที่เหลือคือ
-          ของ 8 ก้อน (โลโก้ · เกม › ชุด · เมนู · ค้นหา · พอร์ต/รายการโปรด/Honey ·
-          อัปเกรด · ข้อความ+แจ้งเตือน · โปรไฟล์) ที่ต้องลงสองแถว สี่แบบนี้คือสี่วิธี
-          แบ่งของลงสองแถวนั้น
+          แบบ 1 กับ 2 ที่เบสชอบทั้งคู่ มีแถว 1 และแถว 3 เหมือนกันเป๊ะ ต่างกันจุดเดียว
+          คือปุ่มชุดอยู่นอกหรืออยู่ในช่องค้นหา — เปิดมาที่โหมดเทียบซ้อนกันให้เห็นชัดๆ
+          แล้วเพิ่มลูกผสม (1+) ที่เอาข้อดีทั้งสองมารวมไว้ให้ดูด้วย
         </p>
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
