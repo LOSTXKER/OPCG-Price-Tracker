@@ -93,6 +93,10 @@ export function ProtoTopBar({ variant = "plain" }: { variant?: ChromeVariant }) 
   }
 
   const showSearch = variant === "plain"
+  // Owner move 2026-08-29: in the center-search bar, รายการโปรด climbs into
+  // the navbar as a heart icon — occupying exactly the slot the search circle
+  // vacated, so the row costs nothing vs the live site.
+  const showHeart = variant === "search"
   return (
     <div aria-hidden className="hairline-b sticky top-0 z-chrome bg-background">
       <div className="flex h-14 min-w-0 items-center px-2">
@@ -120,6 +124,11 @@ export function ProtoTopBar({ variant = "plain" }: { variant?: ChromeVariant }) 
         {showSearch && (
           <span className="surface-2 hairline ml-1.5 flex size-11 shrink-0 items-center justify-center rounded-full text-foreground">
             <Search className="size-[18px]" />
+          </span>
+        )}
+        {showHeart && (
+          <span className="surface-2 hairline ml-1.5 flex size-11 shrink-0 items-center justify-center rounded-full text-foreground">
+            <Heart className="size-[18px]" />
           </span>
         )}
         <span className="flex size-11 shrink-0 items-center justify-center text-muted-foreground">
