@@ -237,7 +237,18 @@ describe("header catalog topology", () => {
     // Owner selection 2026-08-29: on its own row the trigger drops the
     // max-width cap and the truncating short-label pair, and shows the set's
     // box art with its code above its FULL name.
-    expect(catalog).toContain('"h-9 min-w-11 flex-1 ps-1.5 pe-2.5"')
+    expect(catalog).toContain('"h-9 min-w-11 flex-1"')
+    // …and the start padding follows what sits there. Box art is a solid
+    // block that may hug the edge; a bare icon on a full-radius pill may not,
+    // because the curve has already eaten the corner (เบส, 2026-08-29:
+    // "ไอคอน ข้อความรู้สึกติดขอบไป").
+    expect(catalog).toContain('selectedSet ? "ps-1.5 pe-2.5" : "ps-3 pe-3"')
+    expect(catalog).toContain(
+      'selectedSet\n                ? "ps-2.5 pe-2.5 lg:ps-1 lg:pe-2.5"\n                : "ps-3.5 pe-3.5 lg:ps-3 lg:pe-3"',
+    )
+    // The icon takes its inset from the button, never from its own margin —
+    // two sources for one gap is how the 10px imbalance got in.
+    expect(catalog).not.toContain('className="ms-1 size-4 shrink-0')
     expect(catalog).not.toContain("min-[480px]:max-w-56")
     expect(catalog).not.toContain("compactTriggerLabel")
     expect(catalog).not.toContain('className="min-[430px]:hidden"')

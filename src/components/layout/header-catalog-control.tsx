@@ -495,11 +495,24 @@ export function HeaderCatalogControl({
       aria-label={triggerLabel}
       className={cn(
         "surface-2 hairline ease-chrome flex min-w-0 items-center gap-1.5 rounded-full text-left text-label text-foreground transition-colors hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        // Padding depends on what sits at the start of the row. A set's box
+        // art is a solid block that can sit close to the edge; a bare icon
+        // cannot — on a full-radius pill the curve already eats the corner,
+        // so 10px of padding reads as "jammed against the edge" (เบส,
+        // 2026-08-29). Without art the inset matches the 18px radius better.
         presentation === "mobile"
           ? // Its own row since 2026-08-29, so it finally gets real width: no
             // max-width cap, and room on the left for the set's box art.
-            "h-9 min-w-11 flex-1 ps-1.5 pe-2.5"
-          : "h-11 w-44 px-2.5 lg:h-10 lg:w-40 lg:py-1 lg:pe-2.5 lg:ps-1 xl:w-56",
+            cn(
+              "h-9 min-w-11 flex-1",
+              selectedSet ? "ps-1.5 pe-2.5" : "ps-3 pe-3",
+            )
+          : cn(
+              "h-11 w-44 lg:h-10 lg:w-40 lg:py-1 xl:w-56",
+              selectedSet
+                ? "ps-2.5 pe-2.5 lg:ps-1 lg:pe-2.5"
+                : "ps-3.5 pe-3.5 lg:ps-3 lg:pe-3",
+            ),
       )}
     />
   )
@@ -511,7 +524,7 @@ export function HeaderCatalogControl({
           <SetArtwork set={selectedSet} size="trigger" />
         ) : (
           <PackageOpen
-            className="ms-1 size-4 shrink-0 text-muted-foreground"
+            className="size-4 shrink-0 text-muted-foreground"
             aria-hidden
           />
         )}
