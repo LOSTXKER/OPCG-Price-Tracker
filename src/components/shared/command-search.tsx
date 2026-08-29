@@ -389,24 +389,27 @@ export function CommandSearchModal({
                   reset()
                   inputRef.current?.focus()
                 }}
-                className="tap-safe flex size-6 items-center justify-center rounded-md text-muted-foreground hover:text-foreground"
+                className="ease-chrome grid size-9 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
-                <XIcon className="size-3.5" />
+                <XIcon className="size-4" />
               </button>
             )}
-            <button
-              type="button"
-              onClick={() => commitSearch(query)}
-              disabled={!query.trim()}
-              className="min-h-11 shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground motion-base hover:bg-primary/90 disabled:opacity-30 sm:min-h-0"
-            >
-              {t(lang, "search")}
-            </button>
+            {/* One way out, spelled in words (owner selection 2026-08-29, from
+                /proto/search-header). What was here before was an `ESC` chip:
+                a real close button wearing a keyboard-hint costume, so nobody
+                read it as pressable — and on a phone, where there is no Esc key
+                at all, it advertised a shortcut that does not exist. "ยกเลิก"
+                beside the field is the iOS search grammar people already know.
+                Esc still closes the dialog; it just no longer needs a label.
+
+                The old filled "ค้นหา" button is gone with it: the results list
+                already ends in a "ดูผลทั้งหมด" row that runs the same commit,
+                and before you type, that button was a dead 30%-opacity shape
+                taking width from the input. */}
             <DialogClose
-              aria-label={t(lang, "close")}
-              className="rounded-md border border-transparent dark:border-hair bg-muted/40 px-1.5 py-0.5 font-mono text-micro text-muted-foreground"
+              className="ease-chrome -me-1 flex h-10 shrink-0 items-center rounded-full px-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
             >
-              ESC
+              {t(lang, "cancel")}
             </DialogClose>
           </div>
 
