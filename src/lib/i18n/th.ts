@@ -113,7 +113,7 @@ export const th = {
   variant: "เวอร์ชัน",
   regular: "ปกติ",
   parallel: "พาราเลล",
-  artStyle: "ลายศิลป์",
+  artStyle: "ลายพิเศษ",
   artStyleManga: "มังงะ",
   artStyleMangaRed: "มังงะแดง",
   artStyleWanted: "ใบประกาศจับ",

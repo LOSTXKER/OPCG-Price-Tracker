@@ -113,7 +113,7 @@ export const en = {
   variant: "Variant",
   regular: "Regular",
   parallel: "Parallel",
-  artStyle: "Art style",
+  artStyle: "Special art",
   artStyleManga: "Manga",
   artStyleMangaRed: "Red Manga",
   artStyleWanted: "Wanted",

@@ -86,10 +86,14 @@ export function HomeMarketOverview({
 }) {
   const lang = useUIStore((s) => s.language)
 
-  // ลำดับในกล่องตัวกรอง: เวอร์ชันกับลายศิลป์ขึ้นก่อน (เจ้าของงานเคาะ 2026-08-30)
-  // — สองอันนี้คือ "งานพิมพ์ไหนของการ์ดใบเดียวกัน" ซึ่งเป็นสิ่งที่คนเลือกก่อน
-  // ส่วนความหายาก/ประเภท/สี เป็นการกรองข้ามการ์ดหลายใบ จึงอยู่ถัดลงมา
+  // ลำดับในกล่องตัวกรอง (เจ้าของงานเคาะ 2026-08-30): ความหายากบนสุด — เป็นสิ่งที่
+  // คนเล่นการ์ดกรองก่อนเสมอ · ตามด้วยเวอร์ชันกับลายพิเศษ ซึ่งคู่กันเพราะทั้งคู่บอกว่า
+  // "งานพิมพ์ไหนของการ์ดใบเดียวกัน" · ประเภท/สี/ราคาเป็นการกรองกว้าง จึงอยู่ล่างสุด
+  const rarityDef = filterDefinitions.find((f) => f.key === "rarity")
+  const otherDefs = filterDefinitions.filter((f) => f.key !== "set" && f.key !== "rarity")
+
   const allFilterDefs: FilterDefinition[] = [
+    ...(rarityDef ? [{ ...rarityDef, label: t(lang, "rarity") }] : []),
     {
       key: "variant",
       label: t(lang, "variant"),
@@ -107,13 +111,10 @@ export function HomeMarketOverview({
         { value: "wanted", label: t(lang, "artStyleWanted") },
       ],
     },
-    ...filterDefinitions
-      .filter((f) => f.key !== "set")
+    ...otherDefs
       .map((f) => ({
         ...f,
-        label: f.key === "rarity" ? t(lang, "rarity")
-          : f.key === "type" ? t(lang, "type")
-          : f.label,
+        label: f.key === "type" ? t(lang, "type") : f.label,
         // Type option labels arrive baked English from page.tsx (ISR, no request
         // language) — relabel to the user's language. Rarity codes (SEC) stay as-is.
         options: f.key === "type"

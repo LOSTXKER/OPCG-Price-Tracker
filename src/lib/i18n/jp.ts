@@ -113,7 +113,7 @@ export const jp = {
   variant: "バージョン",
   regular: "通常",
   parallel: "パラレル",
-  artStyle: "アート",
+  artStyle: "特殊アート",
   artStyleManga: "漫画背景",
   artStyleMangaRed: "赤漫画",
   artStyleWanted: "手配書",

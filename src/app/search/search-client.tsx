@@ -319,6 +319,34 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
         onReset={resetModalFilters}
         resetDisabled={modalFilterCount === 0}
       >
+        {rarityOptions.length > 0 && (
+          <div>
+            <span className="mb-1.5 block text-eyebrow">{t(lang, "rarity")}</span>
+            <div className="flex flex-wrap gap-1.5">
+              {rarityOptions.map((r) => {
+                const active = filters.rarities.includes(r.code)
+                return (
+                  <button
+                    key={r.code}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => handleMultiFilterToggle("rarities", r.code)}
+                    className={cn(
+                      "ease-chrome min-h-11 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors md:min-h-0",
+                      active
+                        ? "text-white"
+                        : "bg-muted text-muted-foreground hover:text-foreground",
+                    )}
+                    style={active ? { backgroundColor: RARITY_HEX[r.code] ?? "#6B7280" } : undefined}
+                  >
+                    {r.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
         {variantOptions.length > 0 && (
           <div>
             <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
@@ -370,34 +398,6 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
             })}
           </div>
         </div>
-
-        {rarityOptions.length > 0 && (
-          <div>
-            <span className="mb-1.5 block text-eyebrow">{t(lang, "rarity")}</span>
-            <div className="flex flex-wrap gap-1.5">
-              {rarityOptions.map((r) => {
-                const active = filters.rarities.includes(r.code)
-                return (
-                  <button
-                    key={r.code}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => handleMultiFilterToggle("rarities", r.code)}
-                    className={cn(
-                      "ease-chrome min-h-11 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors md:min-h-0",
-                      active
-                        ? "text-white"
-                        : "bg-muted text-muted-foreground hover:text-foreground",
-                    )}
-                    style={active ? { backgroundColor: RARITY_HEX[r.code] ?? "#6B7280" } : undefined}
-                  >
-                    {r.label}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        )}
 
         {typeOptions.length > 0 && (
           <div>
