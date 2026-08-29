@@ -15,14 +15,31 @@ import {
 } from "./market-types"
 
 /**
- * The phone list's sort control, with the change window folded into it.
+ * Every segment shares one geometry so the capsule keeps an even rhythm.
  *
- * Before (owner selection 2026-08-29, from /proto/mobile-home): the period
- * pill owned a whole 44px band of its own, so the phone spent three stacked
- * rows on controls before the first price. Here the period is what it actually
- * is — a modifier of the % column — so it rides the "เปลี่ยนแปลง" label as one
- * joined pill: the label sorts by the current period's column, the chip cycles
- * 24h → 7d → 30d (CoinMarketCap's mobile grammar).
+ * The insets are tight on purpose: this row shares 360px with the grade lens
+ * (Raw / PSA 10 / …), which scrolls sideways when squeezed — every pixel spent
+ * here is a pixel of grade label someone has to swipe for. Measured on a 360px
+ * phone: the capsule lands at ~203px, a little narrower than the two separate
+ * controls it replaced (207px), so folding price in cost the grades nothing.
+ */
+const SEGMENT = "ease-chrome inline-flex min-h-11 items-center hover:bg-muted"
+
+/**
+ * The phone list's sort control: price, change, and the change window, all in
+ * ONE segmented capsule.
+ *
+ * Two rounds of folding got it here. First the period pill gave up its own
+ * 44px band (owner selection 2026-08-29, from /proto/mobile-home) — the phone
+ * was spending three stacked rows on controls before the first price, and the
+ * period is really a modifier of the % column, so it joined "เปลี่ยนแปลง".
+ * Then price joined them too (owner, 2026-08-30): it was the only control left
+ * outside, and one loose label beside a bordered capsule reads as leftovers
+ * rather than as the other half of the same choice.
+ *
+ * What the three segments do differs, and that is the point of the dividers:
+ * the first two SORT (only one can be active), the last CYCLES 24h → 7d → 30d
+ * and re-aims the middle one (CoinMarketCap's mobile grammar).
  *
  * Graded lenses keep the geometry but drop the tap-sort, because their
  * historical deltas are modeled rather than real.
@@ -54,7 +71,7 @@ export function MobileSortCluster({
   return (
     <div
       className={cn(
-        "flex items-center gap-1.5 text-muted-foreground min-[360px]:gap-2",
+        "flex items-center overflow-hidden rounded-full border border-hair text-muted-foreground",
         className,
       )}
     >
@@ -66,41 +83,43 @@ export function MobileSortCluster({
           activeCol={sortCol}
           dir={sortDir}
           onClick={onSort}
-          className="aria-pressed:text-foreground"
+          className={cn(SEGMENT, "gap-1 pe-1.5 ps-2.5 aria-pressed:text-foreground")}
         />
       ) : (
-        <span className="text-eyebrow text-foreground">{t(lang, "price")}</span>
+        <span className={cn(SEGMENT, "text-eyebrow pe-1.5 ps-2.5 text-foreground")}>
+          {t(lang, "price")}
+        </span>
       )}
 
-      <span aria-hidden className="h-3 w-px bg-hair" />
+      <span aria-hidden className="h-3 w-px shrink-0 bg-hair" />
 
-      <div className="flex items-center rounded-full border border-hair">
-        {sortEnabled ? (
-          <SortableHeader<ColumnId>
-            as="button"
-            label={t(lang, "change")}
-            column={PERIOD_COLUMNS[period]}
-            activeCol={sortCol}
-            dir={sortDir}
-            onClick={onSort}
-            className="pe-1.5 ps-2.5 aria-pressed:text-foreground"
-          />
-        ) : (
-          <span className="text-eyebrow flex min-h-11 items-center pe-1.5 ps-2.5">
-            {t(lang, "change")}
-          </span>
-        )}
-        <span aria-hidden className="h-3 w-px bg-hair" />
-        <button
-          type="button"
-          onClick={cyclePeriod}
-          aria-label={`${t(lang, "pricePeriod")} ${period}`}
-          className="ease-chrome inline-flex min-h-11 items-center gap-1 rounded-e-full pe-2.5 ps-1.5 text-xs font-medium text-foreground hover:bg-muted"
-        >
-          <TrendingUpDown className="size-3 text-muted-foreground" aria-hidden />
-          {period}
-        </button>
-      </div>
+      {sortEnabled ? (
+        <SortableHeader<ColumnId>
+          as="button"
+          label={t(lang, "change")}
+          column={PERIOD_COLUMNS[period]}
+          activeCol={sortCol}
+          dir={sortDir}
+          onClick={onSort}
+          className={cn(SEGMENT, "gap-1 px-1.5 aria-pressed:text-foreground")}
+        />
+      ) : (
+        <span className={cn(SEGMENT, "text-eyebrow px-1.5")}>
+          {t(lang, "change")}
+        </span>
+      )}
+
+      <span aria-hidden className="h-3 w-px shrink-0 bg-hair" />
+
+      <button
+        type="button"
+        onClick={cyclePeriod}
+        aria-label={`${t(lang, "pricePeriod")} ${period}`}
+        className={cn(SEGMENT, "gap-1 pe-2.5 ps-1.5 text-xs font-medium text-foreground")}
+      >
+        <TrendingUpDown className="size-3 text-muted-foreground" aria-hidden />
+        {period}
+      </button>
     </div>
   )
 }

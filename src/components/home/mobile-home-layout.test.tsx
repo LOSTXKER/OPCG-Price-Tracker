@@ -75,6 +75,11 @@ describe("mobile home layout", () => {
     expect(cluster).toContain("sortEnabled ? (")
     // Touch targets stay at the 44px floor.
     expect(cluster).toContain("min-h-11")
+    // Owner call 2026-08-30: price sits INSIDE the same capsule as change and
+    // the period — one bordered group, not a loose label beside a bordered one.
+    // A single `rounded-full` wrapper is what enforces that.
+    expect(cluster.match(/rounded-full/g)).toHaveLength(1)
+    expect(cluster).toContain('column="price"')
   })
 
   it("splits the hero lead so the counts stop wrapping to five lines", () => {
