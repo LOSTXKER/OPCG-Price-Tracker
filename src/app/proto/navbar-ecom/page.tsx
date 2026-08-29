@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils"
 
 /* ------------------------------------------------------------------ data */
 
-type Variant = "mergedPulse" | "twoRow" | "current"
+type Variant = "wide" | "icon" | "short" | "center" | "current"
 
 /** ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.) เพื่อเทียบแบบตาต่อตา */
 const STATS = {
@@ -71,8 +71,10 @@ const SETS = [
 ] as const
 
 const VARIANT_OPTIONS = [
-  { value: "mergedPulse", label: "D2 · ชีพจรรวมแถวบน" },
-  { value: "twoRow", label: "D · ชีพจรแยกแถว" },
+  { value: "icon", label: "1 · ตัดปุ่มค้นหาออก" },
+  { value: "wide", label: "2 · ขยายช่อง" },
+  { value: "short", label: "3 · ย่อข้อความ" },
+  { value: "center", label: "4 · ย้ายไปกลางแถว" },
   { value: "current", label: "ปัจจุบัน" },
 ] as const
 
@@ -80,34 +82,47 @@ const VARIANT_COPY: Record<
   Variant,
   { name: string; summary: string; tradeoff: string }
 > = {
-  mergedPulse: {
-    name: "D2 · ชีพจรรวมกับแถวบน — เหลือสองแถวจริงๆ",
+  icon: {
+    name: "1 · ตัดปุ่มค้นหาสีทองออก — เหลือแค่ไอคอนแว่น",
     summary:
-      "ยุบแถบชีพจรเข้าไปอยู่แถวเดียวกับเกม › ชุด และกลุ่มบัญชี แล้วย้ายพอร์ต · รายการโปรด · Honey ลงมาอยู่ซ้ายของช่องค้นหาในแถวล่าง — เหลือสองแถวจริงๆ สูงรวมแค่ 104px เตี้ยกว่าของจริง 28px และแถวล่างอ่านเป็นลำดับเดียว: ตัวตน → ทางไป → ของฉัน → ค้นหา",
+      "ต้นเหตุที่ข้อความโดนตัดคือปุ่ม \"ค้นหา\" สีเต็มที่กินไปเกือบ 100px ทั้งที่คนกดปุ่มนั้นน้อยมาก (ส่วนใหญ่พิมพ์แล้วกด Enter) — ตัดออกแล้วใส่ไอคอนแว่นไว้ซ้ายแทน ได้พื้นที่พิมพ์คืนเกือบทั้งหมด และทรงกลับไปเหมือนช่องค้นหาที่ใช้อยู่จริงตอนนี้",
     tradeoff:
-      "สายพานเหลือที่วิ่ง 337px จากเดิม 781px (แคบกว่าอยู่ 57%) เห็นการ์ดพร้อมกันได้ราวสองใบ — ถ้าสายพานคือของที่อยากให้คนเห็น อันนี้คือราคาที่แพงที่สุดของแบบนี้ · ต้องซ่อนสถิติสองตัว (จำนวนชุด · อัปเดตล่าสุด) ถึงจะใส่ลงแถวเดียวได้",
+      "เสียความเด่นแบบ Shopee/Lazada ที่ปุ่มสีตัดกับช่องขาว — แถบจะดูเรียบลง ถ้าอยากให้ช่องค้นหา \"ตะโกน\" อันนี้ตะโกนน้อยสุด",
   },
-  twoRow: {
-    name: "D · ชีพจรแยกแถว — แบบก่อนหน้า เก็บไว้เทียบ",
+  wide: {
+    name: "2 · ขยายช่องให้ข้อความพอ — เก็บปุ่มสีไว้",
     summary:
-      "แถบชีพจรยังเป็นแถวของตัวเองเต็มความกว้าง สายพานเลยมีที่วิ่งเต็มที่ · แถวกลาง = เกม › ชุด ⟷ ของฉัน ‖ บัญชี · แถวล่าง = โลโก้ · เมนู ⟷ ค้นหาชิดขวา",
+      "เก็บปุ่มค้นหาสีเต็มไว้เหมือนเดิม แต่ขยายช่องจาก 384px เป็น 496px ให้ข้อความตัวอย่างลงได้ครบไม่โดนตัด — วิธีที่เปลี่ยนหน้าตาน้อยที่สุด",
     tradeoff:
-      "สูง 136px มากกว่า D2 อยู่ 32px · ของฉันอยู่แถวบน ห่างจากช่องค้นหาที่อยู่แถวล่าง",
+      "ช่องค้นหากินที่ไปมาก ของฉัน (พอร์ต · รายการโปรด · Honey) จะถูกดันไปชิดซ้ายมากขึ้น ช่องว่างกลางแถวเหลือน้อยลง",
+  },
+  short: {
+    name: "3 · ย่อข้อความในช่องเหลือ \"ค้นหาการ์ด...\"",
+    summary:
+      "ไม่แตะขนาดหรือปุ่มเลย แค่ตัดข้อความตัวอย่างให้สั้นลง — ช่องแคบลงได้ถึง 320px (เท่าของจริงตอนนี้) โดยข้อความยังไม่โดนตัด และเหลือช่องว่างกลางแถวเยอะที่สุดในสี่แบบ",
+    tradeoff:
+      "เสียคำใบ้ว่าค้นด้วยรหัสการ์ดได้ (\"เช่น OP13-118\") ซึ่งเป็นวิธีค้นที่คนเล่นใช้บ่อย — อาจต้องไปบอกในหน้าผลค้นหาแทน",
+  },
+  center: {
+    name: "4 · ย้ายช่องค้นหาไปกลางแถว",
+    summary:
+      "ปัญหาอาจไม่ใช่ขนาดแต่เป็นตำแหน่ง — ช่องค้นหาไปเบียดกับของฉันที่มุมขวาพอดี แบบนี้ย้ายไปวางกึ่งกลางแถวแทน แล้วให้ของฉันไปชิดขวาสุด ทั้งสองก้อนเลยไม่ติดกัน และช่องค้นหาได้ตำแหน่งกลางจอแบบ Shopee/Lazada",
+    tradeoff:
+      "ของฉันย้ายไปขวาสุด ห่างจากช่องค้นหา — ถ้าอยากให้สองอย่างนี้อยู่ใกล้กันเพราะใช้ต่อเนื่องกัน อันนี้จะแยกมันออก",
   },
   current: {
     name: "ปัจจุบัน — แบบ C ที่ขึ้นเว็บอยู่",
-    summary:
-      "ตัวตั้งเทียบ: สามแถว สูง 132px · ช่องค้นหา 320px ซุกอยู่ขวาสุดแถวเมนู",
+    summary: "ตัวตั้งเทียบ: สามแถว สูง 132px · ช่องค้นหา 320px ทรงไอคอนแว่นไม่มีปุ่มสี",
     tradeoff: "—",
   },
 }
 
 const SHARED_NOTES = [
-  "D2 รอบล่าสุด: เกม › ชุด อยู่ซ้ายสุด ชีพจรต่อท้าย · ช่องค้นหาหดเหลือ 384px · สูงรวม 104px เตี้ยกว่าของจริง 28px",
-  "ราคาที่ต้องจ่ายคือที่วิ่งของสายพาน — วัดจริง: D2 ได้ 337px (ดีขึ้นจาก 309px หลังจัดใหม่) ส่วน D ได้ 781px เท่าของจริง คือยังแคบกว่าอยู่ 57%",
-  "D2 ยังต้องซ่อนสถิติสองตัว (จำนวนชุด · อัปเดตล่าสุด) ถึงจะใส่ลงแถวเดียวได้",
-  "ช่องค้นหาชิดขวาทั้งสองแบบ · D2 กว้าง 384px · D กว้าง 480px (ของจริงตอนนี้ 320px)",
-  "ทุกปุ่มสูง 40px ขึ้นไป · ของฉันมีป้ายชื่อครบ · ภาษา/สกุลเงิน/ธีมอยู่ในเมนูโปรไฟล์",
+  "โครง D2 ล็อกแล้วตามที่เบสเคาะ — ต่างกันแค่ช่องค้นหาอย่างเดียว",
+  "ต้นเหตุที่ข้อความโดนตัด: ปุ่มค้นหาสีเต็มกิน 100px + kbd อีก 24px จากช่องกว้าง 384px เหลือที่พิมพ์จริงราว 250px",
+  "แบบ 1 (ตัดปุ่ม) กับแบบ 3 (ย่อข้อความ) แก้ที่ต้นเหตุ · แบบ 2 (ขยาย) กับแบบ 4 (ย้ายที่) แก้ที่ปลายเหตุ",
+  "แถวบนเหมือนกันหมดทุกแบบ: เกม › ชุด ซ้ายสุด · ชีพจรต่อท้าย · บัญชีขวาสุด",
+  "ทุกปุ่มสูง 40px ขึ้นไป · ของฉันมีป้ายชื่อครบ · สูงรวม 104px ทุกแบบ",
   "ปุ่มทุกปุ่มกดไม่ได้จริง (หุ่นโชว์ผัง) · ตัวเลขชุดเดียวกับจอจริงของเบส (28 ส.ค.)",
 ] as const
 
@@ -131,40 +146,76 @@ const PLACEMENTS: Record<Variant, ReadonlyArray<{ item: string; where: string }>
     { item: "ช่องค้นหา", where: "แถวเมนู ขวาสุด (กว้าง 320px)" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ซ่อนในเมนูโปรไฟล์ (guest = ปุ่มเฟือง)" },
   ],
-  mergedPulse: [
-    { item: "สถิติตลาด", where: "🔁 แถวบน — ต่อท้ายปุ่มชุด (ซ่อน 2 ตัว: จำนวนชุด · อัปเดตล่าสุด)" },
-    { item: "สายพานการ์ดขยับแรง", where: "🔁 แถวบน — ต่อจากสถิติ กินที่ที่เหลือ 337px" },
+  icon: [
+    { item: "สถิติตลาด", where: "แถวบน — ต่อท้ายปุ่มชุด (ซ่อน 2 ตัว: จำนวนชุด · อัปเดตล่าสุด)" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถวบน — ต่อจากสถิติ กินที่ที่เหลือ" },
     { item: "โลโก้ Meecard", where: "แถวล่าง ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "🔁 แถวบน ซ้ายสุด — นำหน้าทั้งแถว" },
-    { item: "ตัวเลือกชุดการ์ด", where: "🔁 แถวบน ซ้ายสุด — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มเลือกเกม", where: "แถวบน ซ้ายสุด — นำหน้าทั้งแถว" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถวบน ซ้ายสุด — dropdown มีรูปกล่อง" },
     { item: "ปุ่มอัปเกรด", where: "แถวบน ฝั่งขวา — ปุ่มมีกรอบ" },
     { item: "ข้อความ", where: "แถวบน ฝั่งขวา (ไอคอน 40px)" },
     { item: "การแจ้งเตือน", where: "แถวบน ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
-    { item: "โปรไฟล์", where: "แถวบน ฝั่งขวา ขวาสุด (แคปซูล 40px)" },
+    { item: "โปรไฟล์", where: "แถวบน ขวาสุด (แคปซูล 40px)" },
     { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
     { item: "เมนูหลัก", where: "แถวล่าง — ถัดจากโลโก้" },
-    { item: "พอร์ต", where: "🔁 แถวล่าง — ซ้ายของช่องค้นหา" },
-    { item: "รายการโปรด", where: "🔁 แถวล่าง — ซ้ายของช่องค้นหา" },
-    { item: "Honey + แต้ม", where: "🔁 แถวล่าง — ซ้ายของช่องค้นหา" },
-    { item: "ช่องค้นหา", where: "แถวล่าง ขวาสุด — 384px" },
+    { item: "พอร์ต", where: "แถวล่าง — ซ้ายของช่องค้นหา" },
+    { item: "รายการโปรด", where: "แถวล่าง — ซ้ายของช่องค้นหา" },
+    { item: "Honey + แต้ม", where: "แถวล่าง — ซ้ายของช่องค้นหา" },
+    { item: "ช่องค้นหา", where: "แถวล่าง ขวาสุด — 384px ไอคอนแว่น ไม่มีปุ่มสี" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
-  twoRow: [
-    { item: "สถิติตลาด", where: "แถบชีพจร — แถวของตัวเอง เต็มความกว้าง" },
-    { item: "สายพานการ์ดขยับแรง", where: "แถบชีพจร — แถวของตัวเอง เต็มความกว้าง" },
+  wide: [
+    { item: "สถิติตลาด", where: "แถวบน — ต่อท้ายปุ่มชุด (ซ่อน 2 ตัว: จำนวนชุด · อัปเดตล่าสุด)" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถวบน — ต่อจากสถิติ กินที่ที่เหลือ" },
     { item: "โลโก้ Meecard", where: "แถวล่าง ซ้ายสุด" },
-    { item: "ปุ่มเลือกเกม", where: "แถวกลาง ซ้ายสุด" },
-    { item: "ตัวเลือกชุดการ์ด", where: "แถวกลาง ซ้ายสุด — dropdown มีรูปกล่อง" },
-    { item: "ปุ่มอัปเกรด", where: "แถวกลาง ฝั่งขวา — ปุ่มมีกรอบ" },
-    { item: "ข้อความ", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px)" },
-    { item: "การแจ้งเตือน", where: "แถวกลาง ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
-    { item: "โปรไฟล์", where: "แถวกลาง ฝั่งขวา ขวาสุด (แคปซูล 40px)" },
+    { item: "ปุ่มเลือกเกม", where: "แถวบน ซ้ายสุด — นำหน้าทั้งแถว" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถวบน ซ้ายสุด — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มอัปเกรด", where: "แถวบน ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถวบน ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถวบน ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถวบน ขวาสุด (แคปซูล 40px)" },
     { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
     { item: "เมนูหลัก", where: "แถวล่าง — ถัดจากโลโก้" },
-    { item: "พอร์ต", where: "แถวกลาง ฝั่งขวา — ติดกลุ่มบัญชี" },
-    { item: "รายการโปรด", where: "แถวกลาง ฝั่งขวา — ติดกลุ่มบัญชี" },
-    { item: "Honey + แต้ม", where: "แถวกลาง ฝั่งขวา — ติดกลุ่มบัญชี" },
-    { item: "ช่องค้นหา", where: "แถวล่าง ขวาสุด — 480px" },
+    { item: "พอร์ต", where: "แถวล่าง — ซ้ายของช่องค้นหา" },
+    { item: "รายการโปรด", where: "แถวล่าง — ซ้ายของช่องค้นหา" },
+    { item: "Honey + แต้ม", where: "แถวล่าง — ซ้ายของช่องค้นหา" },
+    { item: "ช่องค้นหา", where: "แถวล่าง ขวาสุด — 496px มีปุ่มสี" },
+    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
+  ],
+  short: [
+    { item: "สถิติตลาด", where: "แถวบน — ต่อท้ายปุ่มชุด (ซ่อน 2 ตัว: จำนวนชุด · อัปเดตล่าสุด)" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถวบน — ต่อจากสถิติ กินที่ที่เหลือ" },
+    { item: "โลโก้ Meecard", where: "แถวล่าง ซ้ายสุด" },
+    { item: "ปุ่มเลือกเกม", where: "แถวบน ซ้ายสุด — นำหน้าทั้งแถว" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถวบน ซ้ายสุด — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มอัปเกรด", where: "แถวบน ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถวบน ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถวบน ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถวบน ขวาสุด (แคปซูล 40px)" },
+    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
+    { item: "เมนูหลัก", where: "แถวล่าง — ถัดจากโลโก้" },
+    { item: "พอร์ต", where: "แถวล่าง — ซ้ายของช่องค้นหา" },
+    { item: "รายการโปรด", where: "แถวล่าง — ซ้ายของช่องค้นหา" },
+    { item: "Honey + แต้ม", where: "แถวล่าง — ซ้ายของช่องค้นหา" },
+    { item: "ช่องค้นหา", where: "แถวล่าง ขวาสุด — 320px ข้อความสั้น" },
+    { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
+  ],
+  center: [
+    { item: "สถิติตลาด", where: "แถวบน — ต่อท้ายปุ่มชุด (ซ่อน 2 ตัว: จำนวนชุด · อัปเดตล่าสุด)" },
+    { item: "สายพานการ์ดขยับแรง", where: "แถวบน — ต่อจากสถิติ กินที่ที่เหลือ" },
+    { item: "โลโก้ Meecard", where: "แถวล่าง ซ้ายสุด" },
+    { item: "ปุ่มเลือกเกม", where: "แถวบน ซ้ายสุด — นำหน้าทั้งแถว" },
+    { item: "ตัวเลือกชุดการ์ด", where: "แถวบน ซ้ายสุด — dropdown มีรูปกล่อง" },
+    { item: "ปุ่มอัปเกรด", where: "แถวบน ฝั่งขวา — ปุ่มมีกรอบ" },
+    { item: "ข้อความ", where: "แถวบน ฝั่งขวา (ไอคอน 40px)" },
+    { item: "การแจ้งเตือน", where: "แถวบน ฝั่งขวา (ไอคอน 40px + จุดแดง)" },
+    { item: "โปรไฟล์", where: "แถวบน ขวาสุด (แคปซูล 40px)" },
+    { item: "ฝั่งยังไม่ล็อกอิน", where: "ตำแหน่งเดียวกับโปรไฟล์" },
+    { item: "เมนูหลัก", where: "แถวล่าง — ถัดจากโลโก้" },
+    { item: "พอร์ต", where: "แถวล่าง ขวาสุด" },
+    { item: "รายการโปรด", where: "แถวล่าง ขวาสุด" },
+    { item: "Honey + แต้ม", where: "แถวล่าง ขวาสุด" },
+    { item: "ช่องค้นหา", where: "แถวล่าง กึ่งกลางแถว — 480px" },
     { item: "ภาษา · สกุลเงิน · ธีม", where: "ในเมนูโปรไฟล์ (เหมือนของจริง)" },
   ],
 }
@@ -519,23 +570,28 @@ function SearchField({ className }: { className?: string }) {
   )
 }
 
-/** ช่องค้นหาพระเอก — แคปซูลใหญ่ + ปุ่มค้นหาสีเต็มฝังขวา (สูตร Shopee/Lazada) */
+/**
+ * ช่องค้นหา — `look` คุมหน้าตา:
+ *   button  = มีปุ่มค้นหาสีเต็มฝังขวา (ทรง Shopee/Lazada)
+ *   icon    = ไม่มีปุ่ม เหลือแค่ไอคอนแว่นซ้าย (ทรงเดียวกับของจริงตอนนี้)
+ * `placeholder` สั้น/ยาว คุมว่าข้อความจะโดนตัดไหมเมื่อช่องแคบ
+ */
 function HeroSearch({
   scope = false,
-  scopeHint = false,
+  look = "button",
+  shortPlaceholder = false,
   className,
 }: {
-  /** scope = มีตัวเลือกเกม›ชุดฝังเป็นหัวช่องค้นหา (ท่า Lazada/Amazon) */
   scope?: boolean
-  /** scopeHint = ปุ่มชุดอยู่นอก แต่ช่องค้นหาบอกเองว่ากำลังค้นในชุดไหน */
-  scopeHint?: boolean
+  look?: "button" | "icon"
+  shortPlaceholder?: boolean
   className?: string
 }) {
   return (
     <div
       className={cn(
         "hairline ease-chrome group flex h-11 w-full items-center rounded-full bg-card pr-1 transition-colors focus-within:ring-2 focus-within:ring-ring/40 hover:bg-muted/50",
-        scope ? "pl-1" : "pl-4",
+        scope ? "pl-1" : look === "icon" ? "pl-3.5" : "pl-4",
         className,
       )}
     >
@@ -549,16 +605,6 @@ function HeroSearch({
             <GameCrest game={{ slug: "opcg" }} size={18} variant="selector" decorative />
             OPCG
             <ChevronRight className="size-3 text-muted-foreground/60" aria-hidden />
-            <span className="relative block h-7 w-5 shrink-0 overflow-hidden rounded bg-muted">
-              <Image
-                src={SETS[0].box}
-                alt=""
-                fill
-                sizes="20px"
-                loading="eager"
-                className="select-none object-cover"
-              />
-            </span>
             {SETS[0].code}
             <ChevronDown className="size-3.5 text-muted-foreground" aria-hidden />
           </button>
@@ -570,19 +616,27 @@ function HeroSearch({
         aria-label="ค้นหาการ์ด"
         className="flex min-w-0 flex-1 self-stretch items-center gap-2 text-left focus-visible:outline-none"
       >
+        {look === "icon" && (
+          <Search
+            className="size-[18px] shrink-0 text-muted-foreground transition-colors group-hover:text-foreground"
+            aria-hidden
+          />
+        )}
         <span className="min-w-0 flex-1 truncate text-body-sm text-muted-foreground">
-          {scopeHint
-            ? "ค้นในชุด " + SETS[0].code + " — พิมพ์ชื่อการ์ดหรือรหัส..."
+          {shortPlaceholder
+            ? "ค้นหาการ์ด..."
             : "ค้นหาการ์ด ชุด หรือรหัส เช่น OP13-118..."}
         </span>
         <kbd className="hairline shrink-0 rounded-full bg-background px-1.5 py-0.5 font-sans text-micro text-muted-foreground">
           /
         </kbd>
       </button>
-      <span className="ml-2 flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground">
-        <Search className="size-4" aria-hidden />
-        ค้นหา
-      </span>
+      {look === "button" && (
+        <span className="ml-2 flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground">
+          <Search className="size-4" aria-hidden />
+          ค้นหา
+        </span>
+      )}
     </div>
   )
 }
@@ -750,45 +804,26 @@ function CurrentNavbar() {
 }
 
 /**
- * D — เหลือสองแถว (ไม่นับแถบชีพจร) ตามที่เบสสั่ง
- *
- * แถวบน = บริบท + บัญชี: เกม › ชุด บอกว่ากำลังดูอะไร · ของฉันกับบัญชีชิดขวา
- * แถวล่าง = ตัวตน + ทางไป + ค้นหา: โลโก้นำหน้าซ้ายสุด แล้วเมนู แล้วค้นหาชิดขวา
- * เตี้ยกว่าแบบ A อยู่ 8px เพราะแถวบนไม่ต้องสูงเท่าแถวที่มีช่องค้นหา
+ * D2 — โครงที่เบสเคาะแล้ว: ชีพจรรวมแถวบน · เกม › ชุด ซ้ายสุด · ของฉันซ้ายของช่องค้นหา
+ * เหลือปรับแค่ช่องค้นหา — `search` คุมว่าจะแก้ด้วยวิธีไหน
  */
-function TwoRowNavbar() {
-  return (
-    <div>
-      <PulseStrip />
-      <div className="flex h-12 items-center gap-3 px-8">
-        <GameSelect />
-        <ChevronRight className="size-3 shrink-0 text-muted-foreground/60" aria-hidden />
-        <SetDropdown width="w-52" />
-        <div className="min-w-0 flex-1" />
-        <MyStuffCluster />
-        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
-        <UpgradeButton />
-        <AccountIcons />
-      </div>
-      <div className="hairline-t flex h-14 items-center gap-3 px-8">
-        <BrandMark />
-        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
-        <TextNavCluster />
-        <div className="min-w-0 flex-1" />
-        <HeroSearch className="w-[30rem] shrink-0" />
-      </div>
-    </div>
-  )
-}
+function D2Navbar({
+  search = "wide",
+}: {
+  /** wide = ขยายช่อง · icon = ตัดปุ่มค้นหาออก · short = ย่อข้อความ · center = ย้ายไปกลางแถว */
+  search?: "wide" | "icon" | "short" | "center"
+}) {
+  const field =
+    search === "icon" ? (
+      <HeroSearch look="icon" className="w-96 shrink-0" />
+    ) : search === "short" ? (
+      <HeroSearch shortPlaceholder className="w-80 shrink-0" />
+    ) : search === "center" ? (
+      <HeroSearch className="w-[30rem] shrink-0" />
+    ) : (
+      <HeroSearch className="w-[31rem] shrink-0" />
+    )
 
-/**
- * D2 — ยุบแถบชีพจรเข้าแถวบน · ของฉันอยู่ซ้ายของช่องค้นหา
- * รอบล่าสุด (เบสสั่ง): เกม › ชุด ย้ายไปซ้ายสุด ชีพจรต่อท้าย · ช่องค้นหาหดเหลือ 384px
- *
- * ผลคือเหลือสองแถวจริงๆ สูงรวม 104px — เตี้ยกว่าของจริง 28px
- * แต่สายพานต้องแบ่งแถวกับอีกสามก้อน จึงเหลือที่วิ่งแคบลงมาก (ดูตัวเลขจริงในข้อแลก)
- */
-function MergedPulseNavbar() {
   return (
     <div>
       <div className="hairline-b flex h-12 items-center gap-3 overflow-hidden px-8">
@@ -801,14 +836,24 @@ function MergedPulseNavbar() {
         <UpgradeButton />
         <AccountIcons />
       </div>
-      <div className="flex h-14 items-center gap-3 px-8">
-        <BrandMark />
-        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
-        <TextNavCluster />
-        <div className="min-w-0 flex-1" />
-        <MyStuffCluster />
-        <HeroSearch className="w-96 shrink-0" />
-      </div>
+      {search === "center" ? (
+        <div className="flex h-14 items-center gap-3 px-8">
+          <BrandMark />
+          <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
+          <TextNavCluster />
+          <div className="flex min-w-0 flex-1 justify-center px-3">{field}</div>
+          <MyStuffCluster />
+        </div>
+      ) : (
+        <div className="flex h-14 items-center gap-3 px-8">
+          <BrandMark />
+          <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
+          <TextNavCluster />
+          <div className="min-w-0 flex-1" />
+          <MyStuffCluster />
+          {field}
+        </div>
+      )}
     </div>
   )
 }
@@ -872,12 +917,14 @@ const subscribeNever = () => () => {}
 
 const NAVBARS: Record<Variant, () => React.ReactNode> = {
   current: CurrentNavbar,
-  mergedPulse: MergedPulseNavbar,
-  twoRow: TwoRowNavbar,
+  wide: () => <D2Navbar search="wide" />,
+  icon: () => <D2Navbar search="icon" />,
+  short: () => <D2Navbar search="short" />,
+  center: () => <D2Navbar search="center" />,
 }
 
 export default function NavbarEcomPrototypePage() {
-  const [variant, setVariant] = useState<Variant>("mergedPulse")
+  const [variant, setVariant] = useState<Variant>("icon")
   // Flip the real site theme (next-themes) so the whole page — frame included —
   // previews light/dark; a frame-scoped class can't force light under a dark root.
   const { resolvedTheme, setTheme } = useTheme()
@@ -896,11 +943,11 @@ export default function NavbarEcomPrototypePage() {
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-6 lg:px-10">
       <div className="mx-auto max-w-[1440px]">
-        <h1 className="text-h1">ยุบชีพจรเข้าแถวบน — เหลือสองแถวจริงๆ</h1>
+        <h1 className="text-h1">D2 เคาะแล้ว — เหลือแก้ช่องค้นหา</h1>
         <p className="mt-2 max-w-3xl text-body text-muted-foreground">
-          D2 ทำตามที่เบสสั่ง: ยุบแถบชีพจรเข้าไปรวมกับแถวบน แล้วย้ายพอร์ต · รายการโปรด ·
-          Honey ลงมาอยู่ซ้ายของช่องค้นหา — เหลือสองแถวจริงๆ สูงแค่ 104px แต่มีราคาที่ต้อง
-          จ่ายเรื่องที่วิ่งของสายพาน เทียบกับ D (ชีพจรแยกแถว) ได้เลย
+          โครง D2 ล็อกแล้ว เหลือแก้ช่องค้นหาอย่างเดียว — ต้นเหตุที่ข้อความในช่องโดนตัด
+          คือปุ่มค้นหาสีเต็มกินไปเกือบ 100px จากช่องกว้าง 384px เหลือที่พิมพ์จริงราว
+          250px · สี่แบบนี้แก้คนละจุด: สองแบบแรกแก้ที่ต้นเหตุ สองแบบหลังแก้ที่ปลายเหตุ
         </p>
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
