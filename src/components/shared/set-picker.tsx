@@ -17,6 +17,9 @@ export interface SetPickerItem {
   type: string
   releaseDate?: string | null
   imageUrl?: string | null
+  /** Packaging art. `/api/sets` already returns it; used by the header trigger
+   *  so collectors recognise the set by its box before they read "op14". */
+  boxImageUrl?: string | null
   /** Optional card count, shown at the end of the row when provided. */
   cardCount?: number
 }

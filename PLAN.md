@@ -3,6 +3,21 @@
 > งานใหญ่แตกเป็น task ติ๊กได้ · ทำทีละอัน · ติ๊กเมื่อ **verify แล้ว** (ไม่ใช่แค่เขียนเสร็จ)
 > ลำดับ milestone = ข้อเสนอ — เบสสลับได้ · แผนธุรกิจ/north star อยู่ `doc/archive/detailed-plan-2026-04-28.md` (archived snapshot) ไม่ใช่ไฟล์นี้
 
+## 🧭 Navbar D2 — ลงของจริง (เบสเคาะ 2026-08-29 จาก proto `/proto/navbar-ecom`)
+
+โครงที่เคาะ: **สองแถว สูง 104px** (ของเดิม 132px)
+```
+[48] เกม▾ › ชุด▾ ‖ สถิติ(ซ่อน 2 ตัว) · สายพาน ‖ อัปเกรด · ข้อความ · แจ้งเตือน · โปรไฟล์
+[56] โลโก้ · เมนู 4 ลิงก์ ⟷ พอร์ต · รายการโปรด · Honey · ช่องค้นหา 320px
+```
+
+- [x] **NAV-D2-01** — `header-market-ticker.tsx`: ยุบแถบชีพจร + แถวโลโก้เหลือแถวเดียว h-12 · ลำดับ: catalog control ซ้ายสุด → สถิติ → สายพาน → อัปเกรด → account · ซ่อน `StripFigure` จำนวนชุด + อัปเดตล่าสุด · โลโก้ย้ายออก
+- [x] **NAV-D2-02** — `header.tsx`: เพิ่มโลโก้ซ้ายสุดในแถวเมนู · ช่องค้นหา `w-52 lg:w-80` → `w-80` คงที่
+- [x] **NAV-D2-03** — `globals.css`: `--chrome-h` md `8.25rem` → `6.5rem` (104px)
+- [x] **NAV-D2-04** — ปุ่มชุดโชว์รูปกล่อง: `SetPickerItem` เพิ่ม `boxImageUrl` (API ส่งมาแล้ว) · `HeaderCatalogControl` desktop โชว์รูป + รหัส + ชื่อชุด
+- [x] **NAV-D2-05** — มือถือ: `header-mobile.tsx` ซ่อน `HeaderCatalogControl` เมื่อ `scrolled` (เบสสั่ง "เลื่อนลงแล้วเลือกการ์ดกับชุดไม่ต้องตามมา")
+- [x] **NAV-D2-06** — verify: lint + test + build + เปิดดูจริงทั้ง desktop/มือถือ สว่าง/มืด
+
 ## 📐 Site-wide market canvas (owner direction · 2026-08-28)
 
 > ขยายพื้นที่ข้อมูลของหน้าปกติให้ใกล้เว็บตลาดอย่าง CoinMarketCap/CoinGecko โดยคง mobile เดิมและคง reading/form/dialog widths ที่ตั้งใจแคบ ไม่เปลี่ยน spacing, typography, query, state หรือ workflow

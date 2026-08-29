@@ -229,7 +229,7 @@
    lose to the unlayered base value above. */
 @media (min-width: 768px) {
   :root {
-    --chrome-h: 8.25rem;
+    --chrome-h: 6.5rem;
   }
 }
 
