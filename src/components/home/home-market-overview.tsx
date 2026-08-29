@@ -7,6 +7,7 @@ import { Fragment, useMemo } from "react"
 import { AdInventorySlot } from "@/components/ads/ad-inventory-slot"
 import { type FilterDefinition } from "@/components/shared/filter-chips"
 import { FilterModal } from "@/components/shared/filter-modal"
+import { FilterFacetGroup } from "@/components/shared/filter-facet-group"
 import { SetPicker, type SetPickerItem } from "@/components/shared/set-picker"
 import { Input } from "@/components/ui/input"
 import { Pagination } from "@/components/ui/pagination"
@@ -18,6 +19,7 @@ import { useUIStore } from "@/stores/ui-store"
 import { cn } from "@/lib/utils"
 import { formatCount } from "@/lib/utils/currency"
 import { getCardTypeLabel, getColorOptions } from "@/lib/constants/card-config"
+import { RARITY_HEX } from "@/lib/constants/rarities"
 import { useMarketCards } from "@/hooks/use-market-cards"
 
 import { MarketTable } from "@/components/market/market-table"
@@ -308,39 +310,25 @@ export function HomeMarketOverview({
           {allFilterDefs.map((def) => {
             const values = m.filters[def.key] ?? []
             return (
-              <div key={def.key}>
-                <span className="mb-1.5 block text-eyebrow">{def.label}</span>
-                <div className="flex flex-wrap gap-1.5">
-                  {def.options.map((opt) => {
-                    const active = values.includes(opt.value)
-                    return (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() =>
-                          m.handleFilterChange(
-                            def.key,
-                            active
-                              ? values.filter((v) => v !== opt.value)
-                              : [...values, opt.value]
-                          )
-                        }
-                        className={cn(
-                          "ease-chrome flex min-h-11 items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium md:min-h-0",
-                          active
-                            ? "border-primary/40 bg-primary/5 text-primary"
-                            : "border-hair bg-background text-muted-foreground hover:text-foreground"
-                        )}
-                      >
-                        {opt.dot && (
-                          <span className={cn("size-2.5 rounded-full", opt.dot)} />
-                        )}
-                        {opt.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
+              <FilterFacetGroup
+                key={def.key}
+                label={def.label}
+                options={def.options.map((opt) => ({
+                  value: opt.value,
+                  label: opt.label,
+                  dot: opt.dot,
+                  // ความหายากที่เลือกไว้ใช้สีประจำระดับนั้น เหมือนป้ายในตาราง
+                  activeColor:
+                    def.key === "rarity" ? (RARITY_HEX[opt.value] ?? "#6B7280") : undefined,
+                }))}
+                values={values}
+                onToggle={(value, nextActive) =>
+                  m.handleFilterChange(
+                    def.key,
+                    nextActive ? [...values, value] : values.filter((v) => v !== value),
+                  )
+                }
+              />
             )
           })}
         </div>

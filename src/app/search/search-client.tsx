@@ -15,7 +15,8 @@ import { SegmentedControl } from "@/components/ui/segmented-control"
 import { ViewModeControl } from "@/components/ui/view-mode-control"
 import { EmptyState } from "@/components/shared/empty-state"
 import { FilterModal } from "@/components/shared/filter-modal"
-import { cn } from "@/lib/utils"
+import { FilterFacetGroup } from "@/components/shared/filter-facet-group"
+import type { SearchVariant } from "@/lib/cards/search-filters"
 import { FilterButton, ToolbarSortDropdown } from "@/components/ui/toolbar"
 import { SetPicker } from "@/components/shared/set-picker"
 import { CardItem } from "@/components/cards/card-item"
@@ -319,140 +320,60 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
         onReset={resetModalFilters}
         resetDisabled={modalFilterCount === 0}
       >
-        {rarityOptions.length > 0 && (
-          <div>
-            <span className="mb-1.5 block text-eyebrow">{t(lang, "rarity")}</span>
-            <div className="flex flex-wrap gap-1.5">
-              {rarityOptions.map((r) => {
-                const active = filters.rarities.includes(r.code)
-                return (
-                  <button
-                    key={r.code}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => handleMultiFilterToggle("rarities", r.code)}
-                    className={cn(
-                      "ease-chrome min-h-11 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors md:min-h-0",
-                      active
-                        ? "text-white"
-                        : "bg-muted text-muted-foreground hover:text-foreground",
-                    )}
-                    style={active ? { backgroundColor: RARITY_HEX[r.code] ?? "#6B7280" } : undefined}
-                  >
-                    {r.label}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        )}
+        <FilterFacetGroup
+          label={t(lang, "rarity")}
+          options={rarityOptions.map((r) => ({
+            value: r.code,
+            label: r.label,
+            activeColor: RARITY_HEX[r.code] ?? "#6B7280",
+          }))}
+          values={filters.rarities}
+          onToggle={(value) => handleMultiFilterToggle("rarities", value)}
+        />
 
-        {variantOptions.length > 0 && (
-          <div>
-            <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
-            <div className="flex flex-wrap gap-1.5">
-              {variantOptions.map((option) => {
-                const active = filters.variant === option.code
-                return (
-                  <button
-                    key={option.code}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => handleVariantChange(active ? "" : option.code)}
-                    className={cn(
-                      "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
-                      active
-                        ? "border-primary/40 bg-primary/5 text-primary"
-                        : "border-hair bg-background text-muted-foreground hover:text-foreground",
-                    )}
-                  >
-                    {option.label}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        )}
+        {/* เวอร์ชันเลือกได้ทีละอัน — กดซ้ำที่อันเดิมคือเอาออก */}
+        <FilterFacetGroup
+          label={t(lang, "variant")}
+          options={variantOptions.map((option) => ({
+            value: option.code,
+            label: option.label,
+          }))}
+          values={filters.variant ? [filters.variant] : []}
+          onToggle={(value, nextActive) =>
+            handleVariantChange(nextActive ? (value as SearchVariant) : "")
+          }
+        />
 
-        <div>
-          <span className="mb-1.5 block text-eyebrow">{t(lang, "artStyle")}</span>
-          <div className="flex flex-wrap gap-1.5">
-            {ART_STYLE_OPTIONS.map((option) => {
-              const active = filters.artStyles.includes(option.value)
-              return (
-                <button
-                  key={option.value}
-                  type="button"
-                  aria-pressed={active}
-                  onClick={() => handleMultiFilterToggle("artStyles", option.value)}
-                  className={cn(
-                    "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
-                    active
-                      ? "border-primary/40 bg-primary/5 text-primary"
-                      : "border-hair bg-background text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  {t(lang, option.key)}
-                </button>
-              )
-            })}
-          </div>
-        </div>
+        <FilterFacetGroup
+          label={t(lang, "artStyle")}
+          options={ART_STYLE_OPTIONS.map((option) => ({
+            value: option.value,
+            label: t(lang, option.key),
+          }))}
+          values={filters.artStyles}
+          onToggle={(value) => handleMultiFilterToggle("artStyles", value)}
+        />
 
-        {typeOptions.length > 0 && (
-          <div>
-            <span className="mb-1.5 block text-eyebrow">{t(lang, "type")}</span>
-            <div className="flex flex-wrap gap-1.5">
-              {typeOptions.map((option) => {
-                const active = filters.types.includes(option.value)
-                return (
-                  <button
-                    key={option.value}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => handleMultiFilterToggle("types", option.value)}
-                    className={cn(
-                      "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
-                      active
-                        ? "border-primary/40 bg-primary/5 text-primary"
-                        : "border-hair bg-background text-muted-foreground hover:text-foreground",
-                    )}
-                  >
-                    {option.label}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        )}
+        <FilterFacetGroup
+          label={t(lang, "type")}
+          options={typeOptions.map((option) => ({
+            value: option.value,
+            label: option.label,
+          }))}
+          values={filters.types}
+          onToggle={(value) => handleMultiFilterToggle("types", value)}
+        />
 
-        {colorOptions.length > 0 && (
-          <div>
-            <span className="mb-1.5 block text-eyebrow">{t(lang, "color")}</span>
-            <div className="flex flex-wrap gap-1.5">
-              {colorOptions.map((option) => {
-                const active = filters.colors.includes(option.value)
-                return (
-                  <button
-                    key={option.value}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => handleMultiFilterToggle("colors", option.value)}
-                    className={cn(
-                      "ease-chrome flex min-h-11 items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
-                      active
-                        ? "border-primary/40 bg-primary/5 text-primary"
-                        : "border-hair bg-background text-muted-foreground hover:text-foreground",
-                    )}
-                  >
-                    <span className={cn("size-2.5 rounded-full", option.dot)} />
-                    {option.label}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        )}
+        <FilterFacetGroup
+          label={t(lang, "color")}
+          options={colorOptions.map((option) => ({
+            value: option.value,
+            label: option.label,
+            dot: option.dot,
+          }))}
+          values={filters.colors}
+          onToggle={(value) => handleMultiFilterToggle("colors", value)}
+        />
 
         {rawGrade && (
           <div>
