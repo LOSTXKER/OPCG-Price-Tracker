@@ -94,14 +94,18 @@ export function HeaderMobile({
           so a third "where am I" label was the least useful thing in the row.
           Bear and word are one tap target — two adjacent controls that both go
           home is a miss waiting to happen. */}
+      {/* `gap-1.5` is load-bearing, not decoration: the tool buttons are 44px
+          ROUND, and round shapes set edge-to-edge read as one connected strip
+          rather than three controls (owner, 2026-08-30 — "มันติดไป"). Square
+          buttons would survive touching; these don't. */}
       <div
         data-mobile-header-row="primary"
-        className="flex h-14 min-w-0 items-center px-2 sm:px-4"
+        className="flex h-14 min-w-0 items-center gap-1.5 px-2 sm:px-4"
       >
         <Link
           href="/"
           aria-label="Meecard"
-          className="mr-1 flex min-w-0 flex-1 items-center gap-1.5"
+          className="flex min-w-0 flex-1 items-center gap-1.5"
         >
           <span className="flex size-11 shrink-0 items-center justify-center">
             <Image
@@ -149,7 +153,7 @@ export function HeaderMobile({
         {/* Tools (watchlist, alerts) end here; the account begins after the
             rule. Four undifferentiated icons read as one blur without it. */}
         {authLoaded && (
-          <span aria-hidden className="mx-1 h-5 w-px shrink-0 bg-hair" />
+          <span aria-hidden className="h-5 w-px shrink-0 bg-hair" />
         )}
 
         {authLoaded && isAuthenticated && (

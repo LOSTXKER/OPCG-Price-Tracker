@@ -100,8 +100,8 @@ function BearIcon({ className }: { className?: string }) {
 /** แถวบนสุดของมือถือ ลอกจาก header-mobile.tsx ของจริง */
 function MobileHeaderRow({ showInstallIcon }: { showInstallIcon: boolean }) {
   return (
-    <div className="flex h-14 min-w-0 items-center px-2">
-      <span className="mr-1 flex size-11 shrink-0 items-center justify-center">
+    <div className="flex h-14 min-w-0 items-center gap-1.5 px-2">
+      <span className="flex size-11 shrink-0 items-center justify-center">
         <Image
           src="/meecard.png"
           alt=""
@@ -124,7 +124,7 @@ function MobileHeaderRow({ showInstallIcon }: { showInstallIcon: boolean }) {
       <span className="surface-2 hairline flex min-h-11 min-w-11 items-center justify-center rounded-full text-foreground">
         <Bell className="size-[18px]" />
       </span>
-      <span aria-hidden className="mx-1 h-5 w-px shrink-0 bg-hair" />
+      <span aria-hidden className="h-5 w-px shrink-0 bg-hair" />
       <span className="flex min-h-11 min-w-11 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
         บ
       </span>
