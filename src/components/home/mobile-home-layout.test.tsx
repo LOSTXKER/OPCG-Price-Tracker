@@ -34,25 +34,34 @@ describe("mobile home layout", () => {
     expect(overview).toContain("px-5 py-1.5 backdrop-blur-sm")
   })
 
-  it("collapses the phone controls from three rows to two", () => {
+  it("keeps the phone controls at two rows, split browse vs display", () => {
     const overview = source("src/components/home/home-market-overview.tsx")
 
-    // Row 1 (set + filter + view) and the sticky column header are the only
-    // two phone control rows: the grade rail moved INTO the sticky header, and
-    // the standalone period pill row is gone entirely.
+    // Owner selection 2026-08-30 (/proto/mobile-toolbar option D): row 1 is the
+    // two "what am I looking at" controls — grade + filter — and the set control
+    // moved INSIDE the filter modal. Display mode went down to the sticky header,
+    // next to the list it redraws. Still two rows, never three.
     const phoneToolbar = overview.slice(
       overview.indexOf('<div className="py-3 sm:hidden">'),
       overview.indexOf("Desktop/tablet keeps the established"),
     )
-    expect(phoneToolbar).toContain("<SetPicker")
-    expect(phoneToolbar).toContain("renderFilterTrigger(true)")
-    expect(phoneToolbar).toContain("renderViewControl()")
-    expect(phoneToolbar).not.toContain("GradeControl")
+    expect(phoneToolbar).toContain("<GradeControl")
+    expect(phoneToolbar).toContain("renderFilterTrigger(true, true)")
+    expect(phoneToolbar).not.toContain("<SetPicker")
+    expect(phoneToolbar).not.toContain("renderViewControl()")
 
-    // Exactly one GradeControl on the phone path — the one in the sticky header.
-    expect(overview).toContain("<GradeControl value={m.grade}")
-    expect(occurrences(overview, "<GradeControl")).toBe(2) // phone sticky + desktop toolbar
+    // The set is only readable because the filter button says its name — if that
+    // ever goes, the phone can no longer answer "which set am I looking at?".
+    expect(overview).toContain("const setLabel = speaksSet ? selectedSets[0]?.toUpperCase()")
+    expect(overview).toContain("{showLabel && (setLabel ?? t(lang, \"filter\"))}")
+    // …and because the modal carries the picker it took, phone-only (desktop
+    // still has its own up in the toolbar).
+    expect(overview).toContain('<div className="sm:hidden">')
+    expect(occurrences(overview, "<SetPicker")).toBe(2) // filter modal + desktop toolbar
+
+    // Sticky header: order on the left, display mode on the right.
     expect(overview).toContain("<MobileSortCluster")
+    expect(occurrences(overview, "<GradeControl")).toBe(2) // phone row 1 + desktop toolbar
   })
 
   it("uses the z-index token for the sticky column header", () => {

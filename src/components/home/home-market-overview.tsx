@@ -159,22 +159,36 @@ export function HomeMarketOverview({
     m.setPage(1)
   }
 
-  const renderFilterTrigger = (showLabel: boolean) => (
-    <FilterButton
-      aria-label={t(lang, "filter")}
-      aria-haspopup="dialog"
-      aria-expanded={m.filterOpen}
-      onClick={() => m.setFilterOpen(true)}
-      active={m.filterOpen || m.activeFilterCount > 0}
-      count={m.activeFilterCount}
-      iconOnly={!showLabel}
-      className="shrink-0"
-    >
-      {/* The word is spelled out at every width (เบส) — a lone slider glyph read
-          as decoration, not as "ตัวกรอง". */}
-      {showLabel && t(lang, "filter")}
-    </FilterButton>
-  )
+  /**
+   * `speaksSet` (phone only) swaps the word "ตัวกรอง" for the set being viewed —
+   * owner selection 2026-08-30 from /proto/mobile-toolbar option D. The phone
+   * toolbar no longer carries a set control of its own, so without this the
+   * screen could not answer "which set am I looking at?" at all. The badge still
+   * counts only the modal's OTHER facets: the set is named on the button, and
+   * counting it again would read as one filter too many.
+   */
+  const renderFilterTrigger = (showLabel: boolean, speaksSet = false) => {
+    const setLabel = speaksSet ? selectedSets[0]?.toUpperCase() : undefined
+
+    return (
+      <FilterButton
+        aria-label={
+          setLabel ? `${t(lang, "filter")} · ${setLabel}` : t(lang, "filter")
+        }
+        aria-haspopup="dialog"
+        aria-expanded={m.filterOpen}
+        onClick={() => m.setFilterOpen(true)}
+        active={m.filterOpen || m.activeFilterCount > 0 || !!setLabel}
+        count={m.activeFilterCount}
+        iconOnly={!showLabel}
+        className="shrink-0"
+      >
+        {/* The word is spelled out at every width (เบส) — a lone slider glyph read
+            as decoration, not as "ตัวกรอง". */}
+        {showLabel && (setLabel ?? t(lang, "filter"))}
+      </FilterButton>
+    )
+  }
 
   const renderViewControl = () => (
     <ViewModeControl
@@ -185,20 +199,17 @@ export function HomeMarketOverview({
   )
 
   /**
-   * The phone list's COLUMN HEADER — and, since 2026-08-29, the phone's price
-   * lens too: the grade rail moved up here from its own toolbar row, so the
-   * controls above the list went from three stacked rows to two (owner
-   * selection from /proto/mobile-home). Left = which price, right = which
-   * order, and the sort labels sit over the price column on the same 20px
-   * gutter as the rows. It docks under the top chrome while you scroll, for
-   * BOTH view modes.
+   * The phone list's COLUMN HEADER: how the list is ordered, and how it is drawn.
+   *
+   * The grade rail lived here from 2026-08-29 until 2026-08-30, when it moved up
+   * to sit beside the filter button (/proto/mobile-toolbar option D) and the
+   * view switch came down to take its place — display mode belongs next to the
+   * list it redraws, not up in the browse row. Sort labels stay on the same 20px
+   * gutter as the rows beneath them. Docks under the top chrome while you
+   * scroll, for BOTH view modes.
    */
   const mobileListHeader = (m.isPending || m.cards.length > 0) && (
     <div className="ease-chrome sticky top-[var(--chrome-h)] z-sticky -mx-5 flex items-center gap-2 border-b border-hair bg-background/95 px-5 py-1.5 backdrop-blur-sm sm:hidden">
-      <div className="min-w-0 flex-1">
-        <GradeControl value={m.grade} onChange={m.handleGradeChange} />
-      </div>
-      <span aria-hidden className="h-4 w-px shrink-0 bg-hair" />
       {/* Column labels, not buttons-shouting: the row reads muted and the ONE
           active sort turns dark, so the eye lands on what's sorted. */}
       <MobileSortCluster
@@ -208,8 +219,9 @@ export function HomeMarketOverview({
         sortDir={m.sortDir}
         onSort={m.handleColumnSort}
         sortEnabled={rawGrade}
-        className="shrink-0"
+        className="min-w-0 flex-1"
       />
+      <div className="shrink-0">{renderViewControl()}</div>
     </div>
   )
 
@@ -238,33 +250,21 @@ export function HomeMarketOverview({
           />
         </div>
 
-        {/* Mobile browse controls — ONE row (owner selection 2026-08-29): the
-            set is the primary axis and takes the width, with the two display
-            actions beside it. The price lens moved down into the sticky column
-            header, which is where the numbers it re-prices actually are.
+        {/* Mobile browse controls (owner selection 2026-08-30, /proto/mobile-toolbar
+            option D): the set control moved INSIDE the filter modal, so this row
+            is now the price lens beside the filter button — the two questions of
+            "what am I looking at". The set is still readable at a glance because
+            the filter button says its name.
+            Display mode moved down to the sticky sort row, where the thing it
+            changes actually is.
             No horizontal padding: the page container owns the single 20px
             gutter that the rows, the strip and the sort labels all line up on. */}
         <div className="py-3 sm:hidden">
           <div className="flex items-center gap-2">
-            {sets.length > 0 && (
-              <div className="min-w-0 flex-1">
-                <SetPicker
-                  sets={sets}
-                  selectedCode={selectedSets[0] ?? null}
-                  onSelect={(code) => m.handleFilterChange("set", code ? [code] : [])}
-                  variant="inline"
-                  nullable
-                  prominent
-                  /* No h-10 here: it fought SetPicker's own `h-11 sm:h-9` with
-                     equal specificity, so the row height depended on stylesheet
-                     order and landed at 40px — under the 44px floor. */
-                  triggerClassName="tap-safe rounded-lg border-primary/25 bg-primary/5 hover:border-primary/35 hover:bg-primary/10 aria-expanded:rounded-b-none aria-expanded:border-primary/35 aria-expanded:bg-primary/10"
-                />
-              </div>
-            )}
-
-            <div className="shrink-0">{renderFilterTrigger(true)}</div>
-            <div className="shrink-0">{renderViewControl()}</div>
+            <div className="min-w-0 flex-1">
+              <GradeControl value={m.grade} onChange={m.handleGradeChange} />
+            </div>
+            <div className="shrink-0">{renderFilterTrigger(true, true)}</div>
           </div>
         </div>
 
@@ -306,6 +306,26 @@ export function HomeMarketOverview({
         onReset={resetModalFilters}
         resetDisabled={m.activeFilterCount === 0}
       >
+        {/* Phone only: the set control that used to sit in the toolbar. Desktop
+            keeps its own SetPicker up there, so showing it twice would be the
+            duplicate this modal exists to avoid. First row on purpose — set is
+            still the question people answer first, it just answers it in here
+            now (owner selection 2026-08-30). */}
+        {sets.length > 0 && (
+          <div className="sm:hidden">
+            <span className="mb-1.5 block text-eyebrow">{t(lang, "sets")}</span>
+            <SetPicker
+              sets={sets}
+              selectedCode={selectedSets[0] ?? null}
+              onSelect={(code) => m.handleFilterChange("set", code ? [code] : [])}
+              variant="inline"
+              nullable
+              prominent
+              triggerClassName="tap-safe w-full rounded-lg border-primary/25 bg-primary/5 hover:border-primary/35 hover:bg-primary/10 aria-expanded:rounded-b-none aria-expanded:border-primary/35 aria-expanded:bg-primary/10"
+            />
+          </div>
+        )}
+
         <div className="space-y-3.5">
           {allFilterDefs.map((def) => {
             const values = m.filters[def.key] ?? []
