@@ -13,13 +13,14 @@ import { useProtoFlag, useProtoVariant } from "../_kit/use-proto-variant"
 
 /* ------------------------------------------------------------------ data */
 
-type Look = "current" | "warm" | "aurora" | "edge"
+type Look = "current" | "warm" | "aurora" | "edge" | "still"
 
 const OPTIONS = [
   { value: "current", label: "ปัจจุบัน" },
   { value: "warm", label: "A · เรืองแสงโทนเรา" },
   { value: "aurora", label: "B · รุ้งแบบที่ส่งมา" },
   { value: "edge", label: "C · ขอบไล่สีวิ่ง" },
+  { value: "still", label: "D · ขอบไล่สีนิ่ง" },
 ] as const
 
 const VALUES = OPTIONS.map((o) => o.value)
@@ -44,6 +45,13 @@ const COPY: Record<Look, { name: string; summary: string; tradeoff: string }> = 
       "ทำตามภาพเป๊ะ: เงาไล่สีม่วง-ฟ้า-ชมพูฟุ้งรอบกล่อง แบบที่ ChatGPT · Perplexity · Airbnb ใช้กัน · เป็นภาษาที่คนทั้งโลกอ่านออกทันทีว่า \"อันนี้ AI\" เพราะเห็นมาจากหลายแอปแล้ว",
     tradeoff:
       "สีชุดนี้ไม่มีอยู่ในเว็บเราเลยสักที่ — ทั้งเว็บเป็นน้ำตาล/ทอง/ครีม พอมีม่วงฟ้าโผล่มาจุดเดียวจะอ่านเป็น \"ของนอก\" ที่หลุดเข้ามา หรืออ่านเป็น \"ของพิเศษ\" ก็ได้ · ต้องเบสตัดสินว่ารับได้ไหม",
+  },
+  still: {
+    name: "D · ขอบไล่สีนิ่ง — เส้นเดียวกัน แต่ไม่ขยับ",
+    summary:
+      "ขอบไล่สีเหมือนแบบ C ทุกอย่าง แต่หยุดนิ่ง ไม่หมุน — ไล่จากมุมบนซ้ายที่สว่างสุด ลงไปมุมล่างขวาที่เข้มขึ้น เหมือนขอบโลหะที่รับแสงจากมุมเดียว · ยังบอกว่า \"อันนี้พิเศษ\" ได้ แต่ไม่มีอะไรขยับให้สายตาต้องตาม",
+    tradeoff:
+      "เงียบกว่าจนอาจเงียบเกินไป — ในรายการที่มีของเยอะ ขอบนิ่งบางๆ อาจกลืนไปกับเส้นขอบทั่วไปจนไม่มีใครสังเกต · ตอนกำลังสแกนจะไม่มีสัญญาณว่ากำลังทำงานอยู่ (ต้องพึ่งตัวหนังสืออย่างเดียว)",
   },
   edge: {
     name: "C · ขอบไล่สีวิ่ง — เส้นขอบเคลื่อนไหว",
@@ -120,7 +128,7 @@ function PhotoRow({ look, busy }: { look: Look; busy: boolean }) {
 
   if (look === "current") return <div className="p-2">{inner}</div>
 
-  if (look === "edge") {
+  if (look === "edge" || look === "still") {
     return (
       <div className="p-2">
         <div className="relative overflow-hidden rounded-2xl p-px">
@@ -130,8 +138,12 @@ function PhotoRow({ look, busy }: { look: Look; busy: boolean }) {
           <span
             aria-hidden
             className={cn(
-              "absolute inset-[-100%] bg-[conic-gradient(from_0deg,var(--primary),color-mix(in_srgb,var(--primary)_28%,transparent)_90deg,var(--primary)_180deg,color-mix(in_srgb,var(--primary)_28%,transparent)_270deg,var(--primary)_360deg)]",
-              busy ? "proto-spin-fast" : "proto-spin",
+              look === "still"
+                ? // นิ่ง: ไล่แบบเส้นตรงจากมุมบนซ้ายลงมุมล่างขวา เหมือนขอบโลหะ
+                  // รับแสงจากมุมเดียว — conic ที่หยุดนิ่งจะเห็น "จุดต่อ" ของสี
+                  "absolute inset-0 bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_35%,transparent)] to-primary"
+                : "absolute inset-[-100%] bg-[conic-gradient(from_0deg,var(--primary),color-mix(in_srgb,var(--primary)_28%,transparent)_90deg,var(--primary)_180deg,color-mix(in_srgb,var(--primary)_28%,transparent)_270deg,var(--primary)_360deg)]",
+              look === "edge" && (busy ? "proto-spin-fast" : "proto-spin"),
             )}
           />
           {inner}
@@ -184,14 +196,17 @@ function SearchTab({ look, busyRing }: { look: Look; busyRing: boolean }) {
         />
       )}
 
-      {look === "edge" ? (
+      {look === "edge" || look === "still" ? (
         // แบบ C บนปุ่มกลม: วงแหวนไล่สีหมุนรอบ — ขอบครบวง ไม่ขาดด้านไหน
         <span className="relative -mt-7 grid size-14 place-items-center rounded-full p-[3px] ring-4 ring-background">
           <span
             aria-hidden
             className={cn(
-              "absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,var(--primary),color-mix(in_srgb,var(--primary)_25%,transparent)_90deg,var(--primary)_180deg,color-mix(in_srgb,var(--primary)_25%,transparent)_270deg,var(--primary)_360deg)]",
-              busyRing ? "proto-spin-fast" : "proto-spin",
+              "absolute inset-0 rounded-full",
+              look === "still"
+                ? "bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_30%,transparent)] to-primary"
+                : "bg-[conic-gradient(from_0deg,var(--primary),color-mix(in_srgb,var(--primary)_25%,transparent)_90deg,var(--primary)_180deg,color-mix(in_srgb,var(--primary)_25%,transparent)_270deg,var(--primary)_360deg)]",
+              look === "edge" && (busyRing ? "proto-spin-fast" : "proto-spin"),
             )}
           />
           <span className="relative grid size-full place-items-center rounded-full bg-primary text-primary-foreground shadow-lg">
