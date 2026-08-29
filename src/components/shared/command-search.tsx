@@ -35,10 +35,10 @@ import {
 } from "lucide-react"
 
 import { Skeleton } from "@/components/ui/skeleton"
+import { ResponsiveDialogContent } from "@/components/ui/responsive-dialog-content"
 import {
   Dialog,
   DialogClose,
-  DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Price } from "@/components/shared/price-inline"
@@ -350,10 +350,16 @@ export function CommandSearchModal({
   return (
     <>
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
-      <DialogContent
+      {/* Full-screen on a phone, floating card from `md` up (owner call
+          2026-08-29). Search IS the task on a phone — a card floating at 15vh
+          left a strip of the page showing above and below it while the
+          keyboard ate the bottom, so the list had less room than the chrome it
+          was covering. The shared shell owns that switch; this file only sets
+          how wide the desktop card gets. */}
+      <ResponsiveDialogContent
         showCloseButton={false}
         finalFocus={photoSearchOpen ? false : restoreFocusRef}
-        className="top-[15vh] block max-w-lg translate-y-0 overflow-hidden rounded-2xl p-0 sm:max-w-xl md:max-w-2xl"
+        className="md:top-[15vh] md:max-w-xl md:-translate-y-0 lg:max-w-2xl"
       >
         <DialogTitle className="sr-only">
           {t(lang, "searchCardsDots")}
@@ -433,7 +439,11 @@ export function CommandSearchModal({
             id={listboxId}
             role="listbox"
             aria-label={t(lang, "searchCardsDots")}
-            className="max-h-[min(60vh,34rem)] overflow-y-auto"
+            // Full-screen on a phone: the list takes every pixel the header
+            // and the photo row leave behind (the shell is a flex column), so
+            // it never stops short of the keyboard. From `md` the floating
+            // card goes back to a capped height.
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain md:max-h-[min(60vh,34rem)] md:flex-none"
           >
             {isEmptyQuery ? (
               <>
@@ -736,7 +746,7 @@ export function CommandSearchModal({
               </>
             )}
           </div>
-      </DialogContent>
+      </ResponsiveDialogContent>
     </Dialog>
     <PhotoSearchButton
       open={photoSearchOpen}
