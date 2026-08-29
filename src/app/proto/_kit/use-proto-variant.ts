@@ -23,6 +23,11 @@ function emit() {
 function subscribe(onChange: () => void) {
   listeners.add(onChange)
   window.addEventListener("popstate", onChange)
+  // SSR เรนเดอร์ด้วยค่าเริ่มต้นเสมอ (เซิร์ฟเวอร์ไม่รู้ query) — พอ subscribe ติด
+  // แล้วต้องบอกให้อ่าน URL จริงซ้ำหนึ่งรอบ ไม่งั้นเปิดลิงก์ `?v=edge` ตรงๆ จะค้าง
+  // อยู่ที่ค่าเริ่มต้นตลอด = ลิงก์พกตัวเลือกไม่ได้จริง ซึ่งเป็นเหตุผลเดียวที่
+  // เก็บค่าไว้ใน URL ตั้งแต่แรก (เจอจริง 2026-08-29 บน /proto/ai-look?v=edge)
+  queueMicrotask(onChange)
   return () => {
     listeners.delete(onChange)
     window.removeEventListener("popstate", onChange)
