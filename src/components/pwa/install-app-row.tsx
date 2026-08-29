@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { SquarePlus } from "lucide-react";
 
 import { GroupedRow } from "@/components/ui/grouped-list";
 import { useInstallPrompt } from "@/hooks/use-install-prompt";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
 
+import { InstallGlyph } from "./install-glyph";
 import { InstallGuideDialog } from "./install-guide-dialog";
 
 /**
@@ -30,7 +30,7 @@ export function InstallAppRow() {
   return (
     <>
       <GroupedRow
-        icon={SquarePlus}
+        icon={InstallGlyph}
         iconClassName="bg-primary/12 text-primary"
         title={t(language, "installAppTitle")}
         subtitle={t(language, "installAppSubtitle")}

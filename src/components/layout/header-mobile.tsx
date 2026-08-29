@@ -18,9 +18,10 @@ import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 /**
- * The one pill shape shared by every tool button in row 1 (install, watchlist,
- * alerts). Defined once so a fourth button can never quietly arrive wearing a
- * different shape — the failure mode that made this row look unfinished.
+ * The pill worn by row 1's permanent tools (watchlist, alerts). Defined once so
+ * a third tool can never quietly arrive wearing a different shape — the failure
+ * mode that made this row look unfinished. The install button matches its
+ * geometry but not its surface, on purpose (see install-header-button.tsx).
  */
 const TOOL_BUTTON = "surface-2 hairline min-h-11 min-w-11 rounded-full";
 
@@ -119,15 +120,17 @@ export function HeaderMobile({
           <span className="text-h5 min-w-0 truncate text-foreground">Meecard</span>
         </Link>
 
-        {/* The three tool buttons share ONE shape — `TOOL_BUTTON` — so the row
-            reads as a set. The bell used to be a bare glyph between two pills,
-            which is what made the row look unfinished (owner, 2026-08-30). */}
+        {/* Watchlist and alerts share ONE shape — `TOOL_BUTTON` — so the row
+            reads as a set; the bell used to be a bare glyph between two pills,
+            which is what made the row look unfinished (owner, 2026-08-30). The
+            install button keeps that geometry but owns its own brand tint: it
+            is a one-time invitation, not permanent furniture. */}
 
         {/* Renders nothing at all unless this browser can install AND the
             visitor hasn't already installed or waved it away — so the row keeps
             its original width for everyone else, including every desktop
             browser and every repeat visitor who has the app. */}
-        <InstallHeaderButton className={TOOL_BUTTON} />
+        <InstallHeaderButton />
 
         <Button
           data-mobile-watchlist-trigger

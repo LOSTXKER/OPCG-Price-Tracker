@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { SquarePlus } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { useInstallPrompt } from "@/hooks/use-install-prompt";
 import { useUIStore } from "@/stores/ui-store";
 import { t } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
 
+import { InstallGlyph } from "./install-glyph";
 import { InstallGuideDialog } from "./install-guide-dialog";
 
 /**
@@ -20,14 +18,20 @@ import { InstallGuideDialog } from "./install-guide-dialog";
  * invitation down in the last 30 days. For everyone else the row is exactly the
  * width it was before.
  *
- * The glyph is `SquarePlus` — the same square-with-a-plus iOS itself puts next
- * to "Add to Home Screen" in the Share sheet, so anyone who has done this once
- * recognises it. It also names the action in `/more`: one icon per concept
- * across the site. A device icon with a `+` badge was tried first and dropped —
- * at 18px the badge hangs off the pill's rounded edge and the button stops
- * matching its neighbours (owner, 2026-08-30).
+ * It wears the same 44px circle as watchlist and alerts but in the brand tint,
+ * not their quiet surface — deliberately. Those two are permanent tools; this
+ * is a temporary invitation that disappears for good once accepted, and a
+ * one-time offer that looks identical to the furniture beside it gets read as
+ * furniture. Owner, 2026-08-30: "ไม่ค่อยชวนน่ากด".
+ *
+ * The glyph says both halves of the sentence at once — a phone (this device)
+ * with a download arrow inside its screen (put it here). Two earlier tries
+ * said only one half and lost: `SquarePlus`, the exact glyph iOS uses, reads as
+ * "add something, somewhere" to anyone who hasn't installed a web app before;
+ * a bare download arrow reads as "fetch a file". Every candidate sits side by
+ * side in `/proto/pwa-install` under "ไอคอนไหนสื่อและชวนกด".
  */
-export function InstallHeaderButton({ className }: { className?: string }) {
+export function InstallHeaderButton() {
   const language = useUIStore((s) => s.language);
   const { canInvite, method, promptInstall } = useInstallPrompt();
   const [guideOpen, setGuideOpen] = useState(false);
@@ -43,16 +47,15 @@ export function InstallHeaderButton({ className }: { className?: string }) {
         variant="ghost"
         size="icon-sm"
         aria-label={t(language, "installAppTitle")}
-        className={cn(
-          "surface-2 hairline min-h-11 min-w-11 rounded-full text-foreground",
-          className,
-        )}
+        // Same geometry as `TOOL_BUTTON` in header-mobile.tsx — the row must
+        // stay one rhythm — but the brand tint instead of the quiet surface.
+        className="min-h-11 min-w-11 rounded-full bg-primary/15 text-primary"
         onClick={() => {
           if (method === "ios") setGuideOpen(true);
           else void promptInstall();
         }}
       >
-        <SquarePlus className="size-[18px]" />
+        <InstallGlyph className="size-[18px]" />
       </Button>
       <InstallGuideDialog
         open={guideOpen}

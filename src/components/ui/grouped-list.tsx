@@ -1,6 +1,6 @@
 "use client"
 
-import type { LucideIcon } from "lucide-react"
+import type { ComponentType } from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -52,7 +52,8 @@ export function GroupedRow({
   destructive,
   active,
 }: {
-  icon?: LucideIcon
+  /** Any glyph that takes a className — lucide icons, or one of our own SVGs. */
+  icon?: ComponentType<{ className?: string }>
   /** Background/text classes for the icon's circle — defaults to a quiet honey wash. */
   iconClassName?: string
   title: string

@@ -214,7 +214,10 @@ describe("header catalog topology", () => {
     expect(mobile).toContain(
       "{isAuthenticated && <NotificationBell className={TOOL_BUTTON} />}",
     )
-    expect(mobile).toContain("<InstallHeaderButton className={TOOL_BUTTON} />")
+    // The install button matches that geometry but carries the brand tint —
+    // owner, 2026-08-30: a one-time invitation that looks exactly like the
+    // permanent tools beside it reads as furniture and doesn't get tapped.
+    expect(mobile).toContain("<InstallHeaderButton />")
     // Owner decision 2026-08-27: the phone row's theme toggle moved to
     // "ดูเพิ่มเติม" so the set control could keep the width its name needs.
     // The desktop navbar revert (2026-08-28) does NOT undo that — the phone

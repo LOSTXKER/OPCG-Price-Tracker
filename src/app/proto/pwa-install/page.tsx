@@ -6,15 +6,19 @@ import { useTheme } from "next-themes";
 import {
   Bell,
   ChevronRight,
+  Download,
+  Grid2x2Plus,
   Heart,
   Moon,
   Share,
+  Smartphone,
   SquarePlus,
   Sun,
   X,
 } from "lucide-react";
 
 import { IconButton } from "@/components/ui/icon-button";
+import { InstallGlyph } from "@/components/pwa/install-glyph";
 import { InstallGuideDialog } from "@/components/pwa/install-guide-dialog";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { cn } from "@/lib/utils";
@@ -325,6 +329,149 @@ function FakeBottomNav() {
   );
 }
 
+/* ------------------------------------------------ เทียบไอคอนปุ่มติดตั้ง */
+
+/**
+ * เบสทัก 2026-08-30: "ไอคอนนี้ดูไม่สื่อเท่าไร และไม่ค่อยชวนน่ากด"
+ *
+ * ปัญหาคนละเรื่องกันสองข้อ — **สื่อ** (เห็นแล้วรู้ว่ากดแล้วได้อะไร) กับ **ชวนกด**
+ * (สะดุดตาพอที่จะกด) — แก้ด้วยคนละอย่าง: ข้อแรกแก้ที่รูปไอคอนหรือใส่คำ
+ * ข้อสองแก้ที่สีและน้ำหนัก จึงเทียบทั้งสองแกนพร้อมกันในตารางเดียว
+ */
+const ICON_WAYS = [
+  {
+    key: "current",
+    name: "ปัจจุบัน — สี่เหลี่ยมมีบวก จาง",
+    note: "ไอคอนเดียวกับที่ iPhone ใช้ แต่ถ้าไม่เคยเห็นก็อ่านว่า “เพิ่มอะไรสักอย่าง” เฉยๆ",
+    icon: SquarePlus as typeof SquarePlus | null,
+    glyph: null as "arrow" | "plus" | null,
+    accent: false,
+    label: null as string | null,
+  },
+  {
+    key: "download",
+    name: "ก · ลูกศรลง จาง",
+    note: "ภาษาสากลของ “เอาลงมาไว้ในเครื่อง” คนเดาถูกมากกว่า แต่ก็อาจนึกว่าโหลดไฟล์",
+    icon: Download,
+    accent: false,
+    label: null,
+  },
+  {
+    key: "download-gold",
+    name: "ข · ลูกศรลง พื้นทอง",
+    note: "รูปเดียวกับ ก แต่เป็นสีแบรนด์ — สะดุดตาสุดในบรรดาแบบไอคอนล้วน และแยกตัวจากปุ่มเครื่องมือได้ว่านี่คือคำชวน ไม่ใช่เครื่องมือประจำ",
+    icon: Download,
+    accent: true,
+    label: null,
+  },
+  {
+    key: "grid",
+    name: "ค · กริดแอปมีบวก จาง",
+    note: "สื่อตรงที่สุดว่า “เพิ่มลงหน้าจอที่มีไอคอนแอปเรียงกัน” แต่รายละเอียดเยอะ ที่ 18px อาจอ่านเป็นก้อนมั่ว",
+    icon: Grid2x2Plus,
+    accent: false,
+    label: null,
+  },
+  {
+    key: "grid-gold",
+    name: "ง · กริดแอปมีบวก พื้นทอง",
+    note: "รวมข้อดีของ ค กับความเด่นของ ข",
+    icon: Grid2x2Plus,
+    accent: true,
+    label: null,
+  },
+  {
+    key: "phone",
+    name: "ฉ · มือถือเปล่า",
+    note: "รู้ว่าเกี่ยวกับมือถือ แต่ไม่บอกว่าจะทำอะไรกับมัน — เป็นตัวที่กำกวมที่สุดในกลุ่มนี้",
+    icon: Smartphone,
+    accent: false,
+    label: null,
+  },
+  {
+    key: "phone-arrow",
+    name: "ช · มือถือมีลูกศรลงอยู่ในจอ (วาดเอง) พื้นทอง — ลงเว็บจริงแล้ว",
+    note: "บอกครบทั้งสองอย่างในรูปเดียว — “ของชิ้นนี้” + “ลงไปในเครื่อง” และไม่มีอะไรล้นขอบปุ่มเหมือนป้ายบวกที่แปะทับรอบแรก",
+    icon: null,
+    glyph: "arrow" as const,
+    accent: true,
+    label: null,
+  },
+  {
+    key: "phone-plus",
+    name: "ซ · มือถือมีบวกอยู่ในจอ (วาดเอง) พื้นทอง",
+    note: "อ่านว่า “เพิ่มลงมือถือ” · ต่างจาก ช ตรงที่บวกเป็นกลางกว่าลูกศร ไม่ชวนให้นึกถึงการโหลดไฟล์",
+    icon: null,
+    glyph: "plus" as const,
+    accent: true,
+    label: null,
+  },
+  {
+    key: "worded",
+    name: "จ · ปุ่มมีคำว่า “ติดตั้ง”",
+    note: "แบบเดียวที่ไม่ต้องเดา — เหมือนปุ่ม “เข้าสู่ระบบ” ที่แถวนี้มีอยู่แล้วสำหรับคนยังไม่ล็อกอิน",
+    icon: Download,
+    accent: true,
+    label: "ติดตั้ง",
+  },
+] as const;
+
+/** แถวบนแบบย่อ — โชว์เฉพาะของที่เปลี่ยน เพื่อเทียบไอคอนกันตรงๆ */
+function IconCompareRow({ way }: { way: (typeof ICON_WAYS)[number] }) {
+  const Icon = "icon" in way ? way.icon : null;
+  const glyph = "glyph" in way ? way.glyph : null;
+  return (
+    <div className="flex h-14 min-w-0 items-center gap-1.5 px-2">
+      <span className="flex size-11 shrink-0 items-center justify-center">
+        <Image
+          src="/meecard.png"
+          alt=""
+          width={754}
+          height={694}
+          className="h-auto w-8 select-none"
+        />
+      </span>
+      <span className="text-h5 min-w-0 flex-1 truncate text-foreground">
+        Meecard
+      </span>
+
+      {way.label ? (
+        <span className="flex h-11 shrink-0 items-center gap-1.5 rounded-full bg-primary px-3.5 text-sm font-semibold text-primary-foreground">
+          {Icon ? <Icon className="size-4" /> : null}
+          {way.label}
+        </span>
+      ) : (
+        <span
+          className={cn(
+            "flex min-h-11 min-w-11 items-center justify-center rounded-full",
+            way.accent
+              ? "bg-primary/15 text-primary"
+              : "surface-2 hairline text-foreground",
+          )}
+        >
+          {glyph ? (
+            // ของจริงที่ลงเว็บไปแล้ว ไม่ใช่ของจำลอง — เทียบแล้วเห็นของเดียวกัน
+            <InstallGlyph mark={glyph} className="size-[18px]" />
+          ) : Icon ? (
+            <Icon className="size-[18px]" />
+          ) : null}
+        </span>
+      )}
+
+      <span className="surface-2 hairline flex min-h-11 min-w-11 items-center justify-center rounded-full text-foreground">
+        <Heart className="size-[18px]" />
+      </span>
+      <span className="surface-2 hairline flex min-h-11 min-w-11 items-center justify-center rounded-full text-foreground">
+        <Bell className="size-[18px]" />
+      </span>
+      <span aria-hidden className="h-5 w-px shrink-0 bg-hair" />
+      <span className="flex min-h-11 min-w-11 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
+        บ
+      </span>
+    </div>
+  );
+}
+
 /** แถวใน “ดูเพิ่มเติม” — ทางกลับที่ทุกแบบมีเหมือนกัน */
 function MoreRow() {
   return (
@@ -442,7 +589,29 @@ export default function PwaInstallProtoPage() {
               </div>
             </div>
 
-            <p className="text-eyebrow mb-2 mt-6">
+            {/* รอบเทียบไอคอน (เบสทัก 2026-08-30) — วางซ้อนกันในกรอบเดียว
+                เพราะการเทียบไอคอนต้องเห็นพร้อมกัน สลับทีละอันแล้วจำไม่ได้ */}
+            <p className="text-eyebrow mb-2 mt-8">
+              ไอคอนไหนสื่อและชวนกด — เทียบในแถวจริง
+            </p>
+            <div className="-mx-4 sm:mx-0">
+              <div className="hairline w-[375px] max-w-full divide-y divide-hair overflow-hidden bg-background sm:rounded-2xl">
+                {ICON_WAYS.map((way) => (
+                  <div key={way.key}>
+                    <IconCompareRow way={way} />
+                    <p className="px-3 pb-2.5 text-meta">
+                      <span className="text-foreground">{way.name}</span> — {way.note}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p className="mt-2 max-w-[375px] text-meta">
+              แบบ จ กินความกว้างเพิ่มราว 32px — ที่จอ 360px คำว่า “Meecard”
+              จะเริ่มโดนตัด ต้องเลือกอย่างใดอย่างหนึ่งระหว่างคำว่าติดตั้งกับชื่อแบรนด์เต็ม
+            </p>
+
+            <p className="text-eyebrow mb-2 mt-8">
               ทางกลับใน “ดูเพิ่มเติม” — มีเหมือนกันทุกแบบ
             </p>
             <div className="w-[375px] max-w-full">
