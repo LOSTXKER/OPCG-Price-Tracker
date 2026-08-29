@@ -3,6 +3,22 @@
 > งานใหญ่แตกเป็น task ติ๊กได้ · ทำทีละอัน · ติ๊กเมื่อ **verify แล้ว** (ไม่ใช่แค่เขียนเสร็จ)
 > ลำดับ milestone = ข้อเสนอ — เบสสลับได้ · แผนธุรกิจ/north star อยู่ `doc/archive/detailed-plan-2026-04-28.md` (archived snapshot) ไม่ใช่ไฟล์นี้
 
+## 🧭 Navbar D2 — ลงเว็บจริงแล้ว (เบสเคาะ 2026-08-29)
+
+โครงที่ขึ้น: **สองแถว 104px** (เดิม 132px)
+```
+[48] เกม▾ › ชุด▾(รูปกล่อง) ‖ สถิติ · สายพาน ‖ อัปเกรด · แชท · แจ้งเตือน · โปรไฟล์
+[56] โลโก้ · เมนู 4 ลิงก์ ⟷ พอร์ต · รายการโปรด · Honey · ค้นหา 320px
+```
+
+- [x] **NAV-D2-01** — `header-market-ticker.tsx`: ยุบสองแถวบนเหลือแถวเดียว h-12 · catalog control นำแถว
+- [x] **NAV-D2-02** — `header.tsx`: โลโก้ย้ายมานำแถวเมนู · ค้นหา `w-80` คงที่
+- [x] **NAV-D2-03** — `globals.css`: `--chrome-h` md 8.25rem → 6.5rem
+- [x] **NAV-D2-04** — ปุ่มชุดโชว์รูปกล่อง (`SetPickerItem.boxImageUrl` + trigger 2 บรรทัด)
+- [x] **NAV-D2-05** — มือถือ: ซ่อนปุ่มเลือกเกม/ชุดเมื่อ scrolled
+- [x] **NAV-D2-06** — responsive: สถิติ + ชื่อชุดหลบตามความกว้าง ให้สายพานมีที่วิ่งทุกจอ
+- [x] **NAV-D2-07** — verify: lint 0 · test 918 ผ่าน · build ผ่าน · วัดจริง 1024/1280/1600 + มือถือ
+
 ## 📐 Site-wide market canvas (owner direction · 2026-08-28)
 
 > ขยายพื้นที่ข้อมูลของหน้าปกติให้ใกล้เว็บตลาดอย่าง CoinMarketCap/CoinGecko โดยคง mobile เดิมและคง reading/form/dialog widths ที่ตั้งใจแคบ ไม่เปลี่ยน spacing, typography, query, state หรือ workflow

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Zap } from "lucide-react";
@@ -43,7 +42,7 @@ function StripFigure({
   children,
 }: {
   label: string;
-  secondary?: "lg" | "xl";
+  secondary?: "lg" | "xl" | "2xl";
   children: ReactNode;
 }) {
   return (
@@ -52,6 +51,7 @@ function StripFigure({
         "shrink-0 items-baseline gap-1.5 whitespace-nowrap",
         secondary === "lg" && "hidden lg:flex",
         secondary === "xl" && "hidden xl:flex",
+        secondary === "2xl" && "hidden 2xl:flex",
         !secondary && "flex",
       )}
     >
@@ -85,77 +85,18 @@ export function HeaderMarketTicker({
         scrolled ? "border-hair" : "border-transparent",
       )}
     >
-      {/* Market pulse strip — the CMC/CoinGecko anatomy the owner picked
-          (แบบ C, 2026-08-28): the figures live on their own hairline band so
-          the brand row below stays a brand row. Figures are text, not chips.
-          The site-wide totals stay pinned and neutral on the left; the cards
-          that actually moved scroll on the right, where green/red is earned
-          (VISION §1) because those numbers really are gains and losses. */}
+      {/* ONE row, not two (owner call 2026-08-29, navbar D2): the catalog scope
+          the visitor is browsing leads the row, the market figures and the
+          movers rail follow it, and account closes it. Folding the old brand
+          row into this strip is what buys the page 28px back — the brand mark
+          now leads the nav row below instead. */}
       <div
         data-slot="ticker-strip"
-        className="hairline-b flex h-8 items-center gap-4 overflow-hidden px-6 lg:px-8"
+        className="hairline-b flex h-12 items-center gap-3 overflow-hidden px-6 lg:px-8"
       >
-        {stats.totalCards > 0 && (
-          <StripFigure label={t(language, "totalCards")}>
-            {formatCount(stats.totalCards)}
-          </StripFigure>
-        )}
-
-        {sets.length > 0 && (
-          <StripFigure label={t(language, "sets")} secondary="xl">
-            {formatCount(sets.length)}
-          </StripFigure>
-        )}
-
-        {stats.totalValue > 0 && (
-          <Link
-            href={`/${game}/market-overview`}
-            className="group flex shrink-0 items-baseline gap-1.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
-          >
-            <span className="text-meta">{t(language, "totalValue")}</span>
-            <span className="ease-chrome text-xs font-semibold tabular-nums text-foreground transition-colors group-hover:text-primary">
-              <Price jpy={stats.totalValue} />
-            </span>
-          </Link>
-        )}
-
-        <StripFigure label="JPY/THB" secondary="lg">
-          {stats.exchangeRate.toFixed(3)}
-        </StripFigure>
-
-        {stats.updatedLabels && (
-          <span className="hidden shrink-0 whitespace-nowrap text-meta xl:inline">
-            {t(language, "lastUpdatedLabel")} {stats.updatedLabels[language]}
-          </span>
-        )}
-
-        <HeaderTickerMarquee movers={stats.movers} />
-      </div>
-
-      {/* Brand row — with the figures gone to the strip, this row holds only
-          identity (brand · Game → Set) and account. No vertical dividers:
-          spacing does the grouping. */}
-      <div className="flex h-11 items-center gap-3 px-6 lg:px-8">
-        <Link
-          href="/"
-          aria-label="Meecard"
-          className="ease-chrome flex min-h-11 shrink-0 items-center gap-2 rounded-lg pr-1 transition-opacity hover:opacity-80 lg:h-8 lg:min-h-0"
-        >
-          <Image
-            src="/meecard.png"
-            alt=""
-            width={754}
-            height={694}
-            className="h-auto w-6 shrink-0 select-none"
-            priority
-          />
-          <span className="hidden text-sm font-bold tracking-tight text-foreground lg:inline">
-            Meecard
-          </span>
-        </Link>
-
         {/* Global catalog scope: Game → Set. It stays available on every route
-            without stealing width from the nav row below. */}
+            and now opens the row, because everything to its right — the totals
+            and the movers — is the market it scopes. */}
         <HeaderCatalogControl
           game={game}
           sets={sets}
@@ -165,7 +106,44 @@ export function HeaderMarketTicker({
           presentation="desktop"
         />
 
-        <div className="min-w-0 flex-1" />
+        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
+
+        {/* Figures are text, not chips (แบบ C, 2026-08-28). Two of the five
+            fold away entirely in this one-row layout: the set count is already
+            implied by the set control on the left, and the update date is the
+            least glanced-at of the five — the rail needs their width more. */}
+        {/* One row now carries the scope, the figures, the movers and account,
+            so the supporting figures step back as the viewport narrows — the
+            rail is the only flexible item here, and without this it collapses
+            to nothing at 1024 (measured). The total value holds on longest: it
+            is the row's only link to /market-overview. */}
+        {stats.totalCards > 0 && (
+          <StripFigure label={t(language, "totalCards")} secondary="xl">
+            {formatCount(stats.totalCards)}
+          </StripFigure>
+        )}
+
+        {stats.totalValue > 0 && (
+          <Link
+            href={`/${game}/market-overview`}
+            className="group hidden shrink-0 items-baseline gap-1.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 lg:flex"
+          >
+            <span className="text-meta">{t(language, "totalValue")}</span>
+            <span className="ease-chrome text-xs font-semibold tabular-nums text-foreground transition-colors group-hover:text-primary">
+              <Price jpy={stats.totalValue} />
+            </span>
+          </Link>
+        )}
+
+        <StripFigure label="JPY/THB" secondary="2xl">
+          {stats.exchangeRate.toFixed(3)}
+        </StripFigure>
+
+        {/* The cards that actually moved scroll here, where green/red is earned
+            (VISION §1) because those numbers really are gains and losses. */}
+        <HeaderTickerMarquee movers={stats.movers} />
+
+        <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
 
         {/* Right — upgrade + account. Below `lg` the standalone upgrade button
             yields first — it is the only item here that is also a row in the

@@ -80,15 +80,26 @@ export function HeaderMobile({
           />
         </Link>
 
-        <HeaderCatalogControl
-          game={game}
-          sets={sets}
-          loading={setsLoading}
-          error={setsError}
-          onRetry={onSetsRetry}
-          presentation="mobile"
-          className="min-w-0 flex-1"
-        />
+        {/* The Game → Set control rides along at the top of the page, then
+            steps aside once the visitor scrolls (owner call 2026-08-29):
+            by then they have already picked what they are looking at, and on a
+            phone the sticky bar's width is worth more to the content than to a
+            control they are done with. Search and account stay — those are what
+            a scrolled reader still reaches for. The spacer keeps the remaining
+            utilities pinned right instead of sliding left as it goes. */}
+        {scrolled ? (
+          <div className="min-w-0 flex-1" />
+        ) : (
+          <HeaderCatalogControl
+            game={game}
+            sets={sets}
+            loading={setsLoading}
+            error={setsError}
+            onRetry={onSetsRetry}
+            presentation="mobile"
+            className="min-w-0 flex-1"
+          />
+        )}
 
         <Button
           data-mobile-search-trigger

@@ -25,10 +25,15 @@ function occurrences(value: string, needle: string): number {
  *     own (plain text, never chips, no green on chrome), and the search field
  *     moved to the FAR RIGHT of the nav row, after Honey.
  *
- *   Strip (28px):  market figures · "อัปเดตล่าสุด"
- *   Row 1 (44px):  brand · Game → Set · upgrade ·
+ *  5. 2026-08-29 ("navbar D2", picked from /proto/navbar-ecom): the strip and
+ *     the old brand row FOLDED INTO ONE 48px row — Game → Set leads it, the
+ *     figures and movers follow, account closes it — and the brand mark moved
+ *     DOWN to lead the nav row. Two figures (set count, last-updated) fold away
+ *     so the movers rail keeps room. Chrome height 132px → 104px.
+ *
+ *   Row 1 (48px):  Game → Set · figures · movers · upgrade ·
  *                  chat/notifications/account-menu (or guest gear)
- *   Row 2 (56px):  nav hubs · portfolio/watchlist/honey · SEARCH FIELD
+ *   Row 2 (56px):  BRAND · nav hubs · portfolio/watchlist/honey · SEARCH FIELD
  *
  * These tests lock that shape so a later refactor cannot quietly reintroduce a
  * rejected variant. What did NOT move: the phone header keeps its own search
@@ -44,7 +49,8 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
       header.indexOf("<header"),
     )
 
-    expect(ticker).toContain('aria-label="Meecard"')
+    // navbar D2: the brand LEFT this row for the nav row below.
+    expect(ticker).not.toContain('aria-label="Meecard"')
     expect(ticker).toContain("<HeaderCatalogControl")
     expect(ticker).toContain('presentation="desktop"')
     for (const figure of ["totalCards", "totalValue", "exchangeRate", "JPY/THB"]) {
@@ -90,8 +96,12 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     expect(userMenu).toBeLessThan(primaryRow)
     // Search renders inside <header>, after it opens.
     expect(searchTrigger).toBeGreaterThan(primaryRow)
-    // The brand left row 2 so the search field could have that width.
-    expect(header).not.toContain('src="/meecard.png"')
+    // navbar D2: the brand came DOWN into this row and leads it.
+    expect(header).toContain('src="/meecard.png"')
+    expect(header.indexOf('src="/meecard.png"')).toBeGreaterThan(primaryRow)
+    expect(header.indexOf('src="/meecard.png"')).toBeLessThan(
+      header.indexOf('href="/portfolio"'),
+    )
     // The saved-state links stay in row 2 beside search.
     expect(header).toContain('href="/portfolio"')
     expect(header).toContain('href="/watchlist"')

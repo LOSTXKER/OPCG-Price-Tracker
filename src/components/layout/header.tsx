@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
@@ -163,6 +164,30 @@ export function Header() {
         }}
       >
         <div className="flex h-14 items-center gap-3 px-4 lg:px-8">
+          {/* The brand leads this row now (owner call 2026-08-29, navbar D2):
+              with the old brand row folded into the strip above, the mark sits
+              where the eye starts reading the nav — and the row above is left
+              to say what catalog you are in. */}
+          <Link
+            href="/"
+            aria-label="Meecard"
+            className="ease-chrome flex h-10 shrink-0 items-center gap-2 rounded-lg pr-1 transition-opacity hover:opacity-80"
+          >
+            <Image
+              src="/meecard.png"
+              alt=""
+              width={754}
+              height={694}
+              className="h-auto w-6 shrink-0 select-none"
+              priority
+            />
+            <span className="hidden text-sm font-bold tracking-tight text-foreground lg:inline">
+              Meecard
+            </span>
+          </Link>
+
+          <span className="mx-1 hidden h-5 w-px shrink-0 bg-border lg:block" aria-hidden />
+
           <nav className="flex shrink-0 items-center">
             {navLinks.map((link) => {
               const active = isNavActive(pathname, link.href, link.owns);
@@ -257,7 +282,7 @@ export function Header() {
               and the field sits in the tools corner, the way CoinMarketCap ends
               its main row. Still the page's only search entry, still painted as
               a real field with the visible "/" hint. */}
-          <div className="w-52 shrink-0 lg:w-80">
+          <div className="w-80 shrink-0">
             <CommandSearchTrigger onClick={openSearch} />
           </div>
         </div>

@@ -128,7 +128,7 @@ describe("header catalog helpers", () => {
 })
 
 describe("header catalog topology", () => {
-  it("keeps one 56px mobile row while desktop chrome stays 132px", () => {
+  it("keeps one 56px mobile row while desktop chrome is 104px", () => {
     const header = readFileSync(
       resolve(process.cwd(), "src/components/layout/header.tsx"),
       "utf8",
@@ -166,7 +166,10 @@ describe("header catalog topology", () => {
     )
 
     expect(header).not.toContain("<GameSwitcher")
-    expect(desktop).toContain('className="flex h-11')
+    // navbar D2 (owner call 2026-08-29): the ticker strip and the old brand row
+    // folded into ONE 48px row, so this file no longer carries an h-11 row.
+    expect(desktop).toContain('className="hairline-b flex h-12')
+    expect(desktop).not.toContain('className="flex h-11')
     expect(desktop).toContain('presentation="desktop"')
     expect(mobile).toContain('data-mobile-header-row="primary"')
     expect(mobile.match(/data-mobile-header-row=/g)).toHaveLength(1)
@@ -253,9 +256,9 @@ describe("header catalog topology", () => {
     expect(catalog).not.toContain("backdrop-blur-sm")
     expect(globals).toContain("--chrome-h: 3.5rem")
     expect(globals).toContain("@media (min-width: 768px)")
-    // navbar แบบ C (owner call 2026-08-28): ticker strip 32px + brand row 44px
-    // + nav row 56px = 132px of desktop chrome.
-    expect(globals).toContain("--chrome-h: 8.25rem")
+    // navbar D2 (owner call 2026-08-29): merged strip 48px + nav row 56px
+    // = 104px of desktop chrome, down from 132px.
+    expect(globals).toContain("--chrome-h: 6.5rem")
     expect(setDetail).toContain(
       'parseFloat(styles.getPropertyValue("--chrome-h")) || 3.5',
     )
