@@ -78,13 +78,23 @@ export function HeaderMobile({
   const scrolled = useScrolled();
 
   return (
-    <div
-      data-mobile-header
-      className={cn(
-        "ease-chrome sticky top-0 z-chrome transition-colors md:hidden",
-        scrolled ? "hairline-b bg-background" : "bg-transparent",
-      )}
-    >
+    <>
+      {/* Only row 1 is sticky, and the two rows are SIBLINGS — not wrapped in a
+          shared box. A `sticky` child can only travel inside its parent, so a
+          wrapper sized to both rows would let row 1 scroll away with them.
+          The context row below therefore scrolls off on its own (owner call
+          2026-08-29: "เลื่อนลงแล้วเลือกการ์ดกับชุดไม่ต้องตามมา") — done by
+          LAYOUT, not by hiding it on a scroll flag: a JS-hidden row would leave
+          `--chrome-h` describing a height the bar no longer has, and every
+          sticky sub-bar on the site (the phone list header included) reads that
+          var for its offset. Letting it scroll keeps the var honest at 56px. */}
+      <div
+        data-mobile-header
+        className={cn(
+          "ease-chrome sticky top-0 z-chrome transition-colors md:hidden",
+          scrolled ? "hairline-b bg-background" : "bg-transparent",
+        )}
+      >
       {/* Row 1 — identity + account. The middle carries the PAGE NAME, not the
           wordmark: the bear already says which site this is, so the space is
           better spent saying where you are (iOS toolbar grammar). */}
@@ -164,6 +174,7 @@ export function HeaderMobile({
             {t(language, "login")}
           </Button>
         )}
+        </div>
       </div>
 
       {/* Row 2 — the context bar: which game, which set. Faintly tinted so it
@@ -180,22 +191,20 @@ export function HeaderMobile({
           watchlist, alerts and account are what a scrolled reader still needs.
           The whole row goes, not just its contents — a 48px tinted band with
           nothing in it would be worse than no band at all. */}
-      {!scrolled && (
-        <div
-          data-mobile-header-row="context"
-          className="flex h-12 min-w-0 items-center bg-muted/30 px-2 sm:px-4"
-        >
-          <HeaderCatalogControl
-            game={game}
-            sets={sets}
-            loading={setsLoading}
-            error={setsError}
-            onRetry={onSetsRetry}
-            presentation="mobile"
-            className="min-w-0 flex-1"
-          />
-        </div>
-      )}
-    </div>
+      <div
+        data-mobile-header-row="context"
+        className="flex h-12 min-w-0 items-center bg-muted/30 px-2 sm:px-4 md:hidden"
+      >
+        <HeaderCatalogControl
+          game={game}
+          sets={sets}
+          loading={setsLoading}
+          error={setsError}
+          onRetry={onSetsRetry}
+          presentation="mobile"
+          className="min-w-0 flex-1"
+        />
+      </div>
+    </>
   );
 }

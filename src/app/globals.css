@@ -158,11 +158,12 @@
      = ticker strip (h-8 = 32px) + brand row (h-11 = 44px) + header (h-14 = 56px)
      = 132px. Sticky offsets and scroll-margins read from this single var
      (TOKENS-04) instead of magic numbers. */
-  /* Phone chrome = row 1 (h-14 = 56px) + the context row (h-12 = 48px)
-     = 104px (owner selection 2026-08-29). Every sticky sub-bar and
-     scroll-margin on the site reads this one var, so they follow the taller
-     header without any per-page numbers. */
-  --chrome-h: 6.5rem;
+  /* Phone STICKY chrome = row 1 only (h-14 = 56px). The context row below it
+     (game → set) is deliberately NOT sticky — it scrolls away with the page
+     (owner call 2026-08-29) — so it must not be counted here: every sticky
+     sub-bar and scroll-margin on the site reads this one var, and counting a
+     row that scrolls off would leave them floating 48px below the bar. */
+  --chrome-h: 3.5rem;
   --floating-ad-clearance: 0rem;
 
   /* Frameless in light: .panel lifts by the warm --card fill alone (no hairline).
