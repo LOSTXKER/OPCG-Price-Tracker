@@ -2,12 +2,13 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react"
 import {
   Camera,
   ImageIcon,
   RotateCcw,
   ScanSearch,
+  Upload,
   X,
 } from "lucide-react"
 
@@ -31,7 +32,35 @@ import { useUIStore } from "@/stores/ui-store"
 import { baseCardCode } from "@/lib/cards/card-code"
 
 const MAX_BYTES = 8 * 1024 * 1024
+/** md — the chrome boundary. Above it we treat the visitor as sitting at a
+ *  computer, whose only camera faces *them*, not the card on the desk. */
+const DESKTOP_QUERY = "(min-width: 768px)"
+
+/** Mac writes the paste shortcut with ⌘; everything else with Ctrl. */
+const pasteKey =
+  typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.userAgent)
+    ? "⌘"
+    : "Ctrl"
 const MAX_DIMENSION = 1600
+
+/** Owner ruling (เบส, 2026-08-29): on a computer the photo search is an
+ *  upload, never a viewfinder. A laptop/iMac has only a front camera — it
+ *  shows the visitor their own face, cannot focus close enough to read a card
+ *  code, and asking for the permission at all burns it for good when refused.
+ *  What people actually have on a desktop is the picture itself, copied out of
+ *  a Facebook/LINE listing — so drop and paste are the primary gestures. */
+function useIsDesktop() {
+  const subscribe = useCallback((onChange: () => void) => {
+    const mql = window.matchMedia(DESKTOP_QUERY)
+    mql.addEventListener("change", onChange)
+    return () => mql.removeEventListener("change", onChange)
+  }, [])
+  return useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(DESKTOP_QUERY).matches,
+    () => false,
+  )
+}
 
 interface IdentifiedCard {
   isCardImage: boolean
@@ -95,6 +124,8 @@ export function PhotoSearchButton({
   const streamRef = useRef<MediaStream | null>(null)
   /** null = still asking · true = live feed · false = fall back to file inputs */
   const [cameraLive, setCameraLive] = useState<boolean | null>(null)
+  const isDesktop = useIsDesktop()
+  const [dragging, setDragging] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -106,7 +137,7 @@ export function PhotoSearchButton({
   // page that keeps the lens warm after you leave is the fastest way to lose
   // permission for good.
   useEffect(() => {
-    if (!open) return
+    if (!open || isDesktop) return
     let cancelled = false
 
     async function start() {
@@ -141,7 +172,27 @@ export function PhotoSearchButton({
       streamRef.current = null
       setCameraLive(null)
     }
-  }, [open])
+  }, [open, isDesktop])
+
+  // Ctrl/⌘+V is the fastest path on a desktop: the card photo is usually
+  // already on the clipboard, copied straight out of a listing.
+  useEffect(() => {
+    if (!open || !isDesktop) return
+    function onPaste(event: ClipboardEvent) {
+      const file = [...(event.clipboardData?.items ?? [])]
+        .find((item) => item.kind === "file" && item.type.startsWith("image/"))
+        ?.getAsFile()
+      if (file) {
+        event.preventDefault()
+        void handleFile(file)
+      }
+    }
+    window.addEventListener("paste", onPaste)
+    return () => window.removeEventListener("paste", onPaste)
+    // handleFile is recreated every render; the listener only needs the latest
+    // one, which is what the effect closes over on each open/desktop change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, isDesktop])
 
   function reset() {
     if (previewUrl) URL.revokeObjectURL(previewUrl)
@@ -160,8 +211,10 @@ export function PhotoSearchButton({
   async function handlePick(event: React.ChangeEvent<HTMLInputElement>) {
     const picked = event.target.files?.[0]
     event.target.value = ""
-    if (!picked) return
+    if (picked) void handleFile(picked)
+  }
 
+  async function handleFile(picked: File) {
     setError(null)
     setResult(null)
 
@@ -223,7 +276,10 @@ export function PhotoSearchButton({
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
         setError(t(lang, "photoSearchAuthRequired"))
-      } else if (err instanceof ApiError) {
+      } else if (err instanceof ApiError && err.status < 500) {
+        // 4xx carries a message written for the visitor. A 5xx does not — it
+        // is `Internal server error (POST /api/cards/identify)`, which is a
+        // line for a log file, not for someone holding a card.
         setError(err.message)
       } else {
         setError(t(lang, "photoSearchFailed"))
@@ -253,14 +309,167 @@ export function PhotoSearchButton({
         </DialogTrigger>
       )}
 
-      {/* Full-screen scanner (owner selection 2026-08-29 from
+      {/* Desktop — an upload surface, not a viewfinder. See useIsDesktop for
+          why the camera has no business on a computer here. */}
+      {isDesktop ? (
+        <DialogContent
+          showCloseButton={false}
+          finalFocus={finalFocus}
+          className="gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-xl"
+        >
+          <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-3.5">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary">
+                <ScanSearch className="size-[18px]" aria-hidden />
+              </span>
+              <div className="min-w-0">
+                <DialogTitle className="text-h5">
+                  {t(lang, "photoSearchTitle")}
+                </DialogTitle>
+                <DialogDescription className="text-meta">
+                  {t(lang, "photoSearchDescription")}
+                </DialogDescription>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleOpenChange(false)}
+              aria-label={t(lang, "close")}
+              className="hairline ease-chrome grid size-9 shrink-0 place-items-center rounded-full transition-colors hover:bg-muted"
+            >
+              <X className="size-4" aria-hidden />
+            </button>
+          </div>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handlePick}
+          />
+
+          <div className="max-h-[70vh] overflow-y-auto p-5">
+            {result ? (
+              <div className="space-y-4">
+                <ResultBlock
+                  result={result}
+                  lang={lang}
+                  onClose={() => handleOpenChange(false)}
+                />
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="hairline ease-chrome flex h-11 w-full items-center justify-center gap-1.5 rounded-full text-sm font-medium transition-colors hover:bg-muted"
+                >
+                  <RotateCcw className="size-4" aria-hidden />
+                  {t(lang, "photoSearchScanAgain")}
+                </button>
+              </div>
+            ) : loading ? (
+              <div className="grid min-h-[216px] place-items-center rounded-2xl bg-muted/40 px-6">
+                <div className="text-center">
+                  {previewUrl ? (
+                    <span className="relative mx-auto block h-28 w-20 overflow-hidden rounded-lg">
+                      <Image
+                        src={previewUrl}
+                        alt=""
+                        fill
+                        unoptimized
+                        sizes="80px"
+                        className="object-cover"
+                      />
+                      <span className="scan-sweep absolute inset-x-0 h-1/3 bg-gradient-to-b from-transparent via-primary/50 to-transparent" />
+                    </span>
+                  ) : (
+                    <span className="relative mx-auto grid size-14 place-items-center rounded-full bg-primary/20 text-primary">
+                      <span className="absolute inset-0 animate-ping rounded-full bg-primary/20" />
+                      <ScanSearch className="relative size-6" aria-hidden />
+                    </span>
+                  )}
+                  <p className="mt-3 text-h5">{t(lang, "photoSearchAnalyzing")}</p>
+                  <p className="mt-1 text-body-sm text-muted-foreground">
+                    {t(lang, "photoSearchComparing")}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div
+                  onDragOver={(event) => {
+                    event.preventDefault()
+                    setDragging(true)
+                  }}
+                  onDragLeave={(event) => {
+                    if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+                      setDragging(false)
+                    }
+                  }}
+                  onDrop={(event) => {
+                    event.preventDefault()
+                    setDragging(false)
+                    const dropped = event.dataTransfer.files?.[0]
+                    if (dropped) void handleFile(dropped)
+                  }}
+                  className={cn(
+                    "ease-chrome grid place-items-center rounded-2xl border-2 border-dashed px-8 py-10 text-center transition-colors",
+                    dragging
+                      ? "border-primary bg-primary/10"
+                      : "border-border bg-muted/40",
+                  )}
+                >
+                  <div>
+                    <span
+                      className={cn(
+                        "mx-auto grid size-14 place-items-center rounded-2xl transition-colors",
+                        dragging
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-primary/15 text-primary",
+                      )}
+                    >
+                      <Upload className="size-6" aria-hidden />
+                    </span>
+                    <p className="mt-3 text-h4">
+                      {dragging
+                        ? t(lang, "photoSearchDropRelease")
+                        : t(lang, "photoSearchDropTitle")}
+                    </p>
+                    <p className="mt-1 flex items-center justify-center gap-1.5 text-body-sm text-muted-foreground">
+                      <kbd className="hairline rounded px-1.5 py-0.5 text-code">
+                        {pasteKey}
+                      </kbd>
+                      <kbd className="hairline rounded px-1.5 py-0.5 text-code">V</kbd>
+                      <span>{t(lang, "photoSearchPasteHint")}</span>
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="ease-chrome mt-4 inline-flex h-11 items-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground transition-transform active:scale-95"
+                    >
+                      <ImageIcon className="size-4" aria-hidden />
+                      {t(lang, "photoSearchChooseFile")}
+                    </button>
+                    <p className="mt-3 text-meta">{t(lang, "photoSearchFileTypes")}</p>
+                  </div>
+                </div>
+                {error && (
+                  <p className="mt-3 rounded-xl bg-destructive/10 px-3 py-2 text-center text-body-sm text-destructive">
+                    {error}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+        </DialogContent>
+      ) : (
+      /* Full-screen scanner (owner selection 2026-08-29 from
           /proto/photo-scan, style B). The old surface was a small dialog with
           two buttons that handed the job to the OS camera app; you never saw
           what the model would see until it was too late to move the card.
           Now the lens is ours: a live feed, a card-shaped frame (63:88 — the
           shape itself says what to point at, the way a QR box says "QR"), and
           the upload button parked bottom-left where every Thai banking app
-          keeps it. */}
+          keeps it. */
       <DialogContent
         showCloseButton={false}
         finalFocus={finalFocus}
@@ -480,6 +689,7 @@ export function PhotoSearchButton({
           )}
         </div>
       </DialogContent>
+      )}
     </Dialog>
   )
 }
