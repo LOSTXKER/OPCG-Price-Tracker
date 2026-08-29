@@ -18,7 +18,7 @@ import {
   BarChart3,
   BookOpen,
   Briefcase,
-  Camera,
+  ScanSearch,
   Clock,
   Heart,
   LayoutGrid,
@@ -423,17 +423,38 @@ export function CommandSearchModal({
             </DialogClose>
           </div>
 
+          {/* Photo search wears its AI on the outside now (owner selection
+              2026-08-29, from /proto/search-ai). It always HAS been an AI
+              lookup — the copy said so — but that sentence only rendered from
+              `sm` up, so on a phone the row was a camera glyph and four words
+              that read as a plain upload button. Two lines, a tinted lead-in
+              and an AI tag put the machine back on screen at every width.
+
+              ScanSearch, not Sparkles: ✨ already means three different things
+              on this site (pricing · home · footer), and a fourth meaning
+              would leave it meaning nothing. */}
           <div className="border-b border-hair p-2">
             <button
               data-command-photo-search
               type="button"
               onClick={openPhotoSearch}
-              className="ease-chrome flex min-h-11 w-full items-center gap-2.5 rounded-xl px-3 text-left text-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+              className="ease-chrome flex w-full items-center gap-3 rounded-xl bg-gradient-to-r from-[var(--p-honey-soft)] to-transparent px-3 py-2 text-left transition-colors hover:from-[var(--p-honey-soft)] hover:to-accent/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
             >
-              <Camera className="size-4 text-primary" aria-hidden />
-              <span className="flex-1">{t(lang, "photoSearchTitle")}</span>
-              <span className="hidden max-w-[14rem] truncate text-meta sm:inline">
-                {t(lang, "photoSearchDescription")}
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary/15 text-primary">
+                <ScanSearch className="size-[18px]" aria-hidden />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="flex items-center gap-1.5">
+                  <span className="text-body-sm font-semibold text-foreground">
+                    {t(lang, "photoSearchTitle")}
+                  </span>
+                  <span className="rounded-full bg-primary/15 px-1.5 text-micro font-semibold text-primary">
+                    AI
+                  </span>
+                </span>
+                <span className="block truncate text-meta">
+                  {t(lang, "photoSearchDescription")}
+                </span>
               </span>
             </button>
           </div>

@@ -96,11 +96,19 @@ function SearchTab({ label, onOpen }: { label: string; onOpen: () => void }) {
         onClick={onOpen}
         aria-label={label}
         aria-haspopup="dialog"
-        className={cn(TAB_CLASS, "text-muted-foreground")}
+        className={cn(TAB_CLASS, "relative text-muted-foreground")}
       >
         {/* -mt-7 lifts the disc above the hairline; ring-4 in the page
-            background cuts it cleanly out of the bar instead of overlapping it. */}
-        <span className="ease-chrome flex size-14 -mt-7 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-4 ring-background active:brightness-95">
+            background cuts it cleanly out of the bar instead of overlapping it.
+
+            The halo behind it (owner selection 2026-08-29, from
+            /proto/search-ai) is how this button says "there is something
+            smarter than a text match behind me" — search here also runs an AI
+            photo lookup — WITHOUT swapping the magnifier for a cleverer glyph.
+            The icon is the one thing on this bar nobody should have to decode,
+            so the meaning stays and the treatment carries the message. */}
+        <span aria-hidden className="pointer-events-none absolute -top-7 size-14 rounded-full bg-gradient-to-br from-primary/60 to-primary/0 blur-md" />
+        <span className="ease-chrome relative flex size-14 -mt-7 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg ring-4 ring-background active:brightness-95">
           <Search className="size-6" strokeWidth={2.25} aria-hidden />
         </span>
         <span>{label}</span>

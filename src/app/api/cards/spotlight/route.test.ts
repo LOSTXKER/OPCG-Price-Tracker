@@ -74,9 +74,14 @@ describe("cards spotlight route (search palette empty state)", () => {
   it("keeps the payload small: image + names + price fields only, capped per section", async () => {
     await GET(new NextRequest("https://meecard.test/api/cards/spotlight"))
 
+    // Popular is a horizontal chip rail (6 fills the swipe); movers is a
+    // vertical list in a palette that goes full-screen on phones, so it takes
+    // twelve — six left half the screen empty (owner call 2026-08-29).
+    const takes = mocks.findMany.mock.calls.map((c) => c[0].take)
+    expect(takes).toEqual([6, 12])
+
     for (const call of mocks.findMany.mock.calls) {
       const args = call[0]
-      expect(args.take).toBe(6)
       // The palette paints a thumb, a localized name, a price and a delta —
       // no relations beyond the set code, no facet scaffolding.
       expect(Object.keys(args.select)).toEqual([
