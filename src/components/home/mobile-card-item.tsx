@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 import { CardImageButton } from "@/components/shared/card-image-button"
+import { WatchlistHeart } from "@/components/shared/watchlist-heart"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
 import { PriceUsd } from "@/components/shared/price-usd"
@@ -23,11 +24,12 @@ import { PriceTag } from "@/components/ui/price-tag"
  * One row of the phone market list (<sm only — the desktop `<table>` is a
  * separate renderer that keeps its own "กราฟ 30 วัน" sparkline column).
  *
- * Two zones, left identity and right money — no third column. A 48px sparkline
- * used to sit between them, which left the name just 75px of a 390px screen:
- * 16 of the 20 rows truncated, and four consecutive rows all read
- * "Monkey.D…". The trend shape is not legible at that size anyway, so the
- * width goes to the one thing that identifies the card.
+ * Identity on the left, money on the right, and one watchlist heart pinned to
+ * the right edge — no sparkline column. A 48px sparkline used to sit between
+ * the two zones, which left the name just 75px of a 390px screen: 16 of the 20
+ * rows truncated, and four consecutive rows all read "Monkey.D…". The trend
+ * shape is not legible at that size anyway, so the width goes to the name and
+ * to the one control this row needs (owner call, /proto/row-favorite).
  */
 export const MobileCardItem = memo(function MobileCardItem({
   card,
@@ -85,9 +87,12 @@ export const MobileCardItem = memo(function MobileCardItem({
       >
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium leading-tight">{name}</p>
-          <div className="mt-0.5 flex items-center gap-1.5 text-meta">
-            <span className="font-mono">{card.baseCode ?? card.cardCode}</span>
-            <RarityBadge rarity={card.rarity} size="sm" />
+          {/* รหัส + rarity ต้องอยู่บรรทัดเดียวเสมอ: พอปุ่มโปรดมาอยู่ขวาสุด
+              บรรทัดนี้เหลือที่ราว 116px ซึ่งพอดีเป๊ะกับรหัส 8 ตัว + ป้าย —
+              ปล่อยไว้เฉยๆ รหัสยาวกว่านั้นจะขึ้นบรรทัดใหม่ แถวสูงไม่เท่ากันทั้งหน้า */}
+          <div className="mt-0.5 flex min-w-0 items-center gap-1.5 text-meta">
+            <span className="truncate font-mono">{card.baseCode ?? card.cardCode}</span>
+            <RarityBadge rarity={card.rarity} size="sm" className="shrink-0" />
           </div>
         </div>
         <div
@@ -110,6 +115,17 @@ export const MobileCardItem = memo(function MobileCardItem({
           ) : null}
         </div>
       </Link>
+      {/* รายการโปรด — ขวาสุดของแถว (เบสเคาะแบบ A, /proto/row-favorite 2026-08-29).
+          อยู่นอก <Link> เพราะกดแล้วต้องไม่เปิดหน้าการ์ด · -mr-1.5 ดึงปุ่มเข้าหา
+          ขอบจอ พอให้ยังไม่ทับที่ปัดย้อนกลับของแอนดรอยด์ แต่ยังคงกล่องกด 44px */}
+      {card.id != null && (
+        <WatchlistHeart
+          cardId={card.id}
+          size="md"
+          showTooltip={false}
+          className="-mr-2 h-11 w-8"
+        />
+      )}
     </div>
   )
 })
@@ -127,6 +143,8 @@ export function MobileCardSkeleton() {
         <Skeleton className="ml-auto h-4 w-14" />
         <Skeleton className="ml-auto h-3 w-8" />
       </div>
+      {/* กันที่ให้ปุ่มรายการโปรด ไม่งั้นแถวจะกระตุกตอนข้อมูลจริงมาแทนโครงโหลด */}
+      <Skeleton className="-mr-1.5 h-5 w-9 rounded-sm" />
     </div>
   )
 }
