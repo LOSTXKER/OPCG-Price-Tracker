@@ -5,6 +5,7 @@ import Image from "next/image"
 import { Check } from "lucide-react"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { FilterModal } from "@/components/shared/filter-modal"
+import { FilterFacetGroup } from "@/components/shared/filter-facet-group"
 import { Price } from "@/components/shared/price-inline"
 import { SetPicker } from "@/components/shared/set-picker"
 import { FilterButton, ToolbarSearch } from "@/components/ui/toolbar"
@@ -194,59 +195,29 @@ export function CardPicker({
         resetDisabled={activeFilterCount === 0}
       >
         {uniqueRarities.length > 0 && (
-          <div>
-            <span className="mb-1.5 block text-eyebrow">{t(lang, "rarityFilter")}</span>
-            <div className="flex flex-wrap gap-1.5">
-              {uniqueRarities.map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  aria-pressed={rarityFilter.includes(r)}
-                  onClick={() => toggleRarity(r)}
-                  className={cn(
-                    "ease-chrome min-h-11 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors md:min-h-0",
-                    rarityFilter.includes(r)
-                      ? "text-white"
-                      : "bg-muted text-muted-foreground hover:text-foreground"
-                  )}
-                  style={
-                    rarityFilter.includes(r)
-                      ? { backgroundColor: RARITY_HEX[r] ?? "#6B7280" }
-                      : undefined
-                  }
-                >
-                  {r}
-                </button>
-              ))}
-            </div>
-          </div>
+          <FilterFacetGroup
+            label={t(lang, "rarityFilter")}
+            options={uniqueRarities.map((r) => ({
+              value: r,
+              label: r,
+              // สีประจำระดับความหายากตอนถูกเลือก เหมือนหน้าแรกและหน้าค้นหา
+              activeColor: RARITY_HEX[r] ?? "#6B7280",
+            }))}
+            values={rarityFilter}
+            onToggle={(value) => toggleRarity(value)}
+          />
         )}
 
         {/* Version — ปกติ / พาราเลล. Filters the display by isParallel; the drop
             math reads the full set so this is display-only (set-scoped math intact). */}
-        <div>
-          <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
-          <div className="flex flex-wrap gap-1.5">
-            {variantOptions.map((v) => (
-                <button
-                  key={v.code}
-                  type="button"
-                  aria-pressed={variantFilter === v.code}
-                  onClick={() =>
-                  onVariantChange(variantFilter === v.code ? null : v.code)
-                }
-                className={cn(
-                  "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
-                  variantFilter === v.code
-                    ? "border-primary/40 bg-primary/5 text-primary"
-                    : "border-hair bg-background text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {v.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        <FilterFacetGroup
+          label={t(lang, "variant")}
+          options={variantOptions.map((v) => ({ value: v.code, label: v.label }))}
+          values={variantFilter ? [variantFilter] : []}
+          onToggle={(value, nextActive) =>
+            onVariantChange(nextActive ? value : null)
+          }
+        />
       </FilterModal>
 
       <div className="lg:flex lg:gap-8">

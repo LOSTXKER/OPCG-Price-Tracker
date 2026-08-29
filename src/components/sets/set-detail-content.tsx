@@ -14,6 +14,7 @@ import { TrendingUpDown } from "lucide-react";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { GradeControl } from "@/components/market/price-mode-control";
 import { FilterModal } from "@/components/shared/filter-modal";
+import { FilterFacetGroup } from "@/components/shared/filter-facet-group";
 import { FilterButton } from "@/components/ui/toolbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -363,6 +364,25 @@ export function SetDetailContent({
       label: getCardTypeLabel(ct.value, lang),
     })),
   ];
+  /* คนละรูปแบบกับ `typeOptions`/`colorOptions` ข้างล่างโดยตั้งใจ: ตัวนั้นเป็น
+     dropdown บนคอมจึงฝัง JSX ลงใน label ได้ ส่วนชิปในกล่องตัวกรองรับ label เป็น
+     ข้อความล้วนแล้วสั่งจุดสีผ่าน `dot` — จุดสีจึงมาจากที่เดียวกับหน้าแรกและ
+     หน้าค้นหา ไม่ใช่ JSX ที่หน้านี้วาดเอง */
+  const typeFacetOptions = [
+    { value: "all", label: t(lang, "allTab") },
+    ...availableTypes.map((ct) => ({
+      value: ct.value,
+      label: getCardTypeLabel(ct.value, lang),
+    })),
+  ];
+  const colorFacetOptions = [
+    { value: "all", label: t(lang, "allTab") },
+    ...availableColors.map((cc) => ({
+      value: cc.value,
+      label: cc.label[lang],
+      dot: cc.dotClass,
+    })),
+  ];
   const colorOptions: FilterOption[] = [
     { value: "all", label: t(lang, "allTab") },
     ...availableColors.map((cc) => ({
@@ -381,33 +401,6 @@ export function SetDetailContent({
     (activeType !== "all" ? 1 : 0) + (activeColor !== "all" ? 1 : 0);
   const hasActiveCardFilters =
     activeFilterCount > 0 || !isRawGrade(grade);
-
-  // Single-select facet chip inside the FilterModal — same visual grammar as
-  // the home market modal's chips ("ทั้งหมด" first as the reset, one value per
-  // facet, values apply live so Apply just closes).
-  const facetChip = (
-    o: FilterOption,
-    current: string,
-    onSelect: (v: string) => void,
-  ) => {
-    const active = current === o.value;
-    return (
-      <button
-        key={o.value}
-        type="button"
-        aria-pressed={active}
-        onClick={() => onSelect(o.value)}
-        className={cn(
-          "ease-chrome flex min-h-11 items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium lg:min-h-0",
-          active
-            ? "border-primary/40 bg-primary/5 text-primary"
-            : "border-hair bg-background text-muted-foreground hover:text-foreground",
-        )}
-      >
-        {o.label}
-      </button>
-    );
-  };
 
   const rarityNav = visibleGroups.map((g) => ({
     value: g.rarity,
@@ -544,20 +537,22 @@ export function SetDetailContent({
           resetDisabled={activeFilterCount === 0}
         >
           {availableTypes.length > 1 && (
-            <div>
-              <span className="mb-1.5 block text-eyebrow">{t(lang, "type")}</span>
-              <div className="flex flex-wrap gap-1.5">
-                {typeOptions.map((o) => facetChip(o, activeType, setActiveType))}
-              </div>
-            </div>
+            <FilterFacetGroup
+              label={t(lang, "type")}
+              options={typeFacetOptions}
+              values={[activeType]}
+              onToggle={(v) => setActiveType(v)}
+              selectionMode="single"
+            />
           )}
           {availableColors.length > 1 && (
-            <div>
-              <span className="mb-1.5 block text-eyebrow">{t(lang, "color")}</span>
-              <div className="flex flex-wrap gap-1.5">
-                {colorOptions.map((o) => facetChip(o, activeColor, setActiveColor))}
-              </div>
-            </div>
+            <FilterFacetGroup
+              label={t(lang, "color")}
+              options={colorFacetOptions}
+              values={[activeColor]}
+              onToggle={(v) => setActiveColor(v)}
+              selectionMode="single"
+            />
           )}
         </FilterModal>
 

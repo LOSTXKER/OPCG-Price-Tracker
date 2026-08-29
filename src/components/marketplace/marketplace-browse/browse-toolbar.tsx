@@ -5,6 +5,7 @@ import Link from "next/link"
 
 import { buttonVariants } from "@/components/ui/button"
 import { FilterModal } from "@/components/shared/filter-modal"
+import { FilterFacetGroup } from "@/components/shared/filter-facet-group"
 import { FilterToolbar } from "@/components/shared/filter-toolbar"
 import { getGameConfig } from "@/lib/game-config"
 import { t } from "@/lib/i18n"
@@ -18,79 +19,6 @@ import { CONDITIONS, SORT_OPTIONS, VARIANTS } from "./types"
 const RARITY_OPTIONS = getGameConfig("opcg")?.rarityFilterOptions ?? []
 
 type SortKey = (typeof SORT_OPTIONS)[number]["value"]
-
-/** Chip group inside the modal. Single-value facets use radio semantics while
- * multi-value facets expose each chip as a pressed toggle. */
-function FacetChips({
-  options,
-  selected,
-  onToggle,
-  selectionMode = "multiple",
-  labelledBy,
-  describedBy,
-}: {
-  options: readonly { value: string; label: string }[]
-  selected: string[]
-  onToggle: (value: string) => void
-  selectionMode?: "single" | "multiple"
-  labelledBy: string
-  describedBy?: string
-}) {
-  const isSingle = selectionMode === "single"
-
-  return (
-    <div
-      className="flex flex-wrap gap-1.5"
-      role={isSingle ? "radiogroup" : "group"}
-      aria-labelledby={labelledBy}
-      aria-describedby={describedBy}
-    >
-      {options.map((opt) => {
-        const active = selected.includes(opt.value)
-        const chipClass = cn(
-          "ease-chrome flex min-h-11 items-center rounded-lg border px-3 py-1 text-micro",
-          active
-            ? "border-primary/40 bg-primary/5 text-primary"
-            : "border-hair bg-background text-muted-foreground hover:text-foreground",
-        )
-
-        if (isSingle) {
-          return (
-            <label
-              key={opt.value || "all"}
-              className={cn(
-                chipClass,
-                "cursor-pointer focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
-              )}
-            >
-              <input
-                type="radio"
-                name={labelledBy}
-                value={opt.value}
-                checked={active}
-                onChange={() => onToggle(opt.value)}
-                className="sr-only"
-              />
-              {opt.label}
-            </label>
-          )
-        }
-
-        return (
-          <button
-            key={opt.value || "all"}
-            type="button"
-            onClick={() => onToggle(opt.value)}
-            aria-pressed={active}
-            className={chipClass}
-          >
-            {opt.label}
-          </button>
-        )
-      })}
-    </div>
-  )
-}
 
 export function BrowseToolbar({
   search,
@@ -207,44 +135,26 @@ export function BrowseToolbar({
           onVariantsChange(draftVariants)
         }}
       >
-        <div>
-          <span id="marketplace-condition-filter" className="block text-eyebrow">
-            {t(lang, "mktFilterCondition")}
-          </span>
-          <span id="marketplace-condition-filter-hint" className="mb-2 block text-meta">
-            {t(lang, "mktFilterConditionHint")}
-          </span>
-          <FacetChips
-            options={conditionOptions}
-            selected={[draftCondition ?? ""]}
-            onToggle={(v) => setDraftCondition(v || null)}
-            selectionMode="single"
-            labelledBy="marketplace-condition-filter"
-            describedBy="marketplace-condition-filter-hint"
-          />
-        </div>
-        <div>
-          <span id="marketplace-rarity-filter" className="mb-1.5 block text-eyebrow">
-            {t(lang, "mktFilterRarity")}
-          </span>
-          <FacetChips
-            options={rarityOptions}
-            selected={draftRarities}
-            onToggle={(v) => toggle(draftRarities, v, setDraftRarities)}
-            labelledBy="marketplace-rarity-filter"
-          />
-        </div>
-        <div>
-          <span id="marketplace-variant-filter" className="mb-1.5 block text-eyebrow">
-            {t(lang, "variant")}
-          </span>
-          <FacetChips
-            options={variantOptions}
-            selected={draftVariants}
-            onToggle={(v) => toggle(draftVariants, v, setDraftVariants)}
-            labelledBy="marketplace-variant-filter"
-          />
-        </div>
+        <FilterFacetGroup
+          label={t(lang, "mktFilterCondition")}
+          hint={t(lang, "mktFilterConditionHint")}
+          options={conditionOptions}
+          values={[draftCondition ?? ""]}
+          onToggle={(v) => setDraftCondition(v || null)}
+          selectionMode="single"
+        />
+        <FilterFacetGroup
+          label={t(lang, "mktFilterRarity")}
+          options={rarityOptions}
+          values={draftRarities}
+          onToggle={(v) => toggle(draftRarities, v, setDraftRarities)}
+        />
+        <FilterFacetGroup
+          label={t(lang, "variant")}
+          options={variantOptions}
+          values={draftVariants}
+          onToggle={(v) => toggle(draftVariants, v, setDraftVariants)}
+        />
       </FilterModal>
     </>
   )

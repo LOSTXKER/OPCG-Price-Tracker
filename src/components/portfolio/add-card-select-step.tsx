@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 
 import { EmptyState } from "@/components/shared/empty-state"
+import { FilterFacetGroup } from "@/components/shared/filter-facet-group"
 import { GameCrest } from "@/components/shared/game-crest"
 import {
   DialogDescription,
@@ -89,101 +90,47 @@ function FilterControls({
       {/* Set is NOT here — it lives as a prominent control up in the search row
           (เบส: ผู้ใช้เลือกชุดก่อน). The modal holds only rarity / colour / type. */}
       {rarityOptions.length > 0 && (
-        <div>
-          <span className="mb-1.5 block text-eyebrow">{t(lang, "rarity")}</span>
-          <div className="flex flex-wrap gap-1.5">
-            {rarityOptions.map((r) => (
-              <button
-                key={r.code}
-                type="button"
-                onClick={() => setActiveRarity(activeRarity === r.code ? null : r.code)}
-                className={cn(
-                  "ease-chrome min-h-11 rounded-lg px-2.5 py-1 text-xs font-semibold md:min-h-0",
-                  activeRarity === r.code
-                    ? "text-white"
-                    : "bg-muted text-muted-foreground hover:text-foreground"
-                )}
-                style={activeRarity === r.code ? { backgroundColor: RARITY_HEX[r.code] ?? "#6B7280" } : undefined}
-              >
-                {r.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        <FilterFacetGroup
+          label={t(lang, "rarity")}
+          options={rarityOptions.map((r) => ({
+            value: r.code,
+            label: r.label,
+            activeColor: RARITY_HEX[r.code] ?? "#6B7280",
+          }))}
+          values={activeRarity ? [activeRarity] : []}
+          onToggle={(value, nextActive) =>
+            setActiveRarity(nextActive ? value : null)
+          }
+        />
       )}
 
-      {colorOptions.length > 0 && (
-        <div>
-          <span className="mb-1.5 block text-eyebrow">{t(lang, "color")}</span>
-          <div className="flex flex-wrap gap-1.5">
-            {colorOptions.map((c) => (
-              <button
-                key={c.code}
-                type="button"
-                onClick={() => setActiveColor(activeColor === c.code ? null : c.code)}
-                className={cn(
-                  "ease-chrome flex min-h-11 items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium md:min-h-0",
-                  activeColor === c.code
-                    ? "border-primary/40 bg-primary/5 text-primary"
-                    : "border-hair bg-background text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <span className={cn("size-2.5 rounded-full", c.bg)} />
-                {c.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      <FilterFacetGroup
+        label={t(lang, "color")}
+        options={colorOptions.map((c) => ({
+          value: c.code,
+          label: c.label,
+          dot: c.bg,
+        }))}
+        values={activeColor ? [activeColor] : []}
+        onToggle={(value, nextActive) => setActiveColor(nextActive ? value : null)}
+      />
 
-      {typeOptions.length > 0 && (
-        <div>
-          <span className="mb-1.5 block text-eyebrow">{t(lang, "type")}</span>
-          <div className="flex flex-wrap gap-1.5">
-            {typeOptions.map((ty) => (
-              <button
-                key={ty.code}
-                type="button"
-                onClick={() => setActiveCardType(activeCardType === ty.code ? null : ty.code)}
-                className={cn(
-                  "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium md:min-h-0",
-                  activeCardType === ty.code
-                    ? "border-primary/40 bg-primary/5 text-primary"
-                    : "border-hair bg-background text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {ty.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      <FilterFacetGroup
+        label={t(lang, "type")}
+        options={typeOptions.map((ty) => ({ value: ty.code, label: ty.label }))}
+        values={activeCardType ? [activeCardType] : []}
+        onToggle={(value, nextActive) =>
+          setActiveCardType(nextActive ? value : null)
+        }
+      />
 
       {/* Version — เบส: rarity ไม่มี P- แล้ว, มาเลือก ปกติ / พาราเลล ที่นี่แทน. */}
-      {variantOptions.length > 0 && (
-        <div>
-          <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
-          <div className="flex flex-wrap gap-1.5">
-            {variantOptions.map((v) => (
-              <button
-                key={v.code}
-                type="button"
-                onClick={() =>
-                  setActiveVariant(activeVariant === v.code ? null : v.code)
-                }
-                className={cn(
-                  "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium md:min-h-0",
-                  activeVariant === v.code
-                    ? "border-primary/40 bg-primary/5 text-primary"
-                    : "border-hair bg-background text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {v.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      <FilterFacetGroup
+        label={t(lang, "variant")}
+        options={variantOptions.map((v) => ({ value: v.code, label: v.label }))}
+        values={activeVariant ? [activeVariant] : []}
+        onToggle={(value, nextActive) => setActiveVariant(nextActive ? value : null)}
+      />
 
       {activeFilterCount > 0 && (
         <button

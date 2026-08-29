@@ -112,6 +112,10 @@ export function WatchlistToolbar({
             />
 
             <div className="flex shrink-0 items-center gap-2">
+              {/* The word is spelled out here too (เบส, applied site-wide
+                  2026-08-31): every other page's filter button says "ตัวกรอง",
+                  and a lone slider glyph reads as decoration rather than as a
+                  control. The search field beside it still keeps ~208px at 360px. */}
               <FilterButton
                 ref={mobileFilterButtonRef}
                 onClick={openFilters}
@@ -119,9 +123,10 @@ export function WatchlistToolbar({
                 active={filterOpen || activeFilterCount > 0}
                 aria-haspopup="dialog"
                 aria-expanded={filterOpen}
-                iconOnly
                 aria-label={t(lang, "filter")}
-              />
+              >
+                {t(lang, "filter")}
+              </FilterButton>
 
               <IconButton
                 aria-label={t(lang, "watchlistSelectMode")}
