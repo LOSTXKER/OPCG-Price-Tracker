@@ -24,15 +24,12 @@ import { MarketTable } from "@/components/market/market-table"
 import { GradeControl } from "@/components/market/price-mode-control"
 import { buildMarketColumns } from "@/components/market/market-columns"
 import { CardItem, CardItemSkeleton } from "@/components/cards/card-item"
-import { SortableHeader } from "@/components/shared/sortable-header"
+import { MobileSortCluster } from "./mobile-sort-cluster"
 import {
   type Tab,
   type TabId,
   type CardRow,
-  type ChangePeriod,
-  type ColumnId,
   CHANGE_PERIODS,
-  PERIOD_COLUMNS,
   PAGE_SIZE,
 } from "./market-types"
 import { isRawGrade } from "@/lib/pricing/grade-tiers"
@@ -173,56 +170,31 @@ export function HomeMarketOverview({
   )
 
   /**
-   * The phone list's COLUMN HEADER — not a third toolbar row: period pill on the
-   * left, tap-sort labels on the right sitting over the price column, on the
-   * hairline that starts the list. It docks under the top chrome while you
-   * scroll, and it now renders for BOTH view modes — grid had no sort control at
-   * all and carried a second period pill of its own. Graded lenses keep the
-   * geometry but drop the tap-sort because their historical deltas aren't real.
+   * The phone list's COLUMN HEADER — and, since 2026-08-29, the phone's price
+   * lens too: the grade rail moved up here from its own toolbar row, so the
+   * controls above the list went from three stacked rows to two (owner
+   * selection from /proto/mobile-home). Left = which price, right = which
+   * order, and the sort labels sit over the price column on the same 20px
+   * gutter as the rows. It docks under the top chrome while you scroll, for
+   * BOTH view modes.
    */
   const mobileListHeader = (m.isPending || m.cards.length > 0) && (
-    <div className="ease-chrome sticky top-[var(--chrome-h)] z-10 -mx-5 flex items-center justify-between gap-2 border-b border-hair bg-background/95 px-3 py-1.5 backdrop-blur-sm sm:hidden">
-      <SegmentedControl<ChangePeriod>
-        size="sm"
-        variant="pill"
-        leadingIcon={TrendingUpDown}
-        options={CHANGE_PERIODS.map((p) => ({ value: p, label: p }))}
-        value={m.changePeriod}
-        onChange={m.handleChangePeriod}
-        ariaLabel={t(lang, "pricePeriod")}
-        className="shrink-0 [&>svg:first-child]:hidden min-[360px]:[&>svg:first-child]:block"
-      />
+    <div className="ease-chrome sticky top-[var(--chrome-h)] z-sticky -mx-5 flex items-center gap-2 border-b border-hair bg-background/95 px-5 py-1.5 backdrop-blur-sm sm:hidden">
+      <div className="min-w-0 flex-1">
+        <GradeControl value={m.grade} onChange={m.handleGradeChange} />
+      </div>
+      <span aria-hidden className="h-4 w-px shrink-0 bg-hair" />
       {/* Column labels, not buttons-shouting: the row reads muted and the ONE
           active sort turns dark, so the eye lands on what's sorted. */}
-      <div className="flex items-center gap-1.5 text-muted-foreground min-[360px]:gap-2.5">
-        {rawGrade ? (
-          <SortableHeader<ColumnId>
-            as="button"
-            label={t(lang, "price")}
-            column="price"
-            activeCol={m.sortCol}
-            dir={m.sortDir}
-            onClick={m.handleColumnSort}
-            className="aria-pressed:text-foreground"
-          />
-        ) : (
-          <span className="text-eyebrow text-foreground">{t(lang, "price")}</span>
-        )}
-        <span aria-hidden className="h-3 w-px bg-hair" />
-        {rawGrade ? (
-          <SortableHeader<ColumnId>
-            as="button"
-            label={t(lang, "change")}
-            column={PERIOD_COLUMNS[m.changePeriod]}
-            activeCol={m.sortCol}
-            dir={m.sortDir}
-            onClick={m.handleColumnSort}
-            className="aria-pressed:text-foreground"
-          />
-        ) : (
-          <span className="text-eyebrow">{t(lang, "change")}</span>
-        )}
-      </div>
+      <MobileSortCluster
+        period={m.changePeriod}
+        onPeriodChange={m.handleChangePeriod}
+        sortCol={m.sortCol}
+        sortDir={m.sortDir}
+        onSort={m.handleColumnSort}
+        sortEnabled={rawGrade}
+        className="shrink-0"
+      />
     </div>
   )
 
@@ -251,13 +223,13 @@ export function HomeMarketOverview({
           />
         </div>
 
-        {/* Mobile browse controls: the set is the primary axis and owns the
-            first row. Display actions stay together, while sorting gets enough
-            width to keep its label readable at the narrowest supported size. */}
-        {/* px-4 (not px-3) so every control lines up with the list rows below —
-            the sort labels then sit exactly over the price column. */}
-        <div className="space-y-2 px-4 py-3 sm:hidden">
-          {/* Row 1: the two BROWSE decisions — which set, which facets. */}
+        {/* Mobile browse controls — ONE row (owner selection 2026-08-29): the
+            set is the primary axis and takes the width, with the two display
+            actions beside it. The price lens moved down into the sticky column
+            header, which is where the numbers it re-prices actually are.
+            No horizontal padding: the page container owns the single 20px
+            gutter that the rows, the strip and the sort labels all line up on. */}
+        <div className="py-3 sm:hidden">
           <div className="flex items-center gap-2">
             {sets.length > 0 && (
               <div className="min-w-0 flex-1">
@@ -276,19 +248,9 @@ export function HomeMarketOverview({
               </div>
             )}
 
-            <div className="ml-auto shrink-0">{renderFilterTrigger(true)}</div>
-          </div>
-
-          {/* Row 2: the two DISPLAY decisions — which price lens, which layout
-              (เบส: มุมมองไปอยู่แถวเดียวกับ grade). The grade strip scrolls
-              sideways inside whatever width the view toggle leaves it. */}
-          <div className="flex items-center gap-2">
-            <div className="min-w-0 flex-1">
-              <GradeControl value={m.grade} onChange={m.handleGradeChange} />
-            </div>
+            <div className="shrink-0">{renderFilterTrigger(true)}</div>
             <div className="shrink-0">{renderViewControl()}</div>
           </div>
-
         </div>
 
         {/* Desktop/tablet keeps the established single-row toolbar. */}
@@ -403,6 +365,7 @@ export function HomeMarketOverview({
         <MarketTable
           surface="canvas"
           showMobileSort={false}
+          mobileFlush
           cards={m.cards}
           rankOffset={(m.page - 1) * PAGE_SIZE}
           columns={columns}
@@ -497,7 +460,7 @@ export function HomeMarketOverview({
         totalPages={m.totalPages}
         isPending={m.isPending}
         onPageChange={m.setPage}
-        className="border-t border-hair px-4 py-3"
+        className="border-t border-hair py-3 sm:px-4"
         summary={
           <p className="hidden text-meta sm:block">
             {t(lang, "showingOf")} {formatCount((m.page - 1) * PAGE_SIZE + 1)}-

@@ -95,7 +95,11 @@ export function FloatingAdFrame({
         data-floating-ad-spacer
         className="h-[var(--floating-ad-clearance)] shrink-0"
       />
-      <div className="pointer-events-none fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom)+0.5rem)] z-ad px-3 md:bottom-4 md:px-4">
+      {/* 4rem bottom-nav + 1.75rem for the raised search button that overhangs
+          it (owner selection 2026-08-29) + 0.5rem breathing room. Without the
+          overhang term the dock sat on top of that button. From `md` the
+          bottom nav is gone, so the dock returns to the viewport edge. */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-[calc(4rem+1.75rem+env(safe-area-inset-bottom)+0.5rem)] z-ad px-3 md:bottom-4 md:px-4">
         <div
           data-floating-ad-dock
           className="pointer-events-auto relative mx-auto w-full max-w-[320px] sm:max-w-[728px]"

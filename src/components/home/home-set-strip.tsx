@@ -143,7 +143,10 @@ export function HomeSetStrip({ sets }: { sets: HomeSetStripItem[] }) {
     <section aria-labelledby="home-set-strip">
       <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-5">
         {/* The whole header block is the link to the set catalog — a moving
-            rail has no fixed corner to hang a "view all" on. */}
+            rail has no fixed corner to hang a "view all" on.
+            On phones the block is ONE line: the helper sentence under the
+            heading repeated what the pills show anyway, and its 18px was paid
+            above the fold on every visit (owner selection 2026-08-29). */}
         <Link href="/opcg/sets" className="group/head block shrink-0">
           <h2
             id="home-set-strip"
@@ -152,7 +155,7 @@ export function HomeSetStrip({ sets }: { sets: HomeSetStripItem[] }) {
             {copy.heading}
             <ChevronRight className="ease-chrome size-4 text-muted-foreground group-hover/head:translate-x-0.5 group-hover/head:text-primary" />
           </h2>
-          <p className="mt-0.5 text-meta">{copy.description}</p>
+          <p className="mt-0.5 hidden text-meta sm:block">{copy.description}</p>
         </Link>
 
         <div className="flex min-w-0 flex-1 items-center gap-2">

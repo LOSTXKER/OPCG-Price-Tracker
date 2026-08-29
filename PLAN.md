@@ -18,6 +18,27 @@
 - [x] **NAV-D2-05** — มือถือ: ซ่อนปุ่มเลือกเกม/ชุดเมื่อ scrolled
 - [x] **NAV-D2-06** — responsive: สถิติ + ชื่อชุดหลบตามความกว้าง ให้สายพานมีที่วิ่งทุกจอ
 - [x] **NAV-D2-07** — verify: lint 0 · test 918 ผ่าน · build ผ่าน · วัดจริง 1024/1280/1600 + มือถือ
+## 📱 Mobile home + chrome "กลาง 5" (owner selected · 2026-08-29)
+
+> เบสเลือกจากหน้าเทียบ `/proto/mobile-home`: **โครงหน้าแบบ A "จัดระเบียบ" + แถบล่างแบบ "กลาง 5"** (ปุ่มค้นหานูนกลางแถบล่าง · รายการโปรดขึ้นเป็นไอคอนหัวใจบน navbar มือถือ) · ขอบเขต = หน้าแรกฝั่งมือถือ + chrome มือถือเท่านั้น ไม่แตะ desktop chrome (งานอีก session เพิ่งขึ้น master)
+
+- [x] **MHOME-01 — Chrome มือถือ:** `bottom-nav.tsx` ถอด `/watchlist` ออกจากแท็บ แล้วแทรกปุ่มค้นหาทรงกลมนูนกลางแถบ (2 แท็บ + FAB + 2 แท็บ · FAB เปิด search modal ผ่าน `setSearchOpen` ไม่ใช่ลิงก์ · ≥44px · aria ครบ) · `header-mobile.tsx` ถอดปุ่มค้นหาออก (ย้ายลงล่างแล้ว) แล้วใส่ไอคอนหัวใจ → `/watchlist` แทนช่องเดิม
+- [x] **MHOME-02 — Hero หด:** `home-search-hero.tsx` ถอด `px-4` ที่ซ้อนกับ gutter หน้า · โปรยเหลือ 1 บรรทัด + บรรทัด meta (`N ใบ · M ชุด · อัปเดตล่าสุด <วันที่จริง>`) · แก้ `buildHomeHeroLead` ใน `lib/seo/copy/home.ts` ให้สั้นลงโดยคง keyword "การ์ดวันพีช"/OPTCG และห้ามสัญญา schedule
+- [x] **MHOME-03 — หัวแถบชุดบรรทัดเดียว:** `home-set-strip.tsx` บนมือถือให้หัวเป็นแถวเดียว (h2 ซ้าย + "ดูชุดทั้งหมด" ขวา) ซ่อนบรรทัดคำอธิบายใต้หัวเฉพาะ `<sm` · desktop คงของเดิม (ลูกศร + คำอธิบาย)
+- [x] **MHOME-04 — แถบควบคุม 3→2 แถว + ขอบเดียว:** `home-market-overview.tsx` รวมแถวเลือกชุด/ตัวกรอง/มุมมองเป็นแถวเดียว · แถวติดหนึบ = ราง grade + ชุดเรียง (ราคา | เปลี่ยนแปลง + ปุ่มช่วงเวลากดวน) · ทุกบล็อกใช้ขอบ 20px เดียวกัน (เลิก `px-4` ซ้อน, sticky `-mx-5 px-5`) · sticky ใช้ token `z-sticky` แทน `z-10`
+- [x] **MHOME-05 — ระยะห่างหน้าแรก:** `page.tsx` ลด `mt-9 sm:mt-12` เป็นระยะ section มาตรฐาน 4px scale บนมือถือ (desktop คงเดิม)
+- [x] **MHOME-06 — Verify:** tsc ผ่าน · lint **0 errors** (26 warnings เดิม) · test **154 ไฟล์/924 ข้อผ่าน** (เพิ่ม `mobile-home-layout.test.tsx` 6 ข้อล็อกกติกาใหม่ + อัปเดต 2 เทสต์เดิมที่ล็อกค้นหาไว้บน header มือถือ) · build **214 หน้า** · เปิดจริง 375×812: ขอบซ้าย 20px ตรงกันทุกบล็อก (h1 · meta · h2 · pill แรก · SetPicker · ราง grade) · ราคาชิดขวา 355 ตรงกับป้ายเรียง 354 · sticky เกาะที่ 56px พอดี · FAB ค้นหา hit-test ผ่าน เปิด modal + โฟกัสช่องพิมพ์จริง · หัวใจ 44px ลิงก์ `/watchlist` · console 0 error · Light mode ปุ่มค้นหาใช้สีเดียวกับ CTA หลักของเว็บ (`#73533e` ขาวบนน้ำตาล ผ่าน AA) · desktop 1280px ไม่กระทบ (ตารางเดิม · ราง grade เหลือ 1 · chrome มือถือซ่อนหมด) · **แถวราคาแรก 608px → 496px (เร็วขึ้น 112px ≈ 2 แถว)** วัดเทียบ production จริง
+- [x] **MHOME-07 — เก็บบ้าน:** ลบ `/proto/mobile-home` แล้ว (งานขึ้น master `62516d6`)
+
+## 📱 Navbar มือถือ 2 แถว "ขัดเงา" (owner selected · 2026-08-29)
+
+> เบสเลือกจาก `/proto/mobile-navbar`: **แบบ "ขัดเงา" (2 แถวตรึง)** — แถว 1 = โลโก้ + ชื่อหน้า + รายการโปรด/แจ้งเตือน + บัญชี · แถว 2 = แถบบริบทเกม→ชุด พื้นหลังอ่อน มีภาพกล่องชุด + ชื่อเต็ม
+
+- [x] **MNAV-01 — Header 2 แถว:** `header-mobile.tsx` แยกเป็นแถว 1 (h-14: โลโก้ · ชื่อหน้าตาม route · หัวใจ · กระดิ่ง+badge · เส้นแบ่ง · avatar→`/more` หรือปุ่ม "เข้าสู่ระบบ" มีข้อความ) + แถว 2 (h-12 `bg-muted/30`: `HeaderCatalogControl` เต็มความกว้าง)
+- [x] **MNAV-02 — ชื่อหน้าตาม route:** resolver เล็กๆ แปลง pathname → ชื่อหน้าไทย (ใช้ dictionary keys เดิม: home/sets/watchlistNav/portfolioNav/more) fallback = ชื่อเว็บ
+- [x] **MNAV-03 — แถบบริบทโชว์ชุดที่เลือก:** `HeaderCatalogControl presentation="mobile"` ให้แสดงภาพกล่องชุด + `CODE` + ชื่อเต็มเมื่อเลือกชุดแล้ว (ตอนนี้เป็น pill ตัวหนังสือล้วนถูกบีบ) — ใช้ความกว้างที่แถว 2 ให้มา
+- [x] **MNAV-04 — `--chrome-h` มือถือ 3.5rem → 6.5rem:** sticky ทั้งเว็บอ่านค่านี้ (home market header · watchlist selection bar · card-detail section nav + scroll-mt · set-detail · profile tabs) ต้องเช็คว่าเลื่อนตามถูกทุกหน้า
+- [x] **MNAV-05 — Verify:** tsc ผ่าน · lint **0 errors** (26 warnings เดิม) · test **154 ไฟล์/924 ข้อผ่าน** (อัปเดตเทสต์ที่ล็อกแถวเดียว + `--chrome-h: 3.5rem` + ทรง trigger เดิม) · build **214 หน้า** · เปิดจริง 375×812: header 104px (56+48) · `--chrome-h` 6.5rem · ช่องเลือกชุด **123px → 258px** · แถบบริบทโชว์กล่อง OP15 + ชื่อเต็ม "Adventure on KAMI's Island" · ชื่อหน้าเปลี่ยนตาม route (หน้าแรก/ชุดการ์ด/รายการโปรด) · หัวใจติดสีทองตอนอยู่ `/watchlist` · sticky ทุกหน้าเกาะ 104px ไม่ทับ (หน้าแรก · ชุด · การ์ด) · desktop 1280px ไม่กระทบ (`--chrome-h` 8.25rem เดิม)
 
 ## 📐 Site-wide market canvas (owner direction · 2026-08-28)
 

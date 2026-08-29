@@ -46,6 +46,7 @@ export function MarketTable({
   surface = "card",
   showMobileSort = true,
   mobileSortAppearance = "soft",
+  mobileFlush = false,
   insetAfter,
   mobileInset,
   tableInset,
@@ -73,6 +74,13 @@ export function MarketTable({
   showMobileSort?: boolean
   /** Let a caller strengthen only its own mobile sort affordance. */
   mobileSortAppearance?: "soft" | "outline"
+  /**
+   * Cancel the rows' own 16px inset so their content lands on the page
+   * gutter instead of 36px in (Home, owner selection 2026-08-29 — the rows
+   * were the only block on that page not sharing its one gutter). Opt-in: a
+   * caller whose surface is not the page container keeps the padded rows.
+   */
+  mobileFlush?: boolean
   /** Insert an optional full-width row after this many cards. */
   insetAfter?: number
   /** Mobile-list presentation. It must return null when not eligible. */
@@ -120,7 +128,15 @@ export function MarketTable({
       )}
 
       {/* Mobile list fallback (<sm) */}
-      <div className={cn("divide-y divide-hair sm:hidden", isPending && "opacity-50 motion-base")}>
+      <div
+        className={cn(
+          "divide-y divide-hair sm:hidden",
+          // -mx-4 exactly cancels MobileCardItem's px-4: row content lands on
+          // the page gutter while the tap wash still runs nearly edge to edge.
+          mobileFlush && "-mx-4",
+          isPending && "opacity-50 motion-base",
+        )}
+      >
         {showSkeleton
           ? Array.from({ length: 6 }).map((_, i) => <MobileCardSkeleton key={i} />)
           : cards.map((card, i) => (

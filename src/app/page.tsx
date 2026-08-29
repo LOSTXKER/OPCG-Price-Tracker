@@ -202,9 +202,12 @@ export default async function HomePage() {
           gone and the strip's own heading + one-row rail introduce the table
           instead — collectors pick the set first, so the set links earn the
           headline slot. The crawlable links stay in the first HTML response. */}
-      <div className="mt-9 sm:mt-12">
+      {/* Phone spacing follows the 4px section scale (VISION §4 rule 5): the
+          old mt-9 was a nine-step gap paid above the fold on every visit.
+          Desktop keeps its more generous air. */}
+      <div className="mt-6 sm:mt-12">
         <HomeSetStrip sets={recentSets} />
-        <div className="mt-4 sm:mt-5">
+        <div className="mt-3 sm:mt-5">
           <HomeMarketOverview
             initialCards={tableCards}
             initialTotal={initialTableTotal}

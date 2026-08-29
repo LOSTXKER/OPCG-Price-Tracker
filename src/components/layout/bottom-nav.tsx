@@ -2,22 +2,27 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, Heart, LayoutGrid, LineChart, Menu } from "lucide-react";
+import { Briefcase, LayoutGrid, LineChart, Menu, Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
 import { isNavActive } from "@/lib/game/constants";
 import { useUIStore } from "@/stores/ui-store";
 
-// The 4 real-destination tabs. "More" is appended separately: it navigates to
-// /more like the rest, but it also lights up on any deep route none of these own
-// (settings/honey/decks/messages…), so the user never loses their sense of place
-// (iOS tab grammar). `owns` lists tab-less catalog routes that keep ชุดการ์ด lit
-// while browsing.
+// The 4 real-destination tabs, TWO EACH SIDE of the raised search button (owner
+// selection 2026-08-29 from /proto/mobile-home): an odd tab count is what lets
+// the button sit dead centre under the thumb. รายการโปรด gave up its slot and
+// moved to the phone header as a heart icon — same one-tap reach from every
+// route, and it lands in the slot the search icon vacated.
+//
+// "More" is appended separately: it navigates to /more like the rest, but it
+// also lights up on any deep route none of these own (settings/honey/decks/
+// messages/watchlist…), so the user never loses their sense of place (iOS tab
+// grammar). `owns` lists tab-less catalog routes that keep ชุดการ์ด lit while
+// browsing.
 const TABS = [
   { href: "/", key: "home", icon: LineChart, owns: [] as readonly string[] },
   { href: "/opcg/sets", key: "sets", icon: LayoutGrid, owns: ["/cards", "/search", "/trending", "/market-overview"] as readonly string[] },
-  { href: "/watchlist", key: "watchlistNav", icon: Heart, owns: [] as readonly string[] },
   { href: "/portfolio", key: "portfolioNav", icon: Briefcase, owns: [] as readonly string[] },
 ] as const;
 
@@ -78,7 +83,38 @@ function TabLink({
 }
 
 /**
- * Mobile bottom-nav — 5 FIXED tabs. Tab identity never changes (no feature-flag
+ * The one loud element on the phone: search as a raised round button in the
+ * middle of the tab bar. It is a BUTTON, not a tab — it opens the global
+ * search modal in place instead of navigating, so it never claims an "active"
+ * state and never takes the user off the page they are reading.
+ */
+function SearchTab({ label, onOpen }: { label: string; onOpen: () => void }) {
+  return (
+    <li className="min-w-0 flex-1">
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={label}
+        aria-haspopup="dialog"
+        className={cn(TAB_CLASS, "text-muted-foreground")}
+      >
+        {/* -mt-7 lifts the disc above the hairline; ring-4 in the page
+            background cuts it cleanly out of the bar instead of overlapping it. */}
+        <span className="ease-chrome flex size-14 -mt-7 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-4 ring-background active:brightness-95">
+          <Search className="size-6" strokeWidth={2.25} aria-hidden />
+        </span>
+        <span>{label}</span>
+        {/* Keeps the label baseline aligned with the neighbouring tabs, which
+            reserve this row for their active dot. */}
+        <span aria-hidden className="h-1 w-1" />
+      </button>
+    </li>
+  );
+}
+
+/**
+ * Mobile bottom-nav — 4 FIXED tabs around ONE raised search button (owner
+ * selection 2026-08-29). Tab identity never changes (no feature-flag
  * swapping); flag-gated features (marketplace, messages) live inside ชุดการ์ด /
  * Portfolio / More, not as tabs.
  *
@@ -90,10 +126,12 @@ export function BottomNav({ className }: { className?: string }) {
   const pathname = usePathname() ?? "/";
   const lang = useUIStore((s) => s.language);
   const unread = useUIStore((s) => s.unreadMessages);
+  const setSearchOpen = useUIStore((s) => s.setSearchOpen);
 
   const tabActive = TABS.map((tab) => isNavActive(pathname, tab.href, tab.owns));
-  // "More" owns everything the 4 tabs don't — /more itself plus every deep route
-  // none of them claim, so it is lit whenever no other tab is.
+  // "More" owns everything the tabs don't — /more itself plus every deep route
+  // none of them claim (watchlist included, where it lives in the TRACK group),
+  // so it is lit whenever no other tab is.
   const moreActive = !tabActive.some(Boolean);
 
   return (
@@ -105,13 +143,28 @@ export function BottomNav({ className }: { className?: string }) {
       aria-label="Navigation"
     >
       <ul className="mx-auto flex max-w-lg items-stretch justify-around">
-        {TABS.map((tab, i) => (
+        {TABS.slice(0, 2).map((tab, i) => (
           <TabLink
             key={tab.href}
             href={tab.href}
             label={t(lang, tab.key)}
             icon={tab.icon}
             active={tabActive[i]}
+          />
+        ))}
+
+        <SearchTab
+          label={t(lang, "search")}
+          onOpen={() => setSearchOpen(true)}
+        />
+
+        {TABS.slice(2).map((tab, i) => (
+          <TabLink
+            key={tab.href}
+            href={tab.href}
+            label={t(lang, tab.key)}
+            icon={tab.icon}
+            active={tabActive[i + 2]}
           />
         ))}
         <TabLink
