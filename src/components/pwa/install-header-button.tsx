@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Smartphone } from "lucide-react";
+import { SquarePlus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useInstallPrompt } from "@/hooks/use-install-prompt";
@@ -20,9 +20,12 @@ import { InstallGuideDialog } from "./install-guide-dialog";
  * invitation down in the last 30 days. For everyone else the row is exactly the
  * width it was before.
  *
- * The same `Smartphone` glyph names this action in `/more` — one icon per
- * concept across the site. The `+` badge is what separates "install this" from
- * a generic device icon at 18px.
+ * The glyph is `SquarePlus` — the same square-with-a-plus iOS itself puts next
+ * to "Add to Home Screen" in the Share sheet, so anyone who has done this once
+ * recognises it. It also names the action in `/more`: one icon per concept
+ * across the site. A device icon with a `+` badge was tried first and dropped —
+ * at 18px the badge hangs off the pill's rounded edge and the button stops
+ * matching its neighbours (owner, 2026-08-30).
  */
 export function InstallHeaderButton({ className }: { className?: string }) {
   const language = useUIStore((s) => s.language);
@@ -41,7 +44,7 @@ export function InstallHeaderButton({ className }: { className?: string }) {
         size="icon-sm"
         aria-label={t(language, "installAppTitle")}
         className={cn(
-          "surface-2 hairline relative min-h-11 min-w-11 rounded-full text-foreground",
+          "surface-2 hairline min-h-11 min-w-11 rounded-full text-foreground",
           className,
         )}
         onClick={() => {
@@ -49,11 +52,7 @@ export function InstallHeaderButton({ className }: { className?: string }) {
           else void promptInstall();
         }}
       >
-        <Smartphone className="size-[18px]" />
-        <Plus
-          aria-hidden
-          className="absolute top-1.5 right-1.5 size-3 rounded-full bg-primary text-primary-foreground"
-        />
+        <SquarePlus className="size-[18px]" />
       </Button>
       <InstallGuideDialog
         open={guideOpen}

@@ -181,8 +181,16 @@ describe("header catalog topology", () => {
     expect(mobile).toContain('className="flex h-12 min-w-0 items-center bg-muted/30')
     expect(mobile).toContain("px-2 sm:px-4")
     expect(mobile).toContain('presentation="mobile"')
+    // Owner call 2026-08-30: row 1's left is the WORDMARK, not the page name —
+    // bear and word share ONE link home (two adjacent controls going to the
+    // same place is a miss waiting to happen), and the page-name resolver is
+    // gone rather than left dangling.
     expect(mobile).toContain(
-      'className="mr-1 flex size-11 shrink-0 items-center justify-center"',
+      '<span className="text-h5 min-w-0 truncate text-foreground">Meecard</span>',
+    )
+    expect(mobile).not.toContain("resolvePageTitle")
+    expect(mobile).toContain(
+      'className="flex size-11 shrink-0 items-center justify-center"',
     )
     expect(mobile).toContain(
       'className="h-auto w-7 shrink-0 select-none min-[360px]:w-8"',
@@ -197,7 +205,16 @@ describe("header catalog topology", () => {
     expect(mobile).not.toContain("setSearchOpen(true)")
     expect(mobile).not.toContain('<Search className="size-[18px]" />')
     expect(mobile).toContain('<Heart className="size-[18px]" />')
-    expect(mobile).toContain("{isAuthenticated && <NotificationBell />}")
+    // Owner call 2026-08-30 ("จัดดีๆ"): the three tool buttons wear ONE shape,
+    // declared once. The bell used to be a bare glyph between two pills, which
+    // is what made the row look unfinished — assert it can't drift back.
+    expect(mobile).toContain(
+      'const TOOL_BUTTON = "surface-2 hairline min-h-11 min-w-11 rounded-full"',
+    )
+    expect(mobile).toContain(
+      "{isAuthenticated && <NotificationBell className={TOOL_BUTTON} />}",
+    )
+    expect(mobile).toContain("<InstallHeaderButton className={TOOL_BUTTON} />")
     // Owner decision 2026-08-27: the phone row's theme toggle moved to
     // "ดูเพิ่มเติม" so the set control could keep the width its name needs.
     // The desktop navbar revert (2026-08-28) does NOT undo that — the phone

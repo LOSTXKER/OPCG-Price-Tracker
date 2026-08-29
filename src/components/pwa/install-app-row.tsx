@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Smartphone } from "lucide-react";
+import { SquarePlus } from "lucide-react";
 
 import { GroupedRow } from "@/components/ui/grouped-list";
 import { useInstallPrompt } from "@/hooks/use-install-prompt";
@@ -30,7 +30,7 @@ export function InstallAppRow() {
   return (
     <>
       <GroupedRow
-        icon={Smartphone}
+        icon={SquarePlus}
         iconClassName="bg-primary/12 text-primary"
         title={t(language, "installAppTitle")}
         subtitle={t(language, "installAppSubtitle")}

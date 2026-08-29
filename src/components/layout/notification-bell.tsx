@@ -37,7 +37,7 @@ type NotificationItem = {
 
 type TabKey = "system" | "price";
 
-export function NotificationBell() {
+export function NotificationBell({ className }: { className?: string } = {}) {
   const lang = useUIStore((s) => s.language);
   const currency = useUIStore((s) => s.currency);
 
@@ -117,7 +117,10 @@ export function NotificationBell() {
         render={
           <button
             type="button"
-            className="relative flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground lg:size-8"
+            className={cn(
+              "relative flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors ease-chrome hover:bg-muted hover:text-foreground lg:size-8",
+              className,
+            )}
             aria-label={t(lang, "notifications")}
           />
         }

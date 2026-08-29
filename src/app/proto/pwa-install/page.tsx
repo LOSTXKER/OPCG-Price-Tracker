@@ -8,9 +8,8 @@ import {
   ChevronRight,
   Heart,
   Moon,
-  Plus,
   Share,
-  Smartphone,
+  SquarePlus,
   Sun,
   X,
 } from "lucide-react";
@@ -44,11 +43,11 @@ const COPY: Record<Way, { name: string; summary: string; tradeoff: string }> = {
       "คนที่เข้าเว็บทุกวันต้องพิมพ์ที่อยู่หรือหาในบุ๊กมาร์กทุกครั้ง · รอบนี้พื้นฐานทั้งหมดทำเสร็จแล้ว (ไอคอนหมี · เปิดแบบเต็มจอไม่มีแถบ Safari · หน้าจอตอนไม่มีเน็ต) เหลือแค่เคาะว่า “ปุ่มชวนติดตั้ง” จะโผล่ตรงไหน",
   },
   icon: {
-    name: "ก · ปุ่มไอคอนในแถวบน ข้างหัวใจ",
+    name: "ก · ปุ่มไอคอนในแถวบน ข้างหัวใจ — เบสเคาะแล้ว ลงเว็บจริงแล้ว",
     summary:
-      "ปุ่มเล็กๆ รูปมือถือมีเครื่องหมายบวก แทรกอยู่ในแถวบนสุด ข้างปุ่มรายการโปรด — โผล่เฉพาะคนที่ยังไม่ติดตั้ง พอติดตั้งแล้วหายไปเอง กดแล้วเด้งแผ่นติดตั้งของเครื่องขึ้นมาทันที",
+      "ปุ่มสี่เหลี่ยมมีเครื่องหมายบวก (ไอคอนเดียวกับที่ iPhone ใช้ใน “เพิ่มไปยังหน้าจอโฮม”) แทรกในแถวบนสุด ข้างปุ่มรายการโปรด — โผล่เฉพาะคนที่ยังไม่ติดตั้ง พอติดตั้งแล้วหายไปเอง กดแล้วเด้งแผ่นติดตั้งของเครื่องทันที · รอบจัดใหม่ตามที่เบสสั่ง: ชื่อหน้ากลายเป็นคำว่า Meecard และปุ่มเครื่องมือ 3 ตัวใส่ทรงเดียวกันหมด (เดิมกระดิ่งไม่มีวงกลม แถวเลยดูไม่จบ)",
     tradeoff:
-      "แถวบนแน่นอยู่แล้ว (หมี + ชื่อหน้า + หัวใจ + กระดิ่ง + บัญชี) เพิ่มอีกปุ่มกินไปอีก 44px → ชื่อหน้าโดนบีบ และบนจอ 360px ปุ่มจะเบียดกันจนอ่านยาก · ไอคอนโดดๆ ไม่มีคำอธิบาย คนส่วนใหญ่จะไม่รู้ว่ากดแล้วได้อะไร จึงไม่กด",
+      "กินความกว้างของแถวไป 44px — วัดที่จอ 360px แล้วยังพอ: ปุ่มทุกตัวยัง 44px ครบ และแบรนด์ได้ที่ 155px · ข้อแลกที่เหลืออยู่คือไอคอนไม่มีคำอธิบาย คนที่ไม่เคยติดตั้งเว็บเป็นแอปมาก่อนอาจไม่กด — ถ้าอยากได้คนติดตั้งเยอะกว่านี้ ต้องเสริมแบบ ข หรือ ค",
   },
   bar: {
     name: "ข · แถบเชิญชวนบางๆ เหนือแถบบน",
@@ -112,18 +111,17 @@ function MobileHeaderRow({ showInstallIcon }: { showInstallIcon: boolean }) {
         />
       </span>
       <span className="text-h5 min-w-0 flex-1 truncate text-foreground">
-        หน้าแรก
+        Meecard
       </span>
       {showInstallIcon && (
-        <span className="surface-2 hairline relative flex min-h-11 min-w-11 items-center justify-center rounded-full text-foreground">
-          <Smartphone className="size-[18px]" />
-          <Plus className="absolute right-2 top-2 size-3 rounded-full bg-primary text-primary-foreground" />
+        <span className="surface-2 hairline flex min-h-11 min-w-11 items-center justify-center rounded-full text-foreground">
+          <SquarePlus className="size-[18px]" />
         </span>
       )}
       <span className="surface-2 hairline flex min-h-11 min-w-11 items-center justify-center rounded-full text-foreground">
         <Heart className="size-[18px]" />
       </span>
-      <span className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-foreground">
+      <span className="surface-2 hairline flex min-h-11 min-w-11 items-center justify-center rounded-full text-foreground">
         <Bell className="size-[18px]" />
       </span>
       <span aria-hidden className="mx-1 h-5 w-px shrink-0 bg-hair" />
@@ -332,7 +330,7 @@ function MoreRow() {
   return (
     <div className="hairline flex items-center gap-3 rounded-xl bg-card px-4 py-3">
       <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
-        <Smartphone className="size-[18px]" />
+        <SquarePlus className="size-[18px]" />
       </span>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium leading-tight">เพิ่มไปหน้าจอโฮม</p>

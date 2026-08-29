@@ -14,23 +14,15 @@ import type { SetPickerItem } from "@/components/shared/set-picker";
 import { useScrolled } from "@/hooks/use-scrolled";
 import { useUIStore } from "@/stores/ui-store";
 import { isNavActive } from "@/lib/game/constants";
-import { t, type Language } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 /**
- * What row 1's middle says. Keyed off the same routes the bottom nav owns, so
- * the two always agree on what the current place is called; anything deeper
- * (a card, a set, settings…) falls back to the site name rather than guessing.
+ * The one pill shape shared by every tool button in row 1 (install, watchlist,
+ * alerts). Defined once so a fourth button can never quietly arrive wearing a
+ * different shape — the failure mode that made this row look unfinished.
  */
-function resolvePageTitle(pathname: string, language: Language): string {
-  if (pathname === "/") return t(language, "home");
-  if (isNavActive(pathname, "/opcg/sets", ["/cards", "/search", "/trending", "/market-overview"]))
-    return t(language, "sets");
-  if (isNavActive(pathname, "/watchlist")) return t(language, "watchlistNav");
-  if (isNavActive(pathname, "/portfolio")) return t(language, "portfolioNav");
-  if (isNavActive(pathname, "/more")) return t(language, "more");
-  return "Meecard";
-}
+const TOOL_BUTTON = "surface-2 hairline min-h-11 min-w-11 rounded-full";
 
 /**
  * Phone chrome: brand, the global Game → Set catalog control, and route-aware
@@ -96,9 +88,12 @@ export function HeaderMobile({
           scrolled ? "hairline-b bg-background" : "bg-transparent",
         )}
       >
-      {/* Row 1 — identity + account. The middle carries the PAGE NAME, not the
-          wordmark: the bear already says which site this is, so the space is
-          better spent saying where you are (iOS toolbar grammar). */}
+      {/* Row 1 — identity + account. The left carries the WORDMARK, not the page
+          name (owner call 2026-08-30): the row below already says which game and
+          set you are looking at, and the bottom nav highlights the current tab,
+          so a third "where am I" label was the least useful thing in the row.
+          Bear and word are one tap target — two adjacent controls that both go
+          home is a miss waiting to happen. */}
       <div
         data-mobile-header-row="primary"
         className="flex h-14 min-w-0 items-center px-2 sm:px-4"
@@ -106,26 +101,29 @@ export function HeaderMobile({
         <Link
           href="/"
           aria-label="Meecard"
-          className="mr-1 flex size-11 shrink-0 items-center justify-center"
+          className="mr-1 flex min-w-0 flex-1 items-center gap-1.5"
         >
-          <Image
-            src="/meecard.png"
-            alt=""
-            width={754}
-            height={694}
-            className="h-auto w-7 shrink-0 select-none min-[360px]:w-8"
-          />
+          <span className="flex size-11 shrink-0 items-center justify-center">
+            <Image
+              src="/meecard.png"
+              alt=""
+              width={754}
+              height={694}
+              className="h-auto w-7 shrink-0 select-none min-[360px]:w-8"
+            />
+          </span>
+          <span className="text-h5 min-w-0 truncate text-foreground">Meecard</span>
         </Link>
 
-        <span className="text-h5 min-w-0 flex-1 truncate text-foreground">
-          {resolvePageTitle(pathname, language)}
-        </span>
+        {/* The three tool buttons share ONE shape — `TOOL_BUTTON` — so the row
+            reads as a set. The bell used to be a bare glyph between two pills,
+            which is what made the row look unfinished (owner, 2026-08-30). */}
 
         {/* Renders nothing at all unless this browser can install AND the
             visitor hasn't already installed or waved it away — so the row keeps
             its original width for everyone else, including every desktop
             browser and every repeat visitor who has the app. */}
-        <InstallHeaderButton />
+        <InstallHeaderButton className={TOOL_BUTTON} />
 
         <Button
           data-mobile-watchlist-trigger
@@ -136,7 +134,7 @@ export function HeaderMobile({
             isNavActive(pathname, "/watchlist") ? "page" : undefined
           }
           className={cn(
-            "surface-2 hairline min-h-11 min-w-11 rounded-full",
+            TOOL_BUTTON,
             isNavActive(pathname, "/watchlist")
               ? "text-primary"
               : "text-foreground",
@@ -146,7 +144,7 @@ export function HeaderMobile({
           <Heart className="size-[18px]" />
         </Button>
 
-        {isAuthenticated && <NotificationBell />}
+        {isAuthenticated && <NotificationBell className={TOOL_BUTTON} />}
 
         {/* Tools (watchlist, alerts) end here; the account begins after the
             rule. Four undifferentiated icons read as one blur without it. */}
