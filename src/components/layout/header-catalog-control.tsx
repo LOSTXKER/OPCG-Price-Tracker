@@ -482,53 +482,26 @@ export function HeaderCatalogControl({
         "surface-2 hairline ease-chrome flex min-w-0 items-center gap-1.5 rounded-full text-left text-label text-foreground transition-colors hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
         presentation === "mobile"
           ? "h-11 min-w-11 flex-1 px-2 min-[480px]:max-w-56"
-          : "h-11 w-44 px-2.5 lg:h-10 lg:w-40 lg:py-1 lg:pe-2.5 lg:ps-1 xl:w-56",
+          : "h-11 w-40 px-2.5 lg:h-8 lg:w-48",
       )}
     />
   )
 
-  const boxArt = selectedSet?.boxImageUrl ?? null
-
   const triggerContent = (
     <>
-      {/* Desktop shows the set's packaging art when we have it — collectors
-          recognise a box long before they recognise "op14" (same reasoning as
-          the home set strip). PackageOpen stays as the fallback glyph, and the
-          mobile trigger keeps neither: its width belongs to the set name. */}
-      {presentation === "desktop" && boxArt ? (
-        <span className="relative hidden h-8 w-[1.43rem] shrink-0 overflow-hidden rounded-md bg-muted lg:block">
-          <Image
-            src={boxArt}
-            alt=""
-            fill
-            sizes="23px"
-            className="select-none object-cover"
-          />
-        </span>
-      ) : (
-        <PackageOpen
-          className={cn(
-            "size-3.5 shrink-0 text-muted-foreground",
-            presentation === "mobile" && "hidden",
-          )}
-          aria-hidden
-        />
-      )}
+      <PackageOpen
+        className={cn(
+          "size-3.5 shrink-0 text-muted-foreground",
+          presentation === "mobile" && "hidden",
+        )}
+        aria-hidden
+      />
       <span className="min-w-0 flex-1 truncate">
         {presentation === "mobile" ? (
           <>
             <span className="min-[430px]:hidden">{compactTriggerLabel}</span>
             <span className="hidden min-[430px]:inline">
               {triggerLabel}
-            </span>
-          </>
-        ) : selectedSet ? (
-          <>
-            <span className="block truncate text-xs font-semibold leading-tight text-foreground">
-              {selectedSet.code}
-            </span>
-            <span className="hidden truncate text-xs leading-tight text-muted-foreground xl:block">
-              {selectedName}
             </span>
           </>
         ) : (

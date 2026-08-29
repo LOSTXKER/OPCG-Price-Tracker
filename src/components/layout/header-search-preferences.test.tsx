@@ -25,19 +25,10 @@ function occurrences(value: string, needle: string): number {
  *     own (plain text, never chips, no green on chrome), and the search field
  *     moved to the FAR RIGHT of the nav row, after Honey.
  *
- *  5. 2026-08-29 ("navbar D2", picked from /proto/navbar-ecom): the strip and
- *     the old brand row FOLDED INTO ONE 48px row — Game → Set leads it, the
- *     figures and movers follow, account closes it — and the brand mark moved
- *     DOWN to lead the nav row. Two figures (set count, last-updated) fold away
- *     so the movers rail keeps room. Chrome height 132px → 104px.
- *
- *  6. later the same day: search and account swapped rows one more time —
- *     search joined the catalog row (ahead of upgrade), and chat, alerts and
- *     the profile menu came down to sit after Honey.
- *
- *   Row 1 (48px):  Game → Set · figures · movers · SEARCH FIELD · upgrade
- *   Row 2 (56px):  BRAND · nav hubs · portfolio/watchlist/honey ·
+ *   Strip (28px):  market figures · "อัปเดตล่าสุด"
+ *   Row 1 (44px):  brand · Game → Set · upgrade ·
  *                  chat/notifications/account-menu (or guest gear)
+ *   Row 2 (56px):  nav hubs · portfolio/watchlist/honey · SEARCH FIELD
  *
  * These tests lock that shape so a later refactor cannot quietly reintroduce a
  * rejected variant. What did NOT move: the phone header keeps its own search
@@ -53,8 +44,7 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
       header.indexOf("<header"),
     )
 
-    // navbar D2: the brand LEFT this row for the nav row below.
-    expect(ticker).not.toContain('aria-label="Meecard"')
+    expect(ticker).toContain('aria-label="Meecard"')
     expect(ticker).toContain("<HeaderCatalogControl")
     expect(ticker).toContain('presentation="desktop"')
     for (const figure of ["totalCards", "totalValue", "exchangeRate", "JPY/THB"]) {
@@ -87,7 +77,7 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     expect(ticker).toContain("children")
   })
 
-  it("puts the search field in row 1 and the account menu in row 2, never the reverse", () => {
+  it("puts the account menu in row 1 and the search field in row 2, never the reverse", () => {
     const header = source("src/components/layout/header.tsx")
     const primaryRow = header.indexOf("<header")
     const userMenu = header.indexOf("<HeaderUserMenu")
@@ -96,26 +86,19 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     expect(primaryRow).toBeGreaterThan(-1)
     expect(occurrences(header, "<HeaderUserMenu")).toBe(1)
     expect(occurrences(header, "<CommandSearchTrigger")).toBe(1)
-    // navbar D2, second pass (owner call 2026-08-29): search and account
-    // SWAPPED rows again. Search now rides the catalog row — the row already
-    // says what catalog you are in, so the way to search inside it belongs
-    // there — and everything that is "yours" (portfolio, watchlist, Honey,
-    // chat, alerts, profile) gathers in the nav row below.
-    expect(searchTrigger).toBeLessThan(primaryRow)
-    expect(userMenu).toBeGreaterThan(primaryRow)
-    // navbar D2: the brand came DOWN into this row and leads it.
-    expect(header).toContain('src="/meecard.png"')
-    expect(header.indexOf('src="/meecard.png"')).toBeGreaterThan(primaryRow)
-    expect(header.indexOf('src="/meecard.png"')).toBeLessThan(
-      header.indexOf('href="/portfolio"'),
-    )
+    // Account renders inside the ticker element, which opens before <header>.
+    expect(userMenu).toBeLessThan(primaryRow)
+    // Search renders inside <header>, after it opens.
+    expect(searchTrigger).toBeGreaterThan(primaryRow)
+    // The brand left row 2 so the search field could have that width.
+    expect(header).not.toContain('src="/meecard.png"')
     // The saved-state links stay in row 2 beside search.
     expect(header).toContain('href="/portfolio"')
     expect(header).toContain('href="/watchlist"')
     expect(header).toContain('href="/honey"')
-    // Account closes the nav row, right after Honey — one unbroken run of
-    // "yours" from portfolio through the profile menu.
-    expect(header.indexOf('href="/honey"')).toBeLessThan(userMenu)
+    // navbar แบบ C: search closes the row at its far right, AFTER Honey —
+    // the nav reads uninterrupted from the left.
+    expect(header.indexOf('href="/honey"')).toBeLessThan(searchTrigger)
   })
 
   it("reaches language, currency and theme from both the account menu and the guest gear", () => {
