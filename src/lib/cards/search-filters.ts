@@ -5,18 +5,21 @@ export interface SearchFilters {
   rarities: string[]
   types: string[]
   colors: string[]
+  /** ลายศิลป์พิเศษ (มังงะ · มังงะแดง · ใบประกาศจับ) — ดู `@/lib/constants/card-art-style` */
+  artStyles: string[]
   variant: SearchVariant
   minPrice: string
   maxPrice: string
 }
 
-export type SearchMultiFilterKey = "rarities" | "types" | "colors"
+export type SearchMultiFilterKey = "rarities" | "types" | "colors" | "artStyles"
 
 export interface SerializedSearchFilters {
   set?: string
   rarity?: string
   type?: string
   color?: string
+  artStyle?: string
   variant?: Exclude<SearchVariant, "">
   minPrice?: number
   maxPrice?: number
@@ -44,6 +47,7 @@ export function createEmptySearchFilters(): SearchFilters {
     rarities: [],
     types: [],
     colors: [],
+    artStyles: [],
     variant: "",
     minPrice: "",
     maxPrice: "",
@@ -70,6 +74,7 @@ export function resetSearchModalFilters(filters: SearchFilters): SearchFilters {
     rarities: [],
     types: [],
     colors: [],
+    artStyles: [],
     variant: "",
     minPrice: "",
     maxPrice: "",
@@ -87,6 +92,7 @@ export function serializeSearchFilters(filters: SearchFilters): SerializedSearch
     rarity: filters.rarities.join(",") || undefined,
     type: filters.types.join(",") || undefined,
     color: filters.colors.join(",") || undefined,
+    artStyle: filters.artStyles.join(",") || undefined,
     variant: filters.variant || undefined,
     minPrice: positiveInteger(filters.minPrice),
     maxPrice: positiveInteger(filters.maxPrice),
@@ -97,6 +103,7 @@ export function countSearchModalFilters(filters: SearchFilters): number {
   return filters.rarities.length
     + filters.types.length
     + filters.colors.length
+    + filters.artStyles.length
     + (filters.variant ? 1 : 0)
     + (positiveInteger(filters.minPrice) ? 1 : 0)
     + (positiveInteger(filters.maxPrice) ? 1 : 0)

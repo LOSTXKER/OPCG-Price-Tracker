@@ -3,6 +3,7 @@
 import { Bell, Eye, Share2 } from "lucide-react"
 
 import { RarityBadge } from "@/components/shared/rarity-badge"
+import { ArtStyleBadge } from "@/components/shared/art-style-badge"
 import { WatchlistHeart } from "@/components/shared/watchlist-heart"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { t, type Language } from "@/lib/i18n"
@@ -87,6 +88,7 @@ export function CardDetailIdentity({
       </div>
       <div className="text-meta mt-1 flex flex-wrap items-center gap-1.5">
         <RarityBadge rarity={card.rarity} size="sm" />
+        <ArtStyleBadge cardCode={card.cardCode} />
         {/* The official card number, without our internal `_p3` printing suffix
             (owner decision) — the rarity badge beside it already says P-SEC. */}
         <span>· {baseCardCode(card.cardCode)}</span>

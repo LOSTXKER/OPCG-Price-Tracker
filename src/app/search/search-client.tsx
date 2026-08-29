@@ -66,6 +66,12 @@ const SORT_KEYS: { value: SortKey; key: "sortPriceDesc" | "sortPriceAsc" | "sort
   { value: "name", key: "sortNameAz" },
 ]
 
+const ART_STYLE_OPTIONS = [
+  { value: "manga", key: "artStyleManga" },
+  { value: "mangaRed", key: "artStyleMangaRed" },
+  { value: "wanted", key: "artStyleWanted" },
+] as const
+
 function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
   const lang = useUIStore((s) => s.language)
   const [showFilters, setShowFilters] = useState(false)
@@ -313,6 +319,58 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
         onReset={resetModalFilters}
         resetDisabled={modalFilterCount === 0}
       >
+        {variantOptions.length > 0 && (
+          <div>
+            <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
+            <div className="flex flex-wrap gap-1.5">
+              {variantOptions.map((option) => {
+                const active = filters.variant === option.code
+                return (
+                  <button
+                    key={option.code}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => handleVariantChange(active ? "" : option.code)}
+                    className={cn(
+                      "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
+                      active
+                        ? "border-primary/40 bg-primary/5 text-primary"
+                        : "border-hair bg-background text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        <div>
+          <span className="mb-1.5 block text-eyebrow">{t(lang, "artStyle")}</span>
+          <div className="flex flex-wrap gap-1.5">
+            {ART_STYLE_OPTIONS.map((option) => {
+              const active = filters.artStyles.includes(option.value)
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => handleMultiFilterToggle("artStyles", option.value)}
+                  className={cn(
+                    "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
+                    active
+                      ? "border-primary/40 bg-primary/5 text-primary"
+                      : "border-hair bg-background text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {t(lang, option.key)}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
         {rarityOptions.length > 0 && (
           <div>
             <span className="mb-1.5 block text-eyebrow">{t(lang, "rarity")}</span>
@@ -388,33 +446,6 @@ function SearchContent({ sets, game }: { sets: SetOption[]; game: string }) {
                     )}
                   >
                     <span className={cn("size-2.5 rounded-full", option.dot)} />
-                    {option.label}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        )}
-
-        {variantOptions.length > 0 && (
-          <div>
-            <span className="mb-1.5 block text-eyebrow">{t(lang, "variant")}</span>
-            <div className="flex flex-wrap gap-1.5">
-              {variantOptions.map((option) => {
-                const active = filters.variant === option.code
-                return (
-                  <button
-                    key={option.code}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => handleVariantChange(active ? "" : option.code)}
-                    className={cn(
-                      "ease-chrome min-h-11 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors md:min-h-0",
-                      active
-                        ? "border-primary/40 bg-primary/5 text-primary"
-                        : "border-hair bg-background text-muted-foreground hover:text-foreground",
-                    )}
-                  >
                     {option.label}
                   </button>
                 )

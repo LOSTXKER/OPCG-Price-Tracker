@@ -7,6 +7,7 @@ import Link from "next/link"
 import { CardImageButton } from "@/components/shared/card-image-button"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { WatchlistHeart } from "@/components/shared/watchlist-heart"
+import { ArtStyleBadge } from "@/components/shared/art-style-badge"
 import { Price } from "@/components/shared/price-inline"
 import { PriceUsd } from "@/components/shared/price-usd"
 import { MiniSparkline } from "@/components/ui/mini-sparkline"
@@ -83,7 +84,10 @@ export const MarketTableRow = memo(function MarketTableRow({
               <div className="relative size-10 shrink-0 overflow-hidden rounded-md bg-muted" />
             )}
             <Link href={`/opcg/cards/${card.cardCode}`} className="min-w-0">
-              <p className="truncate text-sm font-medium leading-tight hover:underline">{name}</p>
+              <p className="flex min-w-0 items-center gap-1.5 text-sm font-medium leading-tight">
+                <span className="truncate hover:underline">{name}</span>
+                <ArtStyleBadge cardCode={card.cardCode} />
+              </p>
               <p className="mt-0.5 font-mono text-xs text-muted-foreground">
                 {card.baseCode ?? card.cardCode}
                 {card.isParallel && <span className="ml-1 text-muted-foreground/70">P</span>}

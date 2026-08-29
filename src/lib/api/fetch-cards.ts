@@ -10,6 +10,8 @@ export interface FetchCardsParams {
   type?: string;
   /** "regular" | "parallel" — filters by isParallel; omit for both. */
   variant?: string;
+  /** "manga" | "mangaRed" | "wanted" (csv) — art style registry, see card-art-style. */
+  artStyle?: string;
   page?: number;
   limit?: number;
   minPrice?: number;

@@ -5,6 +5,7 @@ import { buildCardSearchFacets } from "@/lib/cards/search-filters";
 import { prisma } from "@/lib/db";
 import { PRICE_SOURCE } from "@/lib/constants/prices";
 import { buildCardSetScope } from "@/lib/game/card-scope";
+import { CARD_ART_STYLE, type CardArtStyle } from "@/lib/constants/card-art-style";
 import {
   GRADE_TIER_BY_KEY,
   isRawGrade,
@@ -70,13 +71,34 @@ export const GET = apiHandler(async (request: NextRequest) => {
     }
     if (validTypes.length > 0) where.cardType = { in: validTypes };
   }
+  // Every additional AND-clause goes through this list — assigning `where.AND`
+  // directly would silently drop whichever filter ran first.
+  const andFilters: Prisma.CardWhereInput[] = [];
   if (color) {
     const colors = splitCsv(color);
     const singleColors = colors.filter((value) => value !== "multi");
     const colorFilters: Prisma.CardWhereInput[] = [];
     if (singleColors.length > 0) colorFilters.push({ colorEn: { in: singleColors } });
     if (colors.includes("multi")) colorFilters.push({ colorEn: { contains: "/" } });
-    if (colorFilters.length > 0) where.AND = [{ OR: colorFilters }];
+    if (colorFilters.length > 0) andFilters.push({ OR: colorFilters });
+  }
+
+  // Art style (manga / red manga / wanted poster) is not a column: Bandai does
+  // not print it and the price scraper never sees it, so it lives as a hand-kept
+  // registry of card codes. Small enough (tens of cards) to send as an `in` list.
+  const artStyle = searchParams.get("artStyle") || "";
+  if (artStyle) {
+    const wanted = splitCsv(artStyle);
+    const valid = wanted.filter((value): value is CardArtStyle =>
+      value === "manga" || value === "mangaRed" || value === "wanted",
+    );
+    if (valid.length !== wanted.length) {
+      return NextResponse.json({ error: "Invalid art style" }, { status: 400 });
+    }
+    const styleCodes = Object.entries(CARD_ART_STYLE)
+      .filter(([, style]) => valid.includes(style))
+      .map(([cardCode]) => cardCode);
+    andFilters.push({ cardCode: { in: styleCodes } });
   }
   const variant = searchParams.get("variant") || "";
   const gradeParam = searchParams.get("grade");
@@ -106,6 +128,8 @@ export const GET = apiHandler(async (request: NextRequest) => {
   } else if (variant === "regular") {
     where.isParallel = false;
   }
+
+  if (andFilters.length > 0) where.AND = andFilters;
 
   if (!rawGrade) {
     where.prices = {

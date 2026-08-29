@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { BLUR_DATA_URL } from "@/lib/constants/ui"
 import { getCardName } from "@/lib/i18n"
 import { RarityBadge } from "@/components/shared/rarity-badge"
+import { ArtStyleBadge } from "@/components/shared/art-style-badge"
 import { Surface } from "@/components/ui/surface"
 import { useUIStore } from "@/stores/ui-store"
 import {
@@ -141,6 +142,7 @@ function CardItemBase({
       <div className="flex flex-1 flex-col p-2.5">
         <div className="mb-0.5 flex items-center gap-1.5">
           <RarityBadge rarity={rarity} size="sm" />
+          <ArtStyleBadge cardCode={cardCode} />
           {setCode &&
             (linkSet ? (
               <span

@@ -30,6 +30,7 @@ describe("search filter state", () => {
       rarities: ["SEC", "SR"],
       types: ["LEADER"],
       colors: ["Yellow"],
+      artStyles: ["mangaRed"],
       variant: "parallel",
       minPrice: "100",
       maxPrice: "5000",
@@ -39,8 +40,8 @@ describe("search filter state", () => {
       ...createEmptySearchFilters(),
       set: "OP13",
     })
-    expect(countSearchModalFilters(filters)).toBe(7)
-    expect(countAllSearchFilters(filters)).toBe(8)
+    expect(countSearchModalFilters(filters)).toBe(8)
+    expect(countAllSearchFilters(filters)).toBe(9)
   })
 
   it("serializes comma filters and ignores non-positive prices", () => {
@@ -49,6 +50,7 @@ describe("search filter state", () => {
       rarities: ["SEC", "SR"],
       types: ["LEADER", "CHARACTER"],
       colors: ["Yellow", "multi"],
+      artStyles: ["manga", "wanted"],
       variant: "regular",
       minPrice: "0",
       maxPrice: "5000",
@@ -57,6 +59,7 @@ describe("search filter state", () => {
       rarity: "SEC,SR",
       type: "LEADER,CHARACTER",
       color: "Yellow,multi",
+      artStyle: "manga,wanted",
       variant: "regular",
       minPrice: undefined,
       maxPrice: 5000,

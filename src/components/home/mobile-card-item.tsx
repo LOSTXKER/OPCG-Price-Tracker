@@ -6,6 +6,7 @@ import Link from "next/link"
 
 import { CardImageButton } from "@/components/shared/card-image-button"
 import { WatchlistHeart } from "@/components/shared/watchlist-heart"
+import { ArtStyleBadge } from "@/components/shared/art-style-badge"
 import { RarityBadge } from "@/components/shared/rarity-badge"
 import { Price } from "@/components/shared/price-inline"
 import { PriceUsd } from "@/components/shared/price-usd"
@@ -86,7 +87,12 @@ export const MobileCardItem = memo(function MobileCardItem({
         className="flex min-w-0 flex-1 items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium leading-tight">{name}</p>
+          {/* ป้ายลายศิลป์อยู่ท้ายชื่อ ไม่ใช่บรรทัดล่าง — บรรทัดล่างเต็มพอดีอยู่แล้ว
+              (รหัส + ความหายาก = 111px จาก 116px) เจ้าของงานเคาะแบบนี้ 2026-08-30 */}
+          <p className="flex min-w-0 items-center gap-1.5 text-sm font-medium leading-tight">
+            <span className="truncate">{name}</span>
+            <ArtStyleBadge cardCode={card.cardCode} compact />
+          </p>
           {/* รหัส + rarity ต้องอยู่บรรทัดเดียวเสมอ: พอปุ่มโปรดมาอยู่ขวาสุด
               บรรทัดนี้เหลือที่ราว 116px ซึ่งพอดีเป๊ะกับรหัส 8 ตัว + ป้าย —
               ปล่อยไว้เฉยๆ รหัสยาวกว่านั้นจะขึ้นบรรทัดใหม่ แถวสูงไม่เท่ากันทั้งหน้า */}

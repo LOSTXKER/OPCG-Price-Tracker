@@ -86,7 +86,27 @@ export function HomeMarketOverview({
 }) {
   const lang = useUIStore((s) => s.language)
 
+  // ลำดับในกล่องตัวกรอง: เวอร์ชันกับลายศิลป์ขึ้นก่อน (เจ้าของงานเคาะ 2026-08-30)
+  // — สองอันนี้คือ "งานพิมพ์ไหนของการ์ดใบเดียวกัน" ซึ่งเป็นสิ่งที่คนเลือกก่อน
+  // ส่วนความหายาก/ประเภท/สี เป็นการกรองข้ามการ์ดหลายใบ จึงอยู่ถัดลงมา
   const allFilterDefs: FilterDefinition[] = [
+    {
+      key: "variant",
+      label: t(lang, "variant"),
+      options: [
+        { value: "regular", label: t(lang, "regular") },
+        { value: "parallel", label: t(lang, "parallel") },
+      ],
+    },
+    {
+      key: "artStyle",
+      label: t(lang, "artStyle"),
+      options: [
+        { value: "manga", label: t(lang, "artStyleManga") },
+        { value: "mangaRed", label: t(lang, "artStyleMangaRed") },
+        { value: "wanted", label: t(lang, "artStyleWanted") },
+      ],
+    },
     ...filterDefinitions
       .filter((f) => f.key !== "set")
       .map((f) => ({
@@ -104,14 +124,6 @@ export function HomeMarketOverview({
       key: "color",
       label: t(lang, "color"),
       options: getColorOptions(lang),
-    },
-    {
-      key: "variant",
-      label: t(lang, "variant"),
-      options: [
-        { value: "regular", label: t(lang, "regular") },
-        { value: "parallel", label: t(lang, "parallel") },
-      ],
     },
   ]
 
