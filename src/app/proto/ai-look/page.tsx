@@ -20,7 +20,7 @@ const OPTIONS = [
   { value: "warm", label: "A · เรืองแสงโทนเรา" },
   { value: "aurora", label: "B · รุ้งแบบที่ส่งมา" },
   { value: "edge", label: "C · ขอบไล่สีวิ่ง" },
-  { value: "still", label: "D · ขอบไล่สีนิ่ง" },
+  { value: "still", label: "D · ขอบไล่สีไหลวน" },
 ] as const
 
 const VALUES = OPTIONS.map((o) => o.value)
@@ -47,11 +47,11 @@ const COPY: Record<Look, { name: string; summary: string; tradeoff: string }> = 
       "สีชุดนี้ไม่มีอยู่ในเว็บเราเลยสักที่ — ทั้งเว็บเป็นน้ำตาล/ทอง/ครีม พอมีม่วงฟ้าโผล่มาจุดเดียวจะอ่านเป็น \"ของนอก\" ที่หลุดเข้ามา หรืออ่านเป็น \"ของพิเศษ\" ก็ได้ · ต้องเบสตัดสินว่ารับได้ไหม",
   },
   still: {
-    name: "D · ขอบไล่สีนิ่ง — เส้นเดียวกัน แต่ไม่ขยับ",
+    name: "D · ขอบไล่สีไหลวน — สีเลื่อน ไม่ใช่แผ่นหมุน",
     summary:
-      "ขอบไล่สีเหมือนแบบ C ทุกอย่าง แต่หยุดนิ่ง ไม่หมุน — ไล่จากมุมบนซ้ายที่สว่างสุด ลงไปมุมล่างขวาที่เข้มขึ้น เหมือนขอบโลหะที่รับแสงจากมุมเดียว · ยังบอกว่า \"อันนี้พิเศษ\" ได้ แต่ไม่มีอะไรขยับให้สายตาต้องตาม",
+      "ใช้การไล่สีแบบเส้นตรงมุมบนซ้าย→ล่างขวาเหมือนที่เบสชอบ แล้วให้ \"สีเลื่อนไหล\" ไปเรื่อยๆ แทนที่จะหมุนทั้งแผ่นแบบ C · สีต้นกับปลายเป็นสีเดียวกัน ลายจึงต่อกันสนิท วนไม่มีรอยสะดุด และไม่เห็นทิศทางการหมุนเหมือนแบบ C · ตอนกำลังสแกนไหลเร็วขึ้นเอง",
     tradeoff:
-      "เงียบกว่าจนอาจเงียบเกินไป — ในรายการที่มีของเยอะ ขอบนิ่งบางๆ อาจกลืนไปกับเส้นขอบทั่วไปจนไม่มีใครสังเกต · ตอนกำลังสแกนจะไม่มีสัญญาณว่ากำลังทำงานอยู่ (ต้องพึ่งตัวหนังสืออย่างเดียว)",
+      "การไหลนุ่มกว่าการหมุน จึงสังเกตยากกว่าเล็กน้อยเมื่ออยู่ในรายการที่มีของเยอะ · ยังเป็นภาพเคลื่อนไหวตลอดเวลา (ปิดเองเมื่อเครื่องตั้ง \"ลดการเคลื่อนไหว\")",
   },
   edge: {
     name: "C · ขอบไล่สีวิ่ง — เส้นขอบเคลื่อนไหว",
@@ -139,9 +139,13 @@ function PhotoRow({ look, busy }: { look: Look; busy: boolean }) {
             aria-hidden
             className={cn(
               look === "still"
-                ? // นิ่ง: ไล่แบบเส้นตรงจากมุมบนซ้ายลงมุมล่างขวา เหมือนขอบโลหะ
-                  // รับแสงจากมุมเดียว — conic ที่หยุดนิ่งจะเห็น "จุดต่อ" ของสี
-                  "absolute inset-0 bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_35%,transparent)] to-primary"
+                ? // ไล่แบบเส้นตรงมุมบนซ้าย→ล่างขวา แล้ว "เลื่อนสี" ไปเรื่อยๆ แทนที่
+                  // จะหมุนทั้งแผ่น — สีต้นกับปลายเป็นสีเดียวกัน ลายจึงต่อกันสนิท
+                  // วนไม่มีรอยสะดุด (แบบ C หมุนทั้งแผ่น จะเห็นทิศทางการหมุนชัด)
+                  cn(
+                    "absolute inset-0 bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_30%,transparent)] to-primary",
+                    busy ? "proto-flow-fast" : "proto-flow",
+                  )
                 : "absolute inset-[-100%] bg-[conic-gradient(from_0deg,var(--primary),color-mix(in_srgb,var(--primary)_28%,transparent)_90deg,var(--primary)_180deg,color-mix(in_srgb,var(--primary)_28%,transparent)_270deg,var(--primary)_360deg)]",
               look === "edge" && (busy ? "proto-spin-fast" : "proto-spin"),
             )}
@@ -204,7 +208,10 @@ function SearchTab({ look, busyRing }: { look: Look; busyRing: boolean }) {
             className={cn(
               "absolute inset-0 rounded-full",
               look === "still"
-                ? "bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_30%,transparent)] to-primary"
+                ? cn(
+                    "bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_28%,transparent)] to-primary",
+                    busyRing ? "proto-flow-fast" : "proto-flow",
+                  )
                 : "bg-[conic-gradient(from_0deg,var(--primary),color-mix(in_srgb,var(--primary)_25%,transparent)_90deg,var(--primary)_180deg,color-mix(in_srgb,var(--primary)_25%,transparent)_270deg,var(--primary)_360deg)]",
               look === "edge" && (busyRing ? "proto-spin-fast" : "proto-spin"),
             )}
@@ -259,8 +266,15 @@ export default function AiLookProtoPage() {
         .proto-spin      { animation: protoSpin 6s linear infinite; }
         .proto-spin-fast { animation: protoSpin 2.2s linear infinite; }
         .proto-pulse     { animation: protoPulse 2s ease-in-out infinite; }
+        @keyframes protoFlow {
+          0%   { background-position: 0% 0%; }
+          100% { background-position: 200% 200%; }
+        }
+        .proto-flow      { background-size: 200% 200%; animation: protoFlow 5s linear infinite; }
+        .proto-flow-fast { background-size: 200% 200%; animation: protoFlow 1.8s linear infinite; }
         @media (prefers-reduced-motion: reduce) {
-          .proto-spin, .proto-spin-fast, .proto-pulse { animation: none; }
+          .proto-spin, .proto-spin-fast, .proto-pulse,
+          .proto-flow, .proto-flow-fast { animation: none; }
         }
       `}</style>
 
