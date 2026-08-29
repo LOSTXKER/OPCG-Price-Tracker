@@ -229,11 +229,16 @@ export function CommandSearchModal({
       .slice(0, MAX_SET_RESULTS)
   }, [normalizedQuery, sets])
 
-  // Nav shortcuts: all of them when the box is empty (quick links), otherwise
-  // those whose localized label matches the query.
+  // Nav shortcuts appear ONLY once you have typed something they match (owner
+  // call 2026-08-29). Listing all twelve on the empty state was a wall of
+  // pills for destinations the header and the bottom nav already carry — it
+  // pushed the actual discovery (recents, popular, movers) up and out of view
+  // on a phone, where the palette is now full-screen and those rows are the
+  // reason to open it. Typed, they still earn their place: "พอร์ต" jumping to
+  // the portfolio is command-palette behaviour worth keeping.
   const matchedNav = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return NAV_ACTIONS
+    if (!q) return []
     return NAV_ACTIONS.filter((a) => t(lang, a.labelKey).toLowerCase().includes(q))
   }, [query, lang])
 
@@ -242,11 +247,10 @@ export function CommandSearchModal({
   const allItems = useMemo(() => {
     const items: PaletteItem[] = []
     if (isEmptyQuery) {
-      // Discovery mode: recents → popular chips → movers → page pills.
+      // Discovery mode: recents → popular chips → movers. No page pills.
       for (const r of filteredRecent) items.push({ type: "recent", key: r })
       for (const c of popular) items.push({ type: "spot-popular", key: c.cardCode })
       for (const c of movers) items.push({ type: "spot-mover", key: c.cardCode })
-      for (const a of matchedNav) items.push({ type: "nav", key: a.href })
       return items
     }
     for (const r of results) items.push({ type: "result", key: r.cardCode })
@@ -556,37 +560,6 @@ export function CommandSearchModal({
                   </div>
                 )}
 
-                {/* Page shortcuts, shrunk to pills so discovery keeps the room. */}
-                <div className="p-2">
-                  <p className="px-2 py-1.5 text-eyebrow text-muted-foreground/60">
-                    {t(lang, "pages")}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5 px-2 pb-2">
-                    {matchedNav.map((action) => {
-                      const index = indexOf("nav", action.href)
-                      const Icon = action.icon
-                      return (
-                        <button
-                          key={action.href}
-                          id={`${listboxId}-option-${index}`}
-                          type="button"
-                          role="option"
-                          aria-selected={activeIdx === index}
-                          onClick={() => goToPage(action.href)}
-                          className={cn(
-                            "hairline flex min-h-9 items-center gap-1.5 rounded-full px-3 text-xs motion-base",
-                            activeIdx === index
-                              ? "bg-accent text-foreground"
-                              : "bg-card text-muted-foreground hover:bg-muted hover:text-foreground",
-                          )}
-                        >
-                          <Icon className="size-3.5" aria-hidden />
-                          {t(lang, action.labelKey)}
-                        </button>
-                      )
-                    })}
-                  </div>
-                </div>
               </>
             ) : (
               <>

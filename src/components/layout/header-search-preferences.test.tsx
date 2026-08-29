@@ -283,9 +283,17 @@ describe("two-row desktop chrome, CoinGecko-style", () => {
     // The movers section bridges to the full trending page.
     expect(search).toContain('goToPage("/opcg/trending")')
 
-    // Page shortcuts stay complete (IA-NAV-04's guarantee) but shrink to
-    // pills in the empty state so discovery keeps the vertical room.
-    expect(search).toContain("rounded-full px-3 text-xs")
+    // Page shortcuts LEFT the empty state entirely (owner call 2026-08-29):
+    // twelve pills for destinations the header and bottom nav already carry
+    // pushed the real discovery rows off a phone screen. They still appear
+    // once a typed query matches one, which is what this guards — the pills
+    // must not come back on the empty state.
+    const emptyBranch = search.slice(
+      search.indexOf("isEmptyQuery ? ("),
+      search.indexOf("            ) : ("),
+    )
+    expect(emptyBranch).not.toContain('t(lang, "pages")')
+    expect(search).toContain('t(lang, "pages")')
   })
 
   it("keeps set and photo search inside the command palette", () => {
