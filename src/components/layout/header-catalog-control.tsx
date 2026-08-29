@@ -482,7 +482,7 @@ export function HeaderCatalogControl({
         "surface-2 hairline ease-chrome flex min-w-0 items-center gap-1.5 rounded-full text-left text-label text-foreground transition-colors hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
         presentation === "mobile"
           ? "h-11 min-w-11 flex-1 px-2 min-[480px]:max-w-56"
-          : "h-11 w-44 px-2.5 lg:h-10 lg:w-56 lg:py-1 lg:pe-2.5 lg:ps-1",
+          : "h-11 w-44 px-2.5 lg:h-10 lg:w-40 lg:py-1 lg:pe-2.5 lg:ps-1 xl:w-56",
       )}
     />
   )
@@ -527,7 +527,7 @@ export function HeaderCatalogControl({
             <span className="block truncate text-xs font-semibold leading-tight text-foreground">
               {selectedSet.code}
             </span>
-            <span className="block truncate text-xs leading-tight text-muted-foreground">
+            <span className="hidden truncate text-xs leading-tight text-muted-foreground xl:block">
               {selectedName}
             </span>
           </>

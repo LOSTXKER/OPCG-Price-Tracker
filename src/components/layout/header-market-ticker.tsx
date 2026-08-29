@@ -24,8 +24,11 @@ interface MarketTickerProps {
   authLoaded: boolean;
   authUser: object | null;
   canUpgrade: boolean;
-  /** Account cluster (chat · notifications · profile, or the guest links). */
-  children?: ReactNode;
+  /** The search field. It rides in this row, ahead of upgrade (owner call
+   *  2026-08-29): the row already says WHAT catalog you are looking at, so the
+   *  way to search inside it belongs here too — and the nav row below is left
+   *  to hold everything that is yours. */
+  searchSlot?: ReactNode;
   /** True once the page is scrolled — chrome goes opaque; at the top it's transparent. */
   scrolled: boolean;
 }
@@ -42,7 +45,7 @@ function StripFigure({
   children,
 }: {
   label: string;
-  secondary?: "lg" | "xl";
+  secondary?: "lg" | "xl" | "2xl";
   children: ReactNode;
 }) {
   return (
@@ -51,6 +54,7 @@ function StripFigure({
         "shrink-0 items-baseline gap-1.5 whitespace-nowrap",
         secondary === "lg" && "hidden lg:flex",
         secondary === "xl" && "hidden xl:flex",
+        secondary === "2xl" && "hidden 2xl:flex",
         !secondary && "flex",
       )}
     >
@@ -72,7 +76,7 @@ export function HeaderMarketTicker({
   authLoaded,
   authUser,
   canUpgrade,
-  children,
+  searchSlot,
   scrolled,
 }: MarketTickerProps) {
   const language = useUIStore((s) => s.language);
@@ -111,8 +115,13 @@ export function HeaderMarketTicker({
             fold away entirely in this one-row layout: the set count is already
             implied by the set control on the left, and the update date is the
             least glanced-at of the five — the rail needs their width more. */}
+        {/* With search now sharing this row, the two supporting figures step
+            back on narrower desktops so the movers rail keeps a readable width
+            — measured: without this, the rail collapses to 44px at 1280. The
+            total value stays at every width: it is the one figure that is a
+            link, and the row's only tie to /market-overview. */}
         {stats.totalCards > 0 && (
-          <StripFigure label={t(language, "totalCards")}>
+          <StripFigure label={t(language, "totalCards")} secondary="2xl">
             {formatCount(stats.totalCards)}
           </StripFigure>
         )}
@@ -120,7 +129,7 @@ export function HeaderMarketTicker({
         {stats.totalValue > 0 && (
           <Link
             href={`/${game}/market-overview`}
-            className="group flex shrink-0 items-baseline gap-1.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+            className="group hidden shrink-0 items-baseline gap-1.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 xl:flex"
           >
             <span className="text-meta">{t(language, "totalValue")}</span>
             <span className="ease-chrome text-xs font-semibold tabular-nums text-foreground transition-colors group-hover:text-primary">
@@ -129,7 +138,7 @@ export function HeaderMarketTicker({
           </Link>
         )}
 
-        <StripFigure label="JPY/THB" secondary="lg">
+        <StripFigure label="JPY/THB" secondary="2xl">
           {stats.exchangeRate.toFixed(3)}
         </StripFigure>
 
@@ -139,22 +148,21 @@ export function HeaderMarketTicker({
 
         <span className="mx-1 h-5 w-px shrink-0 bg-border" aria-hidden />
 
-        {/* Right — upgrade + account. Below `lg` the standalone upgrade button
-            yields first — it is the only item here that is also a row in the
-            profile menu ("อัปเกรดแพ็กเกจ"), so nothing becomes unreachable. */}
-        <div className="flex shrink-0 items-center gap-2">
-          {authLoaded && authUser && canUpgrade && (
-            <Link
-              href="/pricing"
-              className="ease-chrome hidden min-h-11 items-center gap-1 rounded-full border border-primary/30 px-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 lg:flex lg:h-8 lg:min-h-0"
-            >
-              <Zap className="size-3" />
-              {t(language, "upgrade")}
-            </Link>
-          )}
+        {/* Search closes the catalog row, just ahead of upgrade. */}
+        {searchSlot}
 
-          {children}
-        </div>
+        {/* Upgrade is the last thing in the row. Below `lg` it yields first —
+            it is the only item here that is also a row in the profile menu
+            ("อัปเกรดแพ็กเกจ"), so nothing becomes unreachable. */}
+        {authLoaded && authUser && canUpgrade && (
+          <Link
+            href="/pricing"
+            className="ease-chrome hidden min-h-11 shrink-0 items-center gap-1 rounded-full border border-primary/30 px-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 lg:flex lg:h-8 lg:min-h-0"
+          >
+            <Zap className="size-3" />
+            {t(language, "upgrade")}
+          </Link>
+        )}
       </div>
     </div>
   );

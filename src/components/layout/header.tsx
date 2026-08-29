@@ -111,52 +111,12 @@ export function Header() {
         authUser={authUser}
         canUpgrade={canUpgrade}
         scrolled={scrolled}
-      >
-        {authLoaded && authUser ? (
-          <HeaderUserMenu
-            authUser={authUser}
-            authLoaded={authLoaded}
-            userTier={userTier}
-            userName={userName}
-            userAvatar={userAvatar}
-            userId={userId}
-            honeyPoints={honeyPoints}
-            honeyLifetime={honeyLifetime}
-            honeyPendingActions={honeyPendingActions}
-            unreadMessages={unreadMessages}
-            pathname={pathname}
-            marketplaceEnabled={publicConfig.marketplaceEnabled}
-            onLogout={doLogout}
-          />
-        ) : authLoaded ? (
-          <div className="flex items-center gap-2">
-            {/* Language, currency and theme moved into the account menu, which
-                guests do not have — this gear is their door to the same
-                controls, the way CoinGecko keeps a settings icon in its top
-                strip for signed-out visitors. */}
-            <HeaderGuestPreferencesMenu />
-            <Link
-              href="/pricing"
-              className="ease-chrome flex items-center gap-1 rounded-full px-2.5 py-1 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <Crown className="size-3 text-primary" />
-              {t(language, "pricing")}
-            </Link>
-            <Link
-              href="/login"
-              className="ease-chrome rounded-full px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            >
-              {t(language, "login")}
-            </Link>
-            <Link
-              href="/register"
-              className="ease-chrome rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-            >
-              {t(language, "register")}
-            </Link>
+        searchSlot={
+          <div className="w-56 shrink-0 lg:w-64 2xl:w-72">
+            <CommandSearchTrigger onClick={openSearch} />
           </div>
-        ) : null}
-      </HeaderMarketTicker>
+        }
+      />
 
       <header
         style={{
@@ -277,13 +237,54 @@ export function Header() {
 
           </div>
 
-          {/* Owner call 2026-08-28 (navbar แบบ C): search closes the row at its
-              far right, after Honey — the nav reads uninterrupted from the left
-              and the field sits in the tools corner, the way CoinMarketCap ends
-              its main row. Still the page's only search entry, still painted as
-              a real field with the visible "/" hint. */}
-          <div className="w-80 shrink-0">
-            <CommandSearchTrigger onClick={openSearch} />
+          {/* Account closes this row (owner call 2026-08-29): chat, alerts and
+              the profile menu are all "yours", so they sit with portfolio,
+              watchlist and Honey rather than up in the catalog row. */}
+          <div className="flex shrink-0 items-center gap-2">
+        {authLoaded && authUser ? (
+          <HeaderUserMenu
+            authUser={authUser}
+            authLoaded={authLoaded}
+            userTier={userTier}
+            userName={userName}
+            userAvatar={userAvatar}
+            userId={userId}
+            honeyPoints={honeyPoints}
+            honeyLifetime={honeyLifetime}
+            honeyPendingActions={honeyPendingActions}
+            unreadMessages={unreadMessages}
+            pathname={pathname}
+            marketplaceEnabled={publicConfig.marketplaceEnabled}
+            onLogout={doLogout}
+          />
+        ) : authLoaded ? (
+          <div className="flex items-center gap-2">
+            {/* Language, currency and theme moved into the account menu, which
+                guests do not have — this gear is their door to the same
+                controls, the way CoinGecko keeps a settings icon in its top
+                strip for signed-out visitors. */}
+            <HeaderGuestPreferencesMenu />
+            <Link
+              href="/pricing"
+              className="ease-chrome flex items-center gap-1 rounded-full px-2.5 py-1 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <Crown className="size-3 text-primary" />
+              {t(language, "pricing")}
+            </Link>
+            <Link
+              href="/login"
+              className="ease-chrome rounded-full px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              {t(language, "login")}
+            </Link>
+            <Link
+              href="/register"
+              className="ease-chrome rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              {t(language, "register")}
+            </Link>
+          </div>
+        ) : null}
           </div>
         </div>
       </header>
