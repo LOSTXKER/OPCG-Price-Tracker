@@ -40,6 +40,17 @@
 - [x] **MNAV-04 — `--chrome-h` มือถือ 3.5rem → 6.5rem:** sticky ทั้งเว็บอ่านค่านี้ (home market header · watchlist selection bar · card-detail section nav + scroll-mt · set-detail · profile tabs) ต้องเช็คว่าเลื่อนตามถูกทุกหน้า
 - [x] **MNAV-05 — Verify:** tsc ผ่าน · lint **0 errors** (26 warnings เดิม) · test **154 ไฟล์/924 ข้อผ่าน** (อัปเดตเทสต์ที่ล็อกแถวเดียว + `--chrome-h: 3.5rem` + ทรง trigger เดิม) · build **214 หน้า** · เปิดจริง 375×812: header 104px (56+48) · `--chrome-h` 6.5rem · ช่องเลือกชุด **123px → 258px** · แถบบริบทโชว์กล่อง OP15 + ชื่อเต็ม "Adventure on KAMI's Island" · ชื่อหน้าเปลี่ยนตาม route (หน้าแรก/ชุดการ์ด/รายการโปรด) · หัวใจติดสีทองตอนอยู่ `/watchlist` · sticky ทุกหน้าเกาะ 104px ไม่ทับ (หน้าแรก · ชุด · การ์ด) · desktop 1280px ไม่กระทบ (`--chrome-h` 8.25rem เดิม)
 
+## 📷 จอสแกนการ์ดเต็มจอ (เบสเคาะ 2026-08-29 จาก `/proto/photo-scan` · แบบ B กริดเทค)
+
+แทนที่ dialog เล็ก 2 ปุ่มเดิม ด้วยจอกล้องเต็มจอแบบแอปสแกนจ่าย
+
+- [x] **SCAN-01** — `PhotoScanScreen` เต็มจอ: กล้องสดผ่าน `getUserMedia` · กรอบสัดส่วนการ์ด 63:88 · กริดจุด + มุมเรืองแสง (แบบ B) · อัปโหลดซ้ายล่าง · ชัตเตอร์กลาง · ปิดซ้ายบน
+- [x] **SCAN-02** — fallback: ถ้ากล้องไม่ได้ (ปฏิเสธสิทธิ์ / เบราว์เซอร์ไม่รองรับ / ไม่ใช่ HTTPS) → กลับไปใช้ `<input capture>` เดิม ไม่ให้ทางตัน
+- [x] **SCAN-03** — จังหวะสแกน: เส้นกวาดในกรอบ + การ์ดสถานะบอกว่ากำลังเทียบกับกี่ใบ (ระหว่างรอ `/api/cards/identify`)
+- [x] **SCAN-04** — จังหวะผลลัพธ์: sheet เลื่อนขึ้น · ใบหลัก = `cards[0]` + ราคา Raw/PSA 10 · **ตัวเลือกรอง = `cards[1..]`** · ⚠️ ไม่มี % ความมั่นใจใน API — ห้ามปลอมตัวเลข ใช้สิ่งที่ AI อ่านได้ (`identification.cardCode`) แทน
+- [x] **SCAN-05** — animation อยู่ใน `globals.css` (คีย์เฟรมกลาง) · honor `prefers-reduced-motion` · ปล่อย stream ทิ้งเมื่อปิดจอ (กันกล้องค้างเปิด)
+- [x] **SCAN-06** — verify: lint + test + build + เปิดจริงบนมือถือ (กล้อง + อัปโหลด + ผลลัพธ์ + ปฏิเสธสิทธิ์)
+
 ## 📐 Site-wide market canvas (owner direction · 2026-08-28)
 
 > ขยายพื้นที่ข้อมูลของหน้าปกติให้ใกล้เว็บตลาดอย่าง CoinMarketCap/CoinGecko โดยคง mobile เดิมและคง reading/form/dialog widths ที่ตั้งใจแคบ ไม่เปลี่ยน spacing, typography, query, state หรือ workflow

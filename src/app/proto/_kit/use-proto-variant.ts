@@ -1,42 +1,56 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useSyncExternalStore } from "react"
 
 /**
- * useState ที่ผูกค่าไว้กับ query string ของหน้า proto — กดเลือก "แบบ C" แล้ว URL
- * กลายเป็น `?v=c` ทันที เบสจึงส่งลิงก์กลับมาได้เลยว่าชอบอันไหน แทนที่จะต้องบรรยาย
- * ("อันที่สองจากซ้าย" คือที่มาของการเข้าใจผิดรอบก่อนๆ)
+ * "ตัวเลือกที่กำลังดูอยู่" ของหน้า proto เก็บไว้ใน query string ไม่ใช่ใน state —
+ * กดเลือกแบบ C แล้ว URL กลายเป็น `?v=c` ทันที เบสจึงก๊อปลิงก์ส่งกลับมาได้เลยว่า
+ * ชอบอันไหน แทนที่จะต้องบรรยาย ("อันที่สองจากซ้าย" คือที่มาของการเข้าใจผิดรอบก่อนๆ)
  *
- * ใช้ `history.replaceState` ตรงๆ ไม่ใช้ `useSearchParams` เพราะตัวนั้นบังคับให้หน้า
- * ต้องมี Suspense ครอบตอน prerender — หน้า proto ทุกหน้าจะพัง build พร้อมกัน
- *
- * ค่าเริ่มต้นจงใจไม่เขียนลง URL เพื่อให้ลิงก์เปล่า = ค่าเริ่มต้นเสมอ
+ * ทำไมไม่ใช้ `useSearchParams` ของ Next: ตัวนั้นบังคับให้หน้าต้องมี Suspense ครอบ
+ * ตอน prerender — หน้า proto ทุกหน้าจะพัง build พร้อมกัน
+ * ทำไมไม่ใช้ useState + useEffect: React 19 ห้าม setState ใน effect (กฎ compiler)
+ * → อ่าน URL เป็น external store ตรงๆ ถูกกว่าและไม่ต้อง sync สองทาง
  */
+
+const listeners = new Set<() => void>()
+
+/** `history.replaceState` ไม่ยิง popstate — เปลี่ยนเองแล้วต้องบอก subscriber เอง */
+function emit() {
+  for (const listener of listeners) listener()
+}
+
+function subscribe(onChange: () => void) {
+  listeners.add(onChange)
+  window.addEventListener("popstate", onChange)
+  return () => {
+    listeners.delete(onChange)
+    window.removeEventListener("popstate", onChange)
+  }
+}
+
+const getSearch = () => window.location.search
+/** ตอน SSR ยังไม่มี URL → ทุกหน้าเรนเดอร์ด้วยค่าเริ่มต้น แล้วค่อยสลับหลัง hydrate */
+const getServerSearch = () => ""
+
 export function useProtoVariant<T extends string>(
   key: string,
   allowed: readonly T[],
   fallback: T,
 ) {
-  const [value, setValue] = useState<T>(fallback)
-  // อ่านผ่าน ref: รายการตัวเลือกเป็น literal ใหม่ทุก render — ใส่ใน deps ไม่ได้
-  const allowedRef = useRef(allowed)
-  allowedRef.current = allowed
-
-  // อ่าน URL หลัง mount เท่านั้น (ตอน SSR ยังไม่มี window) — ค่ามั่วใน URL ถูกทิ้ง
-  useEffect(() => {
-    const raw = new URLSearchParams(window.location.search).get(key)
-    if (raw && (allowedRef.current as readonly string[]).includes(raw)) {
-      setValue(raw as T)
-    }
-  }, [key])
+  const search = useSyncExternalStore(subscribe, getSearch, getServerSearch)
+  const raw = new URLSearchParams(search).get(key)
+  const value =
+    raw && (allowed as readonly string[]).includes(raw) ? (raw as T) : fallback
 
   const set = useCallback(
     (next: T) => {
-      setValue(next)
       const url = new URL(window.location.href)
+      // ค่าเริ่มต้นไม่เขียนลง URL — ลิงก์เปล่าจึงแปลว่า "ค่าเริ่มต้น" เสมอ
       if (next === fallback) url.searchParams.delete(key)
       else url.searchParams.set(key, next)
       window.history.replaceState(null, "", url)
+      emit()
     },
     [key, fallback],
   )
@@ -44,13 +58,11 @@ export function useProtoVariant<T extends string>(
   return [value, set] as const
 }
 
+const FLAG_VALUES = ["0", "1"] as const
+
 /** รุ่นสวิตช์เปิด/ปิด สำหรับปุ่มสลับสถานะขอบ (ว่าง/มีข้อมูล · สั้น/ยาว) */
 export function useProtoFlag(key: string, fallback = false) {
-  const [raw, setRaw] = useProtoVariant(
-    key,
-    ["0", "1"] as const,
-    fallback ? "1" : "0",
-  )
+  const [raw, setRaw] = useProtoVariant(key, FLAG_VALUES, fallback ? "1" : "0")
   const toggle = useCallback(
     () => setRaw(raw === "1" ? "0" : "1"),
     [raw, setRaw],

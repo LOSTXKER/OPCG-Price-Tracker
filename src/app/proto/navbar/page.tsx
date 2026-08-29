@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { useTheme } from "next-themes"
-import { useState, useSyncExternalStore } from "react"
+import { useSyncExternalStore } from "react"
 import {
   ArrowDown,
   ArrowUp,
@@ -25,6 +25,7 @@ import { GameCrest } from "@/components/shared/game-crest"
 import { IconButton } from "@/components/ui/icon-button"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { cn } from "@/lib/utils"
+import { useProtoVariant } from "../_kit/use-proto-variant"
 
 /* ------------------------------------------------------------------ data */
 
@@ -566,8 +567,10 @@ function HomeFold() {
 
 const subscribeNever = () => () => {}
 
+const CONCEPT_VALUES = CONCEPT_OPTIONS.map((o) => o.value)
+
 export default function NavbarPrototypePage() {
-  const [concept, setConcept] = useState<Concept>("right")
+  const [concept, setConcept] = useProtoVariant("v", CONCEPT_VALUES, "right")
   // Flip the real site theme (next-themes) so the whole page — frame included —
   // previews light/dark; a frame-scoped class can't force light under a dark root.
   const { resolvedTheme, setTheme } = useTheme()

@@ -1004,3 +1004,37 @@
 .guide-article section > div > p {
   max-width: 42rem;
 }
+
+/* Card scanner (SCAN-05, owner selection 2026-08-29 — /proto/photo-scan style B).
+   The line sweeps the frame while the vision model works; the corners pulse so
+   the frame reads as "live" even on the stillest camera feed. Both stop dead
+   under reduced-motion — a scanner that strobes is a scanner people close. */
+@keyframes scan-sweep {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(var(--scan-travel, 100%)); opacity: 0; }
+}
+
+@keyframes scan-corner {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.scan-sweep {
+  animation: scan-sweep 2.2s ease-in-out infinite;
+}
+
+.scan-corner {
+  animation: scan-corner 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-sweep,
+  .scan-corner {
+    animation: none;
+  }
+  .scan-sweep {
+    opacity: 0.9;
+  }
+}

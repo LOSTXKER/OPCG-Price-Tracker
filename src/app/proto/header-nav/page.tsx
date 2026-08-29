@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/popover"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { cn } from "@/lib/utils"
+import { useProtoVariant } from "../_kit/use-proto-variant"
 
 type Direction = "spotlight" | "shelf" | "stamp"
 type PreviewTheme = "light" | "dark"
@@ -494,8 +495,10 @@ function HomeFold({ activeSet }: { activeSet: PrototypeSet }) {
   )
 }
 
+const DIRECTION_VALUES = DIRECTION_OPTIONS.map((o) => o.value)
+
 export default function HeaderNavigationPrototypePage() {
-  const [direction, setDirection] = useState<Direction>("spotlight")
+  const [direction, setDirection] = useProtoVariant("v", DIRECTION_VALUES, "spotlight")
   const [previewTheme, setPreviewTheme] = useState<PreviewTheme>("light")
   const [activeSetIndex, setActiveSetIndex] = useState(0)
   const activeSet = PROTOTYPE_SETS[activeSetIndex] ?? PROTOTYPE_SETS[0]

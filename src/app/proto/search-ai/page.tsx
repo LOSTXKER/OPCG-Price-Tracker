@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useSyncExternalStore } from "react"
+import { useSyncExternalStore } from "react"
 import { useTheme } from "next-themes"
 import {
   ArrowUp,
@@ -15,6 +15,7 @@ import {
 import { IconButton } from "@/components/ui/icon-button"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { cn } from "@/lib/utils"
+import { useProtoFlag, useProtoVariant } from "../_kit/use-proto-variant"
 
 /* ------------------------------------------------------------------ data */
 
@@ -245,10 +246,14 @@ function SearchTabButton({ variant }: { variant: Tab }) {
 
 const subscribeNever = () => () => {}
 
+const PHOTO_VALUES = PHOTO_OPTIONS.map((o) => o.value)
+
+const TAB_VALUES = TAB_OPTIONS.map((o) => o.value)
+
 export default function SearchAiProtoPage() {
-  const [photo, setPhoto] = useState<Photo>("banner")
-  const [tab, setTab] = useState<Tab>("scan")
-  const [longMovers, setLongMovers] = useState(true)
+  const [photo, setPhoto] = useProtoVariant("photo", PHOTO_VALUES, "banner")
+  const [tab, setTab] = useProtoVariant("tab", TAB_VALUES, "scan")
+  const [longMovers, toggleLongMovers] = useProtoFlag("long", true)
   const { resolvedTheme, setTheme } = useTheme()
   const mounted = useSyncExternalStore(
     subscribeNever,
@@ -297,7 +302,7 @@ export default function SearchAiProtoPage() {
             </div>
             <button
               type="button"
-              onClick={() => setLongMovers((v) => !v)}
+              onClick={toggleLongMovers}
               className="hairline ease-chrome h-10 rounded-full px-3.5 text-sm font-medium transition-colors hover:bg-muted"
             >
               {longMovers ? "มาแรง 12 ใบ (กดดู 6 ใบเดิม)" : "มาแรง 6 ใบ (กดดู 12 ใบ)"}

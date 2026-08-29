@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useSyncExternalStore } from "react"
+import { useSyncExternalStore } from "react"
 import { useTheme } from "next-themes"
 import { Camera, Moon, Search, Sun, X } from "lucide-react"
 
 import { IconButton } from "@/components/ui/icon-button"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { cn } from "@/lib/utils"
+import { useProtoFlag, useProtoVariant } from "../_kit/use-proto-variant"
 
 /* ------------------------------------------------------------------ data */
 
@@ -210,9 +211,11 @@ function Popup({
 
 const subscribeNever = () => () => {}
 
+const VARIANT_VALUES = VARIANT_OPTIONS.map((o) => o.value)
+
 export default function SearchHeaderProtoPage() {
-  const [variant, setVariant] = useState<Variant>("clean")
-  const [typed, setTyped] = useState(false)
+  const [variant, setVariant] = useProtoVariant("v", VARIANT_VALUES, "clean")
+  const [typed, toggleTyped] = useProtoFlag("typed")
   const { resolvedTheme, setTheme } = useTheme()
   const mounted = useSyncExternalStore(
     subscribeNever,
@@ -246,7 +249,7 @@ export default function SearchHeaderProtoPage() {
             </div>
             <button
               type="button"
-              onClick={() => setTyped((v) => !v)}
+              onClick={toggleTyped}
               className="hairline ease-chrome h-10 shrink-0 rounded-full px-3.5 text-sm font-medium transition-colors hover:bg-muted"
             >
               {typed ? "ดูตอนยังไม่พิมพ์" : "ดูตอนพิมพ์แล้ว"}

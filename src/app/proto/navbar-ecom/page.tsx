@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { useTheme } from "next-themes"
-import { useState, useSyncExternalStore } from "react"
+import { useSyncExternalStore } from "react"
 import {
   ArrowDown,
   ArrowUp,
@@ -24,6 +24,7 @@ import { GameCrest } from "@/components/shared/game-crest"
 import { IconButton } from "@/components/ui/icon-button"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { cn } from "@/lib/utils"
+import { useProtoVariant } from "../_kit/use-proto-variant"
 
 /* ------------------------------------------------------------------ data */
 
@@ -877,8 +878,10 @@ const NAVBARS: Record<Variant, () => React.ReactNode> = {
   d2: D2PrevNavbar,
 }
 
+const VARIANT_VALUES = VARIANT_OPTIONS.map((o) => o.value)
+
 export default function NavbarEcomPrototypePage() {
-  const [variant, setVariant] = useState<Variant>("d3")
+  const [variant, setVariant] = useProtoVariant("v", VARIANT_VALUES, "d3")
   // Flip the real site theme (next-themes) so the whole page — frame included —
   // previews light/dark; a frame-scoped class can't force light under a dark root.
   const { resolvedTheme, setTheme } = useTheme()
