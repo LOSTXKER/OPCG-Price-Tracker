@@ -2851,4 +2851,15 @@ export const th = {
   guideBuyRelatedSetsTitle: "คู่มือชุดการ์ด",
   guideBuyRelatedSetsDesc: "เรียนรู้เกี่ยวกับชุดการ์ดทั้งหมด",
   guideBuyCtaSearch: "เริ่มค้นหาการ์ดเลย!",
+  // เพิ่มเว็บไปหน้าจอโฮม (PWA)
+  installAppTitle: "เพิ่มไปหน้าจอโฮม",
+  installAppSubtitle: "เปิด Meecard ได้เร็วขึ้น เหมือนแอป",
+  installAppAction: "เพิ่มเลย",
+  installAppIosHowTo: "ดูวิธี",
+  installAppIosStep1: "กดปุ่มแชร์ข้างล่างจอ",
+  installAppIosStep2: "เลื่อนหา “เพิ่มไปยังหน้าจอโฮม”",
+  installAppIosStep3: "กด “เพิ่ม” ที่มุมขวาบน",
+  installAppIosNote: "Safari เท่านั้นที่เพิ่มไปหน้าจอโฮมได้ — ถ้าเปิดจากแอปอื่นอยู่ ให้เปิดใน Safari ก่อน",
+  installAppClose: "เข้าใจแล้ว",
+  installAppLater: "ไว้ก่อน",
 } as const;

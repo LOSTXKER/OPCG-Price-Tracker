@@ -36,6 +36,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { GroupedSection, GroupedRow } from "@/components/ui/grouped-list";
+import { InstallAppRow } from "@/components/pwa/install-app-row";
 import { useHeaderData } from "@/hooks/use-header-data";
 import { usePublicConfig } from "@/hooks/use-public-config";
 import { useUIStore, type Language, type Currency } from "@/stores/ui-store";
@@ -355,6 +356,10 @@ export default function MoreClient() {
 
           {/* ── Footer links ───────────────────────────────────────────── */}
           <GroupedSection className={SECTION_INSET}>
+            {/* Renders nothing unless this browser can actually install — and
+                stays reachable here forever, so dismissing an invitation
+                elsewhere never becomes a dead end. */}
+            <InstallAppRow />
             {authed && (
               <GroupedRow
                 icon={Settings}

@@ -2847,4 +2847,15 @@ export const jp = {
   guideBuyRelatedSetsTitle: "セットガイド",
   guideBuyRelatedSetsDesc: "すべてのカードセットについて学ぶ",
   guideBuyCtaSearch: "カードを検索してみよう！",
+  // ホーム画面に追加 (PWA)
+  installAppTitle: "ホーム画面に追加",
+  installAppSubtitle: "アプリのように素早く開けます",
+  installAppAction: "追加",
+  installAppIosHowTo: "手順を見る",
+  installAppIosStep1: "画面下の共有ボタンをタップ",
+  installAppIosStep2: "「ホーム画面に追加」までスクロール",
+  installAppIosStep3: "右上の「追加」をタップ",
+  installAppIosNote: "ホーム画面に追加できるのはSafariのみです。別のアプリから開いている場合はSafariで開き直してください",
+  installAppClose: "わかりました",
+  installAppLater: "あとで",
 } as const;

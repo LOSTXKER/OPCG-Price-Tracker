@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 
 import { NotificationBell } from "@/components/layout/notification-bell";
 import { HeaderCatalogControl } from "@/components/layout/header-catalog-control";
+import { InstallHeaderButton } from "@/components/pwa/install-header-button";
 import { Button } from "@/components/ui/button";
 import type { SetPickerItem } from "@/components/shared/set-picker";
 import { useScrolled } from "@/hooks/use-scrolled";
@@ -119,6 +120,12 @@ export function HeaderMobile({
         <span className="text-h5 min-w-0 flex-1 truncate text-foreground">
           {resolvePageTitle(pathname, language)}
         </span>
+
+        {/* Renders nothing at all unless this browser can install AND the
+            visitor hasn't already installed or waved it away — so the row keeps
+            its original width for everyone else, including every desktop
+            browser and every repeat visitor who has the app. */}
+        <InstallHeaderButton />
 
         <Button
           data-mobile-watchlist-trigger

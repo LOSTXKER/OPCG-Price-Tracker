@@ -2874,4 +2874,15 @@ export const en = {
   guideBuyRelatedSetsTitle: "Sets Guide",
   guideBuyRelatedSetsDesc: "Learn about all the card sets",
   guideBuyCtaSearch: "Start searching for cards!",
+  // Add to home screen (PWA)
+  installAppTitle: "Add to home screen",
+  installAppSubtitle: "Open Meecard faster, like an app",
+  installAppAction: "Add",
+  installAppIosHowTo: "How to",
+  installAppIosStep1: "Tap the Share button at the bottom of the screen",
+  installAppIosStep2: "Scroll to \u201CAdd to Home Screen\u201D",
+  installAppIosStep3: "Tap \u201CAdd\u201D in the top right",
+  installAppIosNote: "Only Safari can add to the home screen — if you opened this from another app, open it in Safari first",
+  installAppClose: "Got it",
+  installAppLater: "Not now",
 } as const;

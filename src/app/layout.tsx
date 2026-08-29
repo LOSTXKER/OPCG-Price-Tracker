@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Kanit, JetBrains_Mono } from "next/font/google";
 import { BottomNav } from "@/components/layout/bottom-nav";
@@ -14,6 +14,7 @@ import { FloatingBottomAd } from "@/components/ads/floating-bottom-ad";
 
 import { ThemeProvider } from "@/providers/theme-provider";
 import { StoreHydrator } from "@/components/providers/store-hydrator";
+import { ServiceWorkerRegister } from "@/components/providers/service-worker-register";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { ConfirmDialogProvider } from "@/components/shared/confirm-dialog";
@@ -41,6 +42,13 @@ const GOOGLE_SITE_VERIFICATION = clientEnv().NEXT_PUBLIC_GOOGLE_SITE_VERIFICATIO
 // the body is parsed. StoreHydrator keeps it in sync after hydration.
 const INITIAL_HTML_LANG_SCRIPT = `(()=>{const m=document.cookie.match(/(?:^|; )kuma-lang=([^;]*)/);const l=m?decodeURIComponent(m[1]):"TH";document.documentElement.lang=l==="EN"?"en":l==="JP"?"ja":"th"})()`;
 
+// Chrome fires `beforeinstallprompt` ONCE, on its own schedule, and it can beat
+// React's hydration — a listener attached by a component would simply miss it
+// and the "เพิ่มไปหน้าจอโฮม" button would never appear. Parking the event on
+// `window` from the document head guarantees it survives until `useInstallPrompt`
+// mounts and adopts it.
+const CAPTURE_INSTALL_PROMPT_SCRIPT = `addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__mcInstallEvent=e})`;
+
 const SITE_TITLE = "Meecard — เช็คราคาการ์ดวันพีช (One Piece Card Game)";
 // Owner decision (2026-08-06): no source-brand names in site metadata — the
 // trust claim is "ตลาดญี่ปุ่น"; the brand is named only in the home FAQ answer.
@@ -58,6 +66,15 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   applicationName: "Meecard",
+  manifest: "/manifest.webmanifest",
+  // iOS has no install API and ignores the manifest almost entirely: these
+  // meta tags are the only way a home-screen launch opens without Safari's
+  // chrome and carries the right title under the icon.
+  appleWebApp: {
+    capable: true,
+    title: "Meecard",
+    statusBarStyle: "black-translucent",
+  },
   keywords: [
     "Meecard",
     "ราคาการ์ดวันพีช",
@@ -91,6 +108,23 @@ export const metadata: Metadata = {
     : {}),
 };
 
+/**
+ * `themeColor` paints the phone's status bar and the browser's own UI around
+ * the page, so it tracks the theme rather than picking one — and matches
+ * `--background` in globals.css exactly, or the seam between the two shows.
+ *
+ * `viewportFit: "cover"` lets the page reach under the notch/home indicator,
+ * which is what a home-screen launch expects; the chrome already carries its
+ * own safe-area padding.
+ */
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FFFFFF" },
+    { media: "(prefers-color-scheme: dark)", color: "#100C09" },
+  ],
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -104,6 +138,11 @@ export default function RootLayout({
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: INITIAL_HTML_LANG_SCRIPT }}
         />
+        <Script
+          id="capture-install-prompt"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: CAPTURE_INSTALL_PROMPT_SCRIPT }}
+        />
         <JsonLd data={websiteJsonLd()} />
       </head>
       <body
@@ -116,6 +155,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <StoreHydrator />
+          <ServiceWorkerRegister />
           <TooltipProvider>
             <ConfirmDialogProvider>
               <UpgradeDialogProvider>
