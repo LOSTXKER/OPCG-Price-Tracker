@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useSyncExternalStore } from "react"
 import { useTheme } from "next-themes"
 import {
@@ -23,19 +24,28 @@ type Photo = "current" | "badge" | "banner" | "card"
 type Tab = "current" | "scan" | "wand" | "glow"
 
 /** การ์ดมาแรงชุดตายตัว — ของจริง 12 ใบ (ตอนนี้ระบบส่งมาแค่ 6) */
+/** การ์ดมาแรง 12 ใบ — ดึงจาก /api/cards/spotlight ของจริงมาแช่ไว้ (รูป/ชื่อ/rarity/ราคา/%
+ *  ตรงกับที่เว็บจริงแสดง · แปลงเยน→บาทด้วยเรต 0.296 เท่าที่แถบชีพจรใช้) */
 const MOVERS = [
-  { name: "Buggy (Parallel)", code: "OP03-008", rarity: "SP", price: "1,466 ฿", change: 48.5 },
-  { name: "Monkey.D.Luffy", code: "ST21-001", rarity: "P-L", price: "3,108 ฿", change: 33.3 },
-  { name: "Kaido (Parallel)", code: "OP04-044", rarity: "P-SR", price: "122 ฿", change: 28.9 },
-  { name: "Portgas.D.Ace", code: "ST13-011", rarity: "SP", price: "1,676 ฿", change: 28.7 },
-  { name: "Rebecca (Parallel)", code: "OP04-039", rarity: "P-L", price: "836 ฿", change: 28.4 },
-  { name: "Monkey.D.Dragon", code: "OP12-094", rarity: "P-SR", price: "269 ฿", change: 28.0 },
-  { name: "Gol.D.Roger", code: "OP09-118", rarity: "P-SEC", price: "137,540 ฿", change: 6.7 },
-  { name: "Sabo", code: "OP13-120", rarity: "P-SEC", price: "91,540 ฿", change: -20.3 },
-  { name: "Monkey.D.Luffy", code: "EB02-061", rarity: "SP", price: "68,540 ฿", change: 3.9 },
-  { name: "Portgas.D.Ace", code: "OP13-119", rarity: "P-SEC", price: "114,540 ฿", change: 5.9 },
-  { name: "Monkey.D.Luffy", code: "ST01-012", rarity: "P-SR", price: "114,540 ฿", change: 14.9 },
-  { name: "Roronoa Zoro", code: "OP01-001", rarity: "L", price: "1,150 ฿", change: -20.8 },
+  { name: "Buggy (Parallel)", code: "OP03-008", rarity: "SP", price: "2,066 ฿", change: 48.5, img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/op03/OP03-008_p1.png" },
+  { name: "Monkey.D.Luffy", code: "ST21-001", rarity: "P-L", price: "4,381 ฿", change: 33.3, img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/st21/ST21-001_p1.png" },
+  { name: "Kaido (Parallel)", code: "OP04-044", rarity: "P-SR", price: "172 ฿", change: 28.9, img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/op04/OP04-044_p1.png" },
+  { name: "Portgas.D.Ace", code: "ST13-011", rarity: "SP", price: "2,362 ฿", change: 28.7, img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/st13/ST13-011_p2.png" },
+  { name: "Rebecca (Parallel)", code: "OP04-039", rarity: "P-L", price: "1,178 ฿", change: 28.4, img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/op04/OP04-039_p1.png" },
+  { name: "Monkey.D.Dragon", code: "OP12-094", rarity: "P-SR", price: "379 ฿", change: 28, img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/op12/OP12-094_p1.png" },
+  { name: "Enel", code: "OP15-118", rarity: "P-SEC", price: "2,954 ฿", change: 26.3, img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/op15/OP15-118_p1.png" },
+  { name: "Jozu", code: "OP08-047", rarity: "R", price: "148 ฿", change: 25, img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/op08/OP08-047.png" },
+  { name: "Lim", code: "OP09-037", rarity: "SP", price: "882 ฿", change: 24.2, img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/op09/OP09-037_p2.png" },
+  { name: "Issho (Parallel)", code: "OP03-078", rarity: "SP", price: "734 ฿", change: 24, img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/op03/OP03-078_p2.png" },
+  { name: "Boa Hancock", code: "EB03-026", rarity: "P-SR", price: "734 ฿", change: 24, img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/eb03/EB03-026_p1.png" },
+  { name: "Charlotte Pudding (Parallel)", code: "OP08-058", rarity: "P-L", price: "586 ฿", change: 23.8, img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/op08/OP08-058_p1.png" },
+] as const
+
+/** ยอดนิยม 3 ใบ — จาก /api/cards/spotlight ของจริงเช่นกัน */
+const POPULAR = [
+  { name: "Monkey.D.Luffy", code: "OP13-118", price: "378,880 ฿", img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/op13/OP13-118_p3.png" },
+  { name: "Monkey.D.Luffy", code: "OP13-118", price: "438 ฿", img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/op13/OP13-118.png" },
+  { name: "Shanks", code: "OP09-004", price: "17,701 ฿", img: "https://pub-e1c871a889eb42a4bd7dcdc3a5926f3c.r2.dev/op09/OP09-004_p5.png" },
 ] as const
 
 const PHOTO_OPTIONS = [
@@ -180,7 +190,15 @@ function MoverRow({ m }: { m: (typeof MOVERS)[number] }) {
   const up = m.change > 0
   return (
     <div className="flex min-h-14 items-center gap-3 px-4 py-1.5">
-      <span className="hairline h-10 w-7 shrink-0 rounded bg-card" aria-hidden />
+      <span className="hairline relative h-10 w-7 shrink-0 overflow-hidden rounded bg-card">
+        <Image
+          src={m.img}
+          alt={`${m.name} ${m.code}`}
+          fill
+          sizes="28px"
+          className="select-none object-cover"
+        />
+      </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate text-body-sm font-semibold">{m.name}</span>
         <span className="flex items-center gap-1.5">
@@ -335,12 +353,23 @@ export default function SearchAiProtoPage() {
               <div className="min-h-0 flex-1 overflow-y-auto">
                 <p className="px-4 pb-1 pt-3 text-eyebrow">ยอดนิยม</p>
                 <div className="flex gap-2 overflow-hidden px-4 pb-2">
-                  {["268,800 ฿", "311 ฿"].map((p, i) => (
-                    <span key={i} className="hairline flex shrink-0 items-center gap-2 rounded-xl bg-card px-2.5 py-1.5">
-                      <span className="h-8 w-6 rounded bg-muted" aria-hidden />
+                  {POPULAR.slice(0, 2).map((c) => (
+                    <span
+                      key={c.img}
+                      className="hairline flex shrink-0 items-center gap-2 rounded-xl bg-card px-2.5 py-1.5"
+                    >
+                      <span className="relative h-8 w-6 shrink-0 overflow-hidden rounded bg-muted">
+                        <Image
+                          src={c.img}
+                          alt={`${c.name} ${c.code}`}
+                          fill
+                          sizes="24px"
+                          className="select-none object-cover"
+                        />
+                      </span>
                       <span>
-                        <span className="block text-xs font-semibold">Monkey.D.Luffy</span>
-                        <span className="block text-meta">{p}</span>
+                        <span className="block text-xs font-semibold">{c.name}</span>
+                        <span className="block text-meta">{c.price}</span>
                       </span>
                     </span>
                   ))}
