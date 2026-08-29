@@ -31,13 +31,6 @@ export const PROTOS: ProtoEntry[] = [
     status: "รอเคาะ",
   },
   {
-    slug: "ai-look",
-    title: "ภาษาภาพของส่วน AI",
-    question: "ส่วนที่เป็น AI ควรใช้สี/ภาษาภาพแบบไหน",
-    date: "2026-08-29",
-    status: "รอเคาะ",
-  },
-  {
     slug: "photo-scan",
     title: "สแกนการ์ดด้วยกล้อง",
     question: "หน้าจอตอนเล็งกล้องสแกนการ์ดควรหน้าตาแบบไหน",
