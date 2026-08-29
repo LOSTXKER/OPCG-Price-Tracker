@@ -24,6 +24,13 @@ export type ProtoEntry = {
 /** ใหม่สุดอยู่บน */
 export const PROTOS: ProtoEntry[] = [
   {
+    slug: "photo-desktop",
+    title: "ค้นหาด้วยรูปบนคอม",
+    question: "เปิดบนคอมควรเปิดกล้อง หรือให้อัปโหลดรูปอย่างเดียว",
+    date: "2026-08-29",
+    status: "รอเคาะ",
+  },
+  {
     slug: "ai-look",
     title: "ภาษาภาพของส่วน AI",
     question: "ส่วน AI ควรใช้แบบไหน — เรืองแสง (A) หรือขอบไล่สี หมุน (C) / ไหลวน (D)",

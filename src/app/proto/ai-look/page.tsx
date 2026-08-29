@@ -218,76 +218,16 @@ function PhotoRow({ look, busy }: { look: Look; busy: boolean }) {
 }
 
 /** ปุ่มค้นหาแถบล่าง — จุด AI อีกจุดของเว็บ */
-function SearchTab({ look, busyRing }: { look: Look; busyRing: boolean }) {
+/** ปุ่มค้นหาที่แถบล่าง — เบสเคาะ 2026-08-29 ว่า **เอาแบบปัจจุบัน** (ปุ่มทองกลม
+ *  เรียบๆ) ทุกแบบ: ลองใส่วงแหวนไล่สีรอบปุ่มแล้วมันจมกันเอง เพราะตัวปุ่มเป็นทอง
+ *  อยู่แล้ว ขอบทองอีกชั้นจึงไม่มีอะไรให้ตัด แถมวงพื้นหลังที่ต้องคั่นกลางทำให้
+ *  อ่านเป็นเหรียญมากกว่าปุ่ม · ภาษา AI จึงอยู่ที่ "ช่องค้นหา" อย่างเดียว */
+function SearchTab() {
   return (
     <span className="relative flex flex-col items-center gap-1">
-      {/* เงาฟุ้ง — มีเฉพาะแบบที่ใช้เงา (A/B) · แบบ C ใช้วงแหวนแทน */}
-      {(look === "warm" || look === "aurora") && (
-        <span
-          aria-hidden
-          className={cn(
-            "absolute -top-7 size-14 rounded-full blur-md",
-            look === "aurora"
-              ? "bg-[conic-gradient(from_180deg,rgba(139,92,246,.7),rgba(56,189,248,.6),rgba(244,114,182,.6),rgba(139,92,246,.7))]"
-              : "bg-gradient-to-br from-primary/70 to-primary/10",
-          )}
-        />
-      )}
-
-      {look === "edge" || look === "still" ? (
-        <span className="relative -mt-7 grid size-14 place-items-center">
-          {/* เงาเรืองใต้วงแหวน — ชั้นเดียวกับที่กล่องข้อความใช้ */}
-          {look === "still" && (
-            <span
-              aria-hidden
-              className={cn(
-                "absolute -inset-1 rounded-full bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_25%,transparent)] to-primary opacity-70 blur-md dark:opacity-50",
-                busyRing ? "proto-flow-fast" : "proto-flow-slow",
-              )}
-            />
-          )}
-          <span className="relative grid size-14 place-items-center overflow-hidden rounded-full p-[3px] ring-4 ring-background">
-            <span
-              aria-hidden
-              className={cn(
-                "absolute inset-0 rounded-full",
-                look === "still"
-                  ? cn(
-                      "bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_28%,transparent)] to-primary",
-                      busyRing ? "proto-flow-fast" : "proto-flow",
-                    )
-                  : "bg-[conic-gradient(from_0deg,var(--primary),color-mix(in_srgb,var(--primary)_25%,transparent)_90deg,var(--primary)_180deg,color-mix(in_srgb,var(--primary)_25%,transparent)_270deg,var(--primary)_360deg)]",
-                look === "edge" && (busyRing ? "proto-spin-fast" : "proto-spin"),
-              )}
-            />
-            {look === "still" && (
-              <span
-                aria-hidden
-                className={cn(
-                  "absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/70 to-transparent dark:via-white/45",
-                  busyRing ? "proto-sheen-fast" : "proto-sheen",
-                )}
-              />
-            )}
-            <span className="relative grid size-full place-items-center rounded-full bg-primary text-primary-foreground shadow-lg">
-              <Search className="size-6" strokeWidth={2.25} aria-hidden />
-            </span>
-          </span>
-        </span>
-      ) : (
-        <span
-          className={cn(
-            "relative flex size-14 -mt-7 items-center justify-center rounded-full text-primary-foreground shadow-lg ring-4 ring-background",
-            look === "current"
-              ? "bg-gradient-to-br from-primary to-primary/80"
-              : look === "aurora"
-                ? "bg-gradient-to-br from-violet-500 via-sky-500 to-primary"
-                : "bg-gradient-to-br from-primary to-primary/75",
-          )}
-        >
-          <Search className="size-6" strokeWidth={2.25} aria-hidden />
-        </span>
-      )}
+      <span className="relative -mt-7 flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg ring-4 ring-background">
+        <Search className="size-6" strokeWidth={2.25} aria-hidden />
+      </span>
       <span className="text-micro text-muted-foreground">ค้นหา</span>
     </span>
   )
@@ -441,7 +381,7 @@ export default function AiLookProtoPage() {
                       {l}
                     </span>
                   ))}
-                  <SearchTab look={look} busyRing={busy} />
+                  <SearchTab />
                   {["พอร์ต", "ดูเพิ่มเติม"].map((l) => (
                     <span
                       key={l}
