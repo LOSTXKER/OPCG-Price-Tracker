@@ -47,11 +47,11 @@ const COPY: Record<Look, { name: string; summary: string; tradeoff: string }> = 
       "สีชุดนี้ไม่มีอยู่ในเว็บเราเลยสักที่ — ทั้งเว็บเป็นน้ำตาล/ทอง/ครีม พอมีม่วงฟ้าโผล่มาจุดเดียวจะอ่านเป็น \"ของนอก\" ที่หลุดเข้ามา หรืออ่านเป็น \"ของพิเศษ\" ก็ได้ · ต้องเบสตัดสินว่ารับได้ไหม",
   },
   still: {
-    name: "D · ขอบไล่สีไหลวน — สีเลื่อน ไม่ใช่แผ่นหมุน",
+    name: "D · ขอบไล่สีไหลวน — สามชั้นซ้อน",
     summary:
-      "ใช้การไล่สีแบบเส้นตรงมุมบนซ้าย→ล่างขวาเหมือนที่เบสชอบ แล้วให้ \"สีเลื่อนไหล\" ไปเรื่อยๆ แทนที่จะหมุนทั้งแผ่นแบบ C · สีต้นกับปลายเป็นสีเดียวกัน ลายจึงต่อกันสนิท วนไม่มีรอยสะดุด และไม่เห็นทิศทางการหมุนเหมือนแบบ C · ตอนกำลังสแกนไหลเร็วขึ้นเอง",
+      "เส้นขอบชั้นเดียวเป็นแค่ \"เส้นสี\" ยังไม่ใช่ \"เรือง\" — รอบนี้เลยซ้อนสามชั้นที่ทำคนละหน้าที่: (1) เงาเรืองใต้ขอบที่ไหลช้ากว่า ให้ความลึกเห็นเป็นสองระยะ (2) เส้นขอบไล่สีที่คมชัด ไหลปกติ (3) ประกายพาดเฉียงวิ่งผ่านเป็นจังหวะแล้วหายไป · ยังเป็นการไล่สีเส้นตรงมุมบนซ้าย→ล่างขวาแบบที่เบสชอบทุกอย่าง แค่มีมิติขึ้น",
     tradeoff:
-      "การไหลนุ่มกว่าการหมุน จึงสังเกตยากกว่าเล็กน้อยเมื่ออยู่ในรายการที่มีของเยอะ · ยังเป็นภาพเคลื่อนไหวตลอดเวลา (ปิดเองเมื่อเครื่องตั้ง \"ลดการเคลื่อนไหว\")",
+      "สามชั้นแปลว่ามีของขยับพร้อมกันสามอย่าง (คนละความเร็ว) — จังหวะประกายตั้งไว้ห่าง 4.5 วินาทีเพื่อไม่ให้กลายเป็นไฟกะพริบ ถ้ายังรู้สึกเยอะ ลดชั้นได้ · ปิดเองทั้งหมดเมื่อเครื่องตั้ง \"ลดการเคลื่อนไหว\"",
   },
   edge: {
     name: "C · ขอบไล่สีวิ่ง — เส้นขอบเคลื่อนไหว",
@@ -128,7 +128,49 @@ function PhotoRow({ look, busy }: { look: Look; busy: boolean }) {
 
   if (look === "current") return <div className="p-2">{inner}</div>
 
-  if (look === "edge" || look === "still") {
+  if (look === "still") {
+    // สามชั้นซ้อน — เส้นขอบชั้นเดียวเป็นแค่ "เส้นสี" ยังไม่ใช่ "เรือง":
+    //   1) เงาเรืองใต้ขอบ ไหลช้ากว่า → ให้ความลึก เห็นเป็นสองระยะ
+    //   2) เส้นขอบไล่สี ไหลปกติ → ตัวเส้นที่คมชัด
+    //   3) ประกายพาดเฉียงวิ่งผ่านเป็นจังหวะ → สิ่งที่ทำให้ "ว้าว" จริงๆ
+    return (
+      <div className="px-2 pb-2 pt-3">
+        <div className="relative">
+          {/* 1 — เงาเรืองใต้ขอบ (ไม่ล้นขึ้นบนไปบังช่องค้นหา) */}
+          <span
+            aria-hidden
+            className={cn(
+              "absolute -bottom-1.5 -left-1.5 -right-1.5 top-0 rounded-3xl bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_25%,transparent)] to-primary blur-md",
+              "opacity-70 dark:opacity-50",
+              busy ? "proto-flow-fast" : "proto-flow-slow",
+            )}
+          />
+          <div className="relative overflow-hidden rounded-2xl p-[1.5px]">
+            {/* 2 — เส้นขอบ */}
+            <span
+              aria-hidden
+              className={cn(
+                "absolute inset-0 bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_30%,transparent)] to-primary",
+                busy ? "proto-flow-fast" : "proto-flow",
+              )}
+            />
+            {/* 3 — ประกายพาดเฉียง วิ่งผ่านขอบเป็นจังหวะ */}
+            <span aria-hidden className="absolute inset-0 overflow-hidden rounded-2xl">
+              <span
+                className={cn(
+                  "absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/70 to-transparent dark:via-white/45",
+                  busy ? "proto-sheen-fast" : "proto-sheen",
+                )}
+              />
+            </span>
+            <div className="relative">{inner}</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (look === "edge") {
     return (
       <div className="p-2">
         <div className="relative overflow-hidden rounded-2xl p-px">
@@ -138,16 +180,8 @@ function PhotoRow({ look, busy }: { look: Look; busy: boolean }) {
           <span
             aria-hidden
             className={cn(
-              look === "still"
-                ? // ไล่แบบเส้นตรงมุมบนซ้าย→ล่างขวา แล้ว "เลื่อนสี" ไปเรื่อยๆ แทนที่
-                  // จะหมุนทั้งแผ่น — สีต้นกับปลายเป็นสีเดียวกัน ลายจึงต่อกันสนิท
-                  // วนไม่มีรอยสะดุด (แบบ C หมุนทั้งแผ่น จะเห็นทิศทางการหมุนชัด)
-                  cn(
-                    "absolute inset-0 bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_30%,transparent)] to-primary",
-                    busy ? "proto-flow-fast" : "proto-flow",
-                  )
-                : "absolute inset-[-100%] bg-[conic-gradient(from_0deg,var(--primary),color-mix(in_srgb,var(--primary)_28%,transparent)_90deg,var(--primary)_180deg,color-mix(in_srgb,var(--primary)_28%,transparent)_270deg,var(--primary)_360deg)]",
-              look === "edge" && (busy ? "proto-spin-fast" : "proto-spin"),
+              "absolute inset-[-100%] bg-[conic-gradient(from_0deg,var(--primary),color-mix(in_srgb,var(--primary)_28%,transparent)_90deg,var(--primary)_180deg,color-mix(in_srgb,var(--primary)_28%,transparent)_270deg,var(--primary)_360deg)]",
+              busy ? "proto-spin-fast" : "proto-spin",
             )}
           />
           {inner}
@@ -201,23 +235,43 @@ function SearchTab({ look, busyRing }: { look: Look; busyRing: boolean }) {
       )}
 
       {look === "edge" || look === "still" ? (
-        // แบบ C บนปุ่มกลม: วงแหวนไล่สีหมุนรอบ — ขอบครบวง ไม่ขาดด้านไหน
-        <span className="relative -mt-7 grid size-14 place-items-center rounded-full p-[3px] ring-4 ring-background">
-          <span
-            aria-hidden
-            className={cn(
-              "absolute inset-0 rounded-full",
-              look === "still"
-                ? cn(
-                    "bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_28%,transparent)] to-primary",
-                    busyRing ? "proto-flow-fast" : "proto-flow",
-                  )
-                : "bg-[conic-gradient(from_0deg,var(--primary),color-mix(in_srgb,var(--primary)_25%,transparent)_90deg,var(--primary)_180deg,color-mix(in_srgb,var(--primary)_25%,transparent)_270deg,var(--primary)_360deg)]",
-              look === "edge" && (busyRing ? "proto-spin-fast" : "proto-spin"),
+        <span className="relative -mt-7 grid size-14 place-items-center">
+          {/* เงาเรืองใต้วงแหวน — ชั้นเดียวกับที่กล่องข้อความใช้ */}
+          {look === "still" && (
+            <span
+              aria-hidden
+              className={cn(
+                "absolute -inset-1 rounded-full bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_25%,transparent)] to-primary opacity-70 blur-md dark:opacity-50",
+                busyRing ? "proto-flow-fast" : "proto-flow-slow",
+              )}
+            />
+          )}
+          <span className="relative grid size-14 place-items-center overflow-hidden rounded-full p-[3px] ring-4 ring-background">
+            <span
+              aria-hidden
+              className={cn(
+                "absolute inset-0 rounded-full",
+                look === "still"
+                  ? cn(
+                      "bg-gradient-to-br from-primary via-[color-mix(in_srgb,var(--primary)_28%,transparent)] to-primary",
+                      busyRing ? "proto-flow-fast" : "proto-flow",
+                    )
+                  : "bg-[conic-gradient(from_0deg,var(--primary),color-mix(in_srgb,var(--primary)_25%,transparent)_90deg,var(--primary)_180deg,color-mix(in_srgb,var(--primary)_25%,transparent)_270deg,var(--primary)_360deg)]",
+                look === "edge" && (busyRing ? "proto-spin-fast" : "proto-spin"),
+              )}
+            />
+            {look === "still" && (
+              <span
+                aria-hidden
+                className={cn(
+                  "absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/70 to-transparent dark:via-white/45",
+                  busyRing ? "proto-sheen-fast" : "proto-sheen",
+                )}
+              />
             )}
-          />
-          <span className="relative grid size-full place-items-center rounded-full bg-primary text-primary-foreground shadow-lg">
-            <Search className="size-6" strokeWidth={2.25} aria-hidden />
+            <span className="relative grid size-full place-items-center rounded-full bg-primary text-primary-foreground shadow-lg">
+              <Search className="size-6" strokeWidth={2.25} aria-hidden />
+            </span>
           </span>
         </span>
       ) : (
@@ -272,9 +326,21 @@ export default function AiLookProtoPage() {
         }
         .proto-flow      { background-size: 200% 200%; animation: protoFlow 5s linear infinite; }
         .proto-flow-fast { background-size: 200% 200%; animation: protoFlow 1.8s linear infinite; }
+        /* ชั้นเงา: ไหลช้ากว่าขอบ ทำให้เห็นเป็นสองระยะ ไม่ใช่แผ่นเดียวแบน */
+        .proto-flow-slow { background-size: 200% 200%; animation: protoFlow 8s linear infinite; }
+        /* ประกาย: แถบสว่างพาดเฉียงวิ่งผ่านเป็นจังหวะ แล้วหายไปนานกว่าจะมาอีกรอบ
+           — จังหวะห่างคือสิ่งที่ทำให้มันอ่านเป็น "ประกาย" ไม่ใช่ไฟกะพริบ */
+        @keyframes protoSheen {
+          0%, 62%  { transform: translateX(-130%); }
+          88%, 100% { transform: translateX(130%); }
+        }
+        .proto-sheen      { animation: protoSheen 4.5s ease-in-out infinite; }
+        .proto-sheen-fast { animation: protoSheen 2s ease-in-out infinite; }
         @media (prefers-reduced-motion: reduce) {
           .proto-spin, .proto-spin-fast, .proto-pulse,
-          .proto-flow, .proto-flow-fast { animation: none; }
+          .proto-flow, .proto-flow-fast, .proto-flow-slow,
+          .proto-sheen, .proto-sheen-fast { animation: none; }
+          .proto-sheen, .proto-sheen-fast { opacity: 0; }
         }
       `}</style>
 
