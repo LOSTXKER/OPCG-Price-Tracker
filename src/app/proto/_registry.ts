@@ -24,6 +24,20 @@ export type ProtoEntry = {
 /** ใหม่สุดอยู่บน */
 export const PROTOS: ProtoEntry[] = [
   {
+    slug: "ai-look",
+    title: "ภาษาภาพของส่วน AI",
+    question: "ส่วน AI ควรใช้เงาไล่สีแบบไหน — โทนอุ่นของเรา หรือรุ้งม่วง-ฟ้าแบบที่เบสส่งมา",
+    date: "2026-08-29",
+    status: "รอเคาะ",
+  },
+  {
+    slug: "ai-look",
+    title: "ภาษาภาพของส่วน AI",
+    question: "ส่วนที่เป็น AI ควรใช้สี/ภาษาภาพแบบไหน",
+    date: "2026-08-29",
+    status: "รอเคาะ",
+  },
+  {
     slug: "photo-scan",
     title: "สแกนการ์ดด้วยกล้อง",
     question: "หน้าจอตอนเล็งกล้องสแกนการ์ดควรหน้าตาแบบไหน",
