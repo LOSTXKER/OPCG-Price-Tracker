@@ -85,30 +85,43 @@ export function WatchlistToolbar({
             WatchlistSelectionBar above the table header carries the actions.
             Search/filter stay usable while picking rows; picks are pruned to
             the rows that stay visible (see pruneSelectedToVisible). */}
-        {scope && (
-          <div
-            className="min-w-0 sm:col-start-1 sm:row-start-1"
-            data-slot="watchlist-game-scope"
-          >
-            {scope}
-          </div>
-        )}
+        {/* Mobile row one: the game scope and the search field share a line.
+            The mobile search lives inside the scope's own grid cell — a second
+            grid item could not sit beside it on a one-column grid. From sm up
+            this cell turns back into scope-only and the wider search cell
+            below takes over. */}
+        <div
+          className={cn(
+            "flex min-w-0 items-center gap-2 sm:col-start-1 sm:row-start-1 sm:block",
+            !scope && "sm:hidden",
+          )}
+          data-slot="watchlist-game-scope"
+        >
+          {scope}
+
+          <ToolbarSearch
+            type="search"
+            value={search}
+            onValueChange={onSearchChange}
+            placeholder={t(lang, "watchlistSearchPlaceholder")}
+            aria-label={t(lang, "watchlistSearchPlaceholder")}
+            containerClassName="min-w-0 flex-1 border-border bg-background py-0 sm:hidden"
+            className="h-11 w-full"
+          />
+        </div>
 
         <div
           className="contents"
           data-slot="watchlist-toolbar-controls"
         >
-          {/* Mobile (<sm): a visible search field (owner: no icon-collapse) +
-              filter + select. The period pill lives on the list header row. */}
+          {/* Mobile row two: the grade rail keeps the free space and scrolls,
+              with filter + select parked at its tail. The period pill lives on
+              the list header row. */}
           <div className="flex min-w-0 items-center gap-2 sm:hidden">
-            <ToolbarSearch
-              type="search"
-              value={search}
-              onValueChange={onSearchChange}
-              placeholder={t(lang, "watchlistSearchPlaceholder")}
-              aria-label={t(lang, "watchlistSearchPlaceholder")}
-              containerClassName="min-w-0 flex-1 border-border bg-background py-0"
-              className="h-11 w-full"
+            <GradeControl
+              value={grade}
+              onChange={onGradeChange}
+              className="flex-1"
             />
 
             <div className="flex shrink-0 items-center gap-2">
@@ -133,10 +146,6 @@ export function WatchlistToolbar({
                 <ListChecks className="size-4" />
               </IconButton>
             </div>
-          </div>
-
-          <div className="min-w-0 sm:hidden">
-            <GradeControl value={grade} onChange={onGradeChange} />
           </div>
 
           {/* Tablet: scope + search share row one, actions get a deliberate
