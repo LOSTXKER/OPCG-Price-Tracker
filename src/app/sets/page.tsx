@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { JsonLd } from "@/lib/seo/json-ld-script";
 import { breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo/json-ld";
 import { prisma } from "@/lib/db";
+import { resolveSetReleaseDate } from "@/lib/constants/sets";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { isMarketplaceEnabled } from "@/lib/marketplace/feature-flag";
 import { t, type Language } from "@/lib/i18n";
@@ -100,22 +101,28 @@ export default async function SetsIndexPage() {
       const card = nativeTopCardMap.get(id) ?? anyTopCardMap.get(id);
       if (card) topCardMap.set(id, card);
     }
-    setsRaw = sets.map((s) => ({
-      id: s.id,
-      code: s.code,
-      name: s.name,
-      nameEn: s.nameEn,
-      type: s.type,
-      cardCount: s.cardCount,
-      productCardCount: productCountMap.get(s.code) ?? s.cardCount,
-      releaseDate: s.releaseDate?.toISOString() ?? null,
-      // Formatted on the server so the tile never re-formats a date client-side.
-      releaseLabel: formatSetMonth(SEO_LANG, s.releaseDate),
-      boxImageUrl: s.boxImageUrl,
-      topCard: topCardMap.get(s.id) ?? null,
-      // Sealed-box SNKRDUNK price — wired in Phase B (scraper + schema).
-      boxPriceJpy: null,
-    }));
+    setsRaw = sets.map((s) => {
+      // No set row carries a date yet, so the verified Bandai catalog is what
+      // the tiles and the "newest set" line actually read (same resolver the
+      // set page uses — the list must not deny a date the detail page shows).
+      const releaseDate = resolveSetReleaseDate(s.code, s.releaseDate);
+      return {
+        id: s.id,
+        code: s.code,
+        name: s.name,
+        nameEn: s.nameEn,
+        type: s.type,
+        cardCount: s.cardCount,
+        productCardCount: productCountMap.get(s.code) ?? s.cardCount,
+        releaseDate: releaseDate?.toISOString() ?? null,
+        // Formatted on the server so the tile never re-formats it client-side.
+        releaseLabel: formatSetMonth(SEO_LANG, releaseDate),
+        boxImageUrl: s.boxImageUrl,
+        topCard: topCardMap.get(s.id) ?? null,
+        // Sealed-box SNKRDUNK price — wired in Phase B (scraper + schema).
+        boxPriceJpy: null,
+      };
+    });
   } catch (error) {
     console.error("Failed to fetch sets:", error);
     dbError = true;
