@@ -1,0 +1,8 @@
+{
+  "name": "meecard-bestos-tools",
+  "private": true,
+  "type": "module",
+  "description": "งานอัตโนมัติของ MeeCard ที่ระบบ bestos v3 เรียกตามเวลา (ย้ายจาก bestos v2 tools/companion 2026-09-09) — ตรวจการจับคู่การ์ด Yuyutei/SNKRDUNK (อ่านอย่างเดียว) และไล่รายการ SNKRDUNK ที่ยังไม่มี · secret: MEECARD_MCP_TOKEN ใน ~/.config/bestos/env",
+  "scripts": { "test": "node --test *.test.mjs" },
+  "dependencies": { "@napi-rs/canvas": "^1.0.7" }
+}
