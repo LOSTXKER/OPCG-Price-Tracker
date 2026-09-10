@@ -63,3 +63,5 @@
 3. ลองปุ่ม "เพิ่มไปหน้าจอโฮม" บนมือถือจริงหลัง deploy
 
 - 2026-09-10 — มาตรฐาน UI ใหม่ (สมอง new-repo §A5): กติกา UI ใน AGENTS · โครง `/proto` ใหม่ (ProtoCompare วางเทียบข้างกัน · component จริงรับ variant) · `/proto` เปิดได้โดยไม่ login ตอน dev · `.cache/` ใน .gitignore (proto-shots) · ไม่มี engine ดีไซน์ภายนอก
+
+- 2026-09-10 — DESIGN.md/PRODUCT.md ย่อเป็นฉบับบางตามมาตรฐานใหม่ (8KB→4KB · ฉบับเต็มอยู่ใน git) — ข้อสงสัยที่รอเบสเคาะ: ขอบเขตสี honey (DESIGN เดิม = เฉพาะปุ่มซื้อ · VISION = accent ทุกจุด interactive)
