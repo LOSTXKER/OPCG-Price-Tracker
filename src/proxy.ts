@@ -20,6 +20,7 @@ const GAME_COOKIE_OPTS = {
 };
 
 export async function proxy(request: NextRequest) {
+  if (process.env.NODE_ENV === "development" && request.nextUrl.pathname.startsWith("/proto")) return NextResponse.next(); // หน้าลอง: ตอน dev เปิดได้โดยไม่ login (มาตรฐาน UI 2026-09-10)
   const { pathname } = request.nextUrl;
   const segments = pathname.split("/").filter(Boolean);
   const seg1 = segments[0];

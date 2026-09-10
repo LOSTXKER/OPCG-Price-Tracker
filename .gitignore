@@ -57,3 +57,6 @@ CLAUDE.local.md
 
 # generated artifact (render จาก REDESIGN.md ด้วย /tmp/md2html.mjs)
 REDESIGN.html
+
+# ของชั่วคราวของเครื่องมือ (proto-shots เขียนที่นี่)
+.cache/
