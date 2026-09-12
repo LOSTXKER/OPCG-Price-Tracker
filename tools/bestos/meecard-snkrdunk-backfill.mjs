@@ -337,14 +337,28 @@ export function classifyBackfillListingReason(listing) {
   return "requires_exact_variant_review";
 }
 
-function parsePagination(value, status) {
+function paginationNumber(value) {
+  return (typeof value === 'number' || (typeof value === 'string' && value.trim())) ? Number(value) : NaN;
+}
+
+function parsePagination(value, status, page, limit) {
   const rows = Array.isArray(value?.data) ? value.data : null;
-  const totalPage = Number(value?.totalPage);
-  const totalItems = Number(value?.totalItems);
-  const validPages = Number.isInteger(totalPage)
+  const totalPage = paginationNumber(value?.totalPage);
+  const totalItems = paginationNumber(value?.totalItems);
+  const validPages = Number.isSafeInteger(totalPage)
     && (totalPage >= 1 || (totalPage === 0 && totalItems === 0));
-  if (!rows || !validPages || !Number.isInteger(totalItems) || totalItems < 0) {
-    throw new Error(`snkrdunk_mapping_list status=${status} pagination ไม่ถูกต้อง`);
+  if (!rows || !validPages || !Number.isSafeInteger(totalItems) || totalItems < 0) {
+    throw new Error(`snkrdunk_mapping_list status=${status} page=${page} pagination ไม่ถูกต้อง (pages=${totalPage}, items=${totalItems})`);
+  }
+  const expectedPages = Math.ceil(totalItems / limit);
+  if (totalPage !== expectedPages && !(totalItems === 0 && totalPage === 1)) {
+    throw new Error(`snkrdunk_mapping_list status=${status} page=${page} pagination จำนวนหน้าไม่ตรงจำนวนข้อมูล (expectedPages=${expectedPages}, pages=${totalPage}, items=${totalItems})`);
+  }
+  if (
+    (Object.hasOwn(value, 'currentPage') && paginationNumber(value.currentPage) !== page)
+    || (Object.hasOwn(value, 'pageSize') && paginationNumber(value.pageSize) !== limit)
+  ) {
+    throw new Error(`snkrdunk_mapping_list status=${status} page=${page} pagination ไม่ตรงคำขอ (currentPage=${paginationNumber(value.currentPage)}, pageSize=${paginationNumber(value.pageSize)}, expectedSize=${limit})`);
   }
   return { rows, totalPage, totalItems };
 }
@@ -355,29 +369,37 @@ async function fetchMappingsForStatus(client, status) {
     page: 1,
     limit,
     status,
-    sort: "updatedAt",
+    // Price updates change updatedAt between offset pages. productNumber avoids
+    // that movement; ties/concurrent catalog changes still require integrity checks.
+    sort: "productNumber",
     order: "asc",
-  }), status);
+  }), status, 1, limit);
   const rows = [...first.rows];
   for (let page = 2; page <= first.totalPage; page++) {
     const next = parsePagination(await client.callReadOnly("snkrdunk_mapping_list", {
       page,
       limit,
       status,
-      sort: "updatedAt",
+      sort: "productNumber",
       order: "asc",
-    }), status);
+    }), status, page, limit);
+    if (next.totalPage !== first.totalPage || next.totalItems !== first.totalItems) {
+      throw new Error(`snkrdunk_mapping_list status=${status} page=${page} pagination เปลี่ยนระหว่างอ่าน (pages=${first.totalPage}->${next.totalPage}, items=${first.totalItems}->${next.totalItems})`);
+    }
     rows.push(...next.rows);
   }
-  const mappingIds = rows.map((row) => Number(row?.id));
-  const sourceIds = rows.map((row) => Number(row?.snkrdunkId));
-  if (
-    rows.length !== first.totalItems
-    || mappingIds.some((id) => !Number.isSafeInteger(id) || id <= 0)
-    || new Set(mappingIds).size !== rows.length
-    || sourceIds.some((id) => !Number.isSafeInteger(id) || id <= 0)
-  ) {
-    throw new Error(`snkrdunk_mapping_list status=${status} integrity ไม่ผ่าน`);
+  const mappingIds = rows.map((row) => paginationNumber(row?.id));
+  const sourceIds = rows.map((row) => paginationNumber(row?.snkrdunkId));
+  const invalidMappings = mappingIds.filter((id) => !Number.isSafeInteger(id) || id <= 0).length;
+  const invalidSources = sourceIds.filter((id) => !Number.isSafeInteger(id) || id <= 0).length;
+  const unique = new Set(mappingIds).size;
+  const reasons = [];
+  if (rows.length !== first.totalItems) reasons.push('จำนวนข้อมูลไม่ครบ');
+  if (invalidMappings) reasons.push(`id invalid=${invalidMappings}`);
+  if (unique !== rows.length) reasons.push('mapping ID ซ้ำ');
+  if (invalidSources) reasons.push(`snkrdunkId invalid=${invalidSources}`);
+  if (reasons.length) {
+    throw new Error(`snkrdunk_mapping_list status=${status} integrity ไม่ผ่าน: ${reasons.join(', ')} (fetched=${rows.length}, reported=${first.totalItems}, unique=${unique})`);
   }
   return rows;
 }

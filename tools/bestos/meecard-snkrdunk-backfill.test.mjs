@@ -11,6 +11,7 @@ import {
   BackfillUsageError,
   classifyBackfillListingReason,
   defaultBackfillPaths,
+  fetchKnownSnkrdunkIds,
   parseBackfillCliArgs,
   readBackfillCheckpoint,
   runSnkrdunkBackfill,
@@ -123,6 +124,109 @@ const fastDiscover = (options) => discoverSnkrdunkOnePieceCards({
   ...options,
   maxRetries: 0,
   pageDelayMs: 0,
+});
+
+const statuses = ['pending', 'matched', 'rejected', 'skipped'];
+const mappingRows = (count, offset = 0) => Array.from({ length: count }, (_, index) => ({
+  id: offset + index + 1,
+  snkrdunkId: 10000 + offset + index + 1,
+  productNumber: `OP01-${String(index + 1).padStart(3, '0')}`,
+  updatedAt: index + 1,
+}));
+function paginatedMappings(pages) {
+  const calls = [];
+  return {
+    calls,
+    async callReadOnly(name, args) {
+      assert.equal(name, 'snkrdunk_mapping_list');
+      calls.push(args);
+      return args.status === 'pending' ? pages[args.page - 1] : { data: [], totalPage: 1, totalItems: 0 };
+    },
+  };
+}
+
+test('mapping pagination stays complete for every status while price updates move updatedAt between pages', async () => {
+  const rowsByStatus = Object.fromEntries(statuses.map((status, index) => [status, mappingRows(150, index * 1000)]));
+  const calls = [];
+  const result = await fetchKnownSnkrdunkIds({
+    async callReadOnly(name, args) {
+      assert.equal(name, 'snkrdunk_mapping_list');
+      calls.push(args);
+      const rows = rowsByStatus[args.status];
+      if (args.page === 2) rows[0].updatedAt = 1000; // A price update after page 1 changes its offset position.
+      const sorted = [...rows].sort((a, b) => args.sort === 'updatedAt' ? a.updatedAt - b.updatedAt : a.productNumber.localeCompare(b.productNumber));
+      return { data: sorted.slice((args.page - 1) * args.limit, args.page * args.limit), totalPage: 2, totalItems: 150, currentPage: args.page, pageSize: args.limit };
+    },
+  });
+  assert.deepEqual(result.statusCounts, { pending: 150, matched: 150, rejected: 150, skipped: 150 });
+  assert.equal(result.ids.size, 600);
+  assert.ok(statuses.every(status => rowsByStatus[status].every(row => result.ids.has(row.snkrdunkId))));
+  assert.equal(calls.length, 8);
+  assert.ok(calls.every(args => args.sort === 'productNumber' && args.order === 'asc'));
+});
+
+for (const changed of [{ totalItems: 151 }, { totalPage: 3 }]) test(`mapping pagination rejects changed metadata ${Object.keys(changed)[0]}`, async () => {
+  const rows = mappingRows(150);
+  const client = paginatedMappings([
+    { data: rows.slice(0, 100), totalPage: 2, totalItems: 150 },
+    { data: rows.slice(100), totalPage: 2, totalItems: 150, ...changed },
+  ]);
+  await assert.rejects(fetchKnownSnkrdunkIds(client), /status=pending.*page=2.*(?:150|2).*(?:151|3)/);
+  assert.equal(client.calls.length, 2, 'metadata drift stops this read without retries or later statuses');
+});
+
+test('duplicate mapping IDs at a productNumber tie still fail instead of being silently deduplicated', async () => {
+  const rows = mappingRows(150).map(row => ({ ...row, productNumber: 'OP01-001' }));
+  const client = paginatedMappings([
+    { data: rows.slice(0, 100), totalPage: 2, totalItems: 150 },
+    { data: [rows[99], ...rows.slice(101)], totalPage: 2, totalItems: 150 },
+  ]);
+  await assert.rejects(fetchKnownSnkrdunkIds(client), /status=pending.*(?:ซ้ำ|duplicate).*fetched=150.*unique=149/);
+});
+
+for (const [field, badValue] of [['id', null], ['id', true], ['id', ' '], ['id', 1.5], ['snkrdunkId', 0], ['snkrdunkId', 'broken']]) test(`mapping pagination rejects invalid ${field}=${badValue}`, async () => {
+  const client = paginatedMappings([{ data: [{ ...mappingRows(1)[0], [field]: badValue }], totalPage: 1, totalItems: 1 }]);
+  await assert.rejects(fetchKnownSnkrdunkIds(client), new RegExp(`status=pending.*${field}.*invalid=1`));
+});
+
+test('mapping pagination reports a short read instead of returning an incomplete known-ID set', async () => {
+  const client = paginatedMappings([{ data: mappingRows(1), totalPage: 1, totalItems: 2 }]);
+  await assert.rejects(fetchKnownSnkrdunkIds(client), /status=pending.*fetched=1.*reported=2/);
+});
+
+for (const metadata of [{ currentPage: 2 }, { pageSize: 50 }]) test(`mapping pagination validates supplied ${Object.keys(metadata)[0]}`, async () => {
+  const client = paginatedMappings([{ data: mappingRows(1), totalPage: 1, totalItems: 1, currentPage: 1, pageSize: 100, ...metadata }]);
+  await assert.rejects(fetchKnownSnkrdunkIds(client), /status=pending.*page=1.*ไม่ตรงคำขอ/);
+});
+
+test('mapping pagination rejects missing totals and accepts a confirmed empty set', async () => {
+  await assert.rejects(fetchKnownSnkrdunkIds(paginatedMappings([{ data: [], totalPage: null, totalItems: null }])), /pagination ไม่ถูกต้อง/);
+  const result = await fetchKnownSnkrdunkIds(paginatedMappings([{ data: [], totalPage: 0, totalItems: 0 }]));
+  assert.equal(result.ids.size, 0);
+});
+
+for (const [totalPage, totalItems] of [[2, 0], [2, 1], [Number.MAX_SAFE_INTEGER, 0]]) test(`mapping pagination rejects self-contradictory pages=${totalPage} items=${totalItems} before another request`, async () => {
+  const client = paginatedMappings([{ data: mappingRows(totalItems), totalPage, totalItems }]);
+  await assert.rejects(fetchKnownSnkrdunkIds(client), /page=1.*pagination.*expectedPages=/);
+  assert.equal(client.calls.length, 1, 'invalid page counts must not trigger an unbounded page walk');
+});
+
+test('mapping pagination failure leaves the existing backfill checkpoint unchanged', async (t) => {
+  const layout = await tempLayout(t);
+  await writeAtomicBackfillCheckpoint(layout.checkpointPath, checkpoint());
+  const before = await fs.readFile(layout.checkpointPath, 'utf8');
+  const client = paginatedMappings([{ data: [mappingRows(1)[0], mappingRows(1)[0]], totalPage: 1, totalItems: 2 }]);
+  let writes = 0;
+  await assert.rejects(runSnkrdunkBackfill({
+    argv: [`--checkpoint=${layout.checkpointPath}`, `--report-dir=${layout.reportDir}`],
+    env: {},
+    clientFactory: () => ({ initialize: async () => {}, callReadOnly: client.callReadOnly }),
+    discoverImpl: async () => { throw new Error('must stop before discovery'); },
+    writeCheckpointImpl: async () => { writes++; },
+    writeReportImpl: async () => { writes++; },
+  }), /mapping ID ซ้ำ/);
+  assert.equal(writes, 0);
+  assert.equal(await fs.readFile(layout.checkpointPath, 'utf8'), before);
 });
 
 test("CLI/env parsing is bounded and exposes no apply mode", () => {
