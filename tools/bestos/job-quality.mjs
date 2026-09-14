@@ -146,12 +146,36 @@ export function validateObservation(job, observation) {
   return { ...checked, producerRunId: report.runId, startedAt: report.startedAt, finishedAt: report.finishedAt, reportSha256: saved.sha256 };
 }
 
-function presentation(job, j) {
+// Old immutable proofs retain their exact text contract during delivery recovery.
+function legacyPresentation(job, j) {
   if (job === JOBS[0]) return {
     key: JSON.stringify([j.yuyutei.pending, j.yuyutei.ready, j.snkrdunk.pending, j.snkrdunk.readyExisting, j.snkrdunk.discoveredUnmapped, j.snkrdunk.readyNew, j.blocked]),
     text: [`🃏 MeeCard จับคู่การ์ด (ตรวจอย่างเดียว · ${j.mode})`, `Yuyutei: รอตรวจ ${j.yuyutei.pending} · พร้อมอนุมัติ ${j.yuyutei.ready}`, `SNKRDUNK: รอตรวจ ${j.snkrdunk.pending} · พร้อมอนุมัติ ${j.snkrdunk.readyExisting} · เจอใหม่ยังไม่มีในระบบ ${j.snkrdunk.discoveredUnmapped} (พร้อมอนุมัติ ${j.snkrdunk.readyNew})`, j.blocked ? `⛔ ติดด่านก่อนอนุมัติ ${j.blocked}` : null, `รายงานเต็ม: ${j.reportPath}`].filter(Boolean).join('\n'),
   };
   return { key: JSON.stringify({ counts: j.counts, pageEnd: j.pageEnd, status: j.status }), text: `🃏 MeeCard ไล่รายการ SNKRDUNK หน้า ${j.pageStart}–${j.pageEnd} (${j.status})\n${Object.entries(j.counts).filter(([key]) => key !== 'reasons').map(([key, value]) => `• ${key}: ${value}`).join('\n')}\nรายงานเต็ม: ${j.reportPath}` };
+}
+const thaiTime = value => new Intl.DateTimeFormat('th-TH', { timeZone: 'Asia/Bangkok', dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+function replayHeading(proof, finishedAt) {
+  return proof.presentationVersion === 2 ? `♻️ ส่งสรุปที่ตรวจไว้แล้วอีกครั้ง · ข้อมูล ณ ${thaiTime(finishedAt)} น. (เวลาไทย)`
+    : `♻️ สรุปเดิมจากรอบ ${proof.origin.runId} · อ่านข้อมูลเมื่อ ${finishedAt}`;
+}
+function presentation(job, j, version = 2) {
+  const old = legacyPresentation(job, j);
+  if (version !== 2) return old;
+  if (job === JOBS[0]) return { key: old.key, text: [
+    '🃏 ผลตรวจการจับคู่การ์ด MeeCard',
+    `Yuyutei: รอตรวจ ${j.yuyutei.pending} รายการ · พร้อมอนุมัติ ${j.yuyutei.ready} รายการ`,
+    `SNKRDUNK: รอตรวจ ${j.snkrdunk.pending} รายการ · พร้อมอนุมัติ ${j.snkrdunk.readyExisting} รายการ`,
+    `พบการ์ดใหม่ที่ยังไม่มีในระบบ ${j.snkrdunk.discoveredUnmapped} รายการ · พร้อมอนุมัติ ${j.snkrdunk.readyNew} รายการ`,
+    j.blocked ? `ยังติดเงื่อนไขก่อนอนุมัติ ${j.blocked} รายการ` : null,
+    'รอบนี้ตรวจอย่างเดียว ยังไม่ได้เปลี่ยนการจับคู่',
+  ].filter(Boolean).join('\n') };
+  const status = { partial: 'ยังอ่านรายการย้อนหลังไม่ครบ', complete: 'อ่านรายการย้อนหลังครบแล้ว', blocked: 'การอ่านรายการย้อนหลังยังติดข้อจำกัด', 'tail-refresh': 'ตรวจรายการล่าสุดอีกครั้ง ไม่ใช่การยืนยันว่าอ่านย้อนหลังครบ' }[j.status];
+  return { key: old.key, text: [
+    `🃏 ผลตรวจรายการ SNKRDUNK หน้า ${j.pageStart}–${j.pageEnd}`,
+    `อ่านทั้งหมด ${j.counts.total} รายการ · มีในระบบแล้ว ${j.counts.known} รายการ · ยังไม่มีในระบบ ${j.counts.unmapped} รายการ`,
+    status, 'รอบนี้อ่านข้อมูลอย่างเดียว ยังไม่ได้เพิ่มการ์ดหรือเปลี่ยนการจับคู่',
+  ].join('\n') };
 }
 function readReceipt(env, job, runId) {
   const dir = path.join(env.BESTOS_BRAIN, 'records/_receipts', job);
@@ -181,12 +205,13 @@ export function verifyJobQuality(stdout, env = process.env, now = Date.now()) {
     equal(hash(String(stdout).trim()), proof.output?.sha256, 'hash ข้อความที่ตัวรันได้รับ');
     equal(String(stdout).trim(), proof.output?.text, 'ข้อความที่ตัวรันได้รับ');
     const checked = validateObservation(proof.job, proof.observation);
-    const view = presentation(proof.job, proof.observation.producerSummary);
+    expect(proof.presentationVersion == null || proof.presentationVersion === 2, 'รูปแบบสรุปไม่ถูกต้อง');
+    const view = presentation(proof.job, proof.observation.producerSummary, proof.presentationVersion ?? 1);
     equal(proof.key, view.key, 'key ของสรุป');
     let expectedText = view.text;
     if (proof.kind === 'replay') {
       replaySource(proof, env);
-      expectedText = `♻️ สรุปเดิมจากรอบ ${proof.origin.runId} · อ่านข้อมูลเมื่อ ${checked.finishedAt}\n${view.text}`;
+      expectedText = `${replayHeading(proof, checked.finishedAt)}\n${view.text}`;
       expect(proof.output.mode === 'summary', 'replay ต้องแสดงที่มาของสรุป');
     } else if (proof.output.mode === 'quiet') {
       expect((proof.quiet?.reason === 'unchanged' && proof.quiet.previousKey === view.key) || (proof.quiet?.reason === 'empty' && proof.job === JOBS[1] && checked.summary.counts.total === 0 && checked.summary.status !== 'blocked'), 'ความเงียบไม่มีผลอ่านใหม่รองรับ');
@@ -199,7 +224,7 @@ export function verifyJobQuality(stdout, env = process.env, now = Date.now()) {
 
 export function runBusinessWrapper({ job, producer, stateFile, argv = process.argv.slice(2), env = process.env }) {
   const managed = Boolean(env.BESTOS_JOB || env.BESTOS_RUN_ID);
-  const base = { version: 1, job, runId: env.BESTOS_RUN_ID, createdAt: new Date().toISOString() };
+  const base = { version: 1, presentationVersion: 2, job, runId: env.BESTOS_RUN_ID, createdAt: new Date().toISOString() };
   try {
     if (managed) { expect(env.BESTOS_JOB === job, 'ตัวห่อเป็นคนละงานกับตัวรัน'); qualityPath(env); }
     const delivery = openSummary(stateFile, env);
@@ -210,7 +235,7 @@ export function runBusinessWrapper({ job, producer, stateFile, argv = process.ar
       const checked = validateObservation(job, source.data.observation);
       view = presentation(job, source.data.observation.producerSummary);
       const origin = source.data.origin ?? { job: pending.job, runId: pending.runId };
-      const text = `♻️ สรุปเดิมจากรอบ ${origin.runId} · อ่านข้อมูลเมื่อ ${checked.finishedAt}\n${view.text}`;
+      const text = `${replayHeading({ ...base, origin }, checked.finishedAt)}\n${view.text}`;
       proof = { ...base, kind: 'replay', origin, replay: { job: pending.job, runId: pending.runId, sha256: source.sha256 }, observation: source.data.observation, key: view.key, output: { mode: 'summary', text, sha256: hash(text) } };
       replaySource(proof, env);
     } else {

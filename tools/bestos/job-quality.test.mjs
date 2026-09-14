@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import { qualityCases, qualityFixture } from './quality-test-fixture.mjs';
 
 for (const c of qualityCases) {
@@ -49,7 +50,7 @@ for (const c of qualityCases) {
     f.receipt(first.stdout, { state: 'failed', delivered: false, delivery_status: 'pending', message_id: null });
     const replay = f.run('fixture-2');
     assert.equal(replay.status, 0, replay.stderr);
-    assert.match(replay.stdout, /^♻️ สรุปเดิมจากรอบ fixture-1/);
+    assert.match(replay.stdout, /^♻️ ส่งสรุปที่ตรวจไว้แล้วอีกครั้ง/);
     assert.ok(replay.stdout.includes(first.stdout.trim()));
     const checked = f.verify(replay.stdout, 'fixture-2');
     assert.equal(checked.pass, true, checked.reason);
@@ -81,6 +82,36 @@ for (const c of qualityCases) {
     assert.equal(f.calls(), 'run\n');
   });
 }
+
+for (const c of qualityCases) test(`${c.job}: Thai summaries keep counts while old proofs and unsent recovery stay valid`, t => {
+  const f = qualityFixture(t, c), first = f.run();
+  assert.equal(first.status, 0, first.stderr);
+  assert.doesNotMatch(first.stdout, /dry-run|tail-refresh|total:|known:|unmapped:|\.json|\/tmp\/|\/var\//);
+  assert.match(first.stdout, /ยังไม่ได้/);
+  const proof = JSON.parse(fs.readFileSync(f.proof(), 'utf8')), j = proof.observation.producerSummary;
+  assert.equal(proof.presentationVersion, 2);
+  const legacy = c.job === 'meecard-auto-match'
+    ? `🃏 MeeCard จับคู่การ์ด (ตรวจอย่างเดียว · dry-run)\nYuyutei: รอตรวจ 2 · พร้อมอนุมัติ 1\nSNKRDUNK: รอตรวจ 3 · พร้อมอนุมัติ 0 · เจอใหม่ยังไม่มีในระบบ 1 (พร้อมอนุมัติ 0)\nรายงานเต็ม: ${j.reportPath}`
+    : `🃏 MeeCard ไล่รายการ SNKRDUNK หน้า 1–1 (partial)\n• total: 1\n• known: 0\n• unmapped: 1\nรายงานเต็ม: ${j.reportPath}`;
+  delete proof.presentationVersion;
+  proof.output.text = legacy; proof.output.sha256 = crypto.createHash('sha256').update(legacy).digest('hex');
+  fs.writeFileSync(f.proof(), JSON.stringify(proof));
+  assert.equal(f.verify(legacy).pass, true, 'old immutable output remains verifiable');
+  const queued = f.read(); queued.pending.text = legacy;
+  queued.pending.outputHash = crypto.createHash('sha256').update(legacy + '\n').digest('hex');
+  fs.writeFileSync(f.state, JSON.stringify(queued));
+  const saved = fs.readFileSync(f.state), savedProof = fs.readFileSync(f.proof());
+  assert.equal(f.run('still-uncertain').status, 1, 'unconfirmed delivery cannot be rewritten');
+  assert.deepEqual(fs.readFileSync(f.state), saved);
+  f.receipt(legacy, { state: 'failed', delivered: false, delivery_status: 'pending', message_id: null });
+  const replay = f.run('fixture-2');
+  assert.equal(replay.status, 0, replay.stderr); assert.equal(f.verify(replay.stdout, 'fixture-2').pass, true);
+  assert.match(replay.stdout, /ข้อมูล ณ .+เวลาไทย/);
+  assert.doesNotMatch(replay.stdout, /fixture-1|dry-run|partial|\.json/);
+  assert.ok(replay.stdout.includes(first.stdout.trim()));
+  assert.deepEqual(fs.readFileSync(f.proof()), savedProof, 'original proof stays byte-for-byte');
+  assert.equal(f.calls(), 'run\n', 'recovery does not repeat the business read');
+});
 
 for (const badCheckpoint of ['complete', 'no-advance', 'another-run']) test(`backfill rejects checkpoint contradiction: ${badCheckpoint}`, t => {
   const f = qualityFixture(t, qualityCases[1]); f.behavior({ badCheckpoint });

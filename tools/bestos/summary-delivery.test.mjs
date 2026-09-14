@@ -20,7 +20,7 @@ for (const c of cases) {
   test(`${c.job}: definite failure before sending replays the saved summary without redoing the producer`, t => {
     const f = fixture(t, c), first = f.run(); assert.equal(first.status, 0);
     f.receipt(first.stdout, { state: "failed", delivered: false, delivery_status: "pending", message_id: null });
-    const again = f.run("fixture-2"); assert.equal(again.status, 0, again.stderr); assert.ok(again.stdout.startsWith('♻️ สรุปเดิมจากรอบ fixture-1')); assert.ok(again.stdout.includes(first.stdout.trim()));
+    const again = f.run("fixture-2"); assert.equal(again.status, 0, again.stderr); assert.ok(again.stdout.startsWith('♻️ ส่งสรุปที่ตรวจไว้แล้วอีกครั้ง')); assert.ok(again.stdout.includes(first.stdout.trim()));
     assert.equal(f.calls(), "run\n"); assert.equal(f.read().pending.runId, "fixture-2");
   });
   test(`${c.job}: legacy pre-delivery keys and direct CLI output do not count as delivery`, t => {
