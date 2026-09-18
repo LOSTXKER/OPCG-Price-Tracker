@@ -3,7 +3,8 @@
 // Rebuilt 2026-09-06 (first version lived in a session scratchpad and was lost on reboot — lesson 2026-09-06).
 // Reuses the supervisor's image features + Vision OCR locale gate. Never calls mutation tools.
 //
-// usage: node tools/companion/meecard-snkrdunk-catalog-plan.mjs --catalog snkr.json --cards cards.json --mappings maps.json --out DIR
+// usage: node tools/bestos/meecard-snkrdunk-catalog-plan.mjs --catalog snkr.json --cards cards.json --mappings maps.json --out DIR [--no-ocr]
+//   --no-ocr = ข้ามขั้น Apple Vision (เครื่องที่ไม่ใช่ Mac) · กรองฉบับต่างภาษาจากชื่อ/ป้ายในชื่ออย่างเดียว (เบสเคาะทาง ข 2026-09-19)
 //   snkr.json     = { items: [...] } from https://snkrdunk.com/en/v1/brands/onepiece/streetwears?perPage=100&page=N&department=tradingCard
 //   cards.json    = { cards: [...] }   from MCP card_list (all pages)
 //   maps.json     = { mappings: [...] } from MCP snkrdunk_mapping_list (all statuses)
@@ -137,10 +138,16 @@ for (const r of eligible) {
 const shadow = eligible.filter((r) => r.tier && !r.verdict);
 log("visual pass", shadow.length, "auto", shadow.filter((r) => r.tier === "auto").length, "review", shadow.filter((r) => r.tier === "review").length);
 
+const NO_OCR = argv.includes("--no-ocr");
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "meecard-snkr-plan-ocr-"));
 try {
   const ocrRows = shadow.map((r) => ({ key: String(r.snkrdunkId), snkrdunkId: r.snkrdunkId, name: r.name, imageUrl: r.thumbnailUrl }));
   const blocked = new Map(ocrRows.map((row) => [row.key, detectBlockedLocaleMarker(row)]));
+  if (NO_OCR) {
+    // ไม่มี Apple Vision: เชื่อป้ายในชื่ออย่างเดียว (คู่ที่คนจับไว้ 3,893 คู่เป็นฉบับญี่ปุ่น 100% — วัด 09-19) · ใบที่ชื่อบอกว่าต่างภาษาถูกตัดไปแล้วข้างบน
+    for (const r of shadow) { const b = blocked.get(String(r.snkrdunkId)); r.locale = b?.blocked ? { pass: false, reason: "explicit_non_japanese_locale" } : { pass: true, reason: "name_filter_only_no_ocr" }; }
+    throw Object.assign(new Error("skip-ocr"), { skipOcr: true });
+  }
   const dls = await mapLimit(ocrRows.filter((row) => !blocked.get(row.key)?.blocked), 6, (row) => downloadSnkrdunkSourceImage(row, tmp));
   const batch = await runVisionOcrBatch(dls.filter((d) => d.ok), tmp);
   const dl = new Map(dls.map((d) => [d.key, d]));
@@ -151,7 +158,8 @@ try {
     const o = batch.results.get(key); if (!o?.ok) { r.locale = { pass: false, reason: "vision_ocr_error" }; continue; }
     const c = classifyJapaneseLocale(o.lines); r.locale = { pass: c.pass, reason: c.reason, kanaCharacters: c.kanaCharacters, kanaLineCount: c.kanaLineCount };
   }
-} finally { fs.rmSync(tmp, { recursive: true, force: true }); }
+} catch (e) { if (!e?.skipOcr) throw e; }
+finally { fs.rmSync(tmp, { recursive: true, force: true }); }
 for (const r of shadow) { if (!r.locale?.pass) r.verdict = `locale:${r.locale?.reason}`; }
 
 const toManifest = (r) => ({ snkrdunkId: r.snkrdunkId, matchedCardId: r.target.id, code: r.code, sourceImageUrl: preferLargeSnkrdunkImageUrl(r.thumbnailUrl), targetImageUrl: r.target.imageUrl, visual: { decision: "exact_metadata_and_visual", pass: true }, targetCode: r.target.cardCode, name: r.name, stage: r.stage, tier: r.tier, visualScore: r.visualScore, visualMargin: r.visualMargin });
