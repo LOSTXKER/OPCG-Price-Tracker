@@ -82,7 +82,10 @@ for (const x of catalog) {
   rows.push(r);
   if (LOCALE.test(name)) { r.verdict = "explicit_locale"; continue; }
   if (OPENED.test(name)) { r.verdict = "opened_or_unopened"; continue; }
-  if (PROMO.test(name)) { r.verdict = "promo_manual_only"; continue; }
+  // ชื่อชุด Extra Booster ("Memorial Collection" EB01 · "Anime 25th Collection" EB02) ติดคำว่า COLLECTION ในกฎโปรโม ทั้งที่เป็นชุดปกติที่ผูกไปแล้ว 109 ใบ
+  // (เจอ 2026-09-19: ผลรอบประจำวันได้ auto 0 เพราะ EB ทั้งชุดถูกตีเป็นโปรโม) → ตัดชื่อชุด Extra Booster ออกก่อนเทียบกฎโปรโม · โปรโมจริง (Premium Card Collection / Anniversary / Serial) ยังโดนเหมือนเดิม
+  const nameForPromo = name.replace(/\(Extra Booster[^)]*Collection[^)]*\)/i, "");
+  if (PROMO.test(nameForPromo)) { r.verdict = "promo_manual_only"; continue; }
   r.set = setFromTitle(r.packTitle);
   if (!r.set) { r.verdict = "unmapped_pack"; continue; }
   if (!r.rarity) { r.verdict = "no_rarity"; continue; }
