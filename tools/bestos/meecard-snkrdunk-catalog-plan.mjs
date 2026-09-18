@@ -17,6 +17,7 @@ import { fetchImageFeature, compareImageFeatures, normalizePrintedCode } from ".
 import {
   downloadSnkrdunkSourceImage, runVisionOcrBatch, classifyJapaneseLocale, detectBlockedLocaleMarker, preferLargeSnkrdunkImageUrl,
 } from "./meecard-snkrdunk-locale-ocr.mjs";
+import { prbTreatment, pickPrbRows } from "./meecard-snkrdunk-prb-variant.mjs";
 
 const argv = process.argv.slice(2);
 const opt = (n, d) => { const i = argv.indexOf(n); return i >= 0 ? argv[i + 1] : d; };
@@ -90,15 +91,19 @@ for (const x of catalog) {
   if (!r.set) { r.verdict = "unmapped_pack"; continue; }
   if (!r.rarity) { r.verdict = "no_rarity"; continue; }
   const all = byCode.get(r.code) ?? [];
-  let c = all.filter((k) => normRarity(k.rarity) === r.rarity); r.stage = "code+rarity";
-  const inSet = c.filter((k) => k.set?.code === r.set);
-  if (inSet.length) { c = inSet; r.stage = "code+rarity+set"; }
-  else { const fam = all.filter((k) => k.set?.code === r.set && family(k.rarity) === family(r.rarity)); if (fam.length) { c = fam; r.stage = "code+family+set"; } else if (c.length === 1) { r.stage = "code+rarity(any-set,unique)"; } else { c = []; r.stage = "set_no_candidate"; } }
-  // THE BEST reprints: plain listing -> _rN · ":Full Art" / ": Foil" / parallel wording -> _pN (same rarity in MeeCard)
-  if (c.length > 1 && /^prb/.test(r.set)) {
-    const wantsParallel = /FULL ART|FOIL|PARALLEL|ALT(?:ERNATE)? ART/i.test(name);
-    const pick = c.filter((k) => wantsParallel ? /_p\d+$/i.test(k.cardCode) : /_r\d+$/i.test(k.cardCode));
-    if (pick.length) { c = pick; r.stage += wantsParallel ? "+prb-parallel" : "+prb-plain"; }
+  let c = null;
+  // ชุดรีปรินต์ THE BEST: ต้องเลือกแบบของใบก่อนกรองความหายาก เพราะใบ ":Full Art" ชื่อบอกความหายากธรรมดา (เช่น UC)
+  // แต่ตัวการ์ดมีดาว = MeeCard เก็บเป็น P-UC · กฎเดิมกรอง "UC" ตรงตัวก่อน แถวที่ถูกต้องเลยหลุดตั้งแต่ต้น (เจอ 2026-09-19: 73 ใบถูกตีว่าชนกัน)
+  if (/^prb/.test(r.set)) {
+    const treatment = prbTreatment(name, r.rarity);
+    const pick = pickPrbRows(all.filter((k) => k.set?.code === r.set), treatment, r.rarity);
+    if (pick.length) { c = pick; r.stage = `code+prb-${treatment}`; }
+  }
+  if (!c) {
+    c = all.filter((k) => normRarity(k.rarity) === r.rarity); r.stage = "code+rarity";
+    const inSet = c.filter((k) => k.set?.code === r.set);
+    if (inSet.length) { c = inSet; r.stage = "code+rarity+set"; }
+    else { const fam = all.filter((k) => k.set?.code === r.set && family(k.rarity) === family(r.rarity)); if (fam.length) { c = fam; r.stage = "code+family+set"; } else if (c.length === 1) { r.stage = "code+rarity(any-set,unique)"; } else { c = []; r.stage = "set_no_candidate"; } }
   }
   r.candidates = c;
   if (!c.length) { r.verdict = "no_candidate"; continue; }
