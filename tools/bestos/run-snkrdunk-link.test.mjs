@@ -50,3 +50,9 @@ test("อ่านผลสรุป JSON ก้อนสุดท้ายไ�
   assert.equal(lastJson(""), null);
   assert.equal(lastJson("ไม่มี json"), null);
 });
+
+import { localDay } from "./run-snkrdunk-link.mjs";
+test("วันที่ในหัวข้อความใช้เขตเวลาของเครื่อง ไม่ใช่ UTC (ตี 2 ไทยต้องเป็นวันนี้ ไม่ใช่เมื่อวาน)", () => {
+  assert.equal(localDay(new Date(2026, 8, 19, 2, 0)), "2026-09-19");
+  assert.equal(localDay(new Date(2026, 0, 5, 23, 59)), "2026-01-05");
+});

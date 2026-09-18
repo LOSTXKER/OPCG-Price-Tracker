@@ -17,7 +17,9 @@ const opt = (n, d) => { const i = argv.indexOf(n); return i >= 0 ? argv[i + 1] :
 const APPLY = argv.includes("--apply");
 const MAX = Number(opt("--max", "30"));
 const DELAY = Number(opt("--delay", "45000"));
-const today = new Date().toISOString().slice(0, 10);
+/** วันที่ตามเขตเวลาของเครื่องที่รัน (ตัวรันงาน V3.1 ตั้ง TZ=Asia/Bangkok) — toISOString ให้วัน UTC ซึ่งช้ากว่าไทย 7 ชม. ทำให้หัวข้อความผิดวัน (เจอ 19 ก.ย.: รันตี 2 ไทย ขึ้นว่าวันที่ 18) */
+export const localDay = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const today = localDay();
 const STATE = opt("--state", path.join(os.homedir(), ".cache", "bestos-meecard-snkrdunk-link", today));
 fs.mkdirSync(STATE, { recursive: true });
 const log = (...a) => console.error(new Date().toISOString(), ...a);
