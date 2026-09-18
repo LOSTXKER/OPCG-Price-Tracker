@@ -41,3 +41,12 @@ test("หยุดกลางทางเพราะเว็บล้ม: บ
   assert.match(t, /ผูกไม่สำเร็จ 2 ใบ/);
   assert.match(t, /Next action: ไม่มี — ระบบจะลองใหม่พรุ่งนี้/);
 });
+
+import { lastJson } from "./run-snkrdunk-link.mjs";
+test("อ่านผลสรุป JSON ก้อนสุดท้ายได้ทั้งแบบบรรทัดเดียวและหลายบรรทัด (planner/apply พิมพ์หลายบรรทัด — พลาดจริง 19 ก.ย.)", () => {
+  assert.deepEqual(lastJson('{"a":1}'), { a: 1 });
+  assert.deepEqual(lastJson('log line\n{\n "auto": 3,\n "reasons": {\n  "x": 1\n }\n}'), { auto: 3, reasons: { x: 1 } });
+  assert.deepEqual(lastJson('{"old":1}\n{\n "new": 2\n}'), { new: 2 }, "ต้องได้ก้อนสุดท้าย ไม่ใช่ก้อนแรก");
+  assert.equal(lastJson(""), null);
+  assert.equal(lastJson("ไม่มี json"), null);
+});

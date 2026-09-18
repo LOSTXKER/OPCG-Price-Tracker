@@ -30,7 +30,18 @@ function step(name, args, { env = process.env, timeoutMs = 20 * 60_000 } = {}) {
   if (r.status !== 0) throw new Error(`${name} ล้ม (รหัส ${r.status}): ${String(r.stderr ?? "").trim().split("\n").slice(-3).join(" · ").slice(0, 300)}`);
   return r.stdout ?? "";
 }
-const lastJson = (text) => { const lines = String(text).trim().split("\n").filter(Boolean); for (let i = lines.length - 1; i >= 0; i--) { try { return JSON.parse(lines[i]); } catch { /* บรรทัดนี้ไม่ใช่ JSON */ } } return null; };
+/** ผลสรุปของขั้นย่อยเป็น JSON ก้อนสุดท้ายใน stdout — planner กับ apply พิมพ์แบบหลายบรรทัด (JSON.stringify(…, null, 1)) จึงอ่านทีละบรรทัดไม่ได้ */
+export function lastJson(text) {
+  const t = String(text ?? "").trim();
+  if (!t) return null;
+  try { return JSON.parse(t); } catch { /* มีข้อความอื่นปนอยู่ก่อนหน้า */ }
+  const lines = t.split("\n");
+  for (let i = lines.length - 1; i >= 0; i--) {
+    if (!/^\s*\{/.test(lines[i])) continue;
+    try { return JSON.parse(lines.slice(i).join("\n")); } catch { /* ยังไม่ใช่จุดเริ่มก้อนสุดท้าย */ }
+  }
+  return null;
+}
 
 /** สรุปเป็นภาษาคน · คืน "" เมื่อไม่มีอะไรต้องบอก */
 export function summarize({ plan, applyResult, apply, reviewRows = [], max }) {
